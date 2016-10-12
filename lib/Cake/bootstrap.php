@@ -145,6 +145,7 @@ App::uses('ErrorHandler', 'Error');
 App::uses('Configure', 'Core');
 App::uses('CakePlugin', 'Core');
 App::uses('Cache', 'Cache');
+App::uses('CakeObject', 'Core');
 App::uses('Object', 'Core');
 App::uses('Multibyte', 'I18n');
 

@@ -47,6 +47,16 @@ class Folder {
 	const SKIP = 'skip';
 
 /**
+ * Sort mode by name
+ */
+	const SORT_NAME = 'name';
+
+/**
+ * Sort mode by time
+ */
+	const SORT_TIME = 'time';
+
+/**
  * Path to Folder.
  *
  * @var string
@@ -70,6 +80,14 @@ class Folder {
  * http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#Folder::$mode
  */
 	public $mode = 0755;
+
+/**
+ * Functions array to be called depending on the sort type chosen.
+ */
+	protected $_fsorts = array(
+		self::SORT_NAME => 'getPathname',
+		self::SORT_TIME => 'getCTime'
+	);
 
 /**
  * Holds messages from last method.
@@ -155,14 +173,14 @@ class Folder {
  * Returns an array of the contents of the current directory.
  * The returned array holds two arrays: One of directories and one of files.
  *
- * @param bool $sort Whether you want the results sorted, set this and the sort property
+ * @param string|bool $sort Whether you want the results sorted, set this and the sort property
  *   to false to get unsorted results.
  * @param array|bool $exceptions Either an array or boolean true will not grab dot files
  * @param bool $fullPath True returns the full path
  * @return mixed Contents of current directory as an array, an empty array on failure
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#Folder::read
  */
-	public function read($sort = true, $exceptions = false, $fullPath = false) {
+	public function read($sort = self::SORT_NAME, $exceptions = false, $fullPath = false) {
 		$dirs = $files = array();
 
 		if (!$this->pwd()) {
@@ -178,6 +196,11 @@ class Folder {
 		} catch (Exception $e) {
 			return array($dirs, $files);
 		}
+		if (!is_bool($sort) && isset($this->_fsorts[$sort])) {
+			$methodName = $this->_fsorts[$sort];
+		} else {
+			$methodName = $this->_fsorts[self::SORT_NAME];
+		}
 
 		foreach ($iterator as $item) {
 			if ($item->isDot()) {
@@ -191,14 +214,22 @@ class Folder {
 				$name = $item->getPathName();
 			}
 			if ($item->isDir()) {
-				$dirs[] = $name;
+				$dirs[$item->{$methodName}()][] = $name;
 			} else {
-				$files[] = $name;
+				$files[$item->{$methodName}()][] = $name;
 			}
 		}
+
 		if ($sort || $this->sort) {
-			sort($dirs);
-			sort($files);
+			ksort($dirs);
+			ksort($files);
+		}
+
+		if ($dirs) {
+			$dirs = call_user_func_array('array_merge', $dirs);
+		}
+		if ($files) {
+			$files = call_user_func_array('array_merge', $files);
 		}
 		return array($dirs, $files);
 	}
@@ -354,7 +385,7 @@ class Folder {
 	}
 
 /**
- * Returns true if the File is in a given CakePath.
+ * Returns true if the Folder is in the given Cake path.
  *
  * @param string $path The path to check.
  * @return bool
@@ -368,21 +399,26 @@ class Folder {
 	}
 
 /**
- * Returns true if the File is in given path.
+ * Returns true if the Folder is in the given path.
  *
- * @param string $path The path to check that the current pwd() resides with in.
- * @param bool $reverse Reverse the search, check that pwd() resides within $path.
+ * @param string $path The absolute path to check that the current `pwd()` resides within.
+ * @param bool $reverse Reverse the search, check if the given `$path` resides within the current `pwd()`.
  * @return bool
+ * @throws \InvalidArgumentException When the given `$path` argument is not an absolute path.
  * @link http://book.cakephp.org/2.0/en/core-utility-libraries/file-folder.html#Folder::inPath
  */
 	public function inPath($path = '', $reverse = false) {
+		if (!Folder::isAbsolute($path)) {
+			throw new InvalidArgumentException(__d('cake_dev', 'The $path argument is expected to be an absolute path.'));
+		}
+
 		$dir = Folder::slashTerm($path);
 		$current = Folder::slashTerm($this->pwd());
 
 		if (!$reverse) {
-			$return = preg_match('/^(.*)' . preg_quote($dir, '/') . '(.*)/', $current);
+			$return = preg_match('/^' . preg_quote($dir, '/') . '(.*)/', $current);
 		} else {
-			$return = preg_match('/^(.*)' . preg_quote($current, '/') . '(.*)/', $dir);
+			$return = preg_match('/^' . preg_quote($current, '/') . '(.*)/', $dir);
 		}
 		return (bool)$return;
 	}

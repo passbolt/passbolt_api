@@ -184,6 +184,13 @@ class DboSource extends DataSource {
 	protected $_sqlOps = array('like', 'ilike', 'rlike', 'or', 'not', 'in', 'between', 'regexp', 'similar to');
 
 /**
+ * The set of valid SQL boolean operations usable in a WHERE statement
+ *
+ * @var array
+ */
+	protected $_sqlBoolOps = array('and', 'or', 'not', 'and not', 'or not', 'xor', '||', '&&');
+
+/**
  * Indicates the level of nested transactions
  *
  * @var int
@@ -2302,6 +2309,7 @@ class DboSource extends DataSource {
 
 		$this->_transactionNesting = 0;
 		if ($this->fullDebug) {
+			$this->took = $this->numRows = $this->affected = false;
 			$this->logQuery('BEGIN');
 		}
 		return $this->_transactionStarted = $this->_connection->beginTransaction();
@@ -2315,6 +2323,7 @@ class DboSource extends DataSource {
 	protected function _beginNested() {
 		$query = 'SAVEPOINT LEVEL' . ++$this->_transactionNesting;
 		if ($this->fullDebug) {
+			$this->took = $this->numRows = $this->affected = false;
 			$this->logQuery($query);
 		}
 		$this->_connection->exec($query);
@@ -2335,6 +2344,7 @@ class DboSource extends DataSource {
 
 		if ($this->_transactionNesting === 0) {
 			if ($this->fullDebug) {
+				$this->took = $this->numRows = $this->affected = false;
 				$this->logQuery('COMMIT');
 			}
 			$this->_transactionStarted = false;
@@ -2357,6 +2367,7 @@ class DboSource extends DataSource {
 	protected function _commitNested() {
 		$query = 'RELEASE SAVEPOINT LEVEL' . $this->_transactionNesting--;
 		if ($this->fullDebug) {
+			$this->took = $this->numRows = $this->affected = false;
 			$this->logQuery($query);
 		}
 		$this->_connection->exec($query);
@@ -2377,6 +2388,7 @@ class DboSource extends DataSource {
 
 		if ($this->_transactionNesting === 0) {
 			if ($this->fullDebug) {
+				$this->took = $this->numRows = $this->affected = false;
 				$this->logQuery('ROLLBACK');
 			}
 			$this->_transactionStarted = false;
@@ -2399,6 +2411,7 @@ class DboSource extends DataSource {
 	protected function _rollbackNested() {
 		$query = 'ROLLBACK TO SAVEPOINT LEVEL' . $this->_transactionNesting--;
 		if ($this->fullDebug) {
+			$this->took = $this->numRows = $this->affected = false;
 			$this->logQuery($query);
 		}
 		$this->_connection->exec($query);
@@ -2672,7 +2685,6 @@ class DboSource extends DataSource {
 	public function conditionKeysToString($conditions, $quoteValues = true, Model $Model = null) {
 		$out = array();
 		$data = $columnType = null;
-		$bool = array('and', 'or', 'not', 'and not', 'or not', 'xor', '||', '&&');
 
 		foreach ($conditions as $key => $value) {
 			$join = ' AND ';
@@ -2689,8 +2701,8 @@ class DboSource extends DataSource {
 				continue;
 			} elseif (is_numeric($key) && is_string($value)) {
 				$out[] = $this->_quoteFields($value);
-			} elseif ((is_numeric($key) && is_array($value)) || in_array(strtolower(trim($key)), $bool)) {
-				if (in_array(strtolower(trim($key)), $bool)) {
+			} elseif ((is_numeric($key) && is_array($value)) || in_array(strtolower(trim($key)), $this->_sqlBoolOps)) {
+				if (in_array(strtolower(trim($key)), $this->_sqlBoolOps)) {
 					$join = ' ' . strtoupper($key) . ' ';
 				} else {
 					$key = $join;
@@ -3085,54 +3097,45 @@ class DboSource extends DataSource {
  * @return mixed An integer or string representing the length of the column, or null for unknown length.
  */
 	public function length($real) {
-		if (!preg_match_all('/([\w\s]+)(?:\((\d+)(?:,(\d+))?\))?(\sunsigned)?(\szerofill)?/', $real, $result)) {
-			$col = str_replace(array(')', 'unsigned'), '', $real);
-			$limit = null;
-
-			if (strpos($col, '(') !== false) {
-				list($col, $limit) = explode('(', $col);
-			}
-			if ($limit !== null) {
-				return (int)$limit;
-			}
-			return null;
-		}
-
+		preg_match('/([\w\s]+)(?:\((.+?)\))?(\sunsigned)?/i', $real, $result);
 		$types = array(
 			'int' => 1, 'tinyint' => 1, 'smallint' => 1, 'mediumint' => 1, 'integer' => 1, 'bigint' => 1
 		);
 
-		list($real, $type, $length, $offset, $sign) = $result;
-		$typeArr = $type;
-		$type = $type[0];
-		$length = $length[0];
-		$offset = $offset[0];
+		$type = $length = null;
+		if (isset($result[1])) {
+			$type = $result[1];
+		}
+		if (isset($result[2])) {
+			$length = $result[2];
+		}
+		$sign = isset($result[3]);
 
 		$isFloat = in_array($type, array('dec', 'decimal', 'float', 'numeric', 'double'));
-		if ($isFloat && $offset) {
-			return $length . ',' . $offset;
+		if ($isFloat && strpos($length, ',') !== false) {
+			return $length;
 		}
 
-		if (($real[0] == $type) && (count($real) === 1)) {
+		if ($length === null) {
 			return null;
 		}
 
 		if (isset($types[$type])) {
-			$length += $types[$type];
-			if (!empty($sign)) {
-				$length--;
-			}
-		} elseif (in_array($type, array('enum', 'set'))) {
-			$length = 0;
-			foreach ($typeArr as $key => $enumValue) {
-				if ($key === 0) {
-					continue;
-				}
+			return (int)$length;
+		}
+		if (in_array($type, array('enum', 'set'))) {
+			$values = array_map(function ($value) {
+				return trim(trim($value), '\'"');
+			}, explode(',', $length));
+
+			$maxLength = 0;
+			foreach ($values as $key => $enumValue) {
 				$tmpLength = strlen($enumValue);
-				if ($tmpLength > $length) {
-					$length = $tmpLength;
+				if ($tmpLength > $maxLength) {
+					$maxLength = $tmpLength;
 				}
 			}
+			return $maxLength;
 		}
 		return (int)$length;
 	}
@@ -3190,10 +3193,13 @@ class DboSource extends DataSource {
 				$statement->bindValue($i, $val, $columnMap[$col]);
 				$i += 1;
 			}
+			$t = microtime(true);
 			$statement->execute();
 			$statement->closeCursor();
 
 			if ($this->fullDebug) {
+				$this->took = round((microtime(true) - $t) * 1000, 0);
+				$this->numRows = $this->affected = $statement->rowCount();
 				$this->logQuery($sql, $value);
 			}
 		}
@@ -3542,6 +3548,15 @@ class DboSource extends DataSource {
 			return 'integer';
 		}
 		return 'string';
+	}
+
+/**
+ * Empties the query caches.
+ *
+ * @return void
+ */
+	public function flushQueryCache() {
+		$this->_queryCache = array();
 	}
 
 /**

@@ -109,28 +109,86 @@ class FolderTest extends CakeTestCase {
  * @return void
  */
 	public function testInPath() {
-		$path = dirname(dirname(__FILE__));
-		$inside = dirname($path) . DS;
+		// "/Test/test_app/"
+		$basePath = CAKE . 'Test' . DS . 'test_app' . DS;
+		$Base = new Folder($basePath);
 
-		$Folder = new Folder($path);
+		$result = $Base->pwd();
+		$this->assertEquals($basePath, $result);
 
-		$result = $Folder->pwd();
-		$this->assertEquals($path, $result);
+		// is "/" in "/Test/test_app/"
+		$result = $Base->inPath(realpath(DS), true);
+		$this->assertFalse($result, true);
 
-		$result = Folder::isSlashTerm($inside);
+		// is "/Test/test_app/" in "/Test/test_app/"
+		$result = $Base->inPath($basePath, true);
 		$this->assertTrue($result);
 
-		$result = $Folder->realpath('Test/');
-		$this->assertEquals($path . DS . 'Test' . DS, $result);
-
-		$result = $Folder->inPath('Test' . DS);
+		// is "/Test/test_app" in "/Test/test_app/"
+		$result = $Base->inPath(mb_substr($basePath, 0, -1), true);
 		$this->assertTrue($result);
 
-		$result = $Folder->inPath(DS . 'non-existing' . $inside);
+		// is "/Test/test_app/sub" in "/Test/test_app/"
+		$result = $Base->inPath($basePath . 'sub', true);
+		$this->assertTrue($result);
+
+		// is "/Test" in "/Test/test_app/"
+		$result = $Base->inPath(dirname($basePath), true);
 		$this->assertFalse($result);
 
-		$result = $Folder->inPath($path . DS . 'Model', true);
+		// is "/Test/other/(...)Test/test_app" in "/Test/test_app/"
+		$result = $Base->inPath(TMP . 'tests' . DS . 'other' . DS . $basePath, true);
+		$this->assertFalse($result);
+
+		// is "/Test/test_app/" in "/"
+		$result = $Base->inPath(realpath(DS));
 		$this->assertTrue($result);
+
+		// is "/Test/test_app/" in "/Test/test_app/"
+		$result = $Base->inPath($basePath);
+		$this->assertTrue($result);
+
+		// is "/Test/test_app/" in "/Test/test_app"
+		$result = $Base->inPath(mb_substr($basePath, 0, -1));
+		$this->assertTrue($result);
+
+		// is "/Test/test_app/" in "/Test"
+		$result = $Base->inPath(dirname($basePath));
+		$this->assertTrue($result);
+
+		// is "/Test/test_app/" in "/Test/test_app/sub"
+		$result = $Base->inPath($basePath . 'sub');
+		$this->assertFalse($result);
+
+		// is "/other/Test/test_app/" in "/Test/test_app/"
+		$VirtualBase = new Folder();
+		$VirtualBase->path = '/other/Test/test_app';
+		$result = $VirtualBase->inPath('/Test/test_app/');
+		$this->assertFalse($result);
+	}
+
+/**
+ * Data provider for the testInPathInvalidPathArgument test
+ *
+ * @return array
+ */
+	public function inPathInvalidPathArgumentDataProvider() {
+		return array(
+			array(''),
+			array('relative/path/'),
+			array('unknown://stream-wrapper')
+		);
+	}
+
+/**
+ * @dataProvider inPathInvalidPathArgumentDataProvider
+ * @param string $path
+ * @expectedException \InvalidArgumentException
+ * @expectedExceptionMessage The $path argument is expected to be an absolute path.
+ */
+	public function testInPathInvalidPathArgument($path) {
+		$Folder = new Folder();
+		$Folder->inPath($path);
 	}
 
 /**
@@ -1224,6 +1282,87 @@ class FolderTest extends CakeTestCase {
 		$this->assertFalse(file_exists($fileOneA));
 
 		$Folder = new Folder($path);
+		$Folder->delete();
+	}
+
+/**
+ * testSortByTime method
+ *
+ * Verify that the order using modified time is correct.
+ *
+ * @return void
+ */
+	public function testSortByTime() {
+		$Folder = new Folder(TMP . 'test_sort_by_time', true);
+
+		$file2 = new File($Folder->pwd() . DS . 'file_2.tmp');
+		$file2->create();
+
+		sleep(1);
+
+		$file1 = new File($Folder->pwd() . DS . 'file_1.tmp');
+		$file1->create();
+
+		$expected = array('file_2.tmp', 'file_1.tmp');
+		$result = $Folder->find('.*', Folder::SORT_TIME);
+		$this->assertSame($expected, $result);
+
+		$Folder->delete();
+	}
+
+/**
+ * testSortByTime2 method
+ *
+ * Verify that the sort order using modified time is correct.
+ *
+ * @return void
+ */
+	public function testSortByTime2() {
+		$Folder = new Folder(TMP . 'test_sort_by_time2', true);
+
+		$fileC = new File($Folder->pwd() . DS . 'c.txt');
+		$fileC->create();
+
+		sleep(1);
+
+		$fileA = new File($Folder->pwd() . DS . 'a.txt');
+		$fileA->create();
+
+		sleep(1);
+
+		$fileB = new File($Folder->pwd() . DS . 'b.txt');
+		$fileB->create();
+
+		$expected = array('c.txt', 'a.txt', 'b.txt');
+		$result = $Folder->find('.*', Folder::SORT_TIME);
+		$this->assertSame($expected, $result);
+
+		$Folder->delete();
+	}
+
+/**
+ * Verify that the sort order using name is correct.
+ *
+ * @return void
+ */
+	public function testSortByName() {
+		$Folder = new Folder(TMP . 'test_sort_by_name', true);
+
+		$fileA = new File($Folder->pwd() . DS . 'a.txt');
+		$fileA->create();
+
+		$fileC = new File($Folder->pwd() . DS . 'c.txt');
+		$fileC->create();
+
+		sleep(1);
+
+		$fileB = new File($Folder->pwd() . DS . 'b.txt');
+		$fileB->create();
+
+		$expected = array('a.txt', 'b.txt', 'c.txt');
+		$result = $Folder->find('.*', Folder::SORT_NAME);
+		$this->assertSame($expected, $result);
+
 		$Folder->delete();
 	}
 

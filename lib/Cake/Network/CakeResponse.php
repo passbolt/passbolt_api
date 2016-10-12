@@ -122,6 +122,7 @@ class CakeResponse {
 		'ips' => 'application/x-ipscript',
 		'ipx' => 'application/x-ipix',
 		'js' => 'application/javascript',
+		'jsonapi' => 'application/vnd.api+json',
 		'latex' => 'application/x-latex',
 		'lha' => 'application/octet-stream',
 		'lsp' => 'application/x-lisp',
@@ -264,6 +265,14 @@ class CakeResponse {
 		'xbm' => 'image/x-xbitmap',
 		'xpm' => 'image/x-xpixmap',
 		'xwd' => 'image/x-xwindowdump',
+		'psd' => array(
+			'application/photoshop',
+			'application/psd',
+			'image/psd',
+			'image/x-photoshop',
+			'image/photoshop',
+			'zz-application/zz-winassoc-psd'
+		),
 		'ice' => 'x-conference/x-cooltalk',
 		'iges' => 'model/iges',
 		'igs' => 'model/iges',
@@ -300,7 +309,8 @@ class CakeResponse {
 		'vcf' => 'text/x-vcard',
 		'vtt' => 'text/vtt',
 		'mkv' => 'video/x-matroska',
-		'pkpass' => 'application/vnd.apple.pkpass'
+		'pkpass' => 'application/vnd.apple.pkpass',
+		'ajax' => 'text/html'
 	);
 
 /**
@@ -577,7 +587,7 @@ class CakeResponse {
 			if (is_numeric($header)) {
 				list($header, $value) = array($value, null);
 			}
-			if ($value === null) {
+			if ($value === null && strpos($header, ':') !== false) {
 				list($header, $value) = explode(':', $header, 2);
 			}
 			$this->_headers[$header] = is_array($value) ? array_map('trim', $value) : trim($value);
@@ -1191,9 +1201,6 @@ class CakeResponse {
  * If the method is called with an array as argument, it will set the cookie
  * configuration to the cookie container.
  *
- * @param array $options Either null to get all cookies, string for a specific cookie
- *  or array to set cookie.
- *
  * ### Options (when setting a configuration)
  *  - name: The Cookie name
  *  - value: Value of the cookie
@@ -1217,6 +1224,8 @@ class CakeResponse {
  *
  * `$this->cookie((array) $options)`
  *
+ * @param array $options Either null to get all cookies, string for a specific cookie
+ *  or array to set cookie.
  * @return mixed
  */
 	public function cookie($options = null) {
@@ -1407,11 +1416,16 @@ class CakeResponse {
  * @return void
  */
 	protected function _fileRange($file, $httpRange) {
-		list(, $range) = explode('=', $httpRange);
-		list($start, $end) = explode('-', $range);
-
 		$fileSize = $file->size();
 		$lastByte = $fileSize - 1;
+		$start = 0;
+		$end = $lastByte;
+
+		preg_match('/^bytes\s*=\s*(\d+)?\s*-\s*(\d+)?$/', $httpRange, $matches);
+		if ($matches) {
+			$start = $matches[1];
+			$end = isset($matches[2]) ? $matches[2] : '';
+		}
 
 		if ($start === '') {
 			$start = $fileSize - $end;

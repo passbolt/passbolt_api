@@ -455,6 +455,19 @@ class CakeTimeTest extends CakeTestCase {
 	}
 
 /**
+ * testNiceShort translations
+ *
+ * @return void
+ */
+	public function testNiceShortI18n() {
+		$restore = setlocale(LC_ALL, 0);
+		setlocale(LC_ALL, 'es_ES');
+		$time = strtotime('2015-01-07 03:05:00');
+		$this->assertEquals('ene 7th 2015, 03:05', $this->Time->niceShort($time));
+		setlocale(LC_ALL, $restore);
+	}
+
+/**
  * testDaysAsSql method
  *
  * @return void
@@ -545,7 +558,7 @@ class CakeTimeTest extends CakeTestCase {
 		$expected = date('l jS \of F Y h:i:s A', $time);
 		$this->assertEquals($expected, $result);
 
-		$this->assertFalse($this->Time->toServer(time(), new Object()));
+		$this->assertFalse($this->Time->toServer(time(), new CakeObject()));
 
 		date_default_timezone_set('UTC');
 
@@ -1153,6 +1166,10 @@ class CakeTimeTest extends CakeTestCase {
  * @return void
  */
 	public function testListTimezones() {
+		$this->skipIf(
+			version_compare(PHP_VERSION, '5.4.0', '<='),
+			'This test requires newer libicu which is in php5.4+'
+		);
 		$return = CakeTime::listTimezones();
 		$this->assertTrue(isset($return['Asia']['Asia/Bangkok']));
 		$this->assertEquals('Bangkok', $return['Asia']['Asia/Bangkok']);

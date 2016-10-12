@@ -97,6 +97,7 @@ class CakeRequest implements ArrayAccess {
  */
 	protected $_detectors = array(
 		'get' => array('env' => 'REQUEST_METHOD', 'value' => 'GET'),
+		'patch' => array('env' => 'REQUEST_METHOD', 'value' => 'PATCH'),
 		'post' => array('env' => 'REQUEST_METHOD', 'value' => 'POST'),
 		'put' => array('env' => 'REQUEST_METHOD', 'value' => 'PUT'),
 		'delete' => array('env' => 'REQUEST_METHOD', 'value' => 'DELETE'),
@@ -396,7 +397,7 @@ class CakeRequest implements ArrayAccess {
 
 /**
  * Get the content type used in this request.
- * 
+ *
  * @return string
  */
 	public function contentType() {
@@ -747,7 +748,12 @@ class CakeRequest implements ArrayAccess {
  * @return mixed Either false on no header being set or the value of the header.
  */
 	public static function header($name) {
-		$name = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+		$httpName = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
+		if (isset($_SERVER[$httpName])) {
+			return $_SERVER[$httpName];
+		}
+		// Use the provided value, in some configurations apache will
+		// pass Authorization with no prefix and in Titlecase.
 		if (isset($_SERVER[$name])) {
 			return $_SERVER[$name];
 		}
@@ -1124,6 +1130,9 @@ class CakeRequest implements ArrayAccess {
  * @return bool
  */
 	public function offsetExists($name) {
+		if ($name === 'url' || $name === 'data') {
+			return true;
+		}
 		return isset($this->params[$name]);
 	}
 

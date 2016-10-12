@@ -403,6 +403,12 @@ class ValidationTest extends CakeTestCase {
 		$this->assertTrue(Validation::cc('5467639122779531', array('mc')));
 		$this->assertTrue(Validation::cc('5297350261550024', array('mc')));
 		$this->assertTrue(Validation::cc('5162739131368058', array('mc')));
+		//Mastercard (additional 2016 BIN)
+		$this->assertTrue(Validation::cc('2221000000000009', array('mc')));
+		$this->assertTrue(Validation::cc('2720999999999996', array('mc')));
+		$this->assertTrue(Validation::cc('2223000010005798', array('mc')));
+		$this->assertTrue(Validation::cc('2623430710235708', array('mc')));
+		$this->assertTrue(Validation::cc('2420452519835723', array('mc')));
 		//Solo 16
 		$this->assertTrue(Validation::cc('6767432107064987', array('solo')));
 		$this->assertTrue(Validation::cc('6334667758225411', array('solo')));
@@ -2161,9 +2167,6 @@ class ValidationTest extends CakeTestCase {
 		$this->assertFalse(Validation::phone('1-(511)-999-9999'));
 		$this->assertFalse(Validation::phone('1-(555)-999-9999'));
 
-		// invalid exhange
-		$this->assertFalse(Validation::phone('1-(222)-511-9999'));
-
 		// invalid phone number
 		$this->assertFalse(Validation::phone('1-(222)-555-0199'));
 		$this->assertFalse(Validation::phone('1-(222)-555-0122'));
@@ -2186,6 +2189,7 @@ class ValidationTest extends CakeTestCase {
 		$this->assertTrue(Validation::phone('1.(333).333-4444'));
 		$this->assertTrue(Validation::phone('1.(333).333.4444'));
 		$this->assertTrue(Validation::phone('1-333-333-4444'));
+		$this->assertTrue(Validation::phone('1-800-211-4511'));
 	}
 
 /**

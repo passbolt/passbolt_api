@@ -27,7 +27,7 @@ App::uses('MockDataSource', 'Model/Datasource');
 require_once dirname(dirname(__FILE__)) . DS . 'models.php';
 
 /**
- * Class MockPDO
+ * MockPDO
  *
  * @package       Cake.Test.Case.Model.Datasource
  */
@@ -42,7 +42,7 @@ class MockPDO extends PDO {
 }
 
 /**
- * Class MockDataSource
+ * MockDataSource
  *
  * @package       Cake.Test.Case.Model.Datasource
  */
@@ -50,7 +50,7 @@ class MockDataSource extends DataSource {
 }
 
 /**
- * Class DboTestSource
+ * DboTestSource
  *
  * @package       Cake.Test.Case.Model.Datasource
  */
@@ -81,7 +81,7 @@ class DboTestSource extends DboSource {
 }
 
 /**
- * Class DboSecondTestSource
+ * DboSecondTestSource
  *
  * @package       Cake.Test.Case.Model.Datasource
  */
@@ -1809,5 +1809,52 @@ class DboSourceTest extends CakeTestCase {
 
 		$User->Article = $Article;
 		$User->find('first', array('conditions' => array('User.id' => 1), 'recursive' => 2));
+	}
+
+/**
+ * Test that flushQueryCache works as expected
+ *
+ * @return void
+ */
+	public function testFlushQueryCache() {
+		$this->db->flushQueryCache();
+		$this->db->query('SELECT 1');
+		$this->db->query('SELECT 1');
+		$this->db->query('SELECT 2');
+		$this->assertAttributeCount(2, '_queryCache', $this->db);
+
+		$this->db->flushQueryCache();
+		$this->assertAttributeCount(0, '_queryCache', $this->db);
+	}
+
+/**
+ * Test length parsing.
+ *
+ * @return void
+ */
+	public function testLength() {
+		$result = $this->db->length('varchar(255)');
+		$this->assertEquals(255, $result);
+
+		$result = $this->db->length('integer(11)');
+		$this->assertEquals(11, $result);
+
+		$result = $this->db->length('integer unsigned');
+		$this->assertNull($result);
+
+		$result = $this->db->length('integer(11) unsigned');
+		$this->assertEquals(11, $result);
+
+		$result = $this->db->length('integer(11) zerofill');
+		$this->assertEquals(11, $result);
+
+		$result = $this->db->length('decimal(20,3)');
+		$this->assertEquals('20,3', $result);
+
+		$result = $this->db->length('enum("one", "longer")');
+		$this->assertEquals(6, $result);
+
+		$result = $this->db->length("enum('One Value','ANOTHER ... VALUE ...')");
+		$this->assertEquals(21, $result);
 	}
 }

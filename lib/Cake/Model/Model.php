@@ -42,7 +42,7 @@ App::uses('CakeEventManager', 'Event');
  * @package       Cake.Model
  * @link          http://book.cakephp.org/2.0/en/models.html
  */
-class Model extends Object implements CakeEventListener {
+class Model extends CakeObject implements CakeEventListener {
 
 /**
  * The name of the DataSource connection that this Model uses
@@ -473,9 +473,16 @@ class Model extends Object implements CakeEventListener {
 
 /**
  * List of behaviors to load when the model object is initialized. Settings can be
- * passed to behaviors by using the behavior name as index. Eg:
+ * passed to behaviors by using the behavior name as index.
  *
- * public $actsAs = array('Translate', 'MyBehavior' => array('setting1' => 'value1'))
+ * For example:
+ *
+ * ```
+ * public $actsAs = array(
+ *     'Translate',
+ *     'MyBehavior' => array('setting1' => 'value1')
+ * );
+ * ```
  *
  * @var array
  * @link http://book.cakephp.org/2.0/en/models/behaviors.html#using-behaviors
@@ -1035,13 +1042,13 @@ class Model extends Object implements CakeEventListener {
 						unset($association[$assoc]);
 						$assoc = $value;
 						$value = array();
+						$association[$assoc] = $value;
+					}
 
-						if (strpos($assoc, '.') !== false) {
-							list($plugin, $assoc) = pluginSplit($assoc, true);
-							$association[$assoc] = array('className' => $plugin . $assoc);
-						} else {
-							$association[$assoc] = $value;
-						}
+					if (!isset($value['className']) && strpos($assoc, '.') !== false) {
+						unset($association[$assoc]);
+						list($plugin, $assoc) = pluginSplit($assoc, true);
+						$association[$assoc] = array('className' => $plugin . $assoc) + $value;
 					}
 
 					$this->_generateAssociation($type, $assoc);
@@ -3446,12 +3453,19 @@ class Model extends Object implements CakeEventListener {
  * - 3rd param: If 2nd argument is provided, a boolean flag for enabling/disabled
  *   query caching.
  *
+ * If the query cache param as 2nd or 3rd argument is not given then the model's
+ * default `$cacheQueries` value is used.
+ *
  * @param string $sql SQL statement
  * @return mixed Resultset array or boolean indicating success / failure depending on the query executed
  * @link http://book.cakephp.org/2.0/en/models/retrieving-your-data.html#model-query
  */
 	public function query($sql) {
 		$params = func_get_args();
+		// use $this->cacheQueries as default when argument not explicitly given already
+		if (count($params) === 1 || count($params) === 2 && !is_bool($params[1])) {
+			$params[] = $this->cacheQueries;
+		}
 		$db = $this->getDataSource();
 		return call_user_func_array(array(&$db, 'query'), $params);
 	}

@@ -191,8 +191,10 @@ class Security {
 			E_USER_WARNING
 		);
 		$bytes = '';
-		while ($bytes < $length) {
+		$byteLength = 0;
+		while ($byteLength < $length) {
 			$bytes .= static::hash(CakeText::uuid() . uniqid(mt_rand(), true), 'sha512', true);
+			$byteLength = strlen($bytes);
 		}
 		return substr($bytes, 0, $length);
 	}
@@ -303,7 +305,7 @@ class Security {
  * @return string The hashed string or an empty string on error.
  */
 	protected static function _crypt($password, $salt = false) {
-		if ($salt === false) {
+		if ($salt === false || $salt === null || $salt === '') {
 			$salt = static::_salt(22);
 			$salt = vsprintf('$2a$%02d$%s', array(static::$hashCost, $salt));
 		}

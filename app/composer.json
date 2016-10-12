@@ -1,7 +1,7 @@
 {
   "name": "passbolt/dependencies",
   "description": "The passbolt dependencies",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0",
   "config": {
     "vendor-dir": "Vendor"
   },

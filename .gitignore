@@ -63,6 +63,9 @@ composer.lock
 #################################
 /nbproject
 .idea
+/.project
+/.buildpath
+/.settings/
 
 # OS generated files #
 ######################

@@ -26,7 +26,7 @@ App::uses('File', 'Utility');
  *
  * @package       Cake.Model
  */
-class CakeSchema extends Object {
+class CakeSchema extends CakeObject {
 
 /**
  * Name of the schema.
@@ -405,8 +405,14 @@ class CakeSchema extends Object {
  * @param string $table Table name you want returned.
  * @param array $fields Array of field information to generate the table with.
  * @return string Variable declaration for a schema class.
+ * @throws Exception
  */
 	public function generateTable($table, $fields) {
+		// Valid var name regex (http://www.php.net/manual/en/language.variables.basics.php)
+		if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', $table)) {
+			throw new Exception("Invalid table name '{$table}'");
+		}
+
 		$out = "\tpublic \${$table} = array(\n";
 		if (is_array($fields)) {
 			$cols = array();
@@ -487,6 +493,9 @@ class CakeSchema extends Object {
 			foreach ($fields as $field => $value) {
 				if (!empty($old[$table][$field])) {
 					$diff = $this->_arrayDiffAssoc($value, $old[$table][$field]);
+					if (empty($diff)) {
+						$diff = $this->_arrayDiffAssoc($old[$table][$field], $value);
+					}
 					if (!empty($diff) && $field !== 'indexes' && $field !== 'tableParameters') {
 						$tables[$table]['change'][$field] = $value;
 					}

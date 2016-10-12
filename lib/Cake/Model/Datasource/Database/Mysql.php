@@ -437,13 +437,7 @@ class Mysql extends DboSource {
 		if (empty($conditions)) {
 			$alias = $joins = false;
 		}
-		$complexConditions = false;
-		foreach ((array)$conditions as $key => $value) {
-			if (strpos($key, $model->alias) === false) {
-				$complexConditions = true;
-				break;
-			}
-		}
+		$complexConditions = $this->_deleteNeedsComplexConditions($model, $conditions);
 		if (!$complexConditions) {
 			$joins = false;
 		}
@@ -457,6 +451,27 @@ class Mysql extends DboSource {
 			return false;
 		}
 		return true;
+	}
+
+/**
+ * Checks whether complex conditions are needed for a delete with the given conditions.
+ *
+ * @param Model $model The model to delete from.
+ * @param mixed $conditions The conditions to use.
+ * @return bool Whether or not complex conditions are needed
+ */
+	protected function _deleteNeedsComplexConditions(Model $model, $conditions) {
+		$fields = array_keys($this->describe($model));
+		foreach ((array)$conditions as $key => $value) {
+			if (in_array(strtolower(trim($key)), $this->_sqlBoolOps, true)) {
+				if ($this->_deleteNeedsComplexConditions($model, $value)) {
+					return true;
+				}
+			} elseif (strpos($key, $model->alias) === false && !in_array($key, $fields, true)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 /**
@@ -834,4 +849,57 @@ class Mysql extends DboSource {
 		return strpos(strtolower($real), 'unsigned') !== false;
 	}
 
+/**
+ * Inserts multiple values into a table. Uses a single query in order to insert
+ * multiple rows.
+ *
+ * @param string $table The table being inserted into.
+ * @param array $fields The array of field/column names being inserted.
+ * @param array $values The array of values to insert. The values should
+ *   be an array of rows. Each row should have values keyed by the column name.
+ *   Each row must have the values in the same order as $fields.
+ * @return bool
+ */
+	public function insertMulti($table, $fields, $values) {
+		$table = $this->fullTableName($table);
+		$holder = implode(', ', array_fill(0, count($fields), '?'));
+		$fields = implode(', ', array_map(array($this, 'name'), $fields));
+		$pdoMap = array(
+			'integer' => PDO::PARAM_INT,
+			'float' => PDO::PARAM_STR,
+			'boolean' => PDO::PARAM_BOOL,
+			'string' => PDO::PARAM_STR,
+			'text' => PDO::PARAM_STR
+		);
+		$columnMap = array();
+		$rowHolder = "({$holder})";
+		$sql = "INSERT INTO {$table} ({$fields}) VALUES ";
+		$countRows = count($values);
+		for ($i = 0; $i < $countRows; $i++) {
+			if ($i !== 0) {
+				$sql .= ',';
+			}
+			$sql .= " $rowHolder";
+		}
+		$statement = $this->_connection->prepare($sql);
+		foreach ($values[key($values)] as $key => $val) {
+			$type = $this->introspectType($val);
+			$columnMap[$key] = $pdoMap[$type];
+		}
+		$valuesList = array();
+		$i = 1;
+		foreach ($values as $value) {
+			foreach ($value as $col => $val) {
+				$valuesList[] = $val;
+				$statement->bindValue($i, $val, $columnMap[$col]);
+				$i++;
+			}
+		}
+		$result = $statement->execute();
+		$statement->closeCursor();
+		if ($this->fullDebug) {
+			$this->logQuery($sql, $valuesList);
+		}
+		return $result;
+	}
 }
