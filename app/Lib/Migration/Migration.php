@@ -7,7 +7,7 @@
  */
 App::uses('MigrationVersion', 'Migrations.Lib');
 
-class Migration extends Object {
+class Migration extends CakeObject {
 	protected $_remoteTagName;
 
 	/**
