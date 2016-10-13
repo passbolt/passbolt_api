@@ -75,17 +75,14 @@ class CakeErrorController extends AppController {
 		}
 
 		// Log the event if needed
-		ControllerLog::write(Status::ERROR, $this->request, $response['header']['message'], 'CakeErrorJson');
+		ControllerLog::write(Status::ERROR, $this->request, $response['header']['message'], 'CakeError');
 
 		// Default treatment is request is not JSON
 		if (!$this->request->is('json')) {
 			$this->layout = 'error';
-			ControllerLog::write(Status::ERROR, $this->request, '', 'CakeError');
-
 			return parent::render($view, $layout);
 		} else {
 			return $this->response->body(json_encode($response));
 		}
 	}
-
 }

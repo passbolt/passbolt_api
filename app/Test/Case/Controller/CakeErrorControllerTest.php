@@ -8,7 +8,9 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');
+App::uses('CakeErrorController', 'Controller');
 App::uses('UserController', 'Controller');
+App::uses('ControllerLog', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 
@@ -44,6 +46,72 @@ class CakeErrorControllerTest extends ControllerTestCase {
 
     public function setUp() {
         parent::setUp();
+    }
+
+    /**
+     * Test render
+     */
+    function testRenderMockedSuccess() {
+        $this->CakeErrorController = new CakeErrorController();
+        $this->CakeErrorController->request = new CakeRequest();
+        $this->CakeErrorController->request->addDetector('json', [
+            'callback' => function ($request) {
+                return true;
+            }
+        ]);
+        $this->CakeErrorController->response = new CakeResponse();
+        $this->CakeErrorController->request->action = 'TestAction';
+        $this->CakeErrorController->request->controller = 'TestController';
+        $this->CakeErrorController->viewVars['message'] = 'TestMessage';
+        $this->CakeErrorController->viewVars['error'] = new CakeObject();
+        $this->CakeErrorController->viewVars['error']->invalidFields = ['TestField' => 'TestFieldError'];
+        $json = $this->CakeErrorController->render();
+        $result = json_decode($json);
+        $this->assertEquals($result->header->status, 'error');
+        $this->assertEquals($result->header->action, 'TestAction');
+        $this->assertEquals($result->header->controller, 'TestController');
+        $this->assertEquals($result->header->message, 'TestMessage');
+
+        $controllerLog = ClassRegistry::init('ControllerLog');
+        $log = $controllerLog->find('first', array(
+            'order' => array('ControllerLog.created' => 'asc')
+        ));
+        $this->assertEquals($log['ControllerLog']['controller'], 'TestController');
+        $this->assertEquals($log['ControllerLog']['message'], 'TestMessage');
+        $this->assertEquals($log['ControllerLog']['action'], 'TestAction');
+        unset($this->CakeErrorController);
+    }
+
+    /**
+     * Test render
+     */
+    function testRenderMockedMessageSuccess() {
+        $this->CakeErrorController = new CakeErrorController();
+        $this->CakeErrorController->request = new CakeRequest();
+        $this->CakeErrorController->request->addDetector('json', [
+            'callback' => function ($request) {
+                return true;
+            }
+        ]);
+        $this->CakeErrorController->Message = new CakeObject();
+        $this->CakeErrorController->Message->messages = [[
+            'header' => [
+                'action' => 'TestAction',
+                'controller' => 'TestController',
+                'message' => 'TestMessage',
+                'status' => 'error'
+            ]
+        ]];
+        $this->CakeErrorController->request->action = 'TestAction';
+        $this->CakeErrorController->request->controller = 'TestController';
+        $this->CakeErrorController->response = new CakeResponse();
+        $json = $this->CakeErrorController->render();
+        $result = json_decode($json);
+        $this->assertEquals($result->header->status, 'error');
+        $this->assertEquals($result->header->action, 'TestAction');
+        $this->assertEquals($result->header->controller, 'TestController');
+        $this->assertEquals($result->header->message, 'TestMessage');
+        unset($this->CakeErrorController);
     }
 
 	/**
@@ -91,7 +159,10 @@ class CakeErrorControllerTest extends ControllerTestCase {
      */
     public function testNotAuthorizedJSON() {
         $this->setExpectedException('HttpException', 'You need to login to access this location');
-        $result = $this->testAction('/users/view/xxx.json', array('return' => 'contents', 'method' => 'GET'), true);
+        $this->testAction('/users/view/xxx.json', array('return' => 'contents', 'method' => 'GET'), true);
     }
 
+    public function testErrorControllerRender() {
+
+    }
 }
