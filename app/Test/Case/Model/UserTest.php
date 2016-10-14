@@ -53,7 +53,9 @@ class UserTest extends CakeTestCase {
 			'?!#'           => false,
 			'test'          => false,
 			'test@test.com' => true,
-			'admin'         => false
+			'admin'         => false,
+			// With special character and +
+			'édith+01@passbolt.com' => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$user = array('User' => array('username' => $testcase));
