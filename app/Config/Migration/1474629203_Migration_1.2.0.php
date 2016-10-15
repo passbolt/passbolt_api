@@ -1,20 +1,20 @@
 <?php
 /**
- * v1.1.1 Migration script
+ * v1.2.0 Migration script
  * see. https://www.passbolt.com/release/notes#v1.1.1
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
-class Migration_1_1_1 extends CakeMigration {
+class Migration_1_2_0 extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'Migration_1_1_1';
+	public $description = 'Migration_1_2_0';
 
 /**
  * Actions to be performed
