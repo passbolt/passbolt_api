@@ -208,6 +208,10 @@ class Resource extends AppModel {
 					'allowEmpty' => true,
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /')
 				],
+				'maxLength' => [
+					'rule' => ['lengthBetween', 0, 10000],
+					'message' => __('Description maximum length is 10k characters')
+				]
 			],
 		];
 		return $default;

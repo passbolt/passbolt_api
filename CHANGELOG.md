@@ -2,7 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.2.0]
+### Added
+- PASSBOLT-1706 GITHUB-18 Resource Description length is too short, should be 10K characters
+- PASSBOLT-1658 GITHUB-18 Resource URI length is too short, should be 1024 characters
+- PASSBOLT-1637 GITHUB-17 The "+" is not allowed in email address fields or comment
+- PASSBOLT-1525 Test coverage for SetupControllerTest & CakeErrorController
+- PASSBOLT-1694 Default config change: debug should be set to 0
+- PASSBOLT-1660 Refactoring to simplify Chrome plugin development
+- PASSBOLT-1649 Adjusted coveralls markup
+- PASSBOLT-1648 Upgrade to Cakephp 2.9.1
+- PASSBOLT-1250 Contribution guidelines
+
+### Fixed
+- PASSBOLT-1700 Event names should stay backward compatible
+- PASSBOLT-1668 Remove GPGAuth debug count
+- PASSBOLT-1673 Restore avatars during quick install
 
 ## [1.1.0]
 ### Added

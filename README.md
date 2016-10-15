@@ -189,10 +189,8 @@ Install the needed modules defined in the grunt config
 
 Prepare the production release
 ```
-	grunt production
+	grunt
 ```
-
-CSS minified files should have been generated as the Javascript minified file.
 
 
 How do I check the code standards?

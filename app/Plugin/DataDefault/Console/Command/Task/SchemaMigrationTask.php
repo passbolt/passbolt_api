@@ -1,11 +1,10 @@
 <?php
 /**
- * Insert User Task
+ * SchemaMigrationTask
+ * Make sure a fresh install mark the migrations as done
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataDefault.Console.Command.Task.UserTask
- * @since        version 2.12.11
  */
 require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
 
@@ -36,7 +35,7 @@ class SchemaMigrationTask extends ModelTask {
 			'type' => 'app',
 		]];
 		$us[] = ['SchemaMigration' => [
-			'class' => 'Migration_1_1_1',
+			'class' => 'Migration_1_2_0',
 			'type' => 'app',
 		]];
 		return $us;
