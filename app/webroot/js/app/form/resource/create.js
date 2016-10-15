@@ -110,7 +110,7 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		}
 
 		// Notify the plugin that the resource is ready to be edited.
-		mad.bus.trigger('passbolt.plugin.resource.' + this.options.action);
+		mad.bus.trigger('passbolt.plugin.resource_edition');
 
 		// Force focus on first element.
 		setTimeout(function() {
