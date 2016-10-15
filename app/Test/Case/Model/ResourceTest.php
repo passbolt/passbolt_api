@@ -231,6 +231,8 @@ class ResourceTest extends AppTestCase {
 			'0123456789' => true,
 			// Html
 			'<strong>test</strong>' => false,
+			// Too long
+			'TOOLONG' . self::randString(100000, self::getMask('alphaASCII')) => false,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$resource = array('Resource' => array('description' => $testcase));
