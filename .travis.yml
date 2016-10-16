@@ -55,16 +55,32 @@ before_script:
       );
     }" > app/Config/database.php
   - cp app/Config/core.php.default app/Config/core.php
-  - cp app/Config/app.php.default app/Config/app.php
   - cp app/Config/email.php.default app/Config/email.php
   - sed -i "s/('debug',\s0)/('debug', 2)/" ./app/Config/core.php
   - sed -i "s/DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi/DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgbC9mi/" ./app/Config/core.php
   - sed -i "s/76859309657453542496749683645/76859309357453542496749683645/" ./app/Config/core.php
   - sed -i "s/\/\/Configure::write('App.fullBaseUrl',\s'http:\/\/example.com');/Configure::write('App.fullBaseUrl', 'http:\/\/127.0.0.1');/" ./app/Config/core.php
   - sed -i "s/\/\/date_default_timezone_set('UTC');/date_default_timezone_set('UTC');/" ./app/Config/core.php
-  - sed -i "s/\/home\/www-data\/.gnupg/\/home\/travis\/.gnupg/" ./app/Config/app.php
-  - sed -i "s/'force'\s=>\strue/'force' => false/" ./app/Config/app.php
-  - sed -i "s/'active'\s=>\sfalse,/'active' => true,/" ./app/Config/app.php
+  - echo "<?php
+    \$config = array(
+      'App' => array(
+        'ssl' => array(
+          'force' => false,
+        ),
+        'registration' => array(
+          'public' => true,
+        ),
+        'selenium' => array(
+          'active' => true,
+        ),
+      ),
+      'GPG' => array(
+        'env' => array(
+          'setenv' => true,
+          'home'   => '/home/travis/.gnupg',
+        ),
+      ),
+    );" > app/Config/app.php
 
 script:
   - mkdir -p build/logs
