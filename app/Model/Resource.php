@@ -230,14 +230,6 @@ class Resource extends AppModel {
 
 		switch ($case) {
 			case 'exists':
-				$conditions = [
-					'conditions' => [
-						'Resource.deleted' => 0,
-						'Resource.id' => $data['Resource.id']
-					]
-				];
-				break;
-
 			case 'add':
 			case 'edit':
 			case 'view':
@@ -248,7 +240,6 @@ class Resource extends AppModel {
 					]
 				];
 				break;
-
 			case 'index':
 			case 'viewByCategory':
 				$conditions = ['conditions' => ['Resource.deleted' => 0]];
@@ -424,27 +415,28 @@ class Resource extends AppModel {
  * @param array $secrets secret data
  * @throws Exception
  * @throws ValidationException
- * @return void
+ * @return true if success
  */
 	public function saveSecrets($resourceId, $secrets) {
 		// Validate the secrets provided.
 		// Make sure there is a secret per user with whom it's shared, nothing more, nothing less.
-
 		// Get list of current permissions for the given ACO.
 		$permsUsers = $this->getAuthorizedUsers($resourceId);
-		$permsUsers = Set::extract($permsUsers, '{n}.User.id');
+		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
 
 		// Get the list of users corresponding to the secrets, without duplicates.
-		$dataSecretUsers = array_unique(
-			Set::extract($secrets, '{n}.user_id')
-		);
+		$secretUsers = Hash::extract($secrets, '{n}.user_id');
+		if (empty($secretUsers)) {
+			throw new Exception(__('The list of secrets provided is invalid'));
+		}
 
-		// Check difference between the users expected and the users provided.
-		$missingUsers = array_diff($permsUsers, $dataSecretUsers);
 		// Check if the size of expected secrets is the same as provided one.
+		$dataSecretUsers = array_unique($secretUsers);
 		$sameSize = (count($permsUsers) === count($dataSecretUsers));
 
+		// Check difference between the users expected and the users provided.
 		// Check if the users expected are the same as the users provided.
+		$missingUsers = array_diff($permsUsers, $dataSecretUsers);
 		$sameUsers = empty($missingUsers);
 
 		// Check errors and return error message if any.
@@ -452,17 +444,17 @@ class Resource extends AppModel {
 			throw new Exception(__('The list of secrets provided is invalid'));
 		}
 
+		// End of base user list check. We proceed.
 		// Begin transaction.
 		$dataSource = $this->getDataSource();
 		$dataSource->begin();
 
-		// End of secrets check. We proceed.
-
 		// Delete all the previous secrets.
 		$this->Secret->deleteAll(['Secret.resource_id' => $resourceId], false);
 
+		// Get the list of fields allowed in update operation
+		// and validate all the given secrets.
 		$fields = $this->Secret->getFindFields('update', User::get('Role.name'));
-		// Validate the given secrets.
 		foreach ($secrets as $i => &$secret) {
 			// Force the resource id if empty.
 			if (empty($secret['resource_id'])) {
@@ -488,6 +480,7 @@ class Resource extends AppModel {
 
 		// Commit transaction.
 		$dataSource->commit();
+		return true;
 	}
 
 /**

@@ -103,6 +103,6 @@ class PermissionHelperComponent extends Component {
  */
 	public function findAcoUsers($acoModelName, $acoInstanceId) {
 		$AcoModel = Common::getModel($acoModelName);
-		return $AcoModel->getAuthorizedUsers($acoInstanceId);
+		return $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
 	}
 }
