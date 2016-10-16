@@ -151,7 +151,7 @@ class Secret extends AppModel {
  * @return bool
  */
 	public function checkGpgMessageIsValid($check) {
-		if ($check['data'] == null) {
+		if (empty($check['data']) || $check['data'] == null) {
 			return false;
 		} else {
 			$isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $check['data'], $values);

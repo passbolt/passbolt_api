@@ -22,6 +22,7 @@ class PermissionnableTest extends CakeTestCase {
 		'app.role',
 		'app.profile',
 		'app.gpgkey',
+		'app.secret',
 		'app.file_storage',
 		'app.group',
 		'app.groups_user',
@@ -40,6 +41,12 @@ class PermissionnableTest extends CakeTestCase {
 		$this->Group = ClassRegistry::init('Group');
 		$this->Category = ClassRegistry::init('Category');
 		$this->Resource = ClassRegistry::init('Resource');
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		// Make sure there is no session active after each test
+		$this->User->setInactive();
 	}
 
 	public function testGetResourcesPermission() {
@@ -102,9 +109,10 @@ class PermissionnableTest extends CakeTestCase {
 				$this->User->setActive($user);
 
 				foreach (PermissionType::getAll() as $permissionName => $permissionType) {
-					$isAuthorized = $this->Resource->isAuthorized($resourceId, $permissionType, $userId, 'User');
 					if ($permissionType == PermissionType::DENY) {
 						$isAuthorized = true;
+					} else {
+						$isAuthorized = $this->Resource->isAuthorized($resourceId, $permissionType, $userId, 'User');
 					}
 					$operationAllowed = $userPermission >= $permissionType;
 					$not = $operationAllowed ? '' : 'not ';
@@ -128,9 +136,10 @@ class PermissionnableTest extends CakeTestCase {
 				$this->User->setActive($user);
 
 				foreach (PermissionType::getAll() as $permissionName => $permissionType) {
-					$isAuthorized = $this->Category->isAuthorized($categoryId, $permissionType, $userId, 'User');
 					if ($permissionType == PermissionType::DENY) {
 						$isAuthorized = true;
+					} else {
+						$isAuthorized = $this->Category->isAuthorized($categoryId, $permissionType, $userId, 'User');
 					}
 					$operationAllowed = $userPermission >= $permissionType;
 					$not = $operationAllowed ? '' : 'not ';
@@ -184,4 +193,47 @@ class PermissionnableTest extends CakeTestCase {
 		}
 	}
 
+	public function testGetAuthorizedUser() {
+		// As Ada
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
+		// I access a resource named cpp1-pwd1 that is shared with
+		// Ada, Dame, Lynne = Owner
+		// Jean = read
+		$expected = [
+			Common::uuid('user.id.jean'),
+			Common::uuid('user.id.ada'),
+			Common::uuid('user.id.lynne'),
+			Common::uuid('user.id.dame'),
+		];
+		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		$resource = $this->Resource->find('first', $conditions);
+		$permsUsers = $this->Resource->getAuthorizedUsers($resource['Resource']['id']);
+		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
+		$this->assertEquals($expected, $permsUsers);
+	}
+
+	public function testGetUsersWithAPermissionSet() {
+		// As Ada
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
+		// I access a resource named cpp1-pwd1 that is shared with
+		// Ada, Dame, Lynne = OWNER
+		// Jean = READ
+		// Frances = DENY
+		$expected = [
+			Common::uuid('user.id.frances'),
+			Common::uuid('user.id.jean'),
+			Common::uuid('user.id.ada'),
+			Common::uuid('user.id.lynne'),
+			Common::uuid('user.id.dame'),
+		];
+		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		$resource = $this->Resource->find('first', $conditions);
+		$permsUsers = $this->Resource->getUsersWithAPermissionSet($resource['Resource']['id']);
+		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
+		$this->assertEquals($expected, $permsUsers);
+	}
 }

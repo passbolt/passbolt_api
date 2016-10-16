@@ -226,7 +226,44 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Get a list of users who have permissions to access the given instance.
+ * Get a list of users who have a permissions record for the given instance.
+ *
+ * @param Model &$model reference to the type of record.
+ * @param string|null $acoInstanceId uuid
+ * @return array|null
+ */
+	public function getUsersWithAPermissionSet(Model &$model, $acoInstanceId = null) {
+		// Get aco key name.
+		$acoKeyName = strtolower($model->alias) . '_id';
+
+		// If instance id is not provided as parameter, we get it from the model.
+		if (is_null($acoInstanceId)) {
+			$acoInstanceId = $this->id;
+		}
+
+		// Build corresponding model.
+		$model = Common::getModel("User{$model->alias}Permission");
+
+		// Retrieve the list of users.
+		$users = $model->find('all', [
+			'conditions' => [
+				$acoKeyName => $acoInstanceId,
+				'permission_type <>' => null
+			],
+			'contain' => [
+				'User' => [
+					'fields' => [
+						'User.id'
+					]
+				]
+			]
+		]);
+
+		return $users;
+	}
+
+/**
+ * Get a list of users who have a permissions record at least >= to READ
  *
  * @param Model &$model reference to the type of record.
  * @param string|null $acoInstanceId uuid
@@ -248,7 +285,7 @@ class PermissionableBehavior extends ModelBehavior {
 		$users = $model->find('all', [
 			'conditions' => [
 				$acoKeyName => $acoInstanceId,
-				'permission_type <>' => null
+				'permission_type >' => PermissionType::DENY
 			],
 			'contain' => [
 				'User' => [
