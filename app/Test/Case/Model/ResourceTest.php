@@ -8,6 +8,7 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Resource', 'Model');
+App::uses('Secret', 'Model');
 App::uses('AppTestCase', 'Test');
 
 class ResourceTest extends AppTestCase {
@@ -19,6 +20,7 @@ class ResourceTest extends AppTestCase {
 		'app.categoriesResource',
 		'app.user',
 		'app.role',
+		'app.secret',
 		'app.profile',
 		'app.gpgkey',
 		'app.file_storage',
@@ -36,6 +38,11 @@ class ResourceTest extends AppTestCase {
 		$this->User = ClassRegistry::init('User');
 	}
 
+	public function tearDown() {
+		parent::tearDown();
+		// Make sure there is no session active after each test
+		$this->User->setInactive();
+	}
 /**
  * Test Name Validation
  *
@@ -272,6 +279,28 @@ class ResourceTest extends AppTestCase {
 		$this->assertNotEquals($default, Resource::getFindConditions('view'), 'Find conditions missing for view');
 		$this->assertNotEquals($default, Resource::getFindConditions('index'), 'Find conditions missing for index');
 		$this->assertNotEquals($default, Resource::getFindConditions('viewByCategory'), 'Find conditions missing for viewByCategory');
+
+		// ViewByCategory default conditions
+		$conditions = ['conditions' => ['Resource.deleted' => 0]];
+		// filter cases checks
+		$cases = ['favorite', 'own', 'shared'];
+		foreach($cases as $case) {
+			$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['case' => $case]),
+				'Find conditions missing for viewByCategory case ' . $case);
+		}
+		// search by keyword
+		$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['keywords' => 'one or two']),
+				'Find conditions missing for viewByCategory by keywords');
+		// search by categoryid
+		$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['foreignModels' => ['Category.id' => Common::uuid()]]),
+				'Find conditions missing for viewByCategory by foreignModels.CategoryId');
+		// order cases checks
+		$cases = ['modified', 'expiry_date'];
+		foreach($cases as $case) {
+			$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['order' => $case]),
+					'Find conditions missing for viewByCategory case ' . $case);
+		}
+
 		$this->assertEquals($default, Resource::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
 	}
 
@@ -306,10 +335,86 @@ class ResourceTest extends AppTestCase {
 		$id = Common::uuid('resource.id.facebook-account');
 		$this->assertFalse($this->Resource->isSoftDeleted($id));
 
+		// test with empty id
+		$this->assertFalse($this->Resource->isSoftDeleted());
+
 		// Soft delete the resource
 		$this->Resource->softDelete($id);
 		// The resource should has been marked as soft deleted
 		$this->assertTrue($this->Resource->isSoftDeleted($id));
 	}
 
+	/*****************************
+	 * SAVE SECRETS
+	 *****************************/
+	/**
+	 * Test save a list of secrets corresponding to a resource.
+	 */
+	public function testSaveSecretsEmptySecrets() {
+		$this->setExpectedException('Exception', 'The list of secrets provided is invalid');
+		$this->Resource->saveSecrets(Common::uuid(), []);
+	}
+
+	/**
+	 * Test save a list of secrets with a missing user
+	 */
+	public function testSaveSecretsNotEnoughUsers() {
+		// As Ada
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
+		// I access a reource named cpp1-pwd1 that is shared with
+		// Ada, Dame, Lynne = Owner
+		// Jean = read
+		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		$resource = $this->Resource->find('first', $conditions);
+
+		// And I try to save the same secret but without a Lynn
+		// It should throw an exception
+		unset($resource['Secret'][3]);
+		$this->setExpectedException('Exception', 'The list of secrets provided is invalid');
+		$this->Resource->saveSecrets($resource['Resource']['id'], $resource['Secret']);
+	}
+
+	/**
+	 * Test save a list of secrets that cannot validate
+	 */
+	public function testSaveSecretsInvalidate() {
+		// As Ada
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
+		// I access a resource named cpp1-pwd1 that is shared with
+		// Ada, Dame, Lynne = Owner
+		// Jean = read
+		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		$resource = $this->Resource->find('first', $conditions);
+
+		// And I try to save the same secrets but with one missing some data
+		// It should throw an exception
+		unset($resource['Secret'][3]['resource_id']);
+		$resource['Secret'][3]['data'] = 'bugs gpg data';
+		$this->setExpectedException('ValidationException', 'Could not validate secret model');
+		$this->Resource->saveSecrets($resource['Resource']['id'], $resource['Secret']);
+	}
+
+	/**
+	 * Test save a list of secrets success
+	 */
+	public function testSaveSecretsSuccess() {
+		// As Ada
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
+		// I access a resource named cpp1-pwd1 that is shared with
+		// Ada, Dame, Lynne = Owner
+		// Jean = read
+		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		$resource = $this->Resource->find('first', $conditions);
+
+		// And I try to save the same secrets but with one missing some data
+		// It should save alright
+		$result = $this->Resource->saveSecrets($resource['Resource']['id'], $resource['Secret']);
+		$this->assertTrue($result, 'TestSaveSecret results should be true');
+	}
 }

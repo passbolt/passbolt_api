@@ -340,8 +340,8 @@ class ShareController extends AppController {
 		// Get new permissions after all changes.
 		$permsAfterChanges = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
 		// Extract user ids from array.
-		$usersCurrent = Set::extract($permsCurrent, '{n}.User.id');
-		$usersAfterChanges = Set::extract($permsAfterChanges, '{n}.User.id');
+		$usersCurrent = Hash::extract($permsCurrent, '{n}.User.id');
+		$usersAfterChanges = Hash::extract($permsAfterChanges, '{n}.User.id');
 		// Users who have been added will show with the diff between simulated and current.
 		$addedUsers = array_diff($usersAfterChanges, $usersCurrent);
 		// Users who have been removed will show with the diff between current and simulated.
