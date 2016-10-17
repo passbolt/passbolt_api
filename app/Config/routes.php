@@ -18,14 +18,14 @@
  */
 	Router::mapResources('dictionaries');
 	Router::mapResources('users');
-	Router::mapResources('groups');
 	Router::mapResources('categories');
 	Router::mapResources('favorites');
 	Router::mapResources('resources');
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
 	Router::mapResources('comments');
-	Router::mapResources('groupsUsers');
+//	Router::mapResources('groups');
+//	Router::mapResources('groupsUsers');
 
 /**
  * Redirections and aliases (aka persistant redirections)
@@ -73,15 +73,15 @@
 /**
  * Custom route for categories controller
  */
-	Router::connect('/categories/index', array('controller' => 'categories', 'action' => 'index'));
-	Router::connect('/categories/index/*', array('controller' => 'categories', 'action' => 'index'));
-	Router::connect('/categories/type/*', array('controller' => 'categories', 'action' => 'type'));
-	Router::connect('/categories/move/*', array('controller' => 'categories', 'action' => 'move'));
-	Router::connect('/categories/rename/*', array('controller' => 'categories', 'action' => 'rename'));
-	Router::connect('/categories/children/*', array('controller' => 'categories', 'action' => 'children'));
-	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'delete', '[method]' => 'DELETE'));
-	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'edit', '[method]' => 'PUT'));
-	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view', '[method]' => 'GET'));
+//	Router::connect('/categories/index', array('controller' => 'categories', 'action' => 'index'));
+//	Router::connect('/categories/index/*', array('controller' => 'categories', 'action' => 'index'));
+//	Router::connect('/categories/type/*', array('controller' => 'categories', 'action' => 'type'));
+//	Router::connect('/categories/move/*', array('controller' => 'categories', 'action' => 'move'));
+//	Router::connect('/categories/rename/*', array('controller' => 'categories', 'action' => 'rename'));
+//	Router::connect('/categories/children/*', array('controller' => 'categories', 'action' => 'children'));
+//	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'delete', '[method]' => 'DELETE'));
+//	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'edit', '[method]' => 'PUT'));
+//	Router::connect('/categories/*', array('controller' => 'categories', 'action' => 'view', '[method]' => 'GET'));
 
 /**
  * Custom route for resources controller
@@ -95,29 +95,29 @@
 /**
  * Custom route for groups controller
  */
-	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
-	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
-	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
-	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'));
-	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'view', '[method]' => 'GET'));
+//	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
+//	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
+//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
+//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'));
+//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'view', '[method]' => 'GET'));
 
 /**
  * Category Resources
  */
-	Router::connect('/categoriesResources', array('controller' => 'categories_resources', 'action' => 'view', '[method]' => 'GET'));
-	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'view', '[method]' => 'GET'));
-	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'edit', '[method]' => 'PUT'));
-	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'add', '[method]' => 'POST'));
-	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'delete', '[method]' => 'DELETE'));
+//	Router::connect('/categoriesResources', array('controller' => 'categories_resources', 'action' => 'view', '[method]' => 'GET'));
+//	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'view', '[method]' => 'GET'));
+//	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'edit', '[method]' => 'PUT'));
+//	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'add', '[method]' => 'POST'));
+//	Router::connect('/categoriesResources/*', array('controller' => 'categories_resources', 'action' => 'delete', '[method]' => 'DELETE'));
 
 /**
  * Group User
  */
-	Router::connect('/groupsUsers', array('controller' => 'groups_users', 'action' => 'view', '[method]' => 'GET'));
-	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'view', '[method]' => 'GET'));
-	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'edit', '[method]' => 'PUT'));
-	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'add', '[method]' => 'POST'));
-	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'delete', '[method]' => 'DELETE'));
+//	Router::connect('/groupsUsers', array('controller' => 'groups_users', 'action' => 'view', '[method]' => 'GET'));
+//	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'view', '[method]' => 'GET'));
+//	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'edit', '[method]' => 'PUT'));
+//	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'add', '[method]' => 'POST'));
+//	Router::connect('/groupsUsers/*', array('controller' => 'groups_users', 'action' => 'delete', '[method]' => 'DELETE'));
 
 /**
  * Custom route for gpgkeys controller
@@ -151,15 +151,14 @@
 	Router::connect('/setup/recover', array('controller' => 'setup', 'action' => 'recover', '[method]' => 'GET'));
 	Router::connect('/setup/completeRecovery', array('controller' => 'setup', 'action' => 'completeRecovery', '[method]' => 'PUT'));
 
-
 /**
  * Custom route for permissions controller
  */
 	Router::connect('/permissions/resource/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Resource', '[method]' => 'POST'), array('pass' => array('model', 'id')));
 	Router::connect('/permissions/simulate/:resource/:id', array('controller' => 'permissions', 'action' => 'simulateAcoPermissionsAfterChange', 'model' => 'Resource', '[method]' => 'POST'), array('pass' => array('resource', 'id')));
 	Router::connect('/permissions/resource/:id', array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Resource', '[method]' => 'GET'), array('pass' => array('model', 'id')));
-	Router::connect('/permissions/category/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Category', '[method]' => 'POST'), array('pass' => array('model', 'id')));
-	Router::connect('/permissions/category/:id', array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Category', '[method]' => 'GET'), array('pass' => array('model', 'id')));
+//	Router::connect('/permissions/category/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Category', '[method]' => 'POST'), array('pass' => array('model', 'id')));
+//	Router::connect('/permissions/category/:id', array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Category', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'edit', '[method]' => 'PUT'));
 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'delete', '[method]' => 'DELETE'));
 
