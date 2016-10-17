@@ -10,7 +10,7 @@
 	https://www.passbolt.com
 
 [![Build Status](https://travis-ci.org/passbolt/passbolt.svg?branch=master)](https://travis-ci.org/passbolt/passbolt)
-[![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt/badge.svg?branch=travis)](https://coveralls.io/github/passbolt/passbolt?branch=travis)
+[![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt?branch=master)
 [![Build Status](https://saucelabs.com/buildstatus/passbolt)](https://saucelabs.com/beta/builds/ed8ea3a046e94d2a8ab57c14cac77168)
 
 License
