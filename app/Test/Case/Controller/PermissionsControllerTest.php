@@ -112,25 +112,25 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test view aco permissions action with a not allowed user
 	// not allowed => Permission.type < PermissionType::READ (In other words 0)
-	public function testViewAcoPermissionsUserNotAllowed() {
-		$getOptions = array(
-			 'method' => 'get',
-			 'return' => 'contents'
-		);
-
-		// try to get permissions on a Resource with a not allowed user
-		$categoryId = Common::uuid('category.id.o-project1');
-
-		// If the user is not allowed to access a category, this category is simply hidden to him
-		$this->setExpectedException('HttpException', "The Category does not exist");
-
-		// log the user who is not allowed to access the category
-		$user = $this->User->findById(Common::uuid('user.id.edith'));
-		$this->User->setActive($user);
-
-		$srvResult = json_decode($this->testAction("/permissions/category/$categoryId.json", $getOptions), true);
-		$this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/category/$categoryId.json : The test should return an error but is returning {$srvResult['header']['status']}");
-	}
+	//	public function testViewAcoPermissionsUserNotAllowed() {
+	//		$getOptions = array(
+	//			 'method' => 'get',
+	//			 'return' => 'contents'
+	//		);
+	//
+	//		// try to get permissions on a Resource with a not allowed user
+	//		$categoryId = Common::uuid('category.id.o-project1');
+	//
+	//		// If the user is not allowed to access a category, this category is simply hidden to him
+	//		$this->setExpectedException('HttpException', "The Category does not exist");
+	//
+	//		// log the user who is not allowed to access the category
+	//		$user = $this->User->findById(Common::uuid('user.id.edith'));
+	//		$this->User->setActive($user);
+	//
+	//		$srvResult = json_decode($this->testAction("/permissions/category/$categoryId.json", $getOptions), true);
+	//		$this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/category/$categoryId.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	//	}
 
 	// test view aco permissions on Resource Aco
 	public function testViewAcoPermissionsOnResource() {
@@ -188,36 +188,36 @@ class PermissionsControllerTest extends ControllerTestCase {
 		}
 	}
 
-	public function testViewAcoPermissionsOnCategory() {
-		$getOptions = array(
-			 'method' => 'get',
-			 'return' => 'contents'
-		);
-
-		// Just group permissions should be returned
-		// Check permission on the resource op1-pwd1
-		$expectedPermissions = array(
-			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')),
-			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')),
-			Common::uuid('permission.id.' . Common::uuid('category.id.cp-project1') . '-' . Common::uuid('user.id.ada')),
-			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('group.id.management')),
-			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('group.id.developers_team_leads')),
-			Common::uuid('permission.id.' . Common::uuid('category.id.cakephp') . '-' . Common::uuid('group.id.developers_cakephp')),
-		);
-
-		$expectedCount = count($expectedPermissions);
-		$catName = 'cp-project1';
-		$catId = Common::uuid('category.id.' . $catName);
-
-		$srvResult = json_decode($this->testAction("/permissions/category/$catId.json", $getOptions), true);
-
-		// How many results we expect
-		$this->assertNotEmpty($srvResult['body'], $expectedCount, 'We expect permissions for the category ' . $catName);
-		// All expected permissions are in the server answer
-		foreach($srvResult['body'] as $perm) {
-			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the category {$catName}");
-		}
-	}
+	//	public function testViewAcoPermissionsOnCategory() {
+	//		$getOptions = array(
+	//			 'method' => 'get',
+	//			 'return' => 'contents'
+	//		);
+	//
+	//		// Just group permissions should be returned
+	//		// Check permission on the resource op1-pwd1
+	//		$expectedPermissions = array(
+	//			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('user.id.frances')),
+	//			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('user.id.lynne')),
+	//			Common::uuid('permission.id.' . Common::uuid('category.id.cp-project1') . '-' . Common::uuid('user.id.ada')),
+	//			Common::uuid('permission.id.' . Common::uuid('category.id.bolt') . '-' . Common::uuid('group.id.management')),
+	//			Common::uuid('permission.id.' . Common::uuid('category.id.projects') . '-' . Common::uuid('group.id.developers_team_leads')),
+	//			Common::uuid('permission.id.' . Common::uuid('category.id.cakephp') . '-' . Common::uuid('group.id.developers_cakephp')),
+	//		);
+	//
+	//		$expectedCount = count($expectedPermissions);
+	//		$catName = 'cp-project1';
+	//		$catId = Common::uuid('category.id.' . $catName);
+	//
+	//		$srvResult = json_decode($this->testAction("/permissions/category/$catId.json", $getOptions), true);
+	//
+	//		// How many results we expect
+	//		$this->assertNotEmpty($srvResult['body'], $expectedCount, 'We expect permissions for the category ' . $catName);
+	//		// All expected permissions are in the server answer
+	//		foreach($srvResult['body'] as $perm) {
+	//			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the category {$catName}");
+	//		}
+	//	}
 
 	public function testAddAcoPermissionsNotExistingModel() {
 		$model = 'notExistingModel';
@@ -258,33 +258,33 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test view aco permissions action with a not allowed user
 	// not allowed => Permission.type < PermissionType::READ (In other words 0)
-	public function testAddAcoPermissionsUserNotAllowed() {
-		// try to get permissions on a Resource with a not allowed user
-		$catId = Common::uuid('category.id.o-project1');
-
-		// If the user is not allowed to access a category, this category is simply hidden to him
-		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Category");
-
-		// log the user who is not allowed to access the category
-		$user = $this->User->findById(Common::uuid('user.id.edith'));
-		$this->User->setActive($user);
-
-		$data = array(
-			'Permission' => array(
-				'type' => PermissionType::READ
-			),
-			'User' => array(
-				'id' => User::get('id')
-			)
-		);
-		$postOptions = array(
-			 'method' => 'post',
-			 'return' => 'contents',
-			 'data' => $data
-		);
-
-		$srvResult = json_decode($this->testAction("/permissions/category/$catId.json", $postOptions), true);
-	}
+	//	public function testAddAcoPermissionsUserNotAllowed() {
+	//		// try to get permissions on a Resource with a not allowed user
+	//		$catId = Common::uuid('category.id.o-project1');
+	//
+	//		// If the user is not allowed to access a category, this category is simply hidden to him
+	//		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Category");
+	//
+	//		// log the user who is not allowed to access the category
+	//		$user = $this->User->findById(Common::uuid('user.id.edith'));
+	//		$this->User->setActive($user);
+	//
+	//		$data = array(
+	//			'Permission' => array(
+	//				'type' => PermissionType::READ
+	//			),
+	//			'User' => array(
+	//				'id' => User::get('id')
+	//			)
+	//		);
+	//		$postOptions = array(
+	//			 'method' => 'post',
+	//			 'return' => 'contents',
+	//			 'data' => $data
+	//		);
+	//
+	//		$srvResult = json_decode($this->testAction("/permissions/category/$catId.json", $postOptions), true);
+	//	}
 
 	public function testAddAcoPermissionsOnResource() {
 		// log with a user who has right on the unit test sandbox category
@@ -537,43 +537,43 @@ class PermissionsControllerTest extends ControllerTestCase {
 		);
 		$srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
 	}
-//
-//	 // test delete aco permissions action user not allowed
-//	 public function testDeleteUserNotAllowed() {
-//		 // try to get permissions on a Resource with a not allowed user
-//		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
-//
-//		 // log the user who is not allowed to access the category
-//		 $user = $this->User->findById(Common::uuid('user.id.edith'));
-//		 $this->User->setActive($user);
-//
-//		 $postOptions = array(
-//			 'method' => 'delete',
-//			 'return' => 'contents'
-//		 );
-//		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
-//		 // message should be : The user is not allowed to delete the permission
-//		 $this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
-//	 }
-//
-//	 // test delete
-//	 public function testDelete() {
-//		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
-//		 $postOptions = array(
-//			 'method' => 'delete',
-//			 'return' => 'contents'
-//		 );
-//
-//		 // switch the permission of human resource on the category administration to deny
-//		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
-//		 $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
-//
-//		 // log the user with a user who belongs to the human resource group
-//		 $user = $this->User->findById(Common::uuid('user.id.irene'));
-//		 $this->User->setActive($user);
-//
-//		 // try to access to the category administration
-//		 $category = $this->Category->findByName('administration');
-//		 $this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
-//	 }
+
+	//	 // test delete aco permissions action user not allowed
+	//	 public function testDeleteUserNotAllowed() {
+	//		 // try to get permissions on a Resource with a not allowed user
+	//		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+	//
+	//		 // log the user who is not allowed to access the category
+	//		 $user = $this->User->findById(Common::uuid('user.id.edith'));
+	//		 $this->User->setActive($user);
+	//
+	//		 $postOptions = array(
+	//			 'method' => 'delete',
+	//			 'return' => 'contents'
+	//		 );
+	//		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+	//		 // message should be : The user is not allowed to delete the permission
+	//		 $this->assertEquals(Status::ERROR, $srvResult['header']['status'], "/permissions/$id.json : The test should return an error but is returning {$srvResult['header']['status']}");
+	//	 }
+	//
+	//	 // test delete
+	//	 public function testDelete() {
+	//		 $id = '50e6b4af-5fa4-493d-bad0-23a4d7a10fce'; // has to exist -> permission relative to human resource on the category administration
+	//		 $postOptions = array(
+	//			 'method' => 'delete',
+	//			 'return' => 'contents'
+	//		 );
+	//
+	//		 // switch the permission of human resource on the category administration to deny
+	//		 $srvResult = json_decode($this->testAction("/permissions/$id.json", $postOptions), true);
+	//		 $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$id.json : The test should return a success but is returning {$srvResult['header']['status']}");
+	//
+	//		 // log the user with a user who belongs to the human resource group
+	//		 $user = $this->User->findById(Common::uuid('user.id.irene'));
+	//		 $this->User->setActive($user);
+	//
+	//		 // try to access to the category administration
+	//		 $category = $this->Category->findByName('administration');
+	//		 $this->assertEmpty($category, "The user " . User::get('name') . " should not be able to see the category administration");
+	//	 }
 }
