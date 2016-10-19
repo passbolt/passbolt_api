@@ -256,8 +256,8 @@ var Validation = mad.Validation = can.Construct.extend('mad.Validation', /** @st
      */
     email: function (value) {
         // Regular expression for hostname.
-        var hostnameRegexp = "(?:[_\\p{L}0-9][-_\\p{L}0-9]*\.)*(?:[\\p{L}0-9][-\\p{L}0-9]{0,62})\.(?:(?:[a-z]{2}\.)?[a-z]{2,})";
-        var emailRegexp = "^[\\p{L}0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[\p{L}0-9!#$%&'*+\/=?^_`{|}~-]+)*@" + hostnameRegexp;
+        var hostnameRegexp = "(?:[_\\p{L}0-9][-_\\p{L}0-9]*\\.)*(?:[\\p{L}0-9][-\\p{L}0-9]{0,62})\\.(?:(?:[a-z]{2}\\.)?[a-z]{2,})";
+        var emailRegexp = "^[\\p{L}0-9!#$%&'*+\/=?^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%&'*+\/=?^_`{|}~-]+)*@" + hostnameRegexp + '$';
         var xregexp = XRegExp(emailRegexp);
         if (!xregexp.test(value)) {
             return __('Only email format is allowed');

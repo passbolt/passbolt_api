@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.2.1]
+### Fixed
+- PASSBOLT-1719 GITHUB-17 The "." is not allowed in email address field
+- PASSBOLT-1525 Remove unused controllers and components
+- PASSBOLT-1718 Tidy up readme and contribution guidelines
+
 ## [1.2.0]
 ### Added
 - PASSBOLT-1706 GITHUB-18 Resource Description length is too short, should be 10K characters
