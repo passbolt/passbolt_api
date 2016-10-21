@@ -119,13 +119,24 @@ $this->assign('page_classes', 'status');
 <?php
 	if ($checks['ssl']):
 		echo '<div class="message success">';
-		echo __('SSL is enabled.');
+		echo __('SSL access is enabled.');
 		echo '</div>';
 	else:
 		echo '<div class="message error">';
-		echo __('SSL is not enabled.');
+		echo __('SSL access is not enabled.');
 		echo '</div>';
 	endif;
+?>
+<?php
+if ($checks['sslForce']):
+	echo '<div class="message success">';
+	echo __('Passbolt is configured to force SSL use.');
+	echo '</div>';
+else:
+	echo '<div class="message error">';
+	echo __('Passbot is not configured to force SSL use. <em>(App.ssl.force in app.php configuration file)</em>.');
+	echo '</div>';
+endif;
 ?>
 <?php
 	if ($checks['gpg']):
