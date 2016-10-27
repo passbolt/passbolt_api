@@ -178,6 +178,12 @@ class SetupController extends AppController {
 
 		// Store request data in data.
 		$data = $this->request->data;
+		if(!isset($data) || empty($data)) {
+			// if data is not accessible via form data, check for json input
+			$data = $this->request->input('json_decode');
+			// convert object to associative array to match formdata format
+			$data = json_decode(json_encode($data), true);
+		}
 
 		if (!isset($data['AuthenticationToken'])) {
 			return $this->Message->error(__('No data were provided'));
