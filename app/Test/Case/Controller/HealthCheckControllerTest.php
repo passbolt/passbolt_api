@@ -33,6 +33,7 @@ class HealthCheckControllerTest extends ControllerTestCase {
 		$this->assertTrue(is_bool($this->vars['checks']['debug']), 'debug check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['validation']), 'validation check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['ssl']), 'ssl check should not be empty');
+		$this->assertTrue(is_bool($this->vars['checks']['sslForce']), 'sslForce check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['gpg']), 'gpg check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['gpgKeyDefault']), 'gpgKeyDefault check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['selenium']), 'selenium check should not be empty');

@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.2.1]
 ### Fixed
-- PASSBOLT-1719 GITHUB-17 The "." is not allowed in email address field
+- PASSBOLT-1719 GITHUB-14 The "." is not allowed in email address field
 - PASSBOLT-1525 Remove unused controllers and components
 - PASSBOLT-1718 Tidy up readme and contribution guidelines
 
@@ -12,7 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - PASSBOLT-1706 GITHUB-18 Resource Description length is too short, should be 10K characters
 - PASSBOLT-1658 GITHUB-18 Resource URI length is too short, should be 1024 characters
-- PASSBOLT-1637 GITHUB-17 The "+" is not allowed in email address fields or comment
+- PASSBOLT-1637 GITHUB-14 The "+" is not allowed in the email address field while adding a new user
 - PASSBOLT-1525 Test coverage for SetupControllerTest & CakeErrorController
 - PASSBOLT-1694 Default config change: debug should be set to 0
 - PASSBOLT-1660 Refactoring to simplify Chrome plugin development
