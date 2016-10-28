@@ -16,8 +16,9 @@
 	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
 
 	// Only Firefox is supported right now.
-	if ($userAgent['Browser']['name'] == 'Firefox') {
-		$pluginCheckTemplate = 'public/Auth/default';
+	$browser = strtolower($userAgent['Browser']['name']);
+	if ($browser == 'firefox' || $browser == 'chrome') {
+		$pluginCheckTemplate = 'public/Auth/' . $browser;
 	} else {
 		$pluginCheckTemplate = 'public/Auth/browser_unsupported';
 	}
