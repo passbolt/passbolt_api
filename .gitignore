@@ -3,6 +3,7 @@
 /app/Config/core.php
 /app/Config/database.php
 /app/Config/app.php
+/app/Config/anonymous_statistics.php
 /app/Config/email.php
 
 # User specific #

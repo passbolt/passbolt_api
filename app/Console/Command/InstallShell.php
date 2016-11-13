@@ -6,6 +6,7 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppShell', 'Console/Command');
+App::uses('InstanceStatistic', 'Model');
 
 // Uses Gpg Utility.
 if (!class_exists('\Passbolt\Gpg')) {
@@ -45,6 +46,15 @@ class InstallShell extends AppShell {
 				'help' => 'Delete existing public avatars',
 				'default' => 'true',
 				'short' => 'a',
+			])
+			->addOption('send-anonymous-statistics', [
+				'help' => 'Whether or not anonymous statistics should be sent to passbolt servers.
+				Check our privacy policy for more information: http://linktosection).',
+				'default' => '',
+				'choices' => [
+					'true',
+					'false',
+				],
 			])
 			->addOption('no-admin', [
 				'help' => 'Don\'t register an admin account during the installation',
@@ -117,10 +127,20 @@ class InstallShell extends AppShell {
 		$data = $this->param('data');
 		$this->data($data);
 
+		// Configure anonymous statistics.
+		$this->_configureAnonymousStatistics();
+
 		// register the admin user
 		$registerAdmin = $this->param('no-admin');
 		if (!$registerAdmin) {
 			$this->_registerAdmin($this->param('admin-username'), $this->param('admin-first-name'), $this->param('admin-last-name'));
+		}
+
+		// Check whether anonymous statistics should be sent.
+		InstanceStatistic::reloadConfigFile();
+		if (Configure::read('AnonymousStatistics.send') === true) {
+			$InstanceStatistic = Common::getModel('InstanceStatistic');
+			$InstanceStatistic->send(InstanceStatistic::CONTEXT_INSTALL);
 		}
 
 		if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
@@ -136,6 +156,38 @@ class InstallShell extends AppShell {
 		$this->out(' Passbolt installation success! Enjoy! ☮');
 		$this->out('');
 		return true;
+	}
+
+
+	/**
+	 * Configure anonymous statistics.
+	 */
+	protected function _configureAnonymousStatistics() {
+		InstanceStatistic::reloadConfigFile();
+		$param = $this->param('send-anonymous-statistics');
+		$instanceId = Configure::read('AnonymousStatistics.instanceId');
+		$isConfigured = !empty($instanceId) && Common::isUuid($instanceId);
+
+		// User choice.
+		$choice = false;
+
+		if (!$isConfigured) {
+			$instanceId = Common::uuid();
+		}
+
+		// If param was provided, we store param value as user choice.
+		if ($param != '') {
+			$choice = $param == 'true' ? true : false;
+		}
+		// if param was not provided, ask the user.
+		else {
+			$input = $this->in(__d('cake_console', 'Do you want to help make passbolt better by sending anonymous usage statistics ?'), array('y', 'n'), 'y');
+			$choice = $input == 'y' ? true : false;
+		}
+
+		// Write config file.
+		$InstanceStatistic = Common::getModel('InstanceStatistic');
+		$InstanceStatistic->writeConfigFile($instanceId, $choice);
 	}
 
 /**
@@ -325,13 +377,15 @@ class InstallShell extends AppShell {
 			return false;
 		}
 
-		exec("cp -fr -T {$path} {$cachePath} ", $output, $status);
-		if ($status == 1) {
-			$this->out(' Ooops, something went wrong when trying to set the avatars cache!');
-			return false;
-		} else {
-			$this->out(' Avatar cache set!');
-			return true;
+		if (file_exists($path)) {
+			exec("cp -fr -T {$path} {$cachePath} ", $output, $status);
+			if ($status == 1) {
+				$this->out(' Ooops, something went wrong when trying to set the avatars cache!');
+				return false;
+			} else {
+				$this->out(' Avatar cache set!');
+				return true;
+			}
 		}
 	}
 
