@@ -48,7 +48,7 @@ class InstallShell extends AppShell {
 				'short' => 'a',
 			])
 			->addOption('send-anonymous-statistics', [
-				'help' => 'Whether or not anonymous statistics should be sent to passbolt servers.
+				'help' => 'Whether or not anonymous usage statistics should be sent to passbolt servers.
 				Check our privacy policy for more information: http://linktosection).',
 				'default' => '',
 				'choices' => [
