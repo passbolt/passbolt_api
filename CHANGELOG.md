@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0]
+### Fixed
+- PASSBOLT-1721 SSL detection not working in healthcheck
+- PASSBOLT-1708 Refactor Request get and post to use fetch
+
+### Added
+- PASSBOLT-1725 Chrome support
+
 ## [1.2.1]
 ### Fixed
 - PASSBOLT-1719 GITHUB-14 The "." is not allowed in email address field
