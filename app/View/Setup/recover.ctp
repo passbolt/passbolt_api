@@ -10,9 +10,10 @@ $this->assign('page_classes', 'setup recover');
 $this->Html->css('setup.min', null, array('block' => 'css'));
 $this->Html->script('pages/install.js', array('inline' => false, 'block'=>'scriptBottom'));
 
-// Only Firefox is supported right now.
-if ($userAgent['Browser']['name'] == 'Firefox') {
-	$pluginCheckTemplate = 'public/Setup/firefox_no_addon';
+// Only Firefox and Chrome are supported right now.
+$browser = strtolower($userAgent['Browser']['name']);
+if ($browser == 'firefox' || $browser == 'chrome') {
+	$pluginCheckTemplate = 'public/Setup/' . $browser;
 } else {
 	$pluginCheckTemplate = 'public/Setup/browser_unsupported';
 }

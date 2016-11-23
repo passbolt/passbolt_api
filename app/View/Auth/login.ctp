@@ -16,10 +16,14 @@
 	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
 
 	// Only Firefox is supported right now.
-	if ($userAgent['Browser']['name'] == 'Firefox') {
-		$pluginCheckTemplate = 'public/Auth/default';
-	} else {
-		$pluginCheckTemplate = 'public/Auth/browser_unsupported';
+	$browser = strtolower($userAgent['Browser']['name']);
+	$pluginCheckTemplate = 'public/Auth/browser_unsupported';
+	$pluginBoxTemplate = 'public/box-firefox-extension';
+	if ($browser == 'firefox' || $browser == 'chrome') {
+		$pluginCheckTemplate = 'public/Auth/' . $browser;
+		if ($browser == 'firefox') {
+			$pluginBoxTemplate = 'public/box-chrome-extension';
+		}
 	}
 ?>
 <div class="grid">
@@ -30,9 +34,7 @@
 		<div class="col3 push1 github-block">
 			<?php echo $this->element('public/box-open-source'); ?>
 		</div>
-		<div class="col3 chrome-plugin-block">
-			<?php echo $this->element('public/box-chrome-extension'); ?>
-		</div>
+		<?php echo $this->element($pluginBoxTemplate); ?>
 		<div class="col4 donate-block push1 last">
 			<?php //echo $this->element('public/box-donate'); ?>
 		</div>

@@ -63,7 +63,7 @@ class Migration extends CakeObject {
 	public static function getLatestTagName() {
 		$remoteTagName = Configure::read('App.version.remote');
 		if(is_null($remoteTagName)) {
-			$url = 'https://api.github.com/repos/passbolt/passbolt/tags';
+			$url = 'https://api.github.com/repos/passbolt/passbolt_api/tags';
 			$HttpSocket = new HttpSocket();
 			$results = $HttpSocket->get($url);
 			$tags = (json_decode($results->body));

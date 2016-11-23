@@ -8,7 +8,7 @@
 						<img src="<%= user.Profile.avatarPath('medium') %>" alt="profile picture" />
 					</div>
 					<div class="edit">
-						<a class="edit-avatar-action" href="#" title="<%= __('Change Avatar') %>">
+						<a class="edit-avatar-action" title="<%= __('Change Avatar') %>">
 							<i class="fa fa-camera"></i>
 							<span class="help-text">Click here to upload a new picture.</span>
 						</a>
@@ -42,7 +42,7 @@
 						<td class="label"><%= __('Public key') %></td>
 						<td class="value">
 							<%= user.Gpgkey.key_id %>
-							<p><em>Note: Sorry, it is not possible to change your key at the moment. <!--<a href="#">learn more ›</a>--></em></p>
+							<p><em>Note: Sorry, it is not possible to change your key at the moment. <!--<a>learn more ›</a>--></em></p>
 						</td>
 					</tr>
 					<!--<tr>-->
