@@ -101,7 +101,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			name: 'favorite',
 			index: 'favorite',
 			css: ['selections s-cell'],
-			label: '<a href="#"> \
+			label: '<a> \
 						<i class="icon fav"></i> \
 						<span class="visuallyhidden">fav</span> \
 					</a>',
@@ -145,7 +145,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 					cellElement,
 					'inside_replace',
 					'<div class="secret-copy">' +
-						'<a id="grid_secret_copy_' + item.id + '" href="#copy_secret">' +
+						'<a id="grid_secret_copy_' + item.id + '">' +
 							'<span>copy password to clipboard</span>' +
 						'</a>' +
 						'<pre>' + secret + '</pre>' +

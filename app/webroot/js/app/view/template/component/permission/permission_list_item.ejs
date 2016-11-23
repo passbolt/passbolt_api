@@ -21,7 +21,7 @@ for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
 
     <div class="group">
         <span class="name"><%= mappedItem.acoLabel %></span>
-        <span class="details"><a href="#"><%= mappedItem.acoDetails %></a></span>
+        <span class="details"><a><%= mappedItem.acoDetails %></a></span>
     </div>
 
     <div class="select rights">
@@ -36,7 +36,7 @@ for (var permType in passbolt.model.PermissionType.PERMISSION_TYPES) {
         // If the permission is direct.
         // The user can delete it directly
         if (mappedItem.isDirect) { %>
-        <a href="#" class="js_perm_delete close" title="<%= __('remove') %>">
+        <a class="js_perm_delete close" title="<%= __('remove') %>">
             <i class="fa fa-times-circle"></i>
             <span class="visuallyhidden"><%= __('remove') %></span>
         </a>
