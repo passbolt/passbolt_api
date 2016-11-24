@@ -1,20 +1,20 @@
 <?php
 /**
- * v1.2.2 Migration script
- * see. https://www.passbolt.com/release/notes#v1.2.2
+ * v1.3.0 Migration script
+ * see. https://www.passbolt.com/release/notes#v1.3.0
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
-class Migration_1_2_2 extends CakeMigration {
+class Migration_1_3_0 extends CakeMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'Migration_1_2_2';
+	public $description = 'Migration_1_3_0';
 
 /**
  * Actions to be performed
@@ -55,17 +55,20 @@ class Migration_1_2_2 extends CakeMigration {
 			$CakeShell = new AppShell();
 
 			// Ask user.
-			$input = $CakeShell->in(__d('cake_console', 'Do you want to help make passbolt better by sending anonymous usage statistics ?'), array('y', 'n'), 'y');
+			$input = $CakeShell->in(__d(
+				'cake_console',
+				__("We need you to help make passbolt better by sending anonymous usage statistics. Ok?\n(see: %s)", Configure::read('AnonymousStatistics.help'))),
+				array('y', 'n'), 'n');
 			$choice = $input == 'y' ? true : false;
 
 			// Write file.
 			$instanceId = Common::uuid();
-			$InstanceStatistic = Common::getModel('InstanceStatistic');
-			$InstanceStatistic->writeConfigFile($instanceId, $choice);
+			$AnonymousStatistic = Common::getModel('AnonymousStatistic');
+			$AnonymousStatistic->writeConfigFile($instanceId, $choice);
 
 			// If anonymous usage statistics are activated, send them
 			if ($choice == true) {
-				$InstanceStatistic->send(InstanceStatistic::CONTEXT_INSTALL);
+				$AnonymousStatistic->send(AnonymousStatistic::CONTEXT_INSTALL);
 			}
 		}
 		return true;

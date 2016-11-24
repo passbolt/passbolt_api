@@ -11,7 +11,7 @@ App::uses('User', 'Model');
 App::uses('ControllerLog', 'Model');
 App::uses('HttpSocket', 'Network/Http');
 
-class InstanceStatistic extends AppModel {
+class AnonymousStatistic extends AppModel {
 
 	public $useTable = false;
 
@@ -81,7 +81,7 @@ class InstanceStatistic extends AppModel {
  *
  * Anonymous statistics sent are used to make passbolt better, and are only
  * related to your usage of passbolt.
- * Know more in our privacy policy: http://linktosection
+ * Know more in our privacy policy: https://www.passbolt.com/privacy#statistics
  *
  * @copyright (c) 2015-present passbolt SARL.
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
@@ -105,13 +105,13 @@ class InstanceStatistic extends AppModel {
  *  data to be sent. if not provided, will be retrieved automatically.
  * @return bool $response
  */
-	public function send($context = self::CONTEXT_INSTALL, $data = []) {
-		if (empty($data)) {
-			$data = $this->findInstanceStatistics();
-		}
+	public function send($context = self::CONTEXT_INSTALL) {
+
+		// Get statistics data.
+		$data = $this->findInstanceStatistics();
 
 		$postData = array(
-			'InstanceStatistic' => [
+			'InstallStatistic' => [
 				'instance_id' => Configure::read('AnonymousStatistics.instanceId'),
 				'context' => $context,
 				'passwords_count' => $data['passwords_count'],
@@ -123,7 +123,12 @@ class InstanceStatistic extends AppModel {
 
 		$HttpSocket = new HttpSocket();
 		$entryPoint = Configure::read('AnonymousStatistics.url');
-		$response = $HttpSocket->post($entryPoint, $postData);
+		try {
+			$response = $HttpSocket->post($entryPoint, $postData);
+		}
+		catch(Exception $e) {
+			$this->log("Could not send anonymous statistics. Can't reach server $entryPoint");
+		}
 
 		return $response;
 	}

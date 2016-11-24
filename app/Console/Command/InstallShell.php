@@ -6,7 +6,7 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppShell', 'Console/Command');
-App::uses('InstanceStatistic', 'Model');
+App::uses('AnonymousStatistic', 'Model');
 
 // Uses Gpg Utility.
 if (!class_exists('\Passbolt\Gpg')) {
@@ -49,7 +49,7 @@ class InstallShell extends AppShell {
 			])
 			->addOption('send-anonymous-statistics', [
 				'help' => 'Whether or not anonymous usage statistics should be sent to passbolt servers.
-				Check our privacy policy for more information: http://linktosection).',
+				(Check our privacy policy for more information: https://www.passbolt.com/privacy#statistics).',
 				'default' => '',
 				'choices' => [
 					'true',
@@ -137,10 +137,10 @@ class InstallShell extends AppShell {
 		}
 
 		// Check whether anonymous statistics should be sent.
-		InstanceStatistic::reloadConfigFile();
+		AnonymousStatistic::reloadConfigFile();
 		if (Configure::read('AnonymousStatistics.send') === true) {
-			$InstanceStatistic = Common::getModel('InstanceStatistic');
-			$InstanceStatistic->send(InstanceStatistic::CONTEXT_INSTALL);
+			$AnonymousStatistic = Common::getModel('AnonymousStatistic');
+			$AnonymousStatistic->send(AnonymousStatistic::CONTEXT_INSTALL);
 		}
 
 		if (!isset($this->params['cache']) || $this->params['cache'] == 'true') {
@@ -163,7 +163,7 @@ class InstallShell extends AppShell {
 	 * Configure anonymous statistics.
 	 */
 	protected function _configureAnonymousStatistics() {
-		InstanceStatistic::reloadConfigFile();
+		AnonymousStatistic::reloadConfigFile();
 		$param = $this->param('send-anonymous-statistics');
 		$instanceId = Configure::read('AnonymousStatistics.instanceId');
 		$isConfigured = !empty($instanceId) && Common::isUuid($instanceId);
@@ -176,18 +176,21 @@ class InstallShell extends AppShell {
 		}
 
 		// If param was provided, we store param value as user choice.
-		if ($param != '') {
+		if (!empty($param)) {
 			$choice = $param == 'true' ? true : false;
 		}
 		// if param was not provided, ask the user.
 		else {
-			$input = $this->in(__d('cake_console', 'Do you want to help make passbolt better by sending anonymous usage statistics ?'), array('y', 'n'), 'y');
+			$input = $this->in(__d(
+				'cake_console',
+				__("We need you to help make passbolt better by sending anonymous usage statistics. Ok?\n(see: %s)", Configure::read('AnonymousStatistics.help'))
+			), array('y', 'n'), 'n');
 			$choice = $input == 'y' ? true : false;
 		}
 
 		// Write config file.
-		$InstanceStatistic = Common::getModel('InstanceStatistic');
-		$InstanceStatistic->writeConfigFile($instanceId, $choice);
+		$AnonymousStatistic = Common::getModel('AnonymousStatistic');
+		$AnonymousStatistic->writeConfigFile($instanceId, $choice);
 	}
 
 /**

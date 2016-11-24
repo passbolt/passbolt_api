@@ -39,7 +39,7 @@ class SchemaMigrationTask extends ModelTask {
 			'type' => 'app',
 		]];
 		$us[] = ['SchemaMigration' => [
-			'class' => 'Migration_1_2_2',
+			'class' => 'Migration_1_3_0',
 			'type' => 'app',
 		]];
 		return $us;

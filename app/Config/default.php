@@ -154,7 +154,9 @@ $config = [
 	// Anonymous statistics configuration.
 	'AnonymousStatistics' => [
 		// Url where data will be sent.
-		'url' => 'https://www.passbolt.com/instance_statistic.json',
+		'url' => 'https://www.passbolt.com/statistics/install.json',
+		// Help url.
+		'help' => 'https://www.passbolt.com/privacy#statistics',
 		// Whether to send the anonymous statistics or not.
 		'send' => false,
 		// Instance ID. (will be populated at installation).
