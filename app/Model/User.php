@@ -607,7 +607,11 @@ class User extends AppModel {
 						if (isset($data['keywords'])) {
 							$keywords = explode(' ', $data['keywords']);
 							foreach ($keywords as $keyword) {
-								$conditions['conditions']["AND"][] = ['User.username LIKE' => '%' . $keyword . '%'];
+								$conditions['conditions']["AND"][]['OR'] = [
+									'User.username LIKE' => "%$keyword%",
+									'Profile.first_name LIKE' => "%$keyword%",
+									'Profile.last_name LIKE' => "%$keyword%",
+								];
 							}
 						}
 						// If exclude users.

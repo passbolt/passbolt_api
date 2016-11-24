@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Fixed
+- PASSBOLT-1758 Share: search a user should filter also on first name and last name
+
 ## [1.3.0]
 ### Fixed
 - PASSBOLT-1721 SSL detection not working in healthcheck
