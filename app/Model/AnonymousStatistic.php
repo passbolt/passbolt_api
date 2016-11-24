@@ -55,7 +55,9 @@ class AnonymousStatistic extends AppModel {
  * Force reloading configuration file.
  */
 	public static function reloadConfigFile() {
+		//Configure::delete('AnonymousStatistics');
 		if (file_exists(APP . 'Config' . DS . self::ConfigFile .'.php')) {
+			Configure::delete('AnonymousStatistics');
 			Configure::load(self::ConfigFile); // anonymous statistics config
 		}
 	}
@@ -68,31 +70,16 @@ class AnonymousStatistic extends AppModel {
  * @return int
  */
 	public static function writeConfigFile($instanceId, $send) {
-		$config = [
-			'AnonymousStatistics' => [
-				'instanceId' => $instanceId,
-				'send' => $send
-			]
-		];
-
-		$configHeader = "<?php
-/**
- * Anonymous statistics configuration file
- *
- * Anonymous statistics sent are used to make passbolt better, and are only
- * related to your usage of passbolt.
- * Know more in our privacy policy: https://www.passbolt.com/privacy#statistics
- *
- * @copyright (c) 2015-present passbolt SARL.
- * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- */
- 
- \$config=";
-
-		$config = $configHeader . var_export($config, true) . ';';
+		// Build config file path.
 		$configFilePath = APP . 'Config' . DS . self::ConfigFile . '.php';
 
-		$write = file_put_contents($configFilePath, $config);
+		// Config file content.
+		$v = new View();
+		$v->set(['instanceId' => $instanceId, 'send' => $send]);
+		$configFileContent = $v->render('Elements/config/anonymous_statistics' , 'ajax');
+
+		// Write file.
+		$write = file_put_contents($configFilePath, $configFileContent);
 
 		return $write;
 	}
