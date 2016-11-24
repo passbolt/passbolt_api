@@ -59,7 +59,7 @@ Please checkout CONTRIBUTING.md for more information about how to get involved!
 ## Reporting a security Issue
 
 If you've found a security related issue in Passbolt, please don't open an issue in GitHub.
-Instead contact us at contact+security@passbolt.com. In the spirit of responsible disclosure we ask that the reporter keep the
+Instead contact us at security@passbolt.com. In the spirit of responsible disclosure we ask that the reporter keep the
 issue confidential until we announce it.
 
 The passbolt team will take the following actions:
