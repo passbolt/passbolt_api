@@ -11,6 +11,26 @@ App::uses('AppTestCase', 'Test');
 
 class AnonymousStatisticTest extends AppTestCase {
 
+	public $fixtures = array(
+		'app.category',
+		'app.resource',
+		'app.categoryType',
+		'app.categoriesResource',
+		'app.user',
+		'app.role',
+		'app.secret',
+		'app.profile',
+		'app.gpgkey',
+		'app.file_storage',
+		'app.groupsUser',
+		'app.group',
+		'app.permissionsType',
+		'app.permission',
+		'app.permission_view',
+		'app.controller_log',
+		'core.cakeSession',
+	);
+
 	/**
 	 * setUp().
 	 */
@@ -21,11 +41,21 @@ class AnonymousStatisticTest extends AppTestCase {
 	}
 
 	/**
+	 * tearDown().
+	 */
+	public function tearDown() {
+		parent::tearDown();
+		// Make sure there is no session active after each test
+		$this->User->setInactive();
+	}
+
+	/**
 	 * Test findInstanceStatistics().
 	 */
 	public function testFindInstanceStatistics() {
 		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
+
 		$stats = $this->AnonymousStatistic->findInstanceStatistics();
 
 		$this->assertEquals(
