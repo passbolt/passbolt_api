@@ -5,10 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.3.0]
 ### Fixed
 - PASSBOLT-1721 SSL detection not working in healthcheck
-- PASSBOLT-1708 Refactor Request get and post to use fetch
+- PASSBOLT-1708 Accept JSON data content type for HTTP PUT during setup
 
 ### Added
-- PASSBOLT-1725 Chrome support
+- PASSBOLT-1725 Misc changes for Chrome support
 
 ## [1.2.1]
 ### Fixed
