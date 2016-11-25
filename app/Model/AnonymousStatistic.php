@@ -55,9 +55,7 @@ class AnonymousStatistic extends AppModel {
  * Force reloading configuration file.
  */
 	public static function reloadConfigFile() {
-		//Configure::delete('AnonymousStatistics');
 		if (file_exists(APP . 'Config' . DS . self::ConfigFile .'.php')) {
-			Configure::delete('AnonymousStatistics');
 			Configure::load(self::ConfigFile); // anonymous statistics config
 		}
 	}
