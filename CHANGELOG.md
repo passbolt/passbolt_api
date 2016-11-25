@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - PASSBOLT-1725 Misc changes for Chrome support
+- PASSBOLT-1726 Implement anonymous usage data
 
 ## [1.2.1]
 ### Fixed
