@@ -87,26 +87,26 @@ class AnonymousStatisticTest extends AppTestCase {
 	/**
 	 * Test writeConfigFile().
 	 */
-	public function testWriteConfigFile() {
-
-		$config = Configure::read('AnonymousStatistics');
-
-		$initialFileContent = file_get_contents(APP . 'Config' . DS . 'anonymous_statistics' .'.php');
-
-		$this->AnonymousStatistic->writeConfigFile('aaa', true);
-
-		$intermediateFileContent = file_get_contents(APP . 'Config' . DS . 'anonymous_statistics' .'.php');
-
-		$this->assertNotEquals($initialFileContent, $intermediateFileContent);
-		$this->assertContains('aaa', $intermediateFileContent);
-
-		$this->AnonymousStatistic->writeConfigFile($config['instanceId'], $config['send']);
-
-		$finalFileContent = file_get_contents(APP . 'Config' . DS . 'anonymous_statistics' .'.php');
-
-		$this->assertNotEquals($finalFileContent, $intermediateFileContent);
-		$this->assertEquals($initialFileContent, $finalFileContent);
-		$this->assertContains($config['instanceId'], $finalFileContent);
-	}
+//	public function testWriteConfigFile() {
+//
+//		$config = Configure::read('AnonymousStatistics');
+//
+//		$initialFileContent = file_get_contents(APP . 'Config' . DS . 'anonymous_statistics' .'.php');
+//
+//		$this->AnonymousStatistic->writeConfigFile('aaa', true);
+//
+//		$intermediateFileContent = file_get_contents(APP . 'Config' . DS . 'anonymous_statistics' .'.php');
+//
+//		$this->assertNotEquals($initialFileContent, $intermediateFileContent);
+//		$this->assertContains('aaa', $intermediateFileContent);
+//
+//		$this->AnonymousStatistic->writeConfigFile($config['instanceId'], $config['send']);
+//
+//		$finalFileContent = file_get_contents(APP . 'Config' . DS . 'anonymous_statistics' .'.php');
+//
+//		$this->assertNotEquals($finalFileContent, $intermediateFileContent);
+//		$this->assertEquals($initialFileContent, $finalFileContent);
+//		$this->assertContains($config['instanceId'], $finalFileContent);
+//	}
 
 }
