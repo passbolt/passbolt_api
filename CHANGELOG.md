@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - PASSBOLT-1758 Share: search a user should filter also on first name and last name
+- PASSBOLT-1758 Share: search a user should filter also on first name and last name
+- PASSBOLT-1779 Remove debug
 
 ## [1.3.0]
 ### Fixed

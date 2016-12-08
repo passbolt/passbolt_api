@@ -72,7 +72,6 @@ var Secret = passbolt.model.Secret = mad.Model.extend('passbolt.model.Secret', /
 			for (var i=0; i<secretLength; i++) {
 				secret += mask[Math.randomRange(0, mask.length-1)];
 			}
-			// console.log(expectedEntropy, passbolt.model.SecretStrength.mesurePwdEntropy(secret));
 		} while (expectedEntropy != passbolt.model.SecretStrength.mesurePwdEntropy(secret) && j<10	);
 
 		return secret;
