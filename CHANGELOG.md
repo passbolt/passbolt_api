@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1758: Share: search a user should filter also on first name and last name
 - PASSBOLT-1779: Remove debug
 - PASSBOLT-1585: We should allow profile lastname and firstname fields to be 2 chars in length
+- PASSBOLT-1783: Form validation and translation: malformed error messages
 
 ## [1.3.0]
 ### Fixed
