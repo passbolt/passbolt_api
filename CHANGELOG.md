@@ -4,10 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- PASSBOLT-1758: Share: search a user should filter also on first name and last name
-- PASSBOLT-1779: Remove debug
-- PASSBOLT-1585: We should allow profile lastname and firstname fields to be 2 chars in length
+- PASSBOLT-1758: As LU sharing a password I should be able to filter users based on first name and last name
+- PASSBOLT-1779: Remove debug statement
+- PASSBOLT-1585: As AN I should be allowed to register if my lastname or firstname are 2 chars in length
 - PASSBOLT-1783: Form validation and translation: malformed error messages
+- PASSBOLT-1619: As AP I should not be allowed to recover my account if I have not completed the setup first
 
 ## [1.3.0]
 ### Fixed
