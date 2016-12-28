@@ -131,6 +131,7 @@ class ProfileTest extends CakeTestCase {
 			'Kevin' => true,
 			'Georges1' => false,
 			'Cédric' => true,
+			'Ji' => true,
 			'123' => false,
 			'' => false,
 		);
@@ -152,6 +153,7 @@ class ProfileTest extends CakeTestCase {
 			'Kevin' => true,
 			'Georges1' => false,
 			'Cédric' => true,
+			'Ji' => true,
 			'123' => false,
 			'' => false,
 		);

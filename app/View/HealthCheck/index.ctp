@@ -117,6 +117,17 @@ $this->assign('page_classes', 'status');
 ?>
 <h3><?php echo __('Application configuration'); ?></h3>
 <?php
+	if ($checks['imgPublicWritable']):
+		echo '<div class="message success">';
+		echo __('Your webroot/img/public directory is writable.');
+		echo '</div>';
+	else:
+		echo '<div class="message error">';
+		echo __('Your webroot/img/public directory is NOT writable.');
+		echo '</div>';
+	endif;
+?>
+<?php
 	if ($checks['ssl']):
 		echo '<div class="message success">';
 		echo __('SSL access is enabled.');

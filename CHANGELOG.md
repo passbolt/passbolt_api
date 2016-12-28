@@ -4,39 +4,45 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- PASSBOLT-1758 Share: search a user should filter also on first name and last name
+- PASSBOLT-1758: As LU sharing a password I should be able to filter users based on first name and last name
+- PASSBOLT-1779: Remove debug statement
+- PASSBOLT-1585: As AN I should be allowed to register if my lastname or firstname are 2 chars in length
+- PASSBOLT-1783: Form validation and translation: malformed error messages
+- PASSBOLT-1619: As AP I should not be allowed to recover my account if I have not completed the setup first
+- PASSBOLT-1767: As a AD installing passbolt I should be told if webroot/img/public is not writable.
+- PASSBOLT-1793: Upgrade to CakePHP v2.9.4
 
 ## [1.3.0]
 ### Fixed
-- PASSBOLT-1721 SSL detection not working in healthcheck
-- PASSBOLT-1708 Accept JSON data content type for HTTP PUT during setup
+- PASSBOLT-1721: SSL detection not working in healthcheck
+- PASSBOLT-1708: Accept JSON data content type for HTTP PUT during setup
 
 ### Added
-- PASSBOLT-1725 Misc changes for Chrome support
-- PASSBOLT-1726 Implement anonymous usage data
+- PASSBOLT-1725: Misc changes for Chrome support
+- PASSBOLT-1726: Implement anonymous usage data
 
 ## [1.2.1]
 ### Fixed
-- PASSBOLT-1719 GITHUB-14 The "." is not allowed in email address field
-- PASSBOLT-1525 Remove unused controllers and components
-- PASSBOLT-1718 Tidy up readme and contribution guidelines
+- PASSBOLT-1719: GITHUB-14 The "." is not allowed in email address field
+- PASSBOLT-1525: Remove unused controllers and components
+- PASSBOLT-1718: Tidy up readme and contribution guidelines
 
 ## [1.2.0]
 ### Added
-- PASSBOLT-1706 GITHUB-18 Resource Description length is too short, should be 10K characters
-- PASSBOLT-1658 GITHUB-18 Resource URI length is too short, should be 1024 characters
-- PASSBOLT-1637 GITHUB-14 The "+" is not allowed in the email address field while adding a new user
-- PASSBOLT-1525 Test coverage for SetupControllerTest & CakeErrorController
-- PASSBOLT-1694 Default config change: debug should be set to 0
-- PASSBOLT-1660 Refactoring to simplify Chrome plugin development
-- PASSBOLT-1649 Adjusted coveralls markup
-- PASSBOLT-1648 Upgrade to Cakephp 2.9.1
-- PASSBOLT-1250 Contribution guidelines
+- PASSBOLT-1706: GITHUB-18 Resource Description length is too short, should be 10K characters
+- PASSBOLT-1658: GITHUB-18 Resource URI length is too short, should be 1024 characters
+- PASSBOLT-1637: GITHUB-14 The "+" is not allowed in the email address field while adding a new user
+- PASSBOLT-1525: Test coverage for SetupControllerTest & CakeErrorController
+- PASSBOLT-1694: Default config change: debug should be set to 0
+- PASSBOLT-1660: Refactoring to simplify Chrome plugin development
+- PASSBOLT-1649: Adjusted coveralls markup
+- PASSBOLT-1648: Upgrade to Cakephp 2.9.1
+- PASSBOLT-1250: Contribution guidelines
 
 ### Fixed
-- PASSBOLT-1700 Event names should stay backward compatible
-- PASSBOLT-1668 Remove GPGAuth debug count
-- PASSBOLT-1673 Restore avatars during quick install
+- PASSBOLT-1700: Event names should stay backward compatible
+- PASSBOLT-1668: Remove GPGAuth debug count
+- PASSBOLT-1673: Restore avatars during quick install
 
 ## [1.1.0]
 ### Added

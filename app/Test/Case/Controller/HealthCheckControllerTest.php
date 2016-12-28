@@ -42,6 +42,6 @@ class HealthCheckControllerTest extends ControllerTestCase {
 		$this->assertTrue(is_bool($this->vars['checks']['debugKit']), 'debugKit check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['phpunit']), 'phpunit check should not be empty');
 		$this->assertTrue(is_bool($this->vars['checks']['phpunitVersion']), 'phpunitVersion check should not be empty');
+		$this->assertTrue(is_bool($this->vars['checks']['imgPublicWritable']), 'phpunitVersion check should not be empty');
 	}
-
 }

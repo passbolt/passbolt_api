@@ -2,10 +2,8 @@
 /**
  * Users Controller Tests
  *
- * @copyright			 (c) 2015-present Bolt Softwares Pvt Ltd
- * @license				 http://www.passbolt.com/license
- * @package				 app.Test.Case.Controller.UsersControllerTest
- * @since					 version 2.12.9
+ * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');
 App::uses('UsersController', 'Controller');
@@ -931,7 +929,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEquals(
 			Status::SUCCESS,
 			$result['header']['status'],
-			"Edit : /users.json : The test should return sucess but is returning " . print_r($result, true)
+			"Edit : /users.json : The test should return success but is returning " . print_r($result, true)
 		);
 
 		// check that User was properly saved

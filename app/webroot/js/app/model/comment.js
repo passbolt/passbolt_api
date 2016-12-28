@@ -77,15 +77,6 @@ var Comment = passbolt.model.Comment = mad.Model.extend('passbolt.model.Comment'
 			error: error
 		});
 	}
-}, /** @prototype */ {
-
-	/**
-	 * Override the constructor function
-	 * Listen change on Category, and update the model when a category has been destroyed
-	 */
-	init: function () {
-		var self = this;
-	}
-});
+}, /** @prototype */ {});
 
 export default Comment;
