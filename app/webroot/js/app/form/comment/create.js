@@ -22,11 +22,11 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 		/**
 		 * the foreign Model on which to plug the comments system
 		 */
-		foreignModel : null,
+		foreignModel: null,
 		/**
 		 * The foreign id where to plug the new comments
 		 */
-		foreignId		 : null,
+		foreignId: null,
 		/**
 		 * default callback
 		 */
@@ -100,12 +100,11 @@ var Create = passbolt.form.comment.Create = mad.Form.extend('passbolt.form.comme
 	/* LISTEN TO THE VIEW EVENTS */
 	/* ************************************************************** */
 
-
 	/**
 	 * State ready.
 	 * Empty the comment content field.
 	 */
-	'stateReady': function() {
+	stateReady: function() {
 		this.options.commentContentField.setValue('');
 	},
 

@@ -131,7 +131,7 @@ class Profile extends AppModel {
 					'message' => __('First name should only contain alphabets and the special characters : - \'')
 				],
 				'size' => [
-					'rule' => ['lengthBetween', 3, 64],
+					'rule' => ['lengthBetween', 2, 64],
 					'message' => __('First name should be between %s and %s characters long'),
 				]
 			],
@@ -143,7 +143,7 @@ class Profile extends AppModel {
 					'message' => __('Last name should only contain alphabets and the special characters : - \'')
 				],
 				'size' => [
-					'rule' => ['lengthBetween', 3, 64],
+					'rule' => ['lengthBetween', 2, 64],
 					'message' => __('Last name should be between %s and %s characters long'),
 				]
 			],

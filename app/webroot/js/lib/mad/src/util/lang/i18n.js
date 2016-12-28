@@ -73,10 +73,6 @@ var I18n = mad.I18n = can.Construct.extend('mad.I18n', /** @static */ {
         // Split the string regarding the variable's hooks.
         split = str.split('%s');
 
-        // If the string does not contain the proper number of variables throw an exception
-        if (split.length != vars.length + 1) {
-            throw mad.Exception.get('mad.I18n::replaceHooks() expects as many variables as hooks in the sentence');
-        }
         // No hook found in the string.
         if (split.length < 2) {
             return str;

@@ -1,6 +1,6 @@
 import 'mad/mad';
 import XRegExp from 'xregexp';
-var __ = function(input){return input};
+import 'mad/util/lang/i18n';
 
 /**
 * @parent Mad.core_api
