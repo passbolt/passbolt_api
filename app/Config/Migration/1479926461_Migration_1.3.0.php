@@ -68,7 +68,7 @@ class Migration_1_3_0 extends CakeMigration {
 
 			// If anonymous usage statistics are activated, send them
 			if ($choice == true) {
-				$AnonymousStatistic->send(AnonymousStatistic::CONTEXT_INSTALL);
+				$AnonymousStatistic->send(AnonymousStatistic::CONTEXT_UPDATE);
 			}
 		}
 		return true;
