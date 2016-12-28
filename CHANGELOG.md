@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1783: Form validation and translation: malformed error messages
 - PASSBOLT-1619: As AP I should not be allowed to recover my account if I have not completed the setup first
 - PASSBOLT-1767: As a AD installing passbolt I should be told if webroot/img/public is not writable.
+- PASSBOLT-1793: Upgrade to CakePHP v2.9.4
 
 ## [1.3.0]
 ### Fixed
