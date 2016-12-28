@@ -10,13 +10,6 @@ App::uses('Core', 'Validation');
 class RecoverController extends AppController {
 
 /**
- * Controller name
- *
- * @var string
- */
-    public $name = 'Pages';
-
-/**
  * This controller uses the User model
  *
  * @var array
