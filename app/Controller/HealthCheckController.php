@@ -160,6 +160,7 @@ class HealthCheckController extends AppController {
 		$this->_checks['selenium'] = Configure::read('App.selenium.active');
 		$this->_checks['registration'] = !Configure::read('App.registration.public');
 		$this->_checks['jsProd'] = (Configure::read('App.js.build') == 'production');
+		$this->_checks['imgPublicWritable'] = is_writable(IMAGES . DS . 'public');
 	}
 
 /**
