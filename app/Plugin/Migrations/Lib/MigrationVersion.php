@@ -69,6 +69,20 @@ class MigrationVersion {
 	public $dry = false;
 
 /**
+ * Skip a version or it can skip many version using comma as separate.
+ *
+ * @var array
+ */
+	public $skip = array();
+
+/**
+ * Jump to a certain migration.
+ *
+ * @var null|string
+ */
+	public $jumpTo = null;
+
+/**
  * Log of SQL queries generated
  *
  * This is used for dry run
@@ -95,6 +109,14 @@ class MigrationVersion {
 			$this->migrationConnection = $options['migrationConnection'];
 		}
 
+		if (!empty($options['skip'])) {
+			$this->skip = $options['skip'];
+		}
+
+		if (!empty($options['jumpTo'])) {
+			$this->jumpTo = $options['jumpTo'];
+		}
+
 		if (!isset($options['dry'])) {
 			$options['dry'] = false;
 		}
@@ -112,7 +134,6 @@ class MigrationVersion {
  *
  * @return void
  */
-
 	public function initVersion() {
 		$this->Version = ClassRegistry::init(array(
 			'class' => 'Migrations.SchemaMigration',
@@ -164,7 +185,6 @@ class MigrationVersion {
 		$bc = ($this->Version->schema('class') === null);
 		$field = $bc ? 'version' : 'class';
 		$value = $bc ? $version : $mapping[$version]['class'];
-
 		if ($migrated) {
 			$this->Version->create();
 			$result = $this->Version->save(array(
@@ -299,6 +319,7 @@ class MigrationVersion {
 	public function run($options) {
 		$targetVersion = $latestVersion = $this->getVersion($options['type']);
 		$mapping = $this->getMapping($options['type'], false);
+
 		$direction = 'up';
 		if (!empty($options['direction'])) {
 			$direction = $options['direction'];
@@ -312,6 +333,10 @@ class MigrationVersion {
 			}
 		}
 
+		if (!empty($this->skip) && is_string($this->skip)) {
+			$this->skip = explode(',', trim($this->skip));
+		}
+
 		if ($direction === 'up' && !isset($options['version'])) {
 			$keys = array_keys($mapping);
 			$flipped = array_flip($keys);
@@ -323,14 +348,27 @@ class MigrationVersion {
 			krsort($mapping);
 		}
 
+
 		foreach ($mapping as $version => $info) {
 			if (($direction === 'up' && $version > $targetVersion)
 				|| ($direction === 'down' && $version < $targetVersion)) {
 				break;
-			} elseif (($direction === 'up' && $info['migrated'] === null)
+			} elseif (($direction === 'up' && $info['migrated'] === null) 
 				|| ($direction === 'down' && $info['migrated'] !== null)) {
+				$type = $info['type'];
 
-				$migration = $this->getMigration($info['name'], $info['class'], $info['type'], $options);
+				$jumpVersion = $this->getVersionByName($mapping);
+				if ($version < $jumpVersion) {
+					$this->jump($version, $type);
+					continue;
+				}
+
+				if (in_array($mapping[$version]['name'], $this->skip)) {
+					$this->setVersion($version, $type);
+					continue;
+				}
+
+				$migration = $this->getMigration($info['name'], $info['class'], $type, $options);
 				$migration->Version = $this;
 				$migration->info = $info;
 
@@ -343,7 +381,7 @@ class MigrationVersion {
 					$mapping = $this->getMapping($options['type']);
 					if (isset($mapping[$latestVersion]['version'])) {
 						$latestVersionName = '#' .
-							number_format($mapping[$latestVersion]['version'] / 100, 2, '', '') . ' ' .
+							sprintf("%'.03d", $mapping[$latestVersion]['version']) . ' ' .
 							$mapping[$latestVersion]['name'];
 					} else {
 						$latestVersionName = null;
@@ -352,15 +390,42 @@ class MigrationVersion {
 					return $errorMessage;
 				}
 
-				$this->setVersion($version, $info['type'], ($direction === 'up'));
+				$this->setVersion($version, $type, ($direction === 'up'));
 			}
 		}
 
 		if (isset($result)) {
 			return $result;
 		}
-
 		return true;
+	}
+
+/**
+ * Jump to a certain migration and mark the preceding migrations as executed.
+ *
+ * @param array $version Version of a migration to jump to.
+ * @param array $type migration type
+ * @return void
+ */
+	public function jump($version, $type) {
+		$this->setVersion($version, $type);
+	}
+
+/**
+ * Will return a version based in the migration name
+ *
+ * @param array $mapping mapping of all migrations.
+ * @return bool|string
+ */
+	public function getVersionByName($mapping) {
+		$version = false;
+		foreach ($mapping as $key => $info) {
+			if ($mapping[$key]['name'] == $this->jumpTo) {
+				$version = $key;
+			}
+		}
+
+		return $version;
 	}
 
 /**
@@ -486,7 +551,6 @@ class MigrationVersion {
 		}
 		return $mapping;
 	}
-
 }
 
 /**

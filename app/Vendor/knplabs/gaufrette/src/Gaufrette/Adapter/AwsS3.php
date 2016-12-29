@@ -13,7 +13,8 @@ use Aws\S3\S3Client;
  */
 class AwsS3 implements Adapter,
                        MetadataSupporter,
-                       ListKeysAware
+                       ListKeysAware,
+                       SizeCalculator
 {
     protected $service;
     protected $bucket;
@@ -110,8 +111,8 @@ class AwsS3 implements Adapter,
         );
 
         try {
-            $this->service->copyObject($options);
-            return true;
+            $this->service->copyObject(array_merge($options, $this->getMetadata($targetKey)));
+            return $this->delete($sourceKey);
         } catch (\Exception $e) {
             return false;
         }
@@ -168,6 +169,19 @@ class AwsS3 implements Adapter,
     /**
      * {@inheritDoc}
      */
+    public function size($key)
+    {
+        try {
+            $result = $this->service->headObject($this->getOptions($key));
+            return $result['ContentLength'];
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function keys()
     {
         return $this->listKeys();
@@ -188,7 +202,7 @@ class AwsS3 implements Adapter,
         $keys = array();
         $iter = $this->service->getIterator('ListObjects', $options);
         foreach ($iter as $file) {
-            $keys[] = $file['Key'];
+            $keys[] = $this->computeKey($file['Key']);
         }
 
         return $keys;
@@ -280,5 +294,17 @@ class AwsS3 implements Adapter,
         }
 
         return sprintf('%s/%s', $this->options['directory'], $key);
+    }
+
+    /**
+     * Computes the key from the specified path
+     *
+     * @param string $path
+     *
+     * return string
+     */
+    protected function computeKey($path)
+    {
+        return ltrim(substr($path, strlen($this->options['directory'])), '/');
     }
 }

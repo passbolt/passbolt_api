@@ -32,7 +32,7 @@ Things to do as soon as possible:
 FUTURE VERSIONS
 ---------------
 
-4.8 release [OMG CONFIG PONIES]
+4.9 release [OMG CONFIG PONIES]
  ! Fix Printer. It's from the old days when we didn't have decent XML classes
  ! Factor demo.php into a set of Printer classes, and then create a stub
    file for users here (inside the actual HTML Purifier library)

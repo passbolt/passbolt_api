@@ -163,11 +163,13 @@ class MigrationShellTest extends CakeTestCase {
 			'plugin' => 'Migrations',
 			'no-auto-init' => false,
 			'dry' => false,
+			'skip' => 'test1',
 			'precheck' => 'Migrations.PrecheckException'
 		);
 		$this->Shell->startup();
 		$this->assertEquals($this->Shell->connection, 'test');
 		$this->assertEquals($this->Shell->type, 'Migrations');
+		$this->assertEquals($this->Shell->skip, 'test1');
 
 		$this->Shell->expects($this->any())->method('in')->will($this->returnValue('test'));
 		$this->Shell->expects($this->any())->method('_startMigrationConnection')->will($this->returnValue('test'));
@@ -205,7 +207,9 @@ class MigrationShellTest extends CakeTestCase {
 			'direction' => 'up',
 			'version' => 1,
 			'dry' => false,
-			'precheck' => null)));
+			'precheck' => null,
+			'skip' => array()))
+		);
 		$this->Shell->args = array('up');
 		$this->assertTrue($this->Shell->run());
 
@@ -227,7 +231,9 @@ class MigrationShellTest extends CakeTestCase {
 			'direction' => 'down',
 			'version' => 1,
 			'dry' => false,
-			'precheck' => null)));
+			'precheck' => null,
+			'skip' => array()))
+		);
 		$this->Shell->args = array('down');
 		$this->assertTrue($this->Shell->run());
 
@@ -239,7 +245,8 @@ class MigrationShellTest extends CakeTestCase {
 			'version' => 10,
 			'direction' => 'up',
 			'dry' => false,
-			'precheck' => null)));
+			'precheck' => null,
+			'skip' => array())));
 		$this->Shell->args = array('all');
 		$this->assertTrue($this->Shell->run());
 
@@ -251,7 +258,8 @@ class MigrationShellTest extends CakeTestCase {
 			'version' => 0,
 			'direction' => 'down',
 			'dry' => false,
-			'precheck' => null)));
+			'precheck' => null,
+			'skip' => array())));
 		$this->Shell->args = array('reset');
 		$this->assertTrue($this->Shell->run());
 
@@ -1082,4 +1090,3 @@ TEXT;
 	}
 
 }
-

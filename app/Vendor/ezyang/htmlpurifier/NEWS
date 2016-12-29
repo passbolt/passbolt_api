@@ -9,6 +9,37 @@ NEWS ( CHANGELOG and HISTORY )                                     HTMLPurifier
     . Internal change
 ==========================
 
+4.8.0, released 2016-07-16
+# By default, when a link has a target attribute associated
+  with it, we now also add rel="noreferrer" in order to
+  prevent the new window from being able to overwrite
+  the original frame.  To disable this protection,
+  set %HTML.TargetNoreferrer to FALSE.
+! Full PHP 7 compatibility, the test suite is ALL GO.
+! %CSS.AllowDuplicates permits duplicate CSS properties.
+! Support for 'tel' URIs.
+! Partial support for 'border-radius' properties when %CSS.AllowProprietary is true.
+  The slash syntax, i.e., 'border-radius: 2em 1em 4em / 0.5em 3em' is not
+  yet supported.
+! %Attr.ID.HTML5 turns on HTML5-style ID handling.
+- alt truncation could result in malformed UTF-8 sequence. Don't
+  truncate.  Thanks Brandon Farber for reporting.
+- Linkify regex is smarter, based off of Gruber's regex.
+- IDNA supported natively on PHP 5.3 and later.
+- Non all-numeric top-level names (e.g., foo.1f, 1f) are now
+  allowed.
+- Minor bounds error fix to squash a PHP 7 notice.
+- Support non-/tmp temporary directories for data:// validation
+- Give a better error message when a user attempts to allow
+  ul/ol without allowing li.
+- On some versions of PHP, the Serializer DefinitionCache could
+  infinite loop when the directory exists but is not listable. (#49)
+- Don't match for <body> inside comments with
+  %Core.ConvertDocumentToFragment. (#67)
+- SafeObject is now less case sensitive. (#57)
+- AutoFormat.RemoveEmpty.Predicate now correctly renders in
+  web form. (#85)
+
 4.7.0, released 2015-08-04
 # opacity is now considered a "tricky" CSS property rather than a
   proprietary one.

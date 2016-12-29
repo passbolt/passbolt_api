@@ -77,6 +77,8 @@ class StreamWrapper
     /**
      * @param string $scheme    - protocol scheme
      * @param string $className
+     *
+     * @return bool
      */
     protected static function streamWrapperRegister($scheme, $className)
     {
@@ -198,7 +200,6 @@ class StreamWrapper
         try {
             $stream->open($this->createStreamMode('r+'));
         } catch (\RuntimeException $e) {
-            return false;
         }
 
         return $stream->stat();

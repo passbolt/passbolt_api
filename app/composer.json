@@ -24,7 +24,8 @@
 		"lorenzo/cakephp-email-queue": "1.0",
 		"singpolyma/openpgp-php" : "0.2.0",
 		"thadafinser/user-agent-parser": "^1.1",
-		"donatj/phpuseragentparser": "^0.5.0"
+		"donatj/phpuseragentparser": "^0.5.0",
+		"cakedc/migrations": "2.5.0"
 	},
 	"extra": {
 		"installer-paths": {

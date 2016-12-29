@@ -14,5 +14,4 @@ return array(
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
     'File' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
     'Crypt' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
 );

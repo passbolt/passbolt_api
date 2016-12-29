@@ -87,7 +87,7 @@ class OpenCloudSpec extends ObjectBehavior
      */
     function it_returns_true_if_key_exists($container, $object)
     {
-        $container->getObject('test')->willReturn($object);
+        $container->getPartialObject('test')->willReturn($object);
 
         $this->exists('test')->shouldReturn(true);
     }
@@ -97,7 +97,7 @@ class OpenCloudSpec extends ObjectBehavior
      */
     function it_returns_false_if_key_does_not_exist($container)
     {
-        $container->getObject('test')->willThrow(new ObjectNotFoundException());
+        $container->getPartialObject('test')->willThrow(new BadResponseException());
 
         $this->exists('test')->shouldReturn(false);
     }
@@ -215,7 +215,7 @@ class OpenCloudSpec extends ObjectBehavior
 
         $objectStore->getContainer($containerName)->willThrow(new BadResponseException());
         $objectStore->createContainer($containerName)->willReturn($container);
-        $container->getObject($filename)->willThrow(new ObjectNotFoundException());
+        $container->getPartialObject($filename)->willThrow(new BadResponseException());
 
         $this->beConstructedWith($objectStore, $containerName, true);
 

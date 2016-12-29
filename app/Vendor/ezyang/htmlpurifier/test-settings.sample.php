@@ -21,10 +21,8 @@ if ($data !== false && $data !== '') {
 // REQUIRED SETTINGS
 
 // Note on running SimpleTest:
-//      Because HTML Purifier is PHP5-only and E_STRICT compliant, SimpleTest
-//      1.0.1 will not work; you need to run SimpleTest off its trunk using:
-//
-//        $ svn co https://simpletest.svn.sourceforge.net/svnroot/simpletest/simpletest/trunk simpletest
+//      You want the Git copy of SimpleTest, found here:
+//          https://github.com/simpletest/simpletest/
 //
 //      If SimpleTest is borked with HTML Purifier, please contact me or
 //      the SimpleTest devs; I am a developer for SimpleTest so I should be

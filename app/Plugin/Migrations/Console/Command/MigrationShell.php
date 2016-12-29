@@ -13,11 +13,12 @@ App::uses('Shell', 'Console');
 App::uses('AppShell', 'Console/Command');
 App::uses('CakeSchema', 'Model');
 App::uses('MigrationVersion', 'Migrations.Lib');
-App::uses('String', 'Utility');
+App::uses('CakeText', 'Utility');
 App::uses('ClassRegistry', 'Utility');
 App::uses('ConnectionManager', 'Model');
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
+App::uses('CakeTime', 'Utility');
 
 /**
  * Migration shell.
@@ -62,6 +63,13 @@ class MigrationShell extends AppShell {
 	public $Version;
 
 /**
+ * Skip a version or it can skip many version using comma as separate.
+ *
+ * @var array
+ */
+	public $skip = array();
+
+/**
  * Messages used to display action being performed
  *
  * @var array
@@ -87,12 +95,18 @@ class MigrationShell extends AppShell {
 			$this->type = $this->params['plugin'];
 		}
 
+		if (!empty($this->params['skip'])) {
+			$this->skip = $this->params['skip'];
+		}
+
 		$this->path = $this->_getPath() . 'Config' . DS . 'Migration' . DS;
 
 		$options = array(
 			'precheck' => $this->params['precheck'],
 			'autoinit' => !$this->params['no-auto-init'],
-			'dry' => $this->params['dry']);
+			'dry' => $this->params['dry'],
+			'skip' => isset($this->params['skip']) ? $this->params['skip'] : null,
+			'jumpTo' => isset($this->params['jump-to']) ? $this->params['jump-to'] : null);
 
 		if (!empty($this->connection)) {
 			$options['connection'] = $this->connection;
@@ -101,7 +115,6 @@ class MigrationShell extends AppShell {
 		if (!empty($this->migrationConnection)) {
 			$options['migrationConnection'] = $this->migrationConnection;
 		}
-
 		$this->Version = new MigrationVersion($options);
 
 		$this->_messages = array(
@@ -148,7 +161,7 @@ class MigrationShell extends AppShell {
 /**
  * Get the option parser.
  *
- * @return void
+ * @return string
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
@@ -166,6 +179,15 @@ class MigrationShell extends AppShell {
 				'short' => 'f',
 				'boolean' => true,
 				'help' => __d('migrations', 'Force \'generate\' to compare all tables.')))
+			->addOption('skip', array(
+				'help' => __('Skip certain migration.')))
+			->addOption('jump-to', array(
+				'short' => 'j',
+				'help' => __('Jump to a certain migration and mark the preceding migrations as executed.')))
+			->addOption('compare', array(
+				'short' => 'm',
+				'boolean' => true,
+				'help' => __d('migrations', 'Force the comparison between schema file and database')))
 			->addOption('overwrite', array(
 				'short' => 'o',
 				'boolean' => true,
@@ -225,7 +247,7 @@ class MigrationShell extends AppShell {
 
 		if ($mapping === false) {
 			$this->out(__d('migrations', 'No migrations available.'));
-			return $this->_stop(1);
+			return $this->_stop();
 		}
 		$latestVersion = $this->Version->getVersion($this->type);
 
@@ -237,7 +259,8 @@ class MigrationShell extends AppShell {
 			'precheck' => isset($this->params['precheck']) ? $this->params['precheck'] : null,
 			'type' => $this->type,
 			'dry' => $this->params['dry'],
-			'callback' => &$this);
+			'callback' => &$this,
+			'skip' => $this->skip);
 
 		$once = false; //In case of exception run shell again (all, reset, migration number)
 		if (isset($this->args[0]) && in_array($this->args[0], array('up', 'down'))) {
@@ -269,7 +292,6 @@ class MigrationShell extends AppShell {
 			$this->out(__d('migrations', 'Migration will run dry, no database changes will be made'));
 			$this->out('');
 		}
-
 		$result = $this->_execute($options, $once);
 		if ($result !== true) {
 			$this->out($result);
@@ -277,6 +299,10 @@ class MigrationShell extends AppShell {
 
 		$this->out(__d('migrations', 'All migrations have completed.'));
 		$this->out('');
+
+		Configure::write('Cache.disable', false);
+		Cache::clear(false, '_cake_model_');
+
 		return true;
 	}
 
@@ -416,6 +442,8 @@ class MigrationShell extends AppShell {
  * @return void
  */
 	public function generate() {
+		Configure::write('Cache.disable', true);
+
 		$fromSchema = false;
 		$this->Schema = $this->_getSchema();
 		$migration = array('up' => array(), 'down' => array());
@@ -429,14 +457,19 @@ class MigrationShell extends AppShell {
 		} else {
 			$oldSchema = $this->_getSchema($this->type);
 			if ($oldSchema !== false) {
-				$response = $this->in(__d('migrations', 'Do you want to compare the schema.php file to the database?'), array('y', 'n'), 'y');
+				$response = isset($this->params['compare']) && $this->params['compare'] === true ? 'y' : false;
+
+				if ($response === false) {
+					$response = $this->in(__d('migrations', 'Do you want to compare the schema.php file to the database?'), array('y', 'n'), 'y');
+				}
+
 				if (strtolower($response) === 'y') {
 					$this->_generateFromComparison($migration, $oldSchema, $comparison);
 					$this->_migrationChanges($migration);
 					$fromSchema = true;
 				} else {
 					$response = $this->in(__d('migrations', 'Do you want to compare the database to the schema.php file?'), array('y', 'n'), 'y');
-					if(strtolower($response) === 'y') {
+					if (strtolower($response) === 'y') {
 						$this->_generateFromInverseComparison($migration, $oldSchema, $comparison);
 						$this->_migrationChanges($migration);
 						$fromSchema = false;
@@ -465,6 +498,12 @@ class MigrationShell extends AppShell {
 		}
 	}
 
+/**
+ * _migrationsChanges method
+ *
+ * @param array $migration list of migrations
+ * @return bool
+ */
 	protected function _migrationChanges($migration) {
 		if (empty($migration)) {
 			$this->hr();
@@ -675,13 +714,13 @@ class MigrationShell extends AppShell {
 				$this->out(__d('migrations', 'Current version:'));
 				if ($version != 0) {
 					$info = $mapping[$version];
-					$this->out('  #' . number_format($info['version'] / 100, 2, '', '') . ' ' . $info['name']);
+					$this->out('  #' . sprintf("%'.03d", $info['version']) . ' ' . $info['name']);
 				} else {
 					$this->out('  ' . __d('migrations', 'None applied.'));
 				}
 
 				$this->out(__d('migrations', 'Latest version:'));
-				$this->out('  #' . number_format($latest['version'] / 100, 2, '', '') . ' ' . $latest['name']);
+				$this->out('  #' . sprintf("%'.03d", $latest['version']) . ' ' . $latest['name']);
 				$this->hr();
 			} catch (MigrationVersionException $e) {
 				continue;
@@ -705,17 +744,17 @@ class MigrationShell extends AppShell {
 		if ($version != 0) {
 			$info = $mapping[$version];
 			$this->out(__d('migrations', 'Current migration version:'));
-			$this->out('  #' . number_format($version / 100, 2, '', '') . '  ' . $info['name']);
+			$this->out('  #' . sprintf("%'.03d", $version) . ' ' . $info['name']);
 			$this->hr();
 		}
 
 		$this->out(__d('migrations', 'Available migrations:'));
 		foreach ($mapping as $version => $info) {
-			$this->out('  [' . number_format($version / 100, 2, '', '') . '] ' . $info['name']);
+			$this->out('  [' . sprintf("%'.03d", $version) . '] ' . $info['name']);
 
 			$this->out('        ', false);
 			if ($info['migrated'] !== null) {
-				$this->out(__d('migrations', 'applied') . ' ' . date('r', strtotime($info['migrated'])));
+				$this->out(__d('migrations', 'applied') . ' ' . CakeTime::nice(strtotime($info['migrated'])));
 			} else {
 				$this->out(__d('migrations', 'not applied'));
 			}
@@ -822,14 +861,14 @@ class MigrationShell extends AppShell {
 		}
 
 		$folder = new Folder($this->_getPath($type) . 'Config' . DS . 'Schema');
-		$schema_files = $folder->find('.*schema.*.php');
+		$schemaFiles = $folder->find('.*schema.*.php');
 
-		if (count($schema_files) === 0) {
+		if (count($schemaFiles) === 0) {
 			return false;
 		}
 
 		$name = $this->_getSchemaClassName($type);
-		$file = $this->_findSchemaFile($folder, $schema_files, $name);
+		$file = $this->_findSchemaFile($folder, $schemaFiles, $name);
 
 		if ($type === 'app' && empty($file)) {
 			$appDir = preg_replace('/[^a-zA-Z0-9]/', '', APP_DIR);
@@ -848,13 +887,13 @@ class MigrationShell extends AppShell {
  * Finds schema file
  *
  * @param Folder $folder Folder object with schema folder path.
- * @param string $schema_files Schema files inside schema folder.
+ * @param string $schemaFiles Schema files inside schema folder.
  * @param string $name Schema-class name.
  * @return mixed null in case of no file found, schema file.
  */
-	protected function _findSchemaFile($folder, $schema_files, $name) {
-		foreach ($schema_files as $schema_file) {
-			$file = new File($folder->pwd() . DS . $schema_file);
+	protected function _findSchemaFile($folder, $schemaFiles, $name) {
+		foreach ($schemaFiles as $schemaFile) {
+			$file = new File($folder->pwd() . DS . $schemaFile);
 			$content = $file->read();
 			if (strpos($content, $name) !== false) {
 				return $file->path;
@@ -904,7 +943,7 @@ class MigrationShell extends AppShell {
 		if ($this->params['force']) {
 			$options['models'] = false;
 		} elseif (!empty($this->params['models'])) {
-			$options['models'] = String::tokenize($this->params['models']);
+			$options['models'] = CakeText::tokenize($this->params['models']);
 		}
 
 		$cacheDisable = Configure::read('Cache.disable');
@@ -916,7 +955,7 @@ class MigrationShell extends AppShell {
 		Configure::write('Cache.disable', $cacheDisable);
 
 		if (!empty($this->params['exclude']) && !empty($content)) {
-			$excluded = String::tokenize($this->params['exclude']);
+			$excluded = CakeText::tokenize($this->params['exclude']);
 			foreach ($excluded as $table) {
 				unset($content['tables'][$table]);
 			}
@@ -1155,7 +1194,12 @@ class MigrationShell extends AppShell {
 		if (is_array($values)) {
 			foreach ($values as $key => $value) {
 				if (is_array($value)) {
-					$_values[] = "'" . $key . "' => array('" . implode("', '", $value) . "')";
+					if (array_keys($value) !== range(0, count($value) - 1)) {
+						$set = implode("', '", $this->_values($value));
+					} else {
+						$set = "'" . implode("', '", $value) . "'";
+					}
+					$_values[] = "'" . $key . "' => array(" . $set . ")";
 				} elseif (!is_numeric($key)) {
 					$value = var_export($value, true);
 					$_values[] = "'" . $key . "' => " . $value;
@@ -1201,12 +1245,21 @@ class MigrationShell extends AppShell {
 /**
  * Callback used to display what migration is being runned
  *
+ * Additionally, shows the generation date of the migration,
+ * if the version is greater than '2000-01-01'.
+ *
  * @param CakeMigration &$Migration Migration being performed
  * @param string $direction Direction being runned
  * @return void
  */
 	public function beforeMigration(&$Migration, $direction) {
-		$this->out('  [' . number_format($Migration->info['version'] / 100, 2, '', '') . '] ' . $Migration->info['name']);
+		$version = $Migration->info['version'];
+		$generationDate = '';
+		if ($version > 946684800) {
+			$generationDate =  ' (' .	CakeTime::format($version, '%Y-%m-%d %H:%M:%S') . ')';
+		}
+		$this->out('  [' . sprintf("%'.03d", $version) . '] ' . $Migration->info['name'] . $generationDate
+		);
 	}
 
 /**
@@ -1230,7 +1283,7 @@ class MigrationShell extends AppShell {
  */
 	public function beforeAction(&$Migration, $type, $data) {
 		if (isset($this->_messages[$type])) {
-			$message = String::insert($this->_messages[$type], $data);
+			$message = CakeText::insert($this->_messages[$type], $data);
 			$this->out('      > ' . $message);
 		}
 	}

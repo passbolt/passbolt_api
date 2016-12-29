@@ -52,6 +52,7 @@ class MogileFS implements Adapter
         $data = '';
 
         if ($paths) {
+            shuffle($paths);
             foreach ($paths as $path) {
                 $fh = fopen($path, 'r');
 
@@ -64,6 +65,7 @@ class MogileFS implements Adapter
                 }
 
                 fclose($fh);
+                break;
             }
         }
 

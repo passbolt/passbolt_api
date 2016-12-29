@@ -105,4 +105,13 @@ class AwsS3Test extends \PHPUnit_Framework_TestCase
         $adapter = new AwsS3($client, 'bucket', array('directory' => 'bar'));
         $this->assertEquals('https://bucket.s3.amazonaws.com/bar/foo', $adapter->getUrl('foo'));
     }
+
+    public function shouldListKeysWithoutDirectory()
+    {
+        $client = $this->getClient();
+        $adapter = new AwsS3($client, 'bucket', array('directory' => 'bar'));
+        $adapter->write('test.txt', 'some content');
+        $keys = $adapter->listKeys();
+        $this->assertEquals('test.txt', $keys['key']);
+    }
 }

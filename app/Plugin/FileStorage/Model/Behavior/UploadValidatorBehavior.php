@@ -73,10 +73,7 @@ class UploadValidatorBehavior extends ModelBehavior {
  */
 	public function beforeValidate(Model $Model, $options = array()) {
 		extract($this->settings[$Model->alias]);
-		if ($validate === true
-			&& isset($Model->data[$Model->alias][$fileField])
-			&& isset($Model->data[$Model->alias][$fileField]['error'])
-			&& is_array($Model->data[$Model->alias][$fileField])) {
+		if ($validate === true && isset($Model->data[$Model->alias][$fileField]) && is_array($Model->data[$Model->alias][$fileField])) {
 
 			if ($Model->validateUploadError($Model->data[$Model->alias][$fileField]['error']) === false) {
 				$Model->validationErrors[$fileField] = array($this->uploadError);

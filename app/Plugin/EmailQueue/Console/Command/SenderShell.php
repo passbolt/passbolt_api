@@ -81,7 +81,7 @@ class SenderShell extends AppShell {
 			}
 
 		}
-		$emailQueue->releaseLocks(Hash::extract($emails, '{n}.EmailQueue.id'));
+		$emailQueue->releaseLocks(Set::extract('{n}.EmailQueue.id', $emails));
 	}
 
 /**

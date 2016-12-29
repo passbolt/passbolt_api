@@ -1,17 +1,14 @@
 {
 	"name": "passbolt/passbolt",
-	"description": "The open source password manager for teams",
-	"type": "library",
-	"keywords": ["framework"],
+	"description": "Open source password manager for teams",
+	"type": "application",
+	"keywords": ["password","passbolt"],
 	"homepage": "https://www.passbolt.com",
 	"license": "AGPL-3.0",
-	"config": {
-	  "vendor-dir": "Vendor"
-	},
 	"authors": [
         {
-          "name": "Passbolt Team",
-          "homepage": "https://www.passbolt.com/credits"
+			"name": "Passbolt Team",
+			"homepage": "https://www.passbolt.com/credits"
         },
 		{
 			"name": "CakePHP Community",
@@ -33,6 +30,9 @@
 		"cakephp/cakephp-codesniffer": "^1.0.0",
         "zircote/swagger-php": "^2.0",
         "satooshi/php-coveralls": "dev-master"
+	},
+	"config": {
+		"vendor-dir": "Vendor"
 	},
 	"bin": [
 		"lib/Cake/Console/cake"

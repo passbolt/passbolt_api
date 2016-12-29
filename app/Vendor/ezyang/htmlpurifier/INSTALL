@@ -15,10 +15,8 @@ with these contents.
 ---------------------------------------------------------------------------
 1.  Compatibility
 
-HTML Purifier is PHP 5 only, and is actively tested from PHP 5.0.5 and
-up. It has no core dependencies with other libraries. PHP
-4 support was deprecated on December 31, 2007 with HTML Purifier 3.0.0.
-HTML Purifier is not compatible with zend.ze1_compatibility_mode.
+HTML Purifier is PHP 5 and PHP 7, and is actively tested from PHP 5.0.5
+and up. It has no core dependencies with other libraries.
 
 These optional extensions can enhance the capabilities of HTML Purifier:
 
@@ -29,7 +27,10 @@ These optional extensions can enhance the capabilities of HTML Purifier:
 These optional libraries can enhance the capabilities of HTML Purifier:
 
     * CSSTidy : Clean CSS stylesheets using %Core.ExtractStyleBlocks
+        Note: You should use the modernized fork of CSSTidy available
+        at https://github.com/Cerdic/CSSTidy
     * Net_IDNA2 (PEAR) : IRI support using %Core.EnableIDNA
+        Note: This is not necessary for PHP 5.3 or later
 
 ---------------------------------------------------------------------------
 2.  Reconnaissance
@@ -305,11 +306,9 @@ appropriate permissions using:
     chmod -R 0755 HTMLPurifier/DefinitionCache/Serializer
 
 If the above command doesn't work, you may need to assign write permissions
-to all. This may be necessary if your webserver runs as nobody, but is
-not recommended since it means any other user can write files in the
-directory. Use:
+to group:
 
-    chmod -R 0777 HTMLPurifier/DefinitionCache/Serializer
+    chmod -R 0775 HTMLPurifier/DefinitionCache/Serializer
 
 You can also chmod files via your FTP client; this option
 is usually accessible by right clicking the corresponding directory and

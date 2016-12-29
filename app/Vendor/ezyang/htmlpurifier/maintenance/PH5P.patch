@@ -1,0 +1,102 @@
+--- C:\Users\Edward\Webs\htmlpurifier\maintenance\PH5P.php	2008-07-07 09:12:12.000000000 -0400
++++ C:\Users\Edward\Webs\htmlpurifier\maintenance/PH5P.new.php	2008-12-06 02:29:34.988800000 -0500
+@@ -65,7 +65,7 @@
+ 
+     public function __construct($data) {
+         $data = str_replace("\r\n", "\n", $data);
+-        $date = str_replace("\r", null, $data);
++        $data = str_replace("\r", null, $data);
+ 
+         $this->data = $data;
+         $this->char = -1;
+@@ -211,7 +211,10 @@
+         // If nothing is returned, emit a U+0026 AMPERSAND character token.
+         // Otherwise, emit the character token that was returned.
+         $char = (!$entity) ? '&' : $entity;
+-        $this->emitToken($char);
++        $this->emitToken(array(
++            'type' => self::CHARACTR,
++            'data' => $char
++        ));
+ 
+         // Finally, switch to the data state.
+         $this->state = 'data';
+@@ -708,7 +711,7 @@
+         } elseif($char === '&') {
+             /* U+0026 AMPERSAND (&)
+             Switch to the entity in attribute value state. */
+-            $this->entityInAttributeValueState('non');
++            $this->entityInAttributeValueState();
+ 
+         } elseif($char === '>') {
+             /* U+003E GREATER-THAN SIGN (>)
+@@ -738,7 +741,8 @@
+             ? '&'
+             : $entity;
+ 
+-        $this->emitToken($char);
++        $last = count($this->token['attr']) - 1;
++        $this->token['attr'][$last]['value'] .= $char;
+     }
+ 
+     private function bogusCommentState() {
+@@ -1066,6 +1070,11 @@
+                     $this->char++;
+ 
+                     if(in_array($id, $this->entities)) {
++                        if ($e_name[$c-1] !== ';') {
++                            if ($c < $len && $e_name[$c] == ';') {
++                                $this->char++; // consume extra semicolon
++                            }
++                        }
+                         $entity = $id;
+                         break;
+                     }
+@@ -2084,7 +2093,7 @@
+                     /* Reconstruct the active formatting elements, if any. */
+                     $this->reconstructActiveFormattingElements();
+ 
+-                    $this->insertElement($token);
++                    $this->insertElement($token, true, true);
+                 break;
+             }
+             break;
+@@ -3465,7 +3474,18 @@
+         }
+     }
+ 
+-    private function insertElement($token, $append = true) {
++    private function insertElement($token, $append = true, $check = false) {
++        // Proprietary workaround for libxml2's limitations with tag names
++        if ($check) {
++            // Slightly modified HTML5 tag-name modification,
++            // removing anything that's not an ASCII letter, digit, or hyphen
++            $token['name'] = preg_replace('/[^a-z0-9-]/i', '', $token['name']);
++            // Remove leading hyphens and numbers
++            $token['name'] = ltrim($token['name'], '-0..9');
++            // In theory, this should ever be needed, but just in case
++            if ($token['name'] === '') $token['name'] = 'span'; // arbitrary generic choice
++        }
++        
+         $el = $this->dom->createElement($token['name']);
+ 
+         foreach($token['attr'] as $attr) {
+@@ -3659,7 +3679,7 @@
+         }
+     }
+ 
+-    private function generateImpliedEndTags(array $exclude = array()) {
++    private function generateImpliedEndTags($exclude = array()) {
+         /* When the steps below require the UA to generate implied end tags,
+         then, if the current node is a dd element, a dt element, an li element,
+         a p element, a td element, a th  element, or a tr element, the UA must
+@@ -3673,7 +3693,8 @@
+         }
+     }
+ 
+-    private function getElementCategory($name) {
++    private function getElementCategory($node) {
++        $name = $node->tagName;
+         if(in_array($name, $this->special))
+             return self::SPECIAL;
+ 

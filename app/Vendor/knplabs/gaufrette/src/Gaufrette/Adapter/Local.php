@@ -97,7 +97,8 @@ class Local implements Adapter,
                 new \RecursiveDirectoryIterator(
                     $this->directory,
                     \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS
-                )
+                ),
+                \RecursiveIteratorIterator::CHILD_FIRST
             );
         } catch (\Exception $e) {
             $files = new \EmptyIterator;
@@ -105,10 +106,7 @@ class Local implements Adapter,
 
         $keys = array();
         foreach ($files as $file) {
-            $keys[] = $key = $this->computeKey($file);
-            if ('.' !== dirname($key)) {
-                $keys[] = dirname($key);
-            }
+            $keys[] = $this->computeKey($file);
         }
         sort($keys);
 

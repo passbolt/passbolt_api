@@ -248,10 +248,12 @@ class StreamWrapperSpec extends ObjectBehavior
     /**
      * @param \Gaufrette\Stream $stream
      */
-    function it_does_not_stat_when_cannot_open($stream)
+    function it_stats_even_if_it_cannot_be_open($filesystem, $stream)
     {
+        $filesystem->createStream('dir/')->willReturn($stream);
         $stream->open(Argument::any())->willThrow(new \RuntimeException);
-        $this->url_stat('gaufrette://some/filename', STREAM_URL_STAT_LINK)->shouldReturn(false);
+        $stream->stat(Argument::any())->willReturn(array('mode' => 16893));
+        $this->url_stat('gaufrette://some/dir/', STREAM_URL_STAT_LINK)->shouldReturn(array('mode' => 16893));
     }
 
     /**

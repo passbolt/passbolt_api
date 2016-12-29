@@ -29,9 +29,9 @@
         "aws/aws-sdk-php": "~2",
         "amazonwebservices/aws-sdk-for-php": "1.5.*",
         "rackspace/php-opencloud"  : "1.9.*",
-        "google/apiclient": "~1.1",
+        "google/apiclient": "~1.1.3",
         "phpspec/phpspec": "2.0.*",
-        "phpseclib/phpseclib": "dev-master",
+        "phpseclib/phpseclib": "^2.0",
         "doctrine/dbal": ">=2.3",
         "dropbox-php/dropbox-php": "*",
         "herzult/php-ssh": "*",
@@ -62,7 +62,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.2.x-dev"
+            "dev-master": "0.4.x-dev"
         }
     },
     "config": {

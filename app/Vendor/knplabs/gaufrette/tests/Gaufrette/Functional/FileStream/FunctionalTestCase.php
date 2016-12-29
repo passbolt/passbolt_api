@@ -176,6 +176,22 @@ class FunctionalTestCase extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     */
+    public function shouldCopyFile()
+    {
+        file_put_contents('gaufrette://filestream/copy1.txt', 'test content');
+
+        $this->assertTrue(is_file('gaufrette://filestream/copy1.txt'));
+        $this->assertFalse(is_file('gaufrette://filestream/copy2.txt'));
+
+        copy('gaufrette://filestream/copy1.txt', 'gaufrette://filestream/copy2.txt');
+
+        $this->assertTrue(is_file('gaufrette://filestream/copy1.txt'));
+        $this->assertTrue(is_file('gaufrette://filestream/copy2.txt'));
+    }
+
+    /**
+     * @test
      * @dataProvider modesProvider
      */
     public function shouldCreateNewFile($mode)

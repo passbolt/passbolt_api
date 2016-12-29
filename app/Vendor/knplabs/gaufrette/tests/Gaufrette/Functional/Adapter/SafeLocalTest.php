@@ -25,7 +25,8 @@ class SafeLocalTest extends FunctionalTestCase
                 new \RecursiveDirectoryIterator(
                     $this->getDirectory(),
                     \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS
-                )
+                ),
+                \RecursiveIteratorIterator::CHILD_FIRST
             );
 
             foreach ($iterator as $item) {
