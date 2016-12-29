@@ -13,8 +13,8 @@ addons:
 php:
   - 5.5
   - 5.6
-  - 7.0
-  - 7.1
+#  - 7.0
+#  - 7.1
 
 env:
   - DB=mysql
@@ -24,9 +24,6 @@ services:
 
 matrix:
   fast_finish: true
-  include:
-    - php: 7.0
-      env: PHPCS=1
 
 before_script:
   - wget http://getcomposer.org/composer.phar
