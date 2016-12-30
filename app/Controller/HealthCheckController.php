@@ -72,16 +72,19 @@ class HealthCheckController extends AppController {
 		$this->_checks['adminCount'] = false;
 		if ($this->_checks['dbConnect']) {
 			$this->User = Common::getModel('User');
-			$i = $this->User->find('count', [
-				'conditions' => ['Role.name' => Role::ADMIN],
-				'contain' => ['Role' => [
-					'fields' => [
-						'Role.id',
-						'Role.name'
-					]
-				]]
-			]);
-			$this->_checks['adminCount'] = ($i > 0);
+			try {
+				$i = $this->User->find('count', [
+					'conditions' => ['Role.name' => Role::ADMIN],
+					'contain' => ['Role' => [
+						'fields' => [
+							'Role.id',
+							'Role.name'
+						]
+					]]
+				]);
+				$this->_checks['adminCount'] = ($i > 0);
+			} catch(Exception $e) {
+			}
 		}
 	}
 
@@ -147,7 +150,7 @@ class HealthCheckController extends AppController {
 		try {
 			$this->_checks['remoteVersion'] = Migration::getLatestTagName();
 			$this->_checks['latestVersion'] = Migration::isLatestVersion();
-		} catch(exception $e) {
+		} catch (exception $e) {
 			$this->_checks['remoteVersion'] = null;
 			$this->_checks['latestVersion'] = null;
 		}
