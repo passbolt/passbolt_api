@@ -38,7 +38,7 @@ class Stream implements StreamInterface
      * This constructor accepts an associative array of options.
      *
      * - size: (int) If a read stream would otherwise have an indeterminate
-     *   size, but the size is known due to foreknownledge, then you can
+     *   size, but the size is known due to foreknowledge, then you can
      *   provide that size, in bytes.
      * - metadata: (array) Any additional metadata to return when the metadata
      *   of the stream is accessed.

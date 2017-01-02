@@ -13,11 +13,11 @@ use Gaufrette\Adapter\ListKeysAware;
 class Filesystem
 {
     protected $adapter;
-    
+
     /**
      * Contains File objects created with $this->createFile() method
-     * 
-     * @var array 
+     *
+     * @var array
      */
     protected $fileRegister = array();
 
@@ -75,7 +75,7 @@ class Filesystem
         if (! $this->adapter->rename($sourceKey, $targetKey)) {
             throw new \RuntimeException(sprintf('Could not rename the "%s" key to "%s".', $sourceKey, $targetKey));
         }
-        
+
         if($this->isFileInRegister($sourceKey)) {
             $this->fileRegister[$targetKey] = $this->fileRegister[$sourceKey];
             unset($this->fileRegister[$sourceKey]);
@@ -266,7 +266,10 @@ class Filesystem
     }
 
     /**
-     * {@inheritDoc}
+     * Gets a new stream instance of the specified file.
+     *
+     * @param $key
+     * @return Stream|Stream\InMemoryBuffer
      */
     public function createStream($key)
     {
@@ -278,7 +281,10 @@ class Filesystem
     }
 
     /**
-     * {@inheritDoc}
+     * Creates a new file in a filesystem.
+     *
+     * @param $key
+     * @return File
      */
     public function createFile($key)
     {
@@ -330,12 +336,12 @@ class Filesystem
             throw new Exception\FileNotFound($key);
         }
     }
-    
+
     /**
      * Checks if matching File object by given key exists in the fileRegister
-     * 
+     *
      * @param string $key
-     * 
+     *
      * @return bool
      */
     private function isFileInRegister($key)
@@ -361,5 +367,15 @@ class Filesystem
         if ($this->isFileInRegister($key)) {
             unset($this->fileRegister[$key]);
         }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return bool
+     */
+    public function isDirectory($key)
+    {
+        return $this->adapter->isDirectory($key);
     }
 }

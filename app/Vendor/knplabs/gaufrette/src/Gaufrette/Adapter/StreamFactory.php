@@ -14,7 +14,7 @@ interface StreamFactory
      *
      * @param string $key
      *
-     * @return Gaufrette\Stream
+     * @return \Gaufrette\Stream
      */
     public function createStream($key);
 }

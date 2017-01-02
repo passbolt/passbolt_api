@@ -1,4 +1,9 @@
-HTML Purifier 4.7.0 is a bugfix release, collecting two years
-worth of accumulated bug fixes.  Highlighted bugfixes are updated
-YouTube filter code, corrected rgb() CSS parsing, and one new
-configuration option, %AutoFormat.RemoveEmpty.Predicate.
+HTML Purifier 4.8.0 is a bugfix release, collecting a year
+of accumulated bug fixes.  In particular, we fixed some minor
+bugs and now declare full PHP 7 compatibility. The primary
+backwards-incompatible change is that HTML Purifier will now
+add rel="noreferrer" to all links with target attributes
+(you can disable this with %HTML.TargetNoReferrer.)  Other
+changes: new configuration options %CSS.AllowDuplicates and
+%Attr.ID.HTML5; border-radius is partially supported when
+%CSS.AllowProprietary, and tel URIs are supported by default.

@@ -157,6 +157,8 @@ class Local implements Stream
     {
         if ($this->fileHandle) {
             return fstat($this->fileHandle);
+        } elseif (!is_resource($this->fileHandle) && is_dir($this->path)) {
+            return stat($this->path);
         }
 
         return false;

@@ -126,7 +126,13 @@ class OpenCloud implements Adapter,
      */
     public function exists($key)
     {
-        return $this->tryGetObject($key) !== false;
+        try {
+            $exists = $this->getContainer()->getPartialObject($key) !== false;
+        } catch (BadResponseException $objFetchError) {
+            return false;
+        }
+
+        return $exists;
     }
 
     /**

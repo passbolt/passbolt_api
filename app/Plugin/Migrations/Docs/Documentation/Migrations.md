@@ -20,7 +20,7 @@ If you prefer full control over your changes, or don't want to mess with *SQL*, 
 cake Migrations.migration generate
 ```
 
-Skip the comparison of the current database to the existing schema if asked. Then, open the newly created file under ```app/Config/Migrations```, then fill the file with the following migration directives.
+Skip the comparison of the current database to the existing schema if asked or force comparing using ```--compare``` parameter. Then, open the newly created file under ```app/Config/Migrations```, then fill the file with the following migration directives.
 
 Column Keys
 -----------
@@ -185,21 +185,11 @@ The ```rename_field``` directive changes the name of a field on a specified tabl
 Alter Index
 -----------
 
-In order to add a new index to an existing field, you need to drop the field and create it again passing the index definition in an array.
+In order to add a new index to an existing field, you need to pass the index definition in an array.
 
 ```php
-'drop_field' => array(
-	'posts' => array(
-		'title'
-	)
-),
 'create_field' => array(
 	'posts' => array(
-		'title' => array(
-			'type' => 'string',
-			'length' => 255,
-			'null' => false
-		),
 		'indexes' => array(
 			'UNIQUE_TITLE' => array(
 				'column' => 'title',
@@ -210,23 +200,13 @@ In order to add a new index to an existing field, you need to drop the field and
 )
 ```
 
-Likewise, if you want to drop an index, then you need to drop the field including the indexes you want to drop, then create the field again.
+Likewise, if you want to drop an index.
 
 ```php
 'drop_field' => array(
 	'posts' => array(
-		'title',
 		'indexes' => array(
 			'UNIQUE_TITLE'
-		)
-	)
-),
-'create_field' => array(
-	'posts' => array(
-		'title' => array(
-			'type' => 'string',
-			'null' => true,
-			'length' => 255
 		)
 	)
 )

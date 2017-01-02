@@ -158,17 +158,18 @@ class InMemoryBuffer implements Stream
     public function stat()
     {
         if ($this->filesystem->has($this->key)) {
-            $time = $this->filesystem->mtime($this->key);
+            $isDirectory = $this->filesystem->isDirectory($this->key);
+            $time        = $this->filesystem->mtime($this->key);
 
             $stats = array(
                 'dev'   => 1,
                 'ino'   => 0,
-                'mode'  => 33204,
+                'mode'  => $isDirectory ? 16893 : 33204,
                 'nlink' => 1,
                 'uid'   => 0,
                 'gid'   => 0,
                 'rdev'  => 0,
-                'size'  => Util\Size::fromContent($this->content),
+                'size'  => $isDirectory ? 0 : Util\Size::fromContent($this->content),
                 'atime' => $time,
                 'mtime' => $time,
                 'ctime' => $time,

@@ -4,6 +4,7 @@ namespace GuzzleHttp\Psr7;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -68,22 +69,24 @@ function uri_for($uri)
  * - metadata: Array of custom metadata.
  * - size: Size of the stream.
  *
- * @param resource|string|StreamInterface $resource Entity body data
- * @param array                           $options  Additional options
+ * @param resource|string|null|int|float|bool|StreamInterface|callable $resource Entity body data
+ * @param array                                                        $options  Additional options
  *
  * @return Stream
  * @throws \InvalidArgumentException if the $resource arg is not valid.
  */
 function stream_for($resource = '', array $options = [])
 {
+    if (is_scalar($resource)) {
+        $stream = fopen('php://temp', 'r+');
+        if ($resource !== '') {
+            fwrite($stream, $resource);
+            fseek($stream, 0);
+        }
+        return new Stream($stream, $options);
+    }
+
     switch (gettype($resource)) {
-        case 'string':
-            $stream = fopen('php://temp', 'r+');
-            if ($resource !== '') {
-                fwrite($stream, $resource);
-                fseek($stream, 0);
-            }
-            return new Stream($stream, $options);
         case 'resource':
             return new Stream($resource, $options);
         case 'object':
@@ -232,6 +235,19 @@ function modify_request(RequestInterface $request, array $changes)
 
     if (isset($changes['query'])) {
         $uri = $uri->withQuery($changes['query']);
+    }
+
+    if ($request instanceof ServerRequestInterface) {
+        return new ServerRequest(
+            isset($changes['method']) ? $changes['method'] : $request->getMethod(),
+            $uri,
+            $headers,
+            isset($changes['body']) ? $changes['body'] : $request->getBody(),
+            isset($changes['version'])
+                ? $changes['version']
+                : $request->getProtocolVersion(),
+            $request->getServerParams()
+        );
     }
 
     return new Request(
@@ -430,7 +446,7 @@ function readline(StreamInterface $stream, $maxLength = null)
         }
         $buffer .= $byte;
         // Break when a new line is found or the max length - 1 is reached
-        if ($byte == PHP_EOL || ++$size == $maxLength - 1) {
+        if ($byte === "\n" || ++$size === $maxLength - 1) {
             break;
         }
     }
@@ -449,7 +465,7 @@ function parse_request($message)
 {
     $data = _parse_message($message);
     $matches = [];
-    if (!preg_match('/^[a-zA-Z]+\s+([a-zA-Z]+:\/\/|\/).*/', $data['start-line'], $matches)) {
+    if (!preg_match('/^[\S]+\s+([a-zA-Z]+:\/\/|\/).*/', $data['start-line'], $matches)) {
         throw new \InvalidArgumentException('Invalid request string');
     }
     $parts = explode(' ', $data['start-line'], 3);
@@ -543,7 +559,7 @@ function parse_query($str, $urlEncoding = true)
 /**
  * Build a query string from an array of key value pairs.
  *
- * This function can use the return value of parseQuery() to build a query
+ * This function can use the return value of parse_query() to build a query
  * string. This function does not modify the provided keys when an array is
  * encountered (like http_build_query would).
  *
@@ -561,9 +577,9 @@ function build_query(array $params, $encoding = PHP_QUERY_RFC3986)
 
     if ($encoding === false) {
         $encoder = function ($str) { return $str; };
-    } elseif ($encoding == PHP_QUERY_RFC3986) {
+    } elseif ($encoding === PHP_QUERY_RFC3986) {
         $encoder = 'rawurlencode';
-    } elseif ($encoding == PHP_QUERY_RFC1738) {
+    } elseif ($encoding === PHP_QUERY_RFC1738) {
         $encoder = 'urlencode';
     } else {
         throw new \InvalidArgumentException('Invalid type');

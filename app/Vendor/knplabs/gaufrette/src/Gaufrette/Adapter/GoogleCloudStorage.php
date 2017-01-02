@@ -137,6 +137,27 @@ class GoogleCloudStorage implements Adapter,
 
         $object = new \Google_Service_Storage_StorageObject();
         $object->name = $path;
+
+        if (isset($metadata['ContentDisposition'])) {
+            $object->setContentDisposition($metadata['ContentDisposition']);
+            unset($metadata['ContentDisposition']);
+        }
+
+        if (isset($metadata['CacheControl'])) {
+            $object->setCacheControl($metadata['CacheControl']);
+            unset($metadata['CacheControl']);
+        }
+
+        if (isset($metadata['ContentLanguage'])) {
+            $object->setContentLanguage($metadata['ContentLanguage']);
+            unset($metadata['ContentLanguage']);
+        }
+
+        if (isset($metadata['ContentEncoding'])) {
+            $object->setContentEncoding($metadata['ContentEncoding']);
+            unset($metadata['ContentEncoding']);
+        }
+
         $object->setMetadata($metadata);
 
         try {

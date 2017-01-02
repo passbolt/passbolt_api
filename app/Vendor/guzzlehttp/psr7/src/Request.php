@@ -11,9 +11,7 @@ use Psr\Http\Message\UriInterface;
  */
 class Request implements RequestInterface
 {
-    use MessageTrait {
-        withHeader as protected withParentHeader;
-    }
+    use MessageTrait;
 
     /** @var string */
     private $method;
@@ -25,40 +23,33 @@ class Request implements RequestInterface
     private $uri;
 
     /**
-     * @param null|string $method HTTP method for the request.
-     * @param null|string|UriInterface $uri URI for the request.
-     * @param array $headers Headers for the message.
-     * @param string|resource|StreamInterface $body Message body.
-     * @param string $protocolVersion HTTP protocol version.
-     *
-     * @throws InvalidArgumentException for an invalid URI
+     * @param string                               $method  HTTP method
+     * @param string|UriInterface                  $uri     URI
+     * @param array                                $headers Request headers
+     * @param string|null|resource|StreamInterface $body    Request body
+     * @param string                               $version Protocol version
      */
     public function __construct(
         $method,
         $uri,
         array $headers = [],
         $body = null,
-        $protocolVersion = '1.1'
+        $version = '1.1'
     ) {
-        if (is_string($uri)) {
+        if (!($uri instanceof UriInterface)) {
             $uri = new Uri($uri);
-        } elseif (!($uri instanceof UriInterface)) {
-            throw new \InvalidArgumentException(
-                'URI must be a string or Psr\Http\Message\UriInterface'
-            );
         }
 
         $this->method = strtoupper($method);
         $this->uri = $uri;
         $this->setHeaders($headers);
-        $this->protocol = $protocolVersion;
+        $this->protocol = $version;
 
-        $host = $uri->getHost();
-        if ($host && !$this->hasHeader('Host')) {
-            $this->updateHostFromUri($host);
+        if (!$this->hasHeader('Host')) {
+            $this->updateHostFromUri();
         }
 
-        if ($body) {
+        if ($body !== '' && $body !== null) {
             $this->stream = stream_for($body);
         }
     }
@@ -70,10 +61,10 @@ class Request implements RequestInterface
         }
 
         $target = $this->uri->getPath();
-        if ($target == null) {
+        if ($target == '') {
             $target = '/';
         }
-        if ($this->uri->getQuery()) {
+        if ($this->uri->getQuery() != '') {
             $target .= '?' . $this->uri->getQuery();
         }
 
@@ -120,30 +111,32 @@ class Request implements RequestInterface
         $new->uri = $uri;
 
         if (!$preserveHost) {
-            if ($host = $uri->getHost()) {
-                $new->updateHostFromUri($host);
-            }
+            $new->updateHostFromUri();
         }
 
         return $new;
     }
 
-    public function withHeader($header, $value)
+    private function updateHostFromUri()
     {
-        /** @var Request $newInstance */
-        $newInstance = $this->withParentHeader($header, $value);
-        return $newInstance;
-    }
+        $host = $this->uri->getHost();
 
-    private function updateHostFromUri($host)
-    {
-        // Ensure Host is the first header.
-        // See: http://tools.ietf.org/html/rfc7230#section-5.4
-        if ($port = $this->uri->getPort()) {
+        if ($host == '') {
+            return;
+        }
+
+        if (($port = $this->uri->getPort()) !== null) {
             $host .= ':' . $port;
         }
 
-        $this->headerLines = ['Host' => [$host]] + $this->headerLines;
-        $this->headers = ['host' => [$host]] + $this->headers;
+        if (isset($this->headerNames['host'])) {
+            $header = $this->headerNames['host'];
+        } else {
+            $header = 'Host';
+            $this->headerNames['host'] = 'Host';
+        }
+        // Ensure Host is the first header.
+        // See: http://tools.ietf.org/html/rfc7230#section-5.4
+        $this->headers = [$header => [$host]] + $this->headers;
     }
 }

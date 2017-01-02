@@ -3,7 +3,7 @@
 namespace Gaufrette\Adapter;
 
 use Gaufrette\Adapter;
-use \Net_SFTP;
+use phpseclib\Net\SFTP;
 use Gaufrette\Filesystem;
 use Gaufrette\File;
 
@@ -17,14 +17,16 @@ class PhpseclibSftp implements Adapter,
     protected $initialized = false;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param \Net_SFTP $sftp      An Sftp instance
-     * @param string    $directory The distant directory
-     * @param boolean   $create    Whether to create the remote directory if it
-     *                             does not exist
+     * @param SFTP        $sftp      An Sftp instance
+     * @param string      $directory The distant directory
+     * @param bool        $create    Whether to create the remote directory if it
+     *                               does not exist
+     * @param string|null $username  SFTP user name
+     * @param string|null $password  SFTP user password
      */
-    public function __construct(Net_SFTP $sftp, $directory = null, $create = false)
+    public function __construct(SFTP $sftp, $directory = null, $create = false, $username = null, $password = null)
     {
         $this->sftp = $sftp;
         $this->directory = $directory;
@@ -32,7 +34,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function read($key)
     {
@@ -40,7 +42,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function rename($sourceKey, $targetKey)
     {
@@ -55,7 +57,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function write($key, $content)
     {
@@ -71,7 +73,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function exists($key)
     {
@@ -81,7 +83,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isDirectory($key)
     {
@@ -98,7 +100,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function keys()
     {
@@ -108,7 +110,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function listKeys($prefix = '')
     {
@@ -135,7 +137,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function mtime($key)
     {
@@ -147,7 +149,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete($key)
     {
@@ -155,7 +157,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createFile($key, Filesystem $filesystem)
     {
@@ -170,7 +172,7 @@ class PhpseclibSftp implements Adapter,
     }
 
     /**
-     * Performs the adapter's initialization
+     * Performs the adapter's initialization.
      *
      * It will ensure the root directory exists
      */
@@ -201,7 +203,7 @@ class PhpseclibSftp implements Adapter,
 
     protected function computePath($key)
     {
-        return $this->directory . '/' . ltrim($key, '/');
+        return $this->directory.'/'.ltrim($key, '/');
     }
 
     protected function fetchKeys($directory = '', $onlyKeys = true)
@@ -214,7 +216,7 @@ class PhpseclibSftp implements Adapter,
                 continue;
             }
 
-            $path = ltrim($directory . '/' . $filename, '/');
+            $path = ltrim($directory.'/'.$filename, '/');
             if (isset($stat['type']) && $stat['type'] === NET_SFTP_TYPE_DIRECTORY) {
                 $keys['dirs'][] = $path;
             } else {

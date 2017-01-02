@@ -27,17 +27,24 @@ class ObjectStoreFactory implements ObjectStoreFactoryInterface
     protected $urlType;
 
     /**
+     * @var string
+     */
+    protected $objectStoreType;
+
+    /**
      * Constructor
      *
      * @param OpenStack $connection
      * @param string $region
      * @param string $urlType
+     * @param string $objectStoreType
      */
-    public function __construct(OpenStack $connection, $region, $urlType)
+    public function __construct(OpenStack $connection, $region, $urlType, $objectStoreType = 'cloudFiles')
     {
         $this->connection = $connection;
         $this->region = $region;
         $this->urlType = $urlType;
+        $this->objectStoreType = $objectStoreType;
     }
 
     /**
@@ -45,6 +52,6 @@ class ObjectStoreFactory implements ObjectStoreFactoryInterface
      */
     public function getObjectStore()
     {
-        return $this->connection->objectStoreService('cloudFiles', $this->region, $this->urlType);
+        return $this->connection->objectStoreService($this->objectStoreType, $this->region, $this->urlType);
     }
 }

@@ -12,6 +12,7 @@
 App::uses('CakeMigration', 'Migrations.Lib');
 App::uses('CakeSchema', 'Model');
 App::uses('MigrationVersion', 'Migrations.Lib');
+App::uses('CakeTime', 'Utility');
 
 class MigrationVersionTest extends CakeTestCase {
 
@@ -118,11 +119,11 @@ class MigrationVersionTest extends CakeTestCase {
 				'migrated' => '2011-11-18 13:53:32'
 			),
 			3 => array(
-					'version' => 3,
-					'name' => '003_increase_class_name_length',
-					'class' => 'IncreaseClassNameLength',
-					'type' => 'Migrations',
-					'migrated' => null
+				'version' => 3,
+				'name' => '003_increase_class_name_length',
+				'class' => 'IncreaseClassNameLength',
+				'type' => 'Migrations',
+				'migrated' => null
 			)
 		);
 		$this->assertEquals($result, $expected);
@@ -308,6 +309,71 @@ class MigrationVersionTest extends CakeTestCase {
 	}
 
 /**
+ * TestRunWithJump method
+ *
+ * @return void
+ */
+	public function testRunWithJump() {
+		$options = array(
+			'connection' => 'test',
+			'autoinit' => false,
+			'jumpTo' => '003_schema_dump'
+		);
+
+		$Version = $this->getMock('MigrationVersion',
+			array('getMapping', 'getMigration', 'getVersion', 'jump'),
+			array($options),
+			'TestMigrationVersionMockMigrationVersions'
+		);
+
+		$CakeMigration = new CakeMigration($options);
+
+		$Version->expects($this->any())
+			->method('getMigration')
+			->will($this->returnValue($CakeMigration));
+
+		$Version->Version = ClassRegistry::init(array(
+			'class' => 'schema_migrations',
+			'ds' => 'test'
+		));
+
+		$Version->expects($this->at(0))->method('getVersion')->will($this->returnValue(9));
+		$Version->expects($this->exactly(2))->method('jump');
+		$Version->expects($this->any())->method('getMapping')->will($this->returnValue($this->_mapping()));
+
+		$this->assertTrue($Version->run(array('direction' => 'up', 'type' => 'mocks')));
+
+		$migrations = $Version->Version->find('count', array(
+			'conditions' => array(
+				'type' => 'mocks'
+			)
+		));
+
+		$this->assertEquals(8, $migrations);
+	}
+
+/**
+ * TestGetVersionByName method
+ *
+ * @return void
+ */
+	public function testGetVersionByName() {
+		$Version = new MigrationVersion(array(
+			'jumpTo' => '007_schema_dump'
+		));
+
+		$result = $Version->getVersionByName($this->_mapping());
+		$this->assertEquals(7, $result);
+
+		$Version = new MigrationVersion(array(
+			'jumpTo' => '00_schema_dump'
+		));
+
+		$result = $Version->getVersionByName($this->_mapping());
+		$this->assertFalse($result);
+	}
+
+/**
  * _mapping method
  *
  * @param int $start
@@ -318,14 +384,16 @@ class MigrationVersionTest extends CakeTestCase {
 		$mapping = array();
 		for ($i = 1; $i <= 10; $i++) {
 			$mapping[$i] = array(
-				'version' => $i, 'name' => '001_schema_dump',
+				'version' => $i,
+				'name' => "00{$i}_schema_dump",
 				'class' => 'M4af9d151e1484b74ad9d007058157726',
 				'type' => 'mocks', 'migrated' => null
 			);
 			if ($i >= $start && $i <= $end) {
-				$mapping[$i]['migrated'] = date('r');
+				$mapping[$i]['migrated'] = CakeTime::nice();
 			}
 		}
+
 		return $mapping;
 	}
 }

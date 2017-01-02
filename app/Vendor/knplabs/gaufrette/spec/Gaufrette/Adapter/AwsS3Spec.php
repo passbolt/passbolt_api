@@ -29,4 +29,9 @@ class AwsS3Spec extends ObjectBehavior
     {
         $this->shouldHaveType('Gaufrette\Adapter\MetadataSupporter');
     }
+
+    function it_supports_sizecalculator()
+    {
+        $this->shouldHaveType('Gaufrette\Adapter\SizeCalculator');
+    }
 }

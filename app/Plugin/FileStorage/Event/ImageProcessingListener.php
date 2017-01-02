@@ -363,7 +363,7 @@ class ImageProcessingListener extends Object implements CakeEventListener {
 				mkdir(TMP . 'image-processing');
 			}
 
-			$tmpFile = TMP . 'image-processing' . DS . CakeText::uuid();
+			$tmpFile = TMP . 'image-processing' . DS . String::uuid();
 			file_put_contents($tmpFile, $Storage->read($path));
 
 			return $tmpFile;

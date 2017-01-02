@@ -37,6 +37,6 @@ class LazyOpenCloudSpec extends ObjectBehavior
         $objectStore->getContainer("test-container-name")->shouldBeCalled()->willReturn($container);
         $container->getObject("test-file-name")->willThrow(new ObjectNotFoundException());
 
-        $this->exists("test-file-name");
+        $this->read("test-file-name");
     }
 }

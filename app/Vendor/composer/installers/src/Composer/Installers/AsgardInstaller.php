@@ -31,14 +31,18 @@ class AsgardInstaller extends BaseInstaller
 
     protected function inflectPluginVars($vars)
     {
-        $vars['name'] = ucfirst(preg_replace('/-module/', '', $vars['name']));
+        $vars['name'] = preg_replace('/-module$/', '', $vars['name']);
+        $vars['name'] = str_replace(array('-', '_'), ' ', $vars['name']);
+        $vars['name'] = str_replace(' ', '', ucwords($vars['name']));
 
         return $vars;
     }
 
     protected function inflectThemeVars($vars)
     {
-        $vars['name'] = ucfirst(preg_replace('/-theme$/', '', $vars['name']));
+        $vars['name'] = preg_replace('/-theme$/', '', $vars['name']);
+        $vars['name'] = str_replace(array('-', '_'), ' ', $vars['name']);
+        $vars['name'] = str_replace(' ', '', ucwords($vars['name']));
 
         return $vars;
     }

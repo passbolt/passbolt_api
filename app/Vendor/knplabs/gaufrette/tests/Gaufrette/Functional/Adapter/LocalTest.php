@@ -29,7 +29,8 @@ class LocalTest extends FunctionalTestCase
                 new \RecursiveDirectoryIterator(
                     $this->directory,
                     \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS
-                )
+                ),
+                \RecursiveIteratorIterator::CHILD_FIRST
             );
 
             foreach ($iterator as $item) {
@@ -73,6 +74,7 @@ class LocalTest extends FunctionalTestCase
     /**
      * @test
      * @covers Gaufrette\Adapter\Local
+     * @group functional
      */
     public function shouldListingOnlyGivenDirectory()
     {
@@ -102,6 +104,38 @@ class LocalTest extends FunctionalTestCase
         @unlink($dirname.DIRECTORY_SEPARATOR.'test.txt');
         @unlink($this->directory.DIRECTORY_SEPARATOR.'aaa.txt');
         @rmdir($dirname);
+    }
+
+    /**
+     * @test
+     * @covers Gaufrette\Adapter\Local
+     * @group functional
+     */
+    public function shouldListingAllKeys()
+    {
+        $dirname = sprintf(
+            '%s/localDir',
+            $this->directory
+        );
+        @mkdir($dirname);
+
+        $this->filesystem = new Filesystem(new Local($this->directory));
+        $this->filesystem->write('aaa.txt', 'some content');
+        $this->filesystem->write('localDir/dir1/dir2/dir3/test.txt', 'some content');
+
+        $keys = $this->filesystem->keys();
+        $dirs = $this->filesystem->listKeys();
+        $this->assertCount(6, $keys);
+        $this->assertCount(4, $dirs['dirs']);
+        $this->assertEquals('localDir/dir1/dir2/dir3/test.txt', $dirs['keys'][1]);
+
+        foreach ($dirs['keys'] as $item) {
+            @unlink($item);
+        }
+        $reversed = array_reverse($dirs['dirs']);
+        foreach ($reversed as $item) {
+            @rmdir($item);
+        }
     }
 
     /**

@@ -1,9 +1,8 @@
 # PSR-7 Message Implementation
 
-This repository contains a partial [PSR-7](http://www.php-fig.org/psr/psr-7/)
+This repository contains a full [PSR-7](http://www.php-fig.org/psr/psr-7/)
 message implementation, several stream decorators, and some helpful
-functionality like query string parsing.  Currently missing
-ServerRequestInterface and UploadedFileInterface; a pull request for these features is welcome.
+functionality like query string parsing.
 
 
 [![Build Status](https://travis-ci.org/guzzle/psr7.svg?branch=master)](https://travis-ci.org/guzzle/psr7)
@@ -30,7 +29,7 @@ $composed = new Psr7\AppendStream([$a, $b]);
 
 $composed->addStream(Psr7\stream_for(' Above all listen to me'));
 
-echo $composed(); // abc, 123. Above all listen to me.
+echo $composed; // abc, 123. Above all listen to me.
 ```
 
 
@@ -95,7 +94,7 @@ $stream = Psr7\stream_for();
 // Start dropping data when the stream has more than 10 bytes
 $dropping = new Psr7\DroppingStream($stream, 10);
 
-$stream->write('01234567890123456789');
+$dropping->write('01234567890123456789');
 echo $stream; // 0123456789
 ```
 
@@ -106,7 +105,7 @@ echo $stream; // 0123456789
 
 Compose stream implementations based on a hash of functions.
 
-Allows for easy testing and extension of a provided stream without needing 
+Allows for easy testing and extension of a provided stream without needing
 to create a concrete class for a simple extension point.
 
 ```php
@@ -501,7 +500,7 @@ an associative array (e.g., `foo[a]=1&foo[b]=2` will be parsed into
 
 Build a query string from an array of key value pairs.
 
-This function can use the return value of parseQuery() to build a query string.
+This function can use the return value of parse_query() to build a query string.
 This function does not modify the provided keys when an array is encountered
 (like http_build_query would).
 
@@ -527,7 +526,7 @@ The `GuzzleHttp\Psr7\Uri` class has several static methods to manipulate URIs.
 
 ## `GuzzleHttp\Psr7\Uri::removeDotSegments`
 
-`public static function removeDotSegments($path) -> UriInterface`
+`public static function removeDotSegments(string $path): string`
 
 Removes dot segments from a path and returns the new path.
 
@@ -536,7 +535,7 @@ See http://tools.ietf.org/html/rfc3986#section-5.2.4
 
 ## `GuzzleHttp\Psr7\Uri::resolve`
 
-`public static function resolve(UriInterface $base, $rel) -> UriInterface`
+`public static function resolve(UriInterface $base, $rel): UriInterface`
 
 Resolve a base URI with a relative URI and return a new URI.
 
@@ -545,39 +544,26 @@ See http://tools.ietf.org/html/rfc3986#section-5
 
 ## `GuzzleHttp\Psr7\Uri::withQueryValue`
 
-`public static function withQueryValue(UriInterface $uri, $key, $value) -> UriInterface`
+`public static function withQueryValue(UriInterface $uri, $key, $value): UriInterface`
 
 Create a new URI with a specific query string value.
 
 Any existing query string values that exactly match the provided key are
 removed and replaced with the given key value pair.
 
-Note: this function will convert "=" to "%3D" and "&" to "%26".
-
 
 ## `GuzzleHttp\Psr7\Uri::withoutQueryValue`
 
-`public static function withoutQueryValue(UriInterface $uri, $key, $value) -> UriInterface`
+`public static function withoutQueryValue(UriInterface $uri, $key): UriInterface`
 
 Create a new URI with a specific query string value removed.
 
 Any existing query string values that exactly match the provided key are
 removed.
 
-Note: this function will convert "=" to "%3D" and "&" to "%26".
-
 
 ## `GuzzleHttp\Psr7\Uri::fromParts`
 
-`public static function fromParts(array $parts) -> UriInterface`
+`public static function fromParts(array $parts): UriInterface`
 
 Create a `GuzzleHttp\Psr7\Uri` object from a hash of `parse_url` parts.
-
-
-# Not Implemented
-
-A few aspects of PSR-7 are not implemented in this project. A pull request for
-any of these features is welcome:
-
-- `Psr\Http\Message\ServerRequestInterface`
-- `Psr\Http\Message\UploadedFileInterface`

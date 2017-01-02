@@ -27,6 +27,6 @@ class SafeLocalSpec extends ObjectBehavior
 
     function it_computes_key_back_using_base64()
     {
-        $this->keys()->shouldReturn(array(base64_decode('dir/file'), base64_decode('filename')));
+        $this->keys()->shouldReturn(array(base64_decode('dir'), base64_decode('dir/file'), base64_decode('filename')));
     }
 }

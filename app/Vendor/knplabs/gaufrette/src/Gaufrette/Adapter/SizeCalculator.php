@@ -14,7 +14,7 @@ interface SizeCalculator
      *
      * @param string $key
      *
-     * @return string
+     * @return int
      */
     public function size($key);
 }

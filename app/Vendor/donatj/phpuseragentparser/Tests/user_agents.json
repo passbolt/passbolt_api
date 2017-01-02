@@ -109,6 +109,16 @@
 		"browser": "Firefox",
 		"version": "2.0"
 	},
+	"Mozilla\/5.0 (X11; U; Linux sparc64; es-PY; rv:5.0) Gecko\/20100101 IceCat\/5.0 (like Firefox\/5.0; Debian-6.0.1)": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "5.0"
+	},
+	"Mozilla\/5.0 (X11; Linux i686; rv:7.0.1) Gecko\/20111106 IceCat\/7.0.1": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "7.0.1"
+	},
 	"Mozilla\/5.0 (X11; Ubuntu; Linux x86_64; rv:12.0) Gecko\/20100101 Firefox\/12.0": {
 		"platform": "Linux",
 		"browser": "Firefox",
@@ -118,6 +128,11 @@
 		"platform": "Linux",
 		"browser": "Firefox",
 		"version": "14.0.1"
+	},
+	"Mozilla\/5.0 (X11; Linux x86_64; rv:17.0) Gecko\/20121201 icecat\/17.0.1": {
+		"platform": "Linux",
+		"browser": "Firefox",
+		"version": "17.0.1"
 	},
 	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10.6; en-US; rv:1.9.2.3) Gecko\/20100401 Firefox\/3.6.3": {
 		"platform": "Macintosh",
@@ -319,6 +334,21 @@
 		"browser": "Safari",
 		"version": "5.0.4"
 	},
+	"Mozilla\/5.0 (X11; U; X11; en-US; Valve Steam Tenfoot\/1352503901; ) AppleWebKit\/535.15 (KHTML, like Gecko) Chrome\/18.0.989.0 Safari\/535.11": {
+		"platform": "Linux",
+		"browser": "Valve Steam Tenfoot",
+		"version": "1352503901"
+	},
+	"Mozilla\/5.0 (Macintosh; U; MacOS X 10_11_3; en-US; Valve Steam Tenfoot\/1456366706; ) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/47.0.2526.80 Safari\/537.36": {
+		"platform": "Macintosh",
+		"browser": "Valve Steam Tenfoot",
+		"version": "1456366706"
+	},
+	"Mozilla\/5.0 (Windows; U; Windows NT 6.2; en-US; Valve Steam Tenfoot\/1451690000; ) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/47.0.2526.49 Safari\/537.36": {
+		"platform": "Windows",
+		"browser": "Valve Steam Tenfoot",
+		"version": "1451690000"
+	},
 	"Mozilla\/5.0 (Macintosh; U; Intel Mac OS X 10.6; en; rv:1.9.0.18) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/40.0.2214.89 Vivaldi\/1.0.83.38 Safari\/537.36": {
 		"platform": "Macintosh",
 		"browser": "Vivaldi",
@@ -353,6 +383,11 @@
 		"platform": "Android",
 		"browser": "Chrome",
 		"version": "18.0.1025.308"
+	},
+	"Mozilla\/5.0 (Linux; U; Android 5.1.1; en-US; SM-G925F Build\/LMY47X) AppleWebKit\/534.30 (KHTML, like Gecko) Version\/4.0 UCBrowser\/10.7.5.658 U3\/0.8.0 Mobile Safari\/534.30": {
+		"platform": "Android",
+		"browser": "UC Browser",
+		"version": "10.7.5.658"
 	},
 	"Mozilla\/5.0 (BlackBerry; U; BlackBerry 9780; en) AppleWebKit\/534.8+ (KHTML, like Gecko) Version\/6.0.0.723 Mobile Safari\/534.8+": {
 		"platform": "BlackBerry",
@@ -422,7 +457,7 @@
 	"Mozilla\/4.0 (compatible; Linux 2.6.10) NetFront\/3.3 Kindle\/1.0 (screen 600x800)": {
 		"platform": "Kindle",
 		"browser": "Kindle",
-		"version": "1"
+		"version": "1.0"
 	},
 	"Mozilla\/5.0 (Linux; U; en-US) AppleWebKit\/528.5+ (KHTML, like Gecko, Safari\/528.5+) Version\/4.0 Kindle\/3.0 (screen 600x800; rotate)": {
 		"platform": "Kindle",

@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/donatj/phpuseragentparser/v/stable.png)](https://packagist.org/packages/donatj/phpuseragentparser) [![Total Downloads](https://poser.pugx.org/donatj/phpuseragentparser/downloads.png)](https://packagist.org/packages/donatj/phpuseragentparser) [![Latest Unstable Version](https://poser.pugx.org/donatj/phpuseragentparser/v/unstable.png)](https://packagist.org/packages/donatj/phpuseragentparser) [![License](https://poser.pugx.org/donatj/phpuseragentparser/license.png)](https://packagist.org/packages/donatj/phpuseragentparser)
 [![Build Status](https://travis-ci.org/donatj/PhpUserAgent.png?branch=master)](https://travis-ci.org/donatj/PhpUserAgent)
-[![HHVM Status](http://hhvm.h4cc.de/badge/donatj/phpuseragentparser.png)](http://hhvm.h4cc.de/package/donatj/phpuseragentparser) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/donatj/PhpUserAgent/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/donatj/PhpUserAgent/?branch=master)
+[![HHVM Status](http://hhvm.h4cc.de/badge/donatj/phpuseragentparser.png?style=flat)](http://hhvm.h4cc.de/package/donatj/phpuseragentparser) 
 
 ## What It Is
 
@@ -96,7 +96,7 @@ array(
 - BlackBerry Browser
 - Camino
 - Kindle / Silk
-- Firefox / Iceweasel
+- Firefox / IceWeasel / IceCat
 - Safari
 - Internet Explorer
 - IEMobile
@@ -105,6 +105,7 @@ array(
 - Midori
 - Vivaldi
 - TizenBrowser
+- UC Browser
 - Lynx
 - Wget
 - Curl

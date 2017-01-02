@@ -10,7 +10,7 @@ class UserAgentParser_test extends \PHPUnit_Framework_TestCase {
 
 		foreach($uas as $ua => $expected_result) {
 			$result = parse_user_agent($ua);
-			$this->assertEquals($expected_result, $result, $ua . " failed!" );
+			$this->assertSame($expected_result, $result, $ua . " failed!" );
 		}
 
 	}
@@ -23,13 +23,13 @@ class UserAgentParser_test extends \PHPUnit_Framework_TestCase {
 		);
 
 		$result = parse_user_agent('');
-		$this->assertEquals($result, $expected);
+		$this->assertSame($result, $expected);
 
 //		$result = parse_user_agent('asdjkakljasdkljasdlkj');
 //		$this->assertEquals($result, $expected);
 
 		$result = parse_user_agent('Mozilla (asdjkakljasdkljasdlkj) BlahBlah');
-		$this->assertEquals($result, $expected);
+		$this->assertSame($result, $expected);
 	}
 
 	
@@ -43,7 +43,7 @@ class UserAgentParser_test extends \PHPUnit_Framework_TestCase {
 
 	function test_global_user_agent(){
 		$_SERVER['HTTP_USER_AGENT'] = 'Test/1.0';
-		$this->assertEquals(array('platform'=>null, 'browser' => 'Test', 'version' => '1.0'), parse_user_agent());
+		$this->assertSame(array('platform'=>null, 'browser' => 'Test', 'version' => '1.0'), parse_user_agent());
 	}
 
 }

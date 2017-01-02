@@ -38,6 +38,10 @@ class Ftp implements Adapter,
      */
     public function __construct($directory, $host, $options = array())
     {
+        if (!extension_loaded('ftp')) {
+            throw new \RuntimeException('Unable to use Gaufrette\Adapter\Ftp as the FTP extension is not available.');
+        }
+
         $this->directory = (string) $directory;
         $this->host      = $host;
         $this->port      = isset($options['port']) ? $options['port'] : 21;
