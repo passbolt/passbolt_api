@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1619: As AP I should not be allowed to recover my account if I have not completed the setup first
 - PASSBOLT-1767: As a AD installing passbolt I should be told if webroot/img/public is not writable.
 - PASSBOLT-1793: Upgrade to CakePHP v2.9.4
+- PASSBOLT-1784: GITHUB-29 PHP7 compatibility issue in migration console tasks
 
 ## [1.3.0]
 ### Fixed
