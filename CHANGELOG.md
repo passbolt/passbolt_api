@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.3.1] - 2017-01-03
 ### Fixed
 - PASSBOLT-1758: As LU sharing a password I should be able to filter users based on first name and last name
 - PASSBOLT-1779: Remove debug statement
@@ -12,8 +14,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1767: As a AD installing passbolt I should be told if webroot/img/public is not writable.
 - PASSBOLT-1793: Upgrade to CakePHP v2.9.4
 - PASSBOLT-1784: GITHUB-29 PHP7 compatibility issue in migration console tasks
+- PASSBOLT-1790: Fixed update context sent by anonymous usage statistics
 
-## [1.3.0]
+## [1.3.0] - 2016-25-11
 ### Fixed
 - PASSBOLT-1721: SSL detection not working in healthcheck
 - PASSBOLT-1708: Accept JSON data content type for HTTP PUT during setup
@@ -22,13 +25,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1725: Misc changes for Chrome support
 - PASSBOLT-1726: Implement anonymous usage data
 
-## [1.2.1]
+## [1.2.1] - 2016-10-19
 ### Fixed
 - PASSBOLT-1719: GITHUB-14 The "." is not allowed in email address field
 - PASSBOLT-1525: Remove unused controllers and components
 - PASSBOLT-1718: Tidy up readme and contribution guidelines
 
-## [1.2.0]
+## [1.2.0] - 2016-10-17
 ### Added
 - PASSBOLT-1706: GITHUB-18 Resource Description length is too short, should be 10K characters
 - PASSBOLT-1658: GITHUB-18 Resource URI length is too short, should be 1024 characters
@@ -45,7 +48,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1668: Remove GPGAuth debug count
 - PASSBOLT-1673: Restore avatars during quick install
 
-## [1.1.0]
+## [1.1.0] - 2016-08-09
 ### Added
 - PASSBOLT-1124: As LU on user workspace I should be able to see the last logged in date of a user.
 - PASSBOLT-1216: As LU I should be able to sort the tableview in passwords workspace
@@ -176,7 +179,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.3.1...HEAD
+[1.3.1]: https://github.com/passbolt/passbolt/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/passbolt/passbolt/compare/v1.2.1...v1.3.0
 [1.2.1]: https://github.com/passbolt/passbolt/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/passbolt/passbolt/compare/v1.1.1...v1.2.0
