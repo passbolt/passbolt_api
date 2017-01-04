@@ -8,6 +8,7 @@
 $this->assign('title',	__('Recover an account'));
 $this->Html->css('login.min', null, array('block' => 'css'));
 $this->assign('page_classes', 'recover');
+$inputDefault = ['inputDefaults' => ['error' => [ 'attributes' => ['class' => 'message error']]]];
 ?>
 <div class="grid">
 	<div class="row">
@@ -20,7 +21,7 @@ $this->assign('page_classes', 'recover');
 				<h1><span>Passbolt</span></h1>
 			</div>
 			<div class="users register form">
-				<?php echo $this->Form->create('User');?>
+				<?php echo $this->Form->create('User', $inputDefault);?>
 				<fieldset>
 					<legend><?php echo __('Please enter your username and password'); ?></legend>
 					<?php echo $this->Form->input('User.username', array('label' => __('Enter your email'), 'class' =>'required fluid')); ?>

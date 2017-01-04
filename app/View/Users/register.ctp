@@ -8,6 +8,7 @@
 $this->assign('title',	__('Register'));
 $this->Html->css('login.min', null, array('block' => 'css'));
 $this->assign('page_classes', 'register');
+$inputDefault = ['inputDefaults' => ['error' => [ 'attributes' => ['class' => 'message error']]]];
 ?>
 <div class="grid">
 	<div class="row">
@@ -24,7 +25,7 @@ $this->assign('page_classes', 'register');
 				<h1><span>Passbolt</span></h1>
 			</div>
 			<div class="users register form">
-				<?php echo $this->Form->create('User');?>
+				<?php echo $this->Form->create('User', $inputDefault); ?>
 				<fieldset>
 					<legend><?php echo __('Please enter your username and password'); ?></legend>
 					<?php echo $this->Form->input('Profile.first_name', array('label' => __('First name'), 'class' =>' fluid')); ?>
