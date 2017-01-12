@@ -4,6 +4,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+
+## [1.3.2] - 2017-01-16
+### Fixed
 - PASSBOLT-811: Error message look and feel is not consistent on register / recover
 
 ## [1.3.1] - 2017-01-03
