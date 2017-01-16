@@ -184,21 +184,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt/compare/v1.3.2...HEAD
-[1.3.2]: https://github.com/passbolt/passbolt/compare/v1.3.1...v1.3.2
-[1.3.1]: https://github.com/passbolt/passbolt/compare/v1.3.0...v1.3.1
-[1.3.0]: https://github.com/passbolt/passbolt/compare/v1.2.1...v1.3.0
-[1.2.1]: https://github.com/passbolt/passbolt/compare/v1.2.0...v1.2.1
-[1.2.0]: https://github.com/passbolt/passbolt/compare/v1.1.1...v1.2.0
-[1.1.1]: https://github.com/passbolt/passbolt/compare/v1.1.0...v1.1.1
-[1.1.0]: https://github.com/passbolt/passbolt/compare/v1.0.14...v1.1.0
-[1.0.14]: https://github.com/passbolt/passbolt/compare/v1.0.13...v1.0.14
-[1.0.13]: https://github.com/passbolt/passbolt/compare/v1.0.12...v1.0.13
-[1.0.12]: https://github.com/passbolt/passbolt/compare/v1.0.11...v1.0.12
-[1.0.11]: https://github.com/passbolt/passbolt/compare/v1.0.10...v1.0.11
-[1.0.10]: https://github.com/passbolt/passbolt/compare/v1.0.9...v1.0.10
-[1.0.9]: https://github.com/passbolt/passbolt/compare/v1.0.8...v1.0.9
-[1.0.8]: https://github.com/passbolt/passbolt/compare/v1.0.7...v1.0.8
-[1.0.7]: https://github.com/passbolt/passbolt/compare/v1.0.6...v1.0.7
-[1.0.6]: https://github.com/passbolt/passbolt/compare/v1.0.5...v1.0.6
-[1.0.5]: https://github.com/passbolt/passbolt/compare/6a92766...v1.0.5
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.3.2...HEAD
+[1.3.2]: https://github.com/passbolt/passbolt_api/compare/v1.3.1...v1.3.2
+[1.3.1]: https://github.com/passbolt/passbolt_api/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/passbolt/passbolt_api/compare/v1.2.1...v1.3.0
+[1.2.1]: https://github.com/passbolt/passbolt_api/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/passbolt/passbolt_api/compare/v1.1.1...v1.2.0
+[1.1.1]: https://github.com/passbolt/passbolt_api/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/passbolt/passbolt_api/compare/v1.0.14...v1.1.0
+[1.0.14]: https://github.com/passbolt/passbolt_api/compare/v1.0.13...v1.0.14
+[1.0.13]: https://github.com/passbolt/passbolt_api/compare/v1.0.12...v1.0.13
+[1.0.12]: https://github.com/passbolt/passbolt_api/compare/v1.0.11...v1.0.12
+[1.0.11]: https://github.com/passbolt/passbolt_api/compare/v1.0.10...v1.0.11
+[1.0.10]: https://github.com/passbolt/passbolt_api/compare/v1.0.9...v1.0.10
+[1.0.9]: https://github.com/passbolt/passbolt_api/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/passbolt/passbolt_api/compare/v1.0.7...v1.0.8
+[1.0.7]: https://github.com/passbolt/passbolt_api/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/passbolt/passbolt_api/compare/v1.0.5...v1.0.6
+[1.0.5]: https://github.com/passbolt/passbolt_api/compare/6a92766...v1.0.5
