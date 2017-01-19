@@ -6,9 +6,9 @@
             <directory suffix=".php">../Controller</directory>
             <directory suffix=".php">../Model</directory>
             <directory suffix=".php">../View</directory>
-            <!--<exclude>
-                <directory suffix=".php">../Console</directory>
-            </exclude>-->
+            <!--<exclude>-->
+                <!--<directory suffix=".php">../Console</directory>-->
+            <!--</exclude>-->
         </whitelist>
     </filter>
 </phpunit>
