@@ -17,9 +17,7 @@ if (!class_exists('CakeSession')) {
 class GroupUserTest extends CakeTestCase {
 
 	public $fixtures = array(
-		'app.category',
 		'app.resource',
-		'app.categories_resource',
 		'app.user',
 		'app.role',
 		'app.group',

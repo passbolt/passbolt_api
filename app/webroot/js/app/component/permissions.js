@@ -75,7 +75,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 			itemClass: passbolt.model.Permission,
 			templateUri: 'mad/view/template/component/tree.ejs',
 			itemTemplateUri: 'app/view/template/component/permission/permission_list_item.ejs',
-			// The map to use to make jstree working with our category model
+			// The map to use to make jstree working with our permission model
 			map: new mad.Map({
 				id: 'id',
 				isDirect: {

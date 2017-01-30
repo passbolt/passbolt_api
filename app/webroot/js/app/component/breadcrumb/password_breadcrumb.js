@@ -1,5 +1,4 @@
 import 'mad/component/component';
-import 'app/model/category';
 import 'app/view/template/component/breadcrumb/breadcrumb.ejs!';
 import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 
@@ -20,7 +19,6 @@ import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.extend('passbolt.component.PasswordBreadcrumb', /** @static */ {
 
 	defaults: {
-		categories: passbolt.model.Category.List,
 		// Template
 		templateUri: 'app/view/template/component/breadcrumb/breadcrumb.ejs',
 		// Hidden by default
@@ -68,39 +66,9 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 		});
 		menuItems.push(menuItem);
 
-		// If we want to filter on a Category.
-		if (typeof filter.foreignModels.Category != 'undefined') {
-			// The breadcrumb can react for a unique Category.
-			if (filter.foreignModels.Category.length == 1) {
-				var category = filter.foreignModels.Category[0];
-
-				// Add the parent categories to the breadcrumb.
-				var parentCategories = category.getParentCategories();
-				can.each(parentCategories, function (parentCategory) {
-					var menuItem = new mad.model.Action({
-						id: uuid(),
-						label: parentCategory.name,
-						action: function () {
-							mad.bus.trigger('category_selected', parentCategory);
-						}
-					});
-					menuItems.push(menuItem);
-				});
-
-				// Add the current category to the breadcrumb.
-				var menuItem = new mad.model.Action({
-					id: uuid(),
-					label: category.name,
-					action: function () {
-						mad.bus.trigger('category_selected', category);
-					}
-				});
-				menuItems.push(menuItem);
-			}
-		}
 		// If we want to filter on keywords.
-		else if (typeof filter.keywords != 'undefined' && filter.keywords != '') {
-			// Add the current category to the breadcrumb.
+		if (typeof filter.keywords != 'undefined' && filter.keywords != '') {
+			// Add the search keywords to the breadcrumb.
 			var menuItem = new mad.model.Action({
 				id: uuid(),
 				label: __('Search : %s', filter.keywords)

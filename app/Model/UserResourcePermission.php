@@ -114,9 +114,6 @@ class UserResourcePermission extends AppModel {
 							'Resource' => [
 								'fields' => ['id', 'name']
 							],
-							'Category' => [
-								'fields' => ['id', 'name']
-							]
 						]
 					]
 				];

@@ -225,7 +225,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
 
     /**
-     * Observe when the user requests a category creation
+     * Observe when the user requests a group creation
      * @param {HTMLElement} el The element the event occurred on
      * @param {HTMLEvent} ev The event which occurred
      */
@@ -287,7 +287,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     },
 
     /**
-     * Observe when the user requests a category creation
+     * Observe when the user requests a user creation
      * @param {HTMLElement} el The element the event occurred on
      * @param {HTMLEvent} ev The event which occurred
      */

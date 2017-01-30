@@ -24,9 +24,6 @@ class Permission extends AppModel {
 		'PermissionType' => [
 			'foreignKey' => 'type'
 		],
-		'Category' => [
-			'foreignKey' => 'aco_foreign_key'
-		],
 		'Resource' => [
 			'foreignKey' => 'aco_foreign_key'
 		],
@@ -217,4 +214,5 @@ class Permission extends AppModel {
 
 		return $this->isUnique($combination, false);
 	}
+
 }

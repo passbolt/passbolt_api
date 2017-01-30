@@ -79,7 +79,7 @@ class CommentTest extends AppTestCase {
 			'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
 			'zzz00003-c5cd-11e1-a0c5-080027796c4c' => false,
 			'aaa00003-c5cd-11e1-a0c5-080027796c4c' => false,
-			Common::uuid('comment.id.salesforce-account-1') => true,
+			Common::uuid('comment.id.apache-1') => true,
 		);
 		foreach ($testcases as $testcase => $result) {
 			$comment = array('Comment' => array('parent_id' => $testcase));
@@ -139,7 +139,7 @@ class CommentTest extends AppTestCase {
 		$this->assertEquals($this->Comment->validates(array('fieldList' => array('foreign_id'))), false, $msg);
 
 		// test with a good resource
-		$resourceId = Common::uuid('resource.id.facebook-account');
+		$resourceId = Common::uuid('resource.id.apache');
 		$testcase = array(
 			'Comment' => array(
 				'foreign_id' => $resourceId,

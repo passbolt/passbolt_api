@@ -6,9 +6,6 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');
-App::uses('CategoriesController', 'Controller');
-App::uses('Category', 'Model');
-App::uses('CategoryType', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 App::uses('Gpgkey', 'Model');

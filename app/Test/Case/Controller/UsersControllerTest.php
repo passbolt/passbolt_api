@@ -32,8 +32,6 @@ class UsersControllerTest extends ControllerTestCase {
 		'app.user_agent',
 		'app.controller_log',
 		'app.resource',
-		'app.category',
-		'app.categories_resource',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',

@@ -1,7 +1,5 @@
 import 'app/model/model';
-import 'app/model/category';
 import 'app/model/secret';
-import 'app/model/item_tag';
 import 'mad/model/serializer/cake_serializer';
 
 /**
@@ -29,10 +27,8 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 		created: 'string',
 		modified: 'string',
 		description: 'string',
-		Category: 'passbolt.model.Category.models',
 		Secret: 'passbolt.model.Secret.models',
 		Favorite: 'passbolt.model.Favorite.model',
-		ItemTag: 'passbolt.model.ItemTag.models',
 		Creator: 'passbolt.model.User.model',
 		Modifier: 'passbolt.model.User.model',
 		UserResourcePermission: 'passbolt.model.UserResourcePermission.model',
@@ -161,29 +157,6 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 	}
 
 }, /** @prototype */ {
-
-	/**
-	 * Override the constructor function
-	 * Listen change on Category, and update the model when a category has been destroyed
-	 */
-	init: function () {
-		var self = this;
-
-		// Listen when a category is destroyed
-		passbolt.model.Category.bind('destroyed', function(ev, category) {
-			var destroyedCategories = mad.Model.nestedToList(category, 'children', 'id');
-			var toUpdate = false;
-			can.each(self.Category, function(resourceCategory, i) {
-				if(destroyedCategories.indexOf(resourceCategory.id) != -1) {
-					self.Category.splice(i, 1);
-					toUpdate = true;
-				}
-			});
-			if (toUpdate) {
-				can.trigger(passbolt.model.Resource, 'updated', self);
-			}
-		});
-	},
 
 	/**
 	 * Is favorite

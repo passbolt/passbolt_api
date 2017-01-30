@@ -1,9 +1,6 @@
 import 'mad/model/model';
-import 'app/model/category';
 import 'app/model/permission_type';
-import 'app/model/group_category_permission';
 import 'app/model/group_resource_permission';
-import 'app/model/user_category_permission';
 import 'app/model/user_resource_permission';
 import 'mad/model/serializer/cake_serializer';
 
@@ -46,7 +43,6 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 		aro_foreign_label: 'string',
 		PermissionType: 'passbolt.model.PermissionType.model',
 		Resource: 'passbolt.model.Resource.model',
-		Category: 'passbolt.model.Category.model',
 		User: 'passbolt.model.User.model',
 		Group: 'passbolt.model.Group.model'
 	},
@@ -216,13 +212,6 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 
 			// Extract the permission.
 			switch(obj.constructor.shortName) {
-				case 'Category':
-					if (typeof obj.UserCategoryPermission != 'undefined') {
-						permission = obj.UserCategoryPermission;
-					} else if (typeof obj.GroupCategoryPermission != 'undefined') {
-						permission = obj.GroupCategoryPermission;
-					}
-					break;
 				case 'Resource':
 					if (typeof obj.UserResourcePermission != 'undefined') {
 						permission = obj.UserResourcePermission;
@@ -247,7 +236,7 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 	/**
 	 * Check if the permission is a direct permission for the given aco and aro instances.
 	 * @param {mad.Model} obj The target instance to test if the permission is direct for it. The instance
-	 * can be of whatever type (Resource, Category ...)
+	 * can be of whatever type (ex: Resource)
 	 * @return {boolean}
 	 */
 	isDirect: function(acoInstance) {

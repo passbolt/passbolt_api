@@ -29,7 +29,7 @@ class PermissionableBehavior extends ModelBehavior {
 
 			// Depending on the target model the user wants to access,
 			// the permissions are managed by a specific model.
-			// ex : UserCategoryPermission, UserResourcePermission, GroupCategoryPermission, GroupResourcePermission
+			// ex : UserResourcePermission
 			$userPermissionModelName = 'User' . $model->alias . 'Permission';
 			$foreignModelPrimaryKey = Inflector::underscore($model->alias) . '_id';
 
@@ -53,9 +53,6 @@ class PermissionableBehavior extends ModelBehavior {
 				[
 					'hasOne' => [
 						$userPermissionModelName => [
-							'foreignKey' => $foreignModelPrimaryKey
-						],
-						'GroupCategoryPermission' => [
 							'foreignKey' => $foreignModelPrimaryKey
 						],
 						'Permission' => [
@@ -109,9 +106,7 @@ class PermissionableBehavior extends ModelBehavior {
 
 			$model->unbindModel([
 				'hasOne' => [
-					'UserCategoryPermission',
 					'Permission',
-					'GroupCategoryPermission'
 				]
 			], false);
 		}

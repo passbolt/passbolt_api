@@ -31,24 +31,24 @@ class CommentFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => 'eaca7755-7390-31ba-acd6-aada38da01c8',
-			'parent_id' => 'f0130488-046c-34cc-a575-75150368c6d3',
-			'foreign_id' => '349c17f6-0cbe-3c13-a19d-87452de6a811',
-			'foreign_model' => 'Resource',
-			'content' => 'this is a reply to the short comment',
-			'created' => '2012-11-25 13:39:26',
-			'modified' => '2012-11-25 13:39:26',
-			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
-			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
-		),
-		array(
-			'id' => 'f0130488-046c-34cc-a575-75150368c6d3',
+			'id' => '0ee762f9-71dd-3163-a9a1-345b44c90b28',
 			'parent_id' => null,
-			'foreign_id' => '349c17f6-0cbe-3c13-a19d-87452de6a811',
+			'foreign_id' => '1a3db9d4-7840-342f-a9e5-cf80123a5443',
 			'foreign_model' => 'Resource',
 			'content' => 'this is a short comment',
 			'created' => '2012-11-25 13:39:25',
 			'modified' => '2012-11-25 13:39:25',
+			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
+		),
+		array(
+			'id' => '5bc93a6a-9bd7-338e-ad2a-d8d112281670',
+			'parent_id' => '0ee762f9-71dd-3163-a9a1-345b44c90b28',
+			'foreign_id' => '1a3db9d4-7840-342f-a9e5-cf80123a5443',
+			'foreign_model' => 'Resource',
+			'content' => 'this is a reply to the short comment',
+			'created' => '2012-11-25 13:39:26',
+			'modified' => '2012-11-25 13:39:26',
 			'created_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
 			'modified_by' => 'abfd50cb-ff86-36c4-a8c8-af176b201123'
 		),

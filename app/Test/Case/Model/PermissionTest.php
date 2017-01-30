@@ -25,9 +25,6 @@ class PermissionTest extends CakeTestCase
 		'app.role',
 		'app.group',
 		'app.groupsUser',
-		'app.categoryType',
-		'app.category',
-		'app.categoriesResource',
 		'app.permissionsType',
 		'app.permission',
 		'app.permission_view',
@@ -41,96 +38,12 @@ class PermissionTest extends CakeTestCase
 		$this->Permission = ClassRegistry::init('Permission');
 		$this->User = ClassRegistry::init('User');
 		$this->Role = ClassRegistry::init('Role');
-		$this->Category = ClassRegistry::init('Category');
 		$this->Resource = ClassRegistry::init('Resource');
 		$this->Group = ClassRegistry::init('Group');
 		$this->PermissionType = ClassRegistry::init('PermissionType');
 		$this->PermissionCache = ClassRegistry::init('PermissionCache');
-		$this->UserCategoryPermission = ClassRegistry::init('UserCategoryPermission');
 
-		$this->Category->Behaviors->disable('Permissionable');
 		$this->Resource->Behaviors->disable('Permissionable');
-	}
-
-	public function testMysqlFunctionGetGroupCategoryPermission()
-	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/categories_groups_permissions.csv');
-
-		foreach ($matrix as $categoryAlias => $groupsPermissions) {
-			$categoryId = Common::uuid('category.id.' . $categoryAlias);
-
-			foreach ($groupsPermissions as $groupAlias => $groupPermission) {
-				$groupId = Common::uuid('group.id.' . $groupAlias);
-
-				// Get the permission
-				$query = "SELECT getGroupCategoryPermission('{$groupId}', '{$categoryId}') AS permid";
-				$res = $this->Permission->query($query);
-
-				// Load the permission
-				$permission = $this->Permission->findById($res[0][0]['permid']);
-				$permissionType = $permission ? $permission['Permission']['type'] : 0;
-
-				$this->assertTrue(
-					$groupPermission == $permissionType,
-					"permissions for group {$groupAlias}({$groupId}) and category {$categoryAlias}({$categoryId}) returned {$permissionType}
-				but should have returned {$groupPermission}"
-				);
-			}
-		}
-	}
-
-	public function testMysqlFunctionGetGroupResourcePermission()
-	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_groups_permissions.csv');
-
-		foreach ($matrix as $resourceAlias => $groupsPermissions) {
-			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
-
-			foreach ($groupsPermissions as $groupAlias => $groupPermission) {
-				$groupId = Common::uuid('group.id.' . $groupAlias);
-
-				// Get the permission
-				$query = "SELECT getGroupResourcePermission('{$groupId}', '{$resourceId}') AS permid";
-				$res = $this->Permission->query($query);
-
-				// Load the permission
-				$permission = $this->Permission->findById($res[0][0]['permid']);
-				$permissionType = $permission ? $permission['Permission']['type'] : 0;
-
-				$this->assertTrue(
-					$groupPermission == $permissionType,
-					"permissions for group {$groupAlias}({$groupId}) and resource {$resourceAlias}({$resourceId}) returned {$permissionType}
-				but should have returned {$groupPermission}"
-				);
-			}
-		}
-	}
-
-	public function testMysqlFunctionGetUserCategoryPermission()
-	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/categories_users_permissions.csv');
-
-		foreach ($matrix as $categoryAlias => $usersPermissions) {
-			$categoryId = Common::uuid('category.id.' . $categoryAlias);
-
-			foreach ($usersPermissions as $userAlias => $userPermission) {
-				$userId = Common::uuid('user.id.' . $userAlias);
-
-				// Get the permission
-				$query = "SELECT getUserCategoryPermission('{$userId}', '{$categoryId}') AS permid";
-				$res = $this->Permission->query($query);
-
-				// Load the permission
-				$permission = $this->Permission->findById($res[0][0]['permid']);
-				$permissionType = $permission ? $permission['Permission']['type'] : 0;
-
-				$this->assertTrue(
-					$userPermission == $permissionType,
-					"permissions for user {$userAlias}({$userId}) and category {$categoryAlias}({$categoryId}) returned {$permissionType}
-				but should have returned {$userPermission}"
-				);
-			}
-		}
 	}
 
 	public function testMysqlFunctionGetUserResourcePermission()
@@ -144,13 +57,23 @@ class PermissionTest extends CakeTestCase
 				$userId = Common::uuid('user.id.' . $userAlias);
 
 				// Get the permission
-				$query = "SELECT getUserResourcePermission('{$userId}', '{$resourceId}') AS permid";
+				$query = "SELECT UserResourcePermission.permission_id
+							FROM users_resources_permissions UserResourcePermission
+							WHERE UserResourcePermission.user_id = \"$userId\"
+							AND UserResourcePermission.resource_id = \"$resourceId\"";
 				$res = $this->Permission->query($query);
 
+				// If no permission found
+				if (empty($res)) {
+					$permissionType = 0;
+				}
 				// Load the permission
-				$permission = $this->Permission->findById($res[0][0]['permid']);
-				$permissionType = $permission ? $permission['Permission']['type'] : 0;
+				else {
+					$permission = $this->Permission->findById($res[0]['UserResourcePermission']['permission_id']);
+					$permissionType = $permission ? $permission['Permission']['type'] : 0;
+				}
 
+				// Check the user permission is as expected.
 				$this->assertTrue(
 					$userPermission == $permissionType,
 					"permissions for user {$userAlias}({$userId}) and resource {$resourceAlias}({$resourceId}) returned {$permissionType}

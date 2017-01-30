@@ -59,7 +59,7 @@ class SecretTest extends CakeTestCase {
 		$testcases = array(
 			'' => false,
 			'?!#' => false,
-			Common::uuid('resource.id.cpp1-pwd1') => true,
+			Common::uuid('resource.id.apache') => true,
 			'509bb871-3b14-4877-8a88-fb098cebc04b' => false
 		);
 		foreach ($testcases as $testcase => $result) {

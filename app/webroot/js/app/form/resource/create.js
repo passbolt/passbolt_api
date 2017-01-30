@@ -50,13 +50,6 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		// temporary for update demonstration
 		this.options.data.Resource = this.options.data.Resource || {};
 
-		// Add category id hidden field
-		this.addElement(
-			new mad.form.Textbox($('#js_field_category_id'), {
-				modelReference: 'passbolt.model.Resource.Category.id',
-				validate: false
-			}).start()
-		);
 		// Add resource id hidden field
 		this.addElement(
 			new mad.form.Textbox($('#js_field_resource_id'), {

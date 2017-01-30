@@ -158,12 +158,12 @@ class PermissionsController extends AppController {
 		}
 
 		// Get back the permission to return to the client
-		$viewName = $aroModelName . $acoModelName . 'Permission'; // ex: UserCategoryPermission
+		$viewName = $aroModelName . $acoModelName . 'Permission'; // ex: UserResourcePermission
 		$viewCase = 'viewBy' . $acoModelName; // ex: viewByCategory
-		$foreignKey = Inflector::underscore($acoModelName) . '_id'; // category_id
+		$foreignKey = Inflector::underscore($acoModelName) . '_id'; // ex: resource_id
 		$this->loadModel($viewName);
 		$findData = [
-			$viewName => [ // UserCategoryPermission
+			$viewName => [ // UserResourcePermission
 				$foreignKey => $acoInstanceId // category_id = $acoInstanceId
 			]
 		];

@@ -110,18 +110,13 @@ class DataShell extends AppShell {
 					'DataDefault.Gpgkey',
 					'DataUnitTests.Profile',
 					'DataUnitTests.Avatar',
-					'DataUnitTests.Resource',
+					'DataSeleniumTests.Resource',
 					// testing only
-					'DataUnitTests.CategoryType',
-					'DataUnitTests.Category',
-					'DataUnitTests.CategoryResource',
 					'DataUnitTests.Group',
 					'DataUnitTests.GroupUser',
-					'DataUnitTests.Tag',
-					'DataUnitTests.ItemTag',
-					'DataUnitTests.Permission',
-					'DataUnitTests.Secret',
-					'DataUnitTests.Comment',
+					'DataSeleniumTests.Permission',
+					'DataSeleniumTests.Secret',
+					'DataUnitTests.Comment'
 				);
 		}
 	}

@@ -26,7 +26,7 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 
 	/**
 	 * Create a new group
-	 * @param {array} attrs Attributes of the new category
+	 * @param {array} attrs Attributes of the new group
 	 * @return {jQuery.Deferred)
 	 */
 	create : function (attrs, success, error) {

@@ -8,7 +8,7 @@ import 'mad/model/model';
  *
  * target : Resource / User
  * keywords : string
- * conditions : Category = *, Group = *
+ * conditions : Group = *
  * order : conditions of order,
  * script:
  *

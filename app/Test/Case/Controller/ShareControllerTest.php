@@ -13,11 +13,7 @@ App::uses('UsersController', 'Controller');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 App::uses('Resource', 'Model');
-App::uses('Category', 'Model');
-App::uses('UserResourcePermission', 'Model');
-App::uses('GroupResourcePermission', 'Model');
-App::uses('UserCategoryPermission', 'Model');
-App::uses('GroupCategoryPermission', 'Model');
+App::uses('UserResourcePermission', 'Model');;
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
 
@@ -26,8 +22,6 @@ class ShareControllerTest extends ControllerTestCase {
 	public $fixtures = array(
 		'app.resource',
 		'app.secret',
-		'app.category',
-		'app.categories_resource',
 		'app.favorite',
 		'app.user',
 		'app.group',
@@ -56,17 +50,12 @@ class ShareControllerTest extends ControllerTestCase {
 
 		$this->User = Common::getModel('User');
 		$this->Resource = Common::getModel('Resource');
-		$this->Category = Common::getModel('Category');
 		$this->Permission = Common::getModel('Permission');
 		$this->UserResourcePermission = Common::getModel('UserResourcePermission');
-		$this->GroupResourcePermission = Common::getModel('GroupResourcePermission');
-		$this->UserCategoryPermission = Common::getModel('UserCategoryPermission');
-		$this->GroupCategoryPermission = Common::getModel('GroupCategoryPermission');
 
 		$this->session = new CakeSession();
 		$this->session->init();
 
-		// log the user as a manager to be able to access all categories
 		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
@@ -126,11 +115,11 @@ class ShareControllerTest extends ControllerTestCase {
 
 			),
 		);
-		$this->_updateCall('Resource', Common::uuid('resource.id.facebook-account'), $data);
+		$this->_updateCall('Resource', Common::uuid('resource.id.debian'), $data);
 	}
 
 	public function testUpdateNotAllowed() {
-		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$acoInstanceId = Common::uuid('resource.id.debian');
 
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -153,7 +142,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateDeleteNonExistingResource() {
-		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$acoInstanceId = Common::uuid('resource.id.debian');
 		$permissionId = Common::uuid('not-valid-reference');
 
 		$data = array(
@@ -171,13 +160,13 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateDeletePermissionBelongsToOtherResource() {
-		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$acoInstanceId = Common::uuid('resource.id.debian');
 
 		// Get a permission that doesn't belong to the resource.
 		$directPerm = $this->Permission->find('first', array(
 			'conditions' => array(
 				'aco' => 'Resource',
-				'aco_foreign_key' => Common::uuid('resource.id.salesforce-account'),
+				'aco_foreign_key' => Common::uuid('resource.id.apache'),
 				'aro' => 'User',
 			)
 		));
@@ -198,13 +187,13 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateDeletePermission() {
-		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$acoInstanceId = Common::uuid('resource.id.debian');
 
 		// Get a permission that belongs to the resource
 		$directPerm = $this->Permission->find('first', array(
 			'conditions' => array(
 				'aco' => 'Resource',
-				'aco_foreign_key' => Common::uuid('resource.id.facebook-account'),
+				'aco_foreign_key' => Common::uuid('resource.id.debian'),
 				'aro' => 'User',
 			)
 		));
@@ -230,7 +219,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateAddSecretsNotProvided() {
-		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$acoInstanceId = Common::uuid('resource.id.debian');
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 
 		$data = array(
@@ -252,6 +241,7 @@ class ShareControllerTest extends ControllerTestCase {
 		$directPerm = $this->Permission->find('first', array(
 				'conditions' => array(
 					'aco' => 'Resource',
+					'aco_foreign_key' => Common::uuid('resource.id.debian'),
 					'aro' => 'User',
 				)
 			));
@@ -294,22 +284,22 @@ hcciUFw5
 
 	// Test update add with wrong secrets data provided. (not matching the user ids).
 	public function testUpdateAddSecretForWrongUserProvided() {
-		$userAdaId = Common::uuid('user.id.ada');
-		$userBettyId = Common::uuid('user.id.betty');
-		$userCarolId = Common::uuid('user.id.carol');
-		$rsFacebookId = Common::uuid('resource.id.facebook-account');
+		$userAId = Common::uuid('user.id.ada');
+		$userCId = Common::uuid('user.id.carol');
+		$userFId = Common::uuid('user.id.frances');
+		$rsId = Common::uuid('resource.id.debian');
 
 		$data = array(
 			'Permissions' => array(
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $userBettyId,
+						'aro_foreign_key' => $userCId,
 						'type' => PermissionType::OWNER,
 					),
 				),
 				array(
 					'Permission' => array (
-						'aro_foreign_key' => $userCarolId,
+						'aro_foreign_key' => $userFId,
 						'type' => PermissionType::OWNER,
 					),
 				)
@@ -317,8 +307,8 @@ hcciUFw5
 			'Secrets' => array(
 				array(
 					'Secret' => array (
-						'user_id' =>$userAdaId,
-						'resource_id' => $rsFacebookId,
+						'user_id' =>$userCId,
+						'resource_id' => $rsId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -336,8 +326,8 @@ hcciUFw5
 				),
 				array(
 					'Secret' => array (
-						'user_id' =>$userBettyId,
-						'resource_id' => $rsFacebookId,
+						'user_id' =>$userAId,
+						'resource_id' => $rsId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -355,13 +345,13 @@ hcciUFw5
 				),
 			),
 		);
-		$this->setExpectedException('HttpException', "The secret for user id {$userCarolId} is not provided");
-		$this->_updateCall('Resource', $rsFacebookId, $data);
+		$this->setExpectedException('HttpException', "The secret for user id {$userFId} is not provided");
+		$this->_updateCall('Resource', $rsId, $data);
 	}
 
 	public function testUpdateAddValid() {
 		$userId = Common::uuid('user.id.user');
-		$rsFacebookId = Common::uuid('resource.id.facebook-account');
+		$rsId = Common::uuid('resource.id.debian');
 
 		$data = array(
 			'Permissions' => array(
@@ -376,7 +366,7 @@ hcciUFw5
 				array(
 					'Secret' => array (
 						'user_id' => $userId,
-						'resource_id' => $rsFacebookId,
+						'resource_id' => $rsId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -394,7 +384,7 @@ hcciUFw5
 				),
 			),
 		);
-		$res = json_decode($this->_updateCall('Resource', $rsFacebookId, $data), true);
+		$res = json_decode($this->_updateCall('Resource', $rsId, $data), true);
 		$this->assertEquals(
 			Status::SUCCESS,
 			$res['header']['status'],
@@ -404,7 +394,7 @@ hcciUFw5
 		// Observe that the permission is deleted.
 		$exist = $this->Permission->find('first', array(
 				'conditions' => array(
-					'aco_foreign_key' => $rsFacebookId,
+					'aco_foreign_key' => $rsId,
 					'aro_foreign_key' => $userId,
 					'type' => PermissionType::OWNER,
 				)
@@ -422,6 +412,7 @@ hcciUFw5
 				'conditions' => array(
 					'aco' => 'Resource',
 					'aro' => 'User',
+					'aco_foreign_key' => Common::uuid('resource.id.debian')
 				)
 			));
 		$data = array(
@@ -447,7 +438,7 @@ hcciUFw5
 	// Test adding permissions for a user that is not active (not completed the setup yet).
 	public function testUpdateAddInactiveUser() {
 		$userId = Common::uuid('user.id.user');
-		$rsFacebookId = Common::uuid('resource.id.facebook-account');
+		$rsId = Common::uuid('resource.id.debian');
 
 		$this->User->id = $userId;
 		$this->User->save(['active' => 0], false, ['active']);
@@ -465,7 +456,7 @@ hcciUFw5
 				array(
 					'Secret' => array (
 						'user_id' => $userId,
-						'resource_id' => $rsFacebookId,
+						'resource_id' => $rsId,
 						'data' => '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
@@ -484,12 +475,12 @@ hcciUFw5
 			),
 		);
 		$this->setExpectedException('HttpException', "The ARO instance $userId for the model User doesn't exist or the user is not allowed to access it");
-		$this->_updateCall('Resource', $rsFacebookId, $data);
+		$this->_updateCall('Resource', $rsId, $data);
 	}
 
 	public function testSimulate() {
 		$userId = Common::uuid('user.id.user');
-		$acoInstanceId = Common::uuid('resource.id.facebook-account');
+		$acoInstanceId = Common::uuid('resource.id.debian');
 
 		$data = array(
 			'Permissions' => array(
@@ -550,7 +541,7 @@ hcciUFw5
 	}
 
 	public function testSearchUsersToGrantWithoutOwnerAccess() {
-		$id = Common::uuid('resource.id.cpp2-pwd2');
+		$id = Common::uuid('resource.id.debian');
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
@@ -560,7 +551,7 @@ hcciUFw5
 
 	// test search users available to receive a new direct permission : owner should be excluded
 	public function testSearchUsersToGrantOwnerExcluded() {
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
@@ -569,34 +560,32 @@ hcciUFw5
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// The owner is not in the list of users who can receive a direct permission
-		$this->assertFalse(in_array(Common::uuid('user.id.irene'), $usersIds));
+		$this->assertFalse(in_array(Common::uuid('user.id.dame'), $usersIds));
 	}
 
 	// test search users available to receive a new direct permission : filter by keywords
 	public function testSearchUsersToGrantFilterByKeywords() {
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
-				'keywords' => 'betty'
+				'keywords' => 'carol'
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-
-		// The user Betty is in the list of retrieved users.
-		$this->assertTrue(in_array(Common::uuid('user.id.betty'), $usersIds));
+		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
 	// test search users available to receive a new direct permission : excluding users
 	public function testSearchUsersToGrantFilterExcludingUsers() {
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
-				'excludedUsers' => json_encode(array(Common::uuid('user.id.betty')))
+				'excludedUsers' => json_encode(array(Common::uuid('user.id.edith')))
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
@@ -606,17 +595,15 @@ hcciUFw5
 		$this->assertNotEmpty($usersIds);
 
 		// The users with excluded in the request parameters is not in the request results.
-		$this->assertTrue(!in_array(Common::uuid('user.id.betty'), $usersIds));
+		$this->assertTrue(!in_array(Common::uuid('user.id.edith'), $usersIds));
 	}
 
 	// test search users shouldn't return inactive users.
 	public function testSearchUsersExcludeNonActive() {
-		// Make betty inactive.
-		$bettyId = Common::uuid('user.id.betty');
-		$this->User->id = $bettyId;
+		$this->User->id = Common::uuid('user.id.edit');
 		$this->User->save(['active' => 0], false, ['active']);
 
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
@@ -625,49 +612,41 @@ hcciUFw5
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// Betty shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
+		$this->assertFalse(in_array(Common::uuid('user.id.edith'), $usersIds));
 	}
 
 	// test search users shouldn't return inactive users in case of autocomplete.
 	public function testSearchUsersAutocompleteExcludeNonActive() {
-		// Make betty inactive.
-		$bettyId = Common::uuid('user.id.betty');
-		$this->User->id = $bettyId;
+		$this->User->id = Common::uuid('user.id.edith');
 		$this->User->save(['active' => 0], false, ['active']);
 
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
-				'keywords' => 'betty'
+				'keywords' => 'edith'
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// Betty shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
+		$this->assertFalse(in_array(Common::uuid('user.id.edith'), $usersIds));
 	}
 
 	// test search users shouldn't return inactive users.
 	public function testAdminSearchUsersExcludeNonActive() {
-		$dame = $this->User->findById(Common::uuid('user.id.dame'));
-		$this->User->id = $dame['User']['id'];
+		$userD = $this->User->findById(Common::uuid('user.id.dame'));
+		$this->User->id = $userD['User']['id'];
 		$this->User->save(['role_id' => Common::uuid('role.id.admin')], false, ['role_id']);
-		$dame['User']['role_id'] = Common::uuid('role.id.admin');
-		$this->User->setActive($dame);
+		$userD['User']['role_id'] = Common::uuid('role.id.admin');
+		$this->User->setActive($userD);
 
-		$bettyId = Common::uuid('user.id.betty');
-		$this->User->id = $bettyId;
+		$this->User->id = Common::uuid('user.id.carol');
 		$this->User->save(['active' => 0], false, ['active']);
 
-		// Make betty inactive.
-		$bettyId = Common::uuid('user.id.betty');
-		$this->User->id = $bettyId;
-		$this->User->save(['active' => 0], false, ['active']);
-
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
@@ -675,8 +654,8 @@ hcciUFw5
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
-		// Betty shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.betty'), $usersIds));
+		// The user shouldn't be in the list of returned users.
+		$this->assertFalse(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
 }

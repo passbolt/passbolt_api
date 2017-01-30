@@ -5,8 +5,6 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-App::uses('Category', 'Model');
-App::uses('CategoryResource', 'Model');
 
 class ResourcesController extends AppController {
 
@@ -80,60 +78,10 @@ class ResourcesController extends AppController {
  * )
  */
 	public function index() {
-		// The additional information to pass to the model request
-		$findData = [];
-		// Whether we want also the resources of all subcategories
-		$recursive = false;
-
 		// Extract the filter from the request
-		$filter = $this->Filter->fromRequest($this->request->query);
-		// Merge the filter into the additional information to pass to the model request
-		$findData = array_merge($findData, $filter);
-		if (isset($this->request->query['recursive']) && $this->request->query['recursive'] === 'true') {
-			$recursive = true;
-		}
+		$findData = $this->Filter->fromRequest($this->request->query);
 
-		// A filter on category is provided
-		// - check the validity of the given categories uid
-		// - if recursive, filter also on sub-categories
-		if (isset($findData['foreignModels']['Category.id'])) {
-			// Tmp array to store the target categories and subcategories (if recursive provided)
-			$categories = [];
-
-			foreach ($findData['foreignModels']['Category.id'] as $categoryId) {
-				// if a category id is provided check it is well an uid
-				if (!Common::isUuid($categoryId)) {
-					return $this->Message->error(__('The category id is invalid'));
-				}
-				// check if the category exists
-				$category = $this->Resource->CategoryResource->Category->findById($categoryId);
-				if (!$category) {
-					return $this->Message->error(__('The category doesn\'t exist'));
-				}
-
-				// The request is not a recursive request
-				if (!$recursive) {
-					$categories[] = $categoryId;
-				} else {
-					// Else get the sub categories and add them to the target categories to filter on
-					// If the category has yet been added to the additional parameters
-					if (in_array($categoryId, $categories)) {
-						continue;
-					} else {
-						// Else Get the subcategories of the current category
-						$subCategories = $this->Resource->CategoryResource->Category->getSubCategories($category);
-						// Add the subcategories to the request conditions
-						foreach ($subCategories as $subCategory) {
-							$categories[] = $subCategory['Category']['id'];
-						}
-					}
-				}
-			}
-
-			// replace the categories to filter on with the computed array of categories & subcategories
-			$findData['foreignModels']['Category.id'] = $categories;
-		}
-
+		// Retrieve the resources
 		$findOptions = $this->Resource->getFindOptions('index', User::get('Role.name'), $findData);
 		$resources = $this->Resource->find('all', $findOptions);
 
@@ -219,7 +167,7 @@ class ResourcesController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		// check if the category id is provided
+		// check if the resource id is provided
 		if (!isset($id)) {
 			return $this->Message->error(__('The resource id is missing'));
 		}
@@ -352,50 +300,6 @@ class ResourcesController extends AppController {
 				'resource_id' => $resource['Resource']['id'],
 			]);
 
-		// Save the corresponding categories.
-		if (isset($resourcepost['Category'])) {
-			$categoryResourceFields = $this->Resource->CategoryResource->getFindFields('save', User::get('Role.name'));
-
-			foreach ($resourcepost['Category'] as $cat) {
-				$this->Resource->CategoryResource->create();
-				$crdata = [
-					'CategoryResource' => [
-						'category_id' => $cat['id'],
-						'resource_id' => $resource['Resource']['id']
-					]
-				];
-
-				// check if the data is valid
-				$this->Resource->CategoryResource->set($crdata);
-				if (!$this->Resource->CategoryResource->validates(['fieldList' => $categoryResourceFields['fields']])) {
-					$dataSource->rollback();
-					return $this->Message->error(__('Could not validate CategoryResource',
-						['body' => $this->Resource->CategoryResource->validationErrors]));
-				}
-
-				// Check that the user is well authorized to create a resource into the given category.
-				if (!$this->Resource->CategoryResource->Category->isAuthorized($cat['id'], PermissionType::CREATE)) {
-					$dataSource->rollback();
-					return $this->Message->error(__('You are not authorized to create a resource into the category'),
-						['code' => 403]);
-				}
-
-				// Save the data.
-				$categoryResource = $this->Resource->CategoryResource->save(
-					$crdata,
-					[
-						'validate' => false,
-						'atomic' => false,
-						'fieldList' => $categoryResourceFields['fields']
-					]);
-
-				if ($categoryResource == false) {
-					$dataSource->rollback();
-					return $this->Message->error(__('Could not save the association'));
-				}
-			}
-		}
-
 		// Everything went fine.
 		$dataSource->commit();
 		$this->Message->success(__('The resource was successfully saved'));
@@ -457,7 +361,7 @@ class ResourcesController extends AppController {
 		$dataSource->begin();
 
 		// check if data was provided
-		if (!isset($resourcepost['Resource']) && !isset($resourcepost['Category'])) {
+		if (!isset($resourcepost['Resource'])) {
 			return $this->Message->error(__('No data were provided'));
 		}
 
@@ -502,42 +406,6 @@ class ResourcesController extends AppController {
 			} catch (Exception $e) {
 				$dataSource->rollback();
 				return $this->Message->error($e->getMessage());
-			}
-		}
-
-		// Save the relations
-		if (isset($resourcepost['Category']) && !empty($resourcepost['Category'])) {
-			// If relations are given with the resource
-			// we start by deleting previous associations
-			$delete = $this->Resource->CategoryResource->deleteAll([
-				'resource_id' => $id
-			]);
-			if (!$delete) {
-				$dataSource->rollback();
-				return $this->Message->error(__('Could not delete Categories'));
-			}
-			// Save the new relations
-			foreach ($resourcepost['Category'] as $cat) {
-				$crdata = [
-					'CategoryResource' => [
-						'category_id' => $cat['id'],
-						'resource_id' => $id
-					]
-				];
-
-				$this->Resource->CategoryResource->create();
-				// check if the data is valid
-				$this->Resource->CategoryResource->set($crdata);
-				if (!$this->Resource->CategoryResource->validates()) {
-					$dataSource->rollback();
-					return $this->Message->error(__('Could not validate CategoryResource'));
-				}
-				// if validation passes, then save the data
-				$res = $this->Resource->CategoryResource->save();
-				if (!$res) {
-					$dataSource->rollback();
-					return $this->Message->error(__('Could not save the association'));
-				}
 			}
 		}
 

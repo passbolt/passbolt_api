@@ -64,21 +64,6 @@ var AppFilter = passbolt.component.AppFilter = mad.Component.extend('passbolt.co
 	},
 
 	/* ************************************************************** */
-	/* LISTEN TO APP EVENTS */
-	/* ************************************************************** */
-
-	/**
-	 * Observe when category is selected
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {passbolt.model.Category} category The selected category
-	 * @roadmap
-	 */
-	//'{mad.bus.element} category_selected': function (el, ev, category) {
-	//	this.reset();
-	//},
-
-	/* ************************************************************** */
 	/* LISTEN TO VIEW EVENTS */
 	/* ************************************************************** */
 

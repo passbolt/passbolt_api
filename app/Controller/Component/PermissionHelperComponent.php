@@ -75,20 +75,8 @@ class PermissionHelperComponent extends Component {
 			$upOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $upData);
 			$ups = $ModelView->find('all', $upOptions);
 
-			// get group's permissions for the target instance
-			$viewName = 'Group' . $acoModelName . 'Permission';
-			$ModelView = Common::getModel($viewName);
-			$foreignKey = strtolower($acoModelName) . '_id';
-			$gpData = [
-				$viewName => [
-					$foreignKey => $acoInstanceId
-				]
-			];
-			$gpOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $gpData);
-			$gps = $ModelView->find('all', $gpOptions);
-
 			// merge user's and group's permissions
-			$permissions = array_merge($ups, $gps);
+			$permissions = array_merge($ups);
 		}
 
 		return $permissions;

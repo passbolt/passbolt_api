@@ -1,7 +1,5 @@
 import 'mad/model/model';
-import 'app/model/category';
 import 'mad/model/serializer/cake_serializer';
-
 
 /*
  * Passbolt permission constants.
@@ -102,7 +100,7 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 	},
 
 	destroy: function () {
-		// @todo unbind the passbolt.model.Category destroyed event
+		// @todo unbind the passbolt.model.PermissionType destroyed event
 	}
 });
 

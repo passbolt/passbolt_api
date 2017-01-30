@@ -104,16 +104,8 @@ class Resource extends AppModel {
  * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
  */
 	public $hasMany = [
-		'CategoryResource',
 		'Secret',
 	];
-
-/**
- * Details of has and belongs to many relationships
- *
- * @link http://book.cakephp.org/2.0/en/models/associations-linking-models-together.html#
- */
-	public $hasAndBelongsToMany = ['Category' => ['className' => 'Category']];
 
 /**
  * Resource constructor
@@ -241,11 +233,7 @@ class Resource extends AppModel {
 				];
 				break;
 			case 'index':
-			case 'viewByCategory':
 				$conditions = ['conditions' => ['Resource.deleted' => 0]];
-				if (isset($data['foreignModels']['Category.id'])) {
-					$conditions['conditions']['Category.id'] = $data['foreignModels']['Category.id'];
-				}
 				if (isset($data['keywords'])) {
 					$keywords = explode(' ', $data['keywords']);
 					foreach ($keywords as $keyword) {
@@ -314,7 +302,6 @@ class Resource extends AppModel {
 				break;
 			case 'view':
 			case 'index':
-			case 'viewByCategory':
 				$fields = [
 					'fields' => [
 						'DISTINCT Resource.id',
@@ -333,10 +320,7 @@ class Resource extends AppModel {
 						'Modifier.id',
 						'Modifier.username'
 					],
-					'superjoin' => ['Category'],
 					'contain' => [
-						'Category',
-						'CategoryResource',
 						'Favorite',
 						'Secret' => [
 							'fields' => [

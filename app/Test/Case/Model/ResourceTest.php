@@ -14,10 +14,7 @@ App::uses('AppTestCase', 'Test');
 class ResourceTest extends AppTestCase {
 
 	public $fixtures = array(
-		'app.category',
 		'app.resource',
-		'app.categoryType',
-		'app.categoriesResource',
 		'app.user',
 		'app.role',
 		'app.secret',
@@ -260,7 +257,6 @@ class ResourceTest extends AppTestCase {
 		$default = ['fields' => []];
 		$this->assertNotEquals($default, Resource::getFindFields('view'), 'Find fields missing for view');
 		$this->assertNotEquals($default, Resource::getFindFields('index'), 'Find fields missing for index');
-		$this->assertNotEquals($default, Resource::getFindFields('viewByCategory'), 'Find fields missing for viewByCategory');
 		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
 		$this->assertNotEquals($default, Resource::getFindFields('Resource::edit'), 'Find fields missing for delete');
 		$this->assertNotEquals($default, Resource::getFindFields('save'), 'Find fields missing for delete');
@@ -278,27 +274,23 @@ class ResourceTest extends AppTestCase {
 		$this->assertNotEquals($default, Resource::getFindConditions('edit'), 'Find conditions missing for edit');
 		$this->assertNotEquals($default, Resource::getFindConditions('view'), 'Find conditions missing for view');
 		$this->assertNotEquals($default, Resource::getFindConditions('index'), 'Find conditions missing for index');
-		$this->assertNotEquals($default, Resource::getFindConditions('viewByCategory'), 'Find conditions missing for viewByCategory');
 
-		// ViewByCategory default conditions
+		// Default conditions
 		$conditions = ['conditions' => ['Resource.deleted' => 0]];
 		// filter cases checks
 		$cases = ['favorite', 'own', 'shared'];
 		foreach($cases as $case) {
-			$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['case' => $case]),
-				'Find conditions missing for viewByCategory case ' . $case);
+			$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['case' => $case]),
+				'Find conditions missing for index case ' . $case);
 		}
 		// search by keyword
-		$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['keywords' => 'one or two']),
-				'Find conditions missing for viewByCategory by keywords');
-		// search by categoryid
-		$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['foreignModels' => ['Category.id' => Common::uuid()]]),
-				'Find conditions missing for viewByCategory by foreignModels.CategoryId');
+		$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['keywords' => 'one or two']),
+				'Find conditions missing for index by keywords');
 		// order cases checks
 		$cases = ['modified', 'expiry_date'];
 		foreach($cases as $case) {
-			$this->assertNotEquals($conditions, Resource::getFindConditions('viewByCategory', Role::USER, ['order' => $case]),
-					'Find conditions missing for viewByCategory case ' . $case);
+			$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['order' => $case]),
+					'Find conditions missing for index case ' . $case);
 		}
 
 		$this->assertEquals($default, Resource::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
@@ -311,7 +303,7 @@ class ResourceTest extends AppTestCase {
 		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 
-		$resourceId = Common::uuid('resource.id.facebook-account');
+		$resourceId = Common::uuid('resource.id.apache');
 		$this->Resource->softDelete($resourceId);
 
 		// Resource deleted field should be set at true
@@ -332,7 +324,7 @@ class ResourceTest extends AppTestCase {
 		$id = Common::uuid('not-valid-reference');
 		$this->assertTrue($this->Resource->isSoftDeleted($id));
 
-		$id = Common::uuid('resource.id.facebook-account');
+		$id = Common::uuid('resource.id.apache');
 		$this->assertFalse($this->Resource->isSoftDeleted($id));
 
 		// test with empty id
@@ -363,13 +355,11 @@ class ResourceTest extends AppTestCase {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
-		// I access a reource named cpp1-pwd1 that is shared with
-		// Ada, Dame, Lynne = Owner
-		// Jean = read
-		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		// I access a resource that is shared with multiple users
+		$conditions = ['conditions' => ['name' => 'apache'], 'contain' => ['Secret']];
 		$resource = $this->Resource->find('first', $conditions);
 
-		// And I try to save the same secret but without a Lynn
+		// And I try to save the same secret but with a missing user
 		// It should throw an exception
 		unset($resource['Secret'][3]);
 		$this->setExpectedException('Exception', 'The list of secrets provided is invalid');
@@ -384,10 +374,8 @@ class ResourceTest extends AppTestCase {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
-		// I access a resource named cpp1-pwd1 that is shared with
-		// Ada, Dame, Lynne = Owner
-		// Jean = read
-		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		// I access a resource that is shared with multiple users
+		$conditions = ['conditions' => ['name' => 'apache'], 'contain' => ['Secret']];
 		$resource = $this->Resource->find('first', $conditions);
 
 		// And I try to save the same secrets but with one missing some data
@@ -409,7 +397,7 @@ class ResourceTest extends AppTestCase {
 		// I access a resource named cpp1-pwd1 that is shared with
 		// Ada, Dame, Lynne = Owner
 		// Jean = read
-		$conditions = ['conditions' => ['name' => 'cpp1-pwd1'], 'contain' => ['Secret']];
+		$conditions = ['conditions' => ['name' => 'apache'], 'contain' => ['Secret']];
 		$resource = $this->Resource->find('first', $conditions);
 
 		// And I try to save the same secrets but with one missing some data

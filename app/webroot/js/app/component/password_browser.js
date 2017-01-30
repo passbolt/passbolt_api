@@ -7,7 +7,6 @@ import 'mad/component/grid';
 import 'mad/component/contextual_menu';
 import 'mad/form/element/checkbox';
 import 'app/model/resource';
-import 'app/model/category';
 import 'app/model/favorite';
 import 'app/component/favorite';
 import 'app/view/component/password_browser';
@@ -34,8 +33,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		itemClass: passbolt.model.Resource,
 		// the view class to use. Overriden so we can put our own logic.
 		viewClass: passbolt.view.component.PasswordBrowser,
-		// the list of watched categories
-		categories: [],
 		// the selected resources, you can pass an existing list as parameter of the constructor to share the same list
 		selectedRs: new can.Model.List(),
 		// Prefix each row id with resource_
@@ -69,8 +66,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			secret: 'Secret',
 			uri: 'uri',
 			modified: 'modified',
-			owner: 'Creator.username',
-			Category: 'Category'
+			owner: 'Creator.username'
 		});
 
 		// the columns model
@@ -237,7 +233,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		});
 		contextualMenu.start();
 
-		// get the permission on the category.
+		// get the permission on the resource.
 		var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ),
 			canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE),
 			canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
@@ -382,25 +378,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// If the item doesn't exist
 		if (!this.itemExists(resource)) {
 			return;
-		}
-
-		// if the password browser is filter by category
-		if(this.options.categories.length) {
-			// Is the resource belonging to a displayed category
-			var belongToDisplayedCat = false;
-
-			// check if the resource belongs to a displayed category
-			can.each(resource.Category, function (resourceCategory, i) {
-				// the resource belongs to a destroy categories
-				if (self.options.categories.indexOf(resourceCategory.id) != -1) {
-					belongToDisplayedCat = true;
-				}
-			});
-			// remove the resource if it does not belong to a displayed category
-			if(!belongToDisplayedCat) {
-				this.removeItem(resource);
-				return;
-			}
 		}
 
 		// if the resource has not been removed from the grid, update it
@@ -553,31 +530,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		// Clone the given filter to avoid any changes problem.
 		this.filterSettings = filter.clone();
 
-		//
-		//this.options.categories = [];
-		//
-		//// Set state to filter case.
-		//if (filter.case != undefined) {
-		//	// Remove class belonging to previous filter.
-		//	if (this.filterSettings != undefined) {
-		//		self.element.removeClass(this.filterSettings.case);
-		//	}
-		//	// Add class for current filter. (used in styleguide).
-		//	self.element.addClass(filter.case);
-		//}
-		//
-		//// override the current list of categories displayed with the new ones
-		//// and the relative sub-categories
-		//var filteredCategory = filter.getForeignModels('Category');
-		//if(filteredCategory) {
-		//	can.each(filteredCategory, function (category, i) {
-		//		var subCategories = category.getSubCategories(true);
-		//		can.each(subCategories, function(subCategory, i){
-		//			self.options.categories.push(subCategory.id);
-		//		});
-		//	});
-		//}
-
 		// If the current filter case is different than the previous filter case
 		//   or this is the initial filtering (loading)
 		if (this.oldFilterSettings == null
@@ -678,31 +630,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/* ************************************************************** */
 
 	/**
-	* Observe when a resource is created.
-	* If the created resource belong to a displayed category, add the resource to the grid.
+	* Observe when a resource is created and add it to the browser.
 	* @param {mad.model.Model} model The model reference
 	* @param {HTMLEvent} ev The event which occurred
 	* @param {passbolt.model.Resource} resource The created resource
 	*/
 	'{passbolt.model.Resource} created': function (model, ev, resource) {
-		var self = this;
-
-		// If the resourcs belongs to one or several categories
-		if (resource.Category.length) {
-			// If the new resource belongs to one of the categories displayed by the resource
-			// browser -> Insert it
-			resource.Category.each(function(category, i) {
-				if(self.options.categories.indexOf(category.id) != -1) {
-					self.insertItem(resource, null, 'first');
-					return false; // break
-				}
-			});
-		}
-		// Else insert it whatever the applied filter.
-		// TODO Discuss this behavior with the team
-		else {
-			self.insertItem(resource, null, 'first');
-		}
+		this.insertItem(resource, null, 'first');
 	},
 
 	/**
@@ -718,27 +652,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		if (this.options.items.indexOf(resource) != -1) {
 			this.refreshItem(resource);
 		}
-	},
-
-	/**
-	* Observe when a category is removed. And remove from the grid all the resources
-	* which are not belonging to a displayed Category.
-	* @param {mad.model.Model} model The model reference
-	* @param {HTMLEvent} ev The event which occurred
-	* @param {passbolt.model.Category} category The removed category
-	*/
-	'{passbolt.model.Category} destroyed': function (model, ev, category) {
-		var self = this;
-
-		// remove from the list of displayed categories the given deleted category and its children
-		var destroyedCategories = mad.model.Model.nestedToList(category, 'children');
-		can.each(destroyedCategories, function(destroyedCategory, h) {
-			var indexof = self.options.categories.indexOf(destroyedCategory.id);
-			if (indexof != -1) {
-				// remove the destroyed categories from the display categories array
-				self.options.categories.splice(indexof, 1);
-			}
-		});
 	},
 
 	/* ************************************************************** */

@@ -2,14 +2,11 @@ import 'mad/component/component';
 import 'mad/component/confirm';
 import 'app/component/password_workspace_menu';
 import 'app/component/breadcrumb/password_breadcrumb';
-//import 'app/component/category_actions_tab';
-//import 'app/component/category_chooser';
 import 'app/component/password_browser';
 import 'app/component/resource_actions_tab';
 import 'app/component/resource_sidebar';
 import 'app/component/resource_shortcuts';
 import 'app/component/workspace_secondary_menu';
-//import 'app/form/category/create';
 import 'app/form/resource/create';
 import 'app/model/filter';
 
@@ -95,14 +92,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			}
 		).start();
 
-		// Instanciate the passwords filter controller
+		// Instantiate the passwords filter controller
 		var rsShortcut = new passbolt.component.ResourceShortcuts('#js_wsp_pwd_filter_shortcuts', {});
 		rsShortcut.start();
-
-		// Removed the lines below for #PASSBOLT-787
-		// Instanciate the categories chooser controller
-		//this.catChooser = new passbolt.component.CategoryChooserController('#js_wsp_pwd_category_chooser', {});
-		//this.catChooser.start();
 
 		// Instantiate the password workspace breadcrumb controller
 		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
@@ -156,8 +148,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 * @param {HTMLEvent} ev The event which occurred
 	 */
 	'{createButton.element} click': function (el, ev) {
-		var category = this.options.createButton.getValue();
-		mad.bus.trigger('request_resource_creation', category);
+		mad.bus.trigger('request_resource_creation');
 	},
 
 	/**
@@ -169,143 +160,18 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	'{mad.bus.element} filter_workspace': function (element, evt, filter) {
 		// When filtering the resources browser, unselect all the resources.
 		this.options.selectedRs.splice(0, this.options.selectedRs.length);
-
-		// Change the state of the create but regarding the selected categories.
-		var categories = filter.getForeignModels('Category'),
-			createButtonState = 'ready';
-
-		// If no categories selected, the user is allowed to create password. These
-		// passwords won't be associated to any category.
-		if (!categories) {
-			// Reset the value carried by the button.
-			this.options.createButton.setValue(new can.List([]));
-		} else {
-			// The button will now carry the latest selected categories.
-			this.options.createButton.setValue(categories);
-
-			// If the user doesn't have the permission to create into the selected category.
-			// Or if multiple categories selected.
-			if (categories.length > 1 || (
-				categories.length == 1 &&
-				!passbolt.model.Permission.isAllowedTo(categories[0], passbolt.CREATE))
-			) {
-				createButtonState = 'disabled';
-			}
-		}
-
-		this.options.createButton.setState(createButtonState);
-	},
-
-	/**
-	 * Observe when category is selected
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {passbolt.model.Category} category The selected category
-	 */
-	'{mad.bus.element} category_selected': function (el, ev, category) {
-		// reset the selected resources
-		this.options.selectedRs.splice(0, this.options.selectedRs.length);
-		// Set the new filter
-		this.options.filter.attr({
-			foreignModels: {
-				Category: new can.List([category])
-			},
-			type: passbolt.model.Filter.FOREIGN_MODEL
-		});
-		// propagate a special event on bus
-		mad.bus.trigger('filter_resources_browser', this.options.filter);
-	},
-
-	/**
-	 * Observe when the user requests a category creation
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{mad.bus.element} request_category_creation': function (el, ev, data) {
-		var category = new passbolt.model.Category({ parent_id: data.id });
-
-		// get the dialog
-		var dialog = new mad.component.Dialog(null, {
-			label: __('Create a new Category'),
-            cssClasses : ['edit-category-dialog', 'dialog-wrapper']
-		}).start();
-
-		// attach the component to the dialog
-		var form = dialog.add(passbolt.form.category.Create, {
-			data: category,
-			callbacks : {
-				submit: function (data) {
-					var instance = new passbolt.model.Category(data['passbolt.model.Category'])
-						.save();
-					dialog.remove();
-				}
-			}
-		});
-
-		form.load(category);
-	},
-
-	/**
-	 * Observe when the user requests a category edition
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{mad.bus.element} request_category_edition': function (el, ev, category) {
-		// get the dialog
-		var dialog = new mad.component.Dialog(null, {
-            label: __('Edit a Category'),
-            cssClasses : ['edit-category-dialog', 'dialog-wrapper']
-        }).start();
-
-		// Instanciate the Resource Actions Tab Controller into the dialog
-		var tab = dialog.add(passbolt.component.CategoryActionsTab, {
-			category: category
-		});
-		tab.enableTab('js_cat_edit');
-	},
-
-	/**
-	 * Observe when the user requests a category sharing
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{mad.bus.element} request_category_sharing': function (el, ev, category) {
-		// get the dialog
-		var dialog = new mad.component.Dialog(null, {
-            label: __('Share a Category'),
-            cssClasses : ['share-category-dialog', 'dialog-wrapper']
-        }).start();
-
-		// Instanciate the Resource Actions Tab Controller into the dialog
-		var tab = dialog.add(passbolt.component.CategoryActionsTab, {
-			category: category
-		});
-		tab.enableTab('js_cat_permission');
-	},
-
-	/**
-	 * Observe when the user requests a category deletion
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{mad.bus.element} request_category_deletion': function (el, ev, category) {
-		category.destroy();
+		// Enable the create button
+		this.options.createButton.setState('ready');
 	},
 
 	/**
 	 * Observe when the user requests a resource creation
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {passbolt.model.Category} categories The target categories to insert the resource
 	 */
-	'{mad.bus.element} request_resource_creation': function (el, ev, categories) {
-		if(typeof categories == 'undefined') {
-			categories = [];
-		} else if (!$.isArray(categories)) {
-			categories = [categories];
-		}
+	'{mad.bus.element} request_resource_creation': function (el, ev) {
 		// create the resource which will be used by the form builder to populate the fields
-		var resource = new passbolt.model.Resource({ Category: categories });
+		var resource = new passbolt.model.Resource();
 
 		// get the dialog
 		var dialog = new mad.component.Dialog(null, {
