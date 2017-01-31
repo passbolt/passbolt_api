@@ -29,112 +29,112 @@ class GroupFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => '14153251-abcb-3c00-a2d1-b4fdb1423d26',
-			'name' => 'management',
+			'id' => '012568d6-9300-385b-a22a-e27d191764eb',
+			'name' => 'Sales',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => '1f33f57a-b65b-3831-a133-236d2f874ef4',
-			'name' => 'company a',
+			'id' => '14153251-abcb-3c00-a2d1-b4fdb1423d26',
+			'name' => 'Management',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+			'name' => 'Human resource',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '24537609-6db5-31bb-af0d-f7f0494dd184',
+			'name' => 'Creative',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
 			'id' => '563a4b8f-e7ac-31ff-a3e8-f1b6d3ff222a',
-			'name' => 'accounting dpt',
+			'name' => 'Accounting',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '1c137bd7-2838-3c3d-a021-d2986d9126f5',
+			'modified_by' => '1c137bd7-2838-3c3d-a021-d2986d9126f5'
 		),
 		array(
-			'id' => '6d79c7f7-80d4-352b-a294-e97b32363c84',
-			'name' => 'developers drupal',
+			'id' => '5deebe9f-8e83-354c-a035-4e79353a0957',
+			'name' => 'Developer',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => '854dce19-6f1b-39bd-acbb-94d9a39b007f',
-			'name' => 'human resources',
+			'id' => '6da9af58-6e84-3a66-a1da-e11454751a45',
+			'name' => 'Administration',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => '9d8c162f-c5a1-3fc8-aadc-d652a7352dbb',
-			'name' => 'company b',
+			'id' => '73c705f1-919d-3916-a5b7-990b3a517d14',
+			'name' => 'Traffic',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => 'b9102683-f94d-3c94-a6de-1ff09763046b',
-			'name' => 'developers team leads',
+			'id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+			'name' => 'Freelancer',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => 'bdd0bf4c-a8e3-3d1a-aa79-5d9e9e46edb8',
-			'name' => 'freelancers',
+			'id' => 'd6b15a4e-4fdf-3026-ac49-5a8de3fc49a0',
+			'name' => 'Board',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => 'e037cffd-482f-3787-a30c-6929adc74079',
-			'name' => 'developers',
+			'id' => 'da776e4a-73b7-3a58-a047-f31614bd15bb',
+			'name' => 'Marketing',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => 'e7c2be86-c882-30ad-a3b2-d7387936c826',
-			'name' => 'no privilege',
+			'id' => 'fea0c76e-046c-33ab-ab27-809ce35c0cdb',
+			'name' => 'Network',
 			'deleted' => 0,
-			'created' => '2016-02-02 18:59:05',
-			'modified' => '2016-02-02 18:59:05',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-		),
-		array(
-			'id' => 'f8ec9e82-5709-346a-a157-65bb7c11b34a',
-			'name' => 'developers cakephp',
-			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-		),
-		array(
-			'id' => 'fa2fcd80-cf04-327b-ae18-8c1c5e81929e',
-			'name' => 'Users',
-			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 	);
 

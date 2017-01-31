@@ -37,14 +37,6 @@ class UserTask extends ModelTask {
 		));
 
 		// one user per default roles
-//		$us[] = array('User' => array(
-//			'id' => Common::uuid('user.id.guest'),
-//			'username' => 'guest@passbolt.com',
-//			'role_id' => Common::uuid('role.id.anonymous'),
-//			'active' => 1,
-//			'created_by' => Common::uuid('user.id.admin'),
-//			'modified_by' => Common::uuid('user.id.admin')
-//		));
 		$us[] = array('User' => array(
 			'id' => Common::uuid('user.id.user'),
 			'username' => 'user@passbolt.com',

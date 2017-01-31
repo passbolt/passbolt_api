@@ -19,13 +19,18 @@ class PermissionTask extends ModelTask {
 	public $model = 'Permission';
 
 	protected function getData() {
-		$permissions = array(
+		$ps = array();
+
+		$userResourcePermissions = array(
 			Common::uuid('resource.id.apache') => array(
 				Common::uuid('user.id.ada') => PermissionType::OWNER,
 				Common::uuid('user.id.betty') => PermissionType::UPDATE,
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				//Common::uuid('user.id.edith') => PermissionType::DENY,
+				Common::uuid('user.id.frances') => PermissionType::OWNER,
+				Common::uuid('user.id.grace') => PermissionType::UPDATE,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.april') => array(
 				//Common::uuid('user.id.ada') => PermissionType::DENY,
@@ -33,6 +38,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::UPDATE,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				//Common::uuid('user.id.frances') => PermissionType::DENY,
+				Common::uuid('user.id.grace') => PermissionType::OWNER,
+				Common::uuid('user.id.hedy') => PermissionType::UPDATE,
 			),
 			Common::uuid('resource.id.bower') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -40,6 +48,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::OWNER,
 				Common::uuid('user.id.dame') => PermissionType::UPDATE,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				//Common::uuid('user.id.grace') => PermissionType::DENY,
+				Common::uuid('user.id.hedy') => PermissionType::OWNER,
 			),
 			Common::uuid('resource.id.centos') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -47,6 +58,9 @@ class PermissionTask extends ModelTask {
 				//Common::uuid('user.id.carol') => PermissionType::DENY,
 				Common::uuid('user.id.dame') => PermissionType::OWNER,
 				Common::uuid('user.id.edith') => PermissionType::UPDATE,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				//Common::uuid('user.id.hedy') => PermissionType::DENY,
 			),
 			Common::uuid('resource.id.canjs') => array(
 				Common::uuid('user.id.ada') => PermissionType::UPDATE,
@@ -54,6 +68,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				//Common::uuid('user.id.dame') => PermissionType::DENY,
 				Common::uuid('user.id.edith') => PermissionType::OWNER,
+				Common::uuid('user.id.frances') => PermissionType::UPDATE,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.cakephp') => array(
 				Common::uuid('user.id.ada') => PermissionType::OWNER,
@@ -61,6 +78,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				//Common::uuid('user.id.edith') => PermissionType::DENY,
+				Common::uuid('user.id.frances') => PermissionType::OWNER,
+				Common::uuid('user.id.grace') => PermissionType::UPDATE,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.chai') => array(
 				//Common::uuid('user.id.ada') => PermissionType::DENY,
@@ -68,6 +88,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::UPDATE,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				//Common::uuid('user.id.frances') => PermissionType::DENY,
+				Common::uuid('user.id.grace') => PermissionType::OWNER,
+				Common::uuid('user.id.hedy') => PermissionType::UPDATE,
 			),
 			Common::uuid('resource.id.composer') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -75,6 +98,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::OWNER,
 				Common::uuid('user.id.dame') => PermissionType::UPDATE,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				//Common::uuid('user.id.grace') => PermissionType::DENY,
+				Common::uuid('user.id.hedy') => PermissionType::OWNER,
 			),
 			Common::uuid('resource.id.debian') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -82,6 +108,9 @@ class PermissionTask extends ModelTask {
 				//Common::uuid('user.id.carol') => PermissionType::DENY,
 				Common::uuid('user.id.dame') => PermissionType::OWNER,
 				Common::uuid('user.id.edith') => PermissionType::UPDATE,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				//Common::uuid('user.id.hedy') => PermissionType::DENY,
 			),
 			Common::uuid('resource.id.docker') => array(
 				Common::uuid('user.id.ada') => PermissionType::UPDATE,
@@ -89,6 +118,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				//Common::uuid('user.id.dame') => PermissionType::DENY,
 				Common::uuid('user.id.edith') => PermissionType::OWNER,
+				Common::uuid('user.id.frances') => PermissionType::UPDATE,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.enlightenment') => array(
 				Common::uuid('user.id.ada') => PermissionType::OWNER,
@@ -96,6 +128,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				//Common::uuid('user.id.edith') => PermissionType::DENY,
+				Common::uuid('user.id.frances') => PermissionType::OWNER,
+				Common::uuid('user.id.grace') => PermissionType::UPDATE,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.fosdem') => array(
 				//Common::uuid('user.id.ada') => PermissionType::DENY,
@@ -103,6 +138,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::UPDATE,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				//Common::uuid('user.id.frances') => PermissionType::DENY,
+				Common::uuid('user.id.grace') => PermissionType::OWNER,
+				Common::uuid('user.id.hedy') => PermissionType::UPDATE,
 			),
 			Common::uuid('resource.id.framasoft') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -110,6 +148,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::OWNER,
 				Common::uuid('user.id.dame') => PermissionType::UPDATE,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				//Common::uuid('user.id.grace') => PermissionType::DENY,
+				Common::uuid('user.id.hedy') => PermissionType::OWNER,
 			),
 			Common::uuid('resource.id.fsfe') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -117,6 +158,9 @@ class PermissionTask extends ModelTask {
 				//Common::uuid('user.id.carol') => PermissionType::DENY,
 				Common::uuid('user.id.dame') => PermissionType::OWNER,
 				Common::uuid('user.id.edith') => PermissionType::UPDATE,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				//Common::uuid('user.id.hedy') => PermissionType::DENY,
 			),
 			Common::uuid('resource.id.ftp') => array(
 				Common::uuid('user.id.ada') => PermissionType::UPDATE,
@@ -124,6 +168,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				//Common::uuid('user.id.dame') => PermissionType::DENY,
 				Common::uuid('user.id.edith') => PermissionType::OWNER,
+				Common::uuid('user.id.frances') => PermissionType::UPDATE,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.grogle') => array(
 				Common::uuid('user.id.ada') => PermissionType::OWNER,
@@ -131,6 +178,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				//Common::uuid('user.id.edith') => PermissionType::DENY,
+				Common::uuid('user.id.frances') => PermissionType::OWNER,
+				Common::uuid('user.id.grace') => PermissionType::UPDATE,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			),
 			Common::uuid('resource.id.grunt') => array(
 				//Common::uuid('user.id.ada') => PermissionType::DENY,
@@ -138,6 +188,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::UPDATE,
 				Common::uuid('user.id.dame') => PermissionType::READ,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				//Common::uuid('user.id.frances') => PermissionType::DENY,
+				Common::uuid('user.id.grace') => PermissionType::OWNER,
+				Common::uuid('user.id.hedy') => PermissionType::UPDATE,
 			),
 			Common::uuid('resource.id.gnupg') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -145,6 +198,9 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::OWNER,
 				Common::uuid('user.id.dame') => PermissionType::UPDATE,
 				Common::uuid('user.id.edith') => PermissionType::READ,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				//Common::uuid('user.id.grace') => PermissionType::DENY,
+				Common::uuid('user.id.hedy') => PermissionType::OWNER,
 			),
 			Common::uuid('resource.id.git') => array(
 				Common::uuid('user.id.ada') => PermissionType::READ,
@@ -152,6 +208,9 @@ class PermissionTask extends ModelTask {
 				//Common::uuid('user.id.carol') => PermissionType::DENY,
 				Common::uuid('user.id.dame') => PermissionType::OWNER,
 				Common::uuid('user.id.edith') => PermissionType::UPDATE,
+				Common::uuid('user.id.frances') => PermissionType::READ,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				//Common::uuid('user.id.hedy') => PermissionType::DENY,
 			),
 			Common::uuid('resource.id.inkscape') => array(
 				Common::uuid('user.id.ada') => PermissionType::UPDATE,
@@ -159,19 +218,118 @@ class PermissionTask extends ModelTask {
 				Common::uuid('user.id.carol') => PermissionType::READ,
 				//Common::uuid('user.id.dame') => PermissionType::DENY,
 				Common::uuid('user.id.edith') => PermissionType::OWNER,
+				Common::uuid('user.id.frances') => PermissionType::UPDATE,
+				Common::uuid('user.id.grace') => PermissionType::READ,
+				Common::uuid('user.id.hedy') => PermissionType::READ,
 			)
 		);
 
-		$ps = array();
-
-		foreach($permissions as $resourceID => $users) {
-				foreach($users as $userID => $permission) {
+		foreach($userResourcePermissions as $acoId => $aros) {
+			foreach($aros as $aroId => $permission) {
 				$ps[] = array('Permission' => array(
-					'id' => Common::uuid('permission.id.'.$resourceID.'-'.$userID),
+					'id' => Common::uuid('permission.id.'.$acoId.'-'.$aroId),
 					'aco' => 'Resource',
-					'aco_foreign_key' => $resourceID,
+					'aco_foreign_key' => $acoId,
 					'aro' => 'User',
-					'aro_foreign_key' => $userID,
+					'aro_foreign_key' => $aroId,
+					'type' => $permission,
+					'created_by' => Common::uuid('user.id.admin'),
+					'modified_by' => Common::uuid('user.id.admin')
+				));
+			}
+		}
+
+		$groupResourcePermissions = array(
+			Common::uuid('resource.id.apache') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				//Common::uuid('group.id.administration') => PermissionType::DENY,
+			),
+			Common::uuid('resource.id.april') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.bower') => array(
+				Common::uuid('group.id.accounting') => PermissionType::UPDATE,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.centos') => array(
+				Common::uuid('group.id.accounting') => PermissionType::OWNER,
+				Common::uuid('group.id.administration') => PermissionType::UPDATE,
+			),
+			Common::uuid('resource.id.canjs') => array(
+				//Common::uuid('group.id.accounting') => PermissionType::DENY,
+				Common::uuid('group.id.administration') => PermissionType::OWNER,
+			),
+			Common::uuid('resource.id.cakephp') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				//Common::uuid('group.id.administration') => PermissionType::DENY,
+			),
+			Common::uuid('resource.id.chai') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.composer') => array(
+				Common::uuid('group.id.accounting') => PermissionType::UPDATE,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.debian') => array(
+				Common::uuid('group.id.accounting') => PermissionType::OWNER,
+				Common::uuid('group.id.administration') => PermissionType::UPDATE,
+			),
+			Common::uuid('resource.id.docker') => array(
+				//Common::uuid('group.id.accounting') => PermissionType::DENY,
+				Common::uuid('group.id.administration') => PermissionType::OWNER,
+			),
+			Common::uuid('resource.id.enlightenment') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				//Common::uuid('group.id.administration') => PermissionType::DENY,
+			),
+			Common::uuid('resource.id.fosdem') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.framasoft') => array(
+				Common::uuid('group.id.accounting') => PermissionType::UPDATE,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.fsfe') => array(
+				Common::uuid('group.id.accounting') => PermissionType::OWNER,
+				Common::uuid('group.id.administration') => PermissionType::UPDATE,
+			),
+			Common::uuid('resource.id.ftp') => array(
+				//Common::uuid('group.id.accounting') => PermissionType::DENY,
+				Common::uuid('group.id.administration') => PermissionType::OWNER,
+			),
+			Common::uuid('resource.id.grogle') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				//Common::uuid('group.id.administration') => PermissionType::DENY,
+			),
+			Common::uuid('resource.id.grunt') => array(
+				Common::uuid('group.id.accounting') => PermissionType::READ,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.gnupg') => array(
+				Common::uuid('group.id.accounting') => PermissionType::UPDATE,
+				Common::uuid('group.id.administration') => PermissionType::READ,
+			),
+			Common::uuid('resource.id.git') => array(
+				Common::uuid('group.id.accounting') => PermissionType::OWNER,
+				Common::uuid('group.id.administration') => PermissionType::UPDATE,
+			),
+			Common::uuid('resource.id.inkscape') => array(
+				//Common::uuid('group.id.accounting') => PermissionType::DENY,
+				Common::uuid('group.id.administration') => PermissionType::OWNER,
+			)
+		);
+
+		foreach($groupResourcePermissions as $acoId => $aros) {
+			foreach($aros as $aroId => $permission) {
+				$ps[] = array('Permission' => array(
+					'id' => Common::uuid('permission.id.'.$acoId.'-'.$aroId),
+					'aco' => 'Resource',
+					'aco_foreign_key' => $acoId,
+					'aro' => 'Group',
+					'aro_foreign_key' => $aroId,
 					'type' => $permission,
 					'created_by' => Common::uuid('user.id.admin'),
 					'modified_by' => Common::uuid('user.id.admin')
