@@ -230,60 +230,6 @@ class PermissionsController extends AppController {
 	}
 
 /**
- * View applied permissions on an instance, after simulating change in the list of permissions.
- * The new permissions have to be posted.
- *
- * @param string $acoModelName the model of the target aco model instance
- * @param string $acoInstanceId the uuid of the target aco model instance
- * @return void
- */
-	public function simulateAcoPermissionsAfterChange($acoModelName = '', $acoInstanceId = null) {
-		// Should be capitalized
-		$acoModelName = ucfirst($acoModelName);
-		// The target ARO Model name to use
-		$aroModelName = null;
-		// The ARO instance id.
-		$aroInstanceId = null;
-		// The given permission type
-		$permissionType = isset($this->request->data['Permission']['type']) ?
-			$this->request->data['Permission']['type'] : null;
-
-		// check the HTTP request method
-		if (!$this->request->is('post')) {
-			$this->Message->error(__('Invalid request method, should be POST'));
-			return;
-		}
-
-		// Treat the posted data
-		// Get the target ARO model and instance id
-		foreach ($this->request->data as $key => $val) {
-			// if the current data key is an allowed ARO model
-			if ($this->Permission->isValidAro($key)) {
-				$aroModelName = $key;
-				if (isset($val['id'])) {
-					$aroInstanceId = $val['id'];
-				}
-				break;
-			}
-		}
-
-		// Init a transaction.
-		$this->Permission->begin();
-		// Save permission inside the transaction.
-		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId,
-			$permissionType);
-
-		// Return list of permissions.
-		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
-		// Rollback to return to initial state.
-		$this->Permission->rollback();
-
-		// Return data.
-		$this->Message->success();
-		$this->set('data', $perms);
-	}
-
-/**
  * Edit a permission
  *
  * @param string $id the uuid of the target permission to edit

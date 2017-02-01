@@ -63,6 +63,10 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
+/******************************************************
+ * VIEW TESTS
+ ******************************************************/
+
 	public function testViewAcoPermissionsNotExistingModel() {
 		$model = 'NotExistingModel';
 		$id = Common::uuid('user.id.user');
@@ -147,6 +151,10 @@ class PermissionsControllerTest extends ControllerTestCase {
 				count($expectedUsersPermissions[$resourceAlias]) + count($expectedGroupsPermissions[$resourceAlias]));
 		}
 	}
+
+/******************************************************
+ * ADD TESTS
+ ******************************************************/
 
 	public function testAddAcoPermissionsNotExistingModel() {
 		$model = 'notExistingModel';
@@ -267,59 +275,9 @@ class PermissionsControllerTest extends ControllerTestCase {
 		));
 	}
 
-	public function testSimulateAcoPermissionsOnResource() {
-		$user = $this->User->findById(Common::uuid('user.id.dame'));
-		$this->User->setActive($user);
-
-		$model = 'resource';
-		$rsId = Common::uuid('resource.id.debian');
-		$data = array(
-			'Permission' => array(
-				'type' => PermissionType::READ
-			),
-			'User' => array(
-				'id' => Common::uuid('user.id.carol')
-			)
-		);
-
-		// check how many permissions are already existing before the new insertion
-		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
-					'method' => 'get',
-					'return' => 'contents'
-				)), true);
-
-		$realCount = count($srvResult['body']);
-		// insert the new permission
-		$srvSimulatedResult = json_decode($this->testAction("/permissions/simulate/$model/$rsId.json", array(
-					'method' => 'post',
-					'return' => 'contents',
-					'data'=> $data
-				)), true);
-		$simulatedCount = count($srvSimulatedResult['body']);
-
-		$this->assertEquals(
-			Status::SUCCESS,
-			$srvResult['header']['status'],
-			"/permissions/$model/$rsId.json : The test should return a success but is returning {$srvResult['header']['status']}"
-		);
-
-		$this->assertEquals(
-			$simulatedCount,
-			count($srvResult['body']) + 1,
-			"/permissions/$model/$rsId.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
-		);
-
-		// check the permission was not actually inserted (was only a simulation).
-		$srvResult = json_decode($this->testAction("/permissions/$model/$rsId.json", array(
-					'method' => 'get',
-					'return' => 'contents'
-				)), true);
-		$this->assertEquals(
-			$realCount,
-			count($srvResult['body']),
-			"/permissions/$model/$rsId.json : The test should return {$realCount} permissions but is returning " . count($srvResult['body'])
-		);
-	}
+/******************************************************
+ * EDIT TESTS
+ ******************************************************/
 
 	public function testEditPermissionIdIsMissing() {
 		$this->setExpectedException('HttpException', "The permission id is missing");
@@ -399,6 +357,10 @@ class PermissionsControllerTest extends ControllerTestCase {
 		}
 		$this->assertTrue($found);
 	}
+
+/******************************************************
+ * DELETE TESTS
+ ******************************************************/
 
 	public function testDeletePermissionIdIsMissing() {
 		$this->setExpectedException('HttpException', "The permission id is missing");
