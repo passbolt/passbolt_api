@@ -10,7 +10,7 @@ $config = [
 	'App' => [
 		'name' => 'Passbolt',
 		'punchline' => 'Open source password manager for teams',
-		'copyright' => '© 2016 Bolt Softwares Pvt Ltd',
+		'copyright' => '© 2017 Bolt Softwares Pvt Ltd',
 		'title' => '%s | Passbolt', // %s = title_for_layout
 
 		// Do you want search engine robots to index your site
