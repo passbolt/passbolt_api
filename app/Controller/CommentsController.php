@@ -145,11 +145,11 @@ class CommentsController extends AppController {
 
 		// Handle email notifications.
 		$AcoModel = Common::getModel(ucfirst($foreignModelName));
-		$passwordPermissions = $AcoModel->getUsersWithAPermissionSet($foreignId);
+		$authorizedUsers = $AcoModel->getAuthorizedUsers($foreignId);
 
 		// Extract user ids from array.
-		$passwordUsers = Hash::extract($passwordPermissions, '{n}.User.id');
-		foreach ($passwordUsers as $userId) {
+		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
+		foreach ($authorizedUsersIds as $userId) {
 			// Do not send to user who wrote the comment.
 			if ($userId != User::get('id')) {
 				$this->EmailNotificator->passwordCommentNotification(

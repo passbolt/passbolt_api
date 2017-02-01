@@ -134,22 +134,4 @@ class PermissionnableTest extends CakeTestCase {
 		$this->assertEquals(sort($expected), sort($permsUsers));
 	}
 
-	public function testGetUsersWithAPermissionSet() {
-		// As Ada
-		$user = $this->User->findById(Common::uuid('user.id.ada'));
-		$this->User->setActive($user);
-
-		// Expected list of users with a permission set
-		$expected = [
-			Common::uuid('user.id.ada'),
-			Common::uuid('user.id.betty'),
-			Common::uuid('user.id.dame'),
-			Common::uuid('user.id.edith'),
-		];
-		$conditions = ['conditions' => ['name' => 'debian'], 'contain' => ['Secret']];
-		$resource = $this->Resource->find('first', $conditions);
-		$permsUsers = $this->Resource->getUsersWithAPermissionSet($resource['Resource']['id']);
-		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
-		$this->assertEquals(sort($expected), sort($permsUsers));
-	}
 }

@@ -197,11 +197,11 @@ class ResourcesController extends AppController {
 		}
 
 		// Email notification.
-		$resourcePermissions = $this->Resource->getUsersWithAPermissionSet($id);
+		$authorizedUsers = $this->Resource->getAuthorizedUsers($id);
 
 		// Extract user ids from array.
-		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
-		foreach ($resourceUsers as $userId) {
+		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
+		foreach ($authorizedUsersIds as $userId) {
 			$this->EmailNotificator->passwordDeletedNotification(
 				$userId,
 				[
@@ -413,11 +413,11 @@ class ResourcesController extends AppController {
 		$dataSource->commit();
 
 		// Email notification.
-		$resourcePermissions = $this->Resource->getUsersWithAPermissionSet($id);
+		$authorizedUsers = $this->Resource->getAuthorizedUsers($id);
 
 		// Extract user ids from array.
-		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
-		foreach ($resourceUsers as $userId) {
+		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
+		foreach ($authorizedUsersIds as $userId) {
 			$this->EmailNotificator->passwordUpdatedNotification(
 				$userId,
 				[

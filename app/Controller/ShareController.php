@@ -279,7 +279,7 @@ class ShareController extends AppController {
 
 		// Retrieve the users resources permissions.
 		$AcoModel = Common::getModel($acoModelName);
-		$users = $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
+		$authorizedUsers = $AcoModel->getAuthorizedUsers($acoInstanceId);
 
 		// Retrieve the permissions applied to the aco instance.
 		$findData = [
@@ -295,7 +295,7 @@ class ShareController extends AppController {
 		$this->Permission->rollback();
 
 		$data = [
-			'UserResourcePermissions' => $users,
+			'UserResourcePermissions' => $authorizedUsers,
 			'Permissions' => $permissions,
 		];
 		$this->set('data', $data);
@@ -339,7 +339,7 @@ class ShareController extends AppController {
 
 		// Get list of current permissions for the given ACO.
 		$AcoModel = Common::getModel($acoModelName);
-		$permsCurrent = $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
+		$authorizedUsers = $AcoModel->getAuthorizedUsers($acoInstanceId);
 
 		// Begin transaction.
 		$this->Permission->begin();
@@ -353,11 +353,11 @@ class ShareController extends AppController {
 
 		// Get new permissions after all changes.
 		$AcoModel = Common::getModel($acoModelName);
-		$permsAfterChanges = $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
+		$authorizedUsersAfterChanges = $AcoModel->getAuthorizedUsers($acoInstanceId);
 
 		// Extract user ids from array.
-		$usersCurrent = Hash::extract($permsCurrent, '{n}.User.id');
-		$usersAfterChanges = Hash::extract($permsAfterChanges, '{n}.User.id');
+		$usersCurrent = Hash::extract($authorizedUsers, '{n}.User.id');
+		$usersAfterChanges = Hash::extract($authorizedUsersAfterChanges, '{n}.User.id');
 		// Users who have been added will show with the diff between simulated and current.
 		$addedUsers = array_diff($usersAfterChanges, $usersCurrent);
 		// Users who have been removed will show with the diff between current and simulated.
