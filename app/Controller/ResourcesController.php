@@ -13,7 +13,6 @@ class ResourcesController extends AppController {
  */
 	public $components = [
 		'Filter',
-		'PermissionHelper',
 		'EmailNotificator',
 	];
 
@@ -198,7 +197,8 @@ class ResourcesController extends AppController {
 		}
 
 		// Email notification.
-		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		$resourcePermissions = $this->Resource->getUsersWithAPermissionSet($id);
+
 		// Extract user ids from array.
 		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
 		foreach ($resourceUsers as $userId) {
@@ -413,7 +413,8 @@ class ResourcesController extends AppController {
 		$dataSource->commit();
 
 		// Email notification.
-		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		$resourcePermissions = $this->Resource->getUsersWithAPermissionSet($id);
+
 		// Extract user ids from array.
 		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
 		foreach ($resourceUsers as $userId) {

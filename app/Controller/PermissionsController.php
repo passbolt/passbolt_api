@@ -10,10 +10,6 @@ App::uses('Permission', 'Model');
 
 class PermissionsController extends AppController {
 
-	public $components = [
-		'PermissionHelper'
-	];
-
 /**
  * Add Aco Permissions
  *
@@ -206,7 +202,7 @@ class PermissionsController extends AppController {
 			return;
 		}
 
-		// the user is allowed to access the aco instance
+		// the aco instance exists and the user is allowed to access it
 		$this->loadModel($acoModelName);
 		$acoInstance = $this->$acoModelName->findById($acoInstanceId);
 		if (empty($acoInstance)) {

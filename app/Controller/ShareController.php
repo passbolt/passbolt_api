@@ -11,7 +11,6 @@ class ShareController extends AppController {
  * @var array components used in this controller
  */
 	public $components = [
-		'PermissionHelper',
 		'EmailNotificator',
 	];
 
@@ -277,8 +276,22 @@ class ShareController extends AppController {
 			$this->Permission->rollback();
 			throw new Exception($e->getMessage());
 		}
-		$users = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
-		$permissions = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
+
+		// Retrieve the users resources permissions.
+		$AcoModel = Common::getModel($acoModelName);
+		$users = $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
+
+		// Retrieve the permissions applied to the aco instance.
+		$findData = [
+			'Permission' => [
+				'aco' => $acoModelName,
+				'aco_foreign_key' => $acoInstanceId
+			]
+		];
+		$findOptions = $this->Permission->getFindOptions('viewByAco', User::get('Role.name'), $findData);
+		$permissions = $this->Permission->find('all', $findOptions);
+
+		// Abort the modification.
 		$this->Permission->rollback();
 
 		$data = [
@@ -325,7 +338,8 @@ class ShareController extends AppController {
 		}
 
 		// Get list of current permissions for the given ACO.
-		$permsCurrent = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
+		$AcoModel = Common::getModel($acoModelName);
+		$permsCurrent = $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
 
 		// Begin transaction.
 		$this->Permission->begin();
@@ -338,7 +352,9 @@ class ShareController extends AppController {
 		}
 
 		// Get new permissions after all changes.
-		$permsAfterChanges = $this->PermissionHelper->findAcoUsers($acoModelName, $acoInstanceId);
+		$AcoModel = Common::getModel($acoModelName);
+		$permsAfterChanges = $AcoModel->getUsersWithAPermissionSet($acoInstanceId);
+
 		// Extract user ids from array.
 		$usersCurrent = Hash::extract($permsCurrent, '{n}.User.id');
 		$usersAfterChanges = Hash::extract($permsAfterChanges, '{n}.User.id');
@@ -393,9 +409,18 @@ class ShareController extends AppController {
 		$findResourceOptions = $this->Resource->getFindOptions('view', User::get('Role.name'), $findResourceData);
 		$updatedAcoInstance = $this->Resource->find('first', $findResourceOptions);
 
-		// If the user has still access to the instance, list the updated permissions.
+		// If the user has still access to the instance, get the permissions of the users who have access to the resource
 		if (!empty($updatedAcoInstance)) {
-			$updatedPermissions = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
+			// Get the permissions of the users who have access to the resource
+			$UserResourcePermission = Common::getModel('UserResourcePermission');
+			$findPermissionData = [
+				'UserResourcePermission' => [
+					'resource_id' => $acoInstanceId
+				]
+			];
+			$findPermissionOptions = $UserResourcePermission->getFindOptions('viewByResource', User::get('Role.name'), $findPermissionData);
+			$updatedPermissions = $UserResourcePermission->find('all', $findPermissionOptions);
+
 		} else {
 			// the find one return an empty array if not found, but a null is more relevant.
 			$updatedAcoInstance = null;

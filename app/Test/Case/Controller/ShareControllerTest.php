@@ -78,6 +78,10 @@ class ShareControllerTest extends ControllerTestCase {
 		return $res;
 	}
 
+/******************************************************
+ * UPDATE TESTS
+ ******************************************************/
+
 	public function testUpdateAcoNotValid() {
 		$this->setExpectedException('HttpException', 'The call to entry point with parameter User is not allowed');
 		$this->_updateCall('User', Common::uuid('tetris-license'), array());
@@ -478,6 +482,10 @@ hcciUFw5
 		$this->_updateCall('Resource', $rsId, $data);
 	}
 
+/******************************************************
+ * SIMULATE TESTS
+ ******************************************************/
+
 	public function testSimulate() {
 		$userId = Common::uuid('user.id.user');
 		$acoInstanceId = Common::uuid('resource.id.debian');
@@ -521,6 +529,10 @@ hcciUFw5
 		);
 
 	}
+
+/******************************************************
+ * SEARCH USERS TESTS
+ ******************************************************/
 
 	public function testSearchUsersToGrantIdIsMissing() {
 		$this->setExpectedException('HttpException', "The resource id is missing");
