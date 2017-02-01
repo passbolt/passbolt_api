@@ -84,14 +84,32 @@ class UserResourcePermission extends AppModel {
 					'fields' => ['user_id', 'resource_id', 'permission_id', 'permission_type'],
 					'contain' => [
 						'Permission' => [
-							'fields' => ['id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'],
+							'fields' => [
+								'id',
+								'type',
+								'aco',
+								'aco_foreign_key',
+								'aro',
+								'aro_foreign_key'
+							],
 							'PermissionType' => [
-								'fields' => ['serial', 'name']
+								'fields' => [
+									'serial',
+									'name'
+								]
 							],
 							'User' => [
-								'fields' => ['id', 'username', 'role_id'],
+								'fields' => [
+									'id',
+									'username',
+									'role_id'
+								],
 								'Profile' => [
-									'fields' => ['id', 'first_name', 'last_name'],
+									'fields' => [
+										'id',
+										'first_name',
+										'last_name'
+									],
 									'Avatar' => [
 										'fields' => [
 											'Avatar.id',
@@ -112,7 +130,10 @@ class UserResourcePermission extends AppModel {
 								]
 							],
 							'Resource' => [
-								'fields' => ['id', 'name']
+								'fields' => [
+									'id',
+									'name'
+								]
 							],
 						]
 					]

@@ -214,13 +214,15 @@ class PermissionsController extends AppController {
 			return;
 		}
 
-		// Get list of permissions from subfunction.
-		try {
-			$returnValue = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
-		} catch (Exception $e) {
-			$this->Message->error($e->getMessage());
-			return;
-		}
+		// Get the list of permissions.
+		$findData = [
+			'Permission' => [
+				'aco' => $acoModelName,
+				'aco_foreign_key' => $acoInstanceId
+			]
+		];
+		$findOptions = $this->Permission->getFindOptions('viewByAco', User::get('Role.name'), $findData);
+		$returnValue = $this->Permission->find('all', $findOptions);
 
 		// Return data.
 		$this->Message->success();

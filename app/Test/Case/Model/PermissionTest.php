@@ -48,7 +48,7 @@ class PermissionTest extends CakeTestCase
 
 	public function testMysqlFunctionGetUserResourcePermission()
 	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);

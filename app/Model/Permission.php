@@ -215,4 +215,105 @@ class Permission extends AppModel {
 		return $this->isUnique($combination, false);
 	}
 
+/**
+ * Return the find conditions to be used for a given context.
+ *
+ * @param null|string $case The target case.
+ * @param null|string $role The user role.
+ * @param null|array $data (optional) Optional data to build the find conditions.
+ * @return array
+ */
+	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
+		$conditions = [];
+
+		switch ($case) {
+			case 'viewByAco':
+				$conditions = [
+					'conditions' => [
+						'Permission.aco' => $data['Permission']['aco'],
+						'Permission.aco_foreign_key' => $data['Permission']['aco_foreign_key']
+					]
+				];
+				break;
+
+			default:
+				$conditions = [
+					'conditions' => []
+				];
+		}
+
+		return $conditions;
+	}
+
+	/**
+	 * Return the list of fields to be returned by a find operation in given context
+	 *
+	 * @param string $case context ex: login, activation
+	 * @param string $role optional user role if needed to build the options
+	 * @return array $fields
+	 * @access public
+	 */
+	public static function getFindFields($case = 'view', $role = null) {
+		$fields = ['fields' => []];
+
+		switch ($case) {
+			case 'viewByAco':
+				$fields = [
+					'fields' => [
+						'id',
+						'type',
+						'aco',
+						'aco_foreign_key',
+						'aro',
+						'aro_foreign_key'
+					],
+					'contain' => [
+						'PermissionType' => [
+							'fields' => [
+								'serial',
+								'name'
+							]
+						],
+						'User' => [
+							'fields' => [
+								'id',
+								'username',
+								'role_id'
+							],
+							'Profile' => [
+								'fields' => [
+									'id',
+									'first_name',
+									'last_name'
+								],
+								'Avatar' => [
+									'fields' => [
+										'Avatar.id',
+										'Avatar.user_id',
+										'Avatar.foreign_key',
+										'Avatar.model',
+										'Avatar.filename',
+										'Avatar.filesize',
+										'Avatar.mime_type',
+										'Avatar.extension',
+										'Avatar.hash',
+										'Avatar.path',
+										'Avatar.adapter',
+										'Avatar.created',
+										'Avatar.modified'
+									]
+								],
+							]
+						],
+						'Resource' => [
+							'fields' => ['id', 'name']
+						],
+					]
+				];
+				break;
+		}
+
+		return $fields;
+	}
+
 }

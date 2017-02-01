@@ -75,6 +75,10 @@ class ResourcesControllerTest extends ControllerTestCase
 		return $secretData;
 	}
 
+/******************************************************
+ * VIEW TESTS
+ ******************************************************/
+
 	public function testViewResourceIdIsMissing()
 	{
 		// Unable to test missing id param because of route
@@ -84,10 +88,10 @@ class ResourcesControllerTest extends ControllerTestCase
 	{
 		// test an error bad id
 		$this->setExpectedException('HttpException', 'The resource id is invalid');
-		$result = json_decode($this->testAction("/resources/badid.json?children=true", array(
+		$this->testAction("/resources/badid.json?children=true", array(
 			'method' => 'get',
 			'return' => 'contents'
-		)), true);
+		));
 	}
 
 	public function testViewResourceDoesNotExist()
@@ -110,10 +114,10 @@ class ResourcesControllerTest extends ControllerTestCase
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access this resource');
-		$result = json_decode($this->testAction("/resources/{$resId}.json", array(
+		$this->testAction("/resources/{$resId}.json", array(
 			'method' => 'Get',
 			'return' => 'contents'
-		)), true);
+		));
 	}
 
 	public function testViewDeletedResource()
@@ -143,9 +147,13 @@ class ResourcesControllerTest extends ControllerTestCase
 		$this->assertEquals('apache', $result['body']['Resource']['name']);
 	}
 
+/******************************************************
+ * INDEX TESTS
+ ******************************************************/
+
 	public function testIndexAndPermission()
 	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv', 'user');
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
 
 		foreach ($matrix as $userAlias => $userPermissions) {
 			$userId = Common::uuid('user.id.' . $userAlias);
@@ -179,6 +187,10 @@ class ResourcesControllerTest extends ControllerTestCase
 			"{$url} : The test should return a success but is returning {$result['header']['status']}");
 		$this->assertTrue(!empty($result['body']), "{$url} : should contain result");
 	}
+
+/******************************************************
+ * ADD TESTS
+ ******************************************************/
 
 	public function testAdd() {
 		$result = json_decode($this->testAction('/resources.json', array(
@@ -271,9 +283,13 @@ class ResourcesControllerTest extends ControllerTestCase
 		}
 	}
 
+/******************************************************
+ * EDIT TESTS
+ ******************************************************/
+
 	public function testEditAndPermission()
 	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv', 'user');
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
 
 		foreach ($matrix as $userAlias => $userPermissions) {
 			foreach ($userPermissions as $resourceAlias => $resourcePermission) {
@@ -364,7 +380,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$secretsData[] = $last;
 
 		$this->setExpectedException('HttpException', 'The list of secrets provided is invalid');
-		$result = $this->testAction("/resources/{$resource['Resource']['id']}.json", array(
+		$this->testAction("/resources/{$resource['Resource']['id']}.json", array(
 			'data' => array(
 				'Resource' => array(
 					'name' => 'testEditSecret'
@@ -525,6 +541,10 @@ class ResourcesControllerTest extends ControllerTestCase
 			"update /resources/$rsId.json : The test should have modified the name into 'test', but name is still {$updatedResource['Resource']['name']}");
 	}
 
+/******************************************************
+ * DELETE TESTS
+ ******************************************************/
+
 	public function testDeleteResourceIdIsMissing()
 	{
 		$this->setExpectedException('HttpException', 'The resource id is missing');
@@ -599,6 +619,107 @@ class ResourcesControllerTest extends ControllerTestCase
 			'method' => 'delete',
 			'return' => 'contents'
 		));
+	}
+
+/******************************************************
+ * USERS (shared users) TESTS
+ ******************************************************/
+
+	public function testUsersResourceIdNotValid()
+	{
+		// test an error bad id
+		$this->setExpectedException('HttpException', 'The resource id is invalid');
+		$this->testAction("/resources/badid/users.json", array(
+			'method' => 'get',
+			'return' => 'contents'
+		));
+	}
+
+	public function testUsersResourceDoesNotExist()
+	{
+		$id = Common::uuid('not-valid-reference');
+		// test when a wrong id is provided
+		$this->setExpectedException('HttpException', 'The resource does not exist');
+		$this->testAction("/resources/{$id}/users.json", array(
+			'method' => 'get',
+			'return' => 'contents'
+		));
+	}
+
+	public function testUsersForbiddenAccess()
+	{
+		$resId = Common::uuid('resource.id.apache');
+
+		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
+		$user = $this->User->findById(Common::uuid('user.id.irene'));
+		$this->User->setActive($user);
+
+		$this->setExpectedException('HttpException', 'You are not authorized to access this resource');
+		$this->testAction("/resources/{$resId}/users.json", array(
+			'method' => 'Get',
+			'return' => 'contents'
+		));
+	}
+
+	public function testUsersViewDeletedResource()
+	{
+		$rsId = Common::uuid('resource.id.debian');
+
+		// delete the resource
+		$result = json_decode($this->testAction("/resources/$rsId.json", array(
+			'method' => 'delete',
+			'return' => 'contents'
+		)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
+			"delete /resources/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
+
+		// View the resource
+		$this->setExpectedException('HttpException', 'The resource does not exist');
+		$this->testAction("/resources/$rsId/users.json", array('method' => 'get', 'return' => 'contents'));
+	}
+
+	public function testUsers()
+	{
+		$rsId = Common::uuid('resource.id.apache');
+		// test if the object returned is a success one
+		$result = json_decode($this->testAction("/resources/$rsId/users.json", array('method' => 'get', 'return' => 'contents')), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status']);
+		$this->assertNotEmpty($result['body'][0]['User']['username']);
+	}
+
+	public function testUsersAndPermission()
+	{
+		$matrixExpectedUsersIds = array();
+
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'resource');
+		foreach ($matrix as $resourceAlias => $userPermissions) {
+			// Retrieve the direct users permissions defined for the resource
+			$matrixExpectedUsersIds[$resourceAlias] = array();
+			foreach($userPermissions as $userAlias => $permission) {
+				if ($permission != '0') {
+					$matrixExpectedUsersIds[$resourceAlias][] = Common::uuid('user.id.' . $userAlias);
+				}
+			}
+		}
+
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents'
+		);
+		foreach($matrixExpectedUsersIds as $resourceAlias => $expectedUsersIds) {
+			// Login with an authorized user.
+			$userId = $expectedUsersIds[0];
+			$user = $this->User->findById($userId);
+			$this->User->setActive($user);
+
+			// Get the list of users the resource is shared with.
+			$rsId = Common::uuid('resource.id.' . $resourceAlias);
+			$srvResult = json_decode($this->testAction("/resources/$rsId/users.json", $getOptions), true);
+			$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+
+			// Check that the resource is shared as expected.
+			$this->assertEquals(sort($expectedUsersIds), sort($usersIds));
+		}
 	}
 
 }

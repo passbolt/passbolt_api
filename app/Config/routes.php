@@ -74,6 +74,7 @@
  */
 	Router::connect('/resources/index', array('controller' => 'resources', 'action' => 'index'));
 	Router::connect('/resources/index/*', array('controller' => 'resources', 'action' => 'index'));
+	Router::connect('/resources/:id/users', array('controller' => 'resources', 'action' => 'users', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'delete', '[method]' => 'DELETE'));
 	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'edit', '[method]' => 'PUT'));
 	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'view', '[method]' => 'GET'));

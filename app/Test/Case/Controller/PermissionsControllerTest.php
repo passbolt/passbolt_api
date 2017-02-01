@@ -99,23 +99,52 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 	// test view aco permissions on Resource Aco
 	public function testViewAcoPermissionsOnResource() {
-		$getOptions = array(
-			 'method' => 'get',
-			 'return' => 'contents'
-		);
+		$expectedUsersPermissions = array();
+		$expectedGroupsPermissions = array();
 
-		$resourceName = 'apache';
-		$rsId = Common::uuid('resource.id.' . $resourceName);
-		$expectedPermissions = array(
-			Common::uuid('permission.id.' . Common::uuid('resource.id.' . $resourceName) . '-' . Common::uuid('user.id.ada')),
-			Common::uuid('permission.id.' . Common::uuid('resource.id.' . $resourceName) . '-' . Common::uuid('user.id.betty')),
-			Common::uuid('permission.id.' . Common::uuid('resource.id.' . $resourceName) . '-' . Common::uuid('user.id.carol')),
-			Common::uuid('permission.id.' . Common::uuid('resource.id.' . $resourceName) . '-' . Common::uuid('user.id.dame')),
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/users_resources_permissions.csv', 'resource');
+		foreach ($matrix as $resourceAlias => $userPermissions) {
+			// Retrieve the direct users permissions defined for the resource
+			$expectedUsersPermissions[$resourceAlias] = array();
+			foreach($userPermissions as $userAlias => $permission) {
+				if ($permission != '0') {
+					$expectedUsersPermissions[$resourceAlias][$userAlias] = Common::uuid('user.id.' . $userAlias);
+				}
+			}
+		}
+
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/groups_resources_permissions.csv', 'resource');
+		foreach ($matrix as $resourceAlias => $groupPermissions) {
+			// Retrieve the direct users permissions defined for the resource
+			$expectedGroupsPermissions[$resourceAlias] = [];
+			foreach ($groupPermissions as $groupAlias => $permission) {
+				if ($permission != '0') {
+					$expectedGroupsPermissions[$resourceAlias][$groupAlias] = Common::uuid('group.id.' . $groupAlias);
+				}
+			}
+		}
+
+		$getOptions = array(
+			'method' => 'get',
+			'return' => 'contents'
 		);
-		$srvResult = json_decode($this->testAction("/permissions/resource/$rsId.json", $getOptions), true);
-		$this->assertNotNull(count($srvResult['body']), "We expect permissions for the resources {$resourceName}");
-		foreach($srvResult['body'] as $perm) {
-			$this->assertTrue(in_array($perm['Permission']['id'], $expectedPermissions), "The permission {$perm['Permission']['id']} should be associated to the resource $resourceName");
+		foreach($expectedUsersPermissions as $resourceAlias => $none) {
+			// Login with an authorized user.
+			$userId = Common::uuid('user.id.' . key($expectedUsersPermissions[$resourceAlias]));
+			$user = $this->User->findById($userId);
+			$this->User->setActive($user);
+
+			// Get the resources permissions.
+			$rsId = Common::uuid('resource.id.' . $resourceAlias);
+			$srvResult = json_decode($this->testAction("/permissions/resource/$rsId.json", $getOptions), true);
+
+			// Check that all the permissions are expected.
+			foreach($srvResult['body'] as $perm) {
+				$this->assertTrue(in_array($perm['Permission']['aro_foreign_key'], $expectedUsersPermissions[$resourceAlias]) ||
+					in_array($perm['Permission']['aro_foreign_key'], $expectedGroupsPermissions[$resourceAlias]), "The permission {$perm['Permission']['id']} should be associated to the resource $resourceAlias");
+			}
+			$this->assertEqual(count($srvResult['body']),
+				count($expectedUsersPermissions[$resourceAlias]) + count($expectedGroupsPermissions[$resourceAlias]));
 		}
 	}
 
@@ -363,7 +392,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		// Search for a permission
 		$found = false;
 		foreach ($srvResult['body'] as $permission) {
-			if($permission['Permission']['User']['id'] == $userId) {
+			if($permission['User']['id'] == $userId) {
 				$found = true;
 				$this->assertEquals(PermissionType::OWNER, $permission['Permission']['type']);
 			}
