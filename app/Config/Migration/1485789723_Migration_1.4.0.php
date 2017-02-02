@@ -21,7 +21,12 @@ class Migration_1_4_0 extends CakeMigration {
 				'category_types',
 				'positions',
 				'items_tags',
-				'tags'
+				'tags',
+				'addresses',
+				'authentication_blacklists',
+				'authentication_logs',
+				'emails',
+				'phone_numbers'
 			)
 		),
 		'down' => array(

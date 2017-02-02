@@ -31,8 +31,6 @@ class PermissionsControllerTest extends ControllerTestCase {
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationLog',
-		'app.authenticationBlacklist',
 		'core.cakeSession',
 		'app.user_agent',
 		'app.controller_log'

@@ -41,7 +41,6 @@ class ResourcesControllerTest extends ControllerTestCase
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist',
 		'core.cakeSession',
 		'app.user_agent',
 		'app.controller_log'

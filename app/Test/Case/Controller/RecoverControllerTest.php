@@ -21,7 +21,6 @@ class RecoverControllerTest extends ControllerTestCase
         'app.profile',
         'app.file_storage',
         'app.authenticationToken',
-        'app.authenticationLog',
         'app.controller_log',
     );
 

@@ -32,8 +32,6 @@ class ShareControllerTest extends ControllerTestCase {
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationLog',
-		'app.authenticationBlacklist',
 		'app.gpgkey',
 		'app.emailQueue',
 		'core.cakeSession',

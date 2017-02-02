@@ -28,8 +28,6 @@ class SetupControllerTest extends ControllerTestCase {
 			'app.file_storage',
 			'app.role',
 			'app.authenticationToken',
-			'app.authenticationLog',
-			'app.authenticationBlacklist',
 			'core.cakeSession',
 			'app.user_agent',
 			'app.controller_log',

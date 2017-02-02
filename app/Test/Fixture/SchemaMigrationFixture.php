@@ -29,43 +29,49 @@ class SchemaMigrationFixture extends CakeTestFixture {
 			'id' => '1',
 			'class' => 'InitMigrations',
 			'type' => 'Migrations',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
 		),
 		array(
 			'id' => '2',
 			'class' => 'ConvertVersionToClassNames',
 			'type' => 'Migrations',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
 		),
 		array(
 			'id' => '3',
 			'class' => 'IncreaseClassNameLength',
 			'type' => 'Migrations',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
 		),
 		array(
 			'id' => '4',
 			'class' => 'SettingHashToDefaultNull',
 			'type' => 'FileStorage',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
 		),
 		array(
 			'id' => '5',
 			'class' => 'Migration_1_1_0',
 			'type' => 'app',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
 		),
 		array(
 			'id' => '6',
 			'class' => 'Migration_1_2_0',
 			'type' => 'app',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
 		),
 		array(
 			'id' => '7',
 			'class' => 'Migration_1_3_0',
 			'type' => 'app',
-			'created' => '2017-01-27 10:57:47'
+			'created' => '2017-02-02 08:58:54'
+		),
+		array(
+			'id' => '8',
+			'class' => 'Migration_1_4_0',
+			'type' => 'app',
+			'created' => '2017-02-02 08:58:54'
 		),
 	);
 
