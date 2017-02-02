@@ -83,7 +83,7 @@ class PermissionsController extends AppController {
 		}
 
 		// Check that the permission if a permission already exists
-		if (!$this->Permission->isUniqueByFields($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId)) {
+		if (!$this->Permission->isUniquePermission($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType)) {
 			$this->Message->error(__('A direct permission already exists'));
 			return false;
 		}
