@@ -45,6 +45,14 @@ class UserResourcePermission extends AppModel {
 		$conditions = [];
 
 		switch ($case) {
+			case 'findByUserAndResource':
+				$conditions = [
+					'conditions' => [
+						'UserResourcePermission.resource_id' => $data['UserResourcePermission']['resource_id'],
+						'UserResourcePermission.user_id' => $data['UserResourcePermission']['user_id']
+					]
+				];
+				break;
 			case 'viewByResource':
 				$conditions = [
 					'conditions' => [
@@ -79,6 +87,34 @@ class UserResourcePermission extends AppModel {
 	public static function getFindFields($case = 'view', $role = null) {
 		$fields = ['fields' => []];
 		switch ($case) {
+			case 'findByUserAndResource':
+				$fields = [
+					'fields' => [
+						'UserResourcePermission.user_id',
+						'UserResourcePermission.resource_id',
+						'UserResourcePermission.permission_id',
+						'UserResourcePermission.permission_type'
+					],
+					'contain' => [
+						'Permission' => [
+							'fields' => [
+								'Permission.id',
+								'Permission.type',
+								'Permission.aco',
+								'Permission.aco_foreign_key',
+								'Permission.aro',
+								'Permission.aro_foreign_key'
+							],
+							'PermissionType' => [
+								'fields' => [
+									'PermissionType.serial',
+									'PermissionType.name'
+								]
+							],
+						]
+					]
+				];
+				break;
 			case 'viewByResource':
 				$fields = [
 					'fields' => ['user_id', 'resource_id', 'permission_id', 'permission_type'],
