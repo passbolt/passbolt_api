@@ -97,8 +97,9 @@ class RecoverControllerTest extends ControllerTestCase
         $this->testAction('/recover.json', ['return' => 'view', 'method' => 'post', 'data' => $data], true);
     }
 
+
 /**
- * Test recovery with deleted user
+ * Test recovery with non active user
  *
  * @return void
  */
@@ -112,8 +113,9 @@ class RecoverControllerTest extends ControllerTestCase
         $this->testAction('/recover.json', ['return' => 'view', 'method' => 'post', 'data' => $data], true);
     }
 
+
 /**
- * Test recovery with non active user
+ * Test recovery with deleted user
  *
  * @return void
  */
@@ -126,6 +128,56 @@ class RecoverControllerTest extends ControllerTestCase
         $this->setExpectedException('BadRequestException', 'This user has been deleted. Please contact your administrator.');
         $this->testAction('/recover.json', ['return' => 'view', 'method' => 'post', 'data' => $data], true);
     }
+
+
+/**
+ * Test recovery with a user that has a deleted account with the same username.
+ *
+ * @see GITHUB-33 (https://github.com/passbolt/passbolt_api/issues/33)
+ *
+ * @throws Exception if data set is not correct.
+ *
+ * @return void
+ */
+	public function testRecoverPreviouslyDeletedUser() {
+		$username = 'ada@passbolt.com';
+
+		// Delete the existing user with given username.
+		$u = $this->User->findByUsername($username);
+		$Profile = Common::getModel('Profile');
+		$p = $Profile->findByUserId($u['User']['id']);
+		if (!$u) {
+			throw new Exception('user ruth should have been found in the data set');
+		}
+
+		// Delete Ada in database.
+		$this->User->id = $u['User']['id'];
+		$this->User->saveField('deleted', 1);
+
+		// Register a new user with the same username.
+		$register = $this->User->registerUser([
+			'User' => [
+				'username' => $username,
+			],
+			'Profile' => [
+				'first_name' => $p['Profile']['first_name'],
+				'last_name' => $p['Profile']['last_name'],
+			]
+		]);
+
+		// Activate the user.
+		$this->User->saveField('active', 1);
+
+		// Test a recovery.
+		$data = [
+			'User' => [
+				'username' => $username,
+			]
+		];
+		$result = $this->testAction('/recover.json', ['return' => 'view', 'method' => 'post', 'data' => $data], true);
+		// empty because of redirection
+		$this->assertEmpty($result);
+	}
 
 /**
  * Test recovery with non active user
