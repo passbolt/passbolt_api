@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+- PASSBOLT-1511: removed tracking of config file Config/email.php
 
 ## [1.3.2] - 2017-01-16
 ### Fixed
