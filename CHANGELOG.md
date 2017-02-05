@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - PASSBOLT-1511: removed tracking of config file Config/email.php
+- PASSBOLT-1835: As a user I should be able to create an account with the same username as an account that was previously deleted
 
 ## [1.3.2] - 2017-01-16
 ### Fixed
