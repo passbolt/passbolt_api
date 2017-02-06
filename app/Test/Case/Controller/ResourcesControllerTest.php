@@ -154,23 +154,26 @@ class ResourcesControllerTest extends ControllerTestCase
 	{
 		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
 
-		foreach ($matrix as $userAlias => $userPermissions) {
+		foreach ($matrix as $userAlias => $expectedPermissions) {
 			$userId = Common::uuid('user.id.' . $userAlias);
 			$user = $this->User->findById($userId);
 			$this->User->setActive($user);
 
 			$url = '/resources/index.json';
 			$result = json_decode($this->testAction($url, array('return' => 'contents', 'method' => 'get')), true);
-			$this->assertEquals(Status::SUCCESS, $result['header']['status'],
-				"{$url} : The test should return a success but is returning {$result['header']['status']}");
+			$this->assertEquals(Status::SUCCESS, $result['header']['status']);
 
-			foreach ($userPermissions as $resourceAlias => $resourcePermission) {
+			foreach ($expectedPermissions as $resourceAlias => $expectedPermission) {
 				$resourceId = Common::uuid('resource.id.' . $resourceAlias);
 				$path = $this->Resource->inNestedArray($resourceId, $result['body'], 'id');
-				if ($resourcePermission == PermissionType::DENY) {
+
+				// If the user shouldn't be allowed to access the resource.
+				if ($expectedPermission == PermissionType::DENY) {
 					$this->assertTrue(empty($path),
 						"{$url} : test should not contain '{$resourceAlias}' resource with user '{$userAlias}'");
-				} else {
+				}
+				// If the user should be allowed to access the resource.
+				else {
 					$this->assertTrue(!empty($path),
 						"{$url} : test should contain '{$resourceAlias}' resource with user '{$userAlias}'");
 				}
@@ -285,40 +288,6 @@ class ResourcesControllerTest extends ControllerTestCase
 /******************************************************
  * EDIT TESTS
  ******************************************************/
-
-	public function testEditAndPermission()
-	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
-
-		foreach ($matrix as $userAlias => $userPermissions) {
-			foreach ($userPermissions as $resourceAlias => $resourcePermission) {
-				try{
-					// Log the user
-					$userId = Common::uuid("user.id.$userAlias");
-					$user = $this->User->findById($userId);
-					$this->User->setActive($user);
-
-					// Try to edit the resource
-					$rsId = Common::uuid("resource.id.$resourceAlias");
-					$url = "/resources/$rsId.json";
-					$this->testAction($url, array('return' => 'contents', 'method' => 'put'));
-
-					// If we are the user must have the right, check its permission
-					if (intval($resourcePermission) < 7) {
-						$this->assertTrue(false, "The user $userAlias shouldn't have the right to edit the resource $resourceAlias");
-					}
-					$this->assertTrue(true);
-				}
-				catch(HttpException $e) {
-					// If we are the user must not have the right, check its permission
-					if (intval($resourcePermission) >=7) {
-						$this->assertTrue(false, "The user $userAlias should have the right to edit the resource $resourceAlias");
-					}
-					$this->assertTrue(true);
-				}
-			}
-		}
-	}
 
 	/**
 	 * Test edit a resource with secrets, and providing an invalid number of secrets.
@@ -513,6 +482,55 @@ class ResourcesControllerTest extends ControllerTestCase
 		));
 	}
 
+	public function testEditNotAllowed() {
+		$rsId = Common::uuid('resource.id.debian');
+
+		// Login with a user who is not allowed
+		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
+		$this->User->setActive($user);
+
+		// Expect HttpException
+		$this->setExpectedException('HttpException', 'You are not authorized to edit this resource');
+		$this->testAction("/resources/{$rsId}.json", array(
+			'method' => 'put',
+			'return' => 'contents'
+		));
+	}
+
+	public function testEditAndPermission()
+	{
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
+
+		foreach ($matrix as $userAlias => $expectedPermissions) {
+			foreach ($expectedPermissions as $resourceAlias => $expectedPermission) {
+				try{
+					// Log the user
+					$userId = Common::uuid("user.id.$userAlias");
+					$user = $this->User->findById($userId);
+					$this->User->setActive($user);
+
+					// Try to edit the resource
+					$rsId = Common::uuid("resource.id.$resourceAlias");
+					$url = "/resources/$rsId.json";
+					$this->testAction($url, array('return' => 'contents', 'method' => 'put'));
+
+					// If the user shouldn't be allowed
+					if (intval($expectedPermission) < 7) {
+						$this->assertTrue(false, "The user $userAlias shouldn't have the right to edit the resource $resourceAlias");
+					}
+					$this->assertTrue(true);
+				}
+				catch(HttpException $e) {
+					// If the user should be allowed
+					if (intval($expectedPermission) >=7) {
+						$this->assertTrue(false, "The user $userAlias should have the right to edit the resource $resourceAlias");
+					}
+					$this->assertTrue(true);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Test a normal edit operation.
 	 */
@@ -572,20 +590,57 @@ class ResourcesControllerTest extends ControllerTestCase
 		));
 	}
 
-	public function testDeleteAndPermission()
+	public function testDeleteNotAllowed()
 	{
 		$rsId = Common::uuid('resource.id.debian');
 
-		// Looking at the matrix of permission marlyn should be able to read but not to delete the resource facebook
+		// Login with a user who is not allowed
 		$user = $this->User->findById(Common::uuid('user.id.marlyn'));
 		$this->User->setActive($user);
 
-		// Error : name is empty
+		// Expect HttpException
 		$this->setExpectedException('HttpException', 'You are not authorized to delete this resource');
 		$this->testAction("/resources/{$rsId}.json", array(
 			'method' => 'delete',
 			'return' => 'contents'
 		));
+	}
+
+	public function testDeleteAndPermission()
+	{
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
+
+		foreach ($matrix as $userAlias => $expectedPermissions) {
+			// Reload fixture - cause content is altered in each loop.
+			$this->loadFixtures('Resource', 'Permission');
+
+			foreach ($expectedPermissions as $resourceAlias => $expectedPermission) {
+				try{
+					// Log the user
+					$userId = Common::uuid("user.id.$userAlias");
+					$user = $this->User->findById($userId);
+					$this->User->setActive($user);
+
+					// Try to delete the resource
+					$rsId = Common::uuid("resource.id.$resourceAlias");
+					$url = "/resources/$rsId.json";
+					$this->testAction($url, array('return' => 'contents', 'method' => 'delete'));
+
+					// If the user shouldn't be allowed
+					if (intval($expectedPermission) < 7) {
+						$this->assertTrue(false, "The user $userAlias shouldn't have the right to delete the resource $resourceAlias");
+					}
+					$this->assertTrue(true);
+				}
+				catch(HttpException $e) {
+					// If the user should be allowed
+					if (intval($expectedPermission) >=7) {
+						$this->assertTrue(false, "The user $userAlias should have the right to delete the resource $resourceAlias");
+					}
+					$this->assertTrue(true);
+				}
+			}
+		}
 	}
 
 	public function testDelete()

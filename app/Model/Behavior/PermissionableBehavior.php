@@ -42,8 +42,8 @@ class PermissionableBehavior extends ModelBehavior {
 				'conditions' => [
 					// We're looking for permissions for the current user.
 					$userPermissionModelName . '.user_id' => User::get('id'),
-					// The user should have a permission greater than DENY.
-					$userPermissionModelName . '.permission_type >' => PermissionType::DENY,
+					// The user should have a permission set.
+					$userPermissionModelName . '.permission_type >=' => PermissionType::READ,
 				],
 				'contain' => [$userPermissionModelName]
 			];

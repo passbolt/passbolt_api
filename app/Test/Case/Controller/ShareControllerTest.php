@@ -413,8 +413,9 @@ hcciUFw5
 		$directPerm = $this->Permission->find('first', array(
 				'conditions' => array(
 					'aco' => 'Resource',
+					'aco_foreign_key' => Common::uuid('resource.id.debian'),
 					'aro' => 'User',
-					'aco_foreign_key' => Common::uuid('resource.id.debian')
+					'aro_foreign_key' => Common::uuid('user.id.ada')
 				)
 			));
 		$data = array(
@@ -423,7 +424,7 @@ hcciUFw5
 					'Permission' => array (
 						'id' => $directPerm['Permission']['id'],
 						'aro_foreign_key' => $directPerm['Permission']['aro_foreign_key'],
-						'type' => PermissionType::CREATE,
+						'type' => PermissionType::UPDATE,
 					),
 				),
 			),

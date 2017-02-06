@@ -235,11 +235,6 @@ class AppSchema extends CakeSchema {
 		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'serial' => array('type' => 'string', 'null' => false, 'default' => '0', 'length' => 2, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'name' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'binary' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 4, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
-		'_admin' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'_update' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'_create' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
-		'_read' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'description' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 255, 'collate' => 'utf8_unicode_ci', 'charset' => 'utf8'),
 		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0', 'length' => 1),
 		'indexes' => array(

@@ -143,10 +143,10 @@ class PermissionTest extends CakeTestCase
 	public function testValidatePermissionType() {
 		$matrix = array(
 			false => [
+				PermissionType::DENY,
 				'wrong-permission-type',
 			],
 			true => array(
-				PermissionType::CREATE,
 				PermissionType::READ,
 				PermissionType::UPDATE,
 				PermissionType::OWNER,
@@ -257,9 +257,9 @@ class PermissionTest extends CakeTestCase
 		$matrix = array(
 			false => [
 				'wrong-permission-type',
+				PermissionType::DENY,
 			],
 			true => array(
-				PermissionType::CREATE,
 				PermissionType::READ,
 				PermissionType::UPDATE,
 				PermissionType::OWNER,

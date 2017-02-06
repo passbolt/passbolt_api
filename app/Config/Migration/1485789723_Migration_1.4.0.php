@@ -27,6 +27,15 @@ class Migration_1_4_0 extends CakeMigration {
 				'authentication_logs',
 				'emails',
 				'phone_numbers'
+			),
+			'drop_field' => array(
+				'permissions_types' => array(
+					'binary',
+					'_admin',
+					'_update',
+					'_create',
+					'_read'
+				)
 			)
 		),
 		'down' => array(
@@ -42,14 +51,22 @@ class Migration_1_4_0 extends CakeMigration {
  */
 	public function before($direction) {
 		if ($direction === 'up') {
-			$model = ClassRegistry::init('Permission');
-			$model->query('
+			$Permission = ClassRegistry::init('Permission');
+
+			// Remove views related to groups and categories.
+			$Permission->query('
 				DROP VIEW users_resources_permissions;
 				DROP VIEW users_categories_permissions;
 				DROP VIEW groups_resources_permissions;
 				DROP VIEW groups_categories_permissions;
 				DROP VIEW categories_parents;
 			');
+
+			// Remove permissions types that are not used.
+			$PermissionType = ClassRegistry::init('PermissionType');
+			$PermissionType->deleteAll(array(
+				"serial IN('0', '2', '3', '4', '5', '6', '8', '9', '10', '11', '12', '13', '14')"
+			));
 		}
 		return true;
 	}

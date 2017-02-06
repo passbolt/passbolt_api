@@ -313,7 +313,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			'return' => 'contents',
 			'data'=> array(
 				'Permission' => array(
-					'type' => PermissionType::DENY
+					'type' => PermissionType::READ
 				)
 			)
 		);
@@ -393,12 +393,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 
 		$postOptions = array(
 			'method' => 'delete',
-			'return' => 'contents',
-			'data'=> array(
-				'Permission' => array(
-					'type' => PermissionType::DENY
-				)
-			)
+			'return' => 'contents'
 		);
 		$this->testAction("/permissions/$id.json", $postOptions);
 	}
