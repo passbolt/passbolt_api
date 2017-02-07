@@ -569,7 +569,15 @@ class User extends AppModel {
 							]
 						];
 						break;
-
+					case 'Resource::users':
+						$conditions = [
+							'conditions' => [
+								'User.active' => true,
+								'User.deleted' => false
+							]
+						];
+						$conditions['conditions']['User.id'] = $data['User.ids'];
+						break;
 					case 'User::view':
 						$conditions = [
 							'conditions' => [

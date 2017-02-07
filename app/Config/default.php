@@ -125,7 +125,7 @@ $config = [
 	// For example which models comments is available for
 	// usefull in case we want to enable commenting on more objects in the future
 	'Permission' => [
-		'acoModels' => ['Resource', 'Category'],
+		'acoModels' => ['Resource'],
 		'aroModels' => ['User', 'Group'],
 	],
 	'Comment' => [
@@ -141,13 +141,11 @@ $config = [
 	// See ValidationRuleController.php
 	'Validation' => [
 		'shared' => [
-			'Category',
 			'Comment',
 			'Group',
 			'Profile',
 			'Resource',
 			'Secret',
-			'Tag',
 			'User',
 		],
 	],

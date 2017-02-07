@@ -29,7 +29,7 @@ class PermissionableBehavior extends ModelBehavior {
 
 			// Depending on the target model the user wants to access,
 			// the permissions are managed by a specific model.
-			// ex : UserCategoryPermission, UserResourcePermission, GroupCategoryPermission, GroupResourcePermission
+			// ex : UserResourcePermission
 			$userPermissionModelName = 'User' . $model->alias . 'Permission';
 			$foreignModelPrimaryKey = Inflector::underscore($model->alias) . '_id';
 
@@ -42,8 +42,8 @@ class PermissionableBehavior extends ModelBehavior {
 				'conditions' => [
 					// We're looking for permissions for the current user.
 					$userPermissionModelName . '.user_id' => User::get('id'),
-					// The user should have a permission greater than DENY.
-					$userPermissionModelName . '.permission_type >' => PermissionType::DENY,
+					// The user should have a permission set.
+					$userPermissionModelName . '.permission_type >=' => PermissionType::READ,
 				],
 				'contain' => [$userPermissionModelName]
 			];
@@ -53,9 +53,6 @@ class PermissionableBehavior extends ModelBehavior {
 				[
 					'hasOne' => [
 						$userPermissionModelName => [
-							'foreignKey' => $foreignModelPrimaryKey
-						],
-						'GroupCategoryPermission' => [
 							'foreignKey' => $foreignModelPrimaryKey
 						],
 						'Permission' => [
@@ -109,9 +106,7 @@ class PermissionableBehavior extends ModelBehavior {
 
 			$model->unbindModel([
 				'hasOne' => [
-					'UserCategoryPermission',
 					'Permission',
-					'GroupCategoryPermission'
 				]
 			], false);
 		}
@@ -226,43 +221,6 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Get a list of users who have a permissions record for the given instance.
- *
- * @param Model &$model reference to the type of record.
- * @param string|null $acoInstanceId uuid
- * @return array|null
- */
-	public function getUsersWithAPermissionSet(Model &$model, $acoInstanceId = null) {
-		// Get aco key name.
-		$acoKeyName = strtolower($model->alias) . '_id';
-
-		// If instance id is not provided as parameter, we get it from the model.
-		if (is_null($acoInstanceId)) {
-			$acoInstanceId = $this->id;
-		}
-
-		// Build corresponding model.
-		$model = Common::getModel("User{$model->alias}Permission");
-
-		// Retrieve the list of users.
-		$users = $model->find('all', [
-			'conditions' => [
-				$acoKeyName => $acoInstanceId,
-				'permission_type <>' => null
-			],
-			'contain' => [
-				'User' => [
-					'fields' => [
-						'User.id'
-					]
-				]
-			]
-		]);
-
-		return $users;
-	}
-
-/**
  * Get a list of users who have a permissions record at least >= to READ
  *
  * @param Model &$model reference to the type of record.
@@ -284,8 +242,7 @@ class PermissionableBehavior extends ModelBehavior {
 		// Retrieve the list of users.
 		$users = $model->find('all', [
 			'conditions' => [
-				$acoKeyName => $acoInstanceId,
-				'permission_type >' => PermissionType::DENY
+				$acoKeyName => $acoInstanceId
 			],
 			'contain' => [
 				'User' => [

@@ -66,8 +66,7 @@ var PeopleWorkspaceMenu = passbolt.component.PeopleWorkspaceMenu = mad.Component
      * @param {HTMLEvent} ev The event which occurred
      */
     '{editionButton.element} click': function (el, ev) {
-        /*var category = this.options.editionButton.getValue();*/
-        mad.bus.trigger('request_user_edition'/*, category*/);
+        mad.bus.trigger('request_user_edition');
     },
 
     /**

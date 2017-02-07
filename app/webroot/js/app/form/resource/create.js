@@ -50,13 +50,6 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		// temporary for update demonstration
 		this.options.data.Resource = this.options.data.Resource || {};
 
-		// Add category id hidden field
-		this.addElement(
-			new mad.form.Textbox($('#js_field_category_id'), {
-				modelReference: 'passbolt.model.Resource.Category.id',
-				validate: false
-			}).start()
-		);
 		// Add resource id hidden field
 		this.addElement(
 			new mad.form.Textbox($('#js_field_resource_id'), {
@@ -152,17 +145,16 @@ var Create = passbolt.form.resource.Create = mad.Form.extend('passbolt.form.reso
 		if (this.options.action == 'edit') {
 			// Get the users to encrypt the resource for.
 			// @todo #PASSBOLT-1248 #security
-			passbolt.model.Permission.findAll({
-				aco: this.options.data.constructor.shortName,
-				aco_foreign_key: this.options.data.id
-			}, function (permissions, response, request) {
-				permissions.each(function(permission, i) {
-					usersIds.push(permission.aro_foreign_key);
+			passbolt.model.Resource.findUsers(this.options.data.id)
+				.then(function (users, response, request) {
+					var usersIds = [];
+					users.forEach(function(user) {
+						usersIds.push(user.id);
+					});
+					// Request the plugin to encrypt the secrets.
+					// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
+					mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
 				});
-				// Request the plugin to encrypt the secrets.
-				// When the secrets are encrypted the plugin will trigger the event secret_edition_secret_encrypted.
-				mad.bus.trigger('passbolt.secret_edition.encrypt', usersIds);
-			});
 		} else {
 			usersIds.push(mad.Config.read('user.id'));
 			// Request the plugin to encrypt the secrets.

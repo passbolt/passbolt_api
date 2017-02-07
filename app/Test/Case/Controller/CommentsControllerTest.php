@@ -24,8 +24,6 @@ class CommentsControllerTest extends ControllerTestCase {
 	public $fixtures = array(
 		'app.comment',
 		'app.resource',
-		'app.category',
-		'app.categories_resource',
 		'app.email_queue',
 		'app.user',
 		'app.group',
@@ -36,7 +34,6 @@ class CommentsControllerTest extends ControllerTestCase {
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist',
 		'app.gpgkey',
 		'core.cakeSession',
 		'app.user_agent',
@@ -49,7 +46,6 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->Comment = ClassRegistry::init('Comment');
 		$this->Resource = ClassRegistry::init('Resource');
 
-		// log the user as a manager to be able to access all categories
 		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
@@ -90,7 +86,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testViewAndPermission() {
 		$model = 'resource';
-		$id = Common::uuid('resource.id.cpp1-pwd1');
+		$id = Common::uuid('resource.id.inkscape');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
 		$user = $this->User->findById(Common::uuid('user.id.irene'));
@@ -100,7 +96,6 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
-	// test view foreign comments parameters
 	public function testView() {
 		$getOptions = array(
 			 'method' => 'get',
@@ -108,7 +103,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		);
 
 		$model = 'resource';
-		$rsId = Common::uuid('resource.id.salesforce-account');
+		$rsId = Common::uuid('resource.id.apache');
 		$result = json_decode($this->testAction("/comments/$model/{$rsId}.json", $getOptions), true);
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/comments/viewForeignComments/$model/{$rsId}.json : The test should return a success but is returning {$result['header']['status']}");
 
@@ -144,7 +139,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testAddNoDataProvided() {
 		$model = 'resource';
-		$rsId = Common::uuid('resource.id.salesforce-account');
+		$rsId = Common::uuid('resource.id.debian');
 		$this->setExpectedException('HttpException', 'No data were provided');
 		$this->testAction("/comments/$model/{$rsId}.json", array(
 			 'method' => 'post',
@@ -154,11 +149,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testAddAndPermission() {
 		$model = 'resource';
-		$rsId = Common::uuid('resource.id.cpp1-pwd1');
-
-		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(Common::uuid('user.id.irene'));
-		$this->User->setActive($user);
+		$rsId = Common::uuid('resource.id.inkskape');
 
 		$postOptions = array(
 			'method' => 'post',
@@ -174,7 +165,7 @@ class CommentsControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		$model = 'resource';
-		$rsId = Common::uuid('resource.id.salesforce-account');
+		$rsId = Common::uuid('resource.id.debian');
 		$postOptions = array(
 			 'method' => 'post',
 			 'return' => 'contents',
@@ -196,35 +187,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$findOptions = $this->Comment->getFindOptions('viewByForeignModel', User::get('Role.name'), $findData);
 		$result = $this->Comment->find('threaded', $findOptions);
 		$path = $this->Comment->inNestedArray($srvResult['body']['Comment']['id'], $result);
-		$commentId = $path[0];
 		$this->assertTrue(!empty($path), "The result should contain the comment {$srvResult['body']['Comment']['id']}, but it is not found.");
-
-		// Add an answer to the comment we previously inserted
-		// @TODO Check why the test is not working it seems that the system still support this feature
-		// $postOptions = array(
-			 // 'method' => 'post',
-			 // 'return' => 'contents',
-			 // 'data' => array('Comment' => array(
-				// 'content' => 'UNIT TEST children comment',
-				// 'Comment' => array(
-					// 'parent_id' => $commentId
-				// )
-			// ))
-		// );
-		// $srvResult = json_decode($this->testAction("/comments/$model/{$rs['Resource']['id']}.json", $postOptions), true);
-		// $this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The test should return a success but is returning {$srvResult['header']['status']}");
-		// $this->assertEquals($postOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/addForeignComment/$model/{$rs['Resource']['id']}.json : The server should return a comment which has same content than the posted value");
-//
-		// $findData = array(
-			// 'Comment' => array(
-				// 'foreign_id' => $rs['Resource']['id']
-			// )
-		// );
-		// $findOptions = $this->Comment->getFindOptions('viewByForeignModel', User::get('Role.name'), $findData);
-		// $result = $this->Comment->find('threaded', $findOptions);
-		// $path = $this->Comment->inNestedArray($srvResult['body']['Comment']['id'], $result);
-		// $this->assertTrue(!empty($path), "The result should contain the comment {$srvResult['body']['Comment']['id']}, but it is not found.");
-		// $this->assertEquals($path[0], $postOptionsCopy['data']['Comment']['parent_id'], "The comment {$srvResult['body']['Comment']['id']} should be a child of the comment {$postOptionsCopy['data']['Comment']['parent_id']}");
 	}
 
 	public function testEditCommentIdIsMissing() {
@@ -251,15 +214,15 @@ class CommentsControllerTest extends ControllerTestCase {
 				'content' => 'this is an edited short comment'
 			))
 		);
-		$id = Common::uuid('comment.id.salesforce-account-1'); // has to exist, and user has not to be owner
+		$id = Common::uuid('comment.id.apache-1'); // has to exist, and user has not to be owner
 		$this->setExpectedException('HttpException', 'Your are not allowed to edit this comment');
 		$this->testAction("/comments/$id.json", $putOptions);
 	}
 
 	// test edit
 	public function testEdit() {
-		$commentParentId = Common::uuid('comment.id.salesforce-account-1');
-		$resourceId = Common::uuid('resource.id.facebook-account');
+		$commentParentId = Common::uuid('comment.id.apache-1');
+		$resourceId = Common::uuid('resource.id.apache');
 		$commentContent = 'new comment';
 		$commentId = null;
 
@@ -309,15 +272,15 @@ class CommentsControllerTest extends ControllerTestCase {
 			 'return' => 'contents'
 		);
 
-		$id = Common::uuid('comment.id.salesforce-account-1'); // has to exist, and user has not to be owner
+		$id = Common::uuid('comment.id.apache-1'); // has to exist, and user has not to be owner
 		$this->setExpectedException('HttpException', 'Your are not allowed to delete this comment');
 		$this->testAction("/comments/$id.json", $putOptions);
 	}
 
 	// test delete
 	public function testDelete() {
-		$commentParentId = Common::uuid('comment.id.salesforce-account-1');
-		$resourceId = Common::uuid('resource.id.facebook-account');
+		$commentParentId = Common::uuid('comment.id.apache-1');
+		$resourceId = Common::uuid('resource.id.apache');
 		$commentContent = 'new comment';
 		$commentId = null;
 

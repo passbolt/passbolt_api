@@ -45,6 +45,14 @@ class UserResourcePermission extends AppModel {
 		$conditions = [];
 
 		switch ($case) {
+			case 'findByUserAndResource':
+				$conditions = [
+					'conditions' => [
+						'UserResourcePermission.resource_id' => $data['UserResourcePermission']['resource_id'],
+						'UserResourcePermission.user_id' => $data['UserResourcePermission']['user_id']
+					]
+				];
+				break;
 			case 'viewByResource':
 				$conditions = [
 					'conditions' => [
@@ -79,19 +87,65 @@ class UserResourcePermission extends AppModel {
 	public static function getFindFields($case = 'view', $role = null) {
 		$fields = ['fields' => []];
 		switch ($case) {
+			case 'findByUserAndResource':
+				$fields = [
+					'fields' => [
+						'UserResourcePermission.user_id',
+						'UserResourcePermission.resource_id',
+						'UserResourcePermission.permission_id',
+						'UserResourcePermission.permission_type'
+					],
+					'contain' => [
+						'Permission' => [
+							'fields' => [
+								'Permission.id',
+								'Permission.type',
+								'Permission.aco',
+								'Permission.aco_foreign_key',
+								'Permission.aro',
+								'Permission.aro_foreign_key'
+							],
+							'PermissionType' => [
+								'fields' => [
+									'PermissionType.serial',
+									'PermissionType.name'
+								]
+							],
+						]
+					]
+				];
+				break;
 			case 'viewByResource':
 				$fields = [
 					'fields' => ['user_id', 'resource_id', 'permission_id', 'permission_type'],
 					'contain' => [
 						'Permission' => [
-							'fields' => ['id', 'type', 'aco', 'aco_foreign_key', 'aro', 'aro_foreign_key'],
+							'fields' => [
+								'id',
+								'type',
+								'aco',
+								'aco_foreign_key',
+								'aro',
+								'aro_foreign_key'
+							],
 							'PermissionType' => [
-								'fields' => ['serial', 'name']
+								'fields' => [
+									'serial',
+									'name'
+								]
 							],
 							'User' => [
-								'fields' => ['id', 'username', 'role_id'],
+								'fields' => [
+									'id',
+									'username',
+									'role_id'
+								],
 								'Profile' => [
-									'fields' => ['id', 'first_name', 'last_name'],
+									'fields' => [
+										'id',
+										'first_name',
+										'last_name'
+									],
 									'Avatar' => [
 										'fields' => [
 											'Avatar.id',
@@ -112,11 +166,11 @@ class UserResourcePermission extends AppModel {
 								]
 							],
 							'Resource' => [
-								'fields' => ['id', 'name']
+								'fields' => [
+									'id',
+									'name'
+								]
 							],
-							'Category' => [
-								'fields' => ['id', 'name']
-							]
 						]
 					]
 				];

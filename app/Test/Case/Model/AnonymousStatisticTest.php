@@ -12,10 +12,7 @@ App::uses('AppTestCase', 'Test');
 class AnonymousStatisticTest extends AppTestCase {
 
 	public $fixtures = array(
-		'app.category',
 		'app.resource',
-		'app.categoryType',
-		'app.categoriesResource',
 		'app.user',
 		'app.role',
 		'app.secret',
@@ -61,7 +58,7 @@ class AnonymousStatisticTest extends AppTestCase {
 		$this->assertEquals(
 			$stats,
 			[
-				'passwords_count' => 13,
+				'passwords_count' => 16,
 				'users_count'     => 21,
 				'logs_count'      => 0,
 				'version'         => Configure::read('App.version.number'),

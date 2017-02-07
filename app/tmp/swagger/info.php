@@ -4,12 +4,12 @@
  *
  * @SWG\Swagger(
  *     schemes={"http"},
- *     host="http://passbolt.dev/",
+ *     host="http://192.168.99.100:8081/var/www/passbolt/app/Console/",
  *     basePath="/",
  *     @SWG\Info(
- *         version="1.0.14",
+ *         version="1.3.2",
  *         title="Passbolt JSON API",
- *         description="Open source password manager for teams",
+ *         description="",
  *         termsOfService="https://www.passbolt.com/terms/",
  *         @SWG\Contact(
  *             email="contact@passbolt.com"

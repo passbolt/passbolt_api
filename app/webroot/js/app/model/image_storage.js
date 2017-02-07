@@ -7,7 +7,7 @@ import 'mad/model/model';
  * The Image Storage model
  *
  * @constructor
- * Creates a category
+ * Creates an image storage
  * @param {array} options
  * @return {passbolt.model.ImageStorage}
  */

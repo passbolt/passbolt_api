@@ -28,8 +28,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         itemClass: passbolt.model.User,
         // Specific view for userBrowser. To handle specific behaviours like drag n drop.
         viewClass: passbolt.view.component.UserBrowser,
-        // the list of displayed categories
-        // categories: new passbolt.model.Category.List()
+        // the list of displayed groups
         groups: [],
         // the selected resources, you can pass an existing list as parameter of the constructor to share the same list
         selectedUsers: new can.Model.List(),
@@ -518,7 +517,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
 
     /**
      * Observe when a user is created.
-     * If the created resource belong to a displayed category, add the resource to the grid.
      * @param {mad.model.Model} model The model reference
      * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Resource} resource The created resource
@@ -559,11 +557,10 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
-     * Observe when a category is removed. And remove from the grid all the resources
-     * which are not belonging to a displayed Category.
+     * Observe when a user group relation is destroyed
      * @param {mad.model.Model} model The model reference
      * @param {HTMLEvent} ev The event which occurred
-     * @param {passbolt.model.Category} category The removed category
+     * @param {passbolt.model.GroupUser} groupUser The removed associated
      */
     '{passbolt.model.GroupUser} destroyed': function (model, ev, groupUser) {
         // Remove user from the list of users in the grid.

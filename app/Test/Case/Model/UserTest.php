@@ -26,7 +26,9 @@ class UserTest extends CakeTestCase {
 		'app.gpgkey',
 		'app.role',
 		'core.cakeSession',
+		'app.permissionsType',
 		'app.permission',
+		'app.permission_view',
 		'app.authentication_token'
 	);
 
@@ -40,6 +42,7 @@ class UserTest extends CakeTestCase {
 	public function setup() {
 		parent::setUp();
 		$this->User = ClassRegistry::init('User');
+		$this->Permission = ClassRegistry::init('Permission');
 	}
 
 	/**
@@ -500,7 +503,7 @@ class UserTest extends CakeTestCase {
 	}
 
 	/**
-	 * Test that when soft delete a user it is still in db and his permissions have been revoked
+	 * Test that when soft delete a user it is still in db and marked as soft deleted
 	 */
 	public function testSoftDelete() {
 		$user = $this->User->find('first', array('conditions' => array('username' => 'admin@passbolt.com')));
@@ -512,5 +515,24 @@ class UserTest extends CakeTestCase {
 		// User deleted field should be set at true
 		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
 		$this->assertEquals(1, $userA['User']['deleted'], 'User should be marked as deleted');
+	}
+
+	/**
+	 * Test that all the permissions of a user are deleted when the user is soft deleted.
+	 */
+	public function testSoftDeleteDeletePermissions() {
+		$user = $this->User->find('first', array('conditions' => array('username' => 'admin@passbolt.com')));
+		$this->User->setActive($user);
+
+		// Retrieve the user to soft delete
+		$userA = $this->User->find('first', array('conditions' => array('username' => 'ada@passbolt.com')));
+		// Ensure this user has already few direct permissions
+		$permissions = $this->Permission->find('all', array('conditions' => array('aro_foreign_key' => $userA['User']['id'])));
+		$this->assertNotEmpty($permissions);
+
+		// Soft delete the user and check he has no permission anymore
+		$this->User->softDelete($userA['User']['id']);
+		$permissions = $this->Permission->find('all', array('conditions' => array('aro_foreign_key' => $userA['User']['id'])));
+		$this->assertEmpty($permissions);
 	}
 }

@@ -1,7 +1,6 @@
 import 'mad/component/component';
 import 'mad/component/menu';
 import 'app/model/filter';
-import 'app/model/category';
 
 import 'app/view/template/component/breadcrumb/breadcrumb.ejs!';
 import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
@@ -21,7 +20,6 @@ import 'app/view/template/component/breadcrumb/breadcrumb_item.ejs!';
 var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.extend('passbolt.component.PeopleBreadcrumb', /** @static */ {
 
     defaults: {
-        categories: passbolt.model.Category.List,
         // Template
         templateUri: 'app/view/template/component/breadcrumb/breadcrumb.ejs',
         // Hidden by default
@@ -68,13 +66,13 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
         });
         menuItems.push(menuItem);
 
-        // If we want to filter on a Category.
+        // If we want to filter on a group.
         if (typeof filter.foreignModels.Group != 'undefined') {
-            // The breadcrumb can react for a unique Category.
+            // The breadcrumb can react for a unique group.
             if (filter.foreignModels.Group.length == 1) {
                 var group = filter.foreignModels.Group[0];
 
-                // Add the current category to the breadcrumb.
+                // Add the current group to the breadcrumb.
                 var menuItem = new mad.model.Action({
                     id: uuid(),
                     label: group.name,
@@ -87,7 +85,7 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
         }
         // If we want to filter on keywords.
         else if (typeof filter.keywords != 'undefined' && filter.keywords != '') {
-            // Add the current category to the breadcrumb.
+            // Add the search keywords to the breadcrumb.
             var menuItem = new mad.model.Action({
                 id: uuid(),
                 label: __('Search : %s', filter.keywords)

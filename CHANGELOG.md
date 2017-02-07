@@ -4,6 +4,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+- PASSBOLT-1863 Remove references to legacy features Category and Tags
+- PASSBOLT-1883 Fix wrong usage of the permission entry point viewByAco
+- PASSBOLT-1887 Remove the entry point PermissionController::simulateAcoPermissionsAfterChange
+- PASSBOLT-1886 Remove the controller component PermissionHelperComponent
+- PASSBOLT-1888 Remove the model behavior function PermissionableBehavior::getUsersWithAPermissionSet
+- PASSBOLT-1889 Remove references to legacy models and tables (AuthenticationLogs, AuthenticationBlackList, Email, Adress, PhoneNumber)
+- PASSBOLT-1890 Clean the Permission model validation functions & augment coverage
+- PASSBOLT-1894 Reorganize ACL models tests
+- PASSBOLT-1896 Remove references to legacy permission types CREATE and DENY
 
 ## [1.3.2] - 2017-01-16
 ### Fixed

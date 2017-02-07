@@ -1,13 +1,12 @@
 <?php
 /**
- * AuthenticationLog Model Test
+ * AuthenticationToken Model Test
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package       app.Test.Case.Model.AuthenticationLogTest
+ * @package       app.Test.Case.Model.AuthenticationTokenTest
  * @since         version 2.13.03
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-App::uses('AuthenticationLog', 'Model');
 
 class AuthenticationTokenTest extends CakeTestCase {
 

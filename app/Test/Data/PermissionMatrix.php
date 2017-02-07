@@ -9,9 +9,6 @@ class PermissionMatrix {
 			case 'R':
 				$type = PermissionType::READ;
 				break;
-			case 'C':
-				$type = PermissionType::CREATE;
-				break;
 			case 'U':
 				$type = PermissionType::UPDATE;
 				break;

@@ -24,8 +24,6 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource',
-		'app.category',
-		'app.categories_resource',
 		'app.secret',
 		'app.favorite',
 		'app.user',
@@ -36,7 +34,6 @@ class FavoritesControllerTest extends ControllerTestCase {
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationBlacklist',
 		'app.gpgkey',
 		'app.file_storage',
 		'core.cakeSession',
@@ -49,8 +46,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 		$this->User = Common::getModel('User');
 		$this->Favorite = Common::getModel('Favorite');
 		$this->Resource = Common::getModel('Resource');
-		
-		// log the user as a manager to be able to access all categories
+
 		$user = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->setActive($user);
 	}
@@ -81,7 +77,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testAdd() {
 		$model = 'resource';
-		$rsId = Common::uuid('resource.id.salesforce-account');
+		$rsId = Common::uuid('resource.id.debian');
 		$this->testAction("/favorites/$model/{$rsId}.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -103,7 +99,7 @@ class FavoritesControllerTest extends ControllerTestCase {
 
 	public function testDelete() {
 		$model = 'resource';
-		$rsId = Common::uuid('resource.id.salesforce-account');
+		$rsId = Common::uuid('resource.id.debian');
 		$result = json_decode($this->testAction("/favorites/$model/{$rsId}.json", array('method' => 'post', 'return' => 'contents')), true);
 		$this->testAction("/favorites/{$result['body']['Favorite']['id']}.json", array('method' => 'delete', 'return' => 'contents'));
 	}

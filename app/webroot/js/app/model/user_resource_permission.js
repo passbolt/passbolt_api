@@ -1,8 +1,6 @@
 import 'mad/model/model';
-import 'app/model/category';
 import 'app/model/permission_type';
 import 'mad/model/serializer/cake_serializer';
-
 
 /**
  * @inherits {mad.Model}

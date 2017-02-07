@@ -22,7 +22,7 @@ class ProfileTask extends ModelTask {
 			'id' => Common::uuid('profile.id.anonymous'),
 			'user_id' => Common::uuid('user.id.anonymous'),
 			'gender' => 'm',
-			'date_of_birth' => '1980-12-10',
+			'date_of_birth' => '1970-01-01',
 			'title' => 'Mr',
 			'first_name' => 'Anonymous',
 			'last_name' => 'User'

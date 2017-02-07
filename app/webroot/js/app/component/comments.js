@@ -76,7 +76,7 @@ var Comments = passbolt.component.Comments = mad.Component.extend('passbolt.comp
 	},
 
 	'{passbolt.model.Comment} created': function (model, ev, resource) {
-		// If the new resource belongs to one of the categories displayed by the resource.
+		// If the new comment belongs to the displayed resource.
 		if (resource.foreign_id == this.options.resource.id) {
 			this.addForm.setState('hidden');
 			this.commentsList.insertItem(resource, null, 'first');

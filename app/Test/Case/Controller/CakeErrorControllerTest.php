@@ -24,8 +24,6 @@ class CakeErrorControllerTest extends ControllerTestCase {
 
     public $fixtures = array(
         'app.resource',
-        'app.category',
-        'app.categories_resource',
         'app.secret',
         'app.favorite',
         'app.user',
@@ -36,7 +34,6 @@ class CakeErrorControllerTest extends ControllerTestCase {
         'app.permission',
         'app.permissions_type',
         'app.permission_view',
-        'app.authenticationBlacklist',
         'app.gpgkey',
         'app.file_storage',
         'core.cakeSession',

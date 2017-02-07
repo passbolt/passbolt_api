@@ -40,7 +40,7 @@ var EditDescription = passbolt.form.resource.EditDescription = mad.Form.extend('
 			modelReference : 'passbolt.model.Resource.id'
 		}).start().setValue(this.options.resource.id));
 
-		// this textbox will contain the list of tags separated with a comma
+		// Init the description field.
 		this.options.descriptionField = this.addElement(
 			new mad.form.Textbox($('.js_resource_description', this.element), {
 				modelReference : 'passbolt.model.Resource.description'
