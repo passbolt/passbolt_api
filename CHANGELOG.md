@@ -4,15 +4,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- PASSBOLT-1863 Remove references to legacy features Category and Tags
-- PASSBOLT-1883 Fix wrong usage of the permission entry point viewByAco
-- PASSBOLT-1887 Remove the entry point PermissionController::simulateAcoPermissionsAfterChange
-- PASSBOLT-1886 Remove the controller component PermissionHelperComponent
-- PASSBOLT-1888 Remove the model behavior function PermissionableBehavior::getUsersWithAPermissionSet
-- PASSBOLT-1889 Remove references to legacy models and tables (AuthenticationLogs, AuthenticationBlackList, Email, Adress, PhoneNumber)
-- PASSBOLT-1890 Clean the Permission model validation functions & augment coverage
-- PASSBOLT-1894 Reorganize ACL models tests
-- PASSBOLT-1896 Remove references to legacy permission types CREATE and DENY
+
+## [1.4.0] - 2017-02-07
+### Fixed
+- PASSBOLT-1863: Remove references to legacy features Category and Tags
+- PASSBOLT-1883: Fix wrong usage of the permission entry point viewByAco
+- PASSBOLT-1887: Remove the entry point PermissionController::simulateAcoPermissionsAfterChange
+- PASSBOLT-1886: Remove the controller component PermissionHelperComponent
+- PASSBOLT-1888: Remove the model behavior function PermissionableBehavior::getUsersWithAPermissionSet
+- PASSBOLT-1889: Remove references to legacy models and tables (AuthenticationLogs, AuthenticationBlackList, Email, Adress, PhoneNumber)
+- PASSBOLT-1890: Clean the Permission model validation functions & augment coverage
+- PASSBOLT-1894: Reorganize ACL models tests
+- PASSBOLT-1896: Remove references to legacy permission types CREATE and DENY
 - PASSBOLT-1511: removed tracking of config file Config/email.php
 - PASSBOLT-1835: As a user I should be able to create an account with the same username as an account that was previously deleted
 
@@ -195,7 +198,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.3.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/passbolt/passbolt_api/compare/v1.3.2...v1.4.0
 [1.3.2]: https://github.com/passbolt/passbolt_api/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/passbolt/passbolt_api/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/passbolt/passbolt_api/compare/v1.2.1...v1.3.0
