@@ -16,8 +16,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1890: Clean the Permission model validation functions & augment coverage
 - PASSBOLT-1894: Reorganize ACL models tests
 - PASSBOLT-1896: Remove references to legacy permission types CREATE and DENY
-- PASSBOLT-1511: removed tracking of config file Config/email.php
-- PASSBOLT-1835: As a user I should be able to create an account with the same username as an account that was previously deleted
+- PASSBOLT-1511: removed tracking of config file Config/email.php (@BaumannMisys GITHUB-34)
+- PASSBOLT-1835: As a user I should be able to create an account with the same username as an account that was previously deleted (@bestlibre GITHUB-33)
 
 ## [1.3.2] - 2017-01-16
 ### Fixed
