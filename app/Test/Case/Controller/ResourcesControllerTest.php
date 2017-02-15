@@ -106,11 +106,7 @@ class ResourcesControllerTest extends ControllerTestCase
 
 	public function testViewAndPermission()
 	{
-		$resId = Common::uuid('resource.id.apache');
-
-		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(Common::uuid('user.id.irene'));
-		$this->User->setActive($user);
+		$resId = Common::uuid('resource.id.canjs');
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access this resource');
 		$this->testAction("/resources/{$resId}.json", array(
@@ -238,6 +234,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$this->assertEquals(Status::SUCCESS, $result['header']['status'],
 			"Add : /resources.json : The test should return success but is returning " . print_r($result, true));
 
+//		var_dump($result['body']);
 		// check that Secret has been saved
 		$secret = $this->Resource->Secret->findByResourceId($result['body']['Resource']['id']);
 		$this->assertTrue(!empty($secret), "Add : /resources.json : Secret should have been inserted but is not");
@@ -446,7 +443,7 @@ class ResourcesControllerTest extends ControllerTestCase
 			// Get the resource again, and assert it's the exact same
 			$resourceAfterUpdate = $this->Resource->find('first', [
 				'conditions' => [
-					'id' => $resource['Resource']['id']
+					'Resource.id' => $resource['Resource']['id']
 				],
 				'contain' => ['Secret']
 			]);

@@ -484,7 +484,9 @@ class Gpgkey extends AppModel {
 						'type',
 						'expires',
 						'parent_id',
-						'key_created'
+						'key_created',
+						'created_by',
+						'modified_by',
 					]
 				];
 				break;

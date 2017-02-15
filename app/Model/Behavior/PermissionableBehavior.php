@@ -12,9 +12,8 @@ App::uses('PermissionType', 'Model');
 class PermissionableBehavior extends ModelBehavior {
 
 /**
- * beforeFind can be used to cancel find operations, or modify the query that will be executed.
- * By returning null/false you can abort a find. By returning an array you can modify/replace the query
- * that is going to be run.
+ * beforeFind callback.
+ * Filter all the requests to return only the resources that the current users is authorized to access.
  *
  * @param Model $model Model using this behavior
  * @param array $queryData Data used to execute this query, i.e. conditions, order, etc.
@@ -22,72 +21,55 @@ class PermissionableBehavior extends ModelBehavior {
  *   $query that will be eventually run.
  */
 	public function beforeFind(Model $model, $queryData = []) {
-		// If the current user is a normal user (all roles except root),
-		// all his requests will be augmented with the permissionable behavior
-		// to ensure he can only access records he has permission for.
+		// Augment the request to return only acos users are authorized to access.
 		if (User::get('Role.name') != Role::ROOT) {
 
-			// Depending on the target model the user wants to access,
-			// the permissions are managed by a specific model.
-			// ex : UserResourcePermission
+			// Permissions are pre-calculated by a view functions of the acos/aros.
+			// For the users and resources the permissions are provided by the model UserResourcePermission.
 			$userPermissionModelName = 'User' . $model->alias . 'Permission';
 			$foreignModelPrimaryKey = Inflector::underscore($model->alias) . '_id';
 
-			// Filter options.
-			$permOptions = [
-				'fields' => [
-					$userPermissionModelName . '.permission_id',
-					$userPermissionModelName . '.permission_type'
-				],
-				'conditions' => [
-					// We're looking for permissions for the current user.
-					$userPermissionModelName . '.user_id' => User::get('id'),
-					// The user should have a permission set.
-					$userPermissionModelName . '.permission_type >=' => PermissionType::READ,
-				],
-				'contain' => [$userPermissionModelName]
-			];
-
-			// Bind the model the user is performing a find to our permissions model system.
-			$model->bindModel(
-				[
-					'hasOne' => [
-						$userPermissionModelName => [
-							'foreignKey' => $foreignModelPrimaryKey
-						],
-						'Permission' => [
-							'foreignKey' => false,
-							'conditions' => ['Permission.id' => $userPermissionModelName . '.permission_id '],
-							'type' => 'LEFT'
+			// Bind the permissions models in order to check access.
+			$model->bindModel([
+				'hasOne' => [
+					$userPermissionModelName => [
+						'foreignKey' => $foreignModelPrimaryKey,
+						'conditions' => [
+							$userPermissionModelName . '.user_id' => User::get('id'),
+							$userPermissionModelName . '.permission_type >=' => PermissionType::READ,
 						]
+					],
+					'Permission' => [
+						'foreignKey' => false,
+						'conditions' => ['Permission.id = '. $userPermissionModelName . '.permission_id ']
 					]
-				], false);
+				]
+			], false);
 
-			// Augment the request to add the fields we want to get
-			if (!empty($queryData['fields'])) {
-				if (!is_array($queryData['fields'])) {
-					$queryData['fields'] = [$queryData['fields']];
-				}
-				$queryData['fields'] = array_merge($queryData['fields'], $permOptions['fields']);
-			}
-
-			// Augment the request to add the condition to filter the request
-			if (empty($queryData['conditions'])) {
-				$queryData['conditions'] = [];
-			}
-			if (!is_array($queryData['conditions'])) {
-				$queryData['conditions'] = [$queryData['conditions']];
-			}
-			$queryData['conditions'] = array_merge($queryData['conditions'], $permOptions['conditions']);
-
-			// Augment the request to add the model we want included in the request results.
+			// Return permission data.
 			if (empty($queryData['contain'])) {
 				$queryData['contain'] = [];
 			}
 			if (!is_array($queryData['contain'])) {
 				$queryData['contain'] = [$queryData['contain']];
 			}
-			$queryData['contain'] = array_merge($queryData['contain'], $permOptions['contain']);
+			$contain = [
+				$userPermissionModelName => [ 'fields' => [ $userPermissionModelName . '.*' ] ],
+				'Permission' => [ 'fields' => [  'Permission.*' ] ],
+			];
+			$queryData['contain'] = array_merge($queryData['contain'], $contain);
+
+			// Return only acos the user is authorized to access.
+			if (empty($queryData['conditions'])) {
+				$queryData['conditions'] = [];
+			}
+			if (!is_array($queryData['conditions'])) {
+				$queryData['conditions'] = [$queryData['conditions']];
+			}
+			$conditions = [
+				'Permission.id <>' => null,
+			];
+			$queryData['conditions'] = array_merge($queryData['conditions'], $conditions);
 		}
 
 		return $queryData;

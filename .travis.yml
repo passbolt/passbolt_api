@@ -68,6 +68,8 @@ matrix:
         - sudo apt-get update -q
         - sudo apt-get install -q -y -o Dpkg::Options::=--force-confnew mysql-server
         - sudo mysql_upgrade
+        - sudo service mysql restart
+
   allow_failures:
     - php: 5.6
       env: DB=mysql MYSQL_VERSION=5.7
