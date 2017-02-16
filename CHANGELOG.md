@@ -4,7 +4,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- PASSBOLT-1646: GITHUB-20 Permissions views and queries do not work with Mysql57 / only_full_group_by enabled
 
 ## [1.4.0] - 2017-02-07
 ### Fixed
@@ -19,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1896: Remove references to legacy permission types CREATE and DENY
 - PASSBOLT-1511: removed tracking of config file Config/email.php (@BaumannMisys GITHUB-34)
 - PASSBOLT-1835: As a user I should be able to create an account with the same username as an account that was previously deleted (@bestlibre GITHUB-33)
+- PASSBOLT-1646: GITHUB-20 Permissions views and queries do not work with Mysql57 / only_full_group_by enabled
 
 ## [1.3.2] - 2017-01-16
 ### Fixed
