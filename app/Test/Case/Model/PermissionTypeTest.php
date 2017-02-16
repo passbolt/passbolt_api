@@ -25,8 +25,29 @@ class PermissionTypeTest extends CakeTestCase {
 
 	public function testPermissionTypeConstants() {
 		$this->assertEquals(true, PermissionType::DENY < PermissionType::READ, 'PermissionType::DENY should be inferior to PermissionType::READ');
-		$this->assertEquals(true, PermissionType::READ < PermissionType::CREATE, 'PermissionType::READ should be inferior to PermissionType::CREATE');
-		$this->assertEquals(true, PermissionType::CREATE < PermissionType::UPDATE, 'PermissionType::CREATE should be inferior to PermissionType::UPDATE');
+		$this->assertEquals(true, PermissionType::READ < PermissionType::UPDATE, 'PermissionType::READ should be inferior to PermissionType::UPDATE');
 		$this->assertEquals(true, PermissionType::UPDATE < PermissionType::OWNER, 'PermissionType::UPDATE should be inferior to PermissionType::OWNER');
+	}
+
+	public function testIsValidSerial() {
+		$testcases = array(
+			PermissionType::DENY => false,
+			'' => false,
+			'DENY' => false,
+			'READ' => false,
+			'UPDATE' => false,
+			'OWNER' => false,
+			PermissionType::READ => true,
+			PermissionType::UPDATE => true,
+			PermissionType::OWNER => true,
+		);
+		foreach ($testcases as $testcase => $result) {
+			if ($result) {
+				$msg = 'permission type ' . $testcase . ' should validate';
+			} else {
+				$msg = 'permission type ' . $testcase . ' should not validate';
+			}
+			$this->assertEquals($this->PermissionType->isValidSerial($testcase), $result, $msg);
+		}
 	}
 }

@@ -154,12 +154,34 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 		}
 
 		return filteredFields;
+	},
+
+	/**
+	 * Find users who have access to a resource.
+	 * @param {uuid} id The resource id
+	 * @return {Promise}
+	 */
+	findUsers: function (id) {
+		var params = {
+			id: id
+		};
+		// Send the request to the server.
+		return mad.net.Ajax.request({
+			url: APP_URL + 'resources/{id}/users.json',
+			type: 'GET',
+			params: params
+		}).pipe(function(data, textStatus, jqXHR) {
+			// pipe the result to convert cakephp response format into can format
+			var def = $.Deferred();
+			def.resolveWith(this, [passbolt.model.User.models(data)]);
+			return def;
+		});
 	}
 
 }, /** @prototype */ {
 
 	/**
-	 * Is favorite
+	 * Check if the resource is marked as favorite.
 	 * @return {boolean}
 	 */
 	isFavorite: function () {
@@ -168,12 +190,8 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 		} else {
 			return false;
 		}
-	},
-
-	destroy: function () {
-		// @todo unbind the passbolt.model.Category destroyed event, if it does not done automatically
-		this._super();
 	}
+
 });
 
 export default Resource;

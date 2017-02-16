@@ -74,6 +74,7 @@
  */
 	Router::connect('/resources/index', array('controller' => 'resources', 'action' => 'index'));
 	Router::connect('/resources/index/*', array('controller' => 'resources', 'action' => 'index'));
+	Router::connect('/resources/:id/users', array('controller' => 'resources', 'action' => 'users', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'delete', '[method]' => 'DELETE'));
 	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'edit', '[method]' => 'PUT'));
 	Router::connect('/resources/*', array('controller' => 'resources', 'action' => 'view', '[method]' => 'GET'));
@@ -136,7 +137,6 @@
  * Custom route for permissions controller
  */
 	Router::connect('/permissions/resource/:id', array('controller' => 'permissions', 'action' => 'addAcoPermissions', 'model' => 'Resource', '[method]' => 'POST'), array('pass' => array('model', 'id')));
-	Router::connect('/permissions/simulate/:resource/:id', array('controller' => 'permissions', 'action' => 'simulateAcoPermissionsAfterChange', 'model' => 'Resource', '[method]' => 'POST'), array('pass' => array('resource', 'id')));
 	Router::connect('/permissions/resource/:id', array('controller' => 'permissions', 'action' => 'viewAcoPermissions', 'model' => 'Resource', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'edit', '[method]' => 'PUT'));
 	Router::connect('/permissions/*', array('controller' => 'permissions', 'action' => 'delete', '[method]' => 'DELETE'));

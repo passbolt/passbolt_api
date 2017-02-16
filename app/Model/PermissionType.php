@@ -23,9 +23,11 @@ class PermissionType extends AppModel {
  */
 	public $primaryKey = 'serial';
 
-	const DENY = '0';
+/**
+ * Passbolt permission types.
+ */
+	const DENY = '0'; // DENY is not an allowed permission type, but it's useful to keep it for testing purpose.
 	const READ = '1';
-	const CREATE = '3';
 	const UPDATE = '7';
 	const OWNER = '15';
 
@@ -37,9 +39,7 @@ class PermissionType extends AppModel {
  */
 	public function isValidSerial($type) {
 		switch ($type) {
-			case self::DENY:
 			case self::READ:
-			case self::CREATE:
 			case self::UPDATE:
 			case self::OWNER:
 				return true;
@@ -55,9 +55,7 @@ class PermissionType extends AppModel {
  */
 	public static function getAll() {
 		return [
-			'DENY' => self::DENY,
 			'READ' => self::READ,
-			'CREATE' => self::CREATE,
 			'UPDATE' => self::UPDATE,
 			'ADMIN' => self::OWNER,
 		];

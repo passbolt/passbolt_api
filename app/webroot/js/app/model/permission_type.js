@@ -2,11 +2,9 @@ import 'mad/model/model';
 import 'mad/model/serializer/cake_serializer';
 
 /*
- * Passbolt permission constants.
+ * Passbolt permission types.
  */
-passbolt.DENY 	= 0;
 passbolt.READ 	= 1;
-passbolt.CREATE = 3;
 passbolt.UPDATE = 7;
 passbolt.ADMIN 	= 15;
 
@@ -40,18 +38,11 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 	attributes: {
 		serial: 'string',
 		name: 'string',
-		binary: 'string',
-		_admin: 'boolean',
-		_update: 'boolean',
-		_create: 'boolean',
-		_read: 'boolean',
 		description: 'string'
 	},
 
 	PERMISSION_TYPES: {
-		0: __('deny'),
 		1: __('read'),
-		3: __('create'),
 		7: __('update'),
 		15: __('owner')
 	},
@@ -67,9 +58,6 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 			return 'can read';
 		}
 		switch (permId.toString()) {
-			case passbolt.DENY.toString():
-				returnValue = this.PERMISSION_TYPES[permId];
-				break;
 			case passbolt.ADMIN.toString():
 				returnValue = __('is %s', this.PERMISSION_TYPES[permId]);
 				break;
@@ -87,7 +75,7 @@ var PermissionType = passbolt.model.PermissionType = mad.Model.extend('passbolt.
 		switch(format) {
 			case 'long':
 				returnValue = passbolt.model.PermissionType.PERMISSION_TYPES[this.serial];
-				if(this.serial !== passbolt.DENY.toString() && this.serial != passbolt.ADMIN.toString()) {
+				if(this.serial != passbolt.ADMIN.toString()) {
 					returnValue = __('can %s', returnValue);
 				}
 				break;

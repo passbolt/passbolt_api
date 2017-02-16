@@ -26,8 +26,6 @@ class SeleniumTestsControllerTest extends ControllerTestCase {
 			'app.profile',
 			'app.gpgkey',
 			'app.file_storage',
-			'app.authenticationLog',
-			'app.authenticationBlacklist',
 			'app.emailQueue',
 			'core.cakeSession',
 			'app.user_agent',

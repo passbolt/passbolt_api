@@ -44,7 +44,7 @@ class PermissionnableTest extends CakeTestCase {
 	}
 
 	public function testGetResourcesPermission() {
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
@@ -68,7 +68,7 @@ class PermissionnableTest extends CakeTestCase {
 	}
 
 	public function testUserIsAuthorizedToPerformOperationOnResource() {
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
@@ -95,7 +95,7 @@ class PermissionnableTest extends CakeTestCase {
 	}
 
 	public function testAutomaticResourceFindFiltering() {
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/resources_users_permissions.csv');
+		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
@@ -134,22 +134,4 @@ class PermissionnableTest extends CakeTestCase {
 		$this->assertEquals(sort($expected), sort($permsUsers));
 	}
 
-	public function testGetUsersWithAPermissionSet() {
-		// As Ada
-		$user = $this->User->findById(Common::uuid('user.id.ada'));
-		$this->User->setActive($user);
-
-		// Expected list of users with a permission set
-		$expected = [
-			Common::uuid('user.id.ada'),
-			Common::uuid('user.id.betty'),
-			Common::uuid('user.id.dame'),
-			Common::uuid('user.id.edith'),
-		];
-		$conditions = ['conditions' => ['name' => 'debian'], 'contain' => ['Secret']];
-		$resource = $this->Resource->find('first', $conditions);
-		$permsUsers = $this->Resource->getUsersWithAPermissionSet($resource['Resource']['id']);
-		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
-		$this->assertEquals(sort($expected), sort($permsUsers));
-	}
 }

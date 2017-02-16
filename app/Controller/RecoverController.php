@@ -58,23 +58,38 @@ class RecoverController extends AppController {
                     throw new BadRequestException(__('Please provide a valid email address.'));
                 }
 
-                // User doesn't exist.
-                $user = $this->User->findByUsername($this->request->data['User']['username']);
+                // Find all users with the requested username.
+	            // We do a find all because some users might exist in db, but be deleted. We need to retrieve all
+	            // to figure what's the context.
+	            $user = $this->User->find(
+	            	'all',
+		            [
+		            	'conditions' => [
+		            		'username' => $this->request->data['User']['username'],
+			            ],
+			            'order' => 'deleted ASC',
+		            ]
+	            );
+
+	            // User doesn't exist.
                 if (empty($user)) {
                     throw new BadRequestException(__('This user does not exist. Please register and complete the setup first.'));
                 }
 
-                // User has been deleted
+                // Get first user returned.
+                $user = $user[0];
+
+                // User has been deleted.
                 if ($user['User']['deleted']) {
                     throw new BadRequestException(__('This user has been deleted. Please contact your administrator.'));
                 }
 
-                // User is not activated
+                // User is not activated.
                 if (!$user['User']['active']) {
                     throw new BadRequestException(__('This user is not active. Please complete the setup first.'));
                 }
 
-                // Create the setup authentication token
+                // Create the setup authentication token.
                 $saveToken = $this->AuthenticationToken->generate($user['User']['id']);
                 if (!$saveToken) {
                     throw new InternalErrorException(__('Something went wrong and it was not possible to create a recovery token. Please try again later.'));

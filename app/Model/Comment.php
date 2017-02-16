@@ -216,7 +216,7 @@ class Comment extends AppModel {
 		$m = $this->data['Comment']['foreign_model'];
 		$model = Common::getModel($m);
 		$exists = $model->find('count', [
-			'conditions' => ['id' => $check['foreign_id']],
+			'conditions' => [$m . '.id' => $check['foreign_id']],
 			'recursive' => -1
 		]);
 		return $exists > 0;

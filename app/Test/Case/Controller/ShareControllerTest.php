@@ -32,8 +32,6 @@ class ShareControllerTest extends ControllerTestCase {
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
-		'app.authenticationLog',
-		'app.authenticationBlacklist',
 		'app.gpgkey',
 		'app.emailQueue',
 		'core.cakeSession',
@@ -77,6 +75,10 @@ class ShareControllerTest extends ControllerTestCase {
 			), true);
 		return $res;
 	}
+
+/******************************************************
+ * UPDATE TESTS
+ ******************************************************/
 
 	public function testUpdateAcoNotValid() {
 		$this->setExpectedException('HttpException', 'The call to entry point with parameter User is not allowed');
@@ -411,8 +413,9 @@ hcciUFw5
 		$directPerm = $this->Permission->find('first', array(
 				'conditions' => array(
 					'aco' => 'Resource',
+					'aco_foreign_key' => Common::uuid('resource.id.debian'),
 					'aro' => 'User',
-					'aco_foreign_key' => Common::uuid('resource.id.debian')
+					'aro_foreign_key' => Common::uuid('user.id.ada')
 				)
 			));
 		$data = array(
@@ -421,7 +424,7 @@ hcciUFw5
 					'Permission' => array (
 						'id' => $directPerm['Permission']['id'],
 						'aro_foreign_key' => $directPerm['Permission']['aro_foreign_key'],
-						'type' => PermissionType::CREATE,
+						'type' => PermissionType::UPDATE,
 					),
 				),
 			),
@@ -478,6 +481,10 @@ hcciUFw5
 		$this->_updateCall('Resource', $rsId, $data);
 	}
 
+/******************************************************
+ * SIMULATE TESTS
+ ******************************************************/
+
 	public function testSimulate() {
 		$userId = Common::uuid('user.id.user');
 		$acoInstanceId = Common::uuid('resource.id.debian');
@@ -521,6 +528,10 @@ hcciUFw5
 		);
 
 	}
+
+/******************************************************
+ * SEARCH USERS TESTS
+ ******************************************************/
 
 	public function testSearchUsersToGrantIdIsMissing() {
 		$this->setExpectedException('HttpException', "The resource id is missing");
@@ -600,19 +611,21 @@ hcciUFw5
 
 	// test search users shouldn't return inactive users.
 	public function testSearchUsersExcludeNonActive() {
-		$this->User->id = Common::uuid('user.id.edit');
-		$this->User->save(['active' => 0], false, ['active']);
+		$this->User->id = Common::uuid('user.id.carol');
+		$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
+		$this->User->save(['active' => 0], false, $fields);
 
-		$id = Common::uuid('resource.id.debian');
+		$id = Common::uuid('resource.id.centos');
 		$getOptions = array(
 			'method' => 'get',
 			'return' => 'contents',
 		);
+
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 
 		// Betty shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.edith'), $usersIds));
+		$this->assertFalse(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
 	// test search users shouldn't return inactive users in case of autocomplete.

@@ -10,10 +10,6 @@ App::uses('Permission', 'Model');
 
 class PermissionsController extends AppController {
 
-	public $components = [
-		'PermissionHelper'
-	];
-
 /**
  * Add Aco Permissions
  *
@@ -87,7 +83,7 @@ class PermissionsController extends AppController {
 		}
 
 		// Check that the permission if a permission already exists
-		if (!$this->Permission->isUniqueByFields($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId)) {
+		if (!$this->Permission->isUniquePermission($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId, $permissionType)) {
 			$this->Message->error(__('A direct permission already exists'));
 			return false;
 		}
@@ -206,7 +202,7 @@ class PermissionsController extends AppController {
 			return;
 		}
 
-		// the user is allowed to access the aco instance
+		// the aco instance exists and the user is allowed to access it
 		$this->loadModel($acoModelName);
 		$acoInstance = $this->$acoModelName->findById($acoInstanceId);
 		if (empty($acoInstance)) {
@@ -214,71 +210,19 @@ class PermissionsController extends AppController {
 			return;
 		}
 
-		// Get list of permissions from subfunction.
-		try {
-			$returnValue = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
-		} catch (Exception $e) {
-			$this->Message->error($e->getMessage());
-			return;
-		}
+		// Get the list of permissions.
+		$findData = [
+			'Permission' => [
+				'aco' => $acoModelName,
+				'aco_foreign_key' => $acoInstanceId
+			]
+		];
+		$findOptions = $this->Permission->getFindOptions('viewByAco', User::get('Role.name'), $findData);
+		$returnValue = $this->Permission->find('all', $findOptions);
 
 		// Return data.
 		$this->Message->success();
 		$this->set('data', $returnValue);
-	}
-
-/**
- * View applied permissions on an instance, after simulating change in the list of permissions.
- * The new permissions have to be posted.
- *
- * @param string $acoModelName the model of the target aco model instance
- * @param string $acoInstanceId the uuid of the target aco model instance
- * @return void
- */
-	public function simulateAcoPermissionsAfterChange($acoModelName = '', $acoInstanceId = null) {
-		// Should be capitalized
-		$acoModelName = ucfirst($acoModelName);
-		// The target ARO Model name to use
-		$aroModelName = null;
-		// The ARO instance id.
-		$aroInstanceId = null;
-		// The given permission type
-		$permissionType = isset($this->request->data['Permission']['type']) ?
-			$this->request->data['Permission']['type'] : null;
-
-		// check the HTTP request method
-		if (!$this->request->is('post')) {
-			$this->Message->error(__('Invalid request method, should be POST'));
-			return;
-		}
-
-		// Treat the posted data
-		// Get the target ARO model and instance id
-		foreach ($this->request->data as $key => $val) {
-			// if the current data key is an allowed ARO model
-			if ($this->Permission->isValidAro($key)) {
-				$aroModelName = $key;
-				if (isset($val['id'])) {
-					$aroInstanceId = $val['id'];
-				}
-				break;
-			}
-		}
-
-		// Init a transaction.
-		$this->Permission->begin();
-		// Save permission inside the transaction.
-		$save = $this->__addAcoPermissions($acoModelName, $acoInstanceId, $aroModelName, $aroInstanceId,
-			$permissionType);
-
-		// Return list of permissions.
-		$perms = $this->PermissionHelper->findAcoPermissions($acoModelName, $acoInstanceId);
-		// Rollback to return to initial state.
-		$this->Permission->rollback();
-
-		// Return data.
-		$this->Message->success();
-		$this->set('data', $perms);
 	}
 
 /**

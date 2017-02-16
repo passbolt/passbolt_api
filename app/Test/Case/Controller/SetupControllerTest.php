@@ -28,8 +28,6 @@ class SetupControllerTest extends ControllerTestCase {
 			'app.file_storage',
 			'app.role',
 			'app.authenticationToken',
-			'app.authenticationLog',
-			'app.authenticationBlacklist',
 			'core.cakeSession',
 			'app.user_agent',
 			'app.controller_log',
@@ -299,7 +297,7 @@ class SetupControllerTest extends ControllerTestCase {
 		$userId = Common::uuid('user.id.ada');
 		$token = $recovery['AuthenticationToken']['token'];
 		$this->User->id = $userId;
-		$this->User->saveField('active', false);
+		$this->User->saveField('active', 0);
 		$r = $this->testAction('/setup/install/' . $userId . DS . $token, array('return' => 'vars', 'method' => 'get'));
 		$this->assertNotEmpty($r['userAgent']);
 	}
@@ -364,7 +362,7 @@ class SetupControllerTest extends ControllerTestCase {
 		$userId = Common::uuid('user.id.ada');
 		$token = $recovery['AuthenticationToken']['token'];
 		$this->User->id = $userId;
-		$this->User->saveField('active', false);
+		$this->User->saveField('active', 0);
 		$this->setExpectedException('NotFoundException');
 		$this->testAction('/setup/recover/' . $userId . DS . $token, array('return' => 'contents', 'method' => 'get'));
 	}

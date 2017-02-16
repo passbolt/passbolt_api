@@ -13,7 +13,6 @@ class ResourcesController extends AppController {
  */
 	public $components = [
 		'Filter',
-		'PermissionHelper',
 		'EmailNotificator',
 	];
 
@@ -198,10 +197,11 @@ class ResourcesController extends AppController {
 		}
 
 		// Email notification.
-		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		$authorizedUsers = $this->Resource->getAuthorizedUsers($id);
+
 		// Extract user ids from array.
-		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
-		foreach ($resourceUsers as $userId) {
+		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
+		foreach ($authorizedUsersIds as $userId) {
 			$this->EmailNotificator->passwordDeletedNotification(
 				$userId,
 				[
@@ -413,10 +413,11 @@ class ResourcesController extends AppController {
 		$dataSource->commit();
 
 		// Email notification.
-		$resourcePermissions = $this->PermissionHelper->findAcoUsers('Resource', $id);
+		$authorizedUsers = $this->Resource->getAuthorizedUsers($id);
+
 		// Extract user ids from array.
-		$resourceUsers = Hash::extract($resourcePermissions, '{n}.User.id');
-		foreach ($resourceUsers as $userId) {
+		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
+		foreach ($authorizedUsersIds as $userId) {
 			$this->EmailNotificator->passwordUpdatedNotification(
 				$userId,
 				[
@@ -437,4 +438,87 @@ class ResourcesController extends AppController {
 		$this->Message->success(__('The resource was successfully updated'));
 		$this->set('data', $resource);
 	}
+
+	/**
+	 * Get a list of users who have access to a resource
+	 * Renders a json object of users
+	 *
+	 * @param string $id the uuid of the resource
+	 * @return void
+	 *
+	 * @SWG\Get(
+	 *   path="/resources/{uuid}/users.json",
+	 *   summary="Find the users who have access to a resource",
+	 * @SWG\Parameter(
+	 * 		name="id",
+	 * 		in="path",
+	 * 		required=true,
+	 * 		type="string",
+	 * 		description="the uuid of the resource",
+	 *   ),
+	 * @SWG\Response(
+	 *     response=200,
+	 *     description="The list of users",
+	 *     @SWG\Schema(
+	 *       type="object",
+	 *       properties={
+	 *         @SWG\Property(
+	 *           property="header",
+	 *           ref="#/definitions/Header"
+	 *         ),
+	 *         @SWG\Property(
+	 *           property="body",
+	 *           ref="#/definitions/Resource"
+	 *         )
+	 *       }
+	 *     )
+	 *   )
+	 * )
+	 */
+	public function users($id = null) {
+		// check if the resource id is provided
+		if (!isset($id)) {
+			return $this->Message->error(__('The resource id is missing'));
+		}
+		// check if the id is valid
+		if (!Common::isUuid($id)) {
+			return $this->Message->error(__('The resource id is invalid'));
+		}
+		// check if it exists
+		if (!$this->Resource->exists($id)) {
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
+		}
+		// check if it has been soft deleted
+		if ($this->Resource->isSoftDeleted($id)) {
+			return $this->Message->error(__('The resource does not exist'), ['code' => 404]);
+		}
+		// check if the current user is authorized to access the resource
+		if (!$this->Resource->isAuthorized($id, PermissionType::READ)) {
+			return $this->Message->error(__('You are not authorized to access this resource'), ['code' => 403]);
+		}
+
+		// Get the permissions the users who have access to the resource
+		$UserResourcePermission = Common::getModel('UserResourcePermission');
+		$findPermissionData = [
+			'UserResourcePermission' => [
+				'resource_id' => $id
+			]
+		];
+		$findPermissionOptions = $UserResourcePermission->getFindOptions('viewByResource', User::get('Role.name'), $findPermissionData);
+		$userResourcePermissions = $UserResourcePermission->find('all', $findPermissionOptions);
+
+		// Retrieve the users
+		$usersIds = Hash::extract($userResourcePermissions, '{n}.Permission.User.id');
+		$User = Common::getModel('User');
+		$findUserData = [
+			'User.ids' => $usersIds
+		];
+		$findUserOptions = $User->getFindOptions('Resource::users', User::get('Role.name'), $findUserData);
+		$users = $User->find('all', $findUserOptions);
+
+		// Response
+		$this->set('data', $users);
+		$this->Message->success();
+	}
+
 }

@@ -34,7 +34,6 @@ class CakeErrorControllerTest extends ControllerTestCase {
         'app.permission',
         'app.permissions_type',
         'app.permission_view',
-        'app.authenticationBlacklist',
         'app.gpgkey',
         'app.file_storage',
         'core.cakeSession',

@@ -40,6 +40,18 @@ class TestStringOutput extends ConsoleOutput {
  */
 class RegisterUserTaskTest extends CakeTestCase {
 
+	public $fixtures = array(
+		'app.email_queue',
+		'app.user',
+		'app.group',
+		'app.groups_user',
+		'app.role',
+		'app.profile',
+		'app.file_storage',
+		'app.gpgkey',
+		'app.authenticationToken',
+	);
+
 /**
  * setUp method
  *
