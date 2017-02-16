@@ -96,7 +96,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 						if (obj.aro == 'User') {
 							return obj.User.Profile.avatarPath('small');
 						} else {
-							return 'img/group_default.png';
+							return 'img/avatar/group_default.png';
 						}
 					}
 				},
