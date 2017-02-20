@@ -30,43 +30,54 @@ class PermissionsSchema {
 			"users_resources_permissions" => "
 			CREATE OR REPLACE VIEW users_resources_permissions AS
 
+				# Pre-calculate all the permission a user could have for all the resources stored in passbolt.
 				SELECT
-					u.id AS user_id,
-					r.id AS resource_id,
-					IF(COALESCE(dir_usr_rs_perm.type, 0) > COALESCE(inh_grp_rs_perm.type, 0), dir_usr_rs_perm.id, inh_grp_rs_perm.id) AS permission_id,
-					IF(COALESCE(dir_usr_rs_perm.type, 0) > COALESCE(inh_grp_rs_perm.type, 0), dir_usr_rs_perm.type, inh_grp_rs_perm.type) AS permission_type
+					users.id AS user_id,
+					resources.id AS resource_id,
 
-				FROM resources r
-				JOIN users u
-					ON ( TRUE )
+					# Return the highest permission between :
+					#  - A permission given directly to a user for a target resource:
+					#  - A permission given to a group the user belongs to.
 
-				LEFT JOIN permissions dir_usr_rs_perm
+					IF(COALESCE(direct_user_resource_permission.type, 0) > COALESCE(inherited_groups_resources_permission.type, 0),
+						direct_user_resource_permission.id,
+						inherited_groups_resources_permission.id) AS permission_id,
+
+					IF(COALESCE(direct_user_resource_permission.type, 0) > COALESCE(inherited_groups_resources_permission.type, 0),
+						direct_user_resource_permission.type,
+						inherited_groups_resources_permission.type) AS permission_type
+
+				FROM
+					users
+					JOIN resources
+						ON (TRUE)
+
+				# Find the user direct permission (if any).
+				LEFT JOIN permissions direct_user_resource_permission
 				ON (
-					dir_usr_rs_perm.aro = 'User'
-					AND dir_usr_rs_perm.aco = 'Resource'
-					AND dir_usr_rs_perm.aco_foreign_key = r.id
-					AND dir_usr_rs_perm.aro_foreign_key = u.id
+					direct_user_resource_permission.aco_foreign_key = resources.id
+					AND direct_user_resource_permission.aro_foreign_key = users.id
 				)
 
-				LEFT JOIN permissions inh_grp_rs_perm
+				# Find the highest permission among the groups the user belongs to (if any).
+				LEFT JOIN permissions inherited_groups_resources_permission
 				ON (
-					inh_grp_rs_perm.id = (
-						SELECT grp.id
-						FROM permissions grp,
-							groups_users gu
-						WHERE gu.group_id = grp.aro_foreign_key
-							AND gu.user_id = u.id
-							AND grp.aro = 'Group'
-							AND grp.aco = 'Resource'
-							AND grp.aco_foreign_key = r.id
-							AND grp.aro_foreign_key = gu.group_id
-						ORDER BY grp.type DESC
+					inherited_groups_resources_permission.id = (
+						SELECT groups_permissions.id
+						FROM
+							permissions groups_permissions,
+							groups_users
+						WHERE
+							groups_users.user_id = users.id
+							AND groups_permissions.aro_foreign_key = groups_users.group_id
+							AND groups_permissions.aco_foreign_key = resources.id
+						ORDER BY groups_permissions.type DESC
 						LIMIT 1
 					)
 				)
 
-				WHERE dir_usr_rs_perm.id IS NOT NULL
-					OR inh_grp_rs_perm.id IS NOT NULL;
+				WHERE direct_user_resource_permission.id IS NOT NULL
+					OR inherited_groups_resources_permission.id IS NOT NULL;
 			"
 		);
 	}

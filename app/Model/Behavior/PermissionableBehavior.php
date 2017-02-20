@@ -59,7 +59,7 @@ class PermissionableBehavior extends ModelBehavior {
 			];
 			$queryData['contain'] = array_merge($queryData['contain'], $contain);
 
-			// Return only acos the user is authorized to access.
+			// Filter only acos the user is authorized to access.
 			if (empty($queryData['conditions'])) {
 				$queryData['conditions'] = [];
 			}
@@ -161,23 +161,18 @@ class PermissionableBehavior extends ModelBehavior {
  */
 	public function getPermission(Model &$model, $id, $aroId = null, $aroType = 'User') {
 		$aroId = !is_null($aroId) ? $aroId : User::get('id');
-		$targetPermissionModelName = $aroType . $model->alias . 'Permission';
-		$TargetPermissionModel = Common::getModel($targetPermissionModelName);
+		$UserResourcePermission = Common::getModel('UserResourcePermission');
 
 		$findOptions = [
-			'fields' => [
-				'permission_id',
-				'permission_type'
-			],
 			'conditions' => [
-				$targetPermissionModelName . '.' . strtolower($aroType) . '_id' => $aroId,
-				$targetPermissionModelName . '.' . Inflector::underscore($model->alias) . '_id' => $id,
+				'UserResourcePermission.user_id' => $aroId,
+				'UserResourcePermission.resource_id' => $id,
 			],
 			'contain' => [
 				'Permission(id, type)'
 			]
 		];
-		$result = $TargetPermissionModel->find('first', $findOptions);
+		$result = $UserResourcePermission->find('first', $findOptions);
 
 		return $result;
 	}

@@ -153,14 +153,14 @@ class UsersControllerTest extends ControllerTestCase {
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
 
-		$groupId = Common::uuid('group.id.management');
+		$groupId = Common::uuid('group.id.accounting');
 		$data = array(
 			'filter_model_group' => $groupId,
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 		$this->assertNotEmpty($result->body);
-		$this->assertEquals($result->body[0]->User->username, 'dame@passbolt.com');
+		$this->assertEquals($result->body[0]->User->username, 'frances@passbolt.com');
 	}
 
 /**

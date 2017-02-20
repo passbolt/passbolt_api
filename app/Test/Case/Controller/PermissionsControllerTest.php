@@ -130,6 +130,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			'method' => 'get',
 			'return' => 'contents'
 		);
+		// Loop on each resource.
 		foreach($expectedUsersPermissions as $resourceAlias => $none) {
 			// Login with an authorized user.
 			$userId = Common::uuid('user.id.' . key($expectedUsersPermissions[$resourceAlias]));
@@ -139,11 +140,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 			// Get the resources permissions.
 			$rsId = Common::uuid('resource.id.' . $resourceAlias);
 			$srvResult = json_decode($this->testAction("/permissions/resource/$rsId.json", $getOptions), true);
-
 			// Check that all the permissions are expected.
 			foreach($srvResult['body'] as $perm) {
 				$this->assertTrue(in_array($perm['Permission']['aro_foreign_key'], $expectedUsersPermissions[$resourceAlias]) ||
-					in_array($perm['Permission']['aro_foreign_key'], $expectedGroupsPermissions[$resourceAlias]), "The permission {$perm['Permission']['id']} should be associated to the resource $resourceAlias");
+					in_array($perm['Permission']['aro_foreign_key'], $expectedGroupsPermissions[$resourceAlias]),
+					"The permission {$perm['Permission']['id']} should be associated to the resource $resourceAlias");
 			}
 			$this->assertEqual(count($srvResult['body']),
 				count($expectedUsersPermissions[$resourceAlias]) + count($expectedGroupsPermissions[$resourceAlias]));
