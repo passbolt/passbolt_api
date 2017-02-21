@@ -9,7 +9,51 @@
 class FilterComponent extends Component {
 
 /**
+ * @var Controller $controller convenience reference to the parent controller
+ */
+	public $controller;
+
+/**
+ * Called before the Controller::beforeFilter().
+ *
+ * @param Controller $controller Controller with components to initialize
+ * @throws CakeException if session component is not present
+ * @return void
+ * @link http://book.cakephp.org/2.0/en/controllers/components.html#Component::initialize
+ */
+	public function initialize(Controller $controller) {
+		$this->controller = $controller;
+		$contain = [];
+		$filter = [];
+
+		if(isset($this->controller->request->query['contain']) && !empty($this->controller->request->query['contain'])) {
+			$containData = $this->controller->request->query['contain'];
+			if (!is_array($containData)) {
+				$containList = explode(',', $containData);
+				foreach($containList as $elt) {
+					$contain[$elt] = 1;
+				}
+			}
+			else {
+				$contain = $containData;
+			}
+		}
+
+		if(isset($this->controller->request->query['filter']) && !empty($this->controller->request->query['filter'])) {
+			$filter = $this->controller->request->query['filter'];
+		}
+
+		// Set contain and filter as params.
+		$this->controller->request->params['contain'] = $contain;
+		$this->controller->request->params['filter'] = $filter;
+	}
+
+/**
  * Check if the request contains a filter and extract it
+ *
+ *
+ * @deprecated use the new format instead (?contains[users]=1&...) that will be automatically parsed
+ * by the function initialize which will populate the params array.
  *
  * @param array $params The parameters of the request
  * @return array The extract filter or null

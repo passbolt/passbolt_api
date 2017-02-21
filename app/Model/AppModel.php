@@ -67,6 +67,7 @@ class AppModel extends Model {
 		return [];
 	}
 
+
 /**
  * Return the find options (felds and conditions) for a given context
  *
@@ -76,7 +77,13 @@ class AppModel extends Model {
  * @return array
  */
 	public static function getFindOptions($case, $role = null, $data = null) {
-		return array_merge(static::getFindConditions($case, $role, $data), static::getFindFields($case, $role));
+		// Prepare contain instructions.
+		$data['contain'] = static::prepareFindContain(
+			static::getFindContain($case, $role),
+			isset($data['contain']) ? $data['contain'] : []
+		);
+
+		return array_merge(static::getFindConditions($case, $role, $data), static::getFindFields($case, $role, $data));
 	}
 
 /**
@@ -87,8 +94,66 @@ class AppModel extends Model {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = null, $role = null) {
+	public static function getFindFields($case = null, $role = null, $data = null) {
 		return ['fields' => []];
+	}
+
+/**
+ * Prepare contain instructions for a find operation.
+ *
+ * Will basically compute the defaults (usually returned by Model::getFindContain) against the
+ * requested contains (usually provided in the query).
+ *
+ * @param array defaultContain
+ *  array of data, with a contain key listing the contain objects requested
+ *  in the form:
+ *  array[
+ *    'users' => 1,
+ *    'resources' => 0,
+ *  ]
+ *
+ * @param array requestedContain
+ *   same as above
+ *
+ * @return array
+ *   the computed result.
+ *   let's imagine the operation:
+ *   $defaultContain = array[
+ *    'users' => 1,
+ *    'resources' => 0,
+ *  ];
+ *  $requestedContain = [
+ *    'resources' => 1,
+ *    'whatever' => 1,
+ *  ]
+ *  the result would be:
+ *  [
+ *    'users' => 1,
+ *    'resources' => 1,
+ *  ];
+ *
+ */
+	public static function prepareFindContain($defaultContain, $requestedContain) {
+		$finalContain = [];
+		// Check default contain values. Only retain the one that have been explicitly requested in data, or that
+		// are equal to 1 by default.
+		foreach($defaultContain as $key => $value) {
+			if ((isset($requestedContain[$key]) && $requestedContain[$key] == 1) || (!isset($requestedContain[$key]) && $defaultContain[$key] == 1)) {
+				$finalContain[] = $key;
+			}
+		}
+		return $finalContain;
+	}
+
+/**
+ * Return the list of contain instructions allowed for each case, with their default value
+ *
+ * @param null $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindContain($case = null, $role = null) {
+		return [];
 	}
 
 /**
