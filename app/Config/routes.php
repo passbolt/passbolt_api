@@ -23,7 +23,7 @@
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
 	Router::mapResources('comments');
-//	Router::mapResources('groups');
+	Router::mapResources('groups');
 //	Router::mapResources('groupsUsers');
 
 /**
@@ -82,6 +82,8 @@
 /**
  * Custom route for groups controller
  */
+Router::connect('/groups', array('controller' => 'groups', 'action' => 'index', '[method]' => 'GET'));
+Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index', '[method]' => 'GET'));
 //	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
 //	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
 //	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
