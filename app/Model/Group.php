@@ -2,16 +2,31 @@
 /**
  * Group  model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2017 - present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('User', 'Model');
+App::uses('GroupUser', 'Model');
 
 class Group extends AppModel {
 
-	public $actsAs = ['Trackable'];
+	public $name = 'Group';
 
-	public $hasMany = ['GroupUser'];
+	public $actsAs = [
+		'Trackable',
+		'SuperJoin',
+		'Containable',
+	];
+
+	public $hasMany = [
+		'GroupUser'
+	];
+
+	public $hasAndBelongsToMany = [
+		'User' => [
+			'className' => 'User',
+		]
+	];
 
 /**
  * Get the validation rules upon context
@@ -54,17 +69,17 @@ class Group extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = null, $data = null) {
+	public static function getFindConditions($case = 'Group::view', $role = null, $data = null) {
 		$conditions = [];
 
 		switch ($case) {
-			case 'add':
-			case 'edit':
-			case 'view':
+			case 'Group::add':
+			case 'Group::edit':
+			case 'Group::view':
 				$conditions = ['conditions' => ['Group.deleted' => 0, 'Group.id' => $data['Group.id']]];
 				break;
-			case 'index':
-				$conditions = ['conditions' => []];
+			case 'Group::index':
+				$conditions = ['conditions' => [ 'Group.deleted' => 0 ]];
 				if (isset($data['keywords'])) {
 					$keywords = explode(' ', $data['keywords']);
 					foreach ($keywords as $keyword) {
@@ -87,16 +102,33 @@ class Group extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'Group::view', $role = null, $data = null) {
 		switch ($case) {
-			case 'view':
-			case 'index':
-				$fields = ['fields' => ['id', 'name', 'created', 'modified']];
+			case 'Group::view':
+			case 'Group::index':
+				$fields = [
+					'fields' => [
+						'DISTINCT Group.id',
+						'Group.name',
+						'Group.created',
+						'Group.modified'
+					],
+					'contain' => [],
+				];
+				if (isset($data['contain'])) {
+					if (in_array('user', $data['contain'])) {
+						$fields['superjoin'] = ['User'];
+						$fields['contain'] = [
+							'User' => User::getFindFields($case, $role, $data),
+							'GroupUser' => GroupUser::getFindFields('view', $role, $data),
+						];
+					}
+				}
 				break;
-			case 'delete':
+			case 'Group::delete':
 				$fields = ['fields' => ['deleted']];
 				break;
-			case 'save':
+			case 'Group::save':
 				$fields = ['fields' => ['name', 'created', 'modified', 'created_by', 'modified_by', 'deleted']];
 				break;
 			default:
@@ -104,5 +136,44 @@ class Group extends AppModel {
 				break;
 		}
 		return $fields;
+	}
+
+/**
+ * Return the list of contain instructions allowed, with their default values.
+ *
+ * @param string $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindContain($case = 'view', $role = null) {
+		$filter = [];
+		switch ($case) {
+			case 'Group::view':
+			case 'Group::index':
+				$contain = [
+					'user' => 1,
+					'resource' => 0,
+				];
+				break;
+		}
+		return $contain;
+	}
+
+/**
+ * Return the list of filter instructions allowed.
+ * @param string $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindFilter($case = 'view', $role = null) {
+		$filter = [];
+		switch ($case) {
+			case 'Group::index':
+				$filter = [
+					'has-users'
+				];
+				break;
+		}
+		return $filter;
 	}
 }
