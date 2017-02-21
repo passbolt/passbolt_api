@@ -184,8 +184,8 @@ class Resource extends AppModel {
 			],
 			'uri' => [
 				'url' => [
-					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
-					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
+					'rule' => "/^[\p{L}\d ,.:;?@!=+%$&*#~\-_\(\[\)\]'\"\/]*$/u",
+					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ = + % $ & * # - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
 				],
 				'size' => [
