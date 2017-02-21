@@ -508,7 +508,7 @@ class ResourcesController extends AppController {
 		$userResourcePermissions = $UserResourcePermission->find('all', $findPermissionOptions);
 
 		// Retrieve the users
-		$usersIds = Hash::extract($userResourcePermissions, '{n}.Permission.User.id');
+		$usersIds = Hash::extract($userResourcePermissions, '{n}.UserResourcePermission.user_id');
 		$User = Common::getModel('User');
 		$findUserData = [
 			'User.ids' => $usersIds

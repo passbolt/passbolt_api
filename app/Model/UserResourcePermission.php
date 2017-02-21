@@ -60,9 +60,6 @@ class UserResourcePermission extends AppModel {
 						'UserResourcePermission.permission_id !=' => null,
 						// permissions relative to the target resource
 						'UserResourcePermission.resource_id' => $data['UserResourcePermission']['resource_id'],
-						// only permission which have been defined directly for users
-						'Permission.aro' => 'User',
-						'Permission.aro_foreign_key = UserResourcePermission.user_id'
 					]
 				];
 				break;
