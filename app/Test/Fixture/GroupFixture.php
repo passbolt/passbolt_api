@@ -136,6 +136,15 @@ class GroupFixture extends CakeTestFixture {
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
+		array(
+			'id' => 'fa2fcd80-cf04-328a-ae18-8c1c5e81929e',
+			'name' => 'deleted group',
+			'deleted' => 1,
+			'created' => '2012-12-17 13:39:25',
+			'modified' => '2012-07-04 13:39:25',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
 	);
 
 }
