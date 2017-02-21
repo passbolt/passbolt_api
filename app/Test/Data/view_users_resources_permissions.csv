@@ -1,9 +1,9 @@
 ,ada,betty,carol,dame,edith,frances,grace,hedy,irene,jean,kathleen,lynne,marlyn,nancy
-apache,O,U,R,R,,,O,U,O,R,R,R,R,R
-april,,O,U,R,R,,,O,O,U,U,U,U,U
-bower,R,,O,U,R,,R,U,O,O,O,O,O,O
-centos,R,R,,O,U,,R,O,U,,,,,
-canjs,U,R,R,,O,,U,R,O,R,R,R,R,R
+apache,O,U,R,R,,,,,,,,,,
+april,,O,U,R,R,,,,,,,,,
+bower,R,,O,U,R,,,,,,,,,
+centos,R,R,,O,U,,,,,,,,,
+canjs,U,R,R,,O,,,,,,,,,
 cakephp,O,U,R,R,,,O,U,O,R,R,R,R,R
 chai,,O,U,R,R,,,O,O,U,U,U,U,U
 composer,R,,O,U,R,,R,U,O,O,O,O,O,O
