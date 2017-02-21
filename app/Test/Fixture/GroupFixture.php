@@ -70,21 +70,12 @@ class GroupFixture extends CakeTestFixture {
 			'deleted' => 0,
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',
-			'created_by' => '1c137bd7-2838-3c3d-a021-d2986d9126f5',
-			'modified_by' => '1c137bd7-2838-3c3d-a021-d2986d9126f5'
-		),
-		array(
-			'id' => '5deebe9f-8e83-354c-a035-4e79353a0957',
-			'name' => 'Developer',
-			'deleted' => 0,
-			'created' => '2016-01-29 13:39:25',
-			'modified' => '2016-01-29 13:39:25',
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
 			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
-			'id' => '6da9af58-6e84-3a66-a1da-e11454751a45',
-			'name' => 'Administration',
+			'id' => '5deebe9f-8e83-354c-a035-4e79353a0957',
+			'name' => 'Developer',
 			'deleted' => 0,
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',
@@ -103,6 +94,15 @@ class GroupFixture extends CakeTestFixture {
 		array(
 			'id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
 			'name' => 'Freelancer',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '981777cc-aa3a-3b5b-ac1d-86e281c37982',
+			'name' => 'Ergonom',
 			'deleted' => 0,
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',

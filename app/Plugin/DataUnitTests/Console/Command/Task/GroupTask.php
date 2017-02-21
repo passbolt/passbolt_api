@@ -17,18 +17,9 @@ class GroupTask extends ModelTask {
 	public $model = "Group";
 
 	protected function getData() {
-
 		$g[] = array('Group' => array(
 			'id' => Common::uuid('group.id.accounting'),
 			'name' => 'Accounting',
-			'created' => '2016-01-29 13:39:25',
-			'modified' => '2016-01-29 13:39:25',
-			'created_by' => Common::uuid('user.id.frances'),
-			'modified_by' => Common::uuid('user.id.frances')
-		));
-		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.administration'),
-			'name' => 'Administration',
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',
 			'created_by' => Common::uuid('user.id.admin'),
@@ -53,6 +44,14 @@ class GroupTask extends ModelTask {
 		$g[] = array('Group' => array(
 			'id' => Common::uuid('group.id.developer'),
 			'name' => 'Developer',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.ergonom'),
+			'name' => 'Ergonom',
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',
 			'created_by' => Common::uuid('user.id.admin'),

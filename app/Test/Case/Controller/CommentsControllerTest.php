@@ -89,7 +89,7 @@ class CommentsControllerTest extends ControllerTestCase {
 		$id = Common::uuid('resource.id.inkscape');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(Common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.frances'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'The Resource does not exist');

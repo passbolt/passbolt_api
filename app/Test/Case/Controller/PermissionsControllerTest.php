@@ -104,7 +104,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$expectedUsersPermissions = array();
 		$expectedGroupsPermissions = array();
 
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/users_resources_permissions.csv', 'resource');
+		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $userPermissions) {
 			// Retrieve the direct users permissions defined for the resource
 			$expectedUsersPermissions[$resourceAlias] = array();
@@ -115,7 +116,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 			}
 		}
 
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/groups_resources_permissions.csv', 'resource');
+		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $groupPermissions) {
 			// Retrieve the direct users permissions defined for the resource
 			$expectedGroupsPermissions[$resourceAlias] = [];
