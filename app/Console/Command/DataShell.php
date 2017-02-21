@@ -95,6 +95,8 @@ class DataShell extends AppShell {
 					'DataUnitTests.Avatar',
 					// resource and permission are different though
 					'DataSeleniumTests.Resource',
+					'DataUnitTests.Group',
+					'DataUnitTests.GroupUser',
 					'DataSeleniumTests.Permission',
 					'DataSeleniumTests.Secret',
 					//'DataUnitTests.Comment'
