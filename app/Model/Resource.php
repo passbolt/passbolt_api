@@ -288,7 +288,7 @@ class Resource extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'exists':
 				$fields = [

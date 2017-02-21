@@ -266,7 +266,7 @@ class Permission extends AppModel {
 	 * @return array $fields
 	 * @access public
 	 */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		$fields = ['fields' => []];
 
 		switch ($case) {

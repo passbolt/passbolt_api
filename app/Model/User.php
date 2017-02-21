@@ -688,7 +688,7 @@ class User extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = null, $role = null) {
+	public static function getFindFields($case = null, $role = null, $data = null) {
 		switch ($case) {
 			case 'User::view':
 			case 'User::index':
@@ -848,6 +848,18 @@ class User extends AppModel {
 					]
 				];
 				break;
+			case 'Group::index':
+				$fields = [
+					'fields' => [
+						'User.id',
+						'User.username',
+						'User.role_id',
+						'User.created',
+						'User.modified',
+						'User.created_by',
+						'User.modified_by',
+					],
+				];
 		}
 
 		return $fields;
