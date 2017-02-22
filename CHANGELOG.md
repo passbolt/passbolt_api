@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - PASSBOLT-1639: As LU when editing a password description in the right sidebar, I get duplicated shared with rows
+- PASSBOLT-1761: Remove references to legacy login throttle
+- PASSBOLT-1915: Remove legacy references to user password that has been replaced by GPG Auth
 
 ## [1.4.0] - 2017-02-07
 ### Fixed
