@@ -149,31 +149,6 @@ var SettingsWorkspace = passbolt.component.SettingsWorkspace = mad.Component.ext
 	},
 
 	/**
-	 * Observe when the user requests a password edition
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{mad.bus.element} request_user_password_edition': function (el, ev, user) {
-		var self = this;
-
-		// get the dialog
-		var dialog = new mad.component.Dialog(null, {label: __('Edit User Password')})
-			.start();
-		// attach the component to the dialog
-		var form = dialog.add(passbolt.form.user.Password, {
-			data: user,
-			callbacks : {
-				submit: function (data) {
-					user.attr(data['passbolt.model.User'])
-						.savePassword();
-					dialog.remove();
-				}
-			}
-		});
-		form.load(user);
-	},
-
-	/**
 	 * Observe when the user requests an avatar edition
 	 * @param {HTMLElement} el The element the event occurred on
 	 * @param {HTMLEvent} ev The event which occurred

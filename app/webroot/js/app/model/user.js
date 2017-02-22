@@ -134,28 +134,6 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 		});
 	},
 
-	updatePassword : function(attrs, success, error) {
-		var self = this;
-		// format data as expected by cakePHP
-		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-		// add the root of the params, it will be used in the url template
-		params.id = attrs['id'];
-
-		return mad.net.Ajax.request({
-			url: APP_URL + 'users/password/{id}',
-			type: 'PUT',
-			params: params,
-			success: success,
-			silentLoading: true,
-			error: error
-		}).pipe(function (data, textStatus, jqXHR) {
-			//pipe the result to convert cakephp response format into can format
-			var def = $.Deferred();
-			def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-			return def;
-		});
-	},
-
 	updateAvatar : function(attrs, success, error) {
 		var self = this;
 
@@ -196,17 +174,6 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 		var def = can.Model._makeRequest(this, 'updateAvatar', null, null, 'updated');
 		this.attr('newAvatar', null);
 		return def;
-	},
-
-	/**
-	 * Save a new password.
-	 * @return {can.Deferred}
-	 */
-	savePassword: function() {
-		// Custom update.
-		// Use the makeRequest operation of Can to support the local object update
-		// feature and its events system which is awesome.
-		return can.Model._makeRequest(this, 'updatePassword', null, null, 'updated');
 	}
 
 });

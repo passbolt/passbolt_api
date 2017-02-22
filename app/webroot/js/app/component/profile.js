@@ -61,13 +61,6 @@ var Profile = passbolt.component.Profile= mad.Component.extend('passbolt.compone
 	},
 
 	/**
-	 * The user want to edit his password
-	 */
-	'.edit-password-action click': function(el, ev) {
-		mad.bus.trigger('request_user_password_edition', this.options.user);
-	},
-
-	/**
 	 * The user want to edit his avatar
 	 */
 	'.edit-avatar-action click': function(el, ev) {
