@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+- PASSBOLT-1639: As LU when editing a password description in the right sidebar, I get duplicated shared with rows
 
 ## [1.4.0] - 2017-02-07
 ### Fixed

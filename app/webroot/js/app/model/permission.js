@@ -147,7 +147,7 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 				// Make a passbolt.model.Resource with the resource sent by the server.
 				var resource = passbolt.model.Resource.model(mad.model.serializer.CakeSerializer.from(data.acoInstance, passbolt.model.Resource));
 				// Trigger a change on the retrieved resource, to notify all components that something changed on the resource.
-				can.trigger(passbolt.model.Resource, 'updated', resource);
+				resource.updated();
 			}
 			// If the resource is not there, that means the user doesn't have access to this resource
 			// anymore. Delete it locally, all components should be notified by this change and update themselves.
