@@ -19,12 +19,15 @@ class Group extends AppModel {
 	];
 
 	public $hasMany = [
-		'GroupUser'
+		'GroupUser' => [
+			'className' => 'GroupUser',
+		]
 	];
 
 	public $hasAndBelongsToMany = [
 		'User' => [
 			'className' => 'User',
+
 		]
 	];
 
@@ -80,9 +83,12 @@ class Group extends AppModel {
 				break;
 			case 'Group::index':
 				$conditions = ['conditions' => [ 'Group.deleted' => 0 ]];
-				if (isset($data['keywords'])) {
-					$keywords = explode(' ', $data['keywords']);
-					foreach ($keywords as $keyword) {
+				if(isset($data['filter']['has-users'])) {
+					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $data['filter']['has-users']];
+				}
+
+				if (isset($data['filter']['keywords'])) {
+					foreach ($data['filter']['keywords'] as $keyword) {
 						$conditions['conditions']["AND"][] = ['Group.name LIKE' => '%' . $keyword . '%'];
 					}
 				}
@@ -111,16 +117,21 @@ class Group extends AppModel {
 						'DISTINCT Group.id',
 						'Group.name',
 						'Group.created',
-						'Group.modified'
+						'Group.modified',
 					],
 					'contain' => [],
 				];
+				// If filter has-users or has-managers is set, then contain[user] is done by default.
+				if (isset($data['filter']) && isset($data['filter']['has-users'])) {
+					$data['contain'][] = 'user';
+				}
+
 				if (isset($data['contain'])) {
 					if (in_array('user', $data['contain'])) {
 						$fields['superjoin'] = ['User'];
 						$fields['contain'] = [
 							'User' => User::getFindFields($case, $role, $data),
-							'GroupUser' => GroupUser::getFindFields('view', $role, $data),
+							'GroupUser' => GroupUser::getFindFields('view', $role, $data)
 						];
 					}
 				}
@@ -170,10 +181,36 @@ class Group extends AppModel {
 		switch ($case) {
 			case 'Group::index':
 				$filter = [
-					'has-users'
+					'has-users',
+					'has-managers',
+					'has-resources',
 				];
 				break;
 		}
 		return $filter;
+	}
+
+/**
+ * Filter a list of groups and remove the groups that don't contain all the members defined by $userIds.
+ *
+ * @param $groups
+ *   list of groups
+ * @param $userIds
+ *   list of user ids
+ *
+ * @return array
+ *   list of only the groups that contain at least the members defined by userIds
+ */
+	public static function filterGroupWithAllUsers($groups, $userIds) {
+		foreach($groups as $key => $group) {
+			$groupMemberIds = Hash::extract($group['GroupUser'], '{n}.user_id');
+			foreach($userIds as $userId) {
+				if (!in_array($userId, $groupMemberIds)) {
+					unset($groups[$key]);
+					break;
+				}
+			}
+		}
+		return $groups;
 	}
 }

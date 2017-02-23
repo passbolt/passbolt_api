@@ -43,6 +43,20 @@ class GroupsController extends AppController {
 		// Get all groups.
 		$groups = $this->Group->find('all', $o);
 
+		// If filter 'has-users' is applied, remove entries where all the users are not listed.
+		if (isset($this->request->params['filter']) && isset($this->request->params['filter']['has-users'])) {
+			$groups = $this->Group->filterGroupWithAllUsers($groups, $this->request->params['filter']['has-users']);
+		}
+
+		// Remove useless elements due to super join.
+		foreach($groups as $key => $group) {
+			if (isset($group['User'])) {
+				foreach($group['User'] as $keyUser => $user) {
+					unset($groups[$key]['User'][$keyUser]['GroupsUser']);
+				}
+			}
+		}
+
 		// Send response.
 		$this->set('data', $groups);
 		$this->Message->success();

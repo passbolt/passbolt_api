@@ -107,6 +107,8 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	/**
 	 * Test index entry point with contain parameters.
+	 *
+	 * Assert that when contain[user] is passed, the output contains for each group a User and GroupUser object
 	 */
 	public function testIndexWithUserContain() {
 		// test with normal user
@@ -136,6 +138,9 @@ class GroupsControllerTest extends ControllerTestCase {
 
 	/**
 	 * Test index entry point with contain parameters.
+	 *
+	 * Assert that user contain can be disabled, and that when disabled
+	 * the output doesn't contain neither User nor GroupUser
 	 */
 	public function testIndexWithoutUserContain() {
 		// test with normal user
@@ -164,10 +169,120 @@ class GroupsControllerTest extends ControllerTestCase {
 	}
 
 	/**
-	 * Test index entry point with filter parameters.
+	 * Test index entry point with "has-users" filter parameters.
+	 *
+	 * Assert that each group returned contained the user mentioned in the filter
 	 */
-	public function testIndexWithFilter() {
+	public function testIndexWithFilterHasUser() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
 
+		// Call to entry point with contain params.
+		$params = [
+			'filter' => ['has-users' => Common::uuid('user.id.ada')],
+		];
+		$res = $this->testAction(
+			"/groups.json", [
+			'return' => 'contents',
+			'method' => 'GET',
+			'data' => $params
+		],
+			true
+		);
+
+		$json = json_decode($res, true);
+
+		// Check if Ada is present in each and every group returned by the query.
+		foreach($json['body'] as $jsonGroup) {
+			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
+			$this->assertTrue(
+				in_array(Common::uuid('user.id.ada'), $userIds),
+				'Ada should be found in the list of users for the group'
+			);
+		}
 	}
 
+	/**
+	 * Test index entry point with "has-users" filter parameters and multiple users provided.
+	 *
+	 * Assert that each group returned contained both the users mentioned in the filter
+	 */
+	public function testIndexWithFilterHasUserMultipleUsers() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Call to entry point with contain params.
+		$usersToFind = [
+			Common::uuid('user.id.ada'),
+			Common::uuid('user.id.frances')
+		];
+		$params = [
+			'filter' => ['has-users' => $usersToFind[0] . "," . $usersToFind[1]],
+		];
+		$res = $this->testAction(
+			"/groups.json", [
+				'return' => 'contents',
+				'method' => 'GET',
+				'data' => $params
+			],
+			true
+		);
+
+		$json = json_decode($res, true);
+
+		// Check if Ada is present in each and every group returned by the query.
+		foreach($json['body'] as $jsonGroup) {
+			$groupMemberIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
+			$found = true;
+			foreach($usersToFind as $userToFind) {
+				if (!in_array($userToFind, $groupMemberIds)) {
+					$found = false;
+					break;
+				}
+			}
+			$this->assertTrue(
+				$found,
+				'Both the users ada and frances should have been found in all groups returned'
+			);
+		}
+	}
+
+	/**
+	 * Test index entry point with "has-managers" filter parameters and one manager provided.
+	 *
+	 * Assert that each group returned contains the manager mentioned in the filter
+	 */
+	public function testIndexWithFilterHasManager() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Call to entry point with contain params.
+		$managerId = Common::uuid('user.id.ada');
+		$params = [
+			'filter' => ['has-managers' => $managerId],
+		];
+		$res = $this->testAction(
+			"/groups.json", [
+			'return' => 'contents',
+			'method' => 'GET',
+			'data' => $params
+		],
+			true
+		);
+
+		$json = json_decode($res, true);
+
+		// Check if Ada is present in each and every group returned by the query.
+		foreach($json['body'] as $jsonGroup) {
+			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
+			$this->assertTrue(
+				in_array(Common::uuid('user.id.ada'), $userIds),
+				'Ada should be found in the list of users for the group'
+			);
+
+		}
+	}
 }

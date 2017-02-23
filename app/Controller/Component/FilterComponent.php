@@ -26,6 +26,7 @@ class FilterComponent extends Component {
 		$contain = [];
 		$filter = [];
 
+		// Manage contains.
 		if(isset($this->controller->request->query['contain']) && !empty($this->controller->request->query['contain'])) {
 			$containData = $this->controller->request->query['contain'];
 			if (!is_array($containData)) {
@@ -39,8 +40,15 @@ class FilterComponent extends Component {
 			}
 		}
 
+		// Manage filters.
 		if(isset($this->controller->request->query['filter']) && !empty($this->controller->request->query['filter'])) {
-			$filter = $this->controller->request->query['filter'];
+			$filterData = $this->controller->request->query['filter'];
+			if (is_array($filterData)) {
+				foreach($filterData as $filterName => $filterD) {
+					$filterList = explode(',', $filterD);
+					$filter[$filterName] = $filterList;
+				}
+			}
 		}
 
 		// Set contain and filter as params.
