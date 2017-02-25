@@ -276,7 +276,8 @@ class GroupsControllerTest extends ControllerTestCase {
 
 		$json = json_decode($res, true);
 
-		// Check if Betty is present in each and every group returned by the query, and if she is a manager for all the groups returned.
+		// Check if Betty is present in each and every group returned by the query,
+		// and if she is a manager for all the groups returned.
 		// (she is not supposed to).
 		foreach($json['body'] as $jsonGroup) {
 			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
