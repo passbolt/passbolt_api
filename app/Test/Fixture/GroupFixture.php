@@ -65,6 +65,15 @@ class GroupFixture extends CakeTestFixture {
 			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
 		),
 		array(
+			'id' => '73dba62a-d402-3cbf-a036-d07b5dac5255',
+			'name' => 'deleted',
+			'deleted' => 0,
+			'created' => '2016-02-02 18:59:05',
+			'modified' => '2016-02-02 18:59:05',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
 			'id' => '854dce19-6f1b-39bd-acbb-94d9a39b007f',
 			'name' => 'human resources',
 			'deleted' => 0,
@@ -131,15 +140,6 @@ class GroupFixture extends CakeTestFixture {
 			'id' => 'fa2fcd80-cf04-327b-ae18-8c1c5e81929e',
 			'name' => 'Users',
 			'deleted' => 0,
-			'created' => '2012-12-17 13:39:25',
-			'modified' => '2012-07-04 13:39:25',
-			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-		),
-		array(
-			'id' => 'fa2fcd80-cf04-328a-ae18-8c1c5e81929e',
-			'name' => 'deleted group',
-			'deleted' => 1,
 			'created' => '2012-12-17 13:39:25',
 			'modified' => '2012-07-04 13:39:25',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
