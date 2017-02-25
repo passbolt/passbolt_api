@@ -83,8 +83,13 @@ class Group extends AppModel {
 				break;
 			case 'Group::index':
 				$conditions = ['conditions' => [ 'Group.deleted' => 0 ]];
-				if(isset($data['filter']['has-users'])) {
-					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $data['filter']['has-users']];
+				if(isset($data['filter']['has-users']) || isset($data['filter']['has-managers'])) {
+					$users = isset($data['filter']['has-users']) ?
+						$data['filter']['has-users'] : $data['filter']['has-managers'];
+					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
+				}
+				if(isset($data['filter']['has-managers'])) {
+					$conditions['conditions'][] = ['GroupsUser.is_admin' => 1];
 				}
 
 				if (isset($data['filter']['keywords'])) {
@@ -122,7 +127,8 @@ class Group extends AppModel {
 					'contain' => [],
 				];
 				// If filter has-users or has-managers is set, then contain[user] is done by default.
-				if (isset($data['filter']) && isset($data['filter']['has-users'])) {
+				if (isset($data['filter']) &&
+					(isset($data['filter']['has-users']) || isset($data['filter']['has-managers']))) {
 					$data['contain'][] = 'user';
 				}
 

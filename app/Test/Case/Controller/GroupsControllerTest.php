@@ -253,6 +253,7 @@ class GroupsControllerTest extends ControllerTestCase {
 	 * Test index entry point with "has-managers" filter parameters and one manager provided.
 	 *
 	 * Assert that each group returned contains the manager mentioned in the filter
+	 * Assert that each time betty is mentioned, she is the manager of the group.
 	 */
 	public function testIndexWithFilterHasManager() {
 		// test with normal user
@@ -260,29 +261,34 @@ class GroupsControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		// Call to entry point with contain params.
-		$managerId = Common::uuid('user.id.ada');
+		$managerId = Common::uuid('user.id.betty');
 		$params = [
 			'filter' => ['has-managers' => $managerId],
 		];
 		$res = $this->testAction(
 			"/groups.json", [
-			'return' => 'contents',
-			'method' => 'GET',
-			'data' => $params
-		],
+				'return' => 'contents',
+				'method' => 'GET',
+				'data' => $params
+			],
 			true
 		);
 
 		$json = json_decode($res, true);
 
-		// Check if Ada is present in each and every group returned by the query.
+		// Check if Betty is present in each and every group returned by the query, and if she is a manager for all the groups returned.
+		// (she is not supposed to).
 		foreach($json['body'] as $jsonGroup) {
 			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
 			$this->assertTrue(
-				in_array(Common::uuid('user.id.ada'), $userIds),
-				'Ada should be found in the list of users for the group'
+				in_array(Common::uuid('user.id.betty'), $userIds),
+				'Betty should be found in the list of users for the group'
 			);
-
+			foreach($jsonGroup['GroupUser'] as $groupUser) {
+				if ($groupUser['user_id'] == Common::uuid('user.id.betty')) {
+					$this->assertTrue($groupUser['is_admin'], 1, 'Betty should be a manager for all the groups returned');
+				}
+			}
 		}
 	}
 }

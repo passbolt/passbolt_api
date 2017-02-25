@@ -67,7 +67,7 @@ class GroupFixture extends CakeTestFixture {
 		array(
 			'id' => '73dba62a-d402-3cbf-a036-d07b5dac5255',
 			'name' => 'deleted',
-			'deleted' => 0,
+			'deleted' => 1,
 			'created' => '2016-02-02 18:59:05',
 			'modified' => '2016-02-02 18:59:05',
 			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',

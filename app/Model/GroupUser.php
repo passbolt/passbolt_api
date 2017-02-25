@@ -105,7 +105,8 @@ class GroupUser extends AppModel {
 					'fields' => [
 						'id',
 						'group_id',
-						'user_id'
+						'user_id',
+						'is_admin',
 					]
 				];
 				break;
