@@ -200,7 +200,7 @@ class Group extends AppModel {
  * Filter a list of groups and remove the groups that don't contain all the members defined by $userIds.
  *
  * @param $groups
- *   list of groups
+ *   list of groups, with the users and groupUsers provided.
  * @param $userIds
  *   list of user ids
  *
