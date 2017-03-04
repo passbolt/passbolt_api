@@ -187,6 +187,69 @@ class UserTask extends ModelTask {
 			'created_by' => Common::uuid('user.id.admin'),
 			'modified_by' => Common::uuid('user.id.admin')
 		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.orna'),
+			'username' => 'orna@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.ping'),
+			'username' => 'ping@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.ruth'),
+			'username' => 'ruth@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.sofia'),
+			'username' => 'sofia@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.thelma'),
+			'username' => 'thelma@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.ursula'),
+			'username' => 'ursula@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$us[] = array('User' => array(
+			'id' => Common::uuid('user.id.wang'),
+			'username' => 'wang@passbolt.com',
+			'role_id' => Common::uuid('role.id.user'),
+			'active' => 1,
+			'deleted' => 0,
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
 
 		// Users with no access
 		$us[] = array('User' => array(
@@ -216,6 +279,7 @@ class UserTask extends ModelTask {
 			'created_by' => Common::uuid('user.id.admin'),
 			'modified_by' => Common::uuid('user.id.admin')
 		));
+
 		return $us;
 	}
 

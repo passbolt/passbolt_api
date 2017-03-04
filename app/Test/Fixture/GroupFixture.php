@@ -38,6 +38,15 @@ class GroupFixture extends CakeTestFixture {
 			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+			'name' => 'IT support',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => '14153251-abcb-3c00-a2d1-b4fdb1423d26',
 			'name' => 'Management',
 			'deleted' => 0,
@@ -65,6 +74,15 @@ class GroupFixture extends CakeTestFixture {
 			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => '53074209-fd29-3c8e-abaf-e017497f43cf',
+			'name' => 'Operations',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => '563a4b8f-e7ac-31ff-a3e8-f1b6d3ff222a',
 			'name' => 'Accounting',
 			'deleted' => 0,
@@ -74,8 +92,26 @@ class GroupFixture extends CakeTestFixture {
 			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => '5a1e3498-35a0-32dc-ac2e-80dbd85c9017',
+			'name' => 'Leadership team',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => '5deebe9f-8e83-354c-a035-4e79353a0957',
 			'name' => 'Developer',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '640d1f30-0197-3276-a87e-a1ef389ee5fb',
+			'name' => 'Quality assurance',
 			'deleted' => 0,
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',
@@ -130,6 +166,24 @@ class GroupFixture extends CakeTestFixture {
 		array(
 			'id' => 'da776e4a-73b7-3a58-a047-f31614bd15bb',
 			'name' => 'Marketing',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'e6d598a1-e050-3237-a4d6-2ba75d65dc3b',
+			'name' => 'Resource planning',
+			'deleted' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'ecc19da3-69b8-3c0d-a03a-2b29bfb7a610',
+			'name' => 'Procurement',
 			'deleted' => 0,
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',

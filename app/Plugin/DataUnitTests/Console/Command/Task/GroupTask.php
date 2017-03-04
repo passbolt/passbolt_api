@@ -74,6 +74,22 @@ class GroupTask extends ModelTask {
 			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.it_support'),
+			'name' => 'IT support',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.leadership_team'),
+			'name' => 'Leadership team',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
 			'id' => Common::uuid('group.id.management'),
 			'name' => 'Management',
 			'created' => '2016-01-29 13:39:25',
@@ -92,6 +108,38 @@ class GroupTask extends ModelTask {
 		$g[] = array('Group' => array(
 			'id' => Common::uuid('group.id.network'),
 			'name' => 'Network',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.operations'),
+			'name' => 'Operations',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.procurement'),
+			'name' => 'Procurement',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.quality_assurance'),
+			'name' => 'Quality assurance',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.resource_planning'),
+			'name' => 'Resource planning',
 			'created' => '2016-01-29 13:39:25',
 			'modified' => '2016-01-29 13:39:25',
 			'created_by' => Common::uuid('user.id.admin'),

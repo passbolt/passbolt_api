@@ -31,6 +31,14 @@ class GroupsUserFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
+			'id' => '2a2ee556-c1de-3b32-a4b8-af05ec11b02d',
+			'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+			'user_id' => 'bfb648f5-9f37-343b-a616-7f3704d13d84',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => '2f5c221d-fd31-334e-a0aa-7bebbded624b',
 			'group_id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
 			'user_id' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e',
@@ -39,9 +47,57 @@ class GroupsUserFixture extends CakeTestFixture {
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => '526a9ce9-f6a9-37f1-aa83-4e3352ad7e1b',
+			'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+			'user_id' => 'bfb648f5-9f37-343b-a616-7f3704d13d84',
+			'is_admin' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => '5279f96d-4b58-3269-af03-4d9dadfd98ac',
 			'group_id' => 'd6b15a4e-4fdf-3026-ac49-5a8de3fc49a0',
 			'user_id' => '5f924faf-8090-30b0-aed6-aa82c5e580a0',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '53611eaf-8f63-363a-a750-55c0f4e59b03',
+			'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+			'user_id' => '47ad29dc-f0c7-3b9e-aae2-9e657397b60b',
+			'is_admin' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '58f75ce3-d146-32a5-a8a4-bfa52247448a',
+			'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+			'user_id' => 'be77c78c-b767-3290-ae92-d5e5c590fcf9',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '5be1d673-98ed-35d7-a99b-9270f4793db1',
+			'group_id' => '5a1e3498-35a0-32dc-ac2e-80dbd85c9017',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '64846ede-14ec-3da2-ada9-5e758d71572f',
+			'group_id' => '53074209-fd29-3c8e-abaf-e017497f43cf',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '655d0e82-8833-3c93-a037-3563093e72f2',
+			'group_id' => 'e6d598a1-e050-3237-a4d6-2ba75d65dc3b',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
 			'is_admin' => 1,
 			'created' => '2016-01-29 13:39:25',
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
@@ -63,9 +119,33 @@ class GroupsUserFixture extends CakeTestFixture {
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => '733788e6-16c4-3557-aa51-19d5aaf49957',
+			'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+			'user_id' => '8a53f107-7ffc-3047-ad08-75effc419d21',
+			'is_admin' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '794d9e13-3558-3f6a-aae9-bdc3eacce779',
+			'group_id' => '14153251-abcb-3c00-a2d1-b4fdb1423d26',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => '84da353b-c07a-3aef-a9c1-3185be7e767a',
 			'group_id' => '563a4b8f-e7ac-31ff-a3e8-f1b6d3ff222a',
 			'user_id' => '1c137bd7-2838-3c3d-a021-d2986d9126f5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => '89b8ad5a-ad44-37f9-a9c1-3d4ded305389',
+			'group_id' => 'fea0c76e-046c-33ab-ab27-809ce35c0cdb',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
 			'is_admin' => 1,
 			'created' => '2016-01-29 13:39:25',
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
@@ -87,6 +167,14 @@ class GroupsUserFixture extends CakeTestFixture {
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => 'a69f0ef6-1f5c-3570-a51e-90ac5fb08e69',
+			'group_id' => '012568d6-9300-385b-a22a-e27d191764eb',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => 'b3d64136-0f00-3a69-abe6-bbc2295e96e4',
 			'group_id' => '24537609-6db5-31bb-af0d-f7f0494dd184',
 			'user_id' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
@@ -103,9 +191,65 @@ class GroupsUserFixture extends CakeTestFixture {
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => 'cb8ff959-ff48-3152-a940-2648eac445f8',
+			'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+			'user_id' => '8a53f107-7ffc-3047-ad08-75effc419d21',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'cbdda793-8d58-3c7f-a694-b2f54a4f3042',
+			'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+			'user_id' => 'be77c78c-b767-3290-ae92-d5e5c590fcf9',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'cc6170c6-ff68-3be6-ac7f-9ccfb5a59775',
+			'group_id' => 'ecc19da3-69b8-3c0d-a03a-2b29bfb7a610',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'd47908dd-c690-3f45-ab9b-7140a0e6a24f',
+			'group_id' => '640d1f30-0197-3276-a87e-a1ef389ee5fb',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
 			'id' => 'db5918aa-4bd6-38bc-a491-4db9bbca219c',
 			'group_id' => '981777cc-aa3a-3b5b-ac1d-86e281c37982',
 			'user_id' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'e62156ea-9bdd-37fe-a47c-ce9c57fb9d7c',
+			'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+			'user_id' => '47ad29dc-f0c7-3b9e-aae2-9e657397b60b',
+			'is_admin' => 0,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'ececde02-c246-3cb7-ae41-9754940ccd35',
+			'group_id' => 'da776e4a-73b7-3a58-a047-f31614bd15bb',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+			'is_admin' => 1,
+			'created' => '2016-01-29 13:39:25',
+			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+		),
+		array(
+			'id' => 'f5b8289b-c41b-3dc0-adcd-fbafc747d63f',
+			'group_id' => '73c705f1-919d-3916-a5b7-990b3a517d14',
+			'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
 			'is_admin' => 1,
 			'created' => '2016-01-29 13:39:25',
 			'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'

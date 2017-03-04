@@ -68,8 +68,8 @@ class GroupTest extends CakeTestCase {
 		// Get all groups.
 		$groups = $this->Group->find('all', $options);
 
-		$groupsFiltered = $this->Group->filterGroupWithAllUsers($groups, [Common::uuid('user.id.ada'), Common::uuid('user.id.betty')]);
-		$this->assertTrue(count($groupsFiltered) === 1, "After filtering all users, there should be only one group remaining.");
+		$groupsFiltered = $this->Group->filterGroupWithAllUsers($groups, [Common::uuid('user.id.ping'), Common::uuid('user.id.thelma')]);
+		$this->assertTrue(count($groupsFiltered) === 2, "After filtering all users, there should be only one group remaining.");
 
 	}
 }
