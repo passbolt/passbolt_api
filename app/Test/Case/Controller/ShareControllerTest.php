@@ -288,7 +288,7 @@ hcciUFw5
 	public function testUpdateAddSecretForWrongUserProvided() {
 		$userAId = Common::uuid('user.id.ada');
 		$userCId = Common::uuid('user.id.carol');
-		$userFId = Common::uuid('user.id.frances');
+		$userFId = Common::uuid('user.id.nancy');
 		$rsId = Common::uuid('resource.id.debian');
 
 		$data = array(

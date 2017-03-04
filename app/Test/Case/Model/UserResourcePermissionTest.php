@@ -50,7 +50,8 @@ class UserResourcePermissionTest extends CakeTestCase
 	 */
 	public function testViewIntegrity()
 	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath);
 
 		foreach ($matrix as $resourceAlias => $usersExpectedPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);

@@ -8,7 +8,7 @@
 App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 App::uses('PermissionType', 'Model');
-App::uses('PermissionMatrix', 'Test/Data');
+ App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
 
 class PermissionnableTest extends CakeTestCase {
 
@@ -44,7 +44,8 @@ class PermissionnableTest extends CakeTestCase {
 	}
 
 	public function testGetResourcesPermission() {
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath);
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
@@ -68,7 +69,8 @@ class PermissionnableTest extends CakeTestCase {
 	}
 
 	public function testUserIsAuthorizedToPerformOperationOnResource() {
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath);
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);
@@ -95,7 +97,8 @@ class PermissionnableTest extends CakeTestCase {
 	}
 
 	public function testAutomaticResourceFindFiltering() {
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath);
 
 		foreach ($matrix as $resourceAlias => $usersPermissions) {
 			$resourceId = Common::uuid('resource.id.' . $resourceAlias);

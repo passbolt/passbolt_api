@@ -14,7 +14,7 @@ App::uses('ResourcesController', 'Controller');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
-App::uses('PermissionMatrix', 'Test/Data');
+ App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
 
 // Uses Gpg Utility.
 if (!class_exists('\Passbolt\Gpg')) {
@@ -148,7 +148,8 @@ class ResourcesControllerTest extends ControllerTestCase
 
 	public function testIndexAndPermission()
 	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'user');
 
 		foreach ($matrix as $userAlias => $expectedPermissions) {
 			$userId = Common::uuid('user.id.' . $userAlias);
@@ -605,7 +606,8 @@ class ResourcesControllerTest extends ControllerTestCase
 
 	public function testDeleteAndPermission()
 	{
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'user');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'user');
 
 		foreach ($matrix as $userAlias => $expectedPermissions) {
 			// Reload fixture - cause content is altered in each loop.
@@ -702,7 +704,7 @@ class ResourcesControllerTest extends ControllerTestCase
 		$resId = Common::uuid('resource.id.apache');
 
 		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(Common::uuid('user.id.irene'));
+		$user = $this->User->findById(Common::uuid('user.id.frances'));
 		$this->User->setActive($user);
 
 		$this->setExpectedException('HttpException', 'You are not authorized to access this resource');
@@ -742,7 +744,8 @@ class ResourcesControllerTest extends ControllerTestCase
 	{
 		$matrixExpectedUsersIds = array();
 
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/view_users_resources_permissions.csv', 'resource');
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $userPermissions) {
 			// Retrieve the direct users permissions defined for the resource
 			$matrixExpectedUsersIds[$resourceAlias] = array();
