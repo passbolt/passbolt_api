@@ -92,6 +92,15 @@ class GroupFixture extends CakeTestFixture {
 			'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
 		),
 		array(
+			'id' => '73dba62a-d402-3cbf-a036-d07b5dac5255',
+			'name' => 'deleted',
+			'deleted' => 1,
+			'created' => '2016-02-02 18:59:05',
+			'modified' => '2016-02-02 18:59:05',
+			'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+			'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
+		),
+		array(
 			'id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
 			'name' => 'Freelancer',
 			'deleted' => 0,
