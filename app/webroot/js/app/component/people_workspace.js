@@ -4,6 +4,7 @@ import 'mad/component/confirm';
 import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb';
+import 'app/component/groups';
 //import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
@@ -11,7 +12,6 @@ import 'app/component/user_sidebar';
 import 'app/form/user/create';
 //import 'app/form/group/create'; // @roadmap
 import 'app/model/user';
-//import 'app/model/group'; // @roadmap
 import 'app/model/filter';
 
 import 'app/view/template/people_workspace.ejs!';
@@ -115,6 +115,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         // Instanciate the users filter controller.
         var userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
         userShortcut.start();
+
+        // Instanciate the users groups controller.
+        var groups = new passbolt.component.Groups('#js_wsp_users_groups', {});
+        groups.start();
 
         // Removed group choosed for #PASSBOLT-787
         //// Instanciate the group chooser controller.
