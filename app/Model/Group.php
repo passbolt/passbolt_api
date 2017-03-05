@@ -97,6 +97,7 @@ class Group extends AppModel {
 						$conditions['conditions']["AND"][] = ['Group.name LIKE' => '%' . $keyword . '%'];
 					}
 				}
+				$conditions['order'] = 'Group.name ASC';
 				break;
 			default:
 				$conditions = ['conditions' => []];
