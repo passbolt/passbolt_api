@@ -10,12 +10,13 @@ import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
 import 'app/form/user/create';
-//import 'app/form/group/create'; // @roadmap
+import 'app/form/group/create';
 import 'app/model/user';
 import 'app/model/filter';
 
 import 'app/view/template/people_workspace.ejs!';
 import 'app/view/template/component/create_button.ejs!';
+import 'app/view/template/component/create_button_dropdown.ejs!';
 
 /**
  * @inherits {mad.Component}
@@ -92,20 +93,41 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         );
         secWkMenu.start();
 
-		// Create user capability is only available to admin user
+		// Create user / group capability is only available to admin user.
 		if (role == 'admin') {
-			// Instantiate the create button controller.
-			this.options.createButton = mad.helper.Component.create(
-				$('.main-action-wrapper'),
-				'last',
-				mad.component.Button, {
-					id: 'js_wsp_create_button',
-					templateBased: true,
-					templateUri: 'app/view/template/component/create_button.ejs',
-					tag: 'a',
-					cssClasses: ['button', 'primary']
-				}
-			).start();
+            var createButtonMenuItems = [
+                new mad.model.Action({
+                    id: uuid(),
+                    label: __('New user'),
+                    cssClasses: [],
+                    action: function () {
+                        mad.bus.trigger('request_user_creation');
+                    }
+                }),
+                new mad.model.Action({
+                    id: uuid(),
+                    label: __('New group'),
+                    cssClasses: [],
+                    action: function () {
+                        mad.bus.trigger('request_group_creation');
+                    }
+                }),
+            ];
+
+            // Instantiate the create button component.
+            this.options.createButton = mad.helper.Component.create(
+            	$('.main-action-wrapper'),
+            	'last',
+                mad.component.ButtonDropdown, {
+                    id: 'js_wsp_create_button',
+                    templateBased: true,
+                    templateUri: 'app/view/template/component/create_button_dropdown.ejs',
+                    tag: 'a',
+                    cssClasses: ['button', 'primary'],
+                    items: createButtonMenuItems
+                }
+            ).start();
+
 		}
 
         // Instantiate the password workspace breadcrumb controller
@@ -175,14 +197,14 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
 
-	/**
-	 * Observe when the user wants to create a new user
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{createButton.element} click': function (el, ev) {
-		mad.bus.trigger('request_user_creation');
-	},
+	// /**
+	//  * Observe when the user wants to create a new user
+	//  * @param {HTMLElement} el The element the event occurred on
+	//  * @param {HTMLEvent} ev The event which occurred
+	//  */
+	// '{createButton.element} click': function (el, ev) {
+	// 	mad.bus.trigger('request_user_creation');
+	// },
 
     /**
      * Observe when group is selected
@@ -237,7 +259,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var group = new passbolt.model.Group();
 
         // Get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Create a new Group')})
+        var dialog = new mad.component.Dialog(null, {label: __('Create group')})
             .start();
 
         // Attach the component to the dialog.
