@@ -146,8 +146,8 @@ class Group extends AppModel {
 			case 'Group::delete':
 				$fields = ['fields' => ['deleted']];
 				break;
-			case 'Group::save':
-				$fields = ['fields' => ['name', 'created', 'modified', 'created_by', 'modified_by', 'deleted']];
+			case 'Group::add':
+				$fields = ['fields' => ['name', 'created_by', 'modified_by']];
 				break;
 			default:
 				$fields = ['fields' => []];

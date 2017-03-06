@@ -849,6 +849,7 @@ class User extends AppModel {
 				];
 				break;
 			case 'Group::index':
+			case 'Group::view':
 				$fields = [
 					'fields' => [
 						'User.id',
