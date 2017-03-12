@@ -15,6 +15,7 @@ class PermissionnableTest extends CakeTestCase {
 	//public $autoFixtures = true;
 
 	public $fixtures = array(
+		'app.controller_log',
 		'app.resource',
 		'app.user',
 		'app.role',
@@ -118,23 +119,31 @@ class PermissionnableTest extends CakeTestCase {
 		}
 	}
 
-	public function testGetAuthorizedUser() {
-		// As Ada
-		$user = $this->User->findById(Common::uuid('user.id.ada'));
-		$this->User->setActive($user);
+	public function testFindAuthorizedUser() {
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath);
 
-		// Expected list of authorized users
-		$expected = [
-			Common::uuid('user.id.ada'),
-			Common::uuid('user.id.betty'),
-			Common::uuid('user.id.dame'),
-			Common::uuid('user.id.edith'),
-		];
-		$conditions = ['conditions' => ['name' => 'debian'], 'contain' => ['Secret']];
-		$resource = $this->Resource->find('first', $conditions);
-		$permsUsers = $this->Resource->getAuthorizedUsers($resource['Resource']['id']);
-		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
-		$this->assertEquals(sort($expected), sort($permsUsers));
+		foreach ($matrix as $resourceAlias => $usersPermissions) {
+			$expectedAuthorizedUsers = array_filter($usersPermissions, function($permissionType) {
+				return $permissionType > 0;
+			});
+			$expectedUsersIds = array_map(function($userAlias) {
+				return Common::uuid("user.id.$userAlias");
+			}, array_keys($expectedAuthorizedUsers));
+
+			// Login with authorized user.
+			$user = $this->User->findById($expectedUsersIds[0]);
+			$this->User->setActive($user);
+
+			// Find authorized users
+			$authorizedUsers = $this->Resource->findAuthorizedUsers(Common::uuid("resource.id.$resourceAlias"));
+			$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
+
+			// Assert.
+			sort($expectedUsersIds);
+			sort($authorizedUsersIds);
+			$this->assertEquals($expectedUsersIds, $authorizedUsersIds);
+		}
 	}
 
 }

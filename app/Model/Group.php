@@ -93,11 +93,33 @@ class Group extends AppModel {
 				}
 
 				if (isset($data['filter']['keywords'])) {
-					foreach ($data['filter']['keywords'] as $keyword) {
+					$keywords = explode(' ', $data['filter']['keywords']);
+					foreach ($keywords as $keyword) {
 						$conditions['conditions']["AND"][] = ['Group.name LIKE' => '%' . $keyword . '%'];
 					}
 				}
 				$conditions['order'] = 'Group.name ASC';
+				break;
+			case 'Share::searchUsers':
+				// Use conditions already defined for the index case
+				$conditions = Group::getFindConditions('Group::index', $role, $data);
+
+				// Only return users who don't have a direct permission defined for the given aco instance
+				$conditions['joins'][] = [
+					'table' => 'groups',
+					'alias' => 'GroupToGrant',
+					'type' => 'inner',
+					'conditions' => [
+						'Group.id = GroupToGrant.id
+						AND GroupToGrant.id NOT IN (
+							SELECT Permission.aro_foreign_key
+							FROM permissions Permission
+							WHERE Permission.aco = "' . $data['aco'] . '"
+								AND Permission.aco_foreign_key = "' . $data['aco_foreign_key'] . '"
+								AND Permission.aro_foreign_key = GroupToGrant.id
+						)',
+					],
+				];
 				break;
 			default:
 				$conditions = ['conditions' => []];
@@ -118,6 +140,7 @@ class Group extends AppModel {
 		switch ($case) {
 			case 'Group::view':
 			case 'Group::index':
+			case 'Share::searchUsers':
 				$fields = [
 					'fields' => [
 						'DISTINCT Group.id',
@@ -164,7 +187,7 @@ class Group extends AppModel {
  * @return array
  */
 	public static function getFindContain($case = 'view', $role = null) {
-		$filter = [];
+		$contain = [];
 		switch ($case) {
 			case 'Group::view':
 			case 'Group::index':
@@ -173,6 +196,11 @@ class Group extends AppModel {
 					'resource' => 0,
 				];
 				break;
+			case 'Share::searchUsers':
+				$contain = [
+					'user' => 0,
+					'resource' => 0,
+				];
 		}
 		return $contain;
 	}

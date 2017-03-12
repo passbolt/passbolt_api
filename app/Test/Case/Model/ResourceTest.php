@@ -14,6 +14,7 @@ App::uses('AppTestCase', 'Test');
 class ResourceTest extends AppTestCase {
 
 	public $fixtures = array(
+		'app.controller_log',
 		'app.resource',
 		'app.user',
 		'app.role',
@@ -343,6 +344,9 @@ class ResourceTest extends AppTestCase {
 	 * Test save a list of secrets corresponding to a resource.
 	 */
 	public function testSaveSecretsEmptySecrets() {
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
 		$this->setExpectedException('Exception', 'The list of secrets provided is invalid');
 		$this->Resource->saveSecrets(Common::uuid(), []);
 	}

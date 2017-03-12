@@ -198,38 +198,38 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Get a list of users who have a permissions record at least >= to READ
+ * Find users who have the permission to at least read the resource
  *
  * @param Model &$model reference to the type of record.
  * @param string|null $acoInstanceId uuid
+ * @param array (optional) $findOptions The users find options
  * @return array|null
  */
-	public function getAuthorizedUsers(Model &$model, $acoInstanceId = null) {
-		// Get aco key name.
-		$acoKeyName = strtolower($model->alias) . '_id';
+	public function findAuthorizedUsers(Model &$model, $acoInstanceId = null, $findOptions = array()) {
+		$model = Common::getModel("UserResourcePermission");
 
 		// If instance id is not provided as parameter, we get it from the model.
 		if (is_null($acoInstanceId)) {
 			$acoInstanceId = $this->id;
 		}
 
-		// Build corresponding model.
-		$model = Common::getModel("User{$model->alias}Permission");
+		// If no find options given, return all users.
+		if (empty($findOptions)) {
+			$findOptions = $model->User->getFindOptions('User::index', User::get('Role.name'));
+		}
 
-		// Retrieve the list of users.
-		$users = $model->find('all', [
+		// Retrieve only users who have the permissions to read the resource.
+		$findOptions['joins'][] = [
+			'table' => 'users_resources_permissions',
+			'alias' => 'UserResourcePermission',
+			'type' => 'inner',
 			'conditions' => [
-				$acoKeyName => $acoInstanceId
-			],
-			'contain' => [
-				'User' => [
-					'fields' => [
-						'User.id'
-					]
-				]
+				"UserResourcePermission.user_id = User.id
+				AND UserResourcePermission.resource_id = '$acoInstanceId'"
 			]
-		]);
+		];
 
+		$users = $model->User->find('all', $findOptions);
 		return $users;
 	}
 }

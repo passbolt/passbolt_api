@@ -197,7 +197,7 @@ class ResourcesController extends AppController {
 		}
 
 		// Email notification.
-		$authorizedUsers = $this->Resource->getAuthorizedUsers($id);
+		$authorizedUsers = $this->Resource->findAuthorizedUsers($id);
 
 		// Extract user ids from array.
 		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');
@@ -413,7 +413,7 @@ class ResourcesController extends AppController {
 		$dataSource->commit();
 
 		// Email notification.
-		$authorizedUsers = $this->Resource->getAuthorizedUsers($id);
+		$authorizedUsers = $this->Resource->findAuthorizedUsers($id);
 
 		// Extract user ids from array.
 		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');

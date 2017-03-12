@@ -65,8 +65,6 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	private function _updateCall($aco = 'Resource', $acoId = '', $data = array()) {
-		Common::uuid('not-valid-reference');
-
 		// check how many permissions are already existing before the new insertion
 		$res = $this->testAction("/share/$aco/$acoId.json", array(
 				'method' => 'put',
@@ -82,12 +80,12 @@ class ShareControllerTest extends ControllerTestCase {
 
 	public function testUpdateAcoNotValid() {
 		$this->setExpectedException('HttpException', 'The call to entry point with parameter User is not allowed');
-		$this->_updateCall('User', Common::uuid('tetris-license'), array());
+		$this->_updateCall('User', Common::uuid('resource.id.debian'), array());
 	}
 
 	public function testUpdateNoPermissions() {
 		$this->setExpectedException('HttpException', 'No permissions were provided');
-		$this->_updateCall('Resource', Common::uuid('tetris-license'), array());
+		$this->_updateCall('Resource', Common::uuid('resource.id.debian'), array());
 	}
 
 	public function testUpdateWrongIdProvided() {
@@ -221,7 +219,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateAddSecretsNotProvided() {
-		$acoInstanceId = Common::uuid('resource.id.debian');
+		$acoInstanceId = Common::uuid('resource.id.centos');
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 
 		$data = array(
@@ -243,7 +241,7 @@ class ShareControllerTest extends ControllerTestCase {
 		$directPerm = $this->Permission->find('first', array(
 				'conditions' => array(
 					'aco' => 'Resource',
-					'aco_foreign_key' => Common::uuid('resource.id.debian'),
+					'aco_foreign_key' => Common::uuid('resource.id.centos'),
 					'aro' => 'User',
 				)
 			));
@@ -289,7 +287,7 @@ hcciUFw5
 		$userAId = Common::uuid('user.id.ada');
 		$userCId = Common::uuid('user.id.carol');
 		$userFId = Common::uuid('user.id.nancy');
-		$rsId = Common::uuid('resource.id.debian');
+		$rsId = Common::uuid('resource.id.centos');
 
 		$data = array(
 			'Permissions' => array(
@@ -351,9 +349,9 @@ hcciUFw5
 		$this->_updateCall('Resource', $rsId, $data);
 	}
 
-	public function testUpdateAddValid() {
+	public function testUpdateAddUserPermission() {
 		$userId = Common::uuid('user.id.user');
-		$rsId = Common::uuid('resource.id.debian');
+		$rsId = Common::uuid('resource.id.centos');
 
 		$data = array(
 			'Permissions' => array(
@@ -408,12 +406,71 @@ hcciUFw5
 		);
 	}
 
-	public function testUpdateUpdate() {
+	public function testUpdateAddGroupPermission() {
+		$groupId = Common::uuid('group.id.board');
+		$userId = Common::uuid('user.id.hedy');
+		$rsId = Common::uuid('resource.id.centos');
+
+		$data = array(
+			'Permissions' => array(
+				array(
+					'Permission' => array (
+						'aro' => 'Group',
+						'aro_foreign_key' => $groupId,
+						'type' => PermissionType::OWNER,
+					),
+				),
+			),
+			'Secrets' => array(
+				array(
+					'Secret' => array (
+						'user_id' => $userId,
+						'resource_id' => $rsId,
+						'data' => '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----',
+					),
+				),
+			),
+		);
+		$res = json_decode($this->_updateCall('Resource', $rsId, $data), true);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$res['header']['status'],
+			"Adding a permission should have returned a success, but returned {$res['header']['status']}"
+		);
+
+		// Observe that the permission is deleted.
+		$exist = $this->Permission->find('first', array(
+			'conditions' => array(
+				'aco_foreign_key' => $rsId,
+				'aro_foreign_key' => $groupId,
+				'type' => PermissionType::OWNER,
+			)
+		));
+
+		$this->assertTrue(
+			!empty($exist),
+			"Adding a permission should have actually added the permission, but the permission doesn't exist."
+		);
+	}
+
+	public function testUpdateUpdateExistingUserPermission() {
 		// Get a direct permission that already exist.
 		$directPerm = $this->Permission->find('first', array(
 				'conditions' => array(
 					'aco' => 'Resource',
-					'aco_foreign_key' => Common::uuid('resource.id.debian'),
+					'aco_foreign_key' => Common::uuid('resource.id.centos'),
 					'aro' => 'User',
 					'aro_foreign_key' => Common::uuid('user.id.ada')
 				)
@@ -441,7 +498,7 @@ hcciUFw5
 	// Test adding permissions for a user that is not active (not completed the setup yet).
 	public function testUpdateAddInactiveUser() {
 		$userId = Common::uuid('user.id.user');
-		$rsId = Common::uuid('resource.id.debian');
+		$rsId = Common::uuid('resource.id.centos');
 
 		$this->User->id = $userId;
 		$this->User->save(['active' => 0], false, ['active']);
@@ -479,196 +536,6 @@ hcciUFw5
 		);
 		$this->setExpectedException('HttpException', "The ARO instance $userId for the model User doesn't exist or the user is not allowed to access it");
 		$this->_updateCall('Resource', $rsId, $data);
-	}
-
-/******************************************************
- * SIMULATE TESTS
- ******************************************************/
-
-	public function testSimulate() {
-		$userId = Common::uuid('user.id.user');
-		$acoInstanceId = Common::uuid('resource.id.debian');
-
-		$data = array(
-			'Permissions' => array(
-				array(
-					'Permission' => array (
-						'aro_foreign_key' => $userId,
-						'type' => PermissionType::OWNER,
-					),
-				),
-			),
-		);
-		// check how many permissions are already existing before the new insertion
-		$res = $this->testAction("/share/simulate/Resource/$acoInstanceId.json", array(
-				'method' => 'put',
-				'return' => 'contents',
-				'data' => $data
-			), true);
-		$json = json_decode($res, true);
-
-		$this->assertEquals(
-			Status::SUCCESS,
-			$json['header']['status'],
-			"Simulation of adding permissions should have returned success, but returned {$json['header']['status']}"
-		);
-
-		// Test that there is one more permissions returned by the simulation.
-		$perms = $this->UserResourcePermission->find('all', array(
-				'conditions' => array(
-					'resource_id' => $acoInstanceId,
-					'permission_type <>' => ''
-				)
-			));
-
-		$this->assertEquals(
-			count($perms) + 1,
-			count($json['body']['UserResourcePermissions']),
-			"Simulation of adding permissions should have returned " . (count($perms) + 1) . " permissions, but returned " . count($json['body']['UserResourcePermissions'])
-		);
-
-	}
-
-/******************************************************
- * SEARCH USERS TESTS
- ******************************************************/
-
-	public function testSearchUsersToGrantIdIsMissing() {
-		$this->setExpectedException('HttpException', "The resource id is missing");
-		// go through the addAcoPermissions because of routes
-		$this->testAction("/share/searchUsers/resource/", array('method' => 'get', 'return' => 'contents'));
-	}
-
-	public function testSearchUsersToGrantIdIsInvalid() {
-		$id = 'badId';
-		$this->setExpectedException('HttpException', "The resource id is invalid");
-		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
-	}
-
-	public function testSearchUsersToGrantDoesNotExist() {
-		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', "The resource does not exist");
-		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
-	}
-
-	public function testSearchUsersToGrantWithoutOwnerAccess() {
-		$id = Common::uuid('resource.id.debian');
-		$user = $this->User->findById(Common::uuid('user.id.ada'));
-		$this->User->setActive($user);
-
-		$this->setExpectedException('HttpException', "You are not authorized to share this resource");
-		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
-	}
-
-	// test search users available to receive a new direct permission : owner should be excluded
-	public function testSearchUsersToGrantOwnerExcluded() {
-		$id = Common::uuid('resource.id.debian');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-		);
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-
-		// The owner is not in the list of users who can receive a direct permission
-		$this->assertFalse(in_array(Common::uuid('user.id.dame'), $usersIds));
-	}
-
-	// test search users available to receive a new direct permission : filter by keywords
-	public function testSearchUsersToGrantFilterByKeywords() {
-		$id = Common::uuid('resource.id.debian');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-			'data' => array(
-				'keywords' => 'carol'
-			)
-		);
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
-	}
-
-	// test search users available to receive a new direct permission : excluding users
-	public function testSearchUsersToGrantFilterExcludingUsers() {
-		$id = Common::uuid('resource.id.debian');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-			'data' => array(
-				'excludedUsers' => json_encode(array(Common::uuid('user.id.edith')))
-			)
-		);
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-
-		// The request found some users.
-		$this->assertNotEmpty($usersIds);
-
-		// The users with excluded in the request parameters is not in the request results.
-		$this->assertTrue(!in_array(Common::uuid('user.id.edith'), $usersIds));
-	}
-
-	// test search users shouldn't return inactive users.
-	public function testSearchUsersExcludeNonActive() {
-		$this->User->id = Common::uuid('user.id.carol');
-		$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
-		$this->User->save(['active' => 0], false, $fields);
-
-		$id = Common::uuid('resource.id.centos');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-		);
-
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-
-		// Betty shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.carol'), $usersIds));
-	}
-
-	// test search users shouldn't return inactive users in case of autocomplete.
-	public function testSearchUsersAutocompleteExcludeNonActive() {
-		$this->User->id = Common::uuid('user.id.edith');
-		$this->User->save(['active' => 0], false, ['active']);
-
-		$id = Common::uuid('resource.id.debian');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-			'data' => array(
-				'keywords' => 'edith'
-			)
-		);
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-
-		// Betty shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.edith'), $usersIds));
-	}
-
-	// test search users shouldn't return inactive users.
-	public function testAdminSearchUsersExcludeNonActive() {
-		$userD = $this->User->findById(Common::uuid('user.id.dame'));
-		$this->User->id = $userD['User']['id'];
-		$this->User->save(['role_id' => Common::uuid('role.id.admin')], false, ['role_id']);
-		$userD['User']['role_id'] = Common::uuid('role.id.admin');
-		$this->User->setActive($userD);
-
-		$this->User->id = Common::uuid('user.id.carol');
-		$this->User->save(['active' => 0], false, ['active']);
-
-		$id = Common::uuid('resource.id.debian');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-		);
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
-		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
-
-		// The user shouldn't be in the list of returned users.
-		$this->assertFalse(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
 }
