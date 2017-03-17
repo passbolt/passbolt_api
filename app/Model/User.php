@@ -622,10 +622,6 @@ class User extends AppModel {
 								];
 							}
 						}
-						// If exclude users.
-						if (isset($data['excludedUsers'])) {
-							$conditions['conditions']["AND"]["NOT"][] = ['User.id' => $data['excludedUsers']];
-						}
 						// Order the data.
 						if (isset($data['order'])) {
 							switch ($data['order']) {
@@ -860,6 +856,58 @@ class User extends AppModel {
 						'User.created_by',
 						'User.modified_by',
 					],
+				];
+				break;
+			case 'Share::searchUsers':
+				$fields = [
+					'fields' => [
+						'User.id',
+						'User.username',
+						'User.role_id',
+						'User.created',
+						'User.modified',
+						'User.created_by',
+						'User.modified_by',
+					],
+					'contain' => [
+						'Role' => [
+							'fields' => [
+								'Role.id',
+								'Role.name',
+							]
+						],
+						'Profile' => [
+							'fields' => [
+								'Profile.id',
+								'Profile.first_name',
+								'Profile.last_name',
+								'Profile.created',
+								'Profile.modified'
+							],
+							'Avatar' => [
+								'fields' => [
+									'Avatar.id',
+									'Avatar.user_id',
+									'Avatar.foreign_key',
+									'Avatar.model',
+									'Avatar.filename',
+									'Avatar.filesize',
+									'Avatar.mime_type',
+									'Avatar.extension',
+									'Avatar.hash',
+									'Avatar.path',
+									'Avatar.adapter',
+									'Avatar.created',
+									'Avatar.modified'
+								]
+							]
+						],
+						'Gpgkey' => [
+							'fields' => [
+								'Gpgkey.key_id',
+							],
+						],
+					]
 				];
 		}
 

@@ -22,6 +22,7 @@ class ShareController extends AppController {
 		'Resource',
 		'Permission',
 		'User',
+		'Group'
 	];
 
 /**
@@ -34,21 +35,6 @@ class ShareController extends AppController {
  * @return void
  */
 	private function __updatePermissions($acoModelName, $acoInstanceId, $permissions) {
-		// check if the target ACO model is permissionable
-		if (!$this->Permission->isValidAco($acoModelName)) {
-			throw new Exception(__('The aco model %s is not permissionable', $acoModelName));
-		}
-
-		// no aco instance id given
-		if (is_null($acoInstanceId)) {
-			throw new Exception(__('The %s id is missing', $acoModelName));
-		}
-
-		// the aco instance id is invalid.
-		if (!Common::isUuid($acoInstanceId)) {
-			throw new Exception(__('The %s id is invalid', $acoModelName));
-		}
-
 		// the aco instance instance is not allowed.
 		$this->loadModel($acoModelName);
 		$acoExist = $this->$acoModelName->exists($acoInstanceId);
@@ -109,7 +95,7 @@ class ShareController extends AppController {
 					}
 				}
 			} elseif ($saveCase) {
-				$aroModelName = 'User';
+				$aroModelName = isset($permission['Permission']['aro']) ? $permission['Permission']['aro'] : 'User';
 				$acoModelName = 'Resource';
 				$aroInstanceId = isset($permission['Permission']['aro_foreign_key']) ? $permission['Permission']['aro_foreign_key'] : null;
 
@@ -131,10 +117,16 @@ class ShareController extends AppController {
 				// Check aro exists.
 				$this->loadModel($aroModelName);
 				$exists = $this->$aroModelName->exists($aroInstanceId);
+
 				// If aro is a user, we make sure it is also active, and not deleted.
 				if ($exists && $aroModelName == 'User') {
 					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'active' => 1, 'deleted' => 0]]);
 				}
+				// If aro is a group, we make sure it is not deleted.
+				else if ($exists && $aroModelName == 'Group') {
+					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'deleted' => 0]]);
+				}
+
 				if (!$exists) {
 					throw new Exception(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',
 						$aroInstanceId, $aroModelName));
@@ -264,40 +256,80 @@ class ShareController extends AppController {
  * @return void
  */
 	public function simulate($acoModelName = '', $acoInstanceId = null) {
-		// Should be capitalized
-		$acoModelName = ucfirst($acoModelName);
 		// Get permissions from request.
 		$permissions = isset($this->request->data['Permissions']) ? $this->request->data['Permissions'] : null;
+
+		// Aco Model name should be capitalized
+		$acoModelName = ucfirst($acoModelName);
+		$AcoModel = Common::getModel($acoModelName);
+
+		// check the HTTP request method
+		if (!$this->request->is('post')) {
+			return $this->Message->error(__('Invalid request method, should be POST'));
+		}
+
+		// check if the target ACO model is permissionable
+		if (!$this->Permission->isValidAco($acoModelName)) {
+			return $this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
+		}
+
+		// no aco instance id given
+		if (is_null($acoInstanceId)) {
+			return $this->Message->error(__('The %s id is missing', $acoModelName));
+		}
+
+		// the aco instance id is invalid.
+		if (!Common::isUuid($acoInstanceId)) {
+			return $this->Message->error(__('The %s id is invalid', $acoModelName));
+		}
+
+		// If permissions are not provided, call is useless.
+		if (empty($permissions) || is_null($permissions)) {
+			return $this->Message->error(__('No permissions were provided'));
+		}
+
+		// Retrieve authorized users before applying the changes.
+		$authorizedUsers = $AcoModel->findAuthorizedUsers($acoInstanceId);
 
 		$this->Permission->begin();
 		try {
 			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
 		} catch (Exception $e) {
 			$this->Permission->rollback();
-			throw new Exception($e->getMessage());
+			return $this->Message->error($e->getMessage());
 		}
 
-		// Retrieve the users resources permissions.
-		$AcoModel = Common::getModel($acoModelName);
-		$authorizedUsers = $AcoModel->getAuthorizedUsers($acoInstanceId);
+		// Retrieve the users after changes.
+		$authorizedUsersAfterChanges = $AcoModel->findAuthorizedUsers($acoInstanceId);
 
-		// Retrieve the permissions applied to the aco instance.
-		$findData = [
-			'Permission' => [
-				'aco' => $acoModelName,
-				'aco_foreign_key' => $acoInstanceId
-			]
-		];
-		$findOptions = $this->Permission->getFindOptions('viewByAco', User::get('Role.name'), $findData);
-		$permissions = $this->Permission->find('all', $findOptions);
-
-		// Abort the modification.
+		// Abort the modification made for the simulation.
 		$this->Permission->rollback();
 
+		// Extract user ids from array.
+		$usersCurrent = Hash::extract($authorizedUsers, '{n}.User.id');
+		$usersAfterChanges = Hash::extract($authorizedUsersAfterChanges, '{n}.User.id');
+		// Users who have been added will show with the diff between before and after changes.
+		$addedUsers = array_diff($usersAfterChanges, $usersCurrent);
+		// Users who have been removed will show with the diff between before and after changes.
+		$removedUsers = array_diff($usersCurrent, $usersAfterChanges);
+
+		// Prepare output.
+		$added = $this->User->find(
+			'all',
+			array_merge(
+				['conditions' => ['User.id' => $addedUsers]],
+				$this->User->getFindFields('User::edit')['fields']['User']
+			));
+		$removed = $this->User->find(
+			'all',
+			array_merge(
+				['conditions' => ['User.id' => $removedUsers]],
+				$this->User->getFindFields('User::edit')['fields']['User']
+			));
 		$data = [
-			'UserResourcePermissions' => $authorizedUsers,
-			'Permissions' => $permissions,
+			'changes' => ['added' => $added, 'removed' => $removed]
 		];
+
 		$this->set('data', $data);
 		$this->Message->success(__('Simulate successful'));
 	}
@@ -321,25 +353,32 @@ class ShareController extends AppController {
 
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
-			$this->Message->error(__('Invalid request method, should be PUT'));
-			return;
+			return $this->Message->error(__('Invalid request method, should be PUT'));
 		}
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
-			$this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
-			return;
+			return $this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
+		}
+
+		// no aco instance id given
+		if (is_null($acoInstanceId)) {
+			return $this->Message->error(__('The %s id is missing', $acoModelName));
+		}
+
+		// the aco instance id is invalid.
+		if (!Common::isUuid($acoInstanceId)) {
+			return $this->Message->error(__('The %s id is invalid', $acoModelName));
 		}
 
 		// If permissions are not provided, call is useless.
 		if (empty($permissions) || is_null($permissions)) {
-			$this->Message->error(__('No permissions were provided'));
-			return;
+			return $this->Message->error(__('No permissions were provided'));
 		}
 
 		// Get list of current permissions for the given ACO.
 		$AcoModel = Common::getModel($acoModelName);
-		$authorizedUsers = $AcoModel->getAuthorizedUsers($acoInstanceId);
+		$authorizedUsers = $AcoModel->findAuthorizedUsers($acoInstanceId);
 
 		// Begin transaction.
 		$this->Permission->begin();
@@ -347,13 +386,12 @@ class ShareController extends AppController {
 			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
 		} catch (Exception $e) {
 			$this->Permission->rollback();
-			$this->Message->error($e->getMessage());
-			return;
+			return $this->Message->error($e->getMessage());
 		}
 
 		// Get new permissions after all changes.
 		$AcoModel = Common::getModel($acoModelName);
-		$authorizedUsersAfterChanges = $AcoModel->getAuthorizedUsers($acoInstanceId);
+		$authorizedUsersAfterChanges = $AcoModel->findAuthorizedUsers($acoInstanceId);
 
 		// Extract user ids from array.
 		$usersCurrent = Hash::extract($authorizedUsers, '{n}.User.id');
@@ -369,8 +407,7 @@ class ShareController extends AppController {
 			$this->__processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
 		} catch (Exception $e) {
 			$this->Permission->rollback();
-			$this->Message->error($e->getMessage());
-			return;
+			return $this->Message->error($e->getMessage());
 		}
 
 		// Everything ok, we can commit.
@@ -485,23 +522,33 @@ class ShareController extends AppController {
 		// If the search should be filtered by keywords.
 		if (isset($this->request->query['keywords'])) {
 			$data['keywords'] = $this->request->query['keywords'];
+			$data['filter']['keywords'] = $this->request->query['keywords'];
 		}
 
-		// If the search should exclude some users.
-		if (isset($this->request->query['excludedUsers'])) {
-			$excludedUsers = json_decode($this->request->query['excludedUsers']);
-			if (!empty($excludedUsers)) {
-				$data['excludedUsers'] = $excludedUsers;
-			}
-		}
-
-		// Find all the users who can receive a direct permission.
+		// Find all the users and all the groups who can receive a direct permission.
 		$data['aco_foreign_key'] = $id;
 		$data['aco'] = $model;
-		$o = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
-		$returnVal = $this->Permission->User->find('all', $o);
+		$findUsersOptions = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+		$users = $this->Permission->User->find('all', $findUsersOptions);
+		$findGroupsOptions = $this->Permission->Group->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+		$groups = $this->Permission->Group->find('all', $findGroupsOptions);
 
-		$this->set('data', $returnVal);
+		// Count the number of users for each group.
+		foreach($groups as $i => $group) {
+			$count = $this->Permission->Group->GroupUser->find('count', [
+				'conditions' => ['GroupUser.group_id' => $group['Group']['id']]
+			]);
+			$groups[$i]['Group']['user_count'] = $count;
+		}
+
+		// Sort alphabetically returned users and groups.
+		$returnValue = array_merge($users, $groups);
+		usort($returnValue, function($first_aco, $second_aco){
+			$first_aco_meaning_value = isset($first_aco['Profile']) ? $first_aco['Profile']['first_name'] : $first_aco['Group']['name'];
+			$second_aco_meaning_value = isset($second_aco['Profile']) ? $second_aco['Profile']['first_name'] : $second_aco['Group']['name'];
+			return $first_aco_meaning_value > $second_aco_meaning_value;
+		});
+		$this->set('data', $returnValue);
 		$this->Message->success();
 	}
 }

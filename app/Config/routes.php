@@ -147,7 +147,8 @@ Router::connect('/groups', array('controller' => 'groups', 'action' => 'create',
 /**
  * Custom route for share
  */
-	Router::connect('/share/:resource/:id', array('controller' => 'share', 'action' => 'update', '[method]' => 'PUT'), array('pass' => array('resource', 'id')));
+	Router::connect('/share/:model/:id', array('controller' => 'share', 'action' => 'update', '[method]' => 'PUT'), array('pass' => array('model', 'id')));
+	Router::connect('/share/simulate/:model/:id', array('controller' => 'share', 'action' => 'simulate', '[method]' => 'POST'), array('pass' => array('model', 'id')));
 	Router::connect('/share/search-users/:model/:id', array('controller' => 'share', 'action' => 'searchUsers', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 
 /**

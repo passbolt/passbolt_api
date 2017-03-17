@@ -12,7 +12,6 @@ import 'app/model/permission';
 import 'app/model/permission_type';
 
 import 'app/view/template/component/permissions.ejs!';
-import 'app/view/template/form/permission/add.ejs!';
 import 'app/view/template/component/permission/permission_list_item.ejs!';
 
 /**
@@ -614,10 +613,8 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		}
 
 		// Request the plugin to encrypt the secret for the new users.
-		// Once the plugin has encrypted the secret, it sends back an event secret_share_secret_encrypted.
-		mad.bus.trigger('passbolt.share.encrypt', {
-			usersIds: usersIds
-		});
+		// Once the plugin has encrypted the secret, it sends back an event resource_share_encrypted.
+		mad.bus.trigger('passbolt.share.encrypt');
 	},
 
 	/* ************************************************************** */
