@@ -9,8 +9,8 @@ import 'app/component/groups';
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
+import 'app/component/group_edit';
 import 'app/form/user/create';
-import 'app/form/group/create';
 import 'app/model/user';
 import 'app/model/filter';
 
@@ -259,23 +259,25 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var group = new passbolt.model.Group();
 
         // Get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Create group')})
-            .start();
+        var dialog = new mad.component.Dialog(null, {
+            label: __('Create group')
+        }).start();
+
+        // share-tab is not completely semantically correct,
+        // but we consider that adding user to a group is a bit like a share operation.
+        // (and well.. modifying the styleguide for this is a headache. so we have
+        // convinced ourselves that it's a share operation.)
+        // Side note: Remy has full responsibility for this.
+        // $('.dialog-content').addClass('share-tab');
+        //
+        // var topComponent = new mad.Component(
+        //     'cssClasses': []
+        // );
 
         // Attach the component to the dialog.
-        var form = dialog.add(passbolt.form.group.Create, {
-            data: group,
-            callbacks : {
-                submit: function (data) {
-                    var instance = new passbolt.model.Group(
-                        data['passbolt.model.Group']
-                    )
-                        .save();
-                    dialog.remove();
-                }
-            }
+        var groupEdit = dialog.add(passbolt.component.GroupEdit, {
+           // data: group
         });
-        form.load(group);
     },
 
     /**

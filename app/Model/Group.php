@@ -51,7 +51,12 @@ class Group extends AppModel {
 					'required' => true,
 					'allowEmpty' => false,
 					'message' => __('Alphanumeric only')
-				]
+				],
+				'unique' => [
+					'shared' => false,
+					'rule' => ['checkGroupNameIsUnique', null],
+					'message' => __('The group name provided is already used by another group'),
+				],
 			]
 		];
 		switch ($case) {
@@ -247,5 +252,26 @@ class Group extends AppModel {
 			}
 		}
 		return $groups;
+	}
+
+/**
+ * Check that the group name is unique.
+ *
+ * @param array $check with 'name' set
+ * @return bool
+ */
+	public function checkGroupNameIsUnique($check) {
+		if (!isset($check['name']) || empty($check['name'])) {
+			return false;
+		} else {
+			$exist = $this->find('first', [
+				'conditions' => [
+					'Group.name' => $check['name'],
+					'Group.deleted' => false,
+				],
+			]);
+
+			return empty($exist);
+		}
 	}
 }

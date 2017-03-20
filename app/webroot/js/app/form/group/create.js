@@ -24,7 +24,8 @@ var CreateForm = passbolt.form.group.Create = mad.Form.extend('passbolt.form.gro
     defaults: {
         templateBased: true,
         action: 'create',
-        templateUri: 'app/view/template/form/group/create.ejs'
+        templateUri: 'app/view/template/form/group/create.ejs',
+        cssClasses: ['group_edit_form']
     }
 
 }, /** @prototype */ {
@@ -38,10 +39,10 @@ var CreateForm = passbolt.form.group.Create = mad.Form.extend('passbolt.form.gro
         // temporary for update demonstration
         this.options.data.Group = this.options.data.Group || {};
 
-        // Is the user an admin.
+        //Is the user an admin.
         var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin' ? true : false;
 
-        // Add user first name field.
+        //Add user first name field.
         this.addElement(
             new mad.form.Textbox($('#js_field_name'), {
                 modelReference: 'passbolt.model.Group.name'
@@ -51,7 +52,7 @@ var CreateForm = passbolt.form.group.Create = mad.Form.extend('passbolt.form.gro
 
         // Rebind controller events
         this.on();
-    },
+    }
 
 
     /* ************************************************************** */

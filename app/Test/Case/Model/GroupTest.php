@@ -53,6 +53,23 @@ class GroupTest extends CakeTestCase {
 	}
 
 /**
+ * Test Name Validation where a similar name already exists.
+ * @return void
+ */
+	public function testNameAlreadyExistValidation() {
+		$group = [
+			'name' => 'testgroup',
+		];
+
+		$this->Group->create();
+		$this->Group->save($group);
+
+		$this->Group->set($group);
+		$validates = $this->Group->validates(array('fieldList' => array('name')));
+		$this->assertFalse($validates, 'A group with the same name as an existing one shouldn\'t validate');
+	}
+
+/**
  * Test the function filterGroupWithAllUsers.
  *
  * Assert that the function will remove all the groups that don't contain all the users requested.
@@ -72,5 +89,7 @@ class GroupTest extends CakeTestCase {
 		$this->assertTrue(count($groupsFiltered) === 2, "After filtering all users, there should be only one group remaining.");
 
 	}
+
+
 }
 

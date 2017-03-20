@@ -67,6 +67,8 @@ class GroupsController extends AppController {
 		}
 
 		// Remove useless elements due to super join.
+		// #dirty, but it's a superjoin behaviour and we don't have an alternative for now.
+		// Let's wait for Cake3.x migration to fix this.
 		foreach($groups as $key => $group) {
 			$groups[$key] = $this->__tidyOutput($group);
 		}
@@ -76,7 +78,11 @@ class GroupsController extends AppController {
 		$this->Message->success();
 	}
 
-
+/**
+ * Add entry point.
+ *
+ * Add a group.
+ */
 	public function add() {
 		$postData = $this->request->data;
 
@@ -94,7 +100,7 @@ class GroupsController extends AppController {
 		// Validate group users.
 		$groupManagers = Hash::extract($postData['GroupUsers'], '{n}.GroupUser.is_admin');
 		if (!in_array('1', $groupManagers)) {
-			$this->Message->error(__('A group manager must be provided'), ['code' => '400']);
+			$this->Message->error(__('A group manager must be provided'), ['code' => '404']);
 			return;
 		}
 
@@ -108,7 +114,10 @@ class GroupsController extends AppController {
 		// Check if the data is valid.
 		if (!$this->Group->validates()) {
 			$this->Group->rollback();
-			$this->Message->error(__('Data validation error'));
+			$this->Message->error(__('Data validation error'), [
+				'code' => '400',
+				'body' => ['Group' => $this->Group->validationErrors],
+			]);
 			return;
 		}
 

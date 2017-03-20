@@ -204,9 +204,6 @@ class GroupsControllerAddTest extends ControllerTestCase {
 			],
 		];
 
-		// We expect an exception.
-		//$this->setExpectedException('BadRequestException', 'A group manager must be provided');
-
 		try {
 			// Test action.
 			$this->testAction(
@@ -295,5 +292,57 @@ class GroupsControllerAddTest extends ControllerTestCase {
 				$this->assertEquals($groupUser['GroupUser']['is_admin'], '1');
 			}
 		}
+	}
+
+/**
+ * Test adding a group with a name that already exists.
+ *
+ * Assert that group creation returns an exception, with the validation errors.
+ */
+	public function testAddGroupNameAlreadyExist() {
+		// Test with admin user.
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		$group = $this->Group->find('first', [
+			'conditions' => [
+				'deleted' => false
+			]
+		]);
+
+
+		$groupName = $group['Group']['name'];
+		$postData = [
+			'Group' => [
+				'name' => $groupName,
+			],
+			'GroupUsers' => [
+				[
+					'GroupUser' => [
+						'user_id' => Common::uuid('user.id.ada'),
+						'is_admin' => 1,
+					],
+				],
+				[
+					'GroupUser' => [
+						'user_id' => Common::uuid('user.id.user'),
+					],
+				],
+			],
+		];
+
+		// We expect an exception.
+		$this->setExpectedException('BadRequestException', 'Data validation error');
+
+		$result = $this->testAction(
+			'/groups.json',
+			array(
+				'data' => $postData,
+				'method' => 'post',
+				'return' => 'contents'
+			)
+		);
+
+		throw new Exception(print_r($result, true));
 	}
 }

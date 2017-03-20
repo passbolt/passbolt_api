@@ -216,7 +216,7 @@ var Permissions = passbolt.component.Permissions = mad.Component.extend('passbol
 		this.options.acoInstance = obj;
 		this.options.changes = {};
 
-		// change the state of the component to loading
+		// change the state of the component to loading.
 		this.setState('loading');
 
 		// get permissions for the given resource

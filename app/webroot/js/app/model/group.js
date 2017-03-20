@@ -26,7 +26,6 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 	attributes: {
 		id: 'string',
 		name: 'string',
-		is_admin: 'string',
 		created: 'string',
 		modified: 'string'
 	},
