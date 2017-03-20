@@ -99,7 +99,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                 new mad.model.Action({
                     id: uuid(),
                     label: __('New user'),
-                    cssClasses: [],
+                    cssClasses: ['create-user'],
                     action: function () {
                         mad.bus.trigger('request_user_creation');
                     }
@@ -107,7 +107,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                 new mad.model.Action({
                     id: uuid(),
                     label: __('New group'),
-                    cssClasses: [],
+                    cssClasses: ['create-group'],
                     action: function () {
                         mad.bus.trigger('request_group_creation');
                     }
