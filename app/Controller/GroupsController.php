@@ -100,7 +100,7 @@ class GroupsController extends AppController {
 		// Validate group users.
 		$groupManagers = Hash::extract($postData['GroupUsers'], '{n}.GroupUser.is_admin');
 		if (!in_array('1', $groupManagers)) {
-			$this->Message->error(__('A group manager must be provided'), ['code' => '404']);
+			$this->Message->error(__('A group manager must be provided'), ['code' => '400']);
 			return;
 		}
 
