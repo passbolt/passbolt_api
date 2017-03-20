@@ -253,7 +253,7 @@ var App = passbolt.component.App = mad.Component.extend('passbolt.component.App'
 	 */
 	stateReady: function (go) {
 		// Select the password workspace
-		mad.bus.trigger('request_workspace', 'people');
+		mad.bus.trigger('request_workspace', 'password');
 		// When the application is ready, remove the launching screen.
 		$('html').removeClass('launching');
 	}
