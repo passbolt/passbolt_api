@@ -95,12 +95,14 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
 		// Create user / group capability is only available to admin user.
 		if (role == 'admin') {
+            var self = this;
             var createButtonMenuItems = [
                 new mad.model.Action({
                     id: uuid(),
                     label: __('New user'),
                     cssClasses: ['create-user'],
                     action: function () {
+                        self.options.createButton.view.close();
                         mad.bus.trigger('request_user_creation');
                     }
                 }),
@@ -109,6 +111,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                     label: __('New group'),
                     cssClasses: ['create-group'],
                     action: function () {
+                        self.options.createButton.view.close();
                         mad.bus.trigger('request_group_creation');
                     }
                 }),
@@ -260,7 +263,8 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
         // Get the dialog
         var dialog = new mad.component.Dialog(null, {
-            label: __('Create group')
+            label: __('Create group'),
+            cssClasses: ['create-group-dialog','dialog-wrapper']
         }).start();
 
         // share-tab is not completely semantically correct,
@@ -287,8 +291,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      */
     '{mad.bus.element} request_group_edition': function (el, ev, group) {
         // get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Edit a Group')})
-            .start();
+        var dialog = new mad.component.Dialog(null, {
+            label: __('Edit group'),
+            cssClasses: ['edit-group-dialog','dialog-wrapper']
+        }).start();
 
         // attach the component to the dialog
         var form = dialog.add(passbolt.form.group.Create, {

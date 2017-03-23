@@ -43,15 +43,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         this.formGroup = new passbolt.form.group.Create($('#js_group_edit_form'), {
             data: this.group,
-            callbacks : {
-                // submit: function (data) {
-                //     var instance = new passbolt.model.Group(
-                //         data['passbolt.model.Group']
-                //     )
-                //         .save();
-                //     dialog.remove();
-                // }
-            }
+            callbacks : {}
         });
         this.formGroup.load(this.group);
         this.formGroup.start();
