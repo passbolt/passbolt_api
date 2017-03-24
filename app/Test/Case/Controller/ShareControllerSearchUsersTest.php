@@ -175,8 +175,7 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 	// Test shouldn't return deleted groups.
 	public function testSearchUsersExcludeDeletedGroups() {
 		$this->Group->id = Common::uuid('group.id.marketing');
-		$fields = $this->Group->getFindFields('Group::save', User::get('Role.name'));
-		$this->Group->save(['deleted' => 1], false, $fields);
+		$this->Group->save(['deleted' => 1], false);
 
 		$id = Common::uuid('resource.id.fsfe');
 		$getOptions = array(
@@ -198,8 +197,7 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->User->save(['role_id' => Common::uuid('role.id.admin')], false, ['role_id']);
 
 		$this->Group->id = Common::uuid('group.id.marketing');
-		$fields = $this->Group->getFindFields('Group::save', User::get('Role.name'));
-		$this->Group->save(['deleted' => 1], false, $fields);
+		$this->Group->save(['deleted' => 1], false);
 
 		$id = Common::uuid('resource.id.fsfe');
 		$getOptions = array(
