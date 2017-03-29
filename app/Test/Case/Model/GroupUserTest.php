@@ -106,13 +106,165 @@ class GroupUserTest extends CakeTestCase {
 	 * @return void
 	 */
 	public function testDuplicatesValidation() {
-		$cr = $this->GroupUser->findById('1');
+		$cr = $this->GroupUser->find('first');
 		$cr['GroupUser']['id'] = '';
 		// test duplicates
 		$this->GroupUser->create();
 		$this->GroupUser->set($cr);
 		$validation = $this->GroupUser->validates(array('fieldList' => array('group_id', 'user_id')));
 		$this->assertEquals($validation, false, print_r($this->GroupUser->validationErrors, true));
+	}
+
+	/**
+	 * Test with deleted user
+	 * @return void
+	 */
+	public function testDeletedUserValidation() {
+		// Fetch a user that is deleted, but active.
+		$u = $this->GroupUser->User->find('first', ['conditions' => ['User.deleted' => true, 'User.active' => true]]);
+		// Fetch a group that is not deleted.
+		$g = $this->GroupUser->Group->find('first', ['conditions' => ['Group.deleted' => false]]);
+
+		$this->assertTrue(!empty($u));
+		$this->assertTrue(!empty($g));
+
+		$this->GroupUser->create();
+		$this->GroupUser->set([
+			'group_id' => $u['User']['id'],
+			'user_id' => $g['Group']['id'],
+		]);
+		$validation = $this->GroupUser->validates(array('fieldList' => array('group_id', 'user_id')));
+		$this->assertEquals($validation, false, print_r($this->GroupUser->validationErrors, true));
+	}
+
+	/**
+	 * Test with non active user
+	 * @return void
+	 */
+	public function testNonActiveUserValidation() {
+		// Fetch a user that is not deleted, but not active.
+		$u = $this->GroupUser->User->find('first', ['conditions' => ['User.active' => false, 'User.deleted' => false]]);
+		// Fetch a group that is not deleted.
+		$g = $this->GroupUser->Group->find('first', ['conditions' => ['Group.deleted' => false]]);
+
+		$this->assertTrue(!empty($u));
+		$this->assertTrue(!empty($g));
+
+		$this->GroupUser->create();
+		$this->GroupUser->set([
+			'group_id' => $u['User']['id'],
+			'user_id' => $g['Group']['id'],
+		]);
+		$validation = $this->GroupUser->validates(array('fieldList' => array('group_id', 'user_id')));
+		$this->assertEquals($validation, false, print_r($this->GroupUser->validationErrors, true));
+	}
+
+	/**
+	 * Test with deleted group
+	 * @return void
+	 */
+	public function testDeletedGroupValidation() {
+		// Fetch a user that is active and not deleted.
+		$u = $this->GroupUser->User->find('first', ['conditions' => ['User.active' => true, 'User.deleted' => false]]);
+		// Fetch a group that is deleted.
+		$g = $this->GroupUser->Group->find('first', ['conditions' => ['Group.deleted' => true]]);
+
+		$this->assertTrue(!empty($u));
+		$this->assertTrue(!empty($g));
+
+		$this->GroupUser->create();
+		$this->GroupUser->set([
+			'group_id' => $u['User']['id'],
+			'user_id' => $g['Group']['id'],
+		]);
+		$validation = $this->GroupUser->validates(array('fieldList' => array('group_id', 'user_id')));
+		$this->assertEquals($validation, false, print_r($this->GroupUser->validationErrors, true));
+	}
+
+	/**
+	 * Test bulk update for an isolated delete operation.
+	 */
+	public function testBulkUpdateDelete() {
+		$gu = $this->GroupUser->find('first');
+		$groupUsers = [
+			[
+				'GroupUser' => [
+					'id' => $gu['GroupUser']['id'],
+					'delete' => 1
+				]
+			]
+		];
+
+		$res = $this->GroupUser->bulkUpdate($gu['GroupUser']['group_id'], $groupUsers);
+		$this->assertEquals($res['alterations'], 1);
+		$this->assertEquals(count($res['deleted']), 1);
+		$this->assertEquals($res['deleted'][0]['GroupUser']['id'], $groupUsers[0]['GroupUser']['id']);
+
+		// Make sure that the groupUser has been deleted.
+		$gu = $this->GroupUser->findById($groupUsers[0]['GroupUser']['id']);
+		$this->assertEmpty($gu, 'The group user should be deleted in the database');
+	}
+
+	/**
+	 * Test bulk update for an isolated update operation.
+	 */
+	public function testBulkUpdateUpdate() {
+		$gu = $this->GroupUser->find('first', [
+			'conditions' => ['is_admin' => 0]
+		]);
+		$groupUsers = [
+			[
+				'GroupUser' => [
+					'id' => $gu['GroupUser']['id'],
+					'is_admin' => 1
+				]
+			]
+		];
+
+		$res = $this->GroupUser->bulkUpdate($gu['GroupUser']['group_id'], $groupUsers);
+		$this->assertEquals($res['alterations'], 1);
+		$this->assertEquals(count($res['updated']), 1);
+		$this->assertEquals($res['updated'][0]['GroupUser']['id'], $groupUsers[0]['GroupUser']['id']);
+
+		// Make sure that the groupUser has been deleted.
+		$gu = $this->GroupUser->findById($groupUsers[0]['GroupUser']['id']);
+		$this->assertEquals($gu['GroupUser']['is_admin'], $groupUsers[0]['GroupUser']['is_admin'], 'The group user should have been updated to admin = 1');
+	}
+
+	/**
+	 * Test bulk update for an isolated create operation.
+	 */
+	public function testBulkUpdateCreate() {
+		$group = $this->GroupUser->Group->findByName('Sales');
+		$user = $this->GroupUser->User->findByUsername('thelma@passbolt.com');
+		$groupUsers = [
+			[
+				'GroupUser' => [
+					'user_id' => $user['User']['id'],
+					'is_admin' => 1
+				]
+			]
+		];
+
+		$res = $this->GroupUser->bulkUpdate($group['Group']['id'], $groupUsers);
+		$this->assertEquals($res['alterations'], 1);
+		$this->assertEquals(count($res['created']), 1);
+
+		// Make sure that the groupUser has been deleted.
+		$gu = $this->GroupUser->find(
+			'first',
+			['conditions' =>
+				[
+					'group_id' => $group['Group']['id'],
+					'user_id' => $user['User']['id'],
+				]
+			]);
+		$this->assertNotEmpty($gu, 'The group user should have been created');
+		$this->assertEquals($gu['GroupUser']['is_admin'], $groupUsers[0]['GroupUser']['is_admin'], 'The group user should have been created with admin = 1');
+	}
+
+	public function testBulkUpdate() {
+
 	}
 
 }

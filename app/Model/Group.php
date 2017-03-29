@@ -54,6 +54,7 @@ class Group extends AppModel {
 				],
 				'unique' => [
 					'shared' => false,
+					'on' => 'create',
 					'rule' => ['checkGroupNameIsUnique', null],
 					'message' => __('The group name provided is already used by another group'),
 				],
@@ -177,6 +178,15 @@ class Group extends AppModel {
 			case 'Group::add':
 				$fields = ['fields' => ['name', 'created_by', 'modified_by']];
 				break;
+			case 'Group::edit':
+				$fields = [
+					'fields' => [
+						'name',
+						'modified',
+						'modified_by'
+					]
+				];
+				break;
 			default:
 				$fields = ['fields' => []];
 				break;
@@ -253,6 +263,7 @@ class Group extends AppModel {
 		}
 		return $groups;
 	}
+
 
 /**
  * Check that the group name is unique.

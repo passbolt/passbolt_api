@@ -190,4 +190,102 @@ class GroupsController extends AppController {
 		$this->set('data', $group);
 		$this->Message->success(__("The group has been added successfully."));
 	}
+
+
+	/**
+	 *
+	 * @param null $id
+	 * @return mixed
+	 */
+	public function edit($id = null) {
+		// Check if the id is provided
+		if (!isset($id)) {
+			return $this->Message->error(__('The group id is missing'), ['code' => 400]);
+		}
+
+		// Check if the id is valid
+		if (!Common::isUuid($id)) {
+			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
+		}
+
+		// Check if the group exists.
+		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
+		$group = $this->Group->find('first', $o);
+		if (!$group) {
+			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
+		}
+
+		// Only admin users or group managers can update groups.
+		// Get role for current group.
+		$groupUser = $this->Group->GroupUser->find('first', [
+			'conditions' => [
+				'user_id' => User::get('id'),
+				'group_id' => $id,
+			]
+		]);
+
+		$isGroupAdmin = !empty($groupUser) && $groupUser['GroupUser']['is_admin'] == 1;
+		$isAdmin = User::get('Role.name') == Role::ADMIN;
+
+		// Check that the user is either an administrator, or a group administrator.
+		if (!$isAdmin && !$isGroupAdmin) {
+			return $this->Message->error(__('You are not authorized to access to this group'), ['code' => '401']);
+		}
+
+		$this->Group->begin();
+
+		// If name if provided, and user is an admin, process name change.
+		$groupData = $this->request->data;
+
+		$isNameProvided = !empty(Hash::extract($groupData, 'Group.name')) ? true : false;
+		// Process request.
+		if ($isAdmin == true && $isNameProvided == true) {
+			$this->Group->id = $id;
+			$data = [
+				'name' => $groupData['Group']['name'],
+			];
+			// Update name.
+			$this->Group->set($data);
+
+			// Validate data.
+			$validates = $this->Group->validates(['fieldList' => ['name']]);
+			if( ! $validates) {
+				return $this->Message->error(__('The group name could not be validated'), ['body' => $this->Group->validationErrors]);
+			}
+
+			// Get the fields for the edit operation.
+			$fields = $this->Group->getFindFields('Group::edit', User::get('Role.name'));
+
+			// Save group.
+			$groupSaved = $this->Group->save($data, false, $fields['fields']);
+			if ( ! $groupSaved) {
+				$this->Group->rollback();
+				return $this->Message->error(__('The group name could not be saved'));
+			}
+		}
+
+		// Everything ok. Commit transaction.
+		$this->Group->commit();
+
+		// Return results.
+
+		// Get find options.
+		$o = $this->Group->getFindOptions(
+			'Group::view',
+			User::get('Role.name'),
+			[
+				'contain' => ['user'],
+				'Group.id' => $id
+			]
+		);
+
+		// Get group.
+		$group = $this->Group->find('first', $o);
+		// Tidy up.
+		$group = $this->__tidyOutput($group);
+
+		// Success response.
+		$this->set('data', $group);
+		$this->Message->success(__("The group has been updated successfully."));
+	}
 }
