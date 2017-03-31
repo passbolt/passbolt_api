@@ -263,8 +263,122 @@ class GroupUserTest extends CakeTestCase {
 		$this->assertEquals($gu['GroupUser']['is_admin'], $groupUsers[0]['GroupUser']['is_admin'], 'The group user should have been created with admin = 1');
 	}
 
-	public function testBulkUpdate() {
+	/**
+	 * Test a bulk update with 3 alterations, one of each type.
+	 */
+	public function testBulkUpdateBulk() {
+		$groupId = Common::uuid('group.id.freelancer');
 
+		$groupUserAdmin = $this->GroupUser->find('first', [
+			'conditions' => [
+				'group_id' => $groupId,
+				'is_admin' => true
+			]
+		]);
+		$groupUserNonAdmin = $this->GroupUser->find('first', [
+			'conditions' => [
+				'group_id' => $groupId,
+				'is_admin' => false
+			]
+		]);
+
+		// Group users to alter.
+		$groupUsersData = [
+			// The one we update.
+			[
+				'GroupUser' => [
+					'id' => $groupUserAdmin['GroupUser']['id'],
+					'is_admin' => 0
+				],
+			],
+			// The one we delete.
+			[
+				'GroupUser' => [
+					'id' => $groupUserNonAdmin['GroupUser']['id'],
+					'delete' => 1
+				],
+			],
+			// The one we create.
+			[
+				'GroupUser' => [
+					'user_id' => Common::uuid('user.id.ada'),
+				],
+			]
+		];
+
+		$res = $this->GroupUser->bulkUpdate($groupId, $groupUsersData);
+		$this->assertEquals($res['alterations'], 3);
+		$this->assertEquals(count($res['created']), 1);
+		$this->assertEquals(count($res['updated']), 1);
+		$this->assertEquals(count($res['deleted']), 1);
 	}
 
+
+	/**
+	 * Test a bulk update with trying to update the sole admin of a group to non admin.
+	 *
+	 * Expect an exception.
+	 */
+	public function testBulkUpdateCantDeleteAllAdminsOnUpdateSingleAdmin() {
+		// Group users to alter.
+		$groupUsersData = [
+			// The one we update.
+			[
+				'GroupUser' => [
+					'id' => Common::uuid('group_user.id.accounting-frances'),
+					'is_admin' => 0
+				],
+			],
+		];
+		$this->setExpectedException('Exception', 'Unauthorized operation. It is not possible to remove all the managers of a group');
+		$this->GroupUser->bulkUpdate(Common::uuid('group.id.accounting'), $groupUsersData);
+	}
+
+	/**
+	 * Test a bulk update with trying to delete the sole admin of a group.
+	 *
+	 * Expect an exception.
+	 */
+	public function testBulkUpdateCantDeleteAllAdminsOnDeleteSingleAdmin() {
+		// Group users to alter.
+		$groupUsersData = [
+			// The one we delete.
+			[
+				'GroupUser' => [
+					'id' => Common::uuid('group_user.id.accounting-frances'),
+					'delete' => 1
+				],
+			],
+		];
+		$this->setExpectedException('Exception', 'Unauthorized operation. It is not possible to remove all the managers of a group');
+		$this->GroupUser->bulkUpdate(Common::uuid('group.id.accounting'), $groupUsersData);
+	}
+
+	/**
+	 * Test a bulk update with trying to update the 2 sole admins:
+	 * - one is updated to a non admin
+	 * - the other one is deleted
+	 *
+	 * Expect an exception.
+	 */
+	public function testBulkUpdateCantDeleteAllAdminsOnUpdateDeleteMultipleAdmins() {
+		// Group users to alter.
+		$groupUsersData = [
+			// The one we update.
+			[
+				'GroupUser' => [
+					'id' => Common::uuid('group_user.id.human_resource-ping'),
+					'is_admin' => 0
+				],
+			],
+			[
+				'GroupUser' => [
+					'id' => Common::uuid('group_user.id.human_resource-thelma'),
+					'delete' => 1
+				],
+			],
+		];
+		$this->setExpectedException('Exception', 'Unauthorized operation. It is not possible to remove all the managers of a group');
+		$this->GroupUser->bulkUpdate(Common::uuid('group.id.accounting'), $groupUsersData);
+	}
 }

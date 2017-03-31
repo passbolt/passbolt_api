@@ -264,6 +264,30 @@ class GroupsController extends AppController {
 			}
 		}
 
+		// Edit Group admins if provided.
+		$groupUsers = Hash::extract($groupData, 'Group.GroupUsers');
+		$isGroupUsersProvided = !empty($groupUsers) ? true : false;
+		$changes = [];
+		if ($isGroupUsersProvided) {
+			try {
+				$changes = $this->GroupUser->bulkUpdate($id, $groupUsers);
+			}
+			catch (Exception $e) {
+				$this->Group->rollback();
+				return $this->Message->error($e->getMessage());
+			}
+		}
+
+		// Save secrets.
+		// Process all deleted.
+		// 1) Get all secrets accessible by the group for which the user doesn't have any special direct permission.
+		// 2) Delete all the secrets for which the user is not supposed to access.
+
+		// Process all added secrets.
+		// 1) validate that secrets are provided for all added users, for all resources accessible by the group.
+		// 2) save secrets for each user.
+
+
 		// Everything ok. Commit transaction.
 		$this->Group->commit();
 

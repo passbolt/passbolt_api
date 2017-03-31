@@ -241,6 +241,38 @@ class GroupUser extends AppModel {
 			'deleted' => [],
 		];
 
+		// Get list of current group admins.
+		$groupAdmins = $this->find('all', [
+			'conditions' => [
+				'group_id' => $groupId,
+				'is_admin' => true
+			]
+		]);
+		$groupAdminIds = Hash::extract($groupAdmins, '{n}.GroupUser.user_id');
+
+		// Validation: make sure that no operation will result as removing all the group admins.
+		foreach($groupUsers as $groupUser) {
+			$deleteCase = isset($groupUser['GroupUser']['id']) && isset($groupUser['GroupUser']['delete']);
+			$updateCase = isset($groupUser['GroupUser']['id']) && isset($groupUser['GroupUser']['is_admin']);
+
+			if ($deleteCase || $updateCase) {
+				// Get associated user_id.
+				$ids = Hash::extract($groupAdmins, '{n}.GroupUser.id');
+				$groupUserIndex = array_search($groupUser['GroupUser']['id'], $ids);
+				$userId = $groupAdmins[$groupUserIndex]['GroupUser']['user_id'];
+
+				$deleteRemoveAdmin = $deleteCase && in_array($userId, $groupAdminIds);
+				$updateRemoveAdmin = $updateCase && $groupUser['GroupUser']['is_admin'] == 0 && in_array($userId, $groupAdminIds);
+				// If the operation is attempting to remove the last group admin.
+				if (($deleteRemoveAdmin || $updateRemoveAdmin) && sizeof($groupAdminIds) == 1) {
+					throw new Exception(__('Unauthorized operation. It is not possible to remove all the managers of a group'));
+				}
+				// Once an admin removal operation is processed, remove it from list of admins and continue.
+				unset($groupAdminIds[array_search($userId, $groupAdminIds)]);
+			}
+		}
+
+		// Process changes.
 		foreach($groupUsers as $groupUser) {
 			$deleteCase = isset($groupUser['GroupUser']['id']) && isset($groupUser['GroupUser']['delete']);
 			$updateCase = isset($groupUser['GroupUser']['id']) && isset($groupUser['GroupUser']['is_admin']);
