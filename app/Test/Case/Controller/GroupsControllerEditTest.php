@@ -40,6 +40,25 @@ class GroupsControllerEditTest extends ControllerTestCase {
 		'app.permission_view',
 	);
 
+/**
+ * It consumes too many resources to encrypt a text x times
+ * so we'll use the same message everywhere
+ * @var string
+ */
+	public $dummyPgpMessage = '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----';
+
 
 	/**
 	 * Setup.
@@ -157,8 +176,72 @@ class GroupsControllerEditTest extends ControllerTestCase {
 		$this->assertEquals($json['body']['Group']['name'], $newName, "The name should have been updated, but the response returned {$json['body']['Group']['name']}");
 	}
 
-	public function testUpdateGroupUsersAsAdmin() {
+	private function __buildGroupUsers($userIds, $adminUserIds = []) {
+		$groupUsers = [];
+		foreach ($userIds as $userId) {
+			$groupUsers[] = [
+				'GroupUser' => [
+					'user_id' => $userId,
+					'is_admin' => in_array($userId, $adminUserIds) ? '1' : '0'
+				]
+			];
+		}
 
+		return $groupUsers;
+	}
+
+	private function __buildSecrets($userIds) {
+		$secrets = [];
+		foreach ($userIds as $userId) {
+			$secrets[] = [
+				'Secret' => [
+					'user_id' => $userId,
+					'data' => $this->dummyPgpMessage,
+				]
+			];
+		}
+
+		return $secrets;
+	}
+
+
+/**
+ * Test updating a group group users as an admin.
+ *
+ * Assert that no changes are done.
+ * The admin is not allowed to change the group users unless he is a group manager himself.
+ */
+	public function testUpdateGroupUsersAsAdmin() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// Group to edit.
+		$groupId = Common::uuid('group.id.accounting');
+
+		// List of users to add.
+		$userIdsToAdd = [
+			Common::uuid('user.id.irene')
+		];
+
+		// Data to send in the query.
+		$data = [
+			'GroupUsers' => $this->__buildGroupUsers($userIdsToAdd),
+			'Secrets' => $this->__buildSecrets($userIdsToAdd),
+		];
+
+		$res = $this->testAction(
+			"/groups/$groupId.json",
+			[
+				'method' => 'put',
+				'data' => $data,
+				'return' => 'contents'
+			]
+		);
+		$json = json_decode($res, true);
+		$this->assertEquals($json['body']['changes']['count'], 0);
+		$this->assertEmpty($json['body']['changes']['updated'], 0);
+		$this->assertEmpty($json['body']['changes']['created'], 0);
+		$this->assertEmpty($json['body']['changes']['deleted'], 0);
 	}
 }
 

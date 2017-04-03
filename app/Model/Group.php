@@ -7,6 +7,7 @@
  */
 App::uses('User', 'Model');
 App::uses('GroupUser', 'Model');
+App::uses('GroupResourcePermission', 'Model');
 
 class Group extends AppModel {
 
@@ -21,7 +22,8 @@ class Group extends AppModel {
 	public $hasMany = [
 		'GroupUser' => [
 			'className' => 'GroupUser',
-		]
+		],
+		'GroupResourcePermission'
 	];
 
 	public $hasAndBelongsToMany = [

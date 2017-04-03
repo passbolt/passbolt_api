@@ -14,7 +14,7 @@ App::uses('ResourcesController', 'Controller');
 App::uses('Resource', 'Model');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
- App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
 
 // Uses Gpg Utility.
 if (!class_exists('\Passbolt\Gpg')) {

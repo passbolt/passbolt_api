@@ -267,8 +267,9 @@ class GroupsController extends AppController {
 		// Edit Group admins if provided.
 		$groupUsers = Hash::extract($groupData, 'Group.GroupUsers');
 		$isGroupUsersProvided = !empty($groupUsers) ? true : false;
+
 		$changes = [];
-		if ($isGroupUsersProvided) {
+		if ($isGroupUsersProvided && $isGroupAdmin) {
 			try {
 				$changes = $this->GroupUser->bulkUpdate($id, $groupUsers);
 			}
@@ -276,17 +277,21 @@ class GroupsController extends AppController {
 				$this->Group->rollback();
 				return $this->Message->error($e->getMessage());
 			}
+
+			// Process all added secrets.
+			try {
+				$this->__processAddedSecrets($id, $changes['added'], $groupData['Secrets']);
+			}
+			catch (Exception $e) {
+				$this->Group->rollback();
+				return $this->Message->error($e->getMessage());
+			}
+
+			// Save secrets.
+			// Process all deleted.
+			// 1) Get all secrets accessible by the group for which the user doesn't have any special direct permission.
+			// 2) Delete all the secrets for which the user is not supposed to access.
 		}
-
-		// Save secrets.
-		// Process all deleted.
-		// 1) Get all secrets accessible by the group for which the user doesn't have any special direct permission.
-		// 2) Delete all the secrets for which the user is not supposed to access.
-
-		// Process all added secrets.
-		// 1) validate that secrets are provided for all added users, for all resources accessible by the group.
-		// 2) save secrets for each user.
-
 
 		// Everything ok. Commit transaction.
 		$this->Group->commit();
@@ -308,8 +313,86 @@ class GroupsController extends AppController {
 		// Tidy up.
 		$group = $this->__tidyOutput($group);
 
+		// If changes is empty, set default values.
+		if (empty($changes)){
+			$changes = [
+				'changes' => [
+					'count' => 0,
+					'updated' => [],
+					'created' => [],
+					'deleted' => [],
+				],
+			];
+		}
+
+		// Merge changes with group result.
+		$res = array_merge($group, $changes);
+
 		// Success response.
-		$this->set('data', $group);
+		$this->set('data', $res);
 		$this->Message->success(__("The group has been updated successfully."));
+	}
+
+/**
+ * Process added secrets while updating a group.
+ *
+ * This function makes sure that all necessary secrets are provided for all
+ * the added users, and resources that the group can access.
+ *
+ * @param uuid $groupId
+ * @param array $addedUsers
+ * @param array $secrets
+ * @throws Exception
+ */
+	protected function __processAddedSecrets($groupId, $addedUsers, $secrets) {
+		// 1) validate that secrets are provided for all added users.
+		// 2) save secrets for each user.
+
+		// Add secrets for added users.
+		if (count($addedUsers) != count($secrets)) {
+			throw new Exception(__("The number of secrets provided don't match the %s new users who have now access to the resources",
+				count($addedUsers)));
+		}
+
+		// Get the list of resources accessible by the group.
+		$resources = $this->Group->GroupResourcePermission->findAuthorizedResources($groupId);
+
+		foreach ($addedUsers as $userId) {
+			foreach($resources as $resource) {
+				// TODO : add exception for secrets that are already encrypted for the given user.
+				$secretProvided = false;
+				foreach ($secrets as $secret) {
+					$secretProvided = $secret['Secret']['user_id'] == $userId
+						&& $secret['Secret']['resource_id'] == $resource['Resource']['id'];
+					if ($secretProvided) {
+						break;
+					}
+				}
+				// If a user doesn't have its secret provided, we throw an exception.
+				if (!$secretProvided) {
+					throw new Exception(__("The secret for user id %s and resource id %s is not provided", $userId, $resource['Resource']['id']));
+				}
+
+				// Save secret.
+				$data = [
+					'user_id' => $userId,
+					'resource_id' => $resource['Resource']['id'],
+					'data' => $secret['Secret']['data'],
+				];
+				// Validates data.
+				$this->Secret->set($data);
+				$v = $this->Secret->validates();
+				if (!$v) {
+					throw new Exception(__("Invalid secret provided for user %s and resource %s", $userId, $resource['Resource']['id']));
+				}
+
+				// Save secret.
+				$this->Secret->create();
+				$s = $this->Secret->save($data);
+				if (!$s) {
+					throw new Exception(__("Could not save secret for user %s and resource %s", $userId, $resource['Resource']['id']));
+				}
+			}
+		}
 	}
 }
