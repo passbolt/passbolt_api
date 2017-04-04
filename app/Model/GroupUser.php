@@ -96,16 +96,28 @@ class GroupUser extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'view':
-			case 'add':
 			case 'edit':
+			case 'Group::view':
 				$fields = [
 					'fields' => [
 						'id',
 						'group_id',
-						'user_id'
+						'user_id',
+						'is_admin',
+					]
+				];
+				break;
+			case 'add':
+			case 'Group::add':
+				$fields = [
+					'fields' => [
+						'group_id',
+						'user_id',
+						'is_admin',
+						'created_by',
 					]
 				];
 				break;

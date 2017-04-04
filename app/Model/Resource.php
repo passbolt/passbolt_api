@@ -288,7 +288,7 @@ class Resource extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'exists':
 				$fields = [
@@ -405,7 +405,7 @@ class Resource extends AppModel {
 		// Validate the secrets provided.
 		// Make sure there is a secret per user with whom it's shared, nothing more, nothing less.
 		// Get list of current permissions for the given ACO.
-		$permsUsers = $this->getAuthorizedUsers($resourceId);
+		$permsUsers = $this->findAuthorizedUsers($resourceId);
 		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
 
 		// Get the list of users corresponding to the secrets, without duplicates.

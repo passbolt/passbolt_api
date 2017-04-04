@@ -70,7 +70,7 @@ var Permissions = passbolt.component.sidebarSection.Permissions = mad.Component.
 						if (obj.aro == 'User') {
 							return obj.User.Profile.avatarPath('small');
 						} else {
-							return 'img/group_default.png';
+							return 'img/avatar/group_default.png';
 						}
 					}
 				},

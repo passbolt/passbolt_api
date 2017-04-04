@@ -13,7 +13,8 @@ var Tree = mad.view.component.Tree = mad.View.extend('mad.view.component.Tree', 
      * @return {jQuery}
      */
     getItemElement: function (item) {
-        return $('#' + item.id, this.element);
+        var control = this.getController();
+        return $('#' + control.options.prefixItemId + item.id, this.element);
     },
 
     /**
@@ -41,6 +42,9 @@ var Tree = mad.view.component.Tree = mad.View.extend('mad.view.component.Tree', 
 
         // Map the given item, and set view's data.
         var mappedItem = control.getMap().mapObject(item);
+        if (control.options.prefixItemId != '' && control.options.prefixItemId != undefined) {
+            mappedItem.id = control.options.prefixItemId +  mappedItem.id;
+        }
         control.setViewData('mappedItem', mappedItem);
 
         // Does the item has children ?

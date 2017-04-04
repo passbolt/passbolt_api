@@ -25,7 +25,7 @@ class Permission extends AppModel {
 			'foreignKey' => 'type'
 		],
 		'Resource' => [
-			'foreignKey' => 'aco_foreign_key'
+			'foreignKey' => 'aco_foreign_key',
 		],
 		'User' => [
 			'foreignKey' => 'aro_foreign_key',
@@ -266,7 +266,7 @@ class Permission extends AppModel {
 	 * @return array $fields
 	 * @access public
 	 */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		$fields = ['fields' => []];
 
 		switch ($case) {
@@ -316,6 +316,14 @@ class Permission extends AppModel {
 										'Avatar.modified'
 									]
 								],
+							]
+						],
+						'Group' => [
+							'fields' => [
+								'id',
+								'name',
+								'created',
+								'modified'
 							]
 						],
 						'Resource' => [

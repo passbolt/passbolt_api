@@ -23,7 +23,7 @@
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
 	Router::mapResources('comments');
-//	Router::mapResources('groups');
+	Router::mapResources('groups');
 //	Router::mapResources('groupsUsers');
 
 /**
@@ -82,6 +82,9 @@
 /**
  * Custom route for groups controller
  */
+Router::connect('/groups', array('controller' => 'groups', 'action' => 'index', '[method]' => 'GET'));
+Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index', '[method]' => 'GET'));
+Router::connect('/groups', array('controller' => 'groups', 'action' => 'create', '[method]' => 'POST'));
 //	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
 //	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
 //	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
@@ -144,7 +147,8 @@
 /**
  * Custom route for share
  */
-	Router::connect('/share/:resource/:id', array('controller' => 'share', 'action' => 'update', '[method]' => 'PUT'), array('pass' => array('resource', 'id')));
+	Router::connect('/share/:model/:id', array('controller' => 'share', 'action' => 'update', '[method]' => 'PUT'), array('pass' => array('model', 'id')));
+	Router::connect('/share/simulate/:model/:id', array('controller' => 'share', 'action' => 'simulate', '[method]' => 'POST'), array('pass' => array('model', 'id')));
 	Router::connect('/share/search-users/:model/:id', array('controller' => 'share', 'action' => 'searchUsers', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 
 /**

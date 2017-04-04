@@ -145,7 +145,7 @@ class CommentsController extends AppController {
 
 		// Handle email notifications.
 		$AcoModel = Common::getModel(ucfirst($foreignModelName));
-		$authorizedUsers = $AcoModel->getAuthorizedUsers($foreignId);
+		$authorizedUsers = $AcoModel->findAuthorizedUsers($foreignId);
 
 		// Extract user ids from array.
 		$authorizedUsersIds = Hash::extract($authorizedUsers, '{n}.User.id');

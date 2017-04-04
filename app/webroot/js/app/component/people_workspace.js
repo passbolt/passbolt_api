@@ -4,18 +4,19 @@ import 'mad/component/confirm';
 import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb';
+import 'app/component/groups';
 //import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
+import 'app/component/group_edit';
 import 'app/form/user/create';
-//import 'app/form/group/create'; // @roadmap
 import 'app/model/user';
-//import 'app/model/group'; // @roadmap
 import 'app/model/filter';
 
 import 'app/view/template/people_workspace.ejs!';
 import 'app/view/template/component/create_button.ejs!';
+import 'app/view/template/component/create_button_dropdown.ejs!';
 
 /**
  * @inherits {mad.Component}
@@ -92,20 +93,44 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         );
         secWkMenu.start();
 
-		// Create user capability is only available to admin user
+		// Create user / group capability is only available to admin user.
 		if (role == 'admin') {
-			// Instantiate the create button controller.
-			this.options.createButton = mad.helper.Component.create(
-				$('.main-action-wrapper'),
-				'last',
-				mad.component.Button, {
-					id: 'js_wsp_create_button',
-					templateBased: true,
-					templateUri: 'app/view/template/component/create_button.ejs',
-					tag: 'a',
-					cssClasses: ['button', 'primary']
-				}
-			).start();
+            var self = this;
+            var createButtonMenuItems = [
+                new mad.model.Action({
+                    id: uuid(),
+                    label: __('New user'),
+                    cssClasses: ['create-user'],
+                    action: function () {
+                        self.options.createButton.view.close();
+                        mad.bus.trigger('request_user_creation');
+                    }
+                }),
+                new mad.model.Action({
+                    id: uuid(),
+                    label: __('New group'),
+                    cssClasses: ['create-group'],
+                    action: function () {
+                        self.options.createButton.view.close();
+                        mad.bus.trigger('request_group_creation');
+                    }
+                }),
+            ];
+
+            // Instantiate the create button component.
+            this.options.createButton = mad.helper.Component.create(
+            	$('.main-action-wrapper'),
+            	'last',
+                mad.component.ButtonDropdown, {
+                    id: 'js_wsp_create_button',
+                    templateBased: true,
+                    templateUri: 'app/view/template/component/create_button_dropdown.ejs',
+                    tag: 'a',
+                    cssClasses: ['button', 'primary'],
+                    items: createButtonMenuItems
+                }
+            ).start();
+
 		}
 
         // Instantiate the password workspace breadcrumb controller
@@ -115,6 +140,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         // Instanciate the users filter controller.
         var userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
         userShortcut.start();
+
+        // Instanciate the users groups controller.
+        var groups = new passbolt.component.Groups('#js_wsp_users_groups', {});
+        groups.start();
 
         // Removed group choosed for #PASSBOLT-787
         //// Instanciate the group chooser controller.
@@ -171,14 +200,14 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
 
-	/**
-	 * Observe when the user wants to create a new user
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{createButton.element} click': function (el, ev) {
-		mad.bus.trigger('request_user_creation');
-	},
+	// /**
+	//  * Observe when the user wants to create a new user
+	//  * @param {HTMLElement} el The element the event occurred on
+	//  * @param {HTMLEvent} ev The event which occurred
+	//  */
+	// '{createButton.element} click': function (el, ev) {
+	// 	mad.bus.trigger('request_user_creation');
+	// },
 
     /**
      * Observe when group is selected
@@ -233,23 +262,26 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         var group = new passbolt.model.Group();
 
         // Get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Create a new Group')})
-            .start();
+        var dialog = new mad.component.Dialog(null, {
+            label: __('Create group'),
+            cssClasses: ['create-group-dialog','dialog-wrapper']
+        }).start();
+
+        // share-tab is not completely semantically correct,
+        // but we consider that adding user to a group is a bit like a share operation.
+        // (and well.. modifying the styleguide for this is a headache. so we have
+        // convinced ourselves that it's a share operation.)
+        // Side note: Remy has full responsibility for this.
+        // $('.dialog-content').addClass('share-tab');
+        //
+        // var topComponent = new mad.Component(
+        //     'cssClasses': []
+        // );
 
         // Attach the component to the dialog.
-        var form = dialog.add(passbolt.form.group.Create, {
-            data: group,
-            callbacks : {
-                submit: function (data) {
-                    var instance = new passbolt.model.Group(
-                        data['passbolt.model.Group']
-                    )
-                        .save();
-                    dialog.remove();
-                }
-            }
+        var groupEdit = dialog.add(passbolt.component.GroupEdit, {
+           // data: group
         });
-        form.load(group);
     },
 
     /**
@@ -259,8 +291,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      */
     '{mad.bus.element} request_group_edition': function (el, ev, group) {
         // get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Edit a Group')})
-            .start();
+        var dialog = new mad.component.Dialog(null, {
+            label: __('Edit group'),
+            cssClasses: ['edit-group-dialog','dialog-wrapper']
+        }).start();
 
         // attach the component to the dialog
         var form = dialog.add(passbolt.form.group.Create, {

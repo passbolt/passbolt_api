@@ -159,7 +159,7 @@ class Profile extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = null, $role = null) {
+	public static function getFindFields($case = null, $role = null, $data = null) {
 		switch ($case) {
 			case 'view':
 				$fields = [

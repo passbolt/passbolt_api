@@ -1,7 +1,7 @@
 <?php
 $config = [
 	'App.version' => [
-		'number' => '1.4.0',
-		'name' => 'Cry to Me'
+		'number' => '1.5.0',
+		'name' => 'TBD'
 	],
 ];

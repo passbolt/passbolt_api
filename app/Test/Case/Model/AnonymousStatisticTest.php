@@ -59,7 +59,7 @@ class AnonymousStatisticTest extends AppTestCase {
 			$stats,
 			[
 				'passwords_count' => 16,
-				'users_count'     => 21,
+				'users_count'     => 25,
 				'logs_count'      => 0,
 				'version'         => Configure::read('App.version.number'),
 			]

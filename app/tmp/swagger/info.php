@@ -7,7 +7,7 @@
  *     host="http://192.168.99.100:8081/var/www/passbolt/app/Console/",
  *     basePath="/",
  *     @SWG\Info(
- *         version="1.3.2",
+ *         version="1.4.0",
  *         title="Passbolt JSON API",
  *         description="",
  *         termsOfService="https://www.passbolt.com/terms/",

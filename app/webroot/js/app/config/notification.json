@@ -54,7 +54,13 @@
             },
             "app_share_update_success": {
               "msg": "The permissions have been updated successfully"
-            }
+            },
+			"app_groups_add_success": {
+				"msg": "The group has been added successfully"
+			},
+			"app_groups_add_error": {
+				"msg": "The group could not be saved"
+			}
 		}
 	}
 }

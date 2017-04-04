@@ -104,7 +104,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$expectedUsersPermissions = array();
 		$expectedGroupsPermissions = array();
 
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/users_resources_permissions.csv', 'resource');
+		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $userPermissions) {
 			// Retrieve the direct users permissions defined for the resource
 			$expectedUsersPermissions[$resourceAlias] = array();
@@ -115,7 +116,8 @@ class PermissionsControllerTest extends ControllerTestCase {
 			}
 		}
 
-		$matrix = PermissionMatrix::importCsv(TESTS . '/Data/groups_resources_permissions.csv', 'resource');
+		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $groupPermissions) {
 			// Retrieve the direct users permissions defined for the resource
 			$expectedGroupsPermissions[$resourceAlias] = [];
@@ -130,6 +132,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			'method' => 'get',
 			'return' => 'contents'
 		);
+		// Loop on each resource.
 		foreach($expectedUsersPermissions as $resourceAlias => $none) {
 			// Login with an authorized user.
 			$userId = Common::uuid('user.id.' . key($expectedUsersPermissions[$resourceAlias]));
@@ -139,11 +142,11 @@ class PermissionsControllerTest extends ControllerTestCase {
 			// Get the resources permissions.
 			$rsId = Common::uuid('resource.id.' . $resourceAlias);
 			$srvResult = json_decode($this->testAction("/permissions/resource/$rsId.json", $getOptions), true);
-
 			// Check that all the permissions are expected.
 			foreach($srvResult['body'] as $perm) {
 				$this->assertTrue(in_array($perm['Permission']['aro_foreign_key'], $expectedUsersPermissions[$resourceAlias]) ||
-					in_array($perm['Permission']['aro_foreign_key'], $expectedGroupsPermissions[$resourceAlias]), "The permission {$perm['Permission']['id']} should be associated to the resource $resourceAlias");
+					in_array($perm['Permission']['aro_foreign_key'], $expectedGroupsPermissions[$resourceAlias]),
+					"The permission {$perm['Permission']['id']} should be associated to the resource $resourceAlias");
 			}
 			$this->assertEqual(count($srvResult['body']),
 				count($expectedUsersPermissions[$resourceAlias]) + count($expectedGroupsPermissions[$resourceAlias]));
