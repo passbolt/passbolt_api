@@ -87,8 +87,7 @@ class InstallShell extends AppShell {
 		$this->out(' /_/    \__,_/____/____/_.___/\____/_/\__/   ');
 		$this->out('');
 		$this->out(' Open source password manager for teams');
-		$this->out(' (c) 2015-present passbolt.com');
-		$this->out('');
+		$this->out(' Install shell');
 		$this->hr();
 	}
 
