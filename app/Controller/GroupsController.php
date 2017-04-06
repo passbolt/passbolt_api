@@ -79,6 +79,48 @@ class GroupsController extends AppController {
 	}
 
 /**
+ * View entry point.
+ *
+ * To view a group.
+ */
+	public function view($id = null) {
+		// Check if the id is provided
+		if (!isset($id)) {
+			return $this->Message->error(__('The group id is missing'), ['code' => 400]);
+		}
+
+		// Check if the id is valid.
+		if (!Common::isUuid($id)) {
+			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
+		}
+
+		// Get find options.
+		$o = $this->Group->getFindOptions(
+			'Group::view',
+			User::get('Role.name'),
+			[
+				'contain' => isset($this->request->params['contain']) ? $this->request->params['contain'] : [],
+				'Group.id' => $id,
+			]
+		);
+
+		// Get all groups.
+		$group = $this->Group->find('first', $o);
+
+		// If group doesn't exist, return 404.
+		if(empty($group)) {
+			return $this->Message->error(__('The group doesn\'t exist'), ['code' => 404]);
+		}
+
+		// If group exists, tidy output.
+		$group = $this->__tidyOutput($group);
+
+		// Send response.
+		$this->set('data', $group);
+		$this->Message->success();
+	}
+
+/**
  * Add entry point.
  *
  * Add a group.
@@ -191,12 +233,14 @@ class GroupsController extends AppController {
 		$this->Message->success(__("The group has been added successfully."));
 	}
 
-
-	/**
-	 *
-	 * @param null $id
-	 * @return mixed
-	 */
+/**
+ * Edit entry point.
+ *
+ * Edit a Group and its GroupUsers.
+ *
+ * @param null $id
+ * @return mixed
+ */
 	public function edit($id = null) {
 		// Check if the id is provided
 		if (!isset($id)) {
@@ -265,26 +309,33 @@ class GroupsController extends AppController {
 		}
 
 		// Edit Group admins if provided.
-		$groupUsers = Hash::extract($groupData, 'Group.GroupUsers');
+		$groupUsers = Hash::extract($groupData, 'GroupUsers');
 		$isGroupUsersProvided = !empty($groupUsers) ? true : false;
 
 		$changes = [];
 		if ($isGroupUsersProvided && $isGroupAdmin) {
 			try {
-				$changes = $this->GroupUser->bulkUpdate($id, $groupUsers);
+				$changes = $this->Group->GroupUser->bulkUpdate($id, $groupUsers);
+			}
+			catch(ValidationException $e) {
+				$this->Group->rollback();
+				return $this->Message->error($e->getMessage(), ['body' => $e->getInvalidFields()]);
 			}
 			catch (Exception $e) {
 				$this->Group->rollback();
 				return $this->Message->error($e->getMessage());
 			}
 
-			// Process all added secrets.
-			try {
-				$this->__processAddedSecrets($id, $changes['added'], $groupData['Secrets']);
-			}
-			catch (Exception $e) {
-				$this->Group->rollback();
-				return $this->Message->error($e->getMessage());
+			// If GroupUsers have been added.
+			if (!empty($changes['created'])) {
+				// Process all added secrets.
+				try {
+					$this->__processAddedSecrets($id, $changes['created'], $groupData['Secrets']);
+				}
+				catch (Exception $e) {
+					$this->Group->rollback();
+					return $this->Message->error($e->getMessage());
+				}
 			}
 
 			// Save secrets.
@@ -324,6 +375,11 @@ class GroupsController extends AppController {
 				],
 			];
 		}
+		else {
+			$changes = [
+				'changes' => $changes,
+			];
+		}
 
 		// Merge changes with group result.
 		$res = array_merge($group, $changes);
@@ -345,8 +401,6 @@ class GroupsController extends AppController {
  * @throws Exception
  */
 	protected function __processAddedSecrets($groupId, $addedUsers, $secrets) {
-		// 1) validate that secrets are provided for all added users.
-		// 2) save secrets for each user.
 
 		// Add secrets for added users.
 		if (count($addedUsers) != count($secrets)) {
