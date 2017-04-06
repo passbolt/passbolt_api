@@ -196,7 +196,7 @@ class GroupUserTest extends CakeTestCase {
 		];
 
 		$res = $this->GroupUser->bulkUpdate($gu['GroupUser']['group_id'], $groupUsers);
-		$this->assertEquals($res['alterations'], 1);
+		$this->assertEquals($res['count'], 1);
 		$this->assertEquals(count($res['deleted']), 1);
 		$this->assertEquals($res['deleted'][0]['GroupUser']['id'], $groupUsers[0]['GroupUser']['id']);
 
@@ -222,7 +222,7 @@ class GroupUserTest extends CakeTestCase {
 		];
 
 		$res = $this->GroupUser->bulkUpdate($gu['GroupUser']['group_id'], $groupUsers);
-		$this->assertEquals($res['alterations'], 1);
+		$this->assertEquals($res['count'], 1);
 		$this->assertEquals(count($res['updated']), 1);
 		$this->assertEquals($res['updated'][0]['GroupUser']['id'], $groupUsers[0]['GroupUser']['id']);
 
@@ -247,7 +247,7 @@ class GroupUserTest extends CakeTestCase {
 		];
 
 		$res = $this->GroupUser->bulkUpdate($group['Group']['id'], $groupUsers);
-		$this->assertEquals($res['alterations'], 1);
+		$this->assertEquals($res['count'], 1);
 		$this->assertEquals(count($res['created']), 1);
 
 		// Make sure that the groupUser has been deleted.
@@ -307,7 +307,7 @@ class GroupUserTest extends CakeTestCase {
 		];
 
 		$res = $this->GroupUser->bulkUpdate($groupId, $groupUsersData);
-		$this->assertEquals($res['alterations'], 3);
+		$this->assertEquals($res['count'], 3);
 		$this->assertEquals(count($res['created']), 1);
 		$this->assertEquals(count($res['updated']), 1);
 		$this->assertEquals(count($res['deleted']), 1);

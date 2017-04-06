@@ -225,7 +225,7 @@ class GroupUser extends AppModel {
  *  The ones to create shouldn't have any id provided
  *
  * @return array
- *   alterations: number of alterations performed
+ *   count: number of alterations performed
  *   created: list of groupUsers created
  *   updated: list of groupUsers updated
  *   deletes: list of groupUsers deleted
@@ -235,7 +235,7 @@ class GroupUser extends AppModel {
  */
 	public function bulkUpdate($groupId, $groupUsers) {
 		$changes = [
-			'alterations' => 0,
+			'count' => 0,
 			'created' => [],
 			'updated' => [],
 			'deleted' => [],
@@ -265,7 +265,7 @@ class GroupUser extends AppModel {
 				$updateRemoveAdmin = $updateCase && $groupUser['GroupUser']['is_admin'] == 0 && in_array($userId, $groupAdminIds);
 				// If the operation is attempting to remove the last group admin.
 				if (($deleteRemoveAdmin || $updateRemoveAdmin) && sizeof($groupAdminIds) == 1) {
-					throw new Exception(__('Unauthorized operation. It is not possible to remove all the managers of a group'));
+					throw new Exception(__('Unauthorized operation. It is not possible to remove all the managers of a group.'));
 				}
 				// Once an admin removal operation is processed, remove it from list of admins and continue.
 				unset($groupAdminIds[array_search($userId, $groupAdminIds)]);
@@ -308,7 +308,7 @@ class GroupUser extends AppModel {
 					if (!$del) {
 						throw new Exception(__('Could not delete groupUser id %s', $groupUser['GroupUser']['id']));
 					}
-					$changes['alterations'] ++;
+					$changes['count'] ++;
 					$changes['deleted'][] = $groupUser;
 				} elseif ($updateCase) {
 					// Update.
@@ -317,7 +317,7 @@ class GroupUser extends AppModel {
 					if (!$update) {
 						throw new Exception(__('Could not update groupUser id %s', $groupUser['GroupUser']['id']));
 					}
-					$changes['alterations'] ++;
+					$changes['count'] ++;
 					$changes['updated'][] = $groupUser;
 				}
 			}
@@ -345,7 +345,7 @@ class GroupUser extends AppModel {
 				if (!$savedGroupUser) {
 					throw new Exception(__('Could not save model GroupUser'));
 				}
-				$changes['alterations'] ++;
+				$changes['count'] ++;
 				$changes['created'][] = $savedGroupUser;
 			}
 		}
