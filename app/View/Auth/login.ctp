@@ -13,7 +13,6 @@
 	$this->assign('page_classes', $pageClasses);
 	$this->Html->css('login.min', null, array('block' => 'css'));
 	$this->Html->script('lib/jquery/dist/jquery.js', array('inline' => false, 'block'=>'scriptHeader'));
-	$this->Html->script('pages/login.js', array('inline' => false, 'block'=>'scriptHeader'));
 
 	// Only Firefox is supported right now.
 	$browser = strtolower($userAgent['Browser']['name']);
