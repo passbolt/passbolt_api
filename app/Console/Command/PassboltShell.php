@@ -47,14 +47,6 @@ class PassboltShell extends AppShell {
 	}
 
 /**
- * Display the passbolt prompt.
- *
- * @return void
- */
-	protected function _welcome() {
-	}
-
-/**
  * Main shell entry point
  *
  * @return bool
