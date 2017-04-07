@@ -146,27 +146,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
-     * Get a target column model of the grid.
-     * If no target
-     *
-     * @todo move this function to the parent class mad.grid
-     * @return {mad.model.Model}
-     */
-    getColumnModel: function (name) {
-        var returnValue = null;
-        if (name != undefined) {
-            for (var i in this.options.columnModel) {
-                if (this.options.columnModel[i].name == name) {
-                    return this.options.columnModel[i];
-                }
-            }
-        } else {
-            returnValue = this.options.columnModel;
-        }
-        return returnValue;
-    },
-
-    /**
      * Show the contextual menu
      * @param {passbolt.model.User} item The item to show the contextual menu for
      * @param {string} x The x position where the menu will be rendered
@@ -486,29 +465,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         });
 
         return def;
-    },
-
-    /**
-     * Does the item exist
-     * @param {passbolt.Model} item The item to check if it existing
-     * @return {boolean}
-     * @todo PASSBOLT-1614 move this function into mad grid.
-     */
-    itemExists: function (item) {
-        return this.view.getItemElement(item).length > 0 ? true : false;
-    },
-
-    /**
-     * Reset the filtering
-     * @todo PASSBOLT-1614 move this function into mad grid.
-     */
-    resetFilter: function () {
-        var self = this;
-        this.options.isFiltered = false;
-
-        can.each(this.options.items, function(item, i) {
-            self.view.showItem(item);
-        });
     },
 
     /* ************************************************************** */
