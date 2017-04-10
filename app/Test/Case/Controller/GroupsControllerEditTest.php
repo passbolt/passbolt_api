@@ -539,5 +539,64 @@ hcciUFw5
 
 
 	// TODO: Test rollback on error.
+
+/**
+ * Test updating a group with an error, and verify that no data were altered. (rollback should work).
+ *
+ * Assert that no data are altered.
+ */
+	public function testUpdateRollbackOnError() {
+		$user = $this->User->findById(Common::uuid('user.id.frances'));
+		$this->User->setActive($user);
+
+		// Group to edit.
+		$groupId = Common::uuid('group.id.accounting');
+
+		$groupInitialState = $this->Group->findById($groupId);
+		$groupUsersInitialState = $this->Group->GroupUser->findByGroupId($groupId);
+
+		// Data to send in the query.
+		$data = [
+			'Group' => [
+				'name' => 'accounting-updated'
+			],
+			'GroupUsers' => [
+				[
+					'GroupUser' => [
+						'user_id' => Common::uuid('user.id.ada'),
+					]
+				],
+				// The groupUser below will generate an error since Frances is already part of the group.
+				[
+					'GroupUser' => [
+						'user_id' => Common::uuid('user.id.frances'),
+					]
+				]
+			],
+		];
+
+		try {
+			// Test action.
+			$this->testAction(
+				"/groups/$groupId.json",
+				[
+					'method' => 'put',
+					'data' => $data,
+					'return' => 'contents'
+				]
+			);
+		}
+		catch (Exception $e) {
+			// Do nothing.
+		}
+
+		$groupAfterChange = $this->Group->findById($groupId);
+		$groupUsersAfterChange = $this->Group->GroupUser->findByGroupId($groupId);
+
+		// Assert that none of the change has been taken into account.
+		// The name change should have been rollbacked after the error on GroupUsers.
+		$this->assertEquals($groupInitialState, $groupAfterChange);
+		$this->assertEquals($groupUsersInitialState, $groupUsersAfterChange);
+	}
 }
 
