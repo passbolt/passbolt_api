@@ -574,7 +574,7 @@ class ShareController extends AppController {
 
 		// @deprecated PASSBOLT-1571 Backward compatibility with passbolt 1.4.0
 		if (isset($this->request->query['keywords'])) {
-			$findData['filter']['keywords'][] = $this->request->query['keywords'];
+			$data['filter']['keywords'][] = $this->request->query['keywords'];
 		}
 
 		// Find all the users and all the groups who can receive a direct permission.
