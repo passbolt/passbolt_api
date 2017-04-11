@@ -315,39 +315,6 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	},
 
 	/**
-	 * Insert a resource in the grid
-	 * @param {mad.model.Model} resource The resource to insert
-	 * @param {string} refResourceId The reference resource id. By default the grid view object
-	 * will choose the root as reference element.
-	 * @param {string} position The position of the newly created item. You can pass in one
-	 * of those strings: "before", "after", "inside", "first", "last". By dhe default value
-	 * is set to last.
-	 *
-	 * @todo remove this function check todo inside
-	 */
-	insertItem: function (resource, refResourceId, position) {
-		// insert the item to the grid
-		this._super(resource, refResourceId, position);
-        // Reset state to ready (to remove other states such as empty).
-		// @todo Remove this state change. The control of the state should be operated by the caller script.
-        this.setState('ready');
-	},
-
-	/**
-	 * Remove an item to the grid
-	 * @param {mad.model.Model} item The item to remove
-	 * @todo check if we can remove this function by moving the state empty into the grid
-	 */
-	removeItem: function (item) {
-		// remove the item to the grid
-		this._super(item);
-        // If no resources are left, set empty state.
-        if (this.options.items.length == 0) {
-            this.state.addState('empty');
-        }
-	},
-
-	/**
 	 * Refresh item
 	 * @param {mad.model.Model} item The item to refresh
 	 */
@@ -502,18 +469,10 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	filterBySettings: function(filter) {
 		var self = this,
 			// The deferred used for the resources find all request.
-			def = $.Deferred();
+			def = null;
 
-		// Save the old filter settings.
-		this.oldFilterSettings = this.filterSettings;
-		// Clone the given filter to avoid any changes problem.
-		this.filterSettings = filter.clone();
-
-		// If the current filter case is different than the previous filter case
-		//   or this is the initial filtering (loading)
-		if (this.oldFilterSettings == null
-			|| this.filterSettings.case != this.oldFilterSettings.case) {
-
+		// If new filter or the filter changed, request the API.
+		if (!this.filterSettings || this.filterSettings.id !== filter.id) {
 			// Mark the component as loading.
 			// Complete it once the passwords are retrieved and rendered.
 			this.setState('loading');
@@ -521,12 +480,13 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 			// Remove all elements from the grid
 			this.reset();
 
-			// Retrieve the resources.
-			passbolt.model.Resource.findAll({
-				filter: this.filterSettings,
-				recursive: true,
-				silentLoading: false
-			}).then(function (resources, response, request) {
+			// Request the API.
+			var findOptions = {
+				silentLoading: false,
+				filter: filter.getRules(['keywords']), // All rules except keywords that is filtered on the browser.
+				order: filter.getOrders()
+			};
+			def = passbolt.model.Resource.findAll(findOptions).then(function (resources, response, request) {
 				// If the browser has been destroyed before the request completed.
 				if (self.element == null) return;
 
@@ -535,41 +495,35 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 
 				// Load the resources in the browser.
 				self.load(resources);
-
-				var states = ['ready'];
-				if (filter.case != undefined) {
-					states.push(filter.case);
-				}
+				self.setState('ready');
 				if (!resources.length) {
-					states.push('empty');
+					self.state.addState('empty');
 				}
-				self.setState(states);
-
-				// If the resources are ordered.
-				if (filter.order != undefined) {
-					var sortedColumnModel = self.getColumnModel(filter.order);
-					if (sortedColumnModel != null) {
-						var orderAsc = true;
-						// @todo introduce asc/desc sort
-						// @todo should be cleaned with the filter refactoring PASSBOLT-1571
-						if (filter.order == 'modified') {
-							orderAsc = false;
-						}
-						self.view.markColumnAsSorted(sortedColumnModel, orderAsc);
-					}
-				}
-
-				def.resolve();
 			});
-		} else {
-			def.resolve();
 		}
+		this.filterSettings = filter;
 
 		// When the resources have been retrieved.
 		$.when(def).done(function() {
+			// Mark the ordered column if any.
+			var orders = filter.getOrders();
+			if (orders && orders[0]) {
+				var matches = /((\w*)\.)?(\w*)\s*(asc|desc|ASC|DESC)?/i.exec(orders[0]),
+					modelName = matches[2],
+					fieldName = matches[3],
+					sortWay = matches[4] ? matches[4].toLowerCase() : 'asc';
+
+				if (fieldName) {
+					var sortedColumnModel = self.getColumnModel(fieldName);
+					if (sortedColumnModel) {
+						self.view.markColumnAsSorted(sortedColumnModel, sortWay === 'asc');
+					}
+				}
+			}
+
 			// Filter by keywords.
-			var keywords = self.filterSettings.getKeywords();
-			if (keywords != '') {
+			var keywords = filter.getRule('keywords');
+			if (keywords && keywords != '') {
 				self.filterByKeywords(keywords, {
 					searchInFields: ['username', 'name', 'uri', 'description']
 				});

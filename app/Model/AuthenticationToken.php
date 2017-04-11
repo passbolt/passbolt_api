@@ -78,7 +78,7 @@ class AuthenticationToken extends AppModel {
  *
  * @throws Exception
  */
-	public static function getFindConditions($case = null, $role = Role::GUEST, $data = null) {
+	public static function getFindConditions($case = null, $role = Role::GUEST, &$data = null) {
 		$conditions = [];
 
 		switch ($case) {

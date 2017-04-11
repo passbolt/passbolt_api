@@ -40,10 +40,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 		// The current selected groups
         selectedGroups: new can.Model.List(),
 		// The current filter
-        filter: new passbolt.model.Filter({
-            label: __('All users'),
-            type: passbolt.model.Filter.SHORTCUT
-        }),
+        filter: null,
 		// Override the silentLoading parameter.
 		silentLoading: false,
 		// Filter the workspace with this filter settings.
@@ -56,10 +53,9 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 	 */
 	getDefaultFilterSettings: function() {
 		return new passbolt.model.Filter({
+            id: 'default',
 			label: __('All users'),
-			case: 'all_items',
-			type: passbolt.model.Filter.SHORTCUT,
-			keywords: ''
+            order: ['Profile.last_name ASC']
 		});
 	}
 
@@ -144,13 +140,6 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         // Instanciate the users groups controller.
         var groups = new passbolt.component.Groups('#js_wsp_users_groups', {});
         groups.start();
-
-        // Removed group choosed for #PASSBOLT-787
-        //// Instanciate the group chooser controller.
-        //this.grpChooser = new passbolt.component.GroupChooserController('#js_wsp_users_group_chooser', {
-        //'selectedGroups': this.options.selectedGroups
-        //});
-        //this.grpChooser.start();
 
         // Instanciate the passwords browser controller.
         var userBrowserController = new passbolt.component.UserBrowser('#js_wsp_users_browser', {

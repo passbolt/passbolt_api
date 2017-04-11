@@ -67,23 +67,40 @@ class AppModel extends Model {
 		return [];
 	}
 
-
 /**
- * Return the find options (felds and conditions) for a given context
+ * Return the find options (felds, conditions and order) for a given context
  *
  * @param string $case The target case.
  * @param string $role optional user role filter if needed to build the options
  * @param array $data optional data to be used if needed to build the options
  * @return array
  */
-	public static function getFindOptions($case, $role = null, $data = null) {
+	public static function getFindOptions($case, $role = null, $data = array()) {
+		$findOptions = [];
+
+		// Retrieve the find conditions
+		$findConditions = static::getFindConditions($case, $role, $data);
+		$findOptions = array_merge($findOptions, $findConditions);
+
 		// Prepare contain instructions.
 		$data['contain'] = static::prepareFindContain(
 			static::getFindContain($case, $role),
 			isset($data['contain']) ? $data['contain'] : []
 		);
 
-		return array_merge(static::getFindConditions($case, $role, $data), static::getFindFields($case, $role, $data));
+		// Retrieve the find fields.
+		$findFields = static::getFindFields($case, $role, $data);
+		$findOptions = array_merge($findOptions, $findFields);
+
+		// Retrieve the find orders.
+		$findOrders = static::getFindOrder(
+			static::getFindAllowedOrder($case, $role),
+			isset($data['order']) ? $data['order'] : [],
+			isset($findOptions['contain']) ? array_keys($findOptions['contain']) : []
+		);
+		$findOptions = array_merge($findOptions, $findOrders);
+
+		return $findOptions;
 	}
 
 /**
@@ -138,7 +155,8 @@ class AppModel extends Model {
 		// Check default contain values. Only retain the one that have been explicitly requested in data, or that
 		// are equal to 1 by default.
 		foreach($defaultContain as $key => $value) {
-			if ((isset($requestedContain[$key]) && $requestedContain[$key] == 1) || (!isset($requestedContain[$key]) && $defaultContain[$key] == 1)) {
+			if ((isset($requestedContain[$key]) && $requestedContain[$key] == 1)
+				|| (!isset($requestedContain[$key]) && $defaultContain[$key] == 1)) {
 				$finalContain[] = $key;
 			}
 		}
@@ -165,8 +183,100 @@ class AppModel extends Model {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = null, $role = null, $data = null) {
+	public static function getFindConditions($case = null, $role = null, &$data = null) {
 		return ['conditions' => []];
+	}
+
+/**
+ * Return the list of order instructions allowed for each case.
+ *
+ * @param null $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindAllowedOrder($case = null, $role = null) {
+		return [];
+	}
+
+/**
+ * Get order instructions for a find operation.
+ *
+ * Will basically ensure that the requested orders are allowed, and valid.
+ *
+ * @param array $allowedOrder
+ *  array of allowed orders
+ *  array[
+ * 	  'User.username',
+ *    'User.modified',
+ *    'Profile.last_name',
+ *    'Profile.first_name'
+ *  ]
+ *
+ * @param array requestedOrders
+ *   array of requested orders
+ *  array[
+ * 	  'User.active DESC',
+ *    'User.modified ASC'
+ *  ]
+ *
+ * @param array contain
+ *   array of requested contain
+ *  array[
+ * 	  'User',
+ * 	  'Profile'
+ *  ]
+ *
+ * @return array
+ *   the computed result.
+ *   let's imagine the operation:
+ *
+ *   $allowedOrder = array[
+ * 	  'User.username',
+ *    'User.modified',
+ *    'Profile.last_name',
+ *    'Profile.first_name'
+ *  ]
+ *  $requestedOrder = [
+ * 	  'User.active DESC',
+ *    'Profile.last_name ASC'
+ *  ]
+ *  $contain = []
+ *
+ *  the result would be:
+ *  [
+ * 	  'User.modified DESC'
+ *    // Profile.last_name has been dropped as the request doesn't contain the Profile model
+ *  ];
+ *
+ */
+	public static function getFindOrder($allowedOrder = array(), $requestOrders = array(), $contain = array()) {
+		$finalOrder['order'] = [];
+
+		foreach ($requestOrders as $requestOrder) {
+			/*
+			 * Does the requested order match expected find orders.
+			 * The regex extracts the data as following
+			 * [
+			 *   1: MODEL_NAME.FIELD_NAME
+			 *   2: MODEL_NAME
+			 *   3: FIELD_NAME
+			 *   4: ASC OR DESC
+			 * ]
+			 */
+			$matches = [];
+			preg_match('/^((\w*)?\.?([\w-_]*))\s*(asc|desc)?$/i', trim($requestOrder), $matches);
+
+			// If the request order is valid and the field is an allowed field
+			if (isset($matches[1]) && in_array($matches[1], $allowedOrder)) {
+				// If the field model is part of a requested model. Check that the request model
+				// is either the current model or a model requested in contain.
+				if ($matches[2] === get_called_class() || in_array($matches[2], $contain)) {
+					$finalOrder['order'][] = $requestOrder;
+				}
+			}
+		}
+
+		return $finalOrder;
 	}
 
 /**

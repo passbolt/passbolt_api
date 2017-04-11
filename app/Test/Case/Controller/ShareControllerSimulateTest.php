@@ -13,7 +13,7 @@ App::uses('UsersController', 'Controller');
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
 App::uses('Resource', 'Model');
-App::uses('UserResourcePermission', 'Model');;
+App::uses('UserResourcePermission', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
 

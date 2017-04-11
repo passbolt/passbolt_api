@@ -11,6 +11,7 @@ class ShareController extends AppController {
  * @var array components used in this controller
  */
 	public $components = [
+		'Filter',
 		'EmailNotificator',
 	];
 
@@ -472,11 +473,60 @@ class ShareController extends AppController {
 	}
 
 /**
- * Search users who can be granted for a target aco instance
+ * Search users/groups who can receive a permission for a target item.
+ * Renders a json object containing the users and groups
  *
- * @param string $model the aco model name
- * @param string $id the aco instance uuid
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/groups/searchUsers/{model}/{id}.json",
+ *   summary="Find users and groups",
+ * @SWG\Parameter(
+ *     name="model",
+ *     in="path",
+ *     required=true,
+ *     type="string",
+ *     description="the type of the target instance to search users and groups for",
+ *   ),
+ * @SWG\Parameter(
+ *     name="id",
+ *     in="path",
+ *     required=true,
+ *     type="string",
+ *     description="the target instance instance uuid to search users and groups for",
+ *   ),
+ * @SWG\Parameter(
+ *     name="filter",
+ *     in="query",
+ *     description="A list of filter",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "keywords",
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="An array of users and groups",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"="#/definitions/User",
+ * 				"$ref"="#/definitions/Group"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function searchUsers($model = null, $id = null) {
 		$data = [];
@@ -519,15 +569,17 @@ class ShareController extends AppController {
 			return;
 		}
 
-		// If the search should be filtered by keywords.
+		// Extract request parameters.
+		$data['filter'] = $this->request->params['filter'];
+
+		// @deprecated PASSBOLT-1571 Backward compatibility with passbolt 1.4.0
 		if (isset($this->request->query['keywords'])) {
-			$data['keywords'] = $this->request->query['keywords'];
-			$data['filter']['keywords'] = $this->request->query['keywords'];
+			$findData['filter']['keywords'][] = $this->request->query['keywords'];
 		}
 
 		// Find all the users and all the groups who can receive a direct permission.
-		$data['aco_foreign_key'] = $id;
-		$data['aco'] = $model;
+		$data['Permission.aco_foreign_key'] = $id;
+		$data['Permission.aco'] = $model;
 		$findUsersOptions = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
 		$users = $this->Permission->User->find('all', $findUsersOptions);
 		$findGroupsOptions = $this->Permission->Group->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);

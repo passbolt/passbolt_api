@@ -111,60 +111,9 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 	}
 
-/**
- * Test a call to index filtered by group with a group which doesn't exist
- *
- * @return void
- */
-	public function testIndexFilteredByGroupWhichDoesntExist() {
-		// test with normal user
-		$user = $this->User->findById(Common::uuid('user.id.user'));
-		$this->User->setActive($user);
-
-		$this->setExpectedException('HttpException', 'The group doesn\'t exist');
-		$groupId = Common::uuid('not-valid-reference');
-		$url = '/users.json?filter_model_group=' . $groupId;
-		$this->testAction($url, array('return' => 'contents', 'method' => 'GET'), true);
-	}
 
 /**
- * Test a call to index filtered by group with a wrong group id
- *
- * @return void
- */
-	public function testIndexFilteredByGroupWithWrongId() {
-		// test with normal user
-		$user = $this->User->findById(Common::uuid('user.id.user'));
-		$this->User->setActive($user);
-
-		$this->setExpectedException('HttpException', 'The group id is invalid');
-		$groupId = 'wrong_id';
-		$url = '/users.json?filter_model_group=' . $groupId;
-		$this->testAction($url, array('return' => 'contents', 'method' => 'GET'), true);
-	}
-
-/**
- * Test a call to index filtered by group
- *
- * @return void
- */
-	public function testIndexFilteredByGroup() {
-		// test with normal user
-		$user = $this->User->findById(Common::uuid('user.id.user'));
-		$this->User->setActive($user);
-
-		$groupId = Common::uuid('group.id.accounting');
-		$data = array(
-			'filter_model_group' => $groupId,
-		);
-		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
-		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
-		$this->assertNotEmpty($result->body);
-		$this->assertEquals($result->body[0]->User->username, 'frances@passbolt.com');
-	}
-
-/**
- * Test a call to index filtered by group
+ * Test a call to index filtered by keywords
  *
  * @return void
  */
@@ -174,11 +123,14 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		$data = array(
-			'filter_keywords' => 'Betty'
+			'filter' => [
+				'keywords' => 'Betty'
+			]
 		);
 		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 		$this->assertNotEmpty($result->body);
+		$this->assertEqual(count($result->body), 1);
 		$this->assertEquals($result->body[0]->User->username, 'betty@passbolt.com');
 	}
 

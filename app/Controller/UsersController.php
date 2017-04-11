@@ -3,6 +3,7 @@
  * Users Controller
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2016-present Passbolt S.à r.l.
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class UsersController extends AppController {
@@ -117,34 +118,69 @@ class UsersController extends AppController {
 
 /**
  * Get all users
- * Renders a json object of the users
+ * Renders a json object of the users.
  *
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/users.json",
+ *   summary="Find users",
+ * @SWG\Parameter(
+ *     name="filter",
+ *     in="query",
+ *     description="A list of filter",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "keywords",
+ *       "has-groups"
+ * 	   }
+ *   ),
+ * @SWG\Parameter(
+ *     name="order",
+ *     in="query",
+ *     description="A list of order",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 	     "User.username",
+ * 	     "User.created",
+ * 	     "User.modified",
+ * 	     "Profile.first_name",
+ * 	     "Profile.last_name",
+ * 	     "Profile.created",
+ * 	     "Profile.modified",
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="An array of users",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"="#/definitions/User"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function index() {
-		// The additional information to pass to the model request
-		$data = [];
-
-		// Extract the filter from the request
-		$data = $this->Filter->fromRequest($this->request->query);
-
-		// If a filter by group is provided
-		if (isset($data['foreignModels']['Group.id'])) {
-			// Check the validity of each provided group
-			foreach ($data['foreignModels']['Group.id'] as $groupId) {
-				// Check if the group id is valid
-				if (!Common::isUuid($groupId)) {
-					return $this->Message->error(__('The group id is invalid'));
-				}
-				// Check if the group exists
-				if (!$this->User->Group->findById($groupId)) {
-					return $this->Message->error(__('The group doesn\'t exist', $groupId));
-				}
-			}
-		}
+		// Add filters, contain and order (if all needed) data to the get find options data.
+		$findData['filter'] = $this->request->params['filter'];
+		$findData['order'] = $this->request->params['order'];
 
 		// Find the users.
-		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $data);
+		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $findData);
 		$users = $this->User->find('all', $o);
 
 		$this->set('data', $users);

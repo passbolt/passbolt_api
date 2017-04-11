@@ -217,14 +217,12 @@ class Resource extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = [];
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
+		$conditions = ['conditions' => []];
 
 		switch ($case) {
-			case 'exists':
-			case 'add':
-			case 'edit':
-			case 'view':
+			case 'Resource::exists':
+			case 'Resource::view':
 				$conditions = [
 					'conditions' => [
 						'Resource.deleted' => 0,
@@ -232,49 +230,33 @@ class Resource extends AppModel {
 					]
 				];
 				break;
-			case 'index':
-				$conditions = ['conditions' => ['Resource.deleted' => 0]];
-				if (isset($data['keywords'])) {
-					$keywords = explode(' ', $data['keywords']);
+
+			case 'Resource::index':
+				$conditions = ['conditions' => [
+					'Resource.deleted' => 0,
+				]];
+				if (isset($data['filter']['keywords'][0])) {
+					$keywords = explode(' ', trim($data['filter']['keywords'][0]));
 					foreach ($keywords as $keyword) {
-						$conditions['conditions']["AND"][] = ['Resource.name LIKE' => '%' . $keyword . '%'];
+						$conditions['conditions']['AND'][] = ['Resource.name LIKE' => '%' . $keyword . '%'];
 					}
 				}
-				if (isset($data['case'])) {
-					switch ($data['case']) {
-						case 'favorite':
-							$conditions['conditions']["AND"][] = ['Favorite.id IS NOT NULL'];
-							break;
-
-						case 'own':
-							$conditions['conditions']["AND"][] = ['Resource.created_by' => User::get('User.id')];
-							break;
-
-						case 'shared':
-							$conditions['conditions']["AND"][] = ['Resource.created_by <>' => User::get('User.id')];
-							break;
-
-					}
+				if (isset($data['filter']['is-favorite'])) {
+					$conditions['conditions']['AND'][] = 'Favorite.id IS NOT NULL';
+					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'Favorite';
 				}
-				if (isset($data['order'])) {
-					switch ($data['order']) {
-						case 'modified':
-							$conditions['order'] = ['Resource.modified DESC'];
-							break;
-
-						case 'expiry_date':
-							$conditions['order'] = ['Resource.expiry_date DESC'];
-							break;
-
-					}
-				} else {
-					// By default order by created date
-					$conditions['order'] = ['Resource.modified DESC'];
+				if (isset($data['filter']['is-owned-by-me'])) {
+					$conditions['conditions']['AND'][] = ['Resource.created_by' => User::get('User.id')];
+					if (!isset($data['contain']) || !in_array('Creator', $data['contain'])) $data['contain'][] = 'Creator';
+				}
+				if (isset($data['filter']['is-shared-with-me'])) {
+					$conditions['conditions']['AND'][] = ['Resource.created_by <>' => User::get('User.id')];
+					if (!isset($data['contain']) || !in_array('Modifier', $data['contain'])) $data['contain'][] = 'Modifier';
 				}
 				break;
 
 			default:
-				$conditions = ['conditions' => []];
+				break;
 		}
 
 		return $conditions;
@@ -289,8 +271,10 @@ class Resource extends AppModel {
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null, $data = null) {
+		$fields = ['fields' => []];
+
 		switch ($case) {
-			case 'exists':
+			case 'Resource::exists':
 				$fields = [
 					'fields' => [
 						'Resource.id',
@@ -300,8 +284,9 @@ class Resource extends AppModel {
 					'callbacks' => false
 				];
 				break;
-			case 'view':
-			case 'index':
+
+			case 'Resource::view':
+			case 'Resource::index':
 				$fields = [
 					'fields' => [
 						'DISTINCT Resource.id',
@@ -312,17 +297,24 @@ class Resource extends AppModel {
 						'Resource.description',
 						'Resource.created',
 						'Resource.modified',
-						'Favorite.id',
-						'Favorite.user_id',
-						'Favorite.created',
-						'Creator.id',
-						'Creator.username',
-						'Modifier.id',
-						'Modifier.username'
 					],
-					'contain' => [
-						'Favorite',
-						'Secret' => [
+				];
+
+				// If contain requested, add the query contain.
+				if (isset($data['contain'])) {
+					// If contain Favorite.
+					if (in_array('Favorite', $data['contain'])) {
+						$fields['contain']['Favorite'] = [
+							'fields' => [
+								'Favorite.id',
+								'Favorite.user_id',
+								'Favorite.created',
+							]
+						];
+					}
+					// If contain Secret.
+					if (in_array('Secret', $data['contain'])) {
+						$fields['contain']['Secret'] = [
 							'fields' => [
 								'Secret.id',
 								'Secret.user_id',
@@ -330,19 +322,36 @@ class Resource extends AppModel {
 								'Secret.created',
 								'Secret.modified',
 							],
-							// We get only the secret for the current user.
 							'conditions' => [
 								'Secret.user_id' => User::get('id')
 							],
-						],
-						'Creator',
-						'Modifier'
-					]
-				];
+						];
+					}
+					// If contain Creator.
+					if (in_array('Creator', $data['contain'])) {
+						$fields['contain']['Creator'] = [
+							'fields' => [
+								'Creator.id',
+								'Creator.username',
+							]
+						];
+					}
+					// If contain Modifier.
+					if (in_array('Modifier', $data['contain'])) {
+						$fields['contain']['Modifier'] = [
+							'fields' => [
+								'Creator.id',
+								'Creator.username',
+							]
+						];
+					}
+				}
 				break;
-			case 'delete':
+
+			case 'Resource::delete':
 				$fields = ['fields' => ['deleted']];
 				break;
+
 			case 'Resource::edit':
 				$fields = [
 					'fields' => [
@@ -354,7 +363,8 @@ class Resource extends AppModel {
 					]
 				];
 				break;
-			case 'save':
+
+			case 'Resource::save':
 				$fields = [
 					'fields' => [
 						'name',
@@ -370,14 +380,61 @@ class Resource extends AppModel {
 					]
 				];
 				break;
+
 			default:
-				$fields = ['fields' => []];
 				break;
 		}
 
 		return $fields;
 	}
 
+/**
+ * Return the list of contain instructions allowed, with their default values.
+ *
+ * @param string $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindContain($case = 'view', $role = null) {
+		$contain = [];
+		switch ($case) {
+			case 'Resource::view':
+			case 'Resource::index':
+				$contain = [
+					'Creator' => 1,
+					'Favorite' => 1,
+					'Modifier' => 1,
+					'Secret' => 1,
+				];
+				break;
+		}
+		return $contain;
+	}
+
+/**
+ * Return the list of order instructions allowed for each case, with their default value
+ *
+ * @param null $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindAllowedOrder($case = null, $role = null) {
+		$order = [];
+		switch ($case) {
+			case 'Resource::index':
+				$order = [
+					'Resource.name',
+					'Resource.username',
+					'Resource.expiry_date',
+					'Resource.uri',
+					'Resource.description',
+					'Resource.created',
+					'Resource.modified',
+				];
+				break;
+		}
+		return $order;
+	}
 /**
  * Validates if a date is in future
  *
@@ -487,7 +544,7 @@ class Resource extends AppModel {
 		}
 
 		$data = ['Resource.id' => $id];
-		$o = $this->getFindOptions('exists', User::get('Role.name'), $data);
+		$o = $this->getFindOptions('Resource::exists', User::get('Role.name'), $data);
 		return !(bool)$this->find('count', $o);
 	}
 
@@ -510,7 +567,7 @@ class Resource extends AppModel {
 			'id' => $id,
 			'deleted' => 1
 		];
-		$fields = $this->getFindFields('delete', User::get('Role.name'));
+		$fields = $this->getFindFields('Resource::delete', User::get('Role.name'));
 		if (!$this->save($data, true, $fields['fields'])) {
 			$dataSource->rollback();
 			throw new Exception(__('Unable to soft delete the resource'));

@@ -187,9 +187,7 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 			'return' => 'contents',
 			'method' => 'GET',
 			'data' => $params
-		],
-			true
-		);
+		]);
 
 		$json = json_decode($res, true);
 
