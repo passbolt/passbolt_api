@@ -111,6 +111,45 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
 	}
 
+/**
+ * Test a call to index filtered by groups
+ *
+ * @return void
+ */
+	public function testIndexFilterWithGroups() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Filter with one group
+		$data = array(
+			'filter' => ['has-groups' => Common::uuid('group.id.accounting')],
+		);
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data)), true);
+		$this->assertEquals($result['header']['status'], Status::SUCCESS, '/users return something');
+		$this->assertEquals(2, count($result['body']));
+		$resultUsers = Hash::extract($result['body'], '{n}.User.id');
+		$this->assertContains(Common::uuid('user.id.frances'), $resultUsers);
+		$this->assertContains(Common::uuid('user.id.grace'), $resultUsers);
+
+		// Filter with multiple groups but no one in all
+		$data = array(
+			'filter' => ['has-groups' => Common::uuid('group.id.creative') . ',' . Common::uuid('group.id.administration')],
+		);
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data)), true);
+		$this->assertEquals($result['header']['status'], Status::SUCCESS, '/users return something');
+		$this->assertEquals(0, count($result['body']));
+
+		// Filter with multiple groups with one user in all of each
+		$data = array(
+			'filter' => ['has-groups' => Common::uuid('group.id.creative') . ',' . Common::uuid('group.id.ergonom')],
+		);
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data)), true);
+		$this->assertEquals($result['header']['status'], Status::SUCCESS, '/users return something');
+		$this->assertEquals(1, count($result['body']));
+		$resultUsers = Hash::extract($result['body'], '{n}.User.id');
+		$this->assertContains(Common::uuid('user.id.irene'), $resultUsers);
+	}
 
 /**
  * Test a call to index filtered by keywords
