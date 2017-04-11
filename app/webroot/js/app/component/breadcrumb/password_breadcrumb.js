@@ -22,9 +22,7 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 		// Template
 		templateUri: 'app/view/template/component/breadcrumb/breadcrumb.ejs',
 		// Hidden by default
-		status: 'hidden',
-		// The filter to display
-		filter: null
+		status: 'hidden'
 	}
 
 }, /** @prototype */ {
@@ -48,46 +46,53 @@ var PasswordBreadcrumb = passbolt.component.PasswordBreadcrumb= mad.Component.ex
 	 * @return {array}
 	 */
 	parseFilter: function (filter) {
-		var menuItems = [];
+		var menuItems = [],
+			keywords = filter.getRule('keywords');
 
 		// Add a link to filter on all items as first item.
 		var menuItem = new mad.model.Action({
 			id: uuid(),
 			label: __('All items'),
-			action: function () {
-				var filter = new passbolt.model.Filter({
-					label: __('All items'),
-					order: 'modified',
-					case: 'all_items',
-					type: passbolt.model.Filter.SHORTCUT
-				});
-				mad.bus.trigger('filter_workspace', filter);
-			}
+			filter: passbolt.component.PasswordWorkspace.getDefaultFilterSettings()
 		});
 		menuItems.push(menuItem);
 
-		// If we want to filter on keywords.
-		if (typeof filter.keywords != 'undefined' && filter.keywords != '') {
-			// Add the search keywords to the breadcrumb.
+		// If filtered by keywords, add a breadcrumb relative to the searched keywords
+		if (keywords && keywords != '') {
 			var menuItem = new mad.model.Action({
 				id: uuid(),
-				label: __('Search : %s', filter.keywords)
+				label: __('Search : %s', keywords)
 			});
 			menuItems.push(menuItem);
 		}
-		// Case filter
-		else {
-			if (typeof filter.label != 'undefined'
-				&& filter.label != __('All items')) {
-				var menuItem = new mad.model.Action({
-					id: uuid(),
-					label: filter.label
-				});
-				menuItems.push(menuItem);
-			}
+		// For any other filters than the default one, add a breadcrumb entry.
+		else if (filter.id != 'default') {
+			var menuItem = new mad.model.Action({
+				id: uuid(),
+				label: filter.label
+			});
+			menuItems.push(menuItem);
 		}
 
 		return menuItems;
+	},
+
+	/* ************************************************************** */
+	/* LISTEN TO THE VIEW EVENTS */
+	/* ************************************************************** */
+
+	/**
+	 * An item has been selected
+	 * @parent mad.component.Menu.view_events
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 * @param {string} item The selected item
+	 * @return {void}
+	 */
+	' item_selected': function (el, ev, item) {
+		if (item.filter) {
+			mad.bus.trigger('filter_workspace', item.filter);
+		}
 	},
 
 	/* ************************************************************** */

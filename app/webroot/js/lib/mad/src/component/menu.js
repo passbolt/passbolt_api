@@ -94,7 +94,7 @@ var Menu = mad.component.Menu = mad.component.Tree.extend('mad.component.Menu', 
 
         // If this item is not disabled, try to execute the item action.
         if (!item.state.is('disabled')) {
-            item.execute();
+            item.execute(this);
         }
     }
 });

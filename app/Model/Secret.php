@@ -179,7 +179,7 @@ class Secret extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = null, $role = null, $data = null) {
+	public static function getFindConditions($case = null, $role = null, &$data = null) {
 		$conditions = [
 			'conditions' => []
 		];

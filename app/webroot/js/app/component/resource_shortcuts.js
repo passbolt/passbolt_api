@@ -30,70 +30,74 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 			new mad.model.Action({
 				id: 'js_pwd_wsp_filter_all',
 				label: __('All items'),
-				case : 'all_items',
-				action: function () {
-					var filter = new passbolt.model.Filter({
-						label: __('All items'),
-						order: 'modified',
-                        case : 'all_items',
-						type: passbolt.model.Filter.SHORTCUT
-					});
-					mad.bus.trigger('filter_workspace', filter);
-				}
+				filter: passbolt.component.PasswordWorkspace.getDefaultFilterSettings()
 			}), new mad.model.Action({
 				id: 'js_pwd_wsp_filter_favorite',
 				label: __('Favorite'),
-				case: 'favorite',
-				action: function () {
-					var filter = new passbolt.model.Filter({
-						label: __('Favorite'),
-						case: 'favorite',
-						type: passbolt.model.Filter.SHORTCUT
-					});
-					mad.bus.trigger('filter_workspace', filter);
-				}
+				filter: new passbolt.model.Filter({
+					id: 'workspace_filter_favorite',
+					label: __('Favorite'),
+					rules: {
+						'is-favorite': true
+					},
+					order: ['Resource.modified DESC']
+				})
 			}), new mad.model.Action({
 				id: 'js_pwd_wsp_filter_modified',
 				label: __('Recently modified'),
-				case : 'recently_modified',
-				action: function () {
-					var filter = new passbolt.model.Filter({
-						label: __('Recently modified'),
-						order: 'modified',
-                        case : 'recently_modified',
-						type: passbolt.model.Filter.SHORTCUT
-					});
-					mad.bus.trigger('filter_workspace', filter);
-				}
+				filter : new passbolt.model.Filter({
+					id: 'workspace_filter_modified',
+					label: __('Recently modified'),
+					order: ['Resource.modified DESC']
+				})
 			}), new mad.model.Action({
 				id: 'js_pwd_wsp_filter_share',
 				label: __('Shared with me'),
-				case: 'shared',
-				action: function () {
-					var filter = new passbolt.model.Filter({
-						label: __('Shared with me'),
-						case: 'shared',
-						type: passbolt.model.Filter.SHORTCUT
-					});
-					mad.bus.trigger('filter_workspace', filter);
-				}
+				filter: new passbolt.model.Filter({
+					id: 'workspace_filter_shared',
+					label: __('Shared with me'),
+					rules: {
+						'is-shared-with-me': true
+					},
+					order: ['Resource.modified DESC']
+				})
 			}), new mad.model.Action({
 				id: 'js_pwd_wsp_filter_own',
 				label: __('Items I own'),
-				case: 'own',
-				action: function () {
-					var filter = new passbolt.model.Filter({
-						label: __('Items I own'),
-						case: 'own',
-						type: passbolt.model.Filter.SHORTCUT
-					});
-					mad.bus.trigger('filter_workspace', filter);
-				}
+				filter: new passbolt.model.Filter({
+					id: 'workspace_filter_own',
+					label: __('Items I own'),
+					rules: {
+						'is-owned-by-me': true
+					},
+					order: ['Resource.modified DESC']
+				})
 			})
 		];
 		this.load(menuItems);
         // Select first item.
         this.selectItem(menuItems[0]);
+	},
+
+	/* ************************************************************** */
+	/* LISTEN TO THE VIEW EVENTS */
+	/* ************************************************************** */
+
+	/**
+	 * An item has been selected
+	 * @parent mad.component.Menu.view_events
+	 * @param {HTMLElement} el The element the event occured on
+	 * @param {HTMLEvent} ev The event which occured
+	 * @param {string} item The selected item
+	 * @return {void}
+	 */
+	' item_selected': function (el, ev, item) {
+		this._super(el, ev, item);
+
+		// If this item is not disabled, try to execute the item action.
+		if (!item.state.is('disabled')) {
+			mad.bus.trigger('filter_workspace', item.filter);
+		}
 	},
 
 	/* ************************************************************** */
@@ -108,17 +112,14 @@ var ResourceShortcuts = passbolt.component.ResourceShortcuts = mad.component.Men
 	 */
 	'{mad.bus.element} filter_workspace': function (element, evt, filter) {
 		var self = this;
+		this.unselectAll();
 
-		if (filter.type != passbolt.model.Filter.SHORTCUT) {
-			this.unselectAll();
-		} else {
-			this.options.items.each(function(item, i) {
-				if (item.case == filter.case) {
-					self.selectItem(item);
-					return;
-				}
-			});
-		}
+		// If the filter is relative to a filter registered in this component, select it.
+		this.options.items.each(function(item) {
+			if (item.filter.id == filter.id) {
+				self.selectItem(item);
+			}
+		});
 	}
 });
 

@@ -252,49 +252,41 @@ class ResourceTest extends AppTestCase {
 	}
 
 	/**
-	 * Test GetFindFields
+	 * Test getFindFields
 	 */
 	public function testGetFindFields() {
 		$default = ['fields' => []];
-		$this->assertNotEquals($default, Resource::getFindFields('view'), 'Find fields missing for view');
-		$this->assertNotEquals($default, Resource::getFindFields('index'), 'Find fields missing for index');
-		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
-		$this->assertNotEquals($default, Resource::getFindFields('Resource::edit'), 'Find fields missing for delete');
-		$this->assertNotEquals($default, Resource::getFindFields('save'), 'Find fields missing for delete');
-		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
+		$defaultCases = ['not_existing_case'];
+		$customCases = ['Resource::exists', 'Resource::save', 'Resource::edit', 'Resource::view', 'Resource::index'];
 
-		$this->assertEquals($default, Resource::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+		// Default fields return.
+		foreach($defaultCases as $case) {
+			$this->assertEquals($default, Resource::getFindFields($case), "Find fields missing for case : $case");
+		}
+
+		// Custom fields return.
+		foreach($customCases as $case) {
+			$this->assertNotEquals($default, Resource::getFindConditions($case), "Find fields should be empty for case : $case");
+		}
 	}
 
 	/**
-	 * Test GetFindFields
+	 * Test getFindConditions
 	 */
 	public function testGetFindConditions() {
 		$default = ['conditions' => []];
-		$this->assertNotEquals($default, Resource::getFindConditions('add'), 'Find conditions missing for add');
-		$this->assertNotEquals($default, Resource::getFindConditions('edit'), 'Find conditions missing for edit');
-		$this->assertNotEquals($default, Resource::getFindConditions('view'), 'Find conditions missing for view');
-		$this->assertNotEquals($default, Resource::getFindConditions('index'), 'Find conditions missing for index');
+		$defaultCases = ['not_existing_case', 'Resource::save', 'Resource::edit', 'not_existing_case'];
+		$customCases = ['Resource::exists', 'Resource::view', 'Resource::index'];
 
-		// Default conditions
-		$conditions = ['conditions' => ['Resource.deleted' => 0]];
-		// filter cases checks
-		$cases = ['favorite', 'own', 'shared'];
-		foreach($cases as $case) {
-			$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['case' => $case]),
-				'Find conditions missing for index case ' . $case);
-		}
-		// search by keyword
-		$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['keywords' => 'one or two']),
-				'Find conditions missing for index by keywords');
-		// order cases checks
-		$cases = ['modified', 'expiry_date'];
-		foreach($cases as $case) {
-			$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['order' => $case]),
-					'Find conditions missing for index case ' . $case);
+		// Test find conditions cases == default.
+		foreach($defaultCases as $case) {
+			$this->assertEquals($default, Resource::getFindConditions($case), "Find conditions should be empty for case : $case");
 		}
 
-		$this->assertEquals($default, Resource::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+		// Test find conditions cases != default.
+		foreach($customCases as $case) {
+			$this->assertNotEquals($default, Resource::getFindConditions($case), "Find conditions missing for case : $case");
+		}
 	}
 
 	/**

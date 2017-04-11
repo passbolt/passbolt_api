@@ -25,6 +25,7 @@ class FilterComponent extends Component {
 		$this->controller = $controller;
 		$contain = [];
 		$filter = [];
+		$order = [];
 
 		// Manage contains.
 		if(isset($this->controller->request->query['contain']) && !empty($this->controller->request->query['contain'])) {
@@ -51,52 +52,21 @@ class FilterComponent extends Component {
 			}
 		}
 
-		// Set contain and filter as params.
-		$this->controller->request->params['contain'] = $contain;
-		$this->controller->request->params['filter'] = $filter;
-	}
-
-/**
- * Check if the request contains a filter and extract it
- *
- *
- * @deprecated use the new format instead (?contains[users]=1&...) that will be automatically parsed
- * by the function initialize which will populate the params array.
- *
- * @param array $params The parameters of the request
- * @return array The extract filter or null
- */
-	public static function fromRequest($params = null) {
-		$returnValue = [];
-
-		// extract the keywords to filter on
-		if (isset($params['filter_keywords'])) {
-			$returnValue['keywords'] = $params['filter_keywords'];
-		}
-		// extract the script to apply to filter
-		if (isset($params['filter_case'])) {
-			$returnValue['case'] = $params['filter_case'];
-		}
-		// extract the order to apply to the result
-		if (isset($params['filter_order'])) {
-			$returnValue['order'] = $params['filter_order'];
-		}
-		if (isset($params['modified_after'])) {
-			$returnValue['modified_after'] = $params['modified_after'];
-		}
-		// extract the foreign model to filter on
-		$exp = "/^filter_model_(.*)$/";
-		foreach ($params as $param => $value) {
-			$matches = [];
-			preg_match($exp, $param, $matches);
-			if (!empty($matches)) {
-				if (!isset($params['foreignModels'])) {
-					$returnValue['foreignModels'] = [];
+		// Manage orders.
+		if(isset($this->controller->request->query['order']) && !empty($this->controller->request->query['order'])) {
+			$orderData = $this->controller->request->query['order'];
+			if (is_array($orderData)) {
+				foreach($orderData as $orderKey => $orderValue) {
+					$order[] = $orderValue;
 				}
-				$returnValue['foreignModels'][ucfirst($matches[1]) . '.id'] = explode(',', $value);
+			} else {
+				$order[] = $orderData;
 			}
 		}
 
-		return is_array($returnValue) ? $returnValue : null;
+		// Set contain, filter and order as params.
+		$this->controller->request->params['contain'] = $contain;
+		$this->controller->request->params['filter'] = $filter;
+		$this->controller->request->params['order'] = $order;
 	}
 }

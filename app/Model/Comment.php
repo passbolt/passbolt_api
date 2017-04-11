@@ -230,7 +230,7 @@ class Comment extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
 		$returnValue = [
 			'conditions' => []
 		];

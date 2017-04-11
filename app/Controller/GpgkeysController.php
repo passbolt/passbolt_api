@@ -16,18 +16,55 @@ class GpgkeysController extends AppController {
 	];
 
 /**
- * Index entry point.
+ * Get all gpg public keys
+ * Renders a json object of the gpg keys.
  *
  * @return void
+ *
+ * @SWG\Get(
+ *   path="/gpgkeys.json",
+ *   summary="Find gpg keys",
+ * @SWG\Parameter(
+ *     name="filter",
+ *     in="query",
+ *     description="A list of filter",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "is-modified-after"
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="An array of gpg keys",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"="#/definitions/Gpgkey"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function index() {
-		$filter = $this->Filter->fromRequest($this->request->query);
-		$data = [];
+		// Add filters, contains and order (if any) data to the get find options data.
+		$data['filter'] = $this->request->params['filter'];
+
 		// if keywords provided build the model request with
-		if (isset($filter['modified_after']) && !empty($filter['modified_after'])) {
-			$data['modified_after'] = date('Y-m-d H:i:s', $filter['modified_after']);
+		if (isset($this->request->query['modified_after'])) {
+			$data['filter']['is-modified-after'] = date('Y-m-d H:i:s', $this->request->query['modified_after']);
 		}
-		$o = $this->Gpgkey->getFindOptions('index', User::get('Role.name'), $data);
+		$o = $this->Gpgkey->getFindOptions('GpgKey::index', User::get('Role.name'), $data);
 		$returnVal = $this->Gpgkey->find('all', $o);
 		if (empty($returnVal)) {
 			$this->Message->notice(__('There is no gpg keys to display'));
@@ -58,7 +95,7 @@ class GpgkeysController extends AppController {
 		}
 
 		$data = ['Gpgkey.user_id' => $id];
-		$o = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
+		$o = $this->Gpgkey->getFindOptions('GpgKey::view', User::get('Role.name'), $data);
 		$gpgkey = $this->Gpgkey->find('first', $o);
 		if (!$gpgkey) {
 			$this->Message->error(__('The user id is invalid'), ['code' => 404]);
@@ -145,7 +182,7 @@ class GpgkeysController extends AppController {
 		$gpgkeyDataSanitized['Gpgkey']['uid'] = htmlentities($gpgkeyDataSanitized['Gpgkey']['uid']);
 
 		// Get fields to save.
-		$fields = $this->Gpgkey->getFindFields('save', User::get('Role.name'));
+		$fields = $this->Gpgkey->getFindFields('GpgKey::save', User::get('Role.name'));
 
 		// Everything alright, we save.
 		$gpgkey = $this->Gpgkey->save($gpgkeyDataSanitized, false, $fields['fields']);
@@ -162,7 +199,7 @@ class GpgkeysController extends AppController {
 
 		// Retrieve the data to return inthe response.
 		$data = ['Gpgkey.user_id' => $gpgkeyData['Gpgkey']['user_id']];
-		$options = $this->Gpgkey->getFindOptions('view', User::get('Role.name'), $data);
+		$options = $this->Gpgkey->getFindOptions('GpgKey::view', User::get('Role.name'), $data);
 		$gpgkey = $this->Gpgkey->find('first', $options);
 
 		// Send response.
