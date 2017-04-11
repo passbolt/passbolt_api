@@ -1083,4 +1083,26 @@ class User extends AppModel {
 		// Everything fine, we commit.
 		$dataSource->commit();
 	}
+
+/**
+ * Filter a list of users and remove the users that don't belong to all the groups defined by $groupsIds.
+ *
+ * @param $users
+ *   list of users, with the groups and groupUsers provided.
+ * @param $groupsIds
+ *   list of groups ids
+ *
+ * @return array
+ *   list of only the users that contain all the groups defined by userIds
+ */
+	public static function filterUsersWithAllGroups($users, $groupsIds) {
+		$results = [];
+		foreach($users as $key => $user) {
+			$groupMemberIds = Hash::extract($user['GroupUser'], '{n}.group_id');
+			if (count(array_intersect($groupMemberIds, $groupsIds)) === count($groupsIds)) {
+				array_push($results, $user);
+			}
+		}
+		return $results;
+	}
 }

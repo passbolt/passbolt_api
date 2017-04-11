@@ -183,6 +183,11 @@ class UsersController extends AppController {
 		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $findData);
 		$users = $this->User->find('all', $o);
 
+		// If filter 'has-users' is applied, remove entries where all the users are not listed.
+		if (isset($findData['filter']['has-groups'])) {
+			$users = $this->User->filterUsersWithAllGroups($users, $findData['filter']['has-groups']);
+		}
+
 		$this->set('data', $users);
 		$this->Message->success();
 	}
