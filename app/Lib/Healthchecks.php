@@ -1,6 +1,7 @@
 <?php
 App::uses('Validation', 'Utility');
 App::uses('Migration', 'Lib/Migration');
+App::uses('HttpSocket', 'Network/Http');
 
 /**
  * Class Healthchecks
@@ -14,9 +15,10 @@ class Healthchecks {
         $checks = array_merge(Healthchecks::environment(), $checks);
         $checks = array_merge(Healthchecks::configFiles(), $checks);
         $checks = array_merge(Healthchecks::core(), $checks);
+        $checks = array_merge(Healthchecks::ssl(), $checks);
         $checks = array_merge(Healthchecks::database(), $checks);
         $checks = array_merge(Healthchecks::gpg(), $checks);
-        $checks = array_merge(Healthchecks::app(), $checks);
+        $checks = array_merge(Healthchecks::application(), $checks);
         $checks = array_merge(Healthchecks::devTools(), $checks);
         return $checks;
     }
@@ -70,6 +72,33 @@ class Healthchecks {
         $checks['core']['debugDisabled'] = (Configure::read('debug') === 0);
         $checks['core']['salt'] = (Configure::read('Security.salt') !== 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
         $checks['core']['cipherSeed'] = (Configure::read('Security.cipherSeed') !== '76859309657453542496749683645');
+        $checks['core']['fullBaseUrl'] = (Configure::read('App.fullBaseUrl') !== 'http://localhost');
+        $checks['core']['validFullBaseUrl'] = Validation::url(Configure::read('App.fullBaseUrl'), true);
+        $checks['core']['info']['fullBaseUrl'] = Configure::read('App.fullBaseUrl');
+
+        // Check if the URL is reachable
+        $checks['core']['fullBaseUrlReachable'] = false;
+        try {
+            $context = stream_context_create([
+                'http' => [
+                    'method' => 'GET'
+                ],
+                'ssl' => [
+                    'verify_peer'      => false,
+                    'verify_peer_name' => false,
+                ],
+            ]);
+            $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
+            $response = @file_get_contents($url, false, $context);
+            if(isset($response)) {
+                $json = json_decode($response);
+                if(isset($json->body)) {
+                    $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
+                }
+            }
+        } catch(Exception $e) {
+        }
+
         return $checks;
     }
 
@@ -156,19 +185,20 @@ class Healthchecks {
  * @return array $checks
  * @access private
  */
-    static public function app() {
+    static public function application() {
         try {
-            $checks['app']['info']['remoteVersion'] = Migration::getLatestTagName();
-            $checks['app']['latestVersion'] = Migration::isLatestVersion();
+            $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
+            $checks['application']['latestVersion'] = Migration::isLatestVersion();
         } catch (exception $e) {
             $checks['latestVersion'] = null;
         }
-        $checks['app']['schema'] = !Migration::needMigration();
-        //$checks['app']['ssl'] = $this->request->is('ssl');
-        $checks['app']['sslForce'] = configure::read('App.ssl.force');
-        $checks['app']['seleniumDisabled'] = !Configure::read('App.selenium.active');
-        $checks['app']['registrationClosed'] = !Configure::read('App.registration.public');
-        $checks['app']['jsProd'] = (Configure::read('App.js.build') === 'production');
+        $checks['application']['schema'] = !Migration::needMigration();
+        $checks['application']['robotsIndexDisabled'] = !Configure::read('App.meta.robots.index');
+        $checks['application']['sslForce'] = Configure::read('App.ssl.force');
+        $checks['application']['sslFullBaseUrl'] = !(strpos(Configure::read('App.fullBaseUrl'),'https') === false);
+        $checks['application']['seleniumDisabled'] = !Configure::read('App.selenium.active');
+        $checks['application']['registrationClosed'] = !Configure::read('App.registration.public');
+        $checks['application']['jsProd'] = (Configure::read('App.js.build') === 'production');
 
         $checks = array_merge(Healthchecks::appUser(), $checks);
         return $checks;
@@ -184,6 +214,12 @@ class Healthchecks {
          $checks['gpg']['lib'] = (class_exists('gnupg'));
          $checks['gpg']['gpgKey'] = (Configure::read('GPG.serverKey.fingerprint') != null);
          $checks['gpg']['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
+         $checks['gpg']['gpgHome'] = (getenv('GNUPGHOME') !== false);
+         $checks['gpg']['gpgHomeWritable'] = false;
+         if($checks['gpg']['gpgHome']) {
+             $checks['gpg']['info']['gpgHome'] = getenv('GNUPGHOME');
+             $checks['gpg']['gpgHomeWritable'] = is_writable(getenv('GNUPGHOME'));
+         }
          return $checks;
      }
 
@@ -195,7 +231,7 @@ class Healthchecks {
  * @return array
  */
     static public function appUser() {
-        $checks['app']['adminCount'] = false;
+        $checks['application']['adminCount'] = false;
 
         // no point checking for records if can not connect
         $checks = Healthchecks::database();
@@ -215,7 +251,7 @@ class Healthchecks {
                     ]
                 ]]
             ]);
-            $checks['app']['adminCount'] = ($i > 0);
+            $checks['application']['adminCount'] = ($i > 0);
         } catch(Exception $e) {
         }
 
@@ -235,6 +271,73 @@ class Healthchecks {
         $checks['devTools']['phpunit'] = (class_exists('PHPUnit_Runner_Version'));
         $checks['devTools']['phpunitVersion'] = ($checks['devTools']['phpunit'] && PHPUnit_Runner_Version::id() === '3.7.38');
         $checks['devTools']['info']['phpunitVersion'] = PHPUnit_Runner_Version::id();
+        return $checks;
+    }
+
+/**
+ * SSL certs check
+ * - devTools.debugKit debugkit plugin is present
+ * - devTools.phpunit phpunit is installed
+ * - devTools.phpunitVersion phpunit version == 3.7.38
+ *
+ * @return array
+ * @access private
+ */
+    static public function ssl() {
+        $checks['ssl'] = [
+            'peerValid' => false,
+            'hostValid' => false,
+            'notSelfSigned' => false
+        ];
+
+        // No point to check anything if Core file is not valid
+        $config = Healthchecks::core();
+        if (!$config['core']['fullBaseUrlReachable'])  {
+            return $checks;
+        }
+        $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
+
+        // Check peer
+        try {
+            $HttpSocket = new HttpSocket(array(
+                'ssl_verify_peer' => true,
+                'ssl_verify_host' => false,
+                'ssl_allow_self_signed' => true
+            ));
+            $response = $HttpSocket->get($url);
+            $checks['ssl']['peerValid'] = $response->isOk();
+        } catch(Exception $e) {
+            $checks['ssl']['info'] = $e->getMessage();
+            return $checks;
+        }
+
+        // Check host
+        try {
+            $HttpSocket = new HttpSocket(array(
+                'ssl_verify_peer' => true,
+                'ssl_verify_host' => true,
+                'ssl_allow_self_signed' => true
+            ));
+            $response = $HttpSocket->get($url);
+            $checks['ssl']['hostValid'] = $response->isOk();
+        } catch(Exception $e) {
+            $checks['ssl']['info'] = $e->getMessage();
+            return $checks;
+        }
+
+        // Check self-signed
+        try {
+            $HttpSocket = new HttpSocket(array(
+                'ssl_verify_peer' => true,
+                'ssl_verify_host' => true,
+                'ssl_allow_self_signed' => false
+            ));
+            $response = $HttpSocket->get($url);
+            $checks['ssl']['notSelfSigned'] = $response->isOk();
+        } catch(Exception $e) {
+            return $checks;
+        }
+
         return $checks;
     }
 }

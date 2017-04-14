@@ -76,7 +76,7 @@ $healtcheck = new HealthcheckHtmlHelper();
     $healtcheck->assertCore($checks);
     $healtcheck->assertDatabase($checks);
     $healtcheck->assertGpg($checks);
-    $healtcheck->assertApp($checks);
+    $healtcheck->assertApplication($checks);
     $healtcheck->assertDevTools($checks);
 ?>
 </div>

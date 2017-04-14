@@ -24,12 +24,7 @@ class HealthCheckController extends AppController {
  * @link http://book.cakephp.org/2.0/en/controllers.html#request-life-cycle-callbacks
  */
 	public function beforeFilter() {
-        if (Configure::read('debug') == 0) {
-            if (User::get('Role.name') != Role::ADMIN) {
-                throw new ForbiddenException();
-            }
-        }
-        $this->Auth->allow(['index']);
+        $this->Auth->allow(['status','index']);
 		parent::beforeFilter();
 	}
 
@@ -41,11 +36,28 @@ class HealthCheckController extends AppController {
  * @return void
  */
 	public function index() {
+        // Allow access only in debug mode or if logged in as admin
+        if (Configure::read('debug') == 0) {
+            if (User::get('Role.name') != Role::ADMIN) {
+                throw new ForbiddenException();
+            }
+        }
 		$this->layout = 'login';
 		$checks = Healthchecks::all();
 		$checks = array_merge($this->__webChecks(), $checks);
 		$this->set('checks', $checks);
 	}
+
+/**
+ * A simple ok page allowing to see if the site is up
+ */
+    public function status() {
+        if(!$this->request->is('json')) {
+            $this->layout = 'empty';
+        }
+        $this->Message->success(__("OK"));
+        $this->set('data', 'OK');
+    }
 
 /**
  * Check that needs to be performs in the request context

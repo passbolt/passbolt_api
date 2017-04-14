@@ -9,7 +9,23 @@ App::uses('Healthchecks', 'Lib');
 App::uses('Healthchecks', 'Lib');
 
 class HealthcheckTask extends AppShell {
+/**
+ * Total number of errors for that check
+ * @var int
+ */
     private $__errorCount = 0;
+
+/**
+ * Control what get displayed / what to hide
+ *
+ * @var array
+ */
+    protected $_displayOptions = [
+        'hide-pass' => false,
+        'hide-warning' => false,
+        'hide-help' => false,
+        'hide-title' => false
+    ];
 
 /**
  * Gets the option parser instance and configures it.
@@ -23,8 +39,61 @@ class HealthcheckTask extends AppShell {
         );
 
 		$parser = parent::getOptionParser();
+
+        // Display options
 		$parser
-			->description(__('Check the configuration of the passbolt installation and associated environment'));
+			->description(__('Check the configuration of this installation and associated environment'))
+            ->addOption('hide-pass', array(
+                'help' => __d('cake_console', 'Hide passing checks'),
+                'boolean' => true
+            ))
+            ->addOption('hide-warning', array(
+                'help' => __d('cake_console', 'Hide warnings'),
+                'boolean' => true
+            ))
+            ->addOption('hide-help', array(
+                'help' => __d('cake_console', 'Hide help messages'),
+                'boolean' => true
+            ))
+            ->addOption('hide-title', array(
+                'help' => __d('cake_console', 'Hide section titles'),
+                'boolean' => true
+            ));
+
+        // Checks
+        $parser
+            ->addOption('environment', array(
+                'help' => __d('cake_console', 'Run environment tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('configFiles', array(
+                'help' => __d('cake_console', 'Run configFiles tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('core', array(
+                'help' => __d('cake_console', 'Run core tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('ssl', array(
+                'help' => __d('cake_console', 'Run SSL tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('database', array(
+                'help' => __d('cake_console', 'Run database tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('gpg', array(
+                'help' => __d('cake_console', 'Run gpg tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('application', array(
+                'help' => __d('cake_console', 'Run passbolt app tests only.'),
+                'boolean' => true
+            ))
+            ->addOption('devTools', array(
+                'help' => __d('cake_console', 'Run devTools tests only.'),
+                'boolean' => true
+            ));
 
 		return $parser;
 	}
@@ -35,17 +104,35 @@ class HealthcheckTask extends AppShell {
  * @return void
  */
 	public function execute() {
-        $this->out(' Healthcheck shell', 0);
-
-        // Print a dot for each checks
         $results = [];
+
+        // display options
+        $displayOptions = ['hide-pass', 'hide-warning', 'hide-help', 'hide-title'];
+        foreach($displayOptions as $option) {
+            $this->_displayOptions[$option] = (isset($this->params[$option]) && $this->params[$option]);
+        }
+
+        // if user only want to run one check
+        $paramChecks = [];
         $checks = [
-    	    'environment', 'configFiles', 'core', 'database', 'gpg', 'app', 'devTools'
+            'environment', 'configFiles', 'core', 'ssl', 'database', 'gpg', 'application', 'devTools'
         ];
         foreach($checks as $check) {
-            $this->out('.', 0);
+            if (isset($this->params[$check]) && $this->params[$check]) {
+                $paramChecks[] = $check;
+            }
+        }
+        if(count($paramChecks)) {
+            $checks = $paramChecks;
+        }
+
+        // Run all the selected checks
+        $this->out(' Healthcheck shell', 0);
+        foreach($checks as $check) {
+            $this->out('.', 0); // Print a dot for each checks to show progress
             $results = array_merge(Healthchecks::{$check}(), $results);
         }
+        // Remove all dots
         $this->out(str_repeat(chr(0x08),sizeof($checks)).str_repeat(" ",sizeof($checks)), 0);
 
         // Print results
@@ -152,26 +239,85 @@ class HealthcheckTask extends AppShell {
             $checks =  Healthchecks::core();
         }
         $this->title(__('Core config'));
-        $this->assert($checks['core']['debugDisabled'],
+        $this->assert(
+            $checks['core']['debugDisabled'],
             __('Debug mode is off.'),
             __('Debug mode is on.'),
             __('Set Configure::write(\'debug\', 0); in %s', 'app/Config/core.php')
         );
-        $this->assert($checks['core']['cache'],
+        $this->assert(
+            $checks['core']['cache'],
             __('Cache is working.'),
             __('Cache is NOT working.'),
-            __('Check the settings in %s', 'core.php')
+            __('Check the settings in %s', 'app/Config/core.php')
         );
-        $this->assert($checks['core']['salt'],
+        $this->assert(
+            $checks['core']['salt'],
             __('Unique value set for security.salt'),
             __('Default value found for security.salt'),
-            __('Edit the security.salt in %s', 'core.php')
+            __('Edit the security.salt in %s', 'app/Config/core.php')
         );
-        $this->assert($checks['core']['cipherSeed'],
+        $this->assert(
+            $checks['core']['cipherSeed'],
             __('Unique value set for security.cipherSeed'),
             __('Default value found for security.cipherSeed'),
-            __('Edit the security.salt in %s', 'core.php')
+            __('Edit the security.salt in %s', 'app/Config/core.php')
         );
+        $this->assert(
+            $checks['core']['fullBaseUrl'],
+            __('Full base url is set to %s', $checks['core']['info']['fullBaseUrl']),
+            __('Full base url is not set. The application is using: %s.', $checks['core']['info']['fullBaseUrl']),
+            __('Edit App.fullBaseUrl in %s', 'app/Config/core.php')
+        );
+        $this->assert(
+            $checks['core']['validFullBaseUrl'],
+            __('App.fullBaseUrl validation OK.'),
+            __('App.fullBaseUrl does not validate. %s.', $checks['core']['info']['fullBaseUrl']),
+            [
+                __('Edit App.fullBaseUrl in %s', 'app/Config/core.php'),
+                __('Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt')
+            ]
+        );
+        $this->assert(
+            $checks['core']['fullBaseUrlReachable'],
+            __('/healthcheck/status is reachable.'),
+            __('Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl'),
+            [
+                __('Check that the domain name is correct in %s', 'app/Config/core.php'),
+                __('Check the network settings')
+            ]
+        );
+    }
+
+/**
+ * Assert the core file configuration
+ *
+ * @param $checks array
+ * @return void
+ */
+    public function assertSSL($checks=null) {
+        if(!isset($checks)) {
+            $checks =  Healthchecks::ssl();
+        }
+        $this->title(__('SSL Certificate'));
+        $this->assert(
+            $checks['ssl']['peerValid'],
+            __('SSL peer certificate validates'),
+            __('SSL peer certificate does not validate')
+        );
+        $this->assert(
+            $checks['ssl']['hostValid'],
+            __('Hostname is matching in SSL certificate.'),
+            __('Hostname does not match when validating certificates.')
+        );
+        $this->warn(
+            $checks['ssl']['notSelfSigned'],
+            __('Not using a self-signed certificate'),
+            __('Using a self-signed certificate')
+        );
+        if(isset($checks['ssl']['info'])){
+            $this->help($checks['ssl']['info']);
+        }
     }
 
 /**
@@ -219,7 +365,7 @@ class HealthcheckTask extends AppShell {
             __('Run the install script to set the default content such as roles and permission types')
         );
         $this->assert(
-            $checks['app']['schema'],
+            $checks['application']['schema'],
             __('The database schema up to date.'),
             __('The database schema is not up to date.'),
             [
@@ -231,17 +377,17 @@ class HealthcheckTask extends AppShell {
     }
 
 /**
- * Assert application configuration is in order
+ * Assert passbolt application configuration is in order
  *
  * @param $checks array
  * @return void
  */
-    public function assertApp($checks=null) {
+    public function assertApplication($checks=null) {
         if(!isset($checks)) {
-            $checks =  Healthchecks::app();
+            $checks =  Healthchecks::application();
         }
         $this->title(__('Application configuration'));
-        if (!isset($checks['app']['latestVersion'])) {
+        if (!isset($checks['application']['latestVersion'])) {
             $this->assert(
                 false,
                 __('Could connect to passbolt repository to check versions'),
@@ -250,32 +396,47 @@ class HealthcheckTask extends AppShell {
             );
         } else {
             $this->assert(
-                $checks['app']['latestVersion'],
+                $checks['application']['latestVersion'],
                 __('Using latest passbolt version (%s)', Configure::read('App.version.number')),
-                __('This installation is not up to date. Currently using %s and it should be %s.', Configure::read('App.version.number'), $checks['app']['info']['remoteVersion']),
+                __('This installation is not up to date. Currently using %s and it should be %s.', Configure::read('App.version.number'), $checks['application']['info']['remoteVersion']),
                 __('See. https://www.passbolt.com/help/tech/update')
             );
         }
         $this->assert(
-            $checks['app']['sslForce'],
+            $checks['application']['sslForce'],
             __('Passbolt is configured to force SSL use'),
             __('Passbot is not configured to force SSL use'),
             __('Set App.ssl.force to true in app/Config/app.php')
         );
         $this->assert(
-            $checks['app']['seleniumDisabled'],
+            $checks['application']['sslFullBaseUrl'],
+            __('App.fullBaseUrl is set to HTTPS'),
+            __('App.fullBaseUrl is not set to HTTPS'),
+            __('Check App.fullBaseUrl url scheme in %s', 'app/Config/core.php')
+        );
+        $this->assert(
+            $checks['application']['seleniumDisabled'],
             __('Selenium API endpoints are disabled.'),
             __('Selenium API endpoints are active. This setting should be used for testing only.'),
             __('Set App.selenium.active to false in app/Config/app.php')
         );
         $this->warn(
-            $checks['app']['registrationClosed'],
-            __('Registration is closed, only administrators can add users.'),
-            __('Registration is open to everyone.'),
-            __('Open registration is generally not a good idea if the passbolt service is publicly available.')
+            $checks['application']['robotsIndexDisabled'],
+            __('Search engine robots are told not to index content.'),
+            __('Search engine robots are not told not to index content.'),
+            __('Set App.meta.robots.index to false in app/Config/app.php')
         );
         $this->warn(
-            $checks['app']['jsProd'],
+            $checks['application']['registrationClosed'],
+            __('Registration is closed, only administrators can add users.'),
+            __('Registration is open to everyone.'),
+            [
+                __('Make sure this instance is not publicly available on the internet.'),
+                __('Or set App.registration.public to false in app/Config/app.php')
+            ]
+        );
+        $this->warn(
+            $checks['application']['jsProd'],
             __('Serving the compiled version of the javascript app'),
             __('Using non-compiled Javascript. Passbolt will be slower'),
             __('Set App.js.build to production in app/Config/app.php')
@@ -318,6 +479,19 @@ class HealthcheckTask extends AppShell {
                 __('Create a key, export it and add the fingerprint to app/Config/app.php')
             );
         }
+        $this->assert(
+            $checks['gpg']['gpgHome'],
+            __('The environment variable GNUPGHOME is set to %s', $checks['gpg']['info']['gpgHome']),
+            __('The environment variable GNUPGHOME is not set'),
+            __('Edit app/config.php with the location of the gnupg keyring.')
+        );
+        $processUser = posix_getpwuid(posix_geteuid());
+        $this->assert(
+            $checks['gpg']['gpgHomeWritable'],
+            __('The directory containing the keyring is writable by %s.', $processUser['name']),
+            __('The directory containing the keyring is not writable by %s.', $processUser['name']),
+            __('Double check the keyring location and the permission.')
+        );
     }
 
 /**
@@ -373,6 +547,9 @@ class HealthcheckTask extends AppShell {
  * @return void
  */
     protected function warn($condition, $success, $warning, $help = null) {
+        if($this->_displayOptions['hide-warning']) {
+            return;
+        }
         if($condition) {
             $this->display($success, 'pass');
         } else {
@@ -411,15 +588,21 @@ class HealthcheckTask extends AppShell {
 
         switch ($case) {
             case 'pass':
+                if($this->_displayOptions['hide-pass']) {
+                    return;
+                }
                 $msg = ' <success>['. __('PASS') . ']</success> ' . $msg;
-            break;
+                break;
             case 'fail':
                 $msg = ' <fail>['. __('FAIL') . '] ' . $msg . '</fail>';
             break;
             case 'warn':
-                $msg = ' <warning>['. __('WARN') . ']</warning> ' . $msg;
+                $msg = ' <warning>['. __('WARN') . '] ' . $msg . '</warning>';
                 break;
             case 'info':
+                if($this->_displayOptions['hide-help']) {
+                    return;
+                }
                 $msg = '  <info>['. __('HELP') . '] ' . $msg . '</info>';
                 break;
             default:
@@ -436,6 +619,9 @@ class HealthcheckTask extends AppShell {
  * @return title
  */
      protected function title($title) {
+         if($this->_displayOptions['hide-title']) {
+             return;
+         }
         $this->out('');
         $this->out(' ' . $title);
         $this->out('');
@@ -448,7 +634,7 @@ class HealthcheckTask extends AppShell {
  */
     protected function summary() {
         if($this->__errorCount >= 1) {
-            $summary = ' <fail> ' . __('%s error(s) found. Try correcting them before installing.' . '</fail>', $this->__errorCount);
+            $summary = ' <fail> ' . __('%s error(s) found. Hang in there!', $this->__errorCount) . '</fail>';
         } else {
             $summary = ' <success>' . __('No error found. Nice one sparky!') . '</success>';
         }
