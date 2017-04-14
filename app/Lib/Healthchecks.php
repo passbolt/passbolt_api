@@ -148,6 +148,7 @@ class Healthchecks {
         }
 
         // Check if tables are present
+        $checks['database']['info']['tablesCount'] = 0;
         try {
             $User = Common::getModel('User');
             $tables = $User->query('show tables;');

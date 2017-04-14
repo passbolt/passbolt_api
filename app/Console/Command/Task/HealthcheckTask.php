@@ -356,7 +356,10 @@ class HealthcheckTask extends AppShell {
             $checks['database']['tablesCount'],
             __('%s tables found', $checks['database']['info']['tablesCount']),
             __('No table found'),
-            __('Run the install script to install the database tables')
+            [
+                __('Run the install script to install the database tables'),
+                'su -s /bin/bash -c "./app/Console/cake install" www-data'
+            ]
         );
         $this->assert(
             $checks['database']['defaultContent'],
