@@ -61,7 +61,7 @@ class GroupResourcePermissionTest extends CakeTestCase {
 /**
  * Test function findAuthorizedResources().
  *
- * Compare the results with what is inside groups_resources_permissions mmatrix.
+ * Compare the results with what is inside groups_resources_permissions matrix.
  */
 	public function testFindAuthorizedResources() {
 
@@ -98,5 +98,90 @@ class GroupResourcePermissionTest extends CakeTestCase {
 
 		// Assert that the 2 arrays are same.
 		$this->assertEquals($resources, $expectedResources);
+	}
+
+/**
+ * Test FindUnauthorizedResourcesForUsers().
+ *
+ * Compare the results with what should be returned according to the permission matrix.
+ */
+	public function testFindUnauthorizedResourcesForUsers() {
+		$user = $this->User->findById(Common::uuid('user.id.hedy'));
+		$this->User->setActive($user);
+
+
+		///// TEST 1: test for board group and user betty //////
+		$groupId = Common::uuid('group.id.board');
+		$userIds = [
+			Common::uuid('user.id.grace'),
+		];
+
+		// board can access to: cakephp, chai, composer, debian, enlightenment, fosdem, framasoft, fsfe, grogle, grunt, gnupg, git.
+		// grace can access to: cakephp, composer, debian, docker, enlightenment, framasoft, fsfe, ftp, grogle, gnupg, git, inkscape.
+		// the 3 secrets which grace can't access should be: chai, fosdem, and grunt.
+
+		$resources = $this->GroupResourcePermission->findUnauthorizedResourcesForUsers($groupId, $userIds);
+		$resourceIds = Hash::extract($resources[Common::uuid('user.id.grace')], '{n}.Resource.id');
+
+		// List of expected resources.
+		$expectedResourcesGrace = [
+			Common::uuid('resource.id.chai'),
+			Common::uuid('resource.id.fosdem'),
+			Common::uuid('resource.id.grunt'),
+		];
+
+		$this->assertEquals(count($expectedResourcesGrace), count($resourceIds));
+		foreach($expectedResourcesGrace as $expectedResource) {
+			$this->assertTrue(in_array($expectedResource, $resourceIds));
+		}
+
+		///// TEST 2: test for board group and user frances //////
+		$userIds = [
+			Common::uuid('user.id.frances'),
+		];
+
+		// board can access to: cakephp, chai, composer, debian, enlightenment, fosdem, framasoft, fsfe, grogle, grunt, gnupg, git.
+		// frances can access to: nothing
+		// the secrets which frances can't access to should be the same as groups
+
+		$resources = $this->GroupResourcePermission->findUnauthorizedResourcesForUsers($groupId, $userIds);
+		$resourceIds = Hash::extract($resources[Common::uuid('user.id.frances')], '{n}.Resource.id');
+
+		// List of expected resources.
+		$expectedResourcesFrances = [
+			Common::uuid('resource.id.cakephp'),
+			Common::uuid('resource.id.chai'),
+			Common::uuid('resource.id.composer'),
+			Common::uuid('resource.id.debian'),
+			Common::uuid('resource.id.enlightenment'),
+			Common::uuid('resource.id.fosdem'),
+			Common::uuid('resource.id.framasoft'),
+			Common::uuid('resource.id.fsfe'),
+			Common::uuid('resource.id.grogle'),
+			Common::uuid('resource.id.grunt'),
+			Common::uuid('resource.id.gnupg'),
+			Common::uuid('resource.id.git'),
+		];
+
+		$this->assertEquals(count($expectedResourcesFrances), count($resourceIds));
+		foreach($expectedResourcesFrances as $expectedResource) {
+			$this->assertTrue(in_array($expectedResource, $resourceIds));
+		}
+
+		///// TEST 3: test for board group and multiple users frances and grace //////
+		$userIds = [
+			Common::uuid('user.id.frances'),
+			Common::uuid('user.id.grace'),
+		];
+		$resources = $this->GroupResourcePermission->findUnauthorizedResourcesForUsers($groupId, $userIds);
+		$this->assertEquals(count($resources), count($userIds));
+
+		$resourceIds = array_merge(
+			Hash::extract($resources[Common::uuid('user.id.frances')], '{n}.Resource.id'),
+			Hash::extract($resources[Common::uuid('user.id.grace')], '{n}.Resource.id')
+		);
+
+		// The count of the result should be equal to the number of items expected for jean and for Irene (see above).
+		$this->assertEquals(count($expectedResourcesFrances) + count($expectedResourcesGrace), count($resourceIds));
 	}
 }

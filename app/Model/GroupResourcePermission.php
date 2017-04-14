@@ -85,4 +85,71 @@ class GroupResourcePermission extends AppModel {
 
 		return $resources;
 	}
+
+/**
+ * Get the difference between the resources that are accessible by a group, but not accessible by a given user(s).
+ *
+ * Provides the list of resources accessible by the group, minus the ones that can already be accessed by a user
+ * due to existing permissions.
+ *
+ * @param array $groupId
+ *   array of group id
+ * @param array $userIds
+ *   a single uuid, or an array of user ids
+ * @return array
+ *  list of resources with only id populated, grouped by userId.
+ */
+	public function findUnauthorizedResourcesForUsers($groupId, $userIds) {
+
+		if (!is_array($userIds)) {
+			$userIds = [ $userIds ];
+		}
+
+		// Get the list of resources accessible by the group.
+		$groupResources = $this->findAuthorizedResources($groupId);
+		if (empty($groupResources)) {
+			return [];
+		}
+		$groupResourceIds = Hash::extract($groupResources, '{n}.Resource.id');
+
+		// Get the list of existing permissions for the given users and resources.
+		$UserResourcePermission = Common::getModel('UserResourcePermission');
+		$userResourcePermissions = $UserResourcePermission->find('all', [
+			'conditions' => [
+				'UserResourcePermission.user_id' => $userIds,
+				'UserResourcePermission.resource_id' => $groupResourceIds,
+			]
+		]);
+
+
+		// resources that will be returned, aggregated by user.
+		$usersResources = [];
+
+		// Build result.
+		foreach ($userIds as $userId) {
+
+			$usersResources[$userId] = [];
+			foreach ($groupResourceIds as $groupResourceId) {
+
+				// Look for existing permission.
+				$permissionExists = false;
+				foreach($userResourcePermissions as $userResourcePermission) {
+					$permissionExists = $userResourcePermission['UserResourcePermission']['user_id'] == $userId
+						&& $userResourcePermission['UserResourcePermission']['resource_id'] == $groupResourceId;
+					if($permissionExists) { break; }
+				}
+
+				// If no permission exists, add the resource to the result.
+				if ($permissionExists == false) {
+					$usersResources[$userId][] = [
+						'Resource' => [
+							'id' => $groupResourceId,
+						]
+					];
+				}
+			}
+		}
+
+		return $usersResources;
+	}
 }
