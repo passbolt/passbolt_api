@@ -31,7 +31,7 @@ class HealthCheckControllerTest extends ControllerTestCase {
             'database' => [
                 'connect', 'supportedBackend', 'tablesPrefix', 'tablesCount', 'defaultContent'
             ],
-            'app' => [
+            'application' => [
                 'latestVersion', 'schema', 'sslForce', 'seleniumDisabled', 'registrationClosed', 'jsProd'
             ],
             'core' => [
