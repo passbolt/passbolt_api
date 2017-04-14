@@ -50,11 +50,14 @@ var Action = mad.model.Action = mad.Model.extend('mad.model.Action', /** @static
     },
 
     /**
-     * Get the associated action
+     * Execute the associated callback action if any.
+     * @param {mixed} data Data to pass to the callback if any
      * @return {function}
      */
-    getAction: function () {
-        return (typeof this.action != 'undefined') ? this.action : null;
+    execute: function (data) {
+        if(this.action) {
+            this.action(data);
+        }
     }
 });
 

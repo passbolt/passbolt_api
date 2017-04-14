@@ -33,30 +33,77 @@ class GroupsController extends AppController {
 	}
 
 /**
- * Index entry point.
+ * Get all groups
+ * Renders a json object of the groups.
  *
- * List all groups.
+ * @return void
  *
- * contain available:
- * - user: return the list of User and UserGroup for each group
- *   example: groups.json?contain[user]=1 or groups.json?contain=user
- *
- * - resource: return the list of Resource and Secrets (for current user) that can be accessed by the group.
- *   example: groups.json?contain[resource]=1 or groups.json?contain=resource
- *
- * filter available
- * - To document (doc available here: https://docs.google.com/document/d/1eQk9niUKnLAyIJ9y-NYtzIOuZOwMYmrIEG4rQmqJ86c/edit)
+ * @SWG\Get(
+ *   path="/groups.json",
+ *   summary="Find groups",
+ * @SWG\Parameter(
+ *     name="filter",
+ *     in="query",
+ *     description="A list of filter",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "has-users",
+ * 		 "has-managers",
+ * 		 "has-resources",
+ * 	   }
+ *   ),
+ * @SWG\Parameter(
+ *     name="contain",
+ *     in="query",
+ *     description="A list of associated models",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "user",
+ *     	 "resource"
+ * 	   }
+ *   ),
+ * @SWG\Parameter(
+ *     name="order",
+ *     in="query",
+ *     description="A list of order",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 	     "Group.name",
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="An array of groups",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           type="array",
+ *           items={
+ * 				"$ref"="#/definitions/Group"
+ *           }
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function index() {
+		// Add filters, contains and order data to the get find options data.
+		$findData['contain'] = $this->request->params['contain'];
+		$findData['filter'] = $this->request->params['filter'];
+		$findData['order'] = $this->request->params['order'];
+
 		// Get find options.
-		$o = $this->Group->getFindOptions(
-			'Group::index',
-			User::get('Role.name'),
-			[
-				'contain' => isset($this->request->params['contain']) ? $this->request->params['contain'] : [],
-				'filter' => isset($this->request->params['filter']) ? $this->request->params['filter'] : [],
-			]
-		);
+		$o = $this->Group->getFindOptions('Group::index', User::get('Role.name'), $findData);
 
 		// Get all groups.
 		$groups = $this->Group->find('all', $o);

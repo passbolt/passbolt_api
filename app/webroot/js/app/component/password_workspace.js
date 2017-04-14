@@ -33,7 +33,7 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		// The current selected resources
 		selectedRs: new can.Model.List(),
 		// The current filter
-		filter: new passbolt.model.Filter(),
+		filter: null,
 		// Override the silentLoading parameter.
 		silentLoading: false
 	},
@@ -44,11 +44,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 */
 	getDefaultFilterSettings: function() {
 		return new passbolt.model.Filter({
+			id: 'default',
 			label: __('All items'),
-			order: 'modified',
-			case: 'all_items',
-			type: passbolt.model.Filter.SHORTCUT,
-			keywords: ''
+			order: ['Resource.modified DESC']
 		});
 	}
 

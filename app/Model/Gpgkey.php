@@ -390,9 +390,7 @@ class Gpgkey extends AppModel {
 
 		if ($info) {
 			$data['Gpgkey'] = array_merge(
-				[
-					'key' => $key
-				],
+				['key' => $key],
 				$info
 			);
 			if (!empty($data['Gpgkey']['expires'])) {
@@ -416,20 +414,23 @@ class Gpgkey extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = null, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, &$data = null) {
+		$conditions = ['conditions' => []];
+
 		switch ($case) {
-			case 'index':
-				$conditions = ['Gpgkey.deleted' => 0];
-				if (isset($data['modified_after'])) {
-					$conditions['Gpgkey.modified >='] = $data['modified_after'];
+			case 'GpgKey::index':
+				$conditions['conditions']['Gpgkey.deleted'] = 0;
+
+				if (isset($data['filter']['is-modified-after'])) {
+					$conditions['conditions']['Gpgkey.modified >='] = $data['filter']['is-modified-after'];
 				}
-				$conditions = ['conditions' => $conditions];
 				break;
-			case 'view':
-				$conditions = ['conditions' => ['Gpgkey.deleted' => 0, 'Gpgkey.user_id' => $data['Gpgkey.user_id']]];
-				break;
-			default:
-				$conditions = ['conditions' => []];
+
+			case 'GpgKey::view':
+				$conditions['conditions'] = [
+					'Gpgkey.deleted' => 0,
+					'Gpgkey.user_id' => $data['Gpgkey.user_id']
+				];
 				break;
 		}
 
@@ -445,9 +446,11 @@ class Gpgkey extends AppModel {
  * @access public
  */
 	public static function getFindFields($case = 'view', $role = null, $data = null) {
+		$fields = ['fields' => []];
+
 		switch ($case) {
-			case 'view':
-			case 'index':
+			case 'GpgKey::view':
+			case 'GpgKey::index':
 				$fields = [
 					'fields' => [
 						'id',
@@ -464,14 +467,8 @@ class Gpgkey extends AppModel {
 					]
 				];
 				break;
-			case 'delete':
-				$fields = [
-					'fields' => [
-						'deleted'
-					]
-				];
-				break;
-			case 'save':
+
+			case 'GpgKey::save':
 				$fields = [
 					'fields' => [
 						'id',
@@ -489,9 +486,6 @@ class Gpgkey extends AppModel {
 						'modified_by',
 					]
 				];
-				break;
-			default:
-				$fields = ['fields' => []];
 				break;
 		}
 

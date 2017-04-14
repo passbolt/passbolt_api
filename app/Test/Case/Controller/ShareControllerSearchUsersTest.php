@@ -114,7 +114,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
-				'keywords' => 'carol'
+				'filter' => array(
+					'keywords' => 'carol'
+				)
 			)
 		);
 
@@ -124,13 +126,13 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
 
 		// Filter on lastname.
-		$getOptions['data']['keywords'] = 'shaw';
+		$getOptions['data']['filter']['keywords'] = 'shaw';
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
 
 		// Filter on username.
-		$getOptions['data']['keywords'] = 'carol@passbolt.com';
+		$getOptions['data']['filter']['keywords'] = 'carol@passbolt.com';
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
@@ -143,7 +145,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
-				'keywords' => 'marketing'
+				'filter' => array(
+					'keywords' => 'marketing'
+				)
 			)
 		);
 
@@ -222,7 +226,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 			'method' => 'get',
 			'return' => 'contents',
 			'data' => array(
-				'keywords' => 'edith'
+				'filter' => [
+					'keywords' => 'edith'
+				]
 			)
 		);
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);

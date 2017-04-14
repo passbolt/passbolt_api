@@ -10,6 +10,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1943: As an admin should tell if SSL certificate is invalid
 - PASSBOLT-1885: As an admin the healthcheck should tell if the full base url is not reachable
 - PASSBOLT-1939: As an admin the healthcheck should be accessible in command line
+- PASSBOLT-1614: Abstract user/password grid functions into the mad grid library
+- PASSBOLT-1571: Refactor filter: naming conventions and component implementation
+- PASSBOLT-1960: As a user I can see the list users that are part of the group in the users grid by using the group filter
 
 ## [1.4.0] - 2017-02-07
 ### Fixed

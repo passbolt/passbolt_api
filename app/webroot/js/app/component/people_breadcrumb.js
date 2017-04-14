@@ -23,9 +23,7 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
         // Template
         templateUri: 'app/view/template/component/breadcrumb/breadcrumb.ejs',
         // Hidden by default
-        status: 'hidden',
-        // The filter to display
-        filter: null
+        status: 'hidden'
     }
 
 }, /** @prototype */ {
@@ -49,59 +47,32 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
      * @return {array}
      */
     parseFilter: function (filter) {
-        var menuItems = [];
+        var menuItems = [],
+            keywords = filter.getRule('keywords');
 
-        // Add a link to filter on all items as first item.
+        // Add default filter as root action.
         var menuItem = new mad.model.Action({
             id: uuid(),
             label: __('All users'),
-            action: function () {
-                var filter = new passbolt.model.Filter({
-                    label: __('All users'),
-                    case: 'all_items',
-                    type: passbolt.model.Filter.SHORTCUT
-                });
-                mad.bus.trigger('filter_workspace', filter);
-            }
+            filter: passbolt.component.PeopleWorkspace.getDefaultFilterSettings()
         });
         menuItems.push(menuItem);
 
-        // If we want to filter on a group.
-        if (typeof filter.foreignModels.Group != 'undefined') {
-            // The breadcrumb can react for a unique group.
-            if (filter.foreignModels.Group.length == 1) {
-                var group = filter.foreignModels.Group[0];
-
-                // Add the current group to the breadcrumb.
-                var menuItem = new mad.model.Action({
-                    id: uuid(),
-                    label: group.name,
-                    action: function () {
-                        mad.bus.trigger('group_selected', category);
-                    }
-                });
-                menuItems.push(menuItem);
-            }
-        }
-        // If we want to filter on keywords.
-        else if (typeof filter.keywords != 'undefined' && filter.keywords != '') {
-            // Add the search keywords to the breadcrumb.
+        // If filtered by keywords, add a breadcrumb relative to the searched keywords
+        if (keywords && keywords != '') {
             var menuItem = new mad.model.Action({
                 id: uuid(),
-                label: __('Search : %s', filter.keywords)
+                label: __('Search : %s', keywords)
             });
             menuItems.push(menuItem);
         }
-        // Case filter
-        else {
-            if (typeof filter.label != 'undefined'
-                && filter.label != __('All users')) {
-                var menuItem = new mad.model.Action({
-                    id: uuid(),
-                    label: filter.label
-                });
-                menuItems.push(menuItem);
-            }
+        // For any other filters than the default one, add a breadcrumb entry.
+        else if (filter.id != 'default') {
+            var menuItem = new mad.model.Action({
+                id: uuid(),
+                label: filter.label
+            });
+            menuItems.push(menuItem);
         }
 
         return menuItems;
@@ -119,7 +90,25 @@ var PeopleBreadcrumb = passbolt.component.PeopleBreadcrumb = mad.Component.exten
     },
 
     /* ************************************************************** */
-    /* LISTEN TO THE APP EVENTS */
+    /* LISTEN TO THE VIEW EVENTS */
+    /* ************************************************************** */
+
+    /**
+     * An item has been selected
+     * @parent mad.component.Menu.view_events
+     * @param {HTMLElement} el The element the event occured on
+     * @param {HTMLEvent} ev The event which occured
+     * @param {string} item The selected item
+     * @return {void}
+     */
+    ' item_selected': function (el, ev, item) {
+        if (item.filter) {
+            mad.bus.trigger('filter_workspace', item.filter);
+        }
+    },
+
+    /* ************************************************************** */
+    /* LISTEN TO APP EVENTS */
     /* ************************************************************** */
 
     /**
