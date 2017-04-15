@@ -225,6 +225,7 @@ class Resource extends AppModel {
 			case 'add':
 			case 'edit':
 			case 'view':
+			case 'Group::edit':
 				$conditions = [
 					'conditions' => [
 						'Resource.deleted' => 0,
@@ -351,6 +352,27 @@ class Resource extends AppModel {
 						'expiry_date',
 						'uri',
 						'description',
+					]
+				];
+				break;
+			case 'Group::edit':
+				$fields = [
+					'fields' => [
+						'DISTINCT Resource.id',
+						'Resource.name',
+					],
+					'contain' => [
+						'Secret' => [
+							'fields' => [
+								'Secret.id',
+								'Secret.user_id',
+								'Secret.data',
+							],
+							// We get only the secret for the current user.
+							'conditions' => [
+								'Secret.user_id' => User::get('id')
+							],
+						],
 					]
 				];
 				break;

@@ -317,6 +317,67 @@ class GroupsController extends AppController {
 	}
 
 /**
+ * Get output for edit::dry-run.
+ *
+ * Provides the list of secrets that will have to be encrypted.
+ *
+ * @param $groupId
+ * @param $groupUsers
+ * @return array
+ */
+	private function __getEditDryRunOutput($groupId, $groupUsers) {
+
+		$secretsToEncrypt = [
+			'SecretsNeeded' => [],
+			'Secrets' => [],
+		];
+
+		$changes = $this->Group->GroupUser->prepareBulkUpdate($groupId, $groupUsers);
+		if (count($changes['create']) > 0) {
+			$userIds = Hash::extract($changes['create'], '{n}.GroupUser.user_id');
+			$userResources = $this->Group->GroupResourcePermission->findUnauthorizedResourcesForUsers($groupId, $userIds);
+			foreach($userResources as $userId => $resources) {
+				foreach($resources as $resource) {
+					$secretsToEncrypt['SecretsNeeded'][] = [
+						'Secret' => [
+							'user_id' => $userId,
+							'resource_id' => $resource['Resource']['id'],
+						]
+					];
+				}
+			}
+
+			$resourceIds = array_unique(Hash::extract($secretsToEncrypt['SecretsNeeded'], '{n}.Secret.resource_id'));
+			// Get the same resources with secret for user.
+			$Resource = Common::getModel('Resource');
+			$options = $Resource->getFindOptions('Group::edit', User::get('Role.name'), ['Resource.id' => $resourceIds]);
+			//throw new Exception(print_r($options, true));
+			$resources = $Resource->find('all', $options);
+
+			// Remove unwanted output. (this is disgusting and should be implemented more elegantly when we'll shift to CakePHP 3.x).
+			foreach($resources as $key => $resource) {
+				unset($resources[$key]['UserResourcePermission']);
+				unset($resources[$key]['Permission']);
+			}
+
+			$secretsToEncrypt['Secrets'] = $resources;
+		}
+
+		return $secretsToEncrypt;
+	}
+
+/**
+ * Check if the call is made with the dry-run parameter.
+ * @return bool
+ */
+	private function __isDryRun() {
+		if (in_array('dry-run', $this->params['pass'])) {
+			return true;
+		}
+		return false;
+	}
+
+/**
  * Edit entry point.
  *
  * Edit a Group and its GroupUsers.
@@ -359,6 +420,8 @@ class GroupsController extends AppController {
 			return $this->Message->error(__('You are not authorized to access to this group'), ['code' => '401']);
 		}
 
+		$isDryRun = $this->__isDryRun();
+
 		$this->Group->begin();
 
 		// If name if provided, and user is an admin, process name change.
@@ -366,7 +429,7 @@ class GroupsController extends AppController {
 
 		$isNameProvided = !empty(Hash::extract($groupData, 'Group.name')) ? true : false;
 		// Process request.
-		if ($isAdmin == true && $isNameProvided == true) {
+		if ($isAdmin == true && $isNameProvided == true && $isDryRun == false) {
 			try {
 				$this->__updateGroupName($id, $groupData['Group']['name']);
 			}
@@ -383,26 +446,36 @@ class GroupsController extends AppController {
 		// Edit GroupUsers if provided.
 		$isGroupUsersProvided = isset($groupData['GroupUsers']) && !empty($groupData['GroupUsers']) ? true : false;
 
+		// Default output.
 		$changes = [
 			'count' => 0,
 			'created' => [],
 			'updated' => [],
 			'deleted' => [],
 		];
-		if ($isGroupUsersProvided && $isGroupAdmin) {
-			// If secrets is not provided, define one by default.
-			if (!isset($groupData['Secrets']) || empty($groupData['Secrets'])) {
-				$groupData['Secrets'] = [];
-			}
+		$dryRunOutput = [];
 
-			try {
-				$changes = $this->__updateGroupUsers($id, $groupData['GroupUsers'], $groupData['Secrets']);
-			} catch (ValidationException $e) {
-				$this->Group->rollback();
-				return $this->Message->error($e->getMessage(), ['body' => $e->getInvalidFields()]);
-			} catch (Exception $e) {
-				$this->Group->rollback();
-				return $this->Message->error($e->getMessage());
+		if ($isGroupUsersProvided && $isGroupAdmin) {
+
+			// In case of dry-run, calculate the list of secrets that need to be provided.
+			if ($isDryRun) {
+				$dryRunOutput = $this->__getEditDryRunOutput($id, $groupData['GroupUsers']);
+			}
+			else {
+				// If secrets is not provided, define one by default.
+				if (!isset($groupData['Secrets']) || empty($groupData['Secrets'])) {
+					$groupData['Secrets'] = [];
+				}
+
+				try {
+					$changes = $this->__updateGroupUsers($id, $groupData['GroupUsers'], $groupData['Secrets']);
+				} catch (ValidationException $e) {
+					$this->Group->rollback();
+					return $this->Message->error($e->getMessage(), ['body' => $e->getInvalidFields()]);
+				} catch (Exception $e) {
+					$this->Group->rollback();
+					return $this->Message->error($e->getMessage());
+				}
 			}
 		}
 
@@ -428,6 +501,11 @@ class GroupsController extends AppController {
 
 		// Merge changes with group result.
 		$res = array_merge($group, [ 'changes' => $changes ]);
+
+		// In case of dry run, add output.
+		if ($isDryRun) {
+			$res['dry-run'] = $dryRunOutput;
+		}
 
 		// Success response.
 		$this->set('data', $res);
