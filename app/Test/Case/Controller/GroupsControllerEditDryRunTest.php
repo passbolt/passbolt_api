@@ -17,7 +17,7 @@ App::uses('CakeSessionFixture', 'Test/Fixture');
 /**
  * Class GroupsControllerTest
  */
-class GroupsControllerEditTest extends ControllerTestCase {
+class GroupsControllerEditDryRunTest extends ControllerTestCase {
 
 	// Fixtures to be used.
 	public $fixtures = array(
