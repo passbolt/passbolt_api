@@ -80,7 +80,7 @@ class Group extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'Group::view', $role = null, $data = null) {
+	public static function getFindConditions($case = 'Group::view', $role = null, &$data = null) {
 		$conditions = [];
 
 		switch ($case) {
@@ -89,25 +89,27 @@ class Group extends AppModel {
 			case 'Group::view':
 				$conditions = ['conditions' => ['Group.deleted' => 0, 'Group.id' => $data['Group.id']]];
 				break;
+
 			case 'Group::index':
 				$conditions = ['conditions' => [ 'Group.deleted' => 0 ]];
-				if(isset($data['filter']['has-users']) || isset($data['filter']['has-managers'])) {
-					$users = isset($data['filter']['has-users']) ?
-						$data['filter']['has-users'] : $data['filter']['has-managers'];
-					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
-				}
-				if(isset($data['filter']['has-managers'])) {
-					$conditions['conditions'][] = ['GroupsUser.is_admin' => 1];
-				}
 
-				if (isset($data['filter']['keywords'])) {
-					$keywords = explode(' ', $data['filter']['keywords']);
+				if (isset($data['filter']['keywords'][0])) {
+					$keywords = explode(' ', trim($data['filter']['keywords'][0]));
 					foreach ($keywords as $keyword) {
 						$conditions['conditions']["AND"][] = ['Group.name LIKE' => '%' . $keyword . '%'];
 					}
 				}
-				$conditions['order'] = 'Group.name ASC';
+				if (isset($data['filter']['has-users'])) {
+					$users = $data['filter']['has-users'];
+					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
+				}
+				if (isset($data['filter']['has-managers'])) {
+					$users = $data['filter']['has-managers'];
+					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
+					$conditions['conditions'][] = ['GroupsUser.is_admin' => 1];
+				}
 				break;
+
 			case 'Share::searchUsers':
 				// Use conditions already defined for the index case
 				$conditions = Group::getFindConditions('Group::index', $role, $data);
@@ -122,8 +124,8 @@ class Group extends AppModel {
 						AND GroupToGrant.id NOT IN (
 							SELECT Permission.aro_foreign_key
 							FROM permissions Permission
-							WHERE Permission.aco = "' . $data['aco'] . '"
-								AND Permission.aco_foreign_key = "' . $data['aco_foreign_key'] . '"
+							WHERE Permission.aco = "' . $data['Permission.aco'] . '"
+								AND Permission.aco_foreign_key = "' . $data['Permission.aco_foreign_key'] . '"
 								AND Permission.aro_foreign_key = GroupToGrant.id
 						)',
 					],
@@ -223,23 +225,16 @@ class Group extends AppModel {
 	}
 
 /**
- * Return the list of filter instructions allowed.
- * @param string $case
+ * Return the list of order instructions allowed for each case, with their default value
+ *
+ * @param null $case
  * @param null $role
  * @return array
  */
-	public static function getFindFilter($case = 'view', $role = null) {
-		$filter = [];
-		switch ($case) {
-			case 'Group::index':
-				$filter = [
-					'has-users',
-					'has-managers',
-					'has-resources',
-				];
-				break;
-		}
-		return $filter;
+	public static function getFindAllowedOrder($case = null, $role = null) {
+		return [
+			'Group.name',
+		];
 	}
 
 /**
@@ -254,16 +249,14 @@ class Group extends AppModel {
  *   list of only the groups that contain at least the members defined by userIds
  */
 	public static function filterGroupWithAllUsers($groups, $userIds) {
+		$results = [];
 		foreach($groups as $key => $group) {
 			$groupMemberIds = Hash::extract($group['GroupUser'], '{n}.user_id');
-			foreach($userIds as $userId) {
-				if (!in_array($userId, $groupMemberIds)) {
-					unset($groups[$key]);
-					break;
-				}
+			if (count(array_intersect($groupMemberIds, $userIds)) === count($userIds)) {
+				array_push($results, $group);
 			}
 		}
-		return $groups;
+		return $results;
 	}
 
 

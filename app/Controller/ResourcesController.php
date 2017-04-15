@@ -26,32 +26,44 @@ class ResourcesController extends AppController {
  *   path="/resources.json",
  *   summary="Find resources",
  * @SWG\Parameter(
- *     name="filter_keywords",
+ *     name="filter",
  *     in="query",
- *     description="Keywords to filter by",
- *     required=false,
- *     type="string"
- *   ),
- * @SWG\Parameter(
- *     name="filter_case",
- *     in="query",
- *     description="Case to filter by",
+ *     description="A list of filter",
  *     required=false,
  *     type="string",
  * 	   enum={
- * 		 "favorite",
- * 		 "shared"
+ * 		 "is-favorite",
+ * 		 "is-owned-by-be",
+ * 		 "is-shared-with-me"
  * 	   }
  *   ),
  * @SWG\Parameter(
- *     name="filter_order",
+ *     name="contain",
  *     in="query",
- *     description="Field to order by",
+ *     description="A list of associated models",
  *     required=false,
  *     type="string",
  * 	   enum={
- * 		 "modified",
- * 		 "expiry_date"
+ * 		 "Creator",
+ *     	 "Favorite",
+ *       "Modifier",
+ *       "Secret"
+ * 	   }
+ *   ),
+ * @SWG\Parameter(
+ *     name="order",
+ *     in="query",
+ *     description="A list of order",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 	     "Resource.name",
+ * 	     "Resource.username",
+ * 	     "Resource.expiry_date",
+ * 	     "Resource.uri",
+ * 	     "Resource.description",
+ * 	     "Resource.created",
+ * 	     "Resource.modified",
  * 	   }
  *   ),
  * @SWG\Response(
@@ -68,7 +80,7 @@ class ResourcesController extends AppController {
  *           property="body",
  *           type="array",
  *           items={
- * 				"$ref"= "#/definitions/Resource"
+ * 				"$ref"="#/definitions/Resource"
  *           }
  *         )
  *       }
@@ -77,11 +89,13 @@ class ResourcesController extends AppController {
  * )
  */
 	public function index() {
-		// Extract the filter from the request
-		$findData = $this->Filter->fromRequest($this->request->query);
+		// Add filters and contain data to the get find options data.
+		$findData['contain'] = $this->request->params['contain'];
+		$findData['filter'] = $this->request->params['filter'];
+		$findData['order'] = $this->request->params['order'];
 
 		// Retrieve the resources
-		$findOptions = $this->Resource->getFindOptions('index', User::get('Role.name'), $findData);
+		$findOptions = $this->Resource->getFindOptions('Resource::index', User::get('Role.name'), $findData);
 		$resources = $this->Resource->find('all', $findOptions);
 
 		if (!$resources) {
@@ -154,7 +168,7 @@ class ResourcesController extends AppController {
 		$data = [
 			'Resource.id' => $id
 		];
-		$o = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
+		$o = $this->Resource->getFindOptions('Resource::view', User::get('Role.name'), $data);
 		$this->set('data', $this->Resource->find('first', $o));
 		$this->Message->success();
 	}
@@ -237,7 +251,7 @@ class ResourcesController extends AppController {
 		$this->Resource->set($resourcepost);
 
 		// Get fields to validate.
-		$fields = $this->Resource->getFindFields('save', User::get('Role.name'));
+		$fields = $this->Resource->getFindFields('Resource::save', User::get('Role.name'));
 
 		// check if the data is valid.
 		if (!$this->Resource->validates(['fieldList' => $fields['fields']])) {
@@ -305,7 +319,7 @@ class ResourcesController extends AppController {
 		$this->Message->success(__('The resource was successfully saved'));
 
 		// Return the added resource.
-		$addedResourceFindOptions = $this->Resource->getFindOptions('view', User::get('Role.name'), [
+		$addedResourceFindOptions = $this->Resource->getFindOptions('Resource::view', User::get('Role.name'), [
 			'Resource.id' => $resource['Resource']['id']
 		]);
 		$addedResource = $this->Resource->find('first', $addedResourceFindOptions);
@@ -432,7 +446,7 @@ class ResourcesController extends AppController {
 		$data = [
 			'Resource.id' => $resource['Resource']['id']
 		];
-		$options = $this->Resource->getFindOptions('view', User::get('Role.name'), $data);
+		$options = $this->Resource->getFindOptions('Resource::view', User::get('Role.name'), $data);
 		$resource = $this->Resource->find('first', $options);
 
 		$this->Message->success(__('The resource was successfully updated'));

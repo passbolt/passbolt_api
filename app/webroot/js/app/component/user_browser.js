@@ -46,12 +46,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     filterSettings: null,
 
-    /**
-     * Keep a trace of the old filter used to filter the browser.
-     * @type {passbolt.model.Filter}
-     */
-    oldFilterSettings: null,
-
     // Constructor like
     init: function (el, options) {
 
@@ -143,27 +137,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         })];
 
         this._super(el, options);
-    },
-
-    /**
-     * Get a target column model of the grid.
-     * If no target
-     *
-     * @todo move this function to the parent class mad.grid
-     * @return {mad.model.Model}
-     */
-    getColumnModel: function (name) {
-        var returnValue = null;
-        if (name != undefined) {
-            for (var i in this.options.columnModel) {
-                if (this.options.columnModel[i].name == name) {
-                    return this.options.columnModel[i];
-                }
-            }
-        } else {
-            returnValue = this.options.columnModel;
-        }
-        return returnValue;
     },
 
     /**
@@ -285,13 +258,13 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     },
 
     /**
-     * Load resources in the grid
-     * @param {passbolt.model.Resource.List} resources The list of resources to
-     * load into the grid
+     * Reset the grid
      */
-    load: function (users) {
-        // load the users
-        this._super(users);
+    reset: function () {
+        this.filtered = false;
+        var sortedColumnModel = this.getColumnModel('name');
+        this.view.markColumnAsSorted(sortedColumnModel, true);
+        this._super();
     },
 
     /**
@@ -299,8 +272,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mad.model.Model} item The item to select
      */
     beforeSelect: function (item) {
-        var self = this,
-            returnValue = true;
+        var returnValue = true;
 
         if (this.state.is('selection')) {
             // if an item has already been selected
@@ -402,47 +374,22 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
     filterBySettings: function(filter) {
         var self = this,
         // The deferred used for the users find all request.
-            def = $.Deferred();
+            def = null;
 
-        // Save the old filter settings.
-        this.oldFilterSettings = this.filterSettings;
-        // Clone the given filter to avoid any changes problem.
-        this.filterSettings = filter.clone();
-
-        //// reset the state variables
-        //this.options.groups = [];
-		//
-        //// override the current list of users displayed with the new ones
-        //var filteredGroup = filter.getForeignModels('Group');
-        //if (filteredGroup) {
-        //    can.each(filteredGroup, function (group, i) {
-        //        self.options.groups.push(group.id);
-        //    });
-        //}
-
-        // If the current filter case is different than the previous filter case
-        //   or this is the initial filtering (loading)
-        if (this.oldFilterSettings == null
-            || this.filterSettings.case != this.oldFilterSettings.case) {
-
-            // Mark the component as loading.
-            // Complete it once the users are retrieved and rendered.
+        // If new filter or the filter changed, request the API.
+        if (!this.filterSettings || this.filterSettings.id !== filter.id) {
             this.setState('loading');
-
-            // Remove all elements from the grid
             this.reset();
 
-            // Retrieve the resources.
-            passbolt.model.User.findAll({
-                filter: this.filterSettings,
-                recursive: true,
-                silentLoading: false
-            }).then(function (users, response, request) {
+            // Request the API.
+            var findOptions = {
+                silentLoading: false,
+                filter: filter.getRules(['keywords']), // All rules except keywords that is filtered on the browser.
+                order: filter.getOrders()
+            };
+            def = passbolt.model.User.findAll(findOptions).then(function (users, response, request){
                 // If the browser has been destroyed before the request completed.
                 if (self.element == null) return;
-
-                // If the grid was marked as filtered, reset it.
-                self.filtered = false;
 
                 // Load the resources in the browser.
                 self.load(users);
@@ -451,63 +398,50 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                     self.state.addState('empty');
                 }
 
-                // @todo should be cleaned with the filter refactoring PASSBOLT-1571
-                if (filter.case == 'all_items') {
-                    var sortedColumnModel = self.getColumnModel('name');
-                    self.view.markColumnAsSorted(sortedColumnModel, true);
-                }
-
-                // If the resources are ordered.
-                if (filter.order != undefined) {
+                // If the results is ordered by the server, mark the relative column.
+                if (filter.order) {
                     var sortedColumnModel = self.getColumnModel(filter.order);
-                    if (sortedColumnModel != null) {
-                        var orderAsc = true;
-                        self.view.markColumnAsSorted(sortedColumnModel, orderAsc);
+                    if (sortedColumnModel) {
+                        self.view.markColumnAsSorted(sortedColumnModel, true);
                     }
                 }
-
-                def.resolve();
             });
-        } else {
-            def.resolve();
         }
+        this.filterSettings = filter;
 
-        // When the resources have been retrieved.
+        // Once the call API done, if any, filter locally the result by keywords if any.
         $.when(def).done(function() {
-            // Filter by keywords.
-            var keywords = filter.getKeywords();
-            if (keywords != '') {
+            // Mark the ordered column if any.
+            var orders = filter.getOrders();
+            if (orders && orders[0]) {
+                var matches = /((\w*)\.)?(\w*)\s*(asc|desc|ASC|DESC)?/i.exec(orders[0]),
+                    modelName = matches[2],
+                    fieldName = matches[3],
+                    sortWay = matches[4] ? matches[4].toLowerCase() : 'asc';
+
+                if (fieldName) {
+                    if (fieldName === 'last_name' || fieldName === "first_name") {
+                        fieldName = 'name';
+                    }
+
+                    var sortedColumnModel = self.getColumnModel(fieldName);
+                    if (sortedColumnModel) {
+                        self.view.markColumnAsSorted(sortedColumnModel, sortWay === 'asc');
+                    }
+                }
+            }
+
+            // Filter by keywords if any filter defined.
+            var keywords = filter.getRule('keywords');
+            if (keywords && keywords != '') {
                 self.filterByKeywords(keywords, {
                     searchInFields: ['username', 'Role.name', 'Profile.first_name', 'Profile.last_name']
                 });
-            } else if (self.isFiltered()){
+            }
+            // Otherwise reset the local filtering.
+            else if (self.isFiltered()){
                 self.resetFilter();
             }
-        });
-
-        return def;
-    },
-
-    /**
-     * Does the item exist
-     * @param {passbolt.Model} item The item to check if it existing
-     * @return {boolean}
-     * @todo PASSBOLT-1614 move this function into mad grid.
-     */
-    itemExists: function (item) {
-        return this.view.getItemElement(item).length > 0 ? true : false;
-    },
-
-    /**
-     * Reset the filtering
-     * @todo PASSBOLT-1614 move this function into mad grid.
-     */
-    resetFilter: function () {
-        var self = this;
-        this.options.isFiltered = false;
-
-        can.each(this.options.items, function(item, i) {
-            self.view.showItem(item);
         });
     },
 
@@ -626,11 +560,6 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         if (this.state.is('ready')) {
             this.setState('selection');
         }
-        // if the grid is already in selected state, switch to multipleSelected
-        // @todo Multiple selection has been disabled
-        //else if (this.state.is('selection')) {
-        //    this.setState('multipleSelection');
-        //}
 
         // find the resource to select functions of its id
         var i = mad.model.List.indexOf(this.options.items, userId);
