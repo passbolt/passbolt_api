@@ -6,7 +6,7 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');
-App::uses('GroupsController', 'Controller');
+App::uses('UsersController', 'Controller');
 App::uses('User', 'Model');
 App::uses('Group', 'Model');
 App::uses('Role', 'Model');
@@ -19,7 +19,6 @@ App::uses('CakeSessionFixture', 'Test/Fixture');
  */
 class GroupsControllerViewTest extends ControllerTestCase {
 
-	// Fixtures to be used.
 	public $fixtures = array(
 		'app.groups_user',
 		'app.group',
@@ -46,6 +45,9 @@ class GroupsControllerViewTest extends ControllerTestCase {
 		$this->Group = Common::getModel('Group');
 		$this->session = new CakeSession();
 		$this->session->init();
+
+		$user = $this->User->findById(Common::uuid('user.id.dame'));
+		$this->User->setActive($user);
 	}
 
 	public function tearDown() {
@@ -54,151 +56,81 @@ class GroupsControllerViewTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
-
-	/**
-	 * Test a call to index without being logged in.
-	 *
-	 * @return void
-	 */
-	public function testViewNoAllowed() {
-		// We expect an exception.
+	public function testViewForbiddenAccess() {
+		$this->User->setInactive();
 		$this->setExpectedException('ForbiddenException', 'You need to login to access this location');
-
-		// Group Id.
-		$groupId = Common::uuid('group.id.accounting');
-
-		// Test with anonymous user
-		$this->testAction("/groups/$groupId.json", array('return' => 'contents', 'method' => 'GET'), true);
+		$id = Common::uuid('group.id.accounting');
+		$this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'GET'));
 	}
 
-	/**
-	 * Test a call to index without being logged in.
-	 *
-	 * @return void
-	 */
-	public function testViewWrongFormat() {
-		$user = $this->User->findById(Common::uuid('user.id.frances'));
-		$this->User->setActive($user);
-
-		// We expect an exception.
-		$this->setExpectedException('BadRequestException', 'The group id is invalid');
-
-		// Test with anonymous user
-		$this->testAction("/groups/aaa.json", array('return' => 'contents', 'method' => 'GET'), true);
+	public function testViewGroupIdIsMissing() {
+		// Unable to test missing id param because of route
 	}
 
-	/**
-	 * Test a call to view.
-	 *
-	 * @return void
-	 */
-	public function testViewNormal() {
-		$user = $this->User->findById(Common::uuid('user.id.frances'));
-		$this->User->setActive($user);
+	public function testViewGroupIdNotValid() {
+		// test an error bad id
+		$this->setExpectedException('HttpException', 'The group id is invalid');
+		$this->testAction("/groups/badid.json", array('method' => 'get', 'return' => 'contents'));
+	}
 
-		// Group Id.
-		$groupId = Common::uuid('group.id.accounting');
+	public function testViewGroupDoesNotExist() {
+		$id = Common::uuid('not-valid-reference');
+		// test when a wrong id is provided
+		$this->setExpectedException('HttpException', 'The group does not exist');
+		$this->testAction("/groups/{$id}.json", array('method' => 'get','return' => 'contents'));
+	}
 
-		// Test with anonymous user
-		$res = $this->testAction("/groups/$groupId.json", array('return' => 'contents', 'method' => 'GET'), true);
+	public function testViewGroupDeletedGroup() {
+		$id = Common::uuid('group.id.ergonom');
 
-		$json = json_decode($res, true);
+		// delete the group
+		$this->Group->softDelete($id);
 
-		$this->assertEquals($json['header']['status'], Status::SUCCESS, '/groups.json should return success');
+		// View the group
+		$this->setExpectedException('HttpException', 'The group does not exist');
+		$this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'get'));
+	}
 
-		$keys = array_keys($json['body']);
+	public function testViewGroup(){
+		$id = Common::uuid('group.id.ergonom');
+
+		// test if the object returned is a success one
+		$result = json_decode($this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'get')), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status']);
+		$this->assertEquals('Ergonom', $result['body']['Group']['name']);
+		// Test the result contain the expected associated model
+		$keys = array_keys($result['body']);
 		$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
 	}
 
-	/**
-	 * Test a call to view a deleted group.
-	 *
-	 * It should return a 404.
-	 *
-	 * @return void
-	 */
-	public function testViewDeleted() {
-		$user = $this->User->findById(Common::uuid('user.id.frances'));
-		$this->User->setActive($user);
+	public function testViewGroupWithUserContain(){
+		$id = Common::uuid('group.id.ergonom');
 
-		// Make sure that the deleted group is not part of the list.
-		$deletedGroup = $this->Group->findByDeleted(1);
+		// The result should contain associated model
+		$data['contain'] = ['user' => 1];
 
-		// We expect an exception.
-		$this->setExpectedException('NotFoundException', 'The group doesn\'t exist');
-
-		$groupId = $deletedGroup['Group']['id'];
-
-		// Test with anonymous user
-		$this->testAction("/groups/$groupId.json", array('return' => 'contents', 'method' => 'GET'), true);
-	}
-
-
-	/**
-	 * Test view entry point with contain user parameter.
-	 *
-	 * Assert that when contain[user] is passed, the output contains for the group a User and GroupUser object
-	 */
-	public function testViewWithUserContain() {
-		// test with normal user
-		$user = $this->User->findById(Common::uuid('user.id.user'));
-		$this->User->setActive($user);
-
-		// Group Id.
-		$groupId = Common::uuid('group.id.accounting');
-
-		// Call to entry point with contain params.
-		$params = [
-			'contain' => ['user' => 1]
-		];
-		$res = $this->testAction(
-			"/groups/$groupId.json", [
-				'return' => 'contents',
-				'method' => 'GET',
-				'data' => $params
-			],
-			true
-		);
-
-		$json = json_decode($res, true);
-
-		$this->assertEquals($json['header']['status'], Status::SUCCESS, '/groups.json should return success');
-
-		$keys = array_keys($json['body']);
+		// test if the object returned is a success one
+		$result = json_decode($this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'get', 'data' => $data)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status']);
+		$this->assertEquals('Ergonom', $result['body']['Group']['name']);
+		// Test the result contain the expected associated model
+		$keys = array_keys($result['body']);
 		$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
 	}
 
-	/**
-	 * Test view entry point without contain user parameter.
-	 *
-	 * Assert that when contain[user] is removed, the output doesn't contain GroupUser nor User.
-	 */
-	public function testViewWithoutUserContain() {
+	public function testViewGroupWithoutUserContain(){
+		$id = Common::uuid('group.id.ergonom');
 
-		$user = $this->User->findById(Common::uuid('user.id.user'));
-		$this->User->setActive($user);
+		// The result should contain associated model
+		$data['contain'] = ['user' => 0];
 
-		// Group Id.
-		$groupId = Common::uuid('group.id.accounting');
-
-		// Call to entry point with contain params.
-		$params = [
-			'contain' => ['user' => 0]
-		];
-		$res = $this->testAction(
-				"/groups/$groupId.json", [
-				'return' => 'contents',
-				'method' => 'GET',
-				'data' => $params
-			],
-			true
-		);
-
-		$json = json_decode($res, true);
-
-		$this->assertEquals($json['header']['status'], Status::SUCCESS, '/groups.json should return success');
-
-		$keys = array_keys($json['body']);
+		// test if the object returned is a success one
+		$result = json_decode($this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'get', 'data' => $data)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status']);
+		$this->assertEquals('Ergonom', $result['body']['Group']['name']);
+		// Test the result contain the expected associated model
+		$keys = array_keys($result['body']);
 		$this->assertEquals($keys, ['Group']);
 	}
+
 }

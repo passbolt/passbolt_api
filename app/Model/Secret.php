@@ -192,7 +192,7 @@ class Secret extends AppModel {
 	}
 
 
-	/**
+/**
  * Return the find conditions to be used for a given context.
  *
  * @param null|string $case The target case.

@@ -63,7 +63,8 @@ class SecretTest extends CakeTestCase {
 			'509bb871-3b14-4877-8a88-fb098cebc04b' => false
 		);
 		foreach ($testcases as $testcase => $result) {
-			$secret = array('Secret' => array('resource_id' => $testcase));
+			$secret = array('Secret' => array('resource_id' => $testcase, 'user_id' => Common::uuid('user.id.frances')));
+			$this->Secret->create();
 			$this->Secret->set($secret);
 			if($result) $msg = 'validation of the secret resource_id with ' . $testcase . ' should validate';
 			else $msg = 'validation of the secret resource_id with ' . $testcase . ' should not validate';
