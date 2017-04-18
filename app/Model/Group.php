@@ -87,11 +87,12 @@ class Group extends AppModel {
 			case 'Group::add':
 			case 'Group::edit':
 			case 'Group::view':
+			case 'Group::exists':
 				$conditions = ['conditions' => ['Group.deleted' => 0, 'Group.id' => $data['Group.id']]];
 				break;
 
 			case 'Group::index':
-				$conditions = ['conditions' => [ 'Group.deleted' => 0 ]];
+				$conditions = ['conditions' => ['Group.deleted' => 0]];
 
 				if (isset($data['filter']['keywords'][0])) {
 					$keywords = explode(' ', trim($data['filter']['keywords'][0]));
@@ -102,11 +103,13 @@ class Group extends AppModel {
 				if (isset($data['filter']['has-users'])) {
 					$users = $data['filter']['has-users'];
 					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
+					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'user';
 				}
 				if (isset($data['filter']['has-managers'])) {
 					$users = $data['filter']['has-managers'];
 					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
 					$conditions['conditions'][] = ['GroupsUser.is_admin' => 1];
+					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'user';
 				}
 				break;
 
@@ -160,11 +163,6 @@ class Group extends AppModel {
 					],
 					'contain' => [],
 				];
-				// If filter has-users or has-managers is set, then contain[user] is done by default.
-				if (isset($data['filter']) &&
-					(isset($data['filter']['has-users']) || isset($data['filter']['has-managers']))) {
-					$data['contain'][] = 'user';
-				}
 
 				if (isset($data['contain'])) {
 					if (in_array('user', $data['contain'])) {
@@ -181,6 +179,14 @@ class Group extends AppModel {
 				break;
 			case 'Group::add':
 				$fields = ['fields' => ['name', 'created_by', 'modified_by']];
+				break;
+			case 'Group::exists':
+				$fields = [
+					'fields' => [
+						'Group.id',
+						'Group.deleted',
+					]
+				];
 				break;
 			case 'Group::edit':
 				$fields = [
@@ -250,7 +256,7 @@ class Group extends AppModel {
  */
 	public static function filterGroupWithAllUsers($groups, $userIds) {
 		$results = [];
-		foreach($groups as $key => $group) {
+		foreach ($groups as $key => $group) {
 			$groupMemberIds = Hash::extract($group['GroupUser'], '{n}.user_id');
 			if (count(array_intersect($groupMemberIds, $userIds)) === count($userIds)) {
 				array_push($results, $group);
@@ -259,6 +265,56 @@ class Group extends AppModel {
 		return $results;
 	}
 
+/**
+ * Returns true if a record with particular ID has been soft deleted.
+ *
+ * If $id is not passed it calls `Model::getID()` to obtain the current record ID,
+ * if the group has been soft deleted, is considered has a group which doesn't
+ * exist.
+ *
+ * @param int|string $id ID of record to check for existence
+ * @return bool True if such a record exists
+ */
+	public function isSoftDeleted($id = null) {
+		if ($id === null) {
+			$id = $this->getID();
+		}
+
+		if ($id === false) {
+			return false;
+		}
+
+		$data = ['Group.id' => $id];
+		$o = $this->getFindOptions('Group::exists', User::get('Role.name'), $data);
+		return !(bool)$this->find('count', $o);
+	}
+
+/**
+ * Soft delete a group.
+ *
+ * @param string $id Id of the group to soft delete
+ * @return void
+ * @throws Exception
+ */
+	public function softDelete($id) {
+		// Begin transaction
+		$dataSource = $this->getDataSource();
+		$dataSource->begin();
+
+		// Mark the group as deleted
+		$data['Group'] = [
+			'id' => $id,
+			'deleted' => 1
+		];
+		$fields = $this->getFindFields('Group::delete', User::get('Role.name'));
+		if (!$this->save($data, true, $fields['fields'])) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to soft delete the group'));
+		}
+
+		// Everything fine, we commit.
+		$dataSource->commit();
+	}
 
 /**
  * Check that the group name is unique.

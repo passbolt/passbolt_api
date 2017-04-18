@@ -341,8 +341,8 @@ class Resource extends AppModel {
 					if (in_array('Modifier', $data['contain'])) {
 						$fields['contain']['Modifier'] = [
 							'fields' => [
-								'Creator.id',
-								'Creator.username',
+								'Modifier.id',
+								'Modifier.username',
 							]
 						];
 					}

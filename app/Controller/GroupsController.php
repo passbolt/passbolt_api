@@ -126,9 +126,51 @@ class GroupsController extends AppController {
 	}
 
 /**
- * View entry point.
+ * Get a group
+ * Renders a json object of the group
  *
- * To view a group.
+ * @param string $id the uuid of the group
+ * @return void
+ *
+ * @SWG\Get(
+ *   path="/groups/{uuid}.json",
+ *   summary="Find a group by ID",
+ * @SWG\Parameter(
+ *             name="id",
+ *             in="path",
+ *             required=true,
+ *             type="string",
+ *             description="the uuid of the group",
+ *   ),
+ * @SWG\Parameter(
+ *     name="contain",
+ *     in="query",
+ *     description="A list of associated models",
+ *     required=false,
+ *     type="string",
+ * 	   enum={
+ * 		 "user",
+ *     	 "resource"
+ * 	   }
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="The details of the group",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           ref="#/definitions/Group"
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
  */
 	public function view($id = null) {
 		// Check if the id is provided
@@ -141,25 +183,22 @@ class GroupsController extends AppController {
 			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
 		}
 
-		// Get find options.
-		$o = $this->Group->getFindOptions(
-			'Group::view',
-			User::get('Role.name'),
-			[
-				'contain' => isset($this->request->params['contain']) ? $this->request->params['contain'] : [],
-				'Group.id' => $id,
-			]
-		);
-
-		// Get all groups.
-		$group = $this->Group->find('first', $o);
-
-		// If group doesn't exist, return 404.
-		if(empty($group)) {
-			return $this->Message->error(__('The group doesn\'t exist'), ['code' => 404]);
+		// check if it exists
+		if (!$this->Group->exists($id)) {
+			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
+		}
+		// check if it has been soft deleted
+		if ($this->Group->isSoftDeleted($id)) {
+			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
 		}
 
-		// If group exists, tidy output.
+		// Get the group.
+		$data['contain'] = $this->request->params['contain'];
+		$data['Group.id'] = $id;
+		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $data);
+		$group = $this->Group->find('first', $o);
+
+		// tidy output.
 		$group = $this->__tidyOutput($group);
 
 		// Send response.
