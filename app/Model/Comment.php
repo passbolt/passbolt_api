@@ -157,8 +157,8 @@ class Comment extends AppModel {
 					'message' => __('Content should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \' " ? @ !')
 				],
 				'size' => [
-					'rule' => ['lengthBetween', 3, 255],
-					'message' => __('Comment should be between %s and %s characters long', 3, 255),
+					'rule' => ['lengthBetween', 1, 255],
+					'message' => __('Comment should be between %s and %s characters long', 1, 255),
 				]
 			]
 		];
