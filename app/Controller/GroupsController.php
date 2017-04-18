@@ -15,24 +15,6 @@ class GroupsController extends AppController {
 	];
 
 /**
- * Tidy up output of a group.
- *
- * Remove useless GroupsUsers indexes in the output
- * mainly due to the use of superjoin behaviour.
- *
- * @param $group
- * @return mixed
- */
-	private function __tidyOutput($group) {
-		if (isset($group['User'])) {
-			foreach($group['User'] as $keyUser => $user) {
-				unset($group['User'][$keyUser]['GroupsUser']);
-			}
-		}
-		return $group;
-	}
-
-/**
  * Get all groups
  * Renders a json object of the groups.
  *
@@ -61,7 +43,8 @@ class GroupsController extends AppController {
  *     type="string",
  * 	   enum={
  * 		 "user",
- *     	 "resource"
+ *     	 "resource",
+ *       "modifier"
  * 	   }
  *   ),
  * @SWG\Parameter(
@@ -108,18 +91,6 @@ class GroupsController extends AppController {
 		// Get all groups.
 		$groups = $this->Group->find('all', $o);
 
-		// If filter 'has-users' is applied, remove entries where all the users are not listed.
-		if (isset($this->request->params['filter']) && isset($this->request->params['filter']['has-users'])) {
-			$groups = $this->Group->filterGroupWithAllUsers($groups, $this->request->params['filter']['has-users']);
-		}
-
-		// Remove useless elements due to super join.
-		// #dirty, but it's a superjoin behaviour and we don't have an alternative for now.
-		// Let's wait for Cake3.x migration to fix this.
-		foreach($groups as $key => $group) {
-			$groups[$key] = $this->__tidyOutput($group);
-		}
-
 		// Send response.
 		$this->set('data', $groups);
 		$this->Message->success();
@@ -150,7 +121,8 @@ class GroupsController extends AppController {
  *     type="string",
  * 	   enum={
  * 		 "user",
- *     	 "resource"
+ *     	 "resource",
+ *       "modifier"
  * 	   }
  *   ),
  * @SWG\Response(
@@ -197,9 +169,6 @@ class GroupsController extends AppController {
 		$data['Group.id'] = $id;
 		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $o);
-
-		// tidy output.
-		$group = $this->__tidyOutput($group);
 
 		// Send response.
 		$this->set('data', $group);
@@ -311,8 +280,6 @@ class GroupsController extends AppController {
 
 		// Get all groups.
 		$group = $this->Group->find('first', $o);
-		// Tidy up.
-		$group = $this->__tidyOutput($group);
 
 		// Success response.
 		$this->set('data', $group);
@@ -582,8 +549,6 @@ class GroupsController extends AppController {
 
 		// Get group.
 		$group = $this->Group->find('first', $o);
-		// Tidy up.
-		$group = $this->__tidyOutput($group);
 
 		// Merge changes with group result.
 		$res = array_merge($group, [ 'changes' => $changes ]);

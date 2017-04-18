@@ -100,7 +100,7 @@ class GroupsControllerViewTest extends ControllerTestCase {
 		$this->assertEquals('Ergonom', $result['body']['Group']['name']);
 		// Test the result contain the expected associated model
 		$keys = array_keys($result['body']);
-		$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
+		$this->assertEquals($keys, ['Group', 'GroupUser']);
 	}
 
 	public function testViewGroupWithUserContain(){
@@ -115,7 +115,7 @@ class GroupsControllerViewTest extends ControllerTestCase {
 		$this->assertEquals('Ergonom', $result['body']['Group']['name']);
 		// Test the result contain the expected associated model
 		$keys = array_keys($result['body']);
-		$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
+		$this->assertEquals($keys, ['Group', 'GroupUser']);
 	}
 
 	public function testViewGroupWithoutUserContain(){
@@ -131,6 +131,21 @@ class GroupsControllerViewTest extends ControllerTestCase {
 		// Test the result contain the expected associated model
 		$keys = array_keys($result['body']);
 		$this->assertEquals($keys, ['Group']);
+	}
+
+	public function testViewGroupWithModifierContain(){
+		$id = Common::uuid('group.id.ergonom');
+
+		// The result should contain associated model
+		$data['contain'] = ['modifier' => 1];
+
+		// test if the object returned is a success one
+		$result = json_decode($this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'get', 'data' => $data)), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status']);
+		$this->assertEquals('Ergonom', $result['body']['Group']['name']);
+		// Test the result contain the expected associated model
+		$keys = array_keys($result['body']);
+		$this->assertEquals($keys, ['Group', 'Modifier', 'GroupUser']);
 	}
 
 }

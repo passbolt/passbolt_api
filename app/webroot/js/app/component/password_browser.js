@@ -391,11 +391,8 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 	/**
 	 * Select an item
 	 * @param {mad.model.Model} item The item to select
-	 * @param {boolean} silent Do not propagate any event (default:false)
 	 */
-	select: function (item, silent) {
-		silent = typeof silent == 'undefined' ? false : silent;
-
+	select: function (item) {
 		// If the item doesn't exist
 		if (!this.itemExists(item)) {
 			return;
@@ -425,9 +422,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 		this.view.selectItem(item);
 
 		// Notify the application about this selection.
-		if (!silent) {
-			mad.bus.trigger('resource_selected', item);
-		}
+		mad.bus.trigger('resource_selected', item);
 	},
 
 	/**
