@@ -449,8 +449,9 @@ class GroupUser extends AppModel {
  */
 	public function deleteGroupUser($groupUser) {
 		// Make sure that at least one admin is left.
+		$removeAdmin = $groupUser['GroupUser']['is_admin'] == 1 ? true : false;
 		$countExistingAdmins = $this->countGroupAdmins($groupUser['GroupUser']['group_id']);
-		if ($countExistingAdmins == 1) {
+		if ($countExistingAdmins == 1 && $removeAdmin == true) {
 			throw new Exception(__('A group requires at least one manager'));
 		}
 

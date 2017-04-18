@@ -25,7 +25,8 @@ var CreateForm = passbolt.form.group.Create = mad.Form.extend('passbolt.form.gro
         templateBased: true,
         action: 'create',
         templateUri: 'app/view/template/form/group/create.ejs',
-        cssClasses: ['group_edit_form']
+        cssClasses: ['group_edit_form'],
+        canUpdateName: true
     }
 
 }, /** @prototype */ {
@@ -36,19 +37,18 @@ var CreateForm = passbolt.form.group.Create = mad.Form.extend('passbolt.form.gro
      * @see {mad.Component}
      */
     afterStart: function () {
-        // temporary for update demonstration
-        this.options.data.Group = this.options.data.Group || {};
-
-        //Is the user an admin.
-        var isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin' ? true : false;
-
-        //Add user first name field.
-        this.addElement(
+        // Add user first name field.
+        var nameField = this.addElement(
             new mad.form.Textbox($('#js_field_name'), {
                 modelReference: 'passbolt.model.Group.name'
             }).start(),
             new mad.form.Feedback($('#js_field_name_feedback'), {}).start()
         );
+
+        // Disable name field if the user is not allowed to update it.
+        if (this.options.canUpdateName == false) {
+            $('#js_field_name').attr('disabled', 'disabled');
+        }
 
         // Rebind controller events
         this.on();

@@ -29,7 +29,11 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         // The list of changes.
         GroupUserChanges: [],
         // The initial state the component will be initialized on (after start).
-        state: 'ready'
+        state: 'ready',
+        // Should be provided at the call.
+        data: {
+            Group: {}
+        }
     }
 
 }, /** @prototype */ {
@@ -39,14 +43,22 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      * @see {mad.Component}
      */
     afterStart: function() {
-        this.group = new passbolt.model.Group();
+        this.options.data.Group = this.options.data.Group || {};
+        this.group = this.options.data.Group;
+
+        this.formState = (this.group.id == undefined ? 'create' : 'edit');
+
+        // Is the user an admin.
+        this.isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin' ? true : false;
+        this.isGroupManager = this.formState == 'edit' ? this.group.isGroupManager(passbolt.model.User.getCurrent()) : false;
 
         this.formGroup = new passbolt.form.group.Create($('#js_group_edit_form'), {
             data: this.group,
+            canUpdateName: this.isGroupManager && !this.isAdmin ? false: true,
             callbacks : {}
         });
-        this.formGroup.load(this.group);
         this.formGroup.start();
+        this.formGroup.load(this.group);
 
         // List defined permissions
         this.groupUserList = new mad.component.Tree($('#js_permissions_list'), {
@@ -73,7 +85,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
                 userEmail: {
                     key: 'User',
                     func: function(user, map, obj) {
-                        return user.User.username;
+                        return user.username;
                     }
                 },
                 userFingerprint: {
@@ -87,26 +99,34 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
                     func: function(is_admin, map, obj) {
                         return is_admin;
                     }
+                },
+                isNew: {
+                    key: 'isNew',
+                    func: function(isNew, map, obj) {
+                        return isNew;
+                    }
                 }
             })
         });
         this.groupUserList.start();
 
-        // Trigger plugin to load plugin.group_edit components.
+        // Inform the plugin about the operation.
         mad.bus.trigger('passbolt.plugin.group_edit', {
-            //resourceId: this.options.acoInstance.id,
-            //armored: this.options.acoInstance.Secret[0].data
+            groupId: this.group.id != undefined ? this.group.id : '',
+            canAddGroupUsers: this.formState == 'create' || this.isGroupManager // Will define if the plugin loads the autocomplete field or not.
         });
 
-        // Add a button to control the final save action
+        // Add a button to control the final save action.
         this.options.saveChangesButton = new mad.component.Button($('#js_group_save'), {
             // By default it is disabled, it will be enabled once the user has entered
             // a name and added a group admin.
             state: 'disabled'
         }).start();
 
-        // By default, there are no user groups shown. We set the empty class.
-        $('.group_members').addClass('empty');
+        // If group creation, there are no user groups shown. We set the empty class.
+        if (this.formState == 'create') {
+            $('.group_members').addClass('empty');
+        }
 
         // TODO: this should be done once the plugin has loaded its components, and after the data are loaded.
         // Don't forget to set the initial state of the plugin to loading in the defaults.
@@ -115,9 +135,14 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         this.on();
     },
 
+    /**
+     * Load a groupUser in the list.
+     * @param groupUser
+     */
     loadGroupUser: function(groupUser) {
-        var groupUserTypeSelector = '#js_group_user_is_admin_select_' + groupUser.id,
-            groupUserSelector = '#' + groupUser.id,
+        var groupUserId = groupUser.id,
+            groupUserTypeSelector = '#js_group_user_is_admin_select_' + groupUserId,
+            groupUserSelector = '#' + groupUserId,
             availableTypes = passbolt.model.GroupUser.membershipType;
 
         // Insert GroupUser in the list.
@@ -125,7 +150,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // Add a selectbox to display the permission type (and allow to change)
         new mad.form.Dropdown($('.js_group_user_is_admin', groupUserTypeSelector), {
-            id: 'js_group_user_is_admin_' + groupUser.id,
+            id: 'js_group_user_is_admin_' + groupUserId,
             emptyValue: false,
             modelReference: 'passbolt.model.GroupUser.is_admin',
             availableValues: availableTypes,
@@ -133,25 +158,31 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             state: 'ready'
         })
             .start()
-            .setValue(groupUser.is_admin);
+            .setValue(groupUser.is_admin ? 1 : 0);
 
         // Add a button to allow the user to delete the userGroup.
-        new mad.component.Button($('.js_group_user_delete', $('.actions')), {
-            id: 'js_group_user_delete_' + groupUser.id,
+        new mad.component.Button($('.js_group_user_delete', $('.actions', groupUserSelector)), {
+            id: 'js_group_user_delete_' + groupUserId,
             state: 'ready'
         }).start();
     },
 
     /**
      * Add a new user to the group.
-     * @param data The permission data
+     * @param groupUser The groupUser data, either in json, or in object.
      */
-    addGroupUser: function(data) {
+    addGroupUser: function(groupUser) {
         // Instantiate a new temporary permission.
-        data.id = uuid();
-        var groupUser = new passbolt.model.GroupUser(data);
-        // Map user data into a user object.
-        groupUser.User = new passbolt.model.User(groupUser.User);
+        if (groupUser.id == undefined) {
+            groupUser.id = uuid();
+            groupUser.isNew = true;
+        }
+        else {
+            groupUser.isNew = false;
+        }
+
+        // Make sure to convert the data into an object.
+        var groupUser = passbolt.model.GroupUser.model(groupUser);
 
         // Load this temporary groupUser in the group users list component.
         this.loadGroupUser(groupUser);
@@ -232,8 +263,8 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         // If several admins, make the is_admin dropdown and delete button enabled.
         else if (admins.length > 1) {
             for (var i in admins) {
-                var permTypeDropdownComponentId = 'js_group_user_is_admin_' + admins[0].id,
-                    permDeleteButtonId = 'js_group_user_delete_' + admins[0].id,
+                var permTypeDropdownComponentId = 'js_group_user_is_admin_' + admins[i].id,
+                    permDeleteButtonId = 'js_group_user_delete_' + admins[i].id,
                     permTypeDropdown = mad.getControl(permTypeDropdownComponentId, 'mad.form.Dropdown'),
                     permDeleteButton = mad.getControl(permDeleteButtonId, 'mad.component.Button');
 
@@ -252,6 +283,30 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         }
 
         return hasAdmins;
+    },
+
+    /**
+     * Set a state to a groupUser element : "created", "updated", "unchanged"
+     *
+     * Will reflect the change in the UI.
+     *
+     * @param uuid groupUserId
+     *   groupUser id
+     * @param string state
+     *   can be "created", "updated", or null.
+     */
+    setGroupUserItemState : function(groupUserId, state) {
+        //var $li = $('#js_permissions_list li#' + groupUserId);
+        var $li = this.groupUserList.view.getItemElement({id:groupUserId});
+        if (state == null) {
+            $li.removeClass('permission-updated');
+            $('.permission_changes span', $li).text(__('Unchanged'));
+        }
+        else {
+            $li.addClass('permission-updated');
+            var text = state == 'created' ? __('Will be added') : __('Will be updated');
+            $('.permission_changes span', $li).text(text);
+        }
     },
 
     /* ************************************************************** */
@@ -294,26 +349,71 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
     /* ************************************************************** */
 
     /**
+     * Listen when a group has been loaded by the plugin.
+     */
+    '{mad.bus.element} passbolt.plugin.group.edit.group_loaded': function(el, ev, group) {
+        group = passbolt.model.Group.model(group);
+        this.formGroup.load(group);
+
+        var self = this;
+
+        // Load groupUsers.
+        group.GroupUser.each(function(groupUser) {
+            // Reference user inside groupUser.
+            groupUser.User = passbolt.model.User.store[groupUser.user_id];
+            // Load groupUser.
+            self.addGroupUser(groupUser);
+        });
+
+    },
+
+    /**
      * Listen when a permission has been added through the plugin.
      */
-    '{mad.bus.element} group_edit_add_user': function(el, ev, data) {
+    '{mad.bus.element} passbolt.group.edit.add_user': function(el, ev, data) {
         this.addGroupUser(data);
     },
 
     /**
-     * Listen when a group has been added through the plugin.
+     * Listen when a change to group users has been reported by the plugin.
+     */
+    '{mad.bus.element} passbolt.plugin.group.edit.group_users_updated': function(el, ev, data) {
+        var self = this;
+        setTimeout(function() {
+            self.groupUserList.options.items.each(function(item) {
+                var userId = item.user_id,
+                    groupUserId = item.id,
+                    correspondingChange = _.findWhere(data.changeList, { user_id: userId });
+
+                if (correspondingChange != undefined) {
+                    // We act only for created and updated. Deleted simply disappear from the list.
+                    if (correspondingChange.status == 'created' || correspondingChange.status == 'updated') {
+                        self.setGroupUserItemState(groupUserId, correspondingChange.status);
+                    }
+                }
+                else {
+                    // Reset groupUser state.
+                    self.setGroupUserItemState(groupUserId, null);
+                }
+            });
+        }, 0);
+    },
+
+
+    /**
+     * Listen when a group has been added / updated through the plugin.
      */
     '{mad.bus.element} group_edit_save_success': function(el, ev, data) {
         // Force triggering event of group created.
         var group = passbolt.model.Group.model(data);
-        can.trigger(passbolt.model.Group, 'created', group);
+        can.trigger(passbolt.model.Group, this.formState == 'create' ? 'created' : 'updated', group);
 
         // Complete loading bar.
         mad.bus.trigger('passbolt_loading_complete');
 
         mad.bus.trigger('passbolt_notify', {
             status: 'success',
-            title: 'app_groups_add_success',
+            title: 'app_groups_' + (this.formState == 'create' ? 'add' : 'edit') + '_success',
             data: data
         });
 

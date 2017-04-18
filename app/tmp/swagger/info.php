@@ -4,7 +4,7 @@
  *
  * @SWG\Swagger(
  *     schemes={"http"},
- *     host="http://192.168.99.100:8081/var/www/passbolt/app/Console/",
+ *     host="http://192.168.201.145:8081/var/www/passbolt/app/Console/",
  *     basePath="/",
  *     @SWG\Info(
  *         version="1.4.0",
