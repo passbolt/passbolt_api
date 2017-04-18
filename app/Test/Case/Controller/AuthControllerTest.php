@@ -367,7 +367,7 @@ class AuthControllerTest extends ControllerTestCase {
 		foreach ($this->_keys as $name => $key) {
 			$types = array('public', 'private');
 			foreach ($types as $type) {
-				if(isset($key[$type])) {
+				if (isset($key[$type])) {
 					$keydata = file_get_contents($key[$type]);
 					if (!$this->_gpg->import($keydata)) {
 						echo 'could not import ' . $type . ' key' . $key['fingerprint'];
