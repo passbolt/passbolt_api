@@ -71,7 +71,7 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 	/**
 	 * Check if a user is a group manager of the group.
 	 * @param user
-	 * @returns {*}
+	 * @returns {boolean}
 	 */
 	isGroupManager: function(user) {
 		var isGroupManager = false;
@@ -85,6 +85,17 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 		}
 
 		return isGroupManager;
+	},
+
+	/**
+	 * Check if a user can edit a group.
+	 * @param user
+	 * @returns {boolean}
+	 */
+	isAllowedToEdit: function(user) {
+		var isGroupManager = this.isGroupManager(user),
+			isAdmin = user.Role.name == 'admin';
+		return isGroupManager || isAdmin;
 	}
 
 });

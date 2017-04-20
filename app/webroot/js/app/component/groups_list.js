@@ -39,9 +39,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
                 key: 'GroupUser',
                 func: function(GroupUser, map, obj) {
                     var currentUser = passbolt.model.User.getCurrent();
-                    var isGroupManager = obj.isGroupManager(currentUser);
-                    var isAdmin = currentUser.Role.name == 'admin';
-                    return isGroupManager || isAdmin;
+                    return obj.isAllowedToEdit(currentUser);
                 }
             }
         })
@@ -59,7 +57,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         var self = this;
         // Load the groups.
         passbolt.model.Group.findAll({
-            contain: {modifier: 1, user:1},
+            contain: {user: 1},
             order: ['Group.name ASC']
         }, function (groups, response, request) {
             // Load the tree component with the groups.

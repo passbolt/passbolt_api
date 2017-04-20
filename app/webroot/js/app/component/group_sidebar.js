@@ -37,6 +37,8 @@ var GroupSidebar = passbolt.component.GroupSidebar = passbolt.component.Sidebar.
 	 */
 	beforeRender: function () {
 		this._super();
+		var currentUser = passbolt.model.User.getCurrent();
+		this.setViewData('editable', this.options.selectedItem.isAllowedToEdit(currentUser));
 		this.setViewData('group', this.options.selectedItem);
 	},
 
@@ -61,7 +63,7 @@ var GroupSidebar = passbolt.component.GroupSidebar = passbolt.component.Sidebar.
 	afterStart: function () {
 		var self = this;
 		this._super();
-		passbolt.model.Group.findOne({id: this.options.selectedItem.id})
+		passbolt.model.Group.findOne({id: this.options.selectedItem.id, contain:{modifier:1}})
 			.then(function(group) {
 				self.options.selectedItem = group;
 				self._refreshView();
@@ -106,6 +108,15 @@ var GroupSidebar = passbolt.component.GroupSidebar = passbolt.component.Sidebar.
 		this.options.groupMembersList.load(groupUsers);
 	},
 
+	/**
+	 * Observe when the user want to edit the group members
+	 * @param {HTMLElement} el The element
+	 * @param {HTMLEvent} ev The event which occurred
+	 */
+	' request_group_edition' : function(el, ev) {
+		mad.bus.trigger('request_group_edition', this.options.selectedItem);
+	},
+
 	/* ************************************************************** */
 	/* LISTEN TO THE APP EVENTS */
 	/* ************************************************************** */
@@ -117,7 +128,9 @@ var GroupSidebar = passbolt.component.GroupSidebar = passbolt.component.Sidebar.
 	 * @param {passbolt.model.User} user The selected user
 	 */
 	'{mad.bus.element} user_selected': function (element, evt, user) {
-		this.setState('hidden');
+		if (!this.state.is(null) && !this.state.is('hidden')) {
+			this.setState('hidden');
+		}
 	}
 
 });

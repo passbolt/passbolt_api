@@ -359,8 +359,6 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // Load groupUsers.
         group.GroupUser.each(function(groupUser) {
-            // Reference user inside groupUser.
-            groupUser.User = passbolt.model.User.store[groupUser.user_id];
             // Load groupUser.
             self.addGroupUser(groupUser);
         });

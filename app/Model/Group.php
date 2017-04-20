@@ -208,36 +208,28 @@ class Group extends AppModel {
 										'User.id',
 										'User.username',
 										'User.role_id',
-										'User.created',
-										'User.modified',
-										'User.created_by',
-										'User.modified_by',
 									],
 									'Profile' => [
 										'fields' => [
 											'Profile.id',
 											'Profile.first_name',
 											'Profile.last_name',
-											'Profile.created',
-											'Profile.modified'
 										],
 										'Avatar' => [
 											'fields' => [
 												'Avatar.id',
 												'Avatar.user_id',
-												'Avatar.foreign_key',
-												'Avatar.model',
 												'Avatar.filename',
-												'Avatar.filesize',
 												'Avatar.mime_type',
 												'Avatar.extension',
-												'Avatar.hash',
 												'Avatar.path',
-												'Avatar.adapter',
-												'Avatar.created',
-												'Avatar.modified'
 											]
 										]
+									],
+									'Gpgkey' => [
+										'fields' => [
+											'Gpgkey.fingerprint',
+										],
 									],
 								]
 							]
