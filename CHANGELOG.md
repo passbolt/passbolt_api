@@ -6,6 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PASSBOLT-1950: As a user I can see which groups a password is shared with from the sidebar
 - PASSBOLT-1953: As a user I can share a password with a group
+- PASSBOLT-1943: As an admin the healthcheck should tell if not using a proper domain name as base url
+- PASSBOLT-1943: As an admin should tell if SSL certificate is invalid
+- PASSBOLT-1885: As an admin the healthcheck should tell if the full base url is not reachable
+- PASSBOLT-1939: As an admin the healthcheck should be accessible in command line
 - PASSBOLT-1614: Abstract user/password grid functions into the mad grid library
 - PASSBOLT-1571: Refactor filter: naming conventions and component implementation
 - PASSBOLT-1960: As a user I can see the list users that are part of the group in the users grid by using the group filter

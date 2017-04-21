@@ -239,7 +239,12 @@ class MessageComponent extends Component {
 		$this->messages[] = $response;
 
 		// Log if needed
-		ControllerLog::write($level, $this->controller->request, $message, '');
+		try {
+		    ControllerLog::write($level, $this->controller->request, $message, '');
+        } catch(Exception $e) {
+            // This may happen if no table are present
+            // We still want to go forward
+        }
 
 		// Need some directions?
 		if (isset($options['redirect'])) {
