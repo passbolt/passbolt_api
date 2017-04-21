@@ -27,13 +27,6 @@ class Migration_1_5_0 extends CakeMigration {
 					'is_admin' => ['type' => 'boolean', 'null' => false, 'default' => '0']
 				]
 			]
-		],
-		'down' => [
-			'drop_field' => [
-				'groups_users' => [
-					'is_admin' => ['type' => 'boolean', 'null' => false, 'default' => '0']
-				]
-			]
 		]
 	];
 
@@ -58,12 +51,6 @@ class Migration_1_5_0 extends CakeMigration {
 			require_once( APP . 'Config/Schema/permissions.php');
 			$Permission = new PermissionsSchema();
 			$Permission->init();
-		} else {
-			// Remove views related to groups and categories.
-			$Permission = ClassRegistry::init('Permission');
-			$Permission->query('
-				DROP VIEW users_resources_permissions;
-			');
 		}
 		return true;
 	}
