@@ -88,9 +88,8 @@
 	Router::connect('/groups', array('controller' => 'groups', 'action' => 'create', '[method]' => 'POST'));
 	Router::connect('/groups/*/:dry-run', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'), array('pass' => array('dry-run')));
 	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'));
-//	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
-//	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
-//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
+	Router::connect('/groups/*/:dry-run', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'), array('pass' => array('dry-run')));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
 
 /**
  * Group User

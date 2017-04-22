@@ -39,6 +39,7 @@ class GroupResourcePermissionTest extends CakeTestCase {
 		parent::setUp();
 		$this->User = Common::getModel('User');
 		$this->Group = ClassRegistry::init('Group');
+		$this->Resource = ClassRegistry::init('Resource');
 		$this->Permission = ClassRegistry::init('Permission');
 		$this->GroupResourcePermission = ClassRegistry::init('GroupResourcePermission');
 		$this->PermissionType = ClassRegistry::init('PermissionType');
@@ -99,6 +100,39 @@ class GroupResourcePermissionTest extends CakeTestCase {
 		// Assert that the 2 arrays are same.
 		$this->assertEquals($resources, $expectedResources);
 	}
+
+/**
+ * Test FindUnauthorizedResources() with a permission type.
+ *
+ * Compare the results with what should be returned according to the permission matrix.
+ */
+	public function testFindAuthorizedResourcesWithPermission() {
+		// Log in Irene.
+		// findAuthorizedResources will not return a valid result if
+		// the call is made by a non member of the group.
+		$user = $this->User->findById( Common::uuid( 'user.id.irene' ) );
+		$this->User->setActive( $user );
+
+		$resources = $this->GroupResourcePermission->findAuthorizedResources(
+			Common::uuid( 'group.id.developer' ),
+			PermissionType::OWNER
+		);
+
+		// Build an array of obtained resources id.
+		$resourceIds = Hash::extract( $resources, '{n}.Resource.id' );
+
+		// Expected groups
+		$expectedResourceIds = [Common::uuid('resource.id.cakephp'), Common::uuid('resource.id.enlightenment'), Common::uuid('resource.id.grogle')];
+
+		foreach($resourceIds as $resourceId) {
+			$this->assertTrue(in_array($resourceId, $expectedResourceIds), 'The group returned is not part of the groups expected');
+		}
+
+		// Assert that the same number of elements as the number expected is returned.
+		$this->assertEquals(count($resourceIds), count($expectedResourceIds));
+	}
+
+
 
 /**
  * Test FindUnauthorizedResourcesForUsers().
@@ -183,5 +217,41 @@ class GroupResourcePermissionTest extends CakeTestCase {
 
 		// The count of the result should be equal to the number of items expected for jean and for Irene (see above).
 		$this->assertEquals(count($expectedResourcesFrances) + count($expectedResourcesGrace), count($resourceIds));
+	}
+
+/**
+ * Test findSoleOwnerResources().
+ */
+	public function testFindSoleOwnerResources() {
+		$groupId = Common::uuid('group.id.board');
+
+		// 1) test that by default the group is not the sole owner of any resource.
+		$soleOwnerResources = $this->GroupResourcePermission->findSoleOwnerResources($groupId);
+		$this->assertEmpty($soleOwnerResources);
+
+		// 2) Add a permission that sets him as the sole owner of a resource.
+		// Save a resource.
+		$this->Resource->create();
+		// Unload permissionable behavior, so it will not create an additional permission while saving.
+		$this->Resource->Behaviors->unload('Permissionable');
+		$resource = $this->Resource->save([
+			'name' => 'resource-test'
+		]);
+
+		// Set permission for this resource.
+		$this->Permission->create();
+		$this->Permission->save([
+				'aco' => 'Resource',
+				'aco_foreign_key' => $resource['Resource']['id'],
+				'aro' => 'Group',
+				'aro_foreign_key' => $groupId,
+				'type' => PermissionType::OWNER
+			]);
+
+		$soleOwnerResources = $this->GroupResourcePermission->findSoleOwnerResources($groupId);
+		$this->assertNotEmpty($soleOwnerResources);
+
+		// Assert that the resource corresponds to what we expect.
+		$this->assertEquals($soleOwnerResources[0]['Resource']['id'], $resource['Resource']['id']);
 	}
 }

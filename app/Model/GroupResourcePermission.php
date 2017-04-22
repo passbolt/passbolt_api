@@ -47,19 +47,16 @@ class GroupResourcePermission extends AppModel {
  *   - Permission object
  *
  */
-	public function findAuthorizedResources($groupId = null) {
+	public function findAuthorizedResources($groupId = null, $permissionType = null) {
 
 		// If instance id is not provided as parameter, we get it from the model.
 		if (is_null($groupId)) {
 			$groupId = $this->id;
 		}
 
-		// Get Resource model.
-		$Resource = Common::getModel("Resource");
-
 		// Get resources accessible by the group.
 		// Start from model Resource.
-		$resources = $Resource->find(
+		$resources = $this->Resource->find(
 			'all',
 			[
 				'conditions' => [
@@ -77,6 +74,7 @@ class GroupResourcePermission extends AppModel {
 							AND GroupResourcePermission.aro_foreign_key = '$groupId'
 							AND GroupResourcePermission.aco_foreign_key = Resource.id
 							"
+							. ($permissionType != null ? ' AND GroupResourcePermission.type = ' . $permissionType : '')
 						],
 					]
 				]
@@ -84,6 +82,66 @@ class GroupResourcePermission extends AppModel {
 		);
 
 		return $resources;
+	}
+
+/**
+ * Find resources whose sole owner is the given group.
+ *
+ * @param $groupId
+ *   id of the group.
+ *
+ * @return mixed
+ *   list of resources that are solely owned by the group.
+ */
+	public function findSoleOwnerResources($groupId) {
+		// We unload permissionable as we need to be able to list all the resources here.
+		$this->Resource->Behaviors->unload('Permissionable');
+
+		$resourcesIsOwner = $this->findAuthorizedResources($groupId, PermissionType::OWNER);
+		$resourcesIsOwnerIds = Hash::extract($resourcesIsOwner, '{n}.Resource.id');
+
+		// For all the resources, find the ones with owners different than the given group.
+		$resourcesWithOtherOwners = $this->Resource->find(
+			'all',
+			[
+				'conditions' => [
+					'Resource.deleted' => false,
+					'Resource.id' => $resourcesIsOwnerIds,
+					'GroupResourcePermission.aro_foreign_key <>' => $groupId
+				],
+				'joins' => [
+					[
+						'table' => 'permissions',
+						'alias' => 'GroupResourcePermission',
+						'type' => 'inner',
+						'conditions' => [
+							"
+							GroupResourcePermission.aco = 'Resource'
+							AND GroupResourcePermission.aco_foreign_key = Resource.id
+							AND GroupResourcePermission.aro_foreign_key <> '$groupId'
+							AND GroupResourcePermission.type = " . PermissionType::OWNER
+						],
+					]
+				]
+			]
+		);
+
+		// Load permissionable again.
+		$this->Resource->Behaviors->load('Permissionable');
+
+		// Make a difference between the 2 arrays.
+		$resourcesWithOtherOwnersIds = Hash::extract($resourcesWithOtherOwners, '{n}.Resource.id');
+		$soleOwnerIds = array_diff($resourcesIsOwnerIds, $resourcesWithOtherOwnersIds);
+
+		// Build result.
+		$resourcesIsSoleOwner = [];
+		foreach($resourcesIsOwner as $key => $resourceIsOwner) {
+			if (in_array($resourceIsOwner['Resource']['id'], $soleOwnerIds)) {
+				$resourcesIsSoleOwner[] = $resourceIsOwner;
+			}
+		}
+
+		return $resourcesIsSoleOwner;
 	}
 
 /**
