@@ -9,7 +9,7 @@ for(var i=0; i < mappedItem.userFingerprint.length; i++) {
 }
 %>
 
-<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="row permission-updated <%= cssClasses.join(' ') %>">
+<li id="<%= mappedItem.id %>" <%= (el) -> el.data( itemClass.fullName, item ) %> class="row <%= mappedItem.isNew ? 'permission-updated ' : '' %><%= cssClasses.join(' ') %>">
 
     <div class="avatar">
         <img src="<%= mappedItem.userAvatarPath %>"/>
@@ -27,7 +27,7 @@ for(var i=0; i < mappedItem.userFingerprint.length; i++) {
             </div>
         </div>
         <div class="permission_changes">
-            <span>Will be added</span>
+            <span><%= mappedItem.isNew ? __('Will be added') : __('Unchanged')  %></span>
         </div>
     </div>
 

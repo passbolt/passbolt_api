@@ -24,7 +24,9 @@ var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.Grou
 	attributes: {
 		id: 'string',
 		group_id: 'string',
-		user_id: 'string'
+		user_id: 'string',
+		User: 'passbolt.model.User.model',
+		Group: 'passbolt.model.Group.model'
 	},
 
 	membershipType: {

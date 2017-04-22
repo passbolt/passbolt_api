@@ -185,18 +185,25 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         this._super();
     },
 
+    openEditGroupDialog: function(group) {
+        // get the dialog
+        var dialog = new mad.component.Dialog(null, {
+            label: group.id == undefined || group.id == '' ? __('Create group') : __('Edit group'),
+            cssClasses: ['edit-group-dialog','dialog-wrapper']
+        }).start();
+
+        // Attach the component to the dialog.
+        var groupEdit = dialog.add(passbolt.component.GroupEdit, {
+            id: 'js_edit_group',
+            data: {
+                Group: group
+            }
+        });
+    },
+
     /* ************************************************************** */
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
-
-	// /**
-	//  * Observe when the user wants to create a new user
-	//  * @param {HTMLElement} el The element the event occurred on
-	//  * @param {HTMLEvent} ev The event which occurred
-	//  */
-	// '{createButton.element} click': function (el, ev) {
-	// 	mad.bus.trigger('request_user_creation');
-	// },
 
     /**
      * Observe when group is selected
@@ -249,28 +256,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      */
     '{mad.bus.element} request_group_creation': function (el, ev, data) {
         var group = new passbolt.model.Group();
-
-        // Get the dialog
-        var dialog = new mad.component.Dialog(null, {
-            label: __('Create group'),
-            cssClasses: ['create-group-dialog','dialog-wrapper']
-        }).start();
-
-        // share-tab is not completely semantically correct,
-        // but we consider that adding user to a group is a bit like a share operation.
-        // (and well.. modifying the styleguide for this is a headache. so we have
-        // convinced ourselves that it's a share operation.)
-        // Side note: Remy has full responsibility for this.
-        // $('.dialog-content').addClass('share-tab');
-        //
-        // var topComponent = new mad.Component(
-        //     'cssClasses': []
-        // );
-
-        // Attach the component to the dialog.
-        var groupEdit = dialog.add(passbolt.component.GroupEdit, {
-           // data: group
-        });
+        this.openEditGroupDialog(group);
     },
 
     /**
@@ -279,25 +265,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_group_edition': function (el, ev, group) {
-        // get the dialog
-        var dialog = new mad.component.Dialog(null, {
-            label: __('Edit group'),
-            cssClasses: ['edit-group-dialog','dialog-wrapper']
-        }).start();
-
-        // attach the component to the dialog
-        var form = dialog.add(passbolt.form.group.Create, {
-            data: group,
-            callbacks : {
-                submit: function (data) {
-                    group.attr(data['passbolt.model.Group'])
-                        .save();
-                    dialog.remove();
-                }
-            }
-        });
-
-        form.load(group);
+        this.openEditGroupDialog(group);
     },
 
     /**
