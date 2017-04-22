@@ -58,7 +58,8 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         var self = this;
         // Load the groups.
         passbolt.model.Group.findAll({
-            order: ['Group.name ASC']
+            order: ['Group.name ASC'],
+            silent: false
         }, function (groups, response, request) {
             // Load the tree component with the groups.
             self.load(groups);

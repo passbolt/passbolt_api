@@ -194,24 +194,16 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 
         // Attach the component to the dialog.
         var groupEdit = dialog.add(passbolt.component.GroupEdit, {
+            id: 'js_edit_group',
             data: {
                 Group: group
-            },
+            }
         });
     },
 
     /* ************************************************************** */
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
-
-	// /**
-	//  * Observe when the user wants to create a new user
-	//  * @param {HTMLElement} el The element the event occurred on
-	//  * @param {HTMLEvent} ev The event which occurred
-	//  */
-	// '{createButton.element} click': function (el, ev) {
-	// 	mad.bus.trigger('request_user_creation');
-	// },
 
     /**
      * Observe when group is selected
