@@ -209,7 +209,11 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
         mad.bus.trigger('passbolt.group.edit.remove_group_user', {
-            groupUser: groupUser
+            groupUser: {
+                id: groupUser.id,
+                user_id: groupUser.user_id,
+                group_id: groupUser.group_id
+            }
         });
 
         this.checkManager();
