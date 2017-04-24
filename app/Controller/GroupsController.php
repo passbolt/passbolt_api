@@ -654,6 +654,9 @@ class GroupsController extends AppController {
 					]
 				]
 			);
+			// Unload permissionable to be able to retrieve the list of resources even
+			// without direct access to it.
+			$Resource->Behaviors->unload('Permissionable');
 			$resources = $Resource->find('all', $options);
 			return $this->Message->error(__('The group is sole owner of some passwords. Transfer the ownership before deleting.'), ['code' => 400, 'body' => $resources]);
 		}
@@ -677,6 +680,7 @@ class GroupsController extends AppController {
 					]
 				]
 			);
+			$Resource->Behaviors->unload('Permissionable');
 			$resources = $Resource->find('all', $options);
 			// Success response.
 			$this->set('data', $resources);
@@ -684,11 +688,11 @@ class GroupsController extends AppController {
 		}
 
 		// Everything alright. We can delete.
-		$delete = $this->Resource->delete($id);
+		$delete = $this->Group->delete($id);
 		if (!$delete) {
 			return $this->Message->error(__('Could not delete group'));
 		}
-		
+
 		return $this->Message->success(__("The group has been deleted."));
 	}
 }

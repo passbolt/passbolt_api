@@ -125,9 +125,9 @@ class GroupsControllerDeleteDryRunTest extends ControllerTestCase {
 
 		// Add a permission that sets the group as the sole owner of a resource.
 		// Save a resource.
-		$this->Resource->create();
 		// Unload permissionable behavior, so it will not create an additional permission while saving.
 		$this->Resource->Behaviors->unload('Permissionable');
+		$this->Resource->create();
 		$resource = $this->Resource->save([
 			'name' => 'resource-test'
 		]);
@@ -141,7 +141,6 @@ class GroupsControllerDeleteDryRunTest extends ControllerTestCase {
 			'aro_foreign_key' => $groupId,
 			'type' => PermissionType::OWNER
 		]);
-
 
 		$this->setExpectedException('Exception', 'The group is sole owner of some passwords. Transfer the ownership before deleting.');
 		$res = $this->testAction(

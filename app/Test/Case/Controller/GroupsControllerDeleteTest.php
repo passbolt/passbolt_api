@@ -108,7 +108,7 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 
 		$this->setExpectedException('UnauthorizedException', 'You are not authorized to perform this operation on this group');
 		$this->testAction(
-			"/groups/$id/dry-run.json",
+			"/groups/$id.json",
 			array('method' => 'DELETE', 'return' => 'contents')
 		);
 	}
@@ -145,7 +145,7 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 
 		$this->setExpectedException('Exception', 'The group is sole owner of some passwords. Transfer the ownership before deleting.');
 		$res = $this->testAction(
-			"/groups/$groupId/dry-run.json",
+			"/groups/$groupId.json",
 			[
 				'method' => 'DELETE',
 				'return' => 'contents'
@@ -163,9 +163,12 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 		// Group to edit.
 		$groupId = Common::uuid('group.id.developer');
 
+		$group = $this->Group->findById($groupId);
+		$this->assertNotEmpty($group);
+
 		// test action.
 		$res = $this->testAction(
-			"/groups/$groupId/dry-run.json",
+			"/groups/$groupId.json",
 			[
 				'method' => 'DELETE',
 				'return' => 'contents'
@@ -174,10 +177,11 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 		$res = json_decode($res, true);
 
 		$this->assertEquals($res['header']['status'], Status::SUCCESS);
-		$this->assertEquals(count($res['body']), 12);
+		$this->assertEmpty($res['body']);
 
-		// TODO: make sure that the group is deleted in db.
-
+		// Assert that the group is deleted in db.
+		$group = $this->Group->findById($groupId);
+		$this->assertEmpty($group);
 	}
 
 }
