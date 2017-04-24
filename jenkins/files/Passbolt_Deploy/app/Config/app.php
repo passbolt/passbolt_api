@@ -18,13 +18,6 @@ $config = array(
 		'name' => 'What\'s hapenin\'',
 		'song' => 'http://youtu.be/DaRG0ukxYqQ'
 	),
-	// Internationalization
-	'i18n' => array(
-		'locale' => 'en-EN',
-		'language' => 'en',
-		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary' // default dictionary file name
-	),
 	// Authentication & Authorisation
 	'Auth' => array(
     'authenticate' => array(

@@ -113,14 +113,6 @@ $config = [
 			'Gpg'
 		],
 	],
-	// Internationalization
-	// Note: Not in used at the moment
-	'i18n' => [
-		'locale' => 'en-EN',
-		'language' => 'en',
-		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary', // default dictionary file name
-	],
 	// Enable or disable generic model associations
 	// For example which models comments is available for
 	// usefull in case we want to enable commenting on more objects in the future

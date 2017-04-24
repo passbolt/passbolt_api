@@ -57,13 +57,6 @@
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 /**
- * Load all plugin routes. See the CakePlugin documentation on
- * Custom route for dictionary controller
- */
-	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
-	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
-
-/**
  * Custom route for validation rules controller
  */
 	Router::connect('/validation/:model', array('controller' => 'ValidationRules', 'action' => 'view'), array('pass' => array('model')));
