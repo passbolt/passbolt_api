@@ -212,7 +212,8 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             groupUser: {
                 id: groupUser.id,
                 user_id: groupUser.user_id,
-                group_id: groupUser.group_id
+                group_id: groupUser.group_id,
+                isNew: groupUser.isNew
             }
         });
 
@@ -227,7 +228,12 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         groupUser.is_admin = value;
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
-            groupUser: groupUser
+            groupUser: {
+                id: groupUser.id,
+                user_id: groupUser.user_id,
+                group_id: groupUser.group_id,
+                isNew: groupUser.isNew
+            }
         });
 
         this.checkManager();
