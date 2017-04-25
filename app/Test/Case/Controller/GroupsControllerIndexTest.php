@@ -53,9 +53,6 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
-	/******************************************************
-	 * INDEX TESTS
-	 ******************************************************/
 
 	/**
 	 * Test a call to index without being logged in.

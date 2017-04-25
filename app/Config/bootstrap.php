@@ -20,7 +20,10 @@ Cache::config('default', $commonCache);
  */
 Configure::load('version'); // Version
 Configure::load('default'); // Default config
-Configure::load('app'); // Merge current instance config
+
+if (file_exists(APP . 'Config' . DS . 'app.php')) {
+    Configure::load('app'); // Merge current instance config
+}
 if (file_exists(APP . 'Config' . DS . 'anonymous_statistics.php')) {
 	Configure::load('anonymous_statistics'); // anonymous statistics config
 }

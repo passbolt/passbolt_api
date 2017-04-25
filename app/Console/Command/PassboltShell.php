@@ -15,7 +15,7 @@ class PassboltShell extends AppShell {
  *
  * @var array
  */
-	public $tasks = array('RegisterUser', 'AppConfig', 'CoreConfig');
+	public $tasks = array('Healthcheck', 'RegisterUser', 'AppConfig', 'CoreConfig');
 
 /**
  * Get command options parser
@@ -26,7 +26,11 @@ class PassboltShell extends AppShell {
 		$parser = parent::getOptionParser();
 		$parser
 			->description(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'))
-			->addSubcommand('register_user', array(
+            ->addSubcommand('healthcheck', array(
+                'help' => __('Check the configuration of the passbolt installation and associated environment'),
+                'parser' => $this->Healthcheck->getOptionParser()
+            ))
+            ->addSubcommand('register_user', array(
 				'help' => __('Register new user'),
 				'parser' => $this->RegisterUser->getOptionParser()
 			))
@@ -40,14 +44,6 @@ class PassboltShell extends AppShell {
 			));
 
 		return $parser;
-	}
-
-/**
- * Display the passbolt prompt.
- *
- * @return void
- */
-	protected function _welcome() {
 	}
 
 /**

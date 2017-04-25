@@ -27,7 +27,8 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 		id: 'string',
 		name: 'string',
 		created: 'string',
-		modified: 'string'
+		modified: 'string',
+		GroupUser: 'passbolt.model.GroupUser.models'
 	},
 
 	// /**
@@ -109,6 +110,27 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 	// 	});
 	// }
 
-}, /** @prototype */ { });
+}, /** @prototype */ {
+
+	/**
+	 * Check if a user is a group manager of the group.
+	 * @param user
+	 * @returns {*}
+	 */
+	isGroupManager: function(user) {
+		var isGroupManager = false;
+
+		if(this.GroupUser != undefined) {
+			this.GroupUser.forEach(function(groupUser) {
+				if (groupUser.user_id == user.id && groupUser.is_admin == true) {
+					isGroupManager = true;
+				}
+			});
+		}
+
+		return isGroupManager;
+	}
+
+});
 
 export default Group;

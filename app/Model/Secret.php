@@ -105,6 +105,11 @@ class Secret extends AppModel {
 					'rule' => ['resourceExists', null],
 					'message' => __('The resource provided does not exist')
 				],
+				'uniqueRelationship' => [
+					'rule' => ['uniqueRelationship'],
+					'on' => 'create',
+					'message' => __('The Secret entered is a duplicate')
+				]
 			],
 			'data' => [
 				'isnotBlank' => [
@@ -170,6 +175,22 @@ class Secret extends AppModel {
 			return false;
 		}
 	}
+
+/**
+ * Check if a Secret for the given resource_id and user_id already exists.
+ * Custom Validation Rule
+ *
+ * @return bool
+ */
+	public function uniqueRelationship() {
+		$secret = $this->data['Secret'];
+		$combination = [
+			'Secret.resource_id' => $secret['resource_id'],
+			'Secret.user_id' => $secret['user_id'],
+		];
+		return $this->isUnique($combination, false);
+	}
+
 
 /**
  * Return the find conditions to be used for a given context.

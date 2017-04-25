@@ -124,7 +124,8 @@ var Tree = mad.view.component.Tree = mad.View.extend('mad.view.component.Tree', 
             control = this.getController();
 
         // map the given data to the desired format
-        var mappedItem = control.getMap().mapObject(item);;
+        var mappedItem = control.getMap().mapObject(item);
+        mappedItem.id = control.options.prefixItemId +  mappedItem.id;
         control.setViewData('mappedItem', mappedItem);
         var hasChildren = mappedItem.children && mappedItem.children.length ? true : false;
         control.setViewData('hasChildren', hasChildren);

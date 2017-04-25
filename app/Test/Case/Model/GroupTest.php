@@ -64,6 +64,7 @@ class GroupTest extends CakeTestCase {
 		$this->Group->create();
 		$this->Group->save($group);
 
+		$this->Group->create();
 		$this->Group->set($group);
 		$validates = $this->Group->validates(array('fieldList' => array('name')));
 		$this->assertFalse($validates, 'A group with the same name as an existing one shouldn\'t validate');
