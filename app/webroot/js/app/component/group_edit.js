@@ -213,6 +213,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
                 id: groupUser.id,
                 user_id: groupUser.user_id,
                 group_id: groupUser.group_id,
+                is_admin: groupUser.is_admin,
                 isNew: groupUser.isNew
             }
         });
@@ -232,6 +233,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
                 id: groupUser.id,
                 user_id: groupUser.user_id,
                 group_id: groupUser.group_id,
+                is_admin: groupUser.is_admin,
                 isNew: groupUser.isNew
             }
         });
