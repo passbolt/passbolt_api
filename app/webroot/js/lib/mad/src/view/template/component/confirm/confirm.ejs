@@ -8,11 +8,18 @@
     </div>
     <div class="js_dialog_content dialog-content">
         <div class="form-content">
+            <% if (subtitle != null && subtitle != '' ) { %>
+            <p>
+                <strong>
+                    <%= subtitle %>
+                </strong>
+            </p>
+            <% } %>
             <p><%= content %></p>
         </div>
     </div>
     <div class="submit-wrapper clearfix">
-        <input type="submit" value="OK" class="button primary js-dialog-confirm" id="confirm-button">
+        <input type="submit" value="<%= submitButton.label %>" class="button primary js-dialog-confirm <%= submitButton.cssClasses.join(' ') %>" id="confirm-button">
         <a class="js-dialog-cancel cancel">cancel</a>
     </div>
 </div>

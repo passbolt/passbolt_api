@@ -27,7 +27,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         templateUri: 'mad/view/template/component/tree.ejs',
         itemTemplateUri: 'js/app/view/template/component/group_item.ejs',
         prefixItemId: 'group_',
-        selectedGroup: null,
+        selectedGroups: can.Model.List(),
         selectedFilter: null,
         // the view class to use. Overriden so we can put our own logic.
         viewClass: passbolt.view.component.GroupsList,
@@ -110,7 +110,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      * @param {passbolt.model.Group} item
      */
     select: function(item) {
-        this.options.selectedGroup = item;
+        this.options.selectedGroups[0] = item;
         this.view.selectItem(item);
         this.filter(item);
     },
@@ -152,17 +152,17 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         contextualMenu.insertItem(action);
 
         // Add Delete group action.
-        // var action = new mad.model.Action({
-        //     id: 'js_group_browser_menu_remove',
-        //     label: 'Delete group',
-        //     initial_state: 'ready',
-        //     action: function (menu) {
-        //         // var secret = item.Secret[0].data;
-        //         // mad.bus.trigger('passbolt.secret.decrypt', secret);
-        //         menu.remove();
-        //     }
-        // });
-        // contextualMenu.insertItem(action);
+        var action = new mad.model.Action({
+            id: 'js_group_browser_menu_remove',
+            label: 'Delete group',
+            initial_state: 'ready',
+            action: function (menu) {
+                // var secret = item.Secret[0].data;
+                mad.bus.trigger('request_group_deletion', item);
+                menu.remove();
+            }
+        });
+        contextualMenu.insertItem(action);
 
         // Display the menu.
         contextualMenu.setState('ready');
@@ -196,9 +196,26 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      */
     '{passbolt.model.Group} updated': function(el, ev, data) {
         this.refreshItem(data);
-        if (this.options.selectedGroup != null && this.options.selectedGroup.id == data.id) {
+        if(this.options.selectedGroups.attr('length') == 0) {
+            return;
+        }
+        if (this.options.selectedGroups[0] != null && this.options.selectedGroups[0].id == data.id) {
             this.select(data);
         }
+    },
+
+    /**
+     * Listen when a group model has been destroyed.
+     *
+     * And update the component accordingly by removing it from the list, and unselecting all groups.
+     *
+     * @param el
+     * @param ev
+     * @param data
+     */
+    '{passbolt.model.Group} destroyed': function(el, ev, group) {
+        this.unselectAll();
+        this.removeItem(group);
     },
 
     /* ************************************************************** */
@@ -213,7 +230,6 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      */
     '{mad.bus.element} filter_workspace': function (element, evt, filter) {
         if (this.selectedFilter && this.selectedFilter.id != filter.id) {
-            this.selectedGroup = null;
             this.unselectAll();
         }
     },

@@ -63,52 +63,29 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 	 */
 	findAll: function (params, success, error) {
 		return mad.net.Ajax.request({
-			url: APP_URL + '/groups',
+			url: APP_URL + '/groups.json',
 			type: 'GET',
 			params: params,
 			success: success,
 			error: error
 		});
+	},
+
+	/**
+	 * Destroy a group following the given parameter
+	 * @params {string} id the id of the instance to remove
+	 * @return {jQuery.Deferred)
+	 */
+	destroy : function (id, success, error) {
+		var params = {id:id};
+		return mad.net.Ajax.request({
+			url: APP_URL + 'groups/{id}.json',
+			type: 'DELETE',
+			params: params,
+			success: success,
+			error: error
+		});
 	}
-
-	// update : function(id, attrs, success, error) {
-	// 	var self = this;
-	// 	// remove not desired attributes
-	// 	delete attrs.created;
-	// 	delete attrs.modified;
-	// 	// format data as expected by cakePHP
-	// 	var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-	// 	// add the root of the params, it will be used in the url template
-	// 	params.id = id;
-	// 	return mad.net.Ajax.request({
-	// 		url: APP_URL + 'groups/{id}.json',
-	// 		type: 'PUT',
-	// 		params: params,
-	// 		success: success,
-	// 		error: error
-	// 	}).pipe(function (data, textStatus, jqXHR) {
-	// 		// pipe the result to convert cakephp response format into can format
-	// 		var def = $.Deferred();
-	// 		def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-	// 		return def;
-	// 	});
-	// },
-
-	// /**
-	//  * Destroy a group following the given parameter
-	//  * @params {string} id the id of the instance to remove
-	//  * @return {jQuery.Deferred)
-	//  */
-	// destroy : function (id, success, error) {
-	// 	var params = {id:id};
-	// 	return mad.net.Ajax.request({
-	// 		url: APP_URL + 'groups/{id}',
-	// 		type: 'DELETE',
-	// 		params: params,
-	// 		success: success,
-	// 		error: error
-	// 	});
-	// }
 
 }, /** @prototype */ {
 
@@ -129,7 +106,18 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 		}
 
 		return isGroupManager;
-	}
+	},
+
+	deleteDryRun : function(id, attrs, success, error) {
+		var params = {id:id};
+		return mad.net.Ajax.request({
+			url: APP_URL + 'groups/{id}/dry-run.json',
+			type: 'DELETE',
+			params: params,
+			success: success,
+			error: error
+		});
+	},
 
 });
 
