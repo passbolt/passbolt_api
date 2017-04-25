@@ -16,20 +16,19 @@ class Group extends AppModel {
 	public $actsAs = [
 		'Trackable',
 		'SuperJoin',
-		'Containable',
+		'Containable'
 	];
 
 	public $hasMany = [
 		'GroupUser' => [
-			'className' => 'GroupUser',
+			'className' => 'GroupUser'
 		],
 		'GroupResourcePermission'
 	];
 
 	public $hasAndBelongsToMany = [
 		'User' => [
-			'className' => 'User',
-
+			'className' => 'User'
 		]
 	];
 
@@ -40,7 +39,7 @@ class Group extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = [
+		return [
 			'id' => [
 				'uuid' => [
 					'rule' => 'uuid',
@@ -62,14 +61,6 @@ class Group extends AppModel {
 				],
 			]
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
 	}
 
 /**
@@ -103,13 +94,17 @@ class Group extends AppModel {
 				if (isset($data['filter']['has-users'])) {
 					$users = $data['filter']['has-users'];
 					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
-					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'user';
+					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) {
+						$data['contain'][] = 'user';
+					}
 				}
 				if (isset($data['filter']['has-managers'])) {
 					$users = $data['filter']['has-managers'];
 					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
 					$conditions['conditions'][] = ['GroupsUser.is_admin' => 1];
-					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'user';
+					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) {
+						$data['contain'][] = 'user';
+					}
 				}
 				break;
 
@@ -336,4 +331,43 @@ class Group extends AppModel {
 			return empty($exist);
 		}
 	}
+
+/**
+ * Validate filters
+ *
+ * @params array $filters
+ * - has-users: a UUID or list of UUIDs separated using comma
+ * - has-manager: a UUID or list of UUIDs separated using comma
+ * @return true if valid
+ */
+ 	public function validateFilters ($filters = null) {
+ 		if (isset($filters) && count($filters)) {
+			$allowedFilters = ['has-users', 'has-managers'];
+			foreach ($allowedFilters as $filter) {
+				if (isset($filters[$filter])) {
+					foreach ($filters[$filter] as $i => $userId) {
+						if(!Common::isUuid($userId)) {
+							return false;
+						}
+					}
+				}
+			}
+ 		}
+ 		return true;
+	}
+
+/**
+ * Validate order
+ *
+ * @param array $order
+ * - Group.name: a string that is a valid group name
+ * @return bool true if valid
+ */
+ 	public function validateOrder ($order = null) {
+ 		if (isset($order) && isset($order['Group.name'])) {
+			$validationRules = Group::getValidationRules();
+			return preg_match($order['Group.name'], $validationRules['name']['alphanumeric']['rule']);
+		}
+ 		return true;
+ 	}
 }

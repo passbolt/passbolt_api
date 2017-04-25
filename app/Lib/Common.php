@@ -72,4 +72,26 @@ class Common extends CakeObject {
 	public static function isTimestamp($timestamp) {
 		return ((string) (int) $timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
 	}
+
+/**
+ * All array key exist in an array
+ *
+ * @param array $stack allowed values
+ * @param array $needles associative array
+ * @return bool true if all needles are in stack
+ */
+ 	public static function keysInArray ($stack = null, $needles = null) {
+ 		if (!isset($stack) || empty($stack) || !isset($needles) || empty($needles)) {
+ 			return false;
+ 		}
+ 		if (!is_array($stack) || !count($stack) || !is_array($needles) || !count($needles)) {
+ 			return false;
+ 		}
+		foreach($needles as $key => $value) {
+			if (!in_array($key, $stack)) {
+				return false;
+			}
+		}
+		return true;
+ 	}
 }

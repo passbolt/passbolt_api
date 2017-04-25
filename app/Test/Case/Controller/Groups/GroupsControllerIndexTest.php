@@ -53,30 +53,30 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
-
-	/**
-	 * Test a call to index without being logged in.
-	 *
-	 * @return void
-	 */
+/**
+ * Test a call to index without being logged in.
+ *
+ * @return void
+ */
 	public function testIndexNoAllowed() {
 		// We expect an exception.
+		$this->User->setInactive();
 		$this->setExpectedException('ForbiddenException', 'You need to login to access this location');
 
 		// Test with anonymous user
 		$this->testAction('/groups.json', array('return' => 'contents', 'method' => 'GET'), true);
 	}
 
-	/**
-	 * Test a call to index.
-	 *
-	 * Assert that the call is a success.
-	 * Assert that the deleted groups are not returned.
-	 * Assert that each element contains the element Group, UserGroup and User by default.
-	 *
-	 * @return void
-	 */
-	public function testIndex() {
+/**
+ * Test a call to index.
+ *
+ * Assert that the call is a success.
+ * Assert that the deleted groups are not returned.
+ * Assert that each element contains the element Group, UserGroup and User by default.
+ *
+ * @return void
+ */
+	public function testIndexSuccess() {
 		// test with normal user
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -102,12 +102,12 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 
 	}
 
-	/**
-	 * Test index entry point with contain parameters.
-	 *
-	 * Assert that when contain[user] is passed, the output contains for each group a User and GroupUser object
-	 */
-	public function testIndexWithUserContain() {
+/**
+ * Test index entry point with contain parameters.
+ *
+ * Assert that when contain[user] is passed, the output contains for each group a User and GroupUser object
+ */
+	public function testIndexWithUserContainSuccess() {
 		// test with normal user
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -133,13 +133,13 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		}
 	}
 
-	/**
-	 * Test index entry point with contain parameters.
-	 *
-	 * Assert that user contain can be disabled, and that when disabled
-	 * the output doesn't contain neither User nor GroupUser
-	 */
-	public function testIndexWithoutUserContain() {
+/**
+ * Test index entry point with contain parameters.
+ *
+ * Assert that user contain can be disabled, and that when disabled
+ * the output doesn't contain neither User nor GroupUser
+ */
+	public function testIndexWithoutUserContainSuccess() {
 		// test with normal user
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -165,12 +165,12 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		}
 	}
 
-	/**
-	 * Test index entry point with "has-users" filter parameters.
-	 *
-	 * Assert that each group returned contained the user mentioned in the filter
-	 */
-	public function testIndexWithFilterHasUser() {
+/**
+ * Test index entry point with "has-users" filter parameters.
+ *
+ * Assert that each group returned contained the user mentioned in the filter
+ */
+	public function testIndexWithFilterHasUserSuccess() {
 		// test with normal user
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -198,12 +198,12 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		}
 	}
 
-	/**
-	 * Test index entry point with "has-users" filter parameters and multiple users provided.
-	 *
-	 * Assert that each group returned contained both the users mentioned in the filter
-	 */
-	public function testIndexWithFilterHasUserMultipleUsers() {
+/**
+ * Test index entry point with "has-users" filter parameters and multiple users provided.
+ *
+ * Assert that each group returned contained both the users mentioned in the filter
+ */
+	public function testIndexWithFilterHasUserMultipleUsersSuccess() {
 		// test with normal user
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -244,13 +244,13 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		}
 	}
 
-	/**
-	 * Test index entry point with "has-managers" filter parameters and one manager provided.
-	 *
-	 * Assert that each group returned contains the manager mentioned in the filter
-	 * Assert that each time betty is mentioned, she is the manager of the group.
-	 */
-	public function testIndexWithFilterHasManager() {
+/**
+ * Test index entry point with "has-managers" filter parameters and one manager provided.
+ *
+ * Assert that each group returned contains the manager mentioned in the filter
+ * Assert that each time betty is mentioned, she is the manager of the group.
+ */
+	public function testIndexWithFilterHasManagerSuccess() {
 		// test with normal user
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -287,4 +287,70 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 			}
 		}
 	}
+
+/**
+ * Test index fails with unknown filter name.
+ */
+	public function testIndexWithWrongHasUnknownFilters() {
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+		$this->setExpectedException('BadRequestException', 'Unknown filter clause. Supported filters: has-users, has-managers');
+		$params = ['filter' => ['has-bogus' => Common::uuid('user.id.ada')]];
+		$this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+	}
+
+/**
+ * Test index fails with one unknown filter name and one good one
+ */
+	public function testIndexWithWrongHasOneOutOfTwoUnknownFilters() {
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+		$this->setExpectedException('BadRequestException', 'Unknown filter clause. Supported filters: has-users, has-managers');
+		$params = ['filter' => ['has-users' => Common::uuid('user.id.ada'), 'has-bogus' => Common::uuid('user.id.ada')]];
+		$this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+	}
+
+/**
+ * Test index fails with wrong "has-users" filter parameters.
+ */
+	public function testIndexWithWrongHasUsersFilters() {
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+		$this->setExpectedException('BadRequestException', 'Invalid filter. The filter should contain one or a list of comma separated user UUIDs.');
+		$params = ['filter' => ['has-users' => 'notauuid']];
+		$this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+	}
+
+/**
+ * Test index fails with one good and one wrong "has-users" filter parameters.
+ */
+	public function testIndexWithOneGoodAndWrongHasUsersFilters() {
+		// Some but not all uuid
+		$this->setExpectedException('BadRequestException', 'Invalid filter. The filter should contain one or a list of comma separated user UUIDs.');
+		$usersToFind = [Common::uuid('user.id.ada'), 'notuuid'];
+		$params = ['filter' => ['has-users' => $usersToFind[0] . "," . $usersToFind[1]]];
+		$this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+	}
+
+/**
+ * Test index fails with wrong "has-manager" filter parameters.
+ */
+	public function testIndexWithWrongHasManagersFilters() {
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+		$this->setExpectedException('BadRequestException', 'Invalid filter. The filter should contain one or a list of comma separated user UUIDs.');
+		$params = ['filter' => ['has-managers' => 'notauuid']];
+		$this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+	}
+
+/**
+ * Test index fails with one good and one and one wrong "has-users" filter parameters.
+ */
+	public function testIndexWithOneGoodAndWrongHasManagersFilters() {
+		$this->setExpectedException('BadRequestException', 'Invalid filter. The filter should contain one or a list of comma separated user UUIDs.');
+		$usersToFind = [Common::uuid('user.id.ada'), 'notuuid'];
+		$params = ['filter' => ['has-managers' => $usersToFind[0] . "," . $usersToFind[1]]];
+		$this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+	}
+
 }

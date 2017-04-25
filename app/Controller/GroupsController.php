@@ -49,8 +49,7 @@ class GroupsController extends AppController {
  *     type="string",
  * 	   enum={
  * 		 "has-users",
- * 		 "has-managers",
- * 		 "has-resources",
+ * 		 "has-managers"
  * 	   }
  *   ),
  * @SWG\Parameter(
@@ -97,20 +96,46 @@ class GroupsController extends AppController {
  * )
  */
 	public function index() {
+		// Check request sanity
+		if (!$this->request->is('get')) {
+			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
+		}
+
+		// Check params
+		$params =[];
+		if (!empty($this->request->params['filter'])) {
+			if (!Common::keysInArray(['has-users', 'has-managers'], $this->request->params['filter'])) {
+				throw new BadRequestException(__('Unknown filter clause. Supported filters: has-users, has-managers'));
+			}
+			if (!$this->Group->validateFilters($this->request->params['filter'])) {
+				throw new BadRequestException(__('Invalid filter. The filter should contain one or a list of comma separated user UUIDs.'));
+			}
+			$params['filter'] = $this->request->params['filter'];
+		}
+		if (!empty($this->request->params['contain'])) {
+			if (!Common::keysInArray(['user', 'resource'], $this->request->params['contain'])) {
+				throw new BadRequestException(__('Unknown contain clause. Supported: user, resource.'));
+			}
+			$params['contain'] = $this->request->params['contain'];
+		}
+		if(!empty($this->request->params['order'])) {
+			if (!Common::keysInArray(['Group.name'], $this->request->params['order'])) {
+				throw new BadRequestException(__('Unknown order parameter. Supported: Group.name.'));
+			}
+			if (!$this->Group->validateOrder($this->request->params['order'])) {
+				throw new BadRequestException(__('Invalid order.'));
+			}
+			$params['order'] = $this->request->params['order'];
+		}
+
 		// Add filters, contains and order data to the get find options data.
-		$findData['contain'] = $this->request->params['contain'];
-		$findData['filter'] = $this->request->params['filter'];
-		$findData['order'] = $this->request->params['order'];
-
-		// Get find options.
-		$o = $this->Group->getFindOptions('Group::index', User::get('Role.name'), $findData);
-
-		// Get all groups.
+		// Build find options and get the groups
+		$o = $this->Group->getFindOptions('Group::index', User::get('Role.name'), $params);
 		$groups = $this->Group->find('all', $o);
 
 		// If filter 'has-users' is applied, remove entries where all the users are not listed.
-		if (isset($this->request->params['filter']) && isset($this->request->params['filter']['has-users'])) {
-			$groups = $this->Group->filterGroupWithAllUsers($groups, $this->request->params['filter']['has-users']);
+		if (isset($params['filter']) && isset($params['filter']['has-users'])) {
+			$groups = $this->Group->filterGroupWithAllUsers($groups, $params['filter']['has-users']);
 		}
 
 		// Remove useless elements due to super join.
@@ -136,11 +161,11 @@ class GroupsController extends AppController {
  *   path="/groups/{uuid}.json",
  *   summary="Find a group by ID",
  * @SWG\Parameter(
- *             name="id",
- *             in="path",
- *             required=true,
- *             type="string",
- *             description="the uuid of the group",
+ *     name="id",
+ *     in="path",
+ *     required=true,
+ *     type="string",
+ *     description="the uuid of the group",
  *   ),
  * @SWG\Parameter(
  *     name="contain",
