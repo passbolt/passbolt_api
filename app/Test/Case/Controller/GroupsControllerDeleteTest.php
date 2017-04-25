@@ -155,6 +155,9 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 
 /**
  * Test delete  in a normal scenario.
+ *
+ * Assert that the group is soft deleted.
+ * Assert that the linked models have their corresponding data deleted.
  */
 	public function testDeleteNormal() {
 		$user = $this->User->findById(Common::uuid('user.id.admin'));
@@ -181,7 +184,12 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 
 		// Assert that the group is deleted in db.
 		$group = $this->Group->findById($groupId);
-		$this->assertEmpty($group);
+		$this->assertTrue($group['Group']['deleted']);
+
+		$permsAfterDelete = $this->Group->GroupResourcePermission->find('all', ['conditions' => ['aro_foreign_key' => $groupId]]);
+		$groupUsersAfterDelete = $this->Group->GroupUser->find('all', ['conditions' => ['group_id' => $groupId]]);
+		$this->assertEmpty($permsAfterDelete);
+		$this->assertEmpty($groupUsersAfterDelete);
 	}
 
 }

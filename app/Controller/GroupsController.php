@@ -688,8 +688,10 @@ class GroupsController extends AppController {
 		}
 
 		// Everything alright. We can delete.
-		$delete = $this->Group->delete($id);
-		if (!$delete) {
+		try {
+			$this->Group->softDelete($id);
+		}
+		catch(Exception $e) {
 			return $this->Message->error(__('Could not delete group'));
 		}
 

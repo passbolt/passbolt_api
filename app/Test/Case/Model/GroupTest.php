@@ -12,14 +12,23 @@ App::uses('Group', 'Model');
 class GroupTest extends CakeTestCase {
 
 	public $fixtures = array(
+		'app.groups_user',
 		'app.group',
 		'app.user',
-		'app.role',
+		'app.group',
 		'app.gpgkey',
+		'app.email_queue',
 		'app.profile',
 		'app.file_storage',
-		'app.groupsUser',
-		'core.cakeSession'
+		'app.role',
+		'app.authenticationToken',
+		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log',
+		'app.resource',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
 	);
 
 	public function setUp() {
@@ -91,6 +100,26 @@ class GroupTest extends CakeTestCase {
 
 	}
 
+
+/**
+ * Test soft delete.
+ */
+	public function testSoftDelete() {
+		$groupId = Common::uuid('group.id.developer');
+		$perms = $this->Group->GroupResourcePermission->find('all', ['conditions' => ['aro_foreign_key' => $groupId]]);
+		$groupUsers = $this->Group->GroupUser->find('all', ['conditions' => ['group_id' => $groupId]]);
+		$this->assertNotEmpty($perms);
+		$this->assertNotEmpty($groupUsers);
+
+		// Soft delete group
+		$this->Group->softDelete($groupId);
+
+		// Now check that the related permissions and group users don't exist anymore.
+		$permsAfterDelete = $this->Group->GroupResourcePermission->find('all', ['conditions' => ['aro_foreign_key' => $groupId]]);
+		$groupUsersAfterDelete = $this->Group->GroupUser->find('all', ['conditions' => ['group_id' => $groupId]]);
+		$this->assertEmpty($permsAfterDelete);
+		$this->assertEmpty($groupUsersAfterDelete);
+	}
 
 }
 

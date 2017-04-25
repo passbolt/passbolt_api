@@ -301,7 +301,7 @@ class Group extends AppModel {
 		$dataSource = $this->getDataSource();
 		$dataSource->begin();
 
-		// Mark the group as deleted
+		// Mark the group as deleted.
 		$data['Group'] = [
 			'id' => $id,
 			'deleted' => 1
@@ -310,6 +310,21 @@ class Group extends AppModel {
 		if (!$this->save($data, true, $fields['fields'])) {
 			$dataSource->rollback();
 			throw new Exception(__('Unable to soft delete the group'));
+		}
+
+		// Remove group users.
+		$deleteOptions = ['GroupUser.group_id' => $id];
+		if(!$this->GroupUser->deleteAll($deleteOptions)) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to delete associated group users'));
+		}
+
+		// Revoke the groups's permissions.
+		$Permission = ClassRegistry::init('Permission');
+		$deleteOptions = ['Permission.aro' => 'Group', 'Permission.aro_foreign_key' => $id];
+		if (!$Permission->deleteAll($deleteOptions, false)) {
+			$dataSource->rollback();
+			throw new Exception(__('Unable to delete the group\'s permissions'));
 		}
 
 		// Everything fine, we commit.
