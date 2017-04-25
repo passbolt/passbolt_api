@@ -102,6 +102,8 @@ class SecretTask extends ModelTask {
             // Bower = this_23-04
             case Common::uuid('resource.id.centos') :
                 return 'this_23-04';
+            case Common::uuid('resource.id.enligthenment') :
+                return 'azaertyuiop';
             // Centos = very weak
             default :
                 return $this->getDummyPassword();
