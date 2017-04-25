@@ -62,4 +62,14 @@ class Common extends CakeObject {
 	public static function isCli() {
 		return (php_sapi_name() === "cli");
 	}
+
+/**
+ * Return true if valid timestamp
+ *
+ * @param string $timestamp unixtimestamp
+ * @return bool true if unix timestamp
+ */
+	public static function isTimestamp($timestamp) {
+		return ((string) (int) $timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
+	}
 }

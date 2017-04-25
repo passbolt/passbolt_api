@@ -421,8 +421,8 @@ class Gpgkey extends AppModel {
 			case 'GpgKey::index':
 				$conditions['conditions']['Gpgkey.deleted'] = 0;
 
-				if (isset($data['filter']['is-modified-after'])) {
-					$conditions['conditions']['Gpgkey.modified >='] = $data['filter']['is-modified-after'];
+				if (isset($data['filter']['modified-after'])) {
+					$conditions['conditions']['Gpgkey.modified >='] = $data['filter']['modified-after'];
 				}
 				break;
 

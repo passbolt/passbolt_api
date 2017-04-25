@@ -105,7 +105,8 @@ class FavoritesControllerTest extends ControllerTestCase {
 	public function testAddSuccess() {
 		$model = 'resource';
 		$rsId = Common::uuid('resource.id.debian');
-		$this->testAction("/favorites/{$model}/{$rsId}.json", array('method' => 'post', 'return' => 'contents'));
+		$result = json_decode($this->testAction("/favorites/{$model}/{$rsId}.json", array('method' => 'post', 'return' => 'contents')));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
 	}
 
 /**
@@ -151,7 +152,12 @@ class FavoritesControllerTest extends ControllerTestCase {
 	public function testDeleteSuccess() {
 		$model = 'resource';
 		$rsId = Common::uuid('resource.id.debian');
-		$result = json_decode($this->testAction("/favorites/{$model}/{$rsId}.json", array('method' => 'post', 'return' => 'contents')), true);
-		$this->testAction("/favorites/{$result['body']['Favorite']['id']}.json", array('method' => 'delete', 'return' => 'contents'));
+		$result = json_decode(
+			$this->testAction("/favorites/{$model}/{$rsId}.json", array('method' => 'post', 'return' => 'contents')), true
+		);
+		$result = json_decode(
+			$this->testAction("/favorites/{$result['body']['Favorite']['id']}.json", array('method' => 'delete', 'return' => 'contents'))
+		);
+		$this->assertEquals($result->header->status, Status::SUCCESS);
 	}
 }
