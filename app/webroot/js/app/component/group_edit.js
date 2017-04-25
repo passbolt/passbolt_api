@@ -23,13 +23,13 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
     defaults: {
         label: null,
         resource: null,
-        cssClasses: ['share-tab', 'edit-group-dialog'],
+        cssClasses: ['share-tab'],
         viewClass: passbolt.view.component.GroupEdit,
         templateUri: 'app/view/template/component/group_edit.ejs',
         // The list of changes.
         GroupUserChanges: [],
         // The initial state the component will be initialized on (after start).
-        state: 'ready',
+        state: 'loading',
         // Should be provided at the call.
         data: {
             Group: {}
@@ -128,9 +128,11 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             $('.group_members').addClass('empty');
         }
 
-        // TODO: this should be done once the plugin has loaded its components, and after the data are loaded.
-        // Don't forget to set the initial state of the plugin to loading in the defaults.
-        this.setState('ready');
+        // The component is not marked as ready when editing a group, as the group members list
+        // is retrieved through the plugin. See passbolt.plugin.group.edit.group_loaded
+        if (this.formState == 'create') {
+            this.options.state = 'ready';
+        }
 
         this.on();
     },
@@ -186,7 +188,6 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // Load this temporary groupUser in the group users list component.
         this.loadGroupUser(groupUser);
-
         $('.group_members').removeClass('empty');
 
         // Check manager.
@@ -208,7 +209,11 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
         mad.bus.trigger('passbolt.group.edit.remove_group_user', {
-            groupUser: groupUser
+            groupUser: {
+                id: groupUser.id,
+                user_id: groupUser.user_id,
+                group_id: groupUser.group_id
+            }
         });
 
         this.checkManager();
@@ -363,6 +368,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             self.addGroupUser(groupUser);
         });
 
+        this.setState('ready');
     },
 
     /**
@@ -396,7 +402,6 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             });
         }, 0);
     },
-
 
     /**
      * Listen when a group has been added / updated through the plugin.

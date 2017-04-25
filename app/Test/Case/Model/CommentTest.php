@@ -173,12 +173,10 @@ class CommentTest extends AppTestCase {
 			'' => false,
 			// Email are not accepted
 			'test@test.com' => true,
-			// too short
-			'sh' => false,
+			// short
+			's' => true,
 			// too long
 			'toolong' . self::randString($len - 6, self::getMask('alphaASCII')) => false,
-			// Short but enough
-			'sho' => true,
 			// Long but not too long
 			'long' . self::randString($len - 4, self::getMask('alphaASCII')) => true,
 			// Languages
