@@ -176,6 +176,7 @@
  * Custom route for setup health check page
  */
 	Router::connect('/healthcheck', array('controller' => 'HealthCheck', 'action' => 'index'));
+    Router::connect('/healthcheck/status', array('controller' => 'HealthCheck', 'action' => 'status'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

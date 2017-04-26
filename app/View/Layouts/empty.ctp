@@ -7,18 +7,15 @@
  */
 ?>
 <!doctype html>
-<html class="passbolt no-js alpha version launching no-passboltplugin <?php echo User::get('Role.name'); ?>" lang="en">
+<html class="passbolt no-js alpha version no-passboltplugin" lang="en">
 <head>
     <meta charset="utf-8">
-<?php echo $this->element('asciiart'); ?>
-    <title><?php echo sprintf(Configure::read('App.title'),$this->fetch('title')); ?></title>
-    <meta name="description" content="<?php echo Configure::read('App.punchline'); ?>">
+    <title><?php echo sprintf(Configure::read('App.title'), $this->fetch('title')); ?></title>
     <meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
     <meta name="viewport" content="width=device-width">
 </head>
 <body>
-<!-- main -->
-<div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
+<div id="container" class="empty page">
 <?php echo $this->fetch('content'); ?>
 </div>
 </body>
