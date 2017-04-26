@@ -124,6 +124,9 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      */
     showContextualMenu: function (item, x, y, eventTarget) {
 
+        var currentUser = passbolt.model.User.getCurrent(),
+            isAdmin = (currentUser.Role.name == 'admin');
+
         // Get the offset position of the clicked item.
         var $item = $('#' + this.options.prefixItemId + item.id);
         var item_offset = $('.more-ctrl a', $item).offset();
@@ -151,18 +154,20 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         });
         contextualMenu.insertItem(action);
 
-        // Add Delete group action.
-        var action = new mad.model.Action({
-            id: 'js_group_browser_menu_remove',
-            label: 'Delete group',
-            initial_state: 'ready',
-            action: function (menu) {
-                // var secret = item.Secret[0].data;
-                mad.bus.trigger('request_group_deletion', item);
-                menu.remove();
-            }
-        });
-        contextualMenu.insertItem(action);
+        // Add Delete group action if the user is an admin.
+        if (isAdmin) {
+            var action = new mad.model.Action({
+                id: 'js_group_browser_menu_remove',
+                label: 'Delete group',
+                initial_state: 'ready',
+                action: function (menu) {
+                    // var secret = item.Secret[0].data;
+                    mad.bus.trigger('request_group_deletion', item);
+                    menu.remove();
+                }
+            });
+            contextualMenu.insertItem(action);
+        }
 
         // Display the menu.
         contextualMenu.setState('ready');
