@@ -4,7 +4,8 @@
  * This class serves as a space for convenience functions (mostly static)
  * that need to be globally available within this application.
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -52,8 +53,8 @@ class Common extends CakeObject {
  * @return bool true if str is a UUID
  */
 	public static function isUuid($str) {
-		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/',
-			$str);
+		$uuidRegex = '/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/';
+		return (is_string($str) && preg_match($uuidRegex, $str) === 1);
 	}
 
 /**
@@ -74,24 +75,10 @@ class Common extends CakeObject {
 	}
 
 /**
- * All array key exist in an array
- *
- * @param array $stack allowed values
- * @param array $needles associative array
- * @return bool true if all needles are in stack
+ * Return true if valid Json url
  */
- 	public static function keysInArray ($stack = null, $needles = null) {
- 		if (!isset($stack) || empty($stack) || !isset($needles) || empty($needles)) {
- 			return false;
- 		}
- 		if (!is_array($stack) || !count($stack) || !is_array($needles) || !count($needles)) {
- 			return false;
- 		}
-		foreach($needles as $key => $value) {
-			if (!in_array($key, $stack)) {
-				return false;
-			}
-		}
-		return true;
+ 	public static function isJsonUrl($url) {
+ 		$baseUrl = explode('?', $url);
+		return (preg_match('/(.json){1,}$/', $baseUrl[0]) === 1);
  	}
 }

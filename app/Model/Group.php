@@ -176,21 +176,10 @@ class Group extends AppModel {
 				$fields = ['fields' => ['name', 'created_by', 'modified_by']];
 				break;
 			case 'Group::exists':
-				$fields = [
-					'fields' => [
-						'Group.id',
-						'Group.deleted',
-					]
-				];
+				$fields = ['fields' => ['Group.id', 'Group.deleted']];
 				break;
 			case 'Group::edit':
-				$fields = [
-					'fields' => [
-						'name',
-						'modified',
-						'modified_by'
-					]
-				];
+				$fields = ['fields' => ['name', 'modified', 'modified_by']];
 				break;
 			default:
 				$fields = ['fields' => []];
@@ -211,16 +200,11 @@ class Group extends AppModel {
 		switch ($case) {
 			case 'Group::view':
 			case 'Group::index':
-				$contain = [
-					'user' => 1,
-					'resource' => 0,
-				];
+				$contain = ['user' => 1, 'resource' => 0];
 				break;
 			case 'Share::searchUsers':
-				$contain = [
-					'user' => 0,
-					'resource' => 0,
-				];
+				$contain = ['user' => 0, 'resource' => 0];
+				break;
 		}
 		return $contain;
 	}
@@ -233,21 +217,15 @@ class Group extends AppModel {
  * @return array
  */
 	public static function getFindAllowedOrder($case = null, $role = null) {
-		return [
-			'Group.name',
-		];
+		return ['Group.name'];
 	}
 
 /**
  * Filter a list of groups and remove the groups that don't contain all the members defined by $userIds.
  *
- * @param $groups
- *   list of groups, with the users and groupUsers provided.
- * @param $userIds
- *   list of user ids
- *
- * @return array
- *   list of only the groups that contain at least the members defined by userIds
+ * @param $groups list of groups, with the users and groupUsers provided.
+ * @param $userIds list of user ids
+ * @return array list of only the groups that contain at least the members defined by userIds
  */
 	public static function filterGroupWithAllUsers($groups, $userIds) {
 		$results = [];
@@ -274,7 +252,6 @@ class Group extends AppModel {
 		if ($id === null) {
 			$id = $this->getID();
 		}
-
 		if ($id === false) {
 			return false;
 		}
@@ -327,7 +304,6 @@ class Group extends AppModel {
 					'Group.deleted' => false,
 				],
 			]);
-
 			return empty($exist);
 		}
 	}
@@ -336,23 +312,24 @@ class Group extends AppModel {
  * Validate filters
  *
  * @params array $filters
- * - has-users: a UUID or list of UUIDs separated using comma
- * - has-manager: a UUID or list of UUIDs separated using comma
+ * - has-users: an array of user uuids
+ * - has-manager: an array of user uuids
+ * @throws ValidationException if one of the has-managers or has-users values is not a valid uuid
  * @return true if valid
  */
  	public function validateFilters ($filters = null) {
- 		if (isset($filters) && count($filters)) {
-			$allowedFilters = ['has-users', 'has-managers'];
-			foreach ($allowedFilters as $filter) {
-				if (isset($filters[$filter])) {
-					foreach ($filters[$filter] as $i => $userId) {
+		foreach ($filters as $filter => $values) {
+			switch ($filter) {
+				case 'has-managers':
+				case 'has-users':
+					foreach($values as $i => $userId) {
 						if(!Common::isUuid($userId)) {
-							return false;
+							throw new ValidationException(__('"%s" is not a valid user id for filter %s.', $userId, $filter));
 						}
 					}
-				}
+				break;
 			}
- 		}
+		}
  		return true;
 	}
 
@@ -361,12 +338,16 @@ class Group extends AppModel {
  *
  * @param array $order
  * - Group.name: a string that is a valid group name
+ * @throws ValidationException if the group name does not validate
  * @return bool true if valid
  */
  	public function validateOrder ($order = null) {
  		if (isset($order) && isset($order['Group.name'])) {
 			$validationRules = Group::getValidationRules();
-			return preg_match($order['Group.name'], $validationRules['name']['alphanumeric']['rule']);
+			$valid = (preg_match($order['Group.name'], $validationRules['name']['alphanumeric']['rule']) === 1);
+			if(!$valid) {
+				throw new ValidationException(__('"%" is not a valid group name.'), $order['Group.name']);
+			}
 		}
  		return true;
  	}

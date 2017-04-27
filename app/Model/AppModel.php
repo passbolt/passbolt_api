@@ -83,7 +83,7 @@ class AppModel extends Model {
 		$findOptions = array_merge($findOptions, $findConditions);
 
 		// Prepare contain instructions.
-		$data['contain'] = static::prepareFindContain(
+		$data['contain'] = static::mergeFindContain(
 			static::getFindContain($case, $role),
 			isset($data['contain']) ? $data['contain'] : []
 		);
@@ -150,7 +150,7 @@ class AppModel extends Model {
  *  ];
  *
  */
-	public static function prepareFindContain($defaultContain, $requestedContain) {
+	public static function mergeFindContain($defaultContain, $requestedContain) {
 		$finalContain = [];
 		// Check default contain values. Only retain the one that have been explicitly requested in data, or that
 		// are equal to 1 by default.
@@ -303,7 +303,6 @@ class AppModel extends Model {
 			if ($data[$this->alias][$key] == $needle) {
 				$found = true;
 				array_unshift($path, $data[$this->alias]['id']);
-
 				return $path;
 			}
 			// search in the children
@@ -317,7 +316,6 @@ class AppModel extends Model {
 				}
 			}
 		}
-
 		return $path;
 	}
 

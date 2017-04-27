@@ -224,7 +224,7 @@ class AppController extends Controller {
 		// Add a callback to the JSON detector
 		$this->request->addDetector('json', [
 			'callback' => function ($request) {
-				return (preg_match('/(.json){1,}$/', Router::url(null, true)) || $request->is('ajax'));
+				return (Common::isJsonUrl(Router::url(null, true)) || $request->is('ajax'));
 			}
 		]);
 	}

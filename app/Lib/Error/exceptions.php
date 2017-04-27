@@ -15,7 +15,7 @@ class ValidationException extends Exception {
  * @param string $message the Exception message to throw.
  * @param array $invalidFields fields missing validation and associated error messages
  */
-	public function __construct($message, array $invalidFields) {
+	public function __construct($message, array $invalidFields = null) {
 		parent::__construct($message);
 		$this->invalidFields = $invalidFields;
 	}

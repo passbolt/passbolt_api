@@ -14,6 +14,10 @@ class GroupsController extends AppController {
 		'Filter',
 	];
 
+//	public function beforeFilter() {
+//		$this->Auth->allow(['index']);
+//	}
+
 /**
  * Tidy up output of a group.
  *
@@ -31,6 +35,107 @@ class GroupsController extends AppController {
 		}
 		return $group;
 	}
+
+/**
+ * Get query Items
+ * @param $allowedQueryItems
+ * @return array
+ */
+	private function __getQueryItems($allowedQueryItems) {
+		$query = $this->request->query;
+		$query = $this->__extractQueryItems($query, $allowedQueryItems);
+		$query = $this->__flatenQueryItems($query, ['contain']);
+		$this->__validateQueryItems($query);
+		return $query;
+	}
+
+/**
+ * Extract query string items
+ * - Only allow the whitelisted items, ignore if not in the list
+ * - Transform to array when multiple comma separated values are present
+ *
+ * @param array $allowedQueryItems whitelist of query parameters
+ * @return array $query the sanitized query
+ */
+ 	private function __extractQueryItems($query, $allowedQueryItems) {
+ 		foreach ($query as $key => $items) {
+ 			if(!isset($allowedQueryItems[$key])) {
+				unset($query[$key]);
+ 			}
+ 			if(is_array($items)) {
+				foreach($items as $subKey => $subItems) {
+					if(!in_array($subKey,$allowedQueryItems[$key])) {
+						unset($query[$key][$subKey]);
+					} else {
+						$query[$key][$subKey] = explode(',', $query[$key][$subKey]);
+					}
+				}
+			}
+			if(empty($query[$key])) {
+				unset($query[$key]);
+			}
+ 		}
+ 		return $query;
+ 	}
+
+/**
+ * Flatten a query string parameter
+ * Normalize contain query items
+ * Needed because extract returns
+ * contain {
+ *   user {
+ *     0 => 1
+ *   }
+ * }
+ * Find conditions expect contains as
+ * contain {
+ *   user => 1
+ * }
+ * So we need this function to flaten it out.
+ */
+ 	private function __flatenQueryItems($query, $flattenKeys) {
+ 		foreach ($flattenKeys as $flatten) {
+ 			if (isset($query[$flatten])) {
+ 				foreach($query[$flatten] as $key => $values) {
+					$query[$flatten][$key] = $values[0];
+ 				}
+ 			}
+ 		}
+ 		return $query;
+ 	}
+
+/**
+ * Validate query items
+ *
+ * @params array $allowedQueryItems whitelisted items
+ * @params array $query items to validate
+ * @throws BadRequestException if a validation error occurs
+ * @return bool true if validate
+ */
+ 	private function __validateQueryItems($query) {
+		foreach($query as $key => $parameters) {
+			switch ($key) {
+				case 'filter':
+					try {
+						$this->Group->validateFilters($parameters);
+					} catch (ValidationException $e) {
+						throw new BadRequestException(__('Invalid filter.') . ' ' . $e->getMessage());
+					}
+				break;
+				case 'order':
+					try {
+						$this->Group->validateOrders($parameters);
+					} catch (ValidationException $e) {
+						throw new BadRequestException(__('Invalid order.') . ' ' . $e->getMessage());
+					}
+				break;
+				case 'contain':
+					//$this->Group->validateContain($parameters);
+				break;
+			}
+		}
+		return true;
+ 	}
 
 /**
  * Get all groups
@@ -96,37 +201,19 @@ class GroupsController extends AppController {
  * )
  */
 	public function index() {
+
 		// Check request sanity
 		if (!$this->request->is('get')) {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
 
-		// Check params
-		$params =[];
-		if (!empty($this->request->params['filter'])) {
-			if (!Common::keysInArray(['has-users', 'has-managers'], $this->request->params['filter'])) {
-				throw new BadRequestException(__('Unknown filter clause. Supported filters: has-users, has-managers'));
-			}
-			if (!$this->Group->validateFilters($this->request->params['filter'])) {
-				throw new BadRequestException(__('Invalid filter. The filter should contain one or a list of comma separated user UUIDs.'));
-			}
-			$params['filter'] = $this->request->params['filter'];
-		}
-		if (!empty($this->request->params['contain'])) {
-			if (!Common::keysInArray(['user', 'resource'], $this->request->params['contain'])) {
-				throw new BadRequestException(__('Unknown contain clause. Supported: user, resource.'));
-			}
-			$params['contain'] = $this->request->params['contain'];
-		}
-		if(!empty($this->request->params['order'])) {
-			if (!Common::keysInArray(['Group.name'], $this->request->params['order'])) {
-				throw new BadRequestException(__('Unknown order parameter. Supported: Group.name.'));
-			}
-			if (!$this->Group->validateOrder($this->request->params['order'])) {
-				throw new BadRequestException(__('Invalid order.'));
-			}
-			$params['order'] = $this->request->params['order'];
-		}
+		// Extract query parameters
+		$allowedQueryItems = [
+			'filter' => ['has-users', 'has-managers'],
+			'contain' => ['user', 'resource'],
+			'order' => $this->Group->getFindAllowedOrder('GroupsController::index'),
+		];
+		$params = $this->__getQueryItems($allowedQueryItems);
 
 		// Add filters, contains and order data to the get find options data.
 		// Build find options and get the groups
