@@ -110,7 +110,7 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$this->assertNotEmpty($json['body'], 'Request should return at least one value');
 		foreach($json['body'] as $entry) {
 			$keys = array_keys($entry);
-			$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
+			$this->assertEquals($keys, ['Group', 'GroupUser']);
 		}
 	}
 
@@ -132,7 +132,7 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$this->assertNotEmpty($json['body'], 'Request should return at least one value');
 		foreach($json['body'] as $entry) {
 			$keys = array_keys($entry);
-			$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
+			$this->assertEquals($keys, ['Group', 'GroupUser']);
 		}
 	}
 
@@ -160,6 +160,28 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 	}
 
 /**
+ * Test index entry point with contain parameters.
+ *
+ * Assert that when contain[Modifier] is passed, the output contains for each group a Modifier
+ */
+	public function testIndexWithModifierContain() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Call to entry point with contain params.
+		$url = '/groups.json?contain[modifier]=1';
+		$res = $this->testAction($url, $this->options);
+		$json = json_decode($res, true);
+
+		// Assert that each element includes a Group, UserGroup and a User.
+		foreach($json['body'] as $entry) {
+			$keys = array_keys($entry);
+			$this->assertEquals($keys, ['Group','Modifier','GroupUser']);
+		}
+	}
+
+/**
  * Test index entry point with "has-users" filter parameters.
  *
  * Assert that each group returned contained the user mentioned in the filter
@@ -181,7 +203,7 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
 			$this->assertTrue(
 				in_array(Common::uuid('user.id.irene'), $userIds),
-				'Ada should be found in the list of users for the group'
+				'Irene should be found in the list of users for the group'
 			);
 		}
 	}
@@ -313,7 +335,7 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 	public function testIndexFailsWithWrongGroupNameOrder() {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
-		$this->setExpectedException('BadRequestException', 'Unknown order parameter. Supported: Group.name.');
+		$this->setExpectedException('BadRequestException', '"javascript:alert("ok");" is not a valid group name.');
 		$url = '/groups.json?order[Group.name]=javascript:alert("ok");';
 		$this->testAction($url, $this->options);
 	}

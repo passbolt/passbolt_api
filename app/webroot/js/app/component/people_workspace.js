@@ -10,6 +10,7 @@ import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
 import 'app/component/group_edit';
+import 'app/component/group_sidebar';
 import 'app/form/user/create';
 import 'app/model/user';
 import 'app/model/filter';
@@ -73,8 +74,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
             $('#js_wsp_primary_menu_wrapper'),
             'last',
             passbolt.component.PeopleWorkspaceMenu, {
-                selectedUsers: this.options.selectedUsers,
-                selectedGroups: this.options.selectedGroups
+                selectedUsers: this.options.selectedUsers
             }
         );
         primWkMenu.start();
@@ -110,7 +110,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                         self.options.createButton.view.close();
                         mad.bus.trigger('request_group_creation');
                     }
-                }),
+                })
             ];
 
             // Instantiate the create button component.
@@ -133,26 +133,35 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         this.breadcrumCtl = new passbolt.component.PeopleBreadcrumb($('#js_wsp_users_breadcrumb'), {});
         this.breadcrumCtl.start();
 
-        // Instanciate the users filter controller.
+        // Instantiate the users filter controller.
         var userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
         userShortcut.start();
 
-        // Instanciate the users groups controller.
-        var groups = new passbolt.component.Groups('#js_wsp_users_groups', {});
+        // Instantiate the users groups controller.
+        var groups = new passbolt.component.Groups('#js_wsp_users_groups', {
+            selectedGroups: this.options.selectedGroups
+        });
         groups.start();
 
-        // Instanciate the passwords browser controller.
+        // Instantiate the passwords browser controller.
         var userBrowserController = new passbolt.component.UserBrowser('#js_wsp_users_browser', {
             selectedUsers: this.options.selectedUsers
         });
         userBrowserController.start();
 
-        // Instanciate the resource details controller
-        var userSidebar = new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
+        // Instantiate the user details controller
+        new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
             id: 'js_user_details',
             selectedItems: this.options.selectedUsers
         });
         $('.js_wsp_users_sidebar_second', this.element).hide();
+
+        //// Instantiate the gtroup details controller
+        new passbolt.component.GroupSidebar($('.js_wsp_groups_sidebar_second', this.element), {
+            id: 'js_group_details',
+            selectedItems: this.options.selectedGroups
+        });
+        $('.js_wsp_groups_sidebar_second', this.element).hide();
 
         // A filter has been given in options.
         // If not given, set one by default.
@@ -206,42 +215,13 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     /* ************************************************************** */
 
     /**
-     * Observe when group is selected
-     * @param {HTMLElement} el The element the event occurred on
-     * @param {HTMLEvent} ev The event which occurred
-     * @param {passbolt.model.Group} group The selected group
-     */
-    '{mad.bus.element} group_selected': function (el, ev, group) {
-        // reset the selected resources
-        this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
-        // Set the new filter
-        this.options.filter.attr({
-            foreignModels: {
-                Group: new can.List([group])
-            },
-            type: passbolt.model.Filter.FOREIGN_MODEL
-        });
-        // propagate a special event on bus
-        mad.bus.trigger('filter_users_browser', this.options.filter);
-
-        // Add the group to the list of selected groups.
-        this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
-        this.options.selectedGroups.push(group);
-    },
-
-    /**
      * When a new filter is applied to the workspace.
      * @param {HTMLElement} el The element the event occurred on
      * @param {HTMLEvent} ev The event which occurred
      * @param {passbolt.model.Filter} filter, the filter being applied.
      */
     '{mad.bus.element} filter_workspace': function (el, ev, filter) {
-        // If the filter applied is "all groups", then empty the list of selected groups.
-        if (typeof filter.name != 'undefined') {
-            if(filter.name == 'all') {
-                this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
-            }
-        }
+        // When filtering the grid, no user should stay selected.
         this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
 
         // Update the breadcrumb with the new filter.

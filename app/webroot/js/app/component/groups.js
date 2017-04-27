@@ -21,7 +21,8 @@ import 'app/view/template/component/groups.ejs!';
 var Groups = passbolt.component.Groups = mad.Component.extend('passbolt.component.Groups', /** @static */ {
 
     defaults: {
-        templateUri: 'app/view/template/component/groups.ejs'
+        templateUri: 'app/view/template/component/groups.ejs',
+        selectedGroups: new can.Model.List()
     }
 
 }, /** @prototype */ {
@@ -32,7 +33,7 @@ var Groups = passbolt.component.Groups = mad.Component.extend('passbolt.componen
      */
     afterStart: function() {
         var groupsList = new passbolt.component.GroupsList($('#js_wsp_users_groups_list', this.element), {
-            //user: this.options.selectedItem
+            selectedGroups: this.options.selectedGroups
         });
         groupsList.start();
     }

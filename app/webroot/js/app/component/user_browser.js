@@ -296,9 +296,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      * @param {mad.model.Model} item The item to select
      * @param {boolean} silent Do not propagate any event (default:false)
      */
-    select: function (item, silent) {
-        silent = silent || false;
-
+    select: function (item) {
         // If the item doesn't exist
         if (!this.itemExists(item)) {
             return;
@@ -321,9 +319,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         this.view.selectItem(item);
 
         // Notify the application about this selection.
-        if (!silent) {
-            mad.bus.trigger('user_selected', item);
-        }
+        mad.bus.trigger('user_selected', item);
     },
 
     /**

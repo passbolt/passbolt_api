@@ -27,6 +27,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         templateUri: 'mad/view/template/component/tree.ejs',
         itemTemplateUri: 'js/app/view/template/component/group_item.ejs',
         prefixItemId: 'group_',
+        selectedGroups: new can.Model.List(),
         selectedGroup: null,
         selectedFilter: null,
         // the view class to use. Overriden so we can put our own logic.
@@ -38,9 +39,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
                 key: 'GroupUser',
                 func: function(GroupUser, map, obj) {
                     var currentUser = passbolt.model.User.getCurrent();
-                    var isGroupManager = obj.isGroupManager(currentUser);
-                    var isAdmin = currentUser.Role.name == 'admin';
-                    return isGroupManager || isAdmin;
+                    return obj.isAllowedToEdit(currentUser);
                 }
             }
         })
@@ -58,6 +57,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         var self = this;
         // Load the groups.
         passbolt.model.Group.findAll({
+            contain: {user: 1},
             order: ['Group.name ASC'],
             silent: false
         }, function (groups, response, request) {
@@ -72,9 +72,8 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      * @param item
      */
     insertAlphabetically : function(item) {
-        var self = this;
-
-        var inserted = false;
+        var self = this,
+            inserted = false;
 
         this.options.items.each(function(elt) {
             if (item.name.localeCompare(elt.name) == -1) {
@@ -90,11 +89,19 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
     },
 
 	/**
-	 * Filter by group.
+	 * Select a group.
 	 * @param {passbolt.model.Group} group The group to filter the workspace with
 	 */
-	filter: function (group) {
-		var filter = new passbolt.model.Filter({
+    select: function (group) {
+        this.view.selectItem(group);
+        this.options.selectedGroup = group;
+
+        // Reset the list of selected groups and add the new selected one.
+        this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
+        this.options.selectedGroups.push(group);
+
+        // Propagate the filter by group component.
+        this.selectedFilter = new passbolt.model.Filter({
             id: 'workspace_filter_group_' + group.id,
 			label: group.name + __(' (group)'),
 			rules: {
@@ -102,19 +109,8 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
 			},
             order: ['Profile.last_name ASC']
 		});
-        this.selectedFilter = filter;
-		mad.bus.trigger('filter_workspace', filter);
+		mad.bus.trigger('filter_workspace', this.selectedFilter);
 	},
-
-    /**
-     * Select an item in the list.
-     * @param {passbolt.model.Group} item
-     */
-    select: function(item) {
-        this.options.selectedGroup = item;
-        this.view.selectItem(item);
-        this.filter(item);
-    },
 
     /**
      * Show the contextual menu
@@ -124,7 +120,6 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      * @param {HTMLElement} eventTarget The element the event occurred on
      */
     showContextualMenu: function (item, x, y, eventTarget) {
-
         // Get the offset position of the clicked item.
         var $item = $('#' + this.options.prefixItemId + item.id);
         var item_offset = $('.more-ctrl a', $item).offset();
@@ -174,10 +169,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
 	/* ************************************************************** */
 
 	/**
-     * Listen when a group model has been created.
-     *
-     * And insert it in the list.
-     *
+     * Listen when a group has been created and insert it in the list.
      * @param el
      * @param ev
      * @param data
@@ -213,8 +205,9 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      * @param {passbolt.model.Filter} filter The filter to apply
      */
     '{mad.bus.element} filter_workspace': function (element, evt, filter) {
-        if (this.selectedFilter && this.selectedFilter.id != filter.id) {
+        if (!filter.id.match(/^workspace_filter_group_/)) {
             this.selectedGroup = null;
+            this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
             this.unselectAll();
         }
     },

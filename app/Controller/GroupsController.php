@@ -14,28 +14,6 @@ class GroupsController extends AppController {
 		'Filter',
 	];
 
-//	public function beforeFilter() {
-//		$this->Auth->allow(['index']);
-//	}
-
-/**
- * Tidy up output of a group.
- *
- * Remove useless GroupsUsers indexes in the output
- * mainly due to the use of superjoin behaviour.
- *
- * @param $group
- * @return mixed
- */
-	private function __tidyOutput($group) {
-		if (isset($group['User'])) {
-			foreach($group['User'] as $keyUser => $user) {
-				unset($group['User'][$keyUser]['GroupsUser']);
-			}
-		}
-		return $group;
-	}
-
 /**
  * Get query Items
  * @param $allowedQueryItems
@@ -44,7 +22,7 @@ class GroupsController extends AppController {
 	private function __getQueryItems($allowedQueryItems) {
 		$query = $this->request->query;
 		$query = $this->__extractQueryItems($query, $allowedQueryItems);
-		$query = $this->__flatenQueryItems($query, ['contain']);
+		$query = $this->__flatenQueryItems($query, ['contain', 'order']);
 		$this->__validateQueryItems($query);
 		return $query;
 	}
@@ -80,18 +58,22 @@ class GroupsController extends AppController {
 
 /**
  * Flatten a query string parameter
- * Normalize contain query items
- * Needed because extract returns
+ *
+ * Normalize contain query items is needed because to support multiple values extract returns
  * contain {
  *   user {
  *     0 => 1
  *   }
  * }
- * Find conditions expect contains as
+ * Find conditions expect something different.
+ * So we need this function to flatten, because only one value is possible and expected:
  * contain {
  *   user => 1
  * }
- * So we need this function to flaten it out.
+ *
+ * @param array $query
+ * @param array $flattenKeys
+ * @return array $query
  */
  	private function __flatenQueryItems($query, $flattenKeys) {
  		foreach ($flattenKeys as $flatten) {
@@ -165,7 +147,8 @@ class GroupsController extends AppController {
  *     type="string",
  * 	   enum={
  * 		 "user",
- *     	 "resource"
+ *     	 "resource",
+ *       "modifier"
  * 	   }
  *   ),
  * @SWG\Parameter(
@@ -201,7 +184,6 @@ class GroupsController extends AppController {
  * )
  */
 	public function index() {
-
 		// Check request sanity
 		if (!$this->request->is('get')) {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
@@ -210,27 +192,14 @@ class GroupsController extends AppController {
 		// Extract query parameters
 		$allowedQueryItems = [
 			'filter' => ['has-users', 'has-managers'],
-			'contain' => ['user', 'resource'],
+			'contain' => ['user', 'resource', 'modifier'],
 			'order' => $this->Group->getFindAllowedOrder('GroupsController::index'),
 		];
 		$params = $this->__getQueryItems($allowedQueryItems);
 
-		// Add filters, contains and order data to the get find options data.
-		// Build find options and get the groups
+		// Get find options and get all groups.
 		$o = $this->Group->getFindOptions('Group::index', User::get('Role.name'), $params);
 		$groups = $this->Group->find('all', $o);
-
-		// If filter 'has-users' is applied, remove entries where all the users are not listed.
-		if (isset($params['filter']) && isset($params['filter']['has-users'])) {
-			$groups = $this->Group->filterGroupWithAllUsers($groups, $params['filter']['has-users']);
-		}
-
-		// Remove useless elements due to super join.
-		// #dirty, but it's a superjoin behaviour and we don't have an alternative for now.
-		// Let's wait for Cake3.x migration to fix this.
-		foreach($groups as $key => $group) {
-			$groups[$key] = $this->__tidyOutput($group);
-		}
 
 		// Send response.
 		$this->set('data', $groups);
@@ -262,7 +231,8 @@ class GroupsController extends AppController {
  *     type="string",
  * 	   enum={
  * 		 "user",
- *     	 "resource"
+ *     	 "resource",
+ *       "modifier"
  * 	   }
  *   ),
  * @SWG\Response(
@@ -309,9 +279,6 @@ class GroupsController extends AppController {
 		$data['Group.id'] = $id;
 		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $o);
-
-		// tidy output.
-		$group = $this->__tidyOutput($group);
 
 		// Send response.
 		$this->set('data', $group);
@@ -409,9 +376,7 @@ class GroupsController extends AppController {
 		// Begin transaction
 		$this->Group->commit();
 
-		// Return results.
-
-		// Get find options.
+		// Get find options and get all groups.
 		$o = $this->Group->getFindOptions(
 			'Group::view',
 			User::get('Role.name'),
@@ -420,11 +385,7 @@ class GroupsController extends AppController {
 				'Group.id' => $groupSaved['Group']['id']
 			]
 		);
-
-		// Get all groups.
 		$group = $this->Group->find('first', $o);
-		// Tidy up.
-		$group = $this->__tidyOutput($group);
 
 		// Success response.
 		$this->set('data', $group);
@@ -694,8 +655,6 @@ class GroupsController extends AppController {
 
 		// Get group.
 		$group = $this->Group->find('first', $o);
-		// Tidy up.
-		$group = $this->__tidyOutput($group);
 
 		// Merge changes with group result.
 		$res = array_merge($group, [ 'changes' => $changes ]);

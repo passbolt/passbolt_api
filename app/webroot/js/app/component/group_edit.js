@@ -210,9 +210,11 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         // Notify the plugin, the user shouldn't be listed by the autocomplete anymore.
         mad.bus.trigger('passbolt.group.edit.remove_group_user', {
             groupUser: {
-                id: groupUser.id,
-                user_id: groupUser.user_id,
-                group_id: groupUser.group_id
+                id: groupUser.attr('id'),
+                user_id: groupUser.attr('user_id'),
+                group_id: groupUser.attr('group_id'),
+                is_admin: groupUser.attr('is_admin'),
+                isNew: groupUser.attr('isNew')
             }
         });
 
@@ -227,7 +229,13 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         groupUser.is_admin = value;
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
-            groupUser: groupUser
+            groupUser: {
+                id: groupUser.attr('id'),
+                user_id: groupUser.attr('user_id'),
+                group_id: groupUser.attr('group_id'),
+                is_admin: groupUser.attr('is_admin'),
+                isNew: groupUser.attr('isNew')
+            }
         });
 
         this.checkManager();
@@ -364,8 +372,6 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // Load groupUsers.
         group.GroupUser.each(function(groupUser) {
-            // Reference user inside groupUser.
-            groupUser.User = passbolt.model.User.store[groupUser.user_id];
             // Load groupUser.
             self.addGroupUser(groupUser);
         });
