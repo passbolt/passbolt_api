@@ -169,9 +169,12 @@ class GroupsController extends AppController {
 			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
 		}
 
-		// Get the group.
-		$data['contain'] = $this->request->params['contain'];
+		$allowedQueryItems = [
+			'contain' => ['user', 'resource', 'modifier'],
+		];
+		$data = $this->QueryString->get($allowedQueryItems);
 		$data['Group.id'] = $id;
+
 		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $o);
 
