@@ -332,11 +332,11 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 /**
  * Test index fails with wrong group name order
  */
-	public function testIndexFailsWithWrongGroupNameOrder() {
+	public function testIndexFailsWithWrongOrder() {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
-		$this->setExpectedException('BadRequestException', '"javascript:alert("ok");" is not a valid group name.');
-		$url = '/groups.json?order[Group.name]=javascript:alert("ok");';
+		$this->setExpectedException('BadRequestException', 'javascript:alert("ok");" is not a valid order.');
+		$url = '/groups.json?order=javascript:alert("ok");';
 		$this->testAction($url, $this->options);
 	}
 }

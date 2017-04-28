@@ -10,10 +10,10 @@
 class GpgkeysController extends AppController {
 
 /**
- * @var array $component application wide components
+ * @var array list of supported components
  */
 	public $components = [
-		'Filter'
+		'QueryString'
 	];
 
 /**
@@ -23,41 +23,6 @@ class GpgkeysController extends AppController {
  * @throws MethodNotAllowedException if the request method is not GET
  * @throws BadRequestException if the modified-after filter is not a valid timestamp
  * @return void
- *
- * @SWG\Get(
- *   path="/gpgkeys.json",
- *   summary="Find gpg keys",
- * @SWG\Parameter(
- *     name="filter",
- *     in="query",
- *     description="A list of filter",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 		 "modified-after"
- * 	   }
- *   ),
- * @SWG\Response(
- *     response=200,
- *     description="An array of gpg keys",
- *     @SWG\Schema(
- *       type="object",
- *       properties={
- *         @SWG\Property(
- *           property="header",
- *           ref="#/definitions/Header"
- *         ),
- *         @SWG\Property(
- *           property="body",
- *           type="array",
- *           items={
- * 				"$ref"="#/definitions/Gpgkey"
- *           }
- *         )
- *       }
- *     )
- *   )
- * )
  */
 	public function index() {
 		// Check request sanity
@@ -65,22 +30,12 @@ class GpgkeysController extends AppController {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
 
-		// Parse filters
-		$requestedOptions = [];
-		$aliases = ['modified-after', 'modified_after'];
-		foreach ($aliases as $alias) {
-			if (isset($this->request->query[$alias])) {
-				$timestamp = $this->request->query[$alias];
-				if (!Common::isTimestamp($timestamp)) {
-					throw new BadRequestException(__('The filter modified-after is not a valid timestamp.'));
-				}
-				$requestedOptions['filter']['modified-after'] = date('Y-m-d H:i:s', $timestamp);
-				break; // Allow deprecated modified_after but do not look for both
-			}
-		}
+		// Extract query parameters
+		$allowedQueryItems = ['filter' => ['modified-after']];
+		$params = $this->QueryString->get($allowedQueryItems);
 
 		// Find an return keys if any (empty is fine)
-		$findOptions = $this->Gpgkey->getFindOptions('GpgKey::index', User::get('Role.name'), $requestedOptions);
+		$findOptions = $this->Gpgkey->getFindOptions('GpgKey::index', User::get('Role.name'), $params);
 		$returnVal = $this->Gpgkey->find('all', $findOptions);
 		$this->set('data', $returnVal);
 		$this->Message->success();

@@ -8,116 +8,11 @@
 class GroupsController extends AppController {
 
 /**
- * @var array components used by this controller
+ * @var array list of supported components
  */
 	public $components = [
-		'Filter',
+		'QueryString'
 	];
-
-/**
- * Get query Items
- * @param $allowedQueryItems
- * @return array
- */
-	private function __getQueryItems($allowedQueryItems) {
-		$query = $this->request->query;
-		$query = $this->__extractQueryItems($query, $allowedQueryItems);
-		$query = $this->__flatenQueryItems($query, ['contain', 'order']);
-		$this->__validateQueryItems($query);
-		return $query;
-	}
-
-/**
- * Extract query string items
- * - Only allow the whitelisted items, ignore if not in the list
- * - Transform to array when multiple comma separated values are present
- *
- * @param array $allowedQueryItems whitelist of query parameters
- * @return array $query the sanitized query
- */
- 	private function __extractQueryItems($query, $allowedQueryItems) {
- 		foreach ($query as $key => $items) {
- 			if(!isset($allowedQueryItems[$key])) {
-				unset($query[$key]);
- 			}
- 			if(is_array($items)) {
-				foreach($items as $subKey => $subItems) {
-					if(!in_array($subKey,$allowedQueryItems[$key])) {
-						unset($query[$key][$subKey]);
-					} else {
-						$query[$key][$subKey] = explode(',', $query[$key][$subKey]);
-					}
-				}
-			}
-			if(empty($query[$key])) {
-				unset($query[$key]);
-			}
- 		}
- 		return $query;
- 	}
-
-/**
- * Flatten a query string parameter
- *
- * Normalize contain query items is needed because to support multiple values extract returns
- * contain {
- *   user {
- *     0 => 1
- *   }
- * }
- * Find conditions expect something different.
- * So we need this function to flatten, because only one value is possible and expected:
- * contain {
- *   user => 1
- * }
- *
- * @param array $query
- * @param array $flattenKeys
- * @return array $query
- */
- 	private function __flatenQueryItems($query, $flattenKeys) {
- 		foreach ($flattenKeys as $flatten) {
- 			if (isset($query[$flatten])) {
- 				foreach($query[$flatten] as $key => $values) {
-					$query[$flatten][$key] = $values[0];
- 				}
- 			}
- 		}
- 		return $query;
- 	}
-
-/**
- * Validate query items
- *
- * @params array $allowedQueryItems whitelisted items
- * @params array $query items to validate
- * @throws BadRequestException if a validation error occurs
- * @return bool true if validate
- */
- 	private function __validateQueryItems($query) {
-		foreach($query as $key => $parameters) {
-			switch ($key) {
-				case 'filter':
-					try {
-						$this->Group->validateFilters($parameters);
-					} catch (ValidationException $e) {
-						throw new BadRequestException(__('Invalid filter.') . ' ' . $e->getMessage());
-					}
-				break;
-				case 'order':
-					try {
-						$this->Group->validateOrders($parameters);
-					} catch (ValidationException $e) {
-						throw new BadRequestException(__('Invalid order.') . ' ' . $e->getMessage());
-					}
-				break;
-				case 'contain':
-					//$this->Group->validateContain($parameters);
-				break;
-			}
-		}
-		return true;
- 	}
 
 /**
  * Get all groups
@@ -189,13 +84,13 @@ class GroupsController extends AppController {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
 
-		// Extract query parameters
+		// Extract parameters from query string
 		$allowedQueryItems = [
-			'filter' => ['has-users', 'has-managers'],
+			'filter' => ['has-users', 'has-managers', 'modified-after'],
 			'contain' => ['user', 'resource', 'modifier'],
 			'order' => $this->Group->getFindAllowedOrder('GroupsController::index'),
 		];
-		$params = $this->__getQueryItems($allowedQueryItems);
+		$params = $this->QueryString->get($allowedQueryItems);
 
 		// Get find options and get all groups.
 		$o = $this->Group->getFindOptions('Group::index', User::get('Role.name'), $params);

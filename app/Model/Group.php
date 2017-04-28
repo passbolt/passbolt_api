@@ -370,48 +370,4 @@ class Group extends AppModel {
 			return empty($exist);
 		}
 	}
-
-/**
- * Validate filters
- *
- * @params array $filters
- * - has-users: an array of user uuids
- * - has-manager: an array of user uuids
- * @throws ValidationException if one of the has-managers or has-users values is not a valid uuid
- * @return true if valid
- */
- 	public function validateFilters ($filters = null) {
-		foreach ($filters as $filter => $values) {
-			switch ($filter) {
-				case 'has-managers':
-				case 'has-users':
-					foreach($values as $i => $userId) {
-						if(!Common::isUuid($userId)) {
-							throw new ValidationException(__('"%s" is not a valid user id for filter %s.', $userId, $filter));
-						}
-					}
-				break;
-			}
-		}
- 		return true;
-	}
-
-/**
- * Validate order
- *
- * @param array $order
- * - Group.name: a string that is a valid group name
- * @throws ValidationException if the group name does not validate
- * @return bool true if valid
- */
- 	public function validateOrders($order = null) {
- 		if (isset($order) && isset($order['Group.name'])) {
-			$validationRules = Group::getValidationRules();
-			$valid = (preg_match($validationRules['name']['alphaNumeric']['rule'], $order['Group.name']) === 1);
-			if(!$valid) {
-				throw new ValidationException(__('"%s" is not a valid group name.', $order['Group.name']));
-			}
-		}
- 		return true;
- 	}
 }

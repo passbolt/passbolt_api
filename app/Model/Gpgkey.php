@@ -422,7 +422,9 @@ class Gpgkey extends AppModel {
 				$conditions['conditions']['Gpgkey.deleted'] = 0;
 
 				if (isset($data['filter']['modified-after'])) {
-					$conditions['conditions']['Gpgkey.modified >='] = $data['filter']['modified-after'];
+					// convert timestamp to mysql condition
+					$datetime = date('Y-m-d H:i:s', $data['filter']['modified-after']);
+					$conditions['conditions']['Gpgkey.modified >='] = $datetime;
 				}
 				break;
 
@@ -433,7 +435,6 @@ class Gpgkey extends AppModel {
 				];
 				break;
 		}
-
 		return $conditions;
 	}
 

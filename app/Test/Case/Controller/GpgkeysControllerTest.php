@@ -61,27 +61,40 @@ class GpgkeysControllerTest extends ControllerTestCase {
 	}
 
 /**
- * Test index with the modified filter set in the past
+ * Test index with the legacy modified filter set in the past
  */
-	public function testIndexFiltersModifiedPast() {
+	public function testIndexFiltersModifiedLegacyPast() {
 		// Test filter modified_after with a date in the past.
-		$data['modified_after'] = strval(strtotime('1980-12-14 00:00:00'));
-		$result = json_decode(
-			$this->testAction(
-				"/gpgkeys.json", ['return' => 'contents', 'method' => 'GET', 'data' => $data], true
-			));
+		$url = '/gpgkeys.json?modified_after=' . strval(strtotime('1980-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
 		$this->assertEquals($result->header->status, Status::SUCCESS);
 	}
 
 /**
- * Test index with the modified filter set in the future
+ * Test index with the legacy modified filter set in the future
+ */
+	public function testIndexFiltersModifiedLegacyFuture() {
+		$url = '/gpgkeys.json?modified_after=' . strval(strtotime('2026-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
+	}
+
+/**
+ * Test index with the legacy modified filter set in the past
+ */
+	public function testIndexFiltersModifiedPast() {
+		// Test filter modified_after with a date in the past.
+		$url = '/gpgkeys.json?filter[modified-after]=' . strval(strtotime('1980-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
+	}
+
+/**
+ * Test index with the legacy modified filter set in the future
  */
 	public function testIndexFiltersModifiedFuture() {
-		$data['modified_after'] = strval(strtotime('2026-12-14 00:00:00'));
-		$result = json_decode(
-			$this->testAction(
-				"/gpgkeys.json", ['return' => 'contents', 'method' => 'GET', 'data' => $data], true
-			));
+		$url = '/gpgkeys.json?filter[modified-after]=' . strval(strtotime('2026-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
 		$this->assertEquals($result->header->status, Status::SUCCESS);
 	}
 
@@ -89,9 +102,18 @@ class GpgkeysControllerTest extends ControllerTestCase {
  * Test index with invalid modified filter date
  */
 	public function testIndexFiltersModifiedInvalid() {
-		$data['modified_after'] = 'not a timestamp';
-		$this->setExpectedException('BadRequestException', 'The filter modified-after is not a valid timestamp.');
-		$this->testAction("/gpgkeys.json", ['return' => 'contents', 'method' => 'GET', 'data' => $data]);
+		$url = '/gpgkeys.json?filter[modified-after]=' . 'not a timestamp';
+		$this->setExpectedException('BadRequestException', "Invalid filter. \"not a timestamp\" is not a valid timestamp for filter modified-after.");
+		$this->testAction($url, ['return' => 'contents', 'method' => 'GET']);
+	}
+
+/**
+ * Test index with invalid legacy modified filter date
+ */
+	public function testIndexFiltersModifiedLegacyInvalid() {
+		$url = '/gpgkeys.json?modified_after=' . 'not a timestamp';
+		$this->setExpectedException('BadRequestException', "Invalid filter. \"not a timestamp\" is not a valid timestamp for filter modified-after.");
+		$this->testAction($url, ['return' => 'contents', 'method' => 'GET']);
 	}
 
 /**
