@@ -214,6 +214,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
     '{passbolt.model.Group} destroyed': function(el, ev, group) {
         this.unselectAll();
         this.removeItem(group);
+        mad.bus.trigger('reset_filters');
     },
 
     /* ************************************************************** */

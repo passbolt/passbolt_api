@@ -486,7 +486,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     },
 
     /**
-     * Listen when a group model has been destroyed.
+     * Reset the filters.
      *
      * Unselect the group if it was selected, and select All users instead.
      *
@@ -494,18 +494,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @param ev
      * @param data
      */
-    '{passbolt.model.Group} destroyed': function(el, ev, group) {
-        // 1) if no group was selected, do nothing.
-        var groupIsSelected = this.options.selectedGroups.attr(0) != undefined;
-        if(!groupIsSelected) {
-            return;
-        }
-        // 2) unselect group and select all users instead.
-        if (this.options.selectedGroups.attr(0).id == group.id) {
-            var filter = passbolt.model.Filter.model({name: 'all'});
-            mad.bus.trigger('filter_workspace', filter);
-            this.userShortcut.selectItem(this.userShortcut.options.items[0]);
-        }
+    '{mad.bus.element} reset_filters': function(el, ev) {
+        var filter = passbolt.model.Filter.model({name: 'all'});
+        mad.bus.trigger('filter_workspace', filter);
+        this.userShortcut.selectItem(this.userShortcut.options.items[0]);
     }
 
 });
