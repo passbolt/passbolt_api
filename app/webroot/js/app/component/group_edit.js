@@ -227,7 +227,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      */
     editGroupUser: function(groupUser, value) {
         // Force value on groupUser.
-        groupUser.is_admin = (value == 1 || value == true ? 1 : 0);
+        groupUser.attr('is_admin', (value == 1 || value == true ? 1 : 0));
 
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
