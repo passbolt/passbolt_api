@@ -496,7 +496,8 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      */
     '{passbolt.model.Group} destroyed': function(el, ev, group) {
         // 1) if no group was selected, do nothing.
-        if(this.options.selectedGroups.attr(0) == undefined) {
+        var groupIsSelected = this.options.selectedGroups.attr(0) != undefined;
+        if(!groupIsSelected) {
             return;
         }
         // 2) unselect group and select all users instead.

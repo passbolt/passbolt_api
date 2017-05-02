@@ -228,7 +228,6 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      */
     '{mad.bus.element} filter_workspace': function (element, evt, filter) {
         if (!filter.id.match(/^workspace_filter_group_/)) {
-            this.selectedGroup = null;
             this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
             this.unselectAll();
         }
