@@ -224,7 +224,10 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      * @param groupUser The groupUser to edit
      */
     editGroupUser: function(groupUser, value) {
-        groupUser.is_admin = value;
+        // Serialize object so it can be sent to extension.
+        groupUser = groupUser.serialize();
+        groupUser.is_admin = (value == 1 ? true : false);
+
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
             groupUser: groupUser
