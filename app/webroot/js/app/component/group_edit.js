@@ -224,24 +224,32 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      * @param groupUser The groupUser to edit
      */
     editGroupUser: function(groupUser, value) {
-        // Serialize object so it can be sent to extension.
+        // Force value on groupUser.
         groupUser.is_admin = (value == 1 || value == true ? 1 : 0);
 
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
-            groupUser: groupUser.attr()
+            groupUser: {
+                id: groupUser.id,
+                user_id: groupUser.user_id,
+                group_id: groupUser.group_id,
+                is_admin: groupUser.is_admin
+            }
         });
         
         this.checkManager();
     },
 
+    /**
+     * Check whether there are enough group managers, and lock the neccessary is_admin fields if necessary.
+     * @returns {boolean}
+     */
     checkManager: function() {
         var self = this,
             admins = [],
             hasAdmins = false;
 
         this.groupUserList.options.items.each(function (item) {
-            console.log('checkItem', item);
             var isAdmin = false;
             // Is admin ?
             if (item.is_admin == 1 || item.is_admin == true) {
