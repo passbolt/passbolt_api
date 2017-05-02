@@ -2,7 +2,8 @@
 /**
  * Resource model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 /**
@@ -442,22 +443,17 @@ class Resource extends AppModel {
  * @return array
  */
 	public static function getFindAllowedOrder($case = null, $role = null) {
-		$order = [];
-		switch ($case) {
-			case 'Resource::index':
-				$order = [
-					'Resource.name',
-					'Resource.username',
-					'Resource.expiry_date',
-					'Resource.uri',
-					'Resource.description',
-					'Resource.created',
-					'Resource.modified',
-				];
-				break;
-		}
-		return $order;
+		return [
+			'Resource.name',
+			'Resource.username',
+			'Resource.expiry_date',
+			'Resource.uri',
+			'Resource.description',
+			'Resource.created',
+			'Resource.modified',
+		];
 	}
+
 /**
  * Validates if a date is in future
  *

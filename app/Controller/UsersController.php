@@ -2,8 +2,8 @@
 /**
  * Users Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @copyright (c) 2016-present Passbolt S.à r.l.
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class UsersController extends AppController {
@@ -12,7 +12,7 @@ class UsersController extends AppController {
  * @var array components used by this controller
  */
 	public $components = [
-		'Filter',
+		'QueryString',
 		'EmailNotificator',
 	];
 
@@ -175,12 +175,15 @@ class UsersController extends AppController {
  * )
  */
 	public function index() {
-		// Add filters, contain and order (if all needed) data to the get find options data.
-		$findData['filter'] = $this->request->params['filter'];
-		$findData['order'] = $this->request->params['order'];
+		// Extract parameters from query string
+		$allowedQueryItems = [
+			'filter' => ['keywords', 'has-groups'],
+			'order' => $this->User->getFindAllowedOrder('UsersController::index'),
+		];
+		$params = $this->QueryString->get($allowedQueryItems);
 
 		// Find the users.
-		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $findData);
+		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $params);
 		$users = $this->User->find('all', $o);
 
 		$this->set('data', $users);

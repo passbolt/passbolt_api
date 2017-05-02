@@ -2,7 +2,8 @@
 /**
  * Share Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ShareController extends AppController {
@@ -11,7 +12,7 @@ class ShareController extends AppController {
  * @var array components used in this controller
  */
 	public $components = [
-		'Filter',
+		'QueryString',
 		'EmailNotificator',
 	];
 
@@ -570,12 +571,8 @@ class ShareController extends AppController {
 		}
 
 		// Extract request parameters.
-		$data['filter'] = $this->request->params['filter'];
-
-		// @deprecated PASSBOLT-1571 Backward compatibility with passbolt 1.4.0
-		if (isset($this->request->query['keywords'])) {
-			$data['filter']['keywords'][] = $this->request->query['keywords'];
-		}
+		$allowedQueryItems = ['filter' => ['keywords']];
+		$data = $this->QueryString->get($allowedQueryItems);
 
 		// Find all the users and all the groups who can receive a direct permission.
 		$data['Permission.aco_foreign_key'] = $id;

@@ -2,7 +2,8 @@
 /**
  * Resources Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -12,7 +13,7 @@ class ResourcesController extends AppController {
  * @var array $component application wide components
  */
 	public $components = [
-		'Filter',
+		'QueryString',
 		'EmailNotificator',
 	];
 
@@ -89,15 +90,17 @@ class ResourcesController extends AppController {
  * )
  */
 	public function index() {
-		// Add filters and contain data to the get find options data.
-		$findData['contain'] = $this->request->params['contain'];
-		$findData['filter'] = $this->request->params['filter'];
-		$findData['order'] = $this->request->params['order'];
+		// Extract parameters from query string
+		$allowedQueryItems = [
+			'filter' => ['is-favorite', 'is-owned-by-be', 'is-shared-with-me'],
+			'contain' => [ 'Creator', 'Favorite', 'Modifier', 'Secret'],
+			'order' => $this->Resource->getFindAllowedOrder('ResourcesController::index'),
+		];
+		$params = $this->QueryString->get($allowedQueryItems);
 
 		// Retrieve the resources
-		$findOptions = $this->Resource->getFindOptions('Resource::index', User::get('Role.name'), $findData);
+		$findOptions = $this->Resource->getFindOptions('Resource::index', User::get('Role.name'), $params);
 		$resources = $this->Resource->find('all', $findOptions);
-
 		if (!$resources) {
 			$resources = [];
 		}
@@ -453,42 +456,42 @@ class ResourcesController extends AppController {
 		$this->set('data', $resource);
 	}
 
-	/**
-	 * Get a list of users who have access to a resource
-	 * Renders a json object of users
-	 *
-	 * @param string $id the uuid of the resource
-	 * @return void
-	 *
-	 * @SWG\Get(
-	 *   path="/resources/{uuid}/users.json",
-	 *   summary="Find the users who have access to a resource",
-	 * @SWG\Parameter(
-	 * 		name="id",
-	 * 		in="path",
-	 * 		required=true,
-	 * 		type="string",
-	 * 		description="the uuid of the resource",
-	 *   ),
-	 * @SWG\Response(
-	 *     response=200,
-	 *     description="The list of users",
-	 *     @SWG\Schema(
-	 *       type="object",
-	 *       properties={
-	 *         @SWG\Property(
-	 *           property="header",
-	 *           ref="#/definitions/Header"
-	 *         ),
-	 *         @SWG\Property(
-	 *           property="body",
-	 *           ref="#/definitions/Resource"
-	 *         )
-	 *       }
-	 *     )
-	 *   )
-	 * )
-	 */
+/**
+ * Get a list of users who have access to a resource
+ * Renders a json object of users
+ *
+ * @param string $id the uuid of the resource
+ * @return void
+ *
+ * @SWG\Get(
+ *   path="/resources/{uuid}/users.json",
+ *   summary="Find the users who have access to a resource",
+ * @SWG\Parameter(
+ * 		name="id",
+ * 		in="path",
+ * 		required=true,
+ * 		type="string",
+ * 		description="the uuid of the resource",
+ *   ),
+ * @SWG\Response(
+ *     response=200,
+ *     description="The list of users",
+ *     @SWG\Schema(
+ *       type="object",
+ *       properties={
+ *         @SWG\Property(
+ *           property="header",
+ *           ref="#/definitions/Header"
+ *         ),
+ *         @SWG\Property(
+ *           property="body",
+ *           ref="#/definitions/Resource"
+ *         )
+ *       }
+ *     )
+ *   )
+ * )
+ */
 	public function users($id = null) {
 		// check if the resource id is provided
 		if (!isset($id)) {
