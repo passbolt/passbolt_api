@@ -225,14 +225,13 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      */
     editGroupUser: function(groupUser, value) {
         // Serialize object so it can be sent to extension.
-        groupUser = groupUser.serialize();
-        groupUser.is_admin = (value == 1 ? true : false);
+        groupUser.is_admin = (value == 1 || value == true ? 1 : 0);
 
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
-            groupUser: groupUser
+            groupUser: groupUser.attr()
         });
-
+        
         this.checkManager();
     },
 
@@ -242,9 +241,10 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             hasAdmins = false;
 
         this.groupUserList.options.items.each(function (item) {
+            console.log('checkItem', item);
             var isAdmin = false;
             // Is admin ?
-            if (item.is_admin == 1) {
+            if (item.is_admin == 1 || item.is_admin == true) {
                 isAdmin = true;
             }
 
@@ -304,7 +304,6 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      *   can be "created", "updated", or null.
      */
     setGroupUserItemState : function(groupUserId, state) {
-        //var $li = $('#js_permissions_list li#' + groupUserId);
         var $li = this.groupUserList.view.getItemElement({id:groupUserId});
         if (state == null) {
             $li.removeClass('permission-updated');
