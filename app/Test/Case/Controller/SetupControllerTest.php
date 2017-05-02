@@ -17,25 +17,24 @@ App::uses('CakeSessionFixture', 'Test/Fixture');
 
 class SetupControllerTest extends ControllerTestCase {
 
-	public $fixtures
-		= array(
-			'app.groups_user',
-			'app.group',
-			'app.user',
-			'app.gpgkey',
-			'app.email_queue',
-			'app.profile',
-			'app.file_storage',
-			'app.role',
-			'app.authenticationToken',
-			'core.cakeSession',
-			'app.user_agent',
-			'app.controller_log',
-			'app.resource',
-			'app.permission',
-			'app.permissions_type',
-			'app.permission_view',
-		);
+	public $fixtures = [
+		'app.groups_user',
+		'app.group',
+		'app.user',
+		'app.gpgkey',
+		'app.email_queue',
+		'app.profile',
+		'app.file_storage',
+		'app.role',
+		'app.authenticationToken',
+		'core.cakeSession',
+		'app.user_agent',
+		'app.controller_log',
+		'app.resource',
+		'app.permission',
+		'app.permissions_type',
+		'app.permission_view',
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -114,7 +113,7 @@ class SetupControllerTest extends ControllerTestCase {
 		$recovery = $this->__startRecovery('admin@passbolt.com');
 		$this->User->setInactive();
 
-		$this->setExpectedException('HttpException', 'No data were provided');
+		$this->setExpectedException('HttpException', 'No data was provided');
 		$url = "/users/validateAccount/{$recovery['User']['id']}.json";
 		$this->testAction($url, array(
 				'method' => 'put',

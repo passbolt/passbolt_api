@@ -186,7 +186,7 @@ class SetupController extends AppController {
 		}
 
 		if (!isset($data['AuthenticationToken'])) {
-			return $this->Message->error(__('No data were provided'));
+			return $this->Message->error(__('No data was provided'));
 		}
 
 		// Check if token is provided.

@@ -90,6 +90,11 @@ class ResourcesController extends AppController {
  * )
  */
 	public function index() {
+		// Check request sanity
+		if (!$this->request->is('get')) {
+			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
+		}
+
 		// Extract parameters from query string
 		$allowedQueryItems = [
 			'filter' => ['is-favorite', 'is-owned-by-be', 'is-shared-with-me'],
@@ -246,7 +251,7 @@ class ResourcesController extends AppController {
 		}
 		// check if data was provided
 		if (!isset($this->request->data['Resource'])) {
-			return $this->Message->error(__('No data were provided'));
+			return $this->Message->error(__('No data was provided'));
 		}
 
 		// set the data for validation and save
@@ -379,7 +384,7 @@ class ResourcesController extends AppController {
 
 		// check if data was provided
 		if (!isset($resourcepost['Resource'])) {
-			return $this->Message->error(__('No data were provided'));
+			return $this->Message->error(__('No data was provided'));
 		}
 
 		// Update the resource

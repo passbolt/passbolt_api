@@ -160,7 +160,7 @@ hcciUFw5
 			]
 		];
 
-		//$this->setExpectedException('HttpException', 'No data were provided');
+		//$this->setExpectedException('HttpException', 'No data was provided');
 		$res = $this->testAction(
 			"/groups/$id.json",
 			[
@@ -194,7 +194,7 @@ hcciUFw5
 			]
 		];
 
-		//$this->setExpectedException('HttpException', 'No data were provided');
+		//$this->setExpectedException('HttpException', 'No data was provided');
 		$res = $this->testAction(
 			"/groups/$id.json",
 			[

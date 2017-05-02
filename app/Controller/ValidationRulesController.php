@@ -50,5 +50,4 @@ class ValidationRulesController extends AppController {
 			throw new HttpException(__('No validation rules defined'));
 		}
 	}
-
 }
