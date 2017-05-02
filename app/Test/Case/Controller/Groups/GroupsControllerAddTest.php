@@ -67,9 +67,8 @@ class GroupsControllerAddTest extends ControllerTestCase {
  * Expect a Forbidden exception
  */
 	public function testAddNotLoggedIn() {
-		// We expect an exception.
+		$this->User->setInactive();
 		$this->setExpectedException('ForbiddenException', 'You need to login to access this location');
-		// test with anonymous user, and expect a forbidden exception.
 		$this->testAction('/groups.json', array('return' => 'contents', 'method' => 'POST'), true);
 	}
 
@@ -84,7 +83,7 @@ class GroupsControllerAddTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		// We expect an exception.
-		$this->setExpectedException('UnauthorizedException', 'You are not authorized to access this endpoint');
+		$this->setExpectedException('ForbiddenException', 'You are not authorized to access this endpoint');
 		// test with anonymous user, and expect a forbidden exception.
 		$this->testAction('/groups.json', array('return' => 'contents', 'method' => 'POST'), true);
 

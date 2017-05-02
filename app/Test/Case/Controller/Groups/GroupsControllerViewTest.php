@@ -69,7 +69,7 @@ class GroupsControllerViewTest extends ControllerTestCase {
 
 	public function testViewGroupIdNotValid() {
 		// test an error bad id
-		$this->setExpectedException('HttpException', 'The group id is invalid');
+		$this->setExpectedException('HttpException', 'The group id is not valid.');
 		$this->testAction("/groups/badid.json", array('method' => 'get', 'return' => 'contents'));
 	}
 

@@ -150,31 +150,29 @@ class GroupsController extends AppController {
  * )
  */
 	public function view($id = null) {
-		// Check if the id is provided
+		// Check request sanity
+		if (!$this->request->is('get')) {
+			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
+		}
 		if (!isset($id)) {
-			return $this->Message->error(__('The group id is missing'), ['code' => 400]);
+			throw new BadRequestException(__('The group id is missing.'));
 		}
-
-		// Check if the id is valid.
 		if (!Common::isUuid($id)) {
-			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
+			throw new BadRequestException(__('The group id is not valid.'));
 		}
-
-		// check if it exists
 		if (!$this->Group->exists($id)) {
-			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
+			throw new NotFoundException(__('The group does not exist.'));
 		}
-		// check if it has been soft deleted
 		if ($this->Group->isSoftDeleted($id)) {
-			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
+			throw new NotFoundException(__('The group does not exist.'));
 		}
 
+		// Build response taking query items into account
 		$allowedQueryItems = [
 			'contain' => ['user', 'resource', 'modifier'],
 		];
 		$data = $this->QueryString->get($allowedQueryItems);
 		$data['Group.id'] = $id;
-
 		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $data);
 		$group = $this->Group->find('first', $o);
 
@@ -189,41 +187,29 @@ class GroupsController extends AppController {
  * Add a group.
  */
 	public function add() {
-		$postData = $this->request->data;
-
-		// check the HTTP request method
+		// check the request sanity
 		if (!$this->request->is('post')) {
-			$this->Message->error(__('Invalid request method, should be POST'));
-			return;
+			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
-
-		// Check that user is admin. (only admin can create groups).
 		if (User::get('Role.name') != Role::ADMIN) {
-			return $this->Message->error(__('You are not authorized to access this endpoint'), ['code' => '401']);
+			throw new ForbiddenException(__('You are not authorized to access this endpoint.'));
 		}
 
 		// Validate group users.
+		$postData = $this->request->data;
 		$groupManagers = Hash::extract($postData['GroupUsers'], '{n}.GroupUser.is_admin');
 		if (!in_array('1', $groupManagers)) {
-			$this->Message->error(__('A group manager must be provided'), ['code' => '400']);
-			return;
+			throw new BadRequestException(__('A group manager must be provided.'));
 		}
 
-		// Begin transaction
+		// Begin transaction & try to create group
 		$this->Group->begin();
-
-		// Create group.
 		$this->Group->create();
 		$this->Group->set($postData);
-
-		// Check if the data is valid.
 		if (!$this->Group->validates()) {
 			$this->Group->rollback();
-			$this->Message->error(__('Data validation error'), [
-				'code' => '400',
-				'body' => ['Group' => $this->Group->validationErrors],
-			]);
-			return;
+			$this->set('error', ['invalidFields' => ['Group' => $this->Group->validationErrors]]);
+			throw new BadRequestException(__('Data validation error. This is not a valid group.'));
 		}
 
 		// Save group.
@@ -231,43 +217,36 @@ class GroupsController extends AppController {
 		$groupSaved = $this->Group->save($postData, true, $fields['fields']);
 		if ($groupSaved == false) {
 			$this->Group->rollback();
-			$this->Message->error(__('Group could not be saved.'));
-			return;
+			throw new InternalErrorException(__('Group could not be saved.'));
 		}
 
 		// Validate GroupUsers.
 		if(!isset($postData['GroupUsers']) || empty($postData['GroupUsers'])) {
 			$this->Group->rollback();
-			$this->Message->error(__('Data validation error'));
-			return;
+			throw new BadRequestException(__('Data validation error.'));
 		}
 
 		foreach($postData['GroupUsers'] as $groupUser) {
 			if(!isset($groupUser['GroupUser']) || empty($groupUser['GroupUser'])) {
 				$this->Group->rollback();
-				$this->Message->error(__('Data validation error'));
-				return;
+				throw new BadRequestException(__('Data validation error.'));
 			}
 
-			// Set group id.
-			$groupUser['GroupUser']['group_id'] = $groupSaved['Group']['id'];
-
-			// Validates GroupUser.
+			// Validates GroupUser
 			$this->Group->GroupUser->create();
+			$groupUser['GroupUser']['group_id'] = $groupSaved['Group']['id'];
 			$this->Group->GroupUser->set($groupUser['GroupUser']);
 			if (!$this->Group->GroupUser->validates()) {
 				$this->Group->rollback();
-				$this->Message->error(__('Data validation error'));
-				return;
+				throw new BadRequestException(__('Data validation error.'));
 			}
 
-			// Save GroupUser.
+			// Save GroupUser
 			$fields = $this->Group->GroupUser->getFindFields('add', User::get('Role.name'));
 			$savedGroupUser = $this->Group->GroupUser->save($postData, true, $fields['fields']);
 			if ($savedGroupUser == false) {
 				$this->Group->rollback();
-				$this->Message->error(__('GroupUser could not be saved.'));
-				return;
+				throw new InternalErrorException(__('GroupUser could not be saved.'));
 			}
 		}
 
@@ -275,19 +254,13 @@ class GroupsController extends AppController {
 		$this->Group->commit();
 
 		// Get find options and get all groups.
-		$o = $this->Group->getFindOptions(
-			'Group::view',
-			User::get('Role.name'),
-			[
-				'contain' => ['user'],
-				'Group.id' => $groupSaved['Group']['id']
-			]
-		);
-		$group = $this->Group->find('first', $o);
+		$options = ['contain' => ['user'], 'Group.id' => $groupSaved['Group']['id']];
+		$options = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $options);
+		$group = $this->Group->find('first', $options);
 
 		// Success response.
 		$this->set('data', $group);
-		$this->Message->success(__("The group has been added successfully."));
+		$this->Message->success(__('The group has been added successfully.'));
 	}
 
 /**
@@ -300,27 +273,20 @@ class GroupsController extends AppController {
  * @throws ValidationException
  */
 	private function __updateGroupName($groupId, $name) {
+		// Validate data
 		$this->Group->id = $groupId;
-		$data = [
-			'name' => $name,
-		];
-		// Update name.
+		$data = ['name' => $name];
 		$this->Group->set($data);
-
-		// Validate data.
 		$validates = $this->Group->validates(['fieldList' => ['name']]);
-		if( ! $validates) {
+		if (!$validates) {
 			throw new ValidationException(__('The group name could not be validated'), $this->Group->validationErrors);
 		}
 
-		// Get the fields for the edit operation.
+		// Get the fields for the edit operation and save
 		$fields = $this->Group->getFindFields('Group::edit', User::get('Role.name'));
-
-		// Save group.
 		$groupSaved = $this->Group->save($data, false, $fields['fields']);
-
-		if(!$groupSaved) {
-			throw new Exception('Could not save group');
+		if (!$groupSaved) {
+			throw new InternalErrorException(__('Could not save group'));
 		}
 
 		return $groupSaved;
@@ -443,21 +409,17 @@ class GroupsController extends AppController {
  * @return mixed
  */
 	public function edit($id = null) {
-		// Check if the id is provided
+		// Check request sanity
 		if (!isset($id)) {
-			return $this->Message->error(__('The group id is missing'), ['code' => 400]);
+			throw new BadRequestException(__('The group id is missing.'));
 		}
-
-		// Check if the id is valid
 		if (!Common::isUuid($id)) {
-			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
+			throw new BadRequestException(__('The group id is invalid.'));
 		}
-
-		// Check if the group exists.
 		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
 		$group = $this->Group->find('first', $o);
 		if (!$group) {
-			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
+			throw new BadRequestException(__('The group does not exist.'));
 		}
 
 		// Only admin users or group managers can update groups.
@@ -474,29 +436,27 @@ class GroupsController extends AppController {
 
 		// Check that the user is either an administrator, or a group administrator.
 		if (!$isAdmin && !$isGroupAdmin) {
-			return $this->Message->error(__('You are not authorized to access to this group'), ['code' => '401']);
+			throw new ForbiddenException(__('You are not authorized to access to this group.'));
 		}
 
 		$isDryRun = $this->__isDryRun();
-
 		$this->Group->begin();
 
 		// If name if provided, and user is an admin, process name change.
 		$groupData = $this->request->data;
-
 		$isNameProvided = !empty(Hash::extract($groupData, 'Group.name')) ? true : false;
-		// Process request.
 		if ($isAdmin == true && $isNameProvided == true && $isDryRun == false) {
 			try {
 				$this->__updateGroupName($id, $groupData['Group']['name']);
 			}
 			catch(ValidationException $e) {
 				$this->Group->rollback();
-				return $this->Message->error(__('Validation error'), ['body' => $e->getInvalidFields()]);
+				$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
+				throw new BadRequestException(__('Validation error'));
 			}
 			catch(Exception $e) {
 				$this->Group->rollback();
-				return $this->Message->error($e->getMessage());
+				throw new BadRequestException($e->getMessage());
 			}
 		}
 
@@ -517,8 +477,7 @@ class GroupsController extends AppController {
 			// In case of dry-run, calculate the list of secrets that need to be provided.
 			if ($isDryRun) {
 				$dryRunOutput = $this->__getEditDryRunOutput($id, $groupData['GroupUsers']);
-			}
-			else {
+			} else {
 				// If secrets is not provided, define one by default.
 				if (!isset($groupData['Secrets']) || empty($groupData['Secrets'])) {
 					$groupData['Secrets'] = [];
@@ -528,10 +487,11 @@ class GroupsController extends AppController {
 					$changes = $this->__updateGroupUsers($id, $groupData['GroupUsers'], $groupData['Secrets']);
 				} catch (ValidationException $e) {
 					$this->Group->rollback();
-					return $this->Message->error($e->getMessage(), ['body' => $e->getInvalidFields()]);
+					$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
+					throw new BadRequestException($e->getMessage());
 				} catch (Exception $e) {
 					$this->Group->rollback();
-					return $this->Message->error($e->getMessage());
+					throw new BadRequestException($e->getMessage());
 				}
 			}
 		}
@@ -539,23 +499,12 @@ class GroupsController extends AppController {
 		// Everything ok. Commit transaction.
 		$this->Group->commit();
 
-		// Return results.
-
-		// Get find options.
+		// Get group and merge changes with group result.
 		$o = $this->Group->getFindOptions(
-			'Group::view',
-			User::get('Role.name'),
-			[
-				'contain' => ['user'],
-				'Group.id' => $id
-			]
+			'Group::view', User::get('Role.name'), ['contain' => ['user'], 'Group.id' => $id]
 		);
-
-		// Get group.
 		$group = $this->Group->find('first', $o);
-
-		// Merge changes with group result.
-		$res = array_merge($group, [ 'changes' => $changes ]);
+		$res = array_merge($group, ['changes' => $changes]);
 
 		// In case of dry run, add output.
 		if ($isDryRun) {

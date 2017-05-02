@@ -91,9 +91,8 @@ hcciUFw5
  * Expect a Forbidden exception
  */
 	public function testUpdateNotLoggedIn() {
-		// We expect an exception.
+		$this->User->setInactive();
 		$this->setExpectedException('ForbiddenException', 'You need to login to access this location');
-		// test with anonymous user, and expect a forbidden exception.
 		$this->testAction('/groups.json', array('return' => 'contents', 'method' => 'PUT'), true);
 	}
 
@@ -105,10 +104,7 @@ hcciUFw5
 	public function testUpdateBadId() {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
-
-		// We expect an exception.
 		$this->setExpectedException('BadRequestException', 'The group id is invalid');
-		// test with anonymous user, and expect a forbidden exception.
 		$this->testAction('/groups/aaa.json', array('return' => 'contents', 'method' => 'PUT'), true);
 	}
 
@@ -138,7 +134,7 @@ hcciUFw5
 		// the user to update
 		$id = Common::uuid('group.id.developer');
 
-		$this->setExpectedException('UnauthorizedException', 'You are not authorized to access to this group');
+		$this->setExpectedException('ForbiddenException', 'You are not authorized to access to this group.');
 		$this->testAction(
 			"/groups/$id.json",
 			array('method' => 'put', 'return' => 'contents')
@@ -502,7 +498,6 @@ hcciUFw5
 				]
 			],
 		];
-
 
 		$this->setExpectedException('BadRequestException', 'A group requires at least one manager');
 		$this->testAction(
