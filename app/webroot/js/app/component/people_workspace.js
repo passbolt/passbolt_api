@@ -10,6 +10,7 @@ import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
 import 'app/component/group_edit';
+import 'app/component/group_sidebar';
 import 'app/form/user/create';
 import 'app/model/user';
 import 'app/model/filter';
@@ -110,7 +111,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                         self.options.createButton.view.close();
                         mad.bus.trigger('request_group_creation');
                     }
-                }),
+                })
             ];
 
             // Instantiate the create button component.
@@ -143,18 +144,25 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         });
         groups.start();
 
-        // Instanciate the passwords browser controller.
+        // Instantiate the passwords browser controller.
         var userBrowserController = new passbolt.component.UserBrowser('#js_wsp_users_browser', {
             selectedUsers: this.options.selectedUsers
         });
         userBrowserController.start();
 
-        // Instanciate the resource details controller
-        var userSidebar = new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
+        // Instantiate the user details controller
+        new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
             id: 'js_user_details',
             selectedItems: this.options.selectedUsers
         });
         $('.js_wsp_users_sidebar_second', this.element).hide();
+
+        //// Instantiate the gtroup details controller
+        new passbolt.component.GroupSidebar($('.js_wsp_groups_sidebar_second', this.element), {
+            id: 'js_group_details',
+            selectedItems: this.options.selectedGroups
+        });
+        $('.js_wsp_groups_sidebar_second', this.element).hide();
 
         // A filter has been given in options.
         // If not given, set one by default.

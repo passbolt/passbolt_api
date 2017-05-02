@@ -53,7 +53,6 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
-
 	/**
 	 * Test a call to index without being logged in.
 	 *
@@ -97,7 +96,7 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		// Assert that each element includes a UserGroup and a User entry by default.
 		foreach($json['body'] as $entry) {
 			$keys = array_keys($entry);
-			$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
+			$this->assertEquals($keys, ['Group', 'GroupUser']);
 		}
 
 	}
@@ -114,22 +113,15 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 
 		// Call to entry point with contain params.
 		$params = [
-			'contain[user]' => 1
+			'contain' => ['user' => 1]
 		];
-		$res = $this->testAction(
-			"/groups.json", [
-				'return' => 'contents',
-				'method' => 'GET',
-				'data' => $params
-			],
-			true
-		);
-
+		$res = $this->testAction('/groups.json', ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
 		$json = json_decode($res, true);
+
 		// Assert that each element includes a Group, UserGroup and a User.
 		foreach($json['body'] as $entry) {
 			$keys = array_keys($entry);
-			$this->assertEquals($keys, ['Group', 'GroupUser', 'User']);
+			$this->assertEquals($keys, ['Group', 'GroupUser']);
 		}
 	}
 
@@ -148,20 +140,37 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$params = [
 			'contain' => ['user' => 0]
 		];
-		$res = $this->testAction(
-			"/groups.json", [
-			'return' => 'contents',
-			'method' => 'GET',
-			'data' => $params
-		],
-			true
-		);
-
+		$res = $this->testAction('/groups.json', ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
 		$json = json_decode($res, true);
+
 		// Assert that each element includes a Group, UserGroup and a User.
 		foreach($json['body'] as $entry) {
 			$keys = array_keys($entry);
 			$this->assertEquals($keys, ['Group']);
+		}
+	}
+
+	/**
+	 * Test index entry point with contain parameters.
+	 *
+	 * Assert that when contain[Modifier] is passed, the output contains for each group a Modifier
+	 */
+	public function testIndexWithModifierContain() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Call to entry point with contain params.
+		$params = [
+			'contain' => ['modifier' => 1]
+		];
+		$res = $this->testAction("/groups.json", ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+		$json = json_decode($res, true);
+
+		// Assert that each element includes a Group, UserGroup and a User.
+		foreach($json['body'] as $entry) {
+			$keys = array_keys($entry);
+			$this->assertEquals($keys, ['Group', 'Modifier', 'GroupUser']);
 		}
 	}
 
@@ -177,22 +186,18 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 
 		// Call to entry point with contain params.
 		$params = [
-			'filter' => ['has-users' => Common::uuid('user.id.ada')],
+			'filter' => ['has-users' => Common::uuid('user.id.irene')],
 		];
-		$res = $this->testAction(
-			"/groups.json", [
-			'return' => 'contents',
-			'method' => 'GET',
-			'data' => $params
-		]);
-
+		$res = $this->testAction('/groups.json', ['return' => 'contents', 'method' => 'GET', 'data' => $params ]);
 		$json = json_decode($res, true);
+		$this->assertNotEmpty($json['body']);
+		$this->assertCount(3, $json['body']);
 
 		// Check if Ada is present in each and every group returned by the query.
 		foreach($json['body'] as $jsonGroup) {
 			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
 			$this->assertTrue(
-				in_array(Common::uuid('user.id.ada'), $userIds),
+				in_array(Common::uuid('user.id.irene'), $userIds),
 				'Ada should be found in the list of users for the group'
 			);
 		}
@@ -210,38 +215,47 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 
 		// Call to entry point with contain params.
 		$usersToFind = [
-			Common::uuid('user.id.ada'),
-			Common::uuid('user.id.frances')
+			Common::uuid('user.id.jean'),
+			Common::uuid('user.id.nancy')
 		];
 		$params = [
 			'filter' => ['has-users' => $usersToFind[0] . "," . $usersToFind[1]],
 		];
-		$res = $this->testAction(
-			"/groups.json", [
-				'return' => 'contents',
-				'method' => 'GET',
-				'data' => $params
-			],
-			true
-		);
-
+		$res = $this->testAction('/groups.json', ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
 		$json = json_decode($res, true);
+		$this->assertNotEmpty($json['body']);
+		$this->assertCount(1, $json['body']);
 
 		// Check if Ada is present in each and every group returned by the query.
 		foreach($json['body'] as $jsonGroup) {
 			$groupMemberIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
-			$found = true;
 			foreach($usersToFind as $userToFind) {
-				if (!in_array($userToFind, $groupMemberIds)) {
-					$found = false;
-					break;
-				}
+				$this->assertContains($userToFind, $groupMemberIds);
 			}
-			$this->assertTrue(
-				$found,
-				'Both the users ada and frances should have been found in all groups returned'
-			);
 		}
+	}
+
+	/**
+	 * Test index entry point with "has-users" filter parameters and multiple users provided.
+	 *
+	 * Assert that no group are returned if the users are not part of the same groups
+	 */
+	public function testIndexWithFilterHasUserMultipleUsersNotResult() {
+		// test with normal user
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		// Call to entry point with contain params.
+		$usersToFind = [
+			Common::uuid('user.id.frances'),
+			Common::uuid('user.id.hedy')
+		];
+		$params = [
+			'filter' => ['has-users' => $usersToFind[0] . "," . $usersToFind[1]],
+		];
+		$res = $this->testAction('/groups.json', ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
+		$json = json_decode($res, true);
+		$this->assertEmpty($json['body']);
 	}
 
 	/**
@@ -256,33 +270,23 @@ class GroupsControllerIndexTest extends ControllerTestCase {
 		$this->User->setActive($user);
 
 		// Call to entry point with contain params.
-		$managerId = Common::uuid('user.id.betty');
+		$managerId = Common::uuid('user.id.ping');
 		$params = [
 			'filter' => ['has-managers' => $managerId],
 		];
-		$res = $this->testAction(
-			"/groups.json", [
-				'return' => 'contents',
-				'method' => 'GET',
-				'data' => $params
-			],
-			true
-		);
-
+		$res = $this->testAction('/groups.json', ['return' => 'contents', 'method' => 'GET', 'data' => $params]);
 		$json = json_decode($res, true);
+		$this->assertNotEmpty($json['body']);
+		$this->assertCount(2, $json['body']);
 
-		// Check if Betty is present in each and every group returned by the query,
+		// Check if the user is present in each and every group returned by the query,
 		// and if she is a manager for all the groups returned.
-		// (she is not supposed to).
 		foreach($json['body'] as $jsonGroup) {
 			$userIds = Hash::extract($jsonGroup, 'GroupUser.{n}.user_id');
-			$this->assertTrue(
-				in_array(Common::uuid('user.id.betty'), $userIds),
-				'Betty should be found in the list of users for the group'
-			);
+			$this->assertContains($managerId, $userIds);
 			foreach($jsonGroup['GroupUser'] as $groupUser) {
-				if ($groupUser['user_id'] == Common::uuid('user.id.betty')) {
-					$this->assertTrue($groupUser['is_admin'], 1, 'Betty should be a manager for all the groups returned');
+				if ($groupUser['user_id'] == $managerId) {
+					$this->assertTrue($groupUser['is_admin'], 1);
 				}
 			}
 		}

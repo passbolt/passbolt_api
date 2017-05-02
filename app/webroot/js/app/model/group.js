@@ -28,31 +28,9 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 		name: 'string',
 		created: 'string',
 		modified: 'string',
+		Modifier: 'passbolt.model.User.model',
 		GroupUser: 'passbolt.model.GroupUser.models'
 	},
-
-	// /**
-	//  * Create a new group
-	//  * @param {array} attrs Attributes of the new group
-	//  * @return {jQuery.Deferred)
-	//  */
-	// create : function (attrs, success, error) {
-	// 	var self = this;
-	// 	var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-	// 	return mad.net.Ajax.request({
-	// 		url: APP_URL + 'groups.json',
-	// 		type: 'POST',
-	// 		params: params,
-	// 		success: success,
-	// 		error: error
-	// 	}).pipe(function (data, textStatus, jqXHR) {
-	// 		// pipe the result to convert cakephp response format into can format
-	// 		// else the new attribute are not well placed
-	// 		var def = $.Deferred();
-	// 		def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-	// 		return def;
-	// 	});
-	// },
 
 	/**
 	 * Find all Groups.
@@ -72,27 +50,44 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 	},
 
 	/**
-	 * Destroy a group following the given parameter
-	 * @params {string} id the id of the instance to remove
-	 * @return {jQuery.Deferred)
+	 * Find one Group.
+	 * @param params
+	 * @param success
+	 * @param error
+	 * @returns {deferred|*|request|request|request|request}
 	 */
-	destroy : function (id, success, error) {
-		var params = {id:id};
+	findOne: function (params, success, error) {
 		return mad.net.Ajax.request({
 			url: APP_URL + 'groups/{id}.json',
-			type: 'DELETE',
+			type: 'GET',
 			params: params,
 			success: success,
 			error: error
 		});
-	}
+	},
+
+    /**
+     * Destroy a group following the given parameter
+     * @params {string} id the id of the instance to remove
+     * @return {jQuery.Deferred)
+	 */
+    destroy : function (id, success, error) {
+        var params = {id:id};
+        return mad.net.Ajax.request({
+            url: APP_URL + 'groups/{id}.json',
+            type: 'DELETE',
+            params: params,
+            success: success,
+            error: error
+        });
+    }
 
 }, /** @prototype */ {
 
 	/**
 	 * Check if a user is a group manager of the group.
 	 * @param user
-	 * @returns {*}
+	 * @returns {boolean}
 	 */
 	isGroupManager: function(user) {
 		var isGroupManager = false;
@@ -108,16 +103,37 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
 		return isGroupManager;
 	},
 
-	deleteDryRun : function(id, attrs, success, error) {
-		var params = {id:id};
-		return mad.net.Ajax.request({
-			url: APP_URL + 'groups/{id}/dry-run.json',
-			type: 'DELETE',
-			params: params,
-			success: success,
-			error: error
-		});
+	/**
+	 * Check if a user can edit a group.
+	 * @param user
+	 * @returns {boolean}
+	 */
+	isAllowedToEdit: function(user) {
+		var isGroupManager = this.isGroupManager(user),
+			isAdmin = user.Role.name == 'admin';
+		return isGroupManager || isAdmin;
 	},
+
+
+    /**
+     * Attempt a dry run of delete.
+     *
+     * @param id
+     * @param attrs
+     * @param success
+     * @param error
+     * @returns {*|jQuery.deferred}
+     */
+    deleteDryRun : function(id, attrs, success, error) {
+        var params = {id:id};
+        return mad.net.Ajax.request({
+            url: APP_URL + 'groups/{id}/dry-run.json',
+            type: 'DELETE',
+            params: params,
+            success: success,
+            error: error
+        });
+    }
 
 });
 

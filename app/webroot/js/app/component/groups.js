@@ -22,7 +22,7 @@ var Groups = passbolt.component.Groups = mad.Component.extend('passbolt.componen
 
     defaults: {
         templateUri: 'app/view/template/component/groups.ejs',
-        selectedGroups: can.Model.List()
+        selectedGroups: new can.Model.List()
     }
 
 }, /** @prototype */ {

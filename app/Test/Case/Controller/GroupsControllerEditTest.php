@@ -339,16 +339,8 @@ hcciUFw5
 		$this->assertEquals($userId, $json['body']['changes']['created'][0]['GroupUser']['user_id']);
 
 		// Now query the api with a get and make sure the user has been added.
-		$res = $this->testAction(
-				"/groups/$groupId.json", [
-				'return' => 'contents',
-				'method' => 'GET',
-			],
-			true
-		);
-
-		$json = json_decode($res, true);
-		$userIdsReturned = Hash::extract($json['body'], 'User.{n}.id');
+		$json = json_decode($this->testAction("/groups/$groupId.json", ['return' => 'contents', 'method' => 'GET']), true);
+		$userIdsReturned = Hash::extract($json['body'], 'GroupUser.{n}.User.id');
 
 		$this->assertTrue(in_array($userId, $userIdsReturned));
 
@@ -387,14 +379,7 @@ hcciUFw5
 			'GroupUsers' => $this->__buildGroupUsers($userIdsToAdd),
 		];
 
-		$res = $this->testAction(
-			"/groups/$groupId.json",
-			[
-				'method' => 'put',
-				'data' => $data,
-				'return' => 'contents'
-			]
-		);
+		$res = $this->testAction("/groups/$groupId.json", ['method' => 'put', 'data' => $data, 'return' => 'contents']);
 		$json = json_decode($res, true);
 		$this->assertEquals($json['header']['status'], Status::SUCCESS, 'should return success');
 		$this->assertEquals($json['body']['changes']['count'], 1);
@@ -404,16 +389,9 @@ hcciUFw5
 		$this->assertEquals(Common::uuid('user.id.irene'), $json['body']['changes']['created'][0]['GroupUser']['user_id']);
 
 		// Now query the api with a get and make sure the user has been added.
-		$res = $this->testAction(
-			"/groups/$groupId.json", [
-			'return' => 'contents',
-			'method' => 'GET',
-		],
-			true
-		);
-
+		$res = $this->testAction("/groups/$groupId.json", ['return' => 'contents', 'method' => 'GET']);
 		$json = json_decode($res, true);
-		$userIdsReturned = Hash::extract($json['body'], 'User.{n}.id');
+		$userIdsReturned = Hash::extract($json['body'], 'GroupUser.{n}.User.id');
 		$this->assertTrue(in_array(Common::uuid('user.id.irene'), $userIdsReturned));
 	}
 

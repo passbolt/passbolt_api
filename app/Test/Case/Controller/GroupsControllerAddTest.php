@@ -271,7 +271,7 @@ class GroupsControllerAddTest extends ControllerTestCase {
 		$this->assertEquals($json['header']['status'], Status::SUCCESS, '/groups add should return success');
 
 		// Assert that keys of the output are valid.
-		$this->assertEquals(array_keys($json['body']), ['Group', 'GroupUser', 'User']);
+		$this->assertEquals(array_keys($json['body']), ['Group', 'GroupUser']);
 
 		// Assert that the group exists in database.
 		$group = $this->Group->findByName($groupName);

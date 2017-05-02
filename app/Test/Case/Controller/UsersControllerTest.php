@@ -132,7 +132,7 @@ class UsersControllerTest extends ControllerTestCase {
 		$this->assertContains(Common::uuid('user.id.frances'), $resultUsers);
 		$this->assertContains(Common::uuid('user.id.grace'), $resultUsers);
 
-		// Filter with multiple groups but no one in all
+		// Filter with multiple groups but no users are in all groups
 		$data = array(
 			'filter' => ['has-groups' => Common::uuid('group.id.creative') . ',' . Common::uuid('group.id.administration')],
 		);

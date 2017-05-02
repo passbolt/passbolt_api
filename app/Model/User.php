@@ -624,6 +624,20 @@ class User extends AppModel {
 								];
 							}
 						}
+						if (isset($data['filter']['has-groups'])) {
+							$conditions['joins'][] = array(
+								'table' => 'users',
+								'alias' => 'UserHasGroups',
+								'type' => 'inner',
+								'conditions' => array(
+									'User.id = UserHasGroups.id',
+									"(SELECT COUNT(*) FROM groups_users SubGroupUser
+									  WHERE SubGroupUser.user_id = UserHasGroups.id
+									  AND SubGroupUser.group_id IN ('" . implode("', '", $data['filter']['has-groups']) . "')) = " . count($data['filter']['has-groups'])
+								)
+							);
+							if (!isset($data['contain']) || !in_array('user', $data['contain'])) $data['contain'][] = 'group';
+						}
 						break;
 
 					case 'Share::searchUsers':
@@ -642,8 +656,7 @@ class User extends AppModel {
 							'alias' => 'UserToGrant',
 							'type' => 'inner',
 							'conditions' => [
-								'
-								User.id = UserToGrant.id
+								'User.id = UserToGrant.id
 								AND UserToGrant.id NOT IN (
 									SELECT Permission.aro_foreign_key
 									FROM permissions Permission
@@ -685,15 +698,14 @@ class User extends AppModel {
 			case 'Recovery::userInfo':
 				$fields = [
 					'fields' => [
-						'DISTINCT User.id',
+						'User.id',
 						'User.username',
 						'User.role_id',
 						'User.created',
 						'User.modified',
 						'User.created_by',
-						'User.modified_by',
+						'User.modified_by'
 					],
-					'superjoin' => ['Group'],
 					'contain' => [
 						'Role' => [
 							'fields' => [
@@ -737,14 +749,6 @@ class User extends AppModel {
 								'Gpgkey.expires',
 								'Gpgkey.type',
 								'Gpgkey.key',
-							],
-						],
-						'Group' => [
-							'fields' => [
-								'Group.id',
-								'Group.name',
-								'Group.created',
-								'Group.modified'
 							],
 						],
 						'GroupUser' => [
@@ -1082,27 +1086,5 @@ class User extends AppModel {
 
 		// Everything fine, we commit.
 		$dataSource->commit();
-	}
-
-/**
- * Filter a list of users and remove the users that don't belong to all the groups defined by $groupsIds.
- *
- * @param $users
- *   list of users, with the groups and groupUsers provided.
- * @param $groupsIds
- *   list of groups ids
- *
- * @return array
- *   list of only the users that contain all the groups defined by userIds
- */
-	public static function filterUsersWithAllGroups($users, $groupsIds) {
-		$results = [];
-		foreach($users as $key => $user) {
-			$groupMemberIds = Hash::extract($user['GroupUser'], '{n}.group_id');
-			if (count(array_intersect($groupMemberIds, $groupsIds)) === count($groupsIds)) {
-				array_push($results, $user);
-			}
-		}
-		return $results;
 	}
 }

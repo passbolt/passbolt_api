@@ -26,6 +26,17 @@ class Group extends AppModel {
 		'GroupResourcePermission'
 	];
 
+	public $belongsTo = [
+		'Creator' => [
+			'className' => 'User',
+			'foreignKey' => 'created_by'
+		],
+		'Modifier' => [
+			'className' => 'User',
+			'foreignKey' => 'modified_by'
+		]
+	];
+
 	public $hasAndBelongsToMany = [
 		'User' => [
 			'className' => 'User',
@@ -101,16 +112,34 @@ class Group extends AppModel {
 					}
 				}
 				if (isset($data['filter']['has-users'])) {
-					$users = $data['filter']['has-users'];
-					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
-					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'user';
+					$hasUsers = $data['filter']['has-users'];
+					$conditions['joins'][] = array(
+						'table' => 'groups',
+						'alias' => 'GroupsHasUsers',
+						'conditions' => array(
+							'Group.id = GroupsHasUsers.id',
+							"(SELECT COUNT(*) FROM groups_users SubGroupUser
+							  WHERE SubGroupUser.group_id = GroupsHasUsers.id
+							  AND SubGroupUser.user_id IN ('" . implode("','", $hasUsers) . "')) = " . count($hasUsers)
+						)
+					);
+					if (!isset($data['contain']) || !in_array('user', $data['contain'])) $data['contain'][] = 'user';
 				}
 				if (isset($data['filter']['has-managers'])) {
-					$users = $data['filter']['has-managers'];
-					$conditions['conditions'][] = ['GroupsUser.user_id IN' => $users];
-					$conditions['conditions'][] = ['GroupsUser.is_admin' => 1];
-					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'user';
+					$hasManagers = $data['filter']['has-managers'];
+					$conditions['joins'][] = array(
+						'table' => 'groups', 'alias' => 'GroupHasManagers',
+						'conditions' => array(
+							'Group.id = GroupHasManagers.id',
+							"(SELECT COUNT(*) FROM groups_users SubGroupUser
+							  WHERE SubGroupUser.group_id = GroupHasManagers.id
+							  AND SubGroupUser.is_admin = 1
+							  AND SubGroupUser.user_id IN ('" . implode("','", $hasManagers) . "')) = " . count($hasManagers)
+						)
+					);
+					if (!isset($data['contain']) || !in_array('user', $data['contain'])) $data['contain'][] = 'user';
 				}
+
 				break;
 
 			case 'Share::searchUsers':
@@ -156,20 +185,70 @@ class Group extends AppModel {
 			case 'Share::searchUsers':
 				$fields = [
 					'fields' => [
-						'DISTINCT Group.id',
+						'Group.id',
 						'Group.name',
 						'Group.created',
-						'Group.modified',
+						'Group.modified'
 					],
 					'contain' => [],
 				];
 
 				if (isset($data['contain'])) {
 					if (in_array('user', $data['contain'])) {
-						$fields['superjoin'] = ['User'];
 						$fields['contain'] = [
-							'User' => User::getFindFields($case, $role, $data),
-							'GroupUser' => GroupUser::getFindFields('view', $role, $data)
+							'GroupUser' => [
+								'fields' => [
+									'GroupUser.id',
+									'GroupUser.group_id',
+									'GroupUser.user_id',
+									'GroupUser.is_admin',
+								],
+								'User' => [
+									'fields' => [
+										'User.id',
+										'User.username',
+										'User.role_id',
+									],
+									'Profile' => [
+										'fields' => [
+											'Profile.id',
+											'Profile.first_name',
+											'Profile.last_name',
+										],
+										'Avatar' => [
+											'fields' => [
+												'Avatar.id',
+												'Avatar.user_id',
+												'Avatar.filename',
+												'Avatar.mime_type',
+												'Avatar.extension',
+												'Avatar.path',
+											]
+										]
+									],
+									'Gpgkey' => [
+										'fields' => [
+											'Gpgkey.fingerprint',
+										],
+									],
+								]
+							]
+						];
+					}
+					if (in_array('modifier', $data['contain'])) {
+						$fields['contain']['Modifier'] = [
+							'fields' => [
+								'Modifier.id',
+								'Modifier.username',
+								'Modifier.role_id',
+							],
+							'Profile' => [
+								'fields' => [
+									'Profile.id',
+									'Profile.first_name',
+									'Profile.last_name',
+								],
+							]
 						];
 					}
 				}
@@ -219,12 +298,14 @@ class Group extends AppModel {
 				$contain = [
 					'user' => 1,
 					'resource' => 0,
+					'modifier' => 0
 				];
 				break;
 			case 'Share::searchUsers':
 				$contain = [
 					'user' => 0,
 					'resource' => 0,
+					'modifier' => 0
 				];
 		}
 		return $contain;
@@ -241,28 +322,6 @@ class Group extends AppModel {
 		return [
 			'Group.name',
 		];
-	}
-
-/**
- * Filter a list of groups and remove the groups that don't contain all the members defined by $userIds.
- *
- * @param $groups
- *   list of groups, with the users and groupUsers provided.
- * @param $userIds
- *   list of user ids
- *
- * @return array
- *   list of only the groups that contain at least the members defined by userIds
- */
-	public static function filterGroupWithAllUsers($groups, $userIds) {
-		$results = [];
-		foreach ($groups as $key => $group) {
-			$groupMemberIds = Hash::extract($group['GroupUser'], '{n}.user_id');
-			if (count(array_intersect($groupMemberIds, $userIds)) === count($userIds)) {
-				array_push($results, $group);
-			}
-		}
-		return $results;
 	}
 
 /**
