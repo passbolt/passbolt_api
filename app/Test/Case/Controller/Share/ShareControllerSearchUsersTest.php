@@ -110,18 +110,35 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 	// Test filter users by keywords
 	public function testSearchUsersFilterUsersByKeywords() {
 		$id = Common::uuid('resource.id.debian');
-		$getOptions = array(
-			'method' => 'get',
-			'return' => 'contents',
-			'data' => array(
-				'filter' => array(
-					'keywords' => 'carol'
-				)
-			)
-		);
+		$getOptions = array('method' => 'get', 'return' => 'contents');
 
 		// Filter on firstname.
+		$url = "/share/search-users/resource/$id.json?filter[keywords]=carol";
+		$srvResult = json_decode($this->testAction($url, $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
+
+		// Filter on lastname.
+		$getOptions['data']['filter']['keywords'] = 'shaw';
 		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
+
+		// Filter on username.
+		$getOptions['data']['filter']['keywords'] = 'carol@passbolt.com';
+		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
+		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
+	}
+
+	// Test filter users by legacy keywords
+	public function testSearchUsersFilterUsersByLegacyKeywords() {
+		$id = Common::uuid('resource.id.debian');
+		$getOptions = array('method' => 'get', 'return' => 'contents');
+
+		// Filter on firstname.
+		$url = "/share/search-users/resource/$id.json?keywords=carol";
+		$srvResult = json_decode($this->testAction($url, $getOptions), true);
 		$usersIds = Hash::extract($srvResult['body'], '{n}.User.id');
 		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
 
@@ -143,16 +160,12 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$id = Common::uuid('resource.id.fsfe');
 		$getOptions = array(
 			'method' => 'get',
-			'return' => 'contents',
-			'data' => array(
-				'filter' => array(
-					'keywords' => 'marketing'
-				)
-			)
+			'return' => 'contents'
 		);
 
 		// Filter on group name.
-		$srvResult = json_decode($this->testAction("/share/search-users/resource/$id.json", $getOptions), true);
+		$url = "/share/search-users/resource/$id.json?filter[keywords]=marketing";
+		$srvResult = json_decode($this->testAction($url, $getOptions), true);
 		$groupsIds = Hash::extract($srvResult['body'], '{n}.Group.id');
 		$this->assertTrue(in_array(Common::uuid('group.id.marketing'), $groupsIds));
 	}

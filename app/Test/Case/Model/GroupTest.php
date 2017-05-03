@@ -100,4 +100,3 @@ class GroupTest extends CakeTestCase {
 	}
 
 }
-

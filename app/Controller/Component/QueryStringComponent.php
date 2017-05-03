@@ -56,6 +56,10 @@ class QueryStringComponent extends Component {
 			$query['filter']['modified-after'] = $query['modified_after'];
 			unset($query['modified_after']);
 		}
+		if (isset($query['keywords'])) {
+			$query['filter']['keywords'] = $query['keywords'];
+			unset($query['keywords']);
+		}
 		return $query;
 	}
 
