@@ -113,7 +113,7 @@ class SetupControllerTest extends ControllerTestCase {
 		$recovery = $this->__startRecovery('admin@passbolt.com');
 		$this->User->setInactive();
 
-		$this->setExpectedException('HttpException', 'No data was provided');
+		$this->setExpectedException('HttpException', 'No authentication token was provided.');
 		$url = "/users/validateAccount/{$recovery['User']['id']}.json";
 		$this->testAction($url, array(
 				'method' => 'put',

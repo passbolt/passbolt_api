@@ -80,28 +80,6 @@ class GroupTest extends CakeTestCase {
 	}
 
 /**
- * Test the function filterGroupWithAllUsers.
- *
- * Assert that the function will remove all the groups that don't contain all the users requested.
- *
- * @return void
- */
-	public function testFilterGroupWithAllUsers() {
-		$options = $this->Group->getFindOptions(
-			'Group::index',
-			null,
-			['contain' => ['user']]
-		);
-		// Get all groups.
-		$groups = $this->Group->find('all', $options);
-
-		$groupsFiltered = $this->Group->filterGroupWithAllUsers($groups, [Common::uuid('user.id.ping'), Common::uuid('user.id.thelma')]);
-		$this->assertTrue(count($groupsFiltered) === 2, "After filtering all users, there should be only one group remaining.");
-
-	}
-
-
-/**
  * Test soft delete.
  */
 	public function testSoftDelete() {
