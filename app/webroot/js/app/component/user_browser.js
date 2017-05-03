@@ -262,6 +262,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
      */
     reset: function () {
         this.filtered = false;
+        this.filterSettings = null;
         var sortedColumnModel = this.getColumnModel('name');
         this.view.markColumnAsSorted(sortedColumnModel, true);
         this._super();
@@ -507,6 +508,37 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                 this.options.selectedUsers.splice(i, 1);
             }
         }
+    },
+
+    /**
+     * Listen when a group model has been updated.
+     *
+     * And update the list of users in the grid
+     * only in case the corresponding group filter
+     * was selected.
+     *
+     * @param el
+     * @param ev
+     * @param data
+     */
+    '{passbolt.model.Group} updated': function(el, ev, group) {
+        var filterId = 'workspace_filter_group_' + group.id;
+        var regExp = new RegExp('^' + filterId);
+        if (this.filterSettings != null && this.filterSettings.id.match(regExp)) {
+            // Reload user browser.
+            this.reset();
+            // Propagate the filter by group component.
+            var filter = new passbolt.model.Filter({
+                id: filterId,
+                label: group.name + __(' (group)'),
+                rules: {
+                    'has-groups': group.id
+                },
+                order: ['Profile.last_name ASC']
+            });
+            mad.bus.trigger('filter_workspace', filter);
+        }
+
     },
 
     /* ************************************************************** */

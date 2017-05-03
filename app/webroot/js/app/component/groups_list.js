@@ -93,7 +93,6 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
 	 */
     select: function (group) {
         this.view.selectItem(group);
-        this.options.selectedGroup = group;
 
         // Reset the list of selected groups and add the new selected one.
         this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
