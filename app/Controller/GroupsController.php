@@ -1,4 +1,6 @@
 <?php
+App::import('Model', 'PermissionType');
+
 /**
  * Groups Controller
  *
@@ -13,6 +15,7 @@ class GroupsController extends AppController {
 	public $components = [
 		'QueryString'
 	];
+
 
 /**
  * Get all groups
@@ -320,12 +323,28 @@ class GroupsController extends AppController {
 		}
 
 		$changes = $this->Group->GroupUser->prepareBulkUpdate($groupId, $groupUsers);
-		foreach ($changes['create'] as $create) {
-			if(!isset($userSecrets[$create['GroupUser']['user_id']])) {
-				$userSecrets[$create['GroupUser']['user_id']] = [];
+
+		// Only group managers can add users into groups.
+		// Get role for current group.
+		$groupUser = $this->Group->GroupUser->find('first', [
+			'conditions' => [
+				'user_id' => User::get('id'),
+				'group_id' => $groupId,
+			]
+		]);
+
+		$isGroupAdmin = !empty($groupUser) && $groupUser['GroupUser']['is_admin'] == 1;
+
+		// Add new users can only be done by the group admin, not by the admin (unless he is a group admin).
+		// TODO: need to implement the admin being able to request a user to be added.
+		if ($isGroupAdmin) {
+			foreach ($changes['create'] as $create) {
+				if(!isset($userSecrets[$create['GroupUser']['user_id']])) {
+					$userSecrets[$create['GroupUser']['user_id']] = [];
+				}
+				$res['created'][] = $this->Group->GroupUser->createGroupUser($create, $userSecrets[$create['GroupUser']['user_id']]);
+				$res['count']++;
 			}
-			$res['created'][] = $this->Group->GroupUser->createGroupUser($create, $userSecrets[$create['GroupUser']['user_id']]);
-			$res['count']++;
 		}
 		foreach ($changes['update'] as $update) {
 			$res['updated'][] = $this->Group->GroupUser->updateGroupUser($update);
@@ -472,7 +491,7 @@ class GroupsController extends AppController {
 		];
 		$dryRunOutput = [];
 
-		if ($isGroupUsersProvided && $isGroupAdmin) {
+		if ($isGroupUsersProvided && ($isGroupAdmin || $isAdmin)) {
 
 			// In case of dry-run, calculate the list of secrets that need to be provided.
 			if ($isDryRun) {
@@ -514,5 +533,102 @@ class GroupsController extends AppController {
 		// Success response.
 		$this->set('data', $res);
 		$this->Message->success(__("The group has been updated successfully."));
+	}
+
+
+	/**
+	 * @param null $id
+	 *
+	 * @return mixed
+	 */
+	public function delete($id = null) {
+		// Check if the id is provided
+		if (!isset($id)) {
+			return $this->Message->error(__('The group id is missing'), ['code' => 400]);
+		}
+
+		// Check if the id is valid
+		if (!Common::isUuid($id)) {
+			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
+		}
+
+		// Check if the group exists.
+		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
+		$group = $this->Group->find('first', $o);
+		if (!$group) {
+			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
+		}
+
+		$isAdmin = User::get('Role.name') == Role::ADMIN;
+
+		// Check that the user is either an administrator, or a group administrator.
+		if (!$isAdmin) {
+			return $this->Message->error(__('You are not authorized to perform this operation on this group'), ['code' => '401']);
+		}
+
+		$isDryRun = $this->__isDryRun();
+
+		// Get the list of resources solely owned by the group.
+		$resourcesSolelyOwned = $this->Group->GroupResourcePermission->findSoleOwnerResources($id);
+		$resourceIds = Hash::extract($resourcesSolelyOwned, '{n}.Resource.id');
+
+		$Resource = Common::getModel('Resource');
+
+		if (count($resourcesSolelyOwned) > 0) {
+			$options = $Resource->getFindOptions(
+				'Resource::view',
+				User::get('Role.name'),
+				[
+					'Resource.id' => $resourceIds,
+					'contain' => [
+						'Creator' => 0,
+						'Modifier' => 0,
+						'Secret' => 0,
+						'Favorite' => 0
+					]
+				]
+			);
+			// Unload permissionable to be able to retrieve the list of resources even
+			// without direct access to it.
+			$Resource->Behaviors->unload('Permissionable');
+			$resources = $Resource->find('all', $options);
+			return $this->Message->error(__('The group is sole owner of some passwords. Transfer the ownership before deleting.'), ['code' => 400, 'body' => $resources]);
+		}
+
+		// In case of dry-run, list the resources that will not be accessible anymore, and return them.
+		if ($isDryRun) {
+			// Get the list of resources shared with the group.
+			$this->Group->GroupResourcePermission->Resource->Behaviors->unload('Permissionable');
+			$resourcesShared = $this->Group->GroupResourcePermission->findAuthorizedResources($id);
+			$resourceIds = Hash::extract($resourcesShared, '{n}.Resource.id');
+			$options = $Resource->getFindOptions(
+				'Resource::view',
+				User::get('Role.name'),
+				[
+					'Resource.id' => $resourceIds,
+					'contain' => [
+						'Creator' => 0,
+						'Modifier' => 0,
+						'Secret' => 0,
+						'Favorite' => 0
+					]
+				]
+			);
+			$Resource->Behaviors->unload('Permissionable');
+			$resources = $Resource->find('all', $options);
+			// Success response.
+			$this->set('data', $resources);
+			return $this->Message->success(__("The group can be deleted."));
+		}
+
+		// Everything alright. We can delete.
+		try {
+			$this->Group->softDelete($id);
+		}
+		catch(Exception $e) {
+			return $this->Message->error(__('Could not delete group'));
+		}
+
+		return $this->Message->success(__("The group has been deleted."));
 	}
 }

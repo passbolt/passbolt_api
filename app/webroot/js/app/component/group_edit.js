@@ -226,7 +226,9 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      * @param groupUser The groupUser to edit
      */
     editGroupUser: function(groupUser, value) {
-        groupUser.is_admin = value;
+        // Force value on groupUser.
+        groupUser.attr('is_admin', (value == 1 || value == true ? 1 : 0));
+
         // Notify the plugin, the user can be listed by the autocomplete again.
         mad.bus.trigger('passbolt.group.edit.edit_group_user', {
             groupUser: {
@@ -241,6 +243,10 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         this.checkManager();
     },
 
+    /**
+     * Check whether there are enough group managers, and lock the neccessary is_admin fields if necessary.
+     * @returns {boolean}
+     */
     checkManager: function() {
         var self = this,
             admins = [],
@@ -249,7 +255,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
         this.groupUserList.options.items.each(function (item) {
             var isAdmin = false;
             // Is admin ?
-            if (item.is_admin == 1) {
+            if (item.is_admin == 1 || item.is_admin == true) {
                 isAdmin = true;
             }
 
@@ -309,7 +315,6 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      *   can be "created", "updated", or null.
      */
     setGroupUserItemState : function(groupUserId, state) {
-        //var $li = $('#js_permissions_list li#' + groupUserId);
         var $li = this.groupUserList.view.getItemElement({id:groupUserId});
         if (state == null) {
             $li.removeClass('permission-updated');
