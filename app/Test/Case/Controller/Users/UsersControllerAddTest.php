@@ -232,7 +232,7 @@ class UsersControllerAddTest extends ControllerTestCase {
 	public function testAddExistingUser() {
 		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
-		$this->setExpectedException('BadRequestException', 'Could not validate user profile data.');
+		$this->setExpectedException('ValidationException', 'Could not validate user profile data.');
 		$this->testAction(
 			'/users.json',
 			array(

@@ -397,7 +397,7 @@ qGyky3/L
 			'key' => $adaPrivateKey
 		);
 
-		$this->setExpectedException('BadRequestException', 'Could not validate the GPG key data.');
+		$this->setExpectedException('ValidationException', 'Could not validate the GPG key data.');
 		$url = "/users/validateAccount/{$userId}.json";
 		$this->testAction(
 			$url,

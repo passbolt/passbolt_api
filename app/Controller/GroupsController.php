@@ -117,8 +117,10 @@ class GroupsController extends AppController {
 		$this->Group->set($postData);
 		if (!$this->Group->validates()) {
 			$this->Group->rollback();
-			$this->set('error', ['invalidFields' => ['Group' => $this->Group->validationErrors]]);
-			throw new BadRequestException(__('Data validation error. This is not a valid group.'));
+			throw new ValidationException(
+				__('Data validation error. This is not a valid group.'),
+				['Group' => $this->Group->validationErrors]
+			);
 		}
 
 		// Save group.
@@ -224,8 +226,7 @@ class GroupsController extends AppController {
 			}
 			catch(ValidationException $e) {
 				$this->Group->rollback();
-				$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
-				throw new BadRequestException(__('Validation error'));
+				throw new ValidationException(__('Validation error'), $e->getInvalidFields());
 			}
 			catch(Exception $e) {
 				$this->Group->rollback();
@@ -259,8 +260,7 @@ class GroupsController extends AppController {
 					$changes = $this->__updateGroupUsers($id, $groupData['GroupUsers'], $groupData['Secrets']);
 				} catch (ValidationException $e) {
 					$this->Group->rollback();
-					$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
-					throw new BadRequestException($e->getMessage());
+					throw new ValidationException($e->getMessage(), $e->getInvalidFields());
 				} catch (Exception $e) {
 					$this->Group->rollback();
 					throw new BadRequestException($e->getMessage());
@@ -339,8 +339,10 @@ class GroupsController extends AppController {
 			// without direct access to it.
 			$Resource->Behaviors->unload('Permissionable');
 			$resources = $Resource->find('all', $options);
-			$this->set('error', ['invalidFields' => $resources]);
-			throw new BadRequestException(__('The group is sole owner of some passwords. Transfer the ownership before deleting.'));
+			throw new ValidationException(
+				__('The group is sole owner of some passwords. Transfer the ownership before deleting.'),
+				$resources
+			);
 		}
 
 		// In case of dry-run, list the resources that will not be accessible anymore, and return them.

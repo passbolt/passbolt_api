@@ -158,7 +158,7 @@ class GroupsControllerAddTest extends ControllerTestCase {
 		];
 
 		// We expect an exception.
-		$this->setExpectedException('BadRequestException', 'Data validation error');
+		$this->setExpectedException('ValidationException', 'Data validation error');
 
 		// Test action.
 		$this->testAction(
@@ -331,7 +331,7 @@ class GroupsControllerAddTest extends ControllerTestCase {
 		];
 
 		// We expect an exception.
-		$this->setExpectedException('BadRequestException', 'Data validation error');
+		$this->setExpectedException('ValidationException', 'Data validation error');
 
 		$result = $this->testAction(
 			'/groups.json',

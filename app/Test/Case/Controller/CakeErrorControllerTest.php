@@ -158,8 +158,4 @@ class CakeErrorControllerTest extends ControllerTestCase {
         $this->setExpectedException('HttpException', 'You need to login to access this location');
         $this->testAction('/users/view/xxx.json', array('return' => 'contents', 'method' => 'GET'), true);
     }
-
-    public function testErrorControllerRender() {
-
-    }
 }

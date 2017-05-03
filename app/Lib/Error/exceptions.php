@@ -5,7 +5,7 @@
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
-class ValidationException extends Exception {
+class ValidationException extends CakeBaseException {
 
 	public $invalidFields = null;
 
@@ -15,8 +15,11 @@ class ValidationException extends Exception {
  * @param string $message the Exception message to throw.
  * @param array $invalidFields fields missing validation and associated error messages
  */
-	public function __construct($message, array $invalidFields = null) {
-		parent::__construct($message);
+	public function __construct($message, array $invalidFields = null, $code = null) {
+		if(!isset($code)) {
+			$code = '400';
+		}
+		parent::__construct($message, $code);
 		$this->invalidFields = $invalidFields;
 	}
 

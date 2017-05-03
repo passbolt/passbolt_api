@@ -186,7 +186,6 @@ class UsersController extends AppController {
  * @throws ForbiddenException if the user role is not admin
  * @throws BadRequestException if no user data is provided
  * @throws BadRequestException if the profile data can not be validated
- * @throw
  * @return void
  */
 	public function add() {
@@ -206,8 +205,7 @@ class UsersController extends AppController {
 		try {
 			$this->__registerUser($userData);
 		} catch (ValidationException $e) {
-			$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
-			throw new BadRequestException(__('Could not validate user profile data.'));
+			throw new ValidationException(__('Could not validate user profile data.'), $e->getInvalidFields());
 		} catch (Exception $e) {
 			throw new BadRequestException($e->getMessage());
 		}
@@ -275,8 +273,7 @@ class UsersController extends AppController {
 
 			if (!$this->User->validates(['fieldList' => [$fields['fields']]])) {
 				// Return error message, with list of invalid fields.
-				$this->set('error', ['invalidFields' => $this->User->validationErrors]);
-				throw new BadRequestException(__('Could not validate User'));
+				throw new ValidationException(__('Could not validate User'), $this->User->validationErrors);
 			}
 
 			// Update the user
@@ -320,8 +317,7 @@ class UsersController extends AppController {
 			$this->User->Profile->set($profileData);
 			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
 				$this->User->rollback();
-				$this->set('error', ['invalidFields' => $this->User->validationErrors]);
-				throw new BadRequestException(__('Could not validate Profile'));
+				throw new ValidationException(__('Could not validate Profile'), $this->User->validationErrors);
 			}
 
 			// Update the profile
@@ -383,8 +379,7 @@ class UsersController extends AppController {
 			$data = ['Avatar' => ['file' => $file]];
 			$this->User->Profile->Avatar->upload($user['Profile']['id'], $data);
 		} catch (ValidationException $ve) {
-			$this->set('error', ['invalidFields' => ['User' => ['Profile' => $ve->getInvalidFields()]]]);
-			throw new BadRequestException($ve->getMessage());
+			throw new ValidationException($ve->getMessage(), ['User' => ['Profile' => $ve->getInvalidFields()]]);
 		} catch (Exception $e) {
 			throw new InternalErrorException(__('The avatar could not be uploaded'));
 		}
@@ -488,8 +483,7 @@ class UsersController extends AppController {
 			// Validate the profile data
 			if (!$this->User->Profile->validates(['fieldList' => [$fields['fields']]])) {
 				$dataSource->rollback();
-				$this->set('error', ['invalidFields' => $this->User->Profile->validationErrors]);
-				throw new BadRequestException(__('Could not validate profile.'));
+				throw new ValidationException(__('Could not validate profile.'), $this->User->Profile->validationErrors);
 			}
 
 			// Save/Update the profile
@@ -531,8 +525,7 @@ class UsersController extends AppController {
 			// Check if the key data is valid.
 			if (!$this->User->Gpgkey->validates(['fieldList' => [$fields['fields']]])) {
 				$dataSource->rollback();
-				$this->set('error', ['invalidFields' => $this->User->Gpgkey->validationErrors]);
-				throw new BadRequestException(__('Could not validate the GPG key data.'));
+				throw new ValidationException(__('Could not validate the GPG key data.'), $this->User->Gpgkey->validationErrors);
 			}
 
 			// Sanitize the UID info

@@ -163,7 +163,7 @@ class UsersControllerEditTest extends ControllerTestCase {
 		$id = Common::uuid('user.id.user');
 		$data['User']['username'] = 'user@34@passbolt.com';
 
-		$this->setExpectedException('HttpException', 'Could not validate User');
+		$this->setExpectedException('ValidationException', 'Could not validate User');
 		$this->testAction(
 			"/users/$id.json",
 			array(
