@@ -44,8 +44,7 @@ class UsersController extends AppController {
  * Notify the user by email.
  *
  * @param array $data User and profile data.
- * @param bool $self . whether it's a self registration.
- *
+ * @param bool $self is it a self registration.
  * @return array the created user
  */
 	private function __registerUser($data, $self = false) {
@@ -97,10 +96,8 @@ class UsersController extends AppController {
  * @return void
  */
 	public function register_thankyou() {
-		// Check referer.
-		$referer = $this->referer();
-
 		// If no referer, we redirect to register page.
+		$referer = $this->referer();
 		if (empty($referer)) {
 			$this->redirect("/register");
 			return;
@@ -120,59 +117,8 @@ class UsersController extends AppController {
  * Get all users
  * Renders a json object of the users.
  *
+ * @throws MethodNotAllowedException if http request method is not GET
  * @return void
- *
- * @SWG\Get(
- *   path="/users.json",
- *   summary="Find users",
- * @SWG\Parameter(
- *     name="filter",
- *     in="query",
- *     description="A list of filter",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 		 "keywords",
- *       "has-groups"
- * 	   }
- *   ),
- * @SWG\Parameter(
- *     name="order",
- *     in="query",
- *     description="A list of order",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 	     "User.username",
- * 	     "User.created",
- * 	     "User.modified",
- * 	     "Profile.first_name",
- * 	     "Profile.last_name",
- * 	     "Profile.created",
- * 	     "Profile.modified",
- * 	   }
- *   ),
- * @SWG\Response(
- *     response=200,
- *     description="An array of users",
- *     @SWG\Schema(
- *       type="object",
- *       properties={
- *         @SWG\Property(
- *           property="header",
- *           ref="#/definitions/Header"
- *         ),
- *         @SWG\Property(
- *           property="body",
- *           type="array",
- *           items={
- * 				"$ref"="#/definitions/User"
- *           }
- *         )
- *       }
- *     )
- *   )
- * )
  */
 	public function index() {
 		// Check request sanity
@@ -188,7 +134,7 @@ class UsersController extends AppController {
 		$params = $this->QueryString->get($allowedQueryItems);
 
 		// Find the users.
-		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $params);
+		$o = $this->User->getFindOptions('User::index', Role::USER, $params);
 		$users = $this->User->find('all', $o);
 
 		$this->set('data', $users);
@@ -200,6 +146,9 @@ class UsersController extends AppController {
  * Renders a json object of the user
  *
  * @param string $id UUID of the user
+ * @throws MethodNotAllowedException if http request method is not GET
+ * @throws BadRequestException if the user id is missing or invalid
+ * @throws NotFoundException if the user does not exist
  * @return void
  */
 	public function view($id = null) {
@@ -233,6 +182,11 @@ class UsersController extends AppController {
 /**
  * Add a user
  *
+ * @throws MethodNotAllowedException if http request method is not GET
+ * @throws ForbiddenException if the user role is not admin
+ * @throws BadRequestException if no user data is provided
+ * @throws BadRequestException if the profile data can not be validated
+ * @throw
  * @return void
  */
 	public function add() {
@@ -615,6 +569,12 @@ class UsersController extends AppController {
  * Delete a user
  *
  * @param string $id the uuid of the user to delete
+ * @throws BadRequestException if the request method is not delete
+ * @throws ForbiddenException if the user is not admin
+ * @throws BadRequestException if the user id is missing or invalid
+ * @throws BadRequestException if the user id is the same as the current user
+ * @throws NotFoundException if the user does not exist
+ * @throws InternalErrorException if the user could not be deleted
  * @return void
  */
 	public function delete($id = null) {

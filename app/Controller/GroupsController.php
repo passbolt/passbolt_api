@@ -1,12 +1,12 @@
 <?php
-App::import('Model', 'PermissionType');
-
 /**
  * Groups Controller
  *
  * @copyright (c) 2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
+App::import('Model', 'PermissionType');
+
 class GroupsController extends AppController {
 
 /**
@@ -16,70 +16,11 @@ class GroupsController extends AppController {
 		'QueryString'
 	];
 
-
 /**
- * Get all groups
- * Renders a json object of the groups.
+ * Group Index
  *
+ * @throws MethodNotAllowedException if the http request method is not GET
  * @return void
- *
- * @SWG\Get(
- *   path="/groups.json",
- *   summary="Find groups",
- * @SWG\Parameter(
- *     name="filter",
- *     in="query",
- *     description="A list of filter",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 		 "has-users",
- * 		 "has-managers"
- * 	   }
- *   ),
- * @SWG\Parameter(
- *     name="contain",
- *     in="query",
- *     description="A list of associated models",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 		 "user",
- *     	 "resource",
- *       "modifier"
- * 	   }
- *   ),
- * @SWG\Parameter(
- *     name="order",
- *     in="query",
- *     description="A list of order",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 	     "Group.name",
- * 	   }
- *   ),
- * @SWG\Response(
- *     response=200,
- *     description="An array of groups",
- *     @SWG\Schema(
- *       type="object",
- *       properties={
- *         @SWG\Property(
- *           property="header",
- *           ref="#/definitions/Header"
- *         ),
- *         @SWG\Property(
- *           property="body",
- *           type="array",
- *           items={
- * 				"$ref"="#/definitions/Group"
- *           }
- *         )
- *       }
- *     )
- *   )
- * )
  */
 	public function index() {
 		// Check request sanity
@@ -105,52 +46,13 @@ class GroupsController extends AppController {
 	}
 
 /**
- * Get a group
- * Renders a json object of the group
+ * Group View
  *
  * @param string $id the uuid of the group
+ * @throws MethodNotAllowedException if the http request method is not GET
+ * @throws BadRequestException if the group id is missing or not a valid uuid
+ * @throws NotFoundException if the group does not exist or has been deleted
  * @return void
- *
- * @SWG\Get(
- *   path="/groups/{uuid}.json",
- *   summary="Find a group by ID",
- * @SWG\Parameter(
- *     name="id",
- *     in="path",
- *     required=true,
- *     type="string",
- *     description="the uuid of the group",
- *   ),
- * @SWG\Parameter(
- *     name="contain",
- *     in="query",
- *     description="A list of associated models",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 		 "user",
- *     	 "resource",
- *       "modifier"
- * 	   }
- *   ),
- * @SWG\Response(
- *     response=200,
- *     description="The details of the group",
- *     @SWG\Schema(
- *       type="object",
- *       properties={
- *         @SWG\Property(
- *           property="header",
- *           ref="#/definitions/Header"
- *         ),
- *         @SWG\Property(
- *           property="body",
- *           ref="#/definitions/Group"
- *         )
- *       }
- *     )
- *   )
- * )
  */
 	public function view($id = null) {
 		// Check request sanity
@@ -185,9 +87,13 @@ class GroupsController extends AppController {
 	}
 
 /**
- * Add entry point.
+ * Add a group
  *
- * Add a group.
+ * @throws MethodNotAllowedException if the http request method is not GET
+ * @throws ForbiddenException if the user role is not admin
+ * @throws BadRequestException if no group manager is provided
+ * @throws BadRequestException if the group data cannot be validated
+ * @throws InternalErrorException if the group data could not be saved
  */
 	public function add() {
 		// check the request sanity
@@ -267,13 +173,221 @@ class GroupsController extends AppController {
 	}
 
 /**
+ * Edit group
+ *
+ * @param string $id group uuid
+ * @throws BadRequestException if the group id is missing or invalid
+ * @throws NotFoundException if the group does not exist
+ * @throws ForbiddenException if the user role is not admin or is not a group admin
+ * @throws BadRequestException if the group data fails to validate
+ * @return mixed
+ */
+	public function edit($id = null) {
+		// Check request sanity
+		if (!isset($id)) {
+			throw new BadRequestException(__('The group id is missing.'));
+		}
+		if (!Common::isUuid($id)) {
+			throw new BadRequestException(__('The group id is invalid.'));
+		}
+		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
+		$group = $this->Group->find('first', $o);
+		if (!$group) {
+			throw new NotFoundException(__('The group does not exist.'));
+		}
+
+		// Only admin users or group managers can update groups.
+		// Get role for current group.
+		$groupUser = $this->Group->GroupUser->find('first', [
+			'conditions' => [
+				'user_id' => User::get('id'),
+				'group_id' => $id,
+			]
+		]);
+
+		// Check that the user is either an administrator, or a group administrator.
+		$isGroupAdmin = (!empty($groupUser) && $groupUser['GroupUser']['is_admin'] == 1);
+		$isAdmin = (User::get('Role.name') == Role::ADMIN);
+		if (!$isAdmin && !$isGroupAdmin) {
+			throw new ForbiddenException(__('You are not authorized to access to this group.'));
+		}
+
+		$isDryRun = $this->__isDryRun();
+		$this->Group->begin();
+
+		// If name if provided, and user is an admin, process name change.
+		$groupData = $this->request->data;
+		$isNameProvided = !empty(Hash::extract($groupData, 'Group.name')) ? true : false;
+		if ($isAdmin == true && $isNameProvided == true && $isDryRun == false) {
+			try {
+				$this->__updateGroupName($id, $groupData['Group']['name']);
+			}
+			catch(ValidationException $e) {
+				$this->Group->rollback();
+				$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
+				throw new BadRequestException(__('Validation error'));
+			}
+			catch(Exception $e) {
+				$this->Group->rollback();
+				throw new BadRequestException($e->getMessage());
+			}
+		}
+
+		// Edit GroupUsers if provided.
+		$isGroupUsersProvided = isset($groupData['GroupUsers']) && !empty($groupData['GroupUsers']) ? true : false;
+
+		// Default output.
+		$changes = [
+			'count' => 0,
+			'created' => [],
+			'updated' => [],
+			'deleted' => [],
+		];
+		$dryRunOutput = [];
+
+		if ($isGroupUsersProvided && ($isGroupAdmin || $isAdmin)) {
+
+			// In case of dry-run, calculate the list of secrets that need to be provided.
+			if ($isDryRun) {
+				$dryRunOutput = $this->__getEditDryRunOutput($id, $groupData['GroupUsers']);
+			} else {
+				// If secrets is not provided, define one by default.
+				if (!isset($groupData['Secrets']) || empty($groupData['Secrets'])) {
+					$groupData['Secrets'] = [];
+				}
+				try {
+					$changes = $this->__updateGroupUsers($id, $groupData['GroupUsers'], $groupData['Secrets']);
+				} catch (ValidationException $e) {
+					$this->Group->rollback();
+					$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
+					throw new BadRequestException($e->getMessage());
+				} catch (Exception $e) {
+					$this->Group->rollback();
+					throw new BadRequestException($e->getMessage());
+				}
+			}
+		}
+
+		// Everything ok. Commit transaction.
+		$this->Group->commit();
+
+		// Get group and merge changes with group result.
+		$o = $this->Group->getFindOptions(
+			'Group::view', User::get('Role.name'), ['contain' => ['user'], 'Group.id' => $id]
+		);
+		$group = $this->Group->find('first', $o);
+		$res = array_merge($group, ['changes' => $changes]);
+
+		// In case of dry run, add output.
+		if ($isDryRun) {
+			$res['dry-run'] = $dryRunOutput;
+		}
+
+		// Success response.
+		$this->set('data', $res);
+		$this->Message->success(__("The group has been updated successfully."));
+	}
+
+/**
+ * @param null $id
+ *
+ * @return mixed
+ */
+	public function delete($id = null) {
+		// Check request sanity
+		if (!$this->request->is('delete')) {
+			throw new BadRequestException(__('Invalid request method, should be DELETE.'));
+		}
+		if (!isset($id)) {
+			throw new BadRequestException(__('The group id is missing.'));
+		}
+		if (!Common::isUuid($id)) {
+			throw new BadRequestException(__('The group id is not valid.'));
+		}
+		// Check if the group exists.
+		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
+		$group = $this->Group->find('first', $o);
+		if (!$group) {
+			throw new NotFoundException(__('The group does not exist.'));
+		}
+		// Check that the user is either an administrator, or a group administrator.
+		$isAdmin = (User::get('Role.name') == Role::ADMIN);
+		if (!$isAdmin) {
+			throw new ForbiddenException(__('You are not authorized to perform this operation on this group.'));
+		}
+
+		// Get the list of resources solely owned by the group.
+		$resourcesSolelyOwned = $this->Group->GroupResourcePermission->findSoleOwnerResources($id);
+		$resourceIds = Hash::extract($resourcesSolelyOwned, '{n}.Resource.id');
+		$Resource = Common::getModel('Resource');
+
+		if (count($resourcesSolelyOwned) > 0) {
+			$options = $Resource->getFindOptions(
+				'Resource::view',
+				User::get('Role.name'),
+				[
+					'Resource.id' => $resourceIds,
+					'contain' => [
+						'Creator' => 0,
+						'Modifier' => 0,
+						'Secret' => 0,
+						'Favorite' => 0
+					]
+				]
+			);
+			// Unload permissionable to be able to retrieve the list of resources even
+			// without direct access to it.
+			$Resource->Behaviors->unload('Permissionable');
+			$resources = $Resource->find('all', $options);
+			$this->set('error', ['invalidFields' => $resources]);
+			throw new BadRequestException(__('The group is sole owner of some passwords. Transfer the ownership before deleting.'));
+		}
+
+		// In case of dry-run, list the resources that will not be accessible anymore, and return them.
+		$isDryRun = $this->__isDryRun();
+		if ($isDryRun) {
+			// Get the list of resources shared with the group.
+			$this->Group->GroupResourcePermission->Resource->Behaviors->unload('Permissionable');
+			$resourcesShared = $this->Group->GroupResourcePermission->findAuthorizedResources($id);
+			$resourceIds = Hash::extract($resourcesShared, '{n}.Resource.id');
+			$options = $Resource->getFindOptions(
+				'Resource::view',
+				User::get('Role.name'),
+				[
+					'Resource.id' => $resourceIds,
+					'contain' => [
+						'Creator' => 0,
+						'Modifier' => 0,
+						'Secret' => 0,
+						'Favorite' => 0
+					]
+				]
+			);
+			$Resource->Behaviors->unload('Permissionable');
+			$resources = $Resource->find('all', $options);
+			// Success response.
+			$this->set('data', $resources);
+			return $this->Message->success(__("The group can be deleted."));
+		}
+
+		// Everything alright. We can delete.
+		try {
+			$this->Group->softDelete($id);
+		} catch(Exception $e) {
+			throw new InternalErrorException(__('Could not delete group.'));
+		}
+
+		return $this->Message->success(__("The group has been deleted."));
+	}
+
+/**
  * Update a group name.
  *
- * @param $groupId
- * @param $name
+ * @param $groupId string uuid
+ * @param $name string group name
+ * @throws ValidationException if the group name could not be validated
+ * @throws InternalErrorException if the group could not be saved
  * @return mixed
- * @throws Exception
- * @throws ValidationException
  */
 	private function __updateGroupName($groupId, $name) {
 		// Validate data
@@ -282,14 +396,14 @@ class GroupsController extends AppController {
 		$this->Group->set($data);
 		$validates = $this->Group->validates(['fieldList' => ['name']]);
 		if (!$validates) {
-			throw new ValidationException(__('The group name could not be validated'), $this->Group->validationErrors);
+			throw new ValidationException(__('The group name could not be validated.'), $this->Group->validationErrors);
 		}
 
 		// Get the fields for the edit operation and save
 		$fields = $this->Group->getFindFields('Group::edit', User::get('Role.name'));
 		$groupSaved = $this->Group->save($data, false, $fields['fields']);
 		if (!$groupSaved) {
-			throw new InternalErrorException(__('Could not save group'));
+			throw new InternalErrorException(__('Could not save group.'));
 		}
 
 		return $groupSaved;
@@ -413,222 +527,6 @@ class GroupsController extends AppController {
  * @return bool
  */
 	private function __isDryRun() {
-		if (in_array('dry-run', $this->params['pass'])) {
-			return true;
-		}
-		return false;
-	}
-
-/**
- * Edit entry point.
- *
- * Edit a Group and its GroupUsers.
- *
- * @param null $id
- * @return mixed
- */
-	public function edit($id = null) {
-		// Check request sanity
-		if (!isset($id)) {
-			throw new BadRequestException(__('The group id is missing.'));
-		}
-		if (!Common::isUuid($id)) {
-			throw new BadRequestException(__('The group id is invalid.'));
-		}
-		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
-		$group = $this->Group->find('first', $o);
-		if (!$group) {
-			throw new BadRequestException(__('The group does not exist.'));
-		}
-
-		// Only admin users or group managers can update groups.
-		// Get role for current group.
-		$groupUser = $this->Group->GroupUser->find('first', [
-			'conditions' => [
-				'user_id' => User::get('id'),
-				'group_id' => $id,
-			]
-		]);
-
-		$isGroupAdmin = !empty($groupUser) && $groupUser['GroupUser']['is_admin'] == 1;
-		$isAdmin = User::get('Role.name') == Role::ADMIN;
-
-		// Check that the user is either an administrator, or a group administrator.
-		if (!$isAdmin && !$isGroupAdmin) {
-			throw new ForbiddenException(__('You are not authorized to access to this group.'));
-		}
-
-		$isDryRun = $this->__isDryRun();
-		$this->Group->begin();
-
-		// If name if provided, and user is an admin, process name change.
-		$groupData = $this->request->data;
-		$isNameProvided = !empty(Hash::extract($groupData, 'Group.name')) ? true : false;
-		if ($isAdmin == true && $isNameProvided == true && $isDryRun == false) {
-			try {
-				$this->__updateGroupName($id, $groupData['Group']['name']);
-			}
-			catch(ValidationException $e) {
-				$this->Group->rollback();
-				$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
-				throw new BadRequestException(__('Validation error'));
-			}
-			catch(Exception $e) {
-				$this->Group->rollback();
-				throw new BadRequestException($e->getMessage());
-			}
-		}
-
-		// Edit GroupUsers if provided.
-		$isGroupUsersProvided = isset($groupData['GroupUsers']) && !empty($groupData['GroupUsers']) ? true : false;
-
-		// Default output.
-		$changes = [
-			'count' => 0,
-			'created' => [],
-			'updated' => [],
-			'deleted' => [],
-		];
-		$dryRunOutput = [];
-
-		if ($isGroupUsersProvided && ($isGroupAdmin || $isAdmin)) {
-
-			// In case of dry-run, calculate the list of secrets that need to be provided.
-			if ($isDryRun) {
-				$dryRunOutput = $this->__getEditDryRunOutput($id, $groupData['GroupUsers']);
-			} else {
-				// If secrets is not provided, define one by default.
-				if (!isset($groupData['Secrets']) || empty($groupData['Secrets'])) {
-					$groupData['Secrets'] = [];
-				}
-
-				try {
-					$changes = $this->__updateGroupUsers($id, $groupData['GroupUsers'], $groupData['Secrets']);
-				} catch (ValidationException $e) {
-					$this->Group->rollback();
-					$this->set('error', ['invalidFields' => $e->getInvalidFields()]);
-					throw new BadRequestException($e->getMessage());
-				} catch (Exception $e) {
-					$this->Group->rollback();
-					throw new BadRequestException($e->getMessage());
-				}
-			}
-		}
-
-		// Everything ok. Commit transaction.
-		$this->Group->commit();
-
-		// Get group and merge changes with group result.
-		$o = $this->Group->getFindOptions(
-			'Group::view', User::get('Role.name'), ['contain' => ['user'], 'Group.id' => $id]
-		);
-		$group = $this->Group->find('first', $o);
-		$res = array_merge($group, ['changes' => $changes]);
-
-		// In case of dry run, add output.
-		if ($isDryRun) {
-			$res['dry-run'] = $dryRunOutput;
-		}
-
-		// Success response.
-		$this->set('data', $res);
-		$this->Message->success(__("The group has been updated successfully."));
-	}
-
-
-	/**
-	 * @param null $id
-	 *
-	 * @return mixed
-	 */
-	public function delete($id = null) {
-		// Check if the id is provided
-		if (!isset($id)) {
-			return $this->Message->error(__('The group id is missing'), ['code' => 400]);
-		}
-
-		// Check if the id is valid
-		if (!Common::isUuid($id)) {
-			return $this->Message->error(__('The group id is invalid'), ['code' => 400]);
-		}
-
-		// Check if the group exists.
-		$o = $this->Group->getFindOptions('Group::view', User::get('Role.name'), ['Group.id' => $id]);
-		$group = $this->Group->find('first', $o);
-		if (!$group) {
-			return $this->Message->error(__('The group does not exist'), ['code' => 404]);
-		}
-
-		$isAdmin = User::get('Role.name') == Role::ADMIN;
-
-		// Check that the user is either an administrator, or a group administrator.
-		if (!$isAdmin) {
-			return $this->Message->error(__('You are not authorized to perform this operation on this group'), ['code' => '401']);
-		}
-
-		$isDryRun = $this->__isDryRun();
-
-		// Get the list of resources solely owned by the group.
-		$resourcesSolelyOwned = $this->Group->GroupResourcePermission->findSoleOwnerResources($id);
-		$resourceIds = Hash::extract($resourcesSolelyOwned, '{n}.Resource.id');
-
-		$Resource = Common::getModel('Resource');
-
-		if (count($resourcesSolelyOwned) > 0) {
-			$options = $Resource->getFindOptions(
-				'Resource::view',
-				User::get('Role.name'),
-				[
-					'Resource.id' => $resourceIds,
-					'contain' => [
-						'Creator' => 0,
-						'Modifier' => 0,
-						'Secret' => 0,
-						'Favorite' => 0
-					]
-				]
-			);
-			// Unload permissionable to be able to retrieve the list of resources even
-			// without direct access to it.
-			$Resource->Behaviors->unload('Permissionable');
-			$resources = $Resource->find('all', $options);
-			return $this->Message->error(__('The group is sole owner of some passwords. Transfer the ownership before deleting.'), ['code' => 400, 'body' => $resources]);
-		}
-
-		// In case of dry-run, list the resources that will not be accessible anymore, and return them.
-		if ($isDryRun) {
-			// Get the list of resources shared with the group.
-			$this->Group->GroupResourcePermission->Resource->Behaviors->unload('Permissionable');
-			$resourcesShared = $this->Group->GroupResourcePermission->findAuthorizedResources($id);
-			$resourceIds = Hash::extract($resourcesShared, '{n}.Resource.id');
-			$options = $Resource->getFindOptions(
-				'Resource::view',
-				User::get('Role.name'),
-				[
-					'Resource.id' => $resourceIds,
-					'contain' => [
-						'Creator' => 0,
-						'Modifier' => 0,
-						'Secret' => 0,
-						'Favorite' => 0
-					]
-				]
-			);
-			$Resource->Behaviors->unload('Permissionable');
-			$resources = $Resource->find('all', $options);
-			// Success response.
-			$this->set('data', $resources);
-			return $this->Message->success(__("The group can be deleted."));
-		}
-
-		// Everything alright. We can delete.
-		try {
-			$this->Group->softDelete($id);
-		}
-		catch(Exception $e) {
-			return $this->Message->error(__('Could not delete group'));
-		}
-
-		return $this->Message->success(__("The group has been deleted."));
+		return (in_array('dry-run', $this->params['pass']));
 	}
 }

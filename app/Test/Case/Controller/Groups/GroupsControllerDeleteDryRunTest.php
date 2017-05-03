@@ -1,6 +1,6 @@
 <?php
 /**
- * Groups Controller Delete Tests
+ * Groups Controller Delete Dry Run Tests
  *
  * @copyright (c) 2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
@@ -17,7 +17,7 @@ App::uses('CakeSessionFixture', 'Test/Fixture');
 /**
  * Class GroupsControllerTest
  */
-class GroupsControllerDeleteTest extends ControllerTestCase {
+class GroupsControllerDeleteDryRunTest extends ControllerTestCase {
 
 	// Fixtures to be used.
 	public $fixtures = array(
@@ -69,54 +69,53 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 	}
 
 	/**
-	 * Test deleting the group without being logged in.
+	 * Test deleting dry-run the group without being logged in.
 	 *
 	 * Expect a Forbidden exception
 	 */
-	public function testDeleteNotLoggedIn() {
+	public function testDeleteDryRunNotLoggedIn() {
 		// We expect an exception.
 		$this->setExpectedException('ForbiddenException', 'You need to login to access this location');
 		// test with anonymous user, and expect a forbidden exception.
-		$this->testAction('/groups.json', array('return' => 'contents', 'method' => 'DELETE'), true);
+		$this->testAction('/groups/dry-run.json', array('return' => 'contents', 'method' => 'DELETE'), true);
 	}
 
 	/**
-	 * Test deleting with bad uuid.
+	 * Test deleting dry-run with bad uuid.
 	 *
 	 * Expect a Forbidden exception
 	 */
-	public function testDeleteBadId() {
+	public function testDeleteDryRunBadId() {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		// We expect an exception.
-		$this->setExpectedException('BadRequestException', 'The group id is invalid');
+		$this->setExpectedException('BadRequestException', 'The group id is not valid.');
 		// test with anonymous user, and expect a forbidden exception.
-		$this->testAction('/groups/aaa.json', array('return' => 'contents', 'method' => 'DELETE'), true);
+		$this->testAction('/groups/aaa/dry-run.json', array('return' => 'contents', 'method' => 'DELETE'), true);
 	}
 
 
 	/**
-	 * Test deleting a group while not being an administrator.
+	 * Test deleting dry-run a group while not being an administrator.
 	 */
-	public function testDeleteNotAdmin() {
+	public function testDeleteDryRunNotAdmin() {
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
 
 		// the user to update
 		$id = Common::uuid('group.id.developer');
-
-		$this->setExpectedException('UnauthorizedException', 'You are not authorized to perform this operation on this group');
+		$this->setExpectedException('ForbiddenException', 'You are not authorized to perform this operation on this group.');
 		$this->testAction(
-			"/groups/$id.json",
+			"/groups/$id/dry-run.json",
 			array('method' => 'DELETE', 'return' => 'contents')
 		);
 	}
 
 /**
- * Test deleting a group who is the sole owner of a resource, and test that an exception is thrown.
+ * Test deleting dry-run a group who is the sole owner of a resource, and test that an exception is thrown.
  */
-	public function testDeleteGroupIsSoleOwnerException() {
+	public function testDeleteDryRunGroupIsSoleOwnerException() {
 		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
@@ -125,9 +124,9 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 
 		// Add a permission that sets the group as the sole owner of a resource.
 		// Save a resource.
-		$this->Resource->create();
 		// Unload permissionable behavior, so it will not create an additional permission while saving.
 		$this->Resource->Behaviors->unload('Permissionable');
+		$this->Resource->create();
 		$resource = $this->Resource->save([
 			'name' => 'resource-test'
 		]);
@@ -142,10 +141,9 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 			'type' => PermissionType::OWNER
 		]);
 
-
 		$this->setExpectedException('Exception', 'The group is sole owner of some passwords. Transfer the ownership before deleting.');
 		$res = $this->testAction(
-			"/groups/$groupId.json",
+			"/groups/$groupId/dry-run.json",
 			[
 				'method' => 'DELETE',
 				'return' => 'contents'
@@ -154,24 +152,18 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 	}
 
 /**
- * Test delete  in a normal scenario.
- *
- * Assert that the group is soft deleted.
- * Assert that the linked models have their corresponding data deleted.
+ * Test delete dry-run in a normal scenario.
  */
-	public function testDeleteNormal() {
+	public function testDeleteDryRunNormal() {
 		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
 		// Group to edit.
 		$groupId = Common::uuid('group.id.developer');
 
-		$group = $this->Group->findById($groupId);
-		$this->assertNotEmpty($group);
-
 		// test action.
 		$res = $this->testAction(
-			"/groups/$groupId.json",
+			"/groups/$groupId/dry-run.json",
 			[
 				'method' => 'DELETE',
 				'return' => 'contents'
@@ -180,16 +172,7 @@ class GroupsControllerDeleteTest extends ControllerTestCase {
 		$res = json_decode($res, true);
 
 		$this->assertEquals($res['header']['status'], Status::SUCCESS);
-		$this->assertEmpty($res['body']);
-
-		// Assert that the group is deleted in db.
-		$group = $this->Group->findById($groupId);
-		$this->assertTrue($group['Group']['deleted']);
-
-		$permsAfterDelete = $this->Group->GroupResourcePermission->find('all', ['conditions' => ['aro_foreign_key' => $groupId]]);
-		$groupUsersAfterDelete = $this->Group->GroupUser->find('all', ['conditions' => ['group_id' => $groupId]]);
-		$this->assertEmpty($permsAfterDelete);
-		$this->assertEmpty($groupUsersAfterDelete);
+		$this->assertEquals(count($res['body']), 12);
 	}
 
 }

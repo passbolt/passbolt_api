@@ -60,7 +60,6 @@ hcciUFw5
 =TcQF
 -----END PGP MESSAGE-----';
 
-
 /**
  * Setup.
  */
@@ -83,7 +82,6 @@ hcciUFw5
 		// Make sure there is no session active after each test
 		$this->User->setInactive();
 	}
-
 
 /**
  * Test editing the group without being logged in.
@@ -319,7 +317,6 @@ hcciUFw5
 		$this->assertEmpty($json['body']['changes']['created']);
 		$this->assertEmpty($json['body']['changes']['updated']);
 		$this->assertNotEmpty($json['body']['changes']['deleted']);
-
 
 		// Make sure the change is applied in db.
 		$groupUser = $this->Group->GroupUser->find(

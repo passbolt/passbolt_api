@@ -76,7 +76,7 @@ class GroupsControllerViewTest extends ControllerTestCase {
 	public function testViewGroupDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
 		// test when a wrong id is provided
-		$this->setExpectedException('HttpException', 'The group does not exist');
+		$this->setExpectedException('HttpException', 'The group does not exist.');
 		$this->testAction("/groups/{$id}.json", array('method' => 'get','return' => 'contents'));
 	}
 
@@ -87,7 +87,7 @@ class GroupsControllerViewTest extends ControllerTestCase {
 		$this->Group->softDelete($id);
 
 		// View the group
-		$this->setExpectedException('HttpException', 'The group does not exist');
+		$this->setExpectedException('HttpException', 'The group does not exist.');
 		$this->testAction("/groups/$id.json", array('return' => 'contents', 'method' => 'get'));
 	}
 
