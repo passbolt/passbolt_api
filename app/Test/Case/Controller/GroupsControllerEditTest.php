@@ -248,7 +248,7 @@ hcciUFw5
  * Assert that no changes are done.
  * The admin is not allowed to change the group users unless he is a group manager himself.
  */
-	public function testUpdateGroupUsersAsAdmin() {
+	public function testUpdateAddGroupUsersAsAdmin() {
 		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
@@ -279,6 +279,112 @@ hcciUFw5
 		$this->assertEmpty($json['body']['changes']['updated']);
 		$this->assertEmpty($json['body']['changes']['created']);
 		$this->assertEmpty($json['body']['changes']['deleted']);
+	}
+
+/**
+ * Test updating a group and delete group users as an admin.
+ *
+ * Assert that the changes are taken into account.
+ */
+	public function testUpdateDeleteGroupUsersAsAdmin() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// Group to edit.
+		$groupId = Common::uuid('group.id.freelancer');
+
+		// User Id to delete as group admin.
+		$userId = Common::uuid('user.id.marlyn');
+
+		// Find GroupUser to assert that the user is a group member.
+		$groupUser = $this->Group->GroupUser->find(
+			'first', ['conditions' => [ 'group_id' => $groupId, 'user_id' => $userId, ]]
+		);
+
+		// Assert that Marlyn is a group member.
+		$this->assertNotEmpty($groupUser, 'Marlyn should be part of the user groups at this stage');
+
+		// Data to send in the query.
+		$data = [
+			'GroupUsers' => [
+				[
+					'GroupUser' => [
+						'id' => $groupUser['GroupUser']['id'],
+						'delete' => '1'
+					]
+				]
+			],
+		];
+
+		$res = $this->testAction( "/groups/$groupId.json", [ 'method' => 'put', 'data' => $data, 'return' => 'contents' ]);
+		$json = json_decode($res, true);
+
+		$this->assertEquals($json['body']['changes']['count'], 1);
+		$this->assertEmpty($json['body']['changes']['created']);
+		$this->assertEmpty($json['body']['changes']['updated']);
+		$this->assertNotEmpty($json['body']['changes']['deleted']);
+
+
+		// Make sure the change is applied in db.
+		$groupUser = $this->Group->GroupUser->find(
+			'first',  ['conditions' => [ 'group_id' => $groupId, 'user_id' => $userId, ]]
+		);
+
+		// Assert that Marlyn is not an admin already.
+		$this->assertEmpty($groupUser, 'Marlyn should not be a group member anymore at this stage');
+	}
+
+/**
+ * Test updating a group and update group users as an admin.
+ *
+ * Assert that the changes are taken into account.
+ */
+	public function testUpdateUpdateGroupUsersAsAdmin() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// Group to edit.
+		$groupId = Common::uuid('group.id.freelancer');
+
+		// User Id to update as group admin.
+		$userId = Common::uuid('user.id.marlyn');
+
+		// Find GroupUser to assert that the user is a group member.
+		$groupUser = $this->Group->GroupUser->find(
+			'first', ['conditions' => [ 'group_id' => $groupId, 'user_id' => $userId, ]]
+		);
+
+		// Assert that Marlyn is a group member.
+		$this->assertNotEmpty($groupUser, 'Marlyn should be part of the user groups at this stage');
+
+		// Data to send in the query.
+		$data = [
+			'GroupUsers' => [
+				[
+					'GroupUser' => [
+						'id' => $groupUser['GroupUser']['id'],
+						'is_admin' => '1'
+					]
+				]
+			],
+		];
+
+		$res = $this->testAction( "/groups/$groupId.json", [ 'method' => 'put', 'data' => $data, 'return' => 'contents' ]);
+		$json = json_decode($res, true);
+
+		$this->assertEquals($json['body']['changes']['count'], 1);
+		$this->assertEmpty($json['body']['changes']['created']);
+		$this->assertNotEmpty($json['body']['changes']['updated']);
+		$this->assertEmpty($json['body']['changes']['deleted']);
+
+
+		// Make sure the change is applied in db.
+		$groupUser = $this->Group->GroupUser->find(
+			'first',  ['conditions' => [ 'group_id' => $groupId, 'user_id' => $userId, ]]
+		);
+
+		// Assert that Marlyn is now an admin.
+		$this->assertTrue($groupUser['GroupUser']['is_admin'], 'Marlyn should be an admin at this stage');
 	}
 
 /**

@@ -353,12 +353,28 @@ class GroupsController extends AppController {
 		}
 
 		$changes = $this->Group->GroupUser->prepareBulkUpdate($groupId, $groupUsers);
-		foreach ($changes['create'] as $create) {
-			if(!isset($userSecrets[$create['GroupUser']['user_id']])) {
-				$userSecrets[$create['GroupUser']['user_id']] = [];
+
+		// Only group managers can add users into groups.
+		// Get role for current group.
+		$groupUser = $this->Group->GroupUser->find('first', [
+			'conditions' => [
+				'user_id' => User::get('id'),
+				'group_id' => $groupId,
+			]
+		]);
+
+		$isGroupAdmin = !empty($groupUser) && $groupUser['GroupUser']['is_admin'] == 1;
+
+		// Add new users can only be done by the group admin, not by the admin (unless he is a group admin).
+		// TODO: need to implement the admin being able to request a user to be added.
+		if ($isGroupAdmin) {
+			foreach ($changes['create'] as $create) {
+				if(!isset($userSecrets[$create['GroupUser']['user_id']])) {
+					$userSecrets[$create['GroupUser']['user_id']] = [];
+				}
+				$res['created'][] = $this->Group->GroupUser->createGroupUser($create, $userSecrets[$create['GroupUser']['user_id']]);
+				$res['count']++;
 			}
-			$res['created'][] = $this->Group->GroupUser->createGroupUser($create, $userSecrets[$create['GroupUser']['user_id']]);
-			$res['count']++;
 		}
 		foreach ($changes['update'] as $update) {
 			$res['updated'][] = $this->Group->GroupUser->updateGroupUser($update);
@@ -511,7 +527,7 @@ class GroupsController extends AppController {
 		];
 		$dryRunOutput = [];
 
-		if ($isGroupUsersProvided && $isGroupAdmin) {
+		if ($isGroupUsersProvided && ($isGroupAdmin || $isAdmin)) {
 
 			// In case of dry-run, calculate the list of secrets that need to be provided.
 			if ($isDryRun) {
