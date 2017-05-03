@@ -195,6 +195,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         this._super();
     },
 
+    /**
+     * Open EditGroupDialog.
+     * @param group
+     */
     openEditGroupDialog: function(group) {
         // get the dialog
         var dialog = new mad.component.Dialog(null, {
@@ -211,6 +215,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         });
     },
 
+    /**
+     * Delete a group.
+     * @param group
+     */
     deleteGroup: function(group) {
         // First do a dry run to determine whether the group can be deleted.
         group.deleteDryRun(group.id)
@@ -283,29 +291,30 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
 
-    /**
-     * Observe when group is selected
-     * @param {HTMLElement} el The element the event occurred on
-     * @param {HTMLEvent} ev The event which occurred
-     * @param {passbolt.model.Group} group The selected group
-     */
-    '{mad.bus.element} group_selected': function (el, ev, group) {
-        // reset the selected resources
-        this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
-        // Set the new filter
-        this.options.filter.attr({
-            foreignModels: {
-                Group: new can.List([group])
-            },
-            type: passbolt.model.Filter.FOREIGN_MODEL
-        });
-        // propagate a special event on bus
-        mad.bus.trigger('filter_users_browser', this.options.filter);
-
-        // Add the group to the list of selected groups.
-        this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
-        this.options.selectedGroups.push(group);
-    },
+    // /**
+    //  * Observe when group is selected
+    //  * @param {HTMLElement} el The element the event occurred on
+    //  * @param {HTMLEvent} ev The event which occurred
+    //  * @param {passbolt.model.Group} group The selected group
+    //  */
+    // '{mad.bus.element} group_selected': function (el, ev, group) {
+    //     console.log('group_selected');
+    //     // reset the selected resources
+    //     this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+    //     // Set the new filter
+    //     this.options.filter.attr({
+    //         foreignModels: {
+    //             Group: new can.List([group])
+    //         },
+    //         type: passbolt.model.Filter.FOREIGN_MODEL
+    //     });
+    //     // propagate a special event on bus
+    //     mad.bus.trigger('filter_users_browser', this.options.filter);
+    //
+    //     // Add the group to the list of selected groups.
+    //     this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
+    //     this.options.selectedGroups.push(group);
+    // },
 
     /**
      * When a new filter is applied to the workspace.
