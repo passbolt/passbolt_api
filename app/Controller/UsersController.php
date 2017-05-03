@@ -134,7 +134,7 @@ class UsersController extends AppController {
 		$params = $this->QueryString->get($allowedQueryItems);
 
 		// Find the users.
-		$o = $this->User->getFindOptions('User::index', Role::USER, $params);
+		$o = $this->User->getFindOptions('User::index', User::get('Role.name'), $params);
 		$users = $this->User->find('all', $o);
 
 		$this->set('data', $users);
