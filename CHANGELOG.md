@@ -2,17 +2,42 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.5.0-RC1]
+### Added
+-	PASSBOLT-1950 As a user I can see which groups a password is shared with from the sidebar
+-	PASSBOLT-1953 As a user I can share a password with a group
+-	PASSBOLT-1940 As a user when editing a password for a group, the secret should be encrypted for all the members
+-	PASSBOLT-1639 As a user editing a password description in the right sidebar should not get duplicated items in shared with section
+-	PASSBOLT-1938 As a user I can browse the list of groups in the groups section of the user workspace
+-	PASSBOLT-2000 As a user I can see which users are part of a given group from the sidebar and the users section
+-	PASSBOLT-1960 As a user I can see the list users that are part of the group in the users grid by using the group filter
+-	PASSBOLT-1838 As a group manager I can edit the membership roles
+-	PASSBOLT-1838 As a group manager I can add a user to a group
+-	PASSBOLT-1838 As a group manager, I can remove a user from a group using the edit group dialog
+-	PASSBOLT-1969 As a group manager I can edit a group from the contextual menu and from the groups sidebar
+-	PASSBOLT-1969 As a group manager I can see which users are part of a given group from the group edit dialog
+-	PASSBOLT-2000 As a group manager I can see which users are part of a given group from the sidebar and the users section
+-	PASSBOLT-2006 As an administrator I can delete a group from the group contextual menu
+-	PASSBOLT-1969 As an administrator I can edit a group
+-	PASSBOLT-1838 As an administrator I can delete and update group users
+-	PASSBOLT-2006 As an administrator I can delete a group
+-	PASSBOLT-1955 As an administrator I can create a group using the new button in the users workspace
+-	PASSBOLT-1939 As an administrator the healthcheck should be accessible in command line
+-	PASSBOLT-1943 As an administrator the healthcheck should tell if not using a proper domain name as base url
+-	PASSBOLT-1943 As an administrator the healthcheck should tell if SSL certificate is invalid
+-	PASSBOLT-1885 As an administrator the healthcheck should tell if the full base url is not reachable
+-	PASSBOLT-1838 Add v1.5.0 migration script
+-	PASSBOLT-1881 Add support for groups in the permission system
+-	PASSBOLT-1952 Add support for groups in the fixtures
+-	PASSBOLT-1928 Deploy styleguide with groups support
+	
 ### Fixed
-- PASSBOLT-1950: As a user I can see which groups a password is shared with from the sidebar
-- PASSBOLT-1953: As a user I can share a password with a group
-- PASSBOLT-1943: As an admin the healthcheck should tell if not using a proper domain name as base url
-- PASSBOLT-1943: As an admin should tell if SSL certificate is invalid
-- PASSBOLT-1885: As an admin the healthcheck should tell if the full base url is not reachable
-- PASSBOLT-1939: As an admin the healthcheck should be accessible in command line
-- PASSBOLT-1614: Abstract user/password grid functions into the mad grid library
-- PASSBOLT-1571: Refactor filter: naming conventions and component implementation
-- PASSBOLT-1960: As a user I can see the list users that are part of the group in the users grid by using the group filter
+-	PASSBOLT-1614 Abstract user/password grid functions into the mad framework grid library
+-	PASSBOLT-1571 API query string filters: better naming conventions and implementation
+-	PASSBOLT-1915 Remove legacy references related to old user passwords
+-	PASSBOLT-1761 Remove legacy references to throttle login
+-	PASSBOLT-1268 Remove legacy dictionary controller
+-	PASSBOLT-1268 Use exceptions instead of message component errors and misc refactoring
 
 ## [1.4.0] - 2017-02-07
 ### Fixed

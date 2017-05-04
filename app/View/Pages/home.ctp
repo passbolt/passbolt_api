@@ -28,7 +28,6 @@
 		app : {
 			name: "<?php echo Configure::read('App.name'); ?>",
 			description: "<?php echo Configure::read('App.punchline'); ?>",
-			copyright: "<?php echo Configure::read('App.copyright'); ?>",
 			title: "<?php echo Configure::read('App.title'); ?>",
 			version: {
 				number: "<?php echo Configure::read('App.version.number'); ?>",
