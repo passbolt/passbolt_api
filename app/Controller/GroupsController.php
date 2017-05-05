@@ -219,7 +219,8 @@ class GroupsController extends AppController {
 
 		// If name if provided, and user is an admin, process name change.
 		$groupData = $this->request->data;
-		$isNameProvided = !empty(Hash::extract($groupData, 'Group.name')) ? true : false;
+		$groupName = Hash::extract($groupData, 'Group.name');
+		$isNameProvided = !empty($groupName) ? true : false;
 		if ($isAdmin == true && $isNameProvided == true && $isDryRun == false) {
 			try {
 				$this->__updateGroupName($id, $groupData['Group']['name']);

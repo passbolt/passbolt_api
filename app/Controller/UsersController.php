@@ -439,7 +439,8 @@ class UsersController extends AppController {
 		if (!isset($data['AuthenticationToken']) || !isset($data['AuthenticationToken']['token'])) {
 			throw new BadRequestException(__('No authentication token was provided.'));
 		}
-		if (empty($Auth->findFirstByToken($data['AuthenticationToken']['token']))) {
+		$token = $Auth->findFirstByToken($data['AuthenticationToken']['token']);
+		if (empty($token)) {
 			throw new BadRequestException(__('The authentication token is not valid.'));
 		}
 		if (!$Auth->isNotExpired($data['AuthenticationToken']['token'])) {
