@@ -10,16 +10,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1639: As a user editing a password description in the right sidebar should not get duplicated items in shared with section
 - PASSBOLT-1938: As a user I can browse the list of groups in the groups section of the user workspace
 - PASSBOLT-2000: As a user I can see which users are part of a given group from the sidebar and the users section
-- PASSBOLT-1960: As a user I can see the list users that are part of the group in the users grid by using the group filter
+- PASSBOLT-1960: As a user I can see the list of users that are part of the group in the users grid by using the group filter
 - PASSBOLT-1838: As a group manager I can edit the membership roles
 - PASSBOLT-1838: As a group manager I can add a user to a group
-- PASSBOLT-1838: As a group manager, I can remove a user from a group using the edit group dialog
+- PASSBOLT-1838: As a group manager I can remove a user from a group using the edit group dialog
 - PASSBOLT-1969: As a group manager I can edit a group from the contextual menu and from the groups sidebar
 - PASSBOLT-1969: As a group manager I can see which users are part of a given group from the group edit dialog
 - PASSBOLT-2000: As a group manager I can see which users are part of a given group from the sidebar and the users section
 - PASSBOLT-2006: As an administrator I can delete a group from the group contextual menu
 - PASSBOLT-1969: As an administrator I can edit a group
-- PASSBOLT-1838: As an administrator I can delete and update group users
 - PASSBOLT-2006: As an administrator I can delete a group
 - PASSBOLT-1955: As an administrator I can create a group using the new button in the users workspace
 - PASSBOLT-1939: As an administrator the healthcheck should be accessible in command line
