@@ -381,6 +381,9 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             self.addGroupUser(groupUser);
         });
 
+        // Mark the component as ready.
+        // If the component rendering is slower than the time the plugin makes to retrieve the group.
+        this.options.state = 'ready';
         this.setState('ready');
     },
 
