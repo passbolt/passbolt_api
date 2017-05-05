@@ -98,6 +98,7 @@ before_script:
         'login' => 'root',
         'password' => '',
         'persistent' => false,
+        'prefix' => '',
       );
       public \$test = array(
         'datasource' => 'Database/Mysql',
@@ -106,6 +107,7 @@ before_script:
         'login' => 'root',
         'password' => '',
         'persistent' => false,
+        'prefix' => '',
       );
     }" > app/Config/database.php
   - cp app/Config/core.php.default app/Config/core.php
