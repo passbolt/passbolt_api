@@ -8,7 +8,7 @@
 App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 App::uses('PermissionType', 'Model');
- App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
 
 class PermissionnableTest extends CakeTestCase {
 

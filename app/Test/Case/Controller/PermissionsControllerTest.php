@@ -3,9 +3,7 @@
  * Permissions Controller Tests
  *
  * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.PermissionsController
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @since        version 2.12.12
  */
 App::uses('AppController', 'Controller');
 App::uses('PermissionsController', 'Controller');
@@ -16,6 +14,7 @@ App::uses('Resource', 'Model');
 App::uses('UserResourcePermission', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
+App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
 
 class PermissionsControllerTest extends ControllerTestCase {
 
@@ -68,34 +67,34 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testViewAcoPermissionsNotExistingModel() {
 		$model = 'NotExistingModel';
 		$id = Common::uuid('user.id.user');
-		$this->setExpectedException('HttpException', "The model {$model} is not permissionable");
+		$this->setExpectedException('BadRequestException', "The model {$model} is not permissionable");
 		$this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewAcoPermissionsNotPermissionableModel() {
 		$model = 'User';
 		$id = Common::uuid('user.id.user');
-		$this->setExpectedException('HttpException', "The model {$model} is not permissionable");
+		$this->setExpectedException('BadRequestException', "The model {$model} is not permissionable.");
 		$this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewAcoPermissionsModelIdIsMissing() {
 		$model = 'Resource';
-		$this->setExpectedException('HttpException', "The {$model} id is missing");
+		$this->setExpectedException('BadRequestException', "The id is missing for model {$model}.");
 		$this->testAction("/permissions/viewAcoPermissions/$model.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewAcoPermissionsModelIdIsInvalid() {
 		$model = 'Resource';
 		$id = 'badId';
-		$this->setExpectedException('HttpException', "The {$model} id is invalid");
+		$this->setExpectedException('BadRequestException', "The id is not valid for model {$model}.");
 		$this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
 	public function testViewAcoPermissionsModelInstanceDoesNotExist() {
 		$model = 'Resource';
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', "The {$model} does not exist");
+		$this->setExpectedException('HttpException', "The model {$model} does not exist.");
 		$this->testAction("/permissions/viewAcoPermissions/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
@@ -104,7 +103,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$expectedUsersPermissions = array();
 		$expectedGroupsPermissions = array();
 
-		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/users_resources_permissions.csv';
+		$matrixPath = CakePlugin::path('DataSeleniumTests') . '/Data/users_resources_permissions.csv';
 		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $userPermissions) {
 			// Retrieve the direct users permissions defined for the resource
@@ -116,7 +115,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 			}
 		}
 
-		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
+		$matrixPath = CakePlugin::path('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
 		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $groupPermissions) {
 			// Retrieve the direct users permissions defined for the resource
@@ -160,7 +159,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testAddAcoPermissionsNotExistingModel() {
 		$model = 'notExistingModel';
 		$id = Common::uuid('user.id.user');
-		$this->setExpectedException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
+		$this->setExpectedException('BadRequestException', "The model " . ucfirst($model) . " is not permissionable");
 		// go through the addAcoPermissions because of routes
 		$this->testAction("/permissions/addAcoPermissions/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
@@ -168,14 +167,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testAddAcoPermissionsNotPermissionableModel() {
 		$model = 'user';
 		$id = Common::uuid('user.id.user');
-		$this->setExpectedException('HttpException', "The model " . ucfirst($model) . " is not permissionable");
+		$this->setExpectedException('BadRequestException', "The model " . ucfirst($model) . " is not permissionable");
 		// go through the addAcoPermissions because of routes
 		$this->testAction("/permissions/addAcoPermissions/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
 	public function testAddAcoPermissionsModelIdIsMissing() {
 		$model = 'resource';
-		$this->setExpectedException('HttpException', "The " . ucfirst($model) . " id is missing");
+		$this->setExpectedException('BadRequestException','The id is missing for model Resource.');
 		// go through the addAcoPermissions because of routes
 		$this->testAction("/permissions/addAcoPermissions/$model.json", array('method' => 'post', 'return' => 'contents'));
 	}
@@ -183,14 +182,14 @@ class PermissionsControllerTest extends ControllerTestCase {
 	public function testAddAcoPermissionsModelIdIsInvalid() {
 		$model = 'resource';
 		$id = 'badId';
-		$this->setExpectedException('HttpException', "The " . ucfirst($model) . " id is invalid");
+		$this->setExpectedException('BadRequestException', 'The id is not valid for model Resource.');
 		$this->testAction("/permissions/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
 	public function testAddAcoPermissionsModelInstanceDoesNotExist() {
 		$model = 'resource';
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', "Your are not allowed to add a permission to the Resource");
+		$this->setExpectedException('ForbiddenException', "Your are not allowed to add a permission to the Resource");
 		$this->testAction("/permissions/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
@@ -267,7 +266,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/permissions/$model/$rsId.json : The test should return a success but is returning {$srvResult['header']['status']}");
 
 
-		$this->setExpectedException('HttpException', "A direct permission already exists");
+		$this->setExpectedException('BadRequestException', "A direct permission already exists");
 		// try to insert a second time the same permission should return an error
 		$this->testAction("/permissions/$model/$rsId.json", array(
 			 'method' => 'post',
@@ -281,20 +280,20 @@ class PermissionsControllerTest extends ControllerTestCase {
  ******************************************************/
 
 	public function testEditPermissionIdIsMissing() {
-		$this->setExpectedException('HttpException', "The permission id is missing");
+		$this->setExpectedException('BadRequestException', "The permission id is missing");
 		// go through the addAcoPermissions because of routes
 		$this->testAction("/permissions.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditPermissionIdIsInvalid() {
 		$id = 'badId';
-		$this->setExpectedException('HttpException', "The permission id is invalid");
+		$this->setExpectedException('BadRequestException', 'The permission id is not valid.');
 		$this->testAction("/permissions/$id.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
 	public function testEditPermissionDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', "The permission does not exist");
+		$this->setExpectedException('NotFoundException', "The permission does not exist");
 		$this->testAction("/permissions/$id.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
@@ -305,7 +304,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$id = Common::uuid('permission.id.' . Common::uuid('resource.id.debian') . '-' . Common::uuid('user.id.ada'));
 
 		// Expect not allowed exception
-		$this->setExpectedException('HttpException', "You are not allowed to edit this permission");
+		$this->setExpectedException('ForbiddenException', "You are not allowed to edit this permission");
 
 		// Log as not allowed user
 		$user = $this->User->findById(Common::uuid('user.id.carol'));
@@ -364,20 +363,20 @@ class PermissionsControllerTest extends ControllerTestCase {
  ******************************************************/
 
 	public function testDeletePermissionIdIsMissing() {
-		$this->setExpectedException('HttpException', "The permission id is missing");
+		$this->setExpectedException('BadRequestException', "The permission id is missing");
 		// go through the addAcoPermissions because of routes
 		$this->testAction("/permissions.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeletePermissionIdIsInvalid() {
 		$id = 'badId';
-		$this->setExpectedException('HttpException', "The permission id is invalid");
+		$this->setExpectedException('BadRequestException', 'The permission id is not valid.');
 		$this->testAction("/permissions/$id.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
 	public function testDeletePermissionDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', "The permission does not exist");
+		$this->setExpectedException('NotFoundException', "The permission does not exist");
 		$this->testAction("/permissions/$id.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
@@ -388,7 +387,7 @@ class PermissionsControllerTest extends ControllerTestCase {
 		$id = Common::uuid('permission.id.' . Common::uuid('resource.id.debian') . '-' . Common::uuid('user.id.ada'));
 
 		// Expect not allowed exception
-		$this->setExpectedException('HttpException', "You are not allowed to delete this permission");
+		$this->setExpectedException('ForbiddenException', "You are not allowed to delete this permission");
 
 		// log as not allowed user
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
