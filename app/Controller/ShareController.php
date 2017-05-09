@@ -572,14 +572,32 @@ class ShareController extends AppController {
 
 		// Extract request parameters.
 		$allowedQueryItems = ['filter' => ['keywords']];
-		$data = $this->QueryString->get($allowedQueryItems);
+		$findUserData = $findGroupData = $this->QueryString->get($allowedQueryItems);
 
-		// Find all the users and all the groups who can receive a direct permission.
-		$data['Permission.aco_foreign_key'] = $id;
-		$data['Permission.aco'] = $model;
-		$findUsersOptions = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+		// Retrieve the users and groups who already have a direct permission for the resource and exclude them from the
+		$findPermissionsData = [
+			'Permission' => [
+				'aco' => $model,
+				'aco_foreign_key' => $id
+			]
+		];
+		$findPermissionsOptions = $this->Permission->getFindOptions('viewByAco', User::get('Role.name'), $findPermissionsData);
+		$permissions = $this->Permission->find('all', $findPermissionsOptions);
+
+		// Exclude users who have already a permission from the find users request.
+		$alreadySharedWithUsersIds = Hash::extract($permissions, '{n}.Permission[aro=User].aro_foreign_key');
+		$findUserData['exclude-users'] = $alreadySharedWithUsersIds;
+
+		// Exclude groups who have already a permission from the find groups request.
+		$alreadySharedWithGroupsIds = Hash::extract($permissions, '{n}.Permission[aro=Group].aro_foreign_key');
+		$findGroupData['exclude-groups'] = $alreadySharedWithGroupsIds;
+
+		// Find users.
+		$findUsersOptions = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $findUserData);
 		$users = $this->Permission->User->find('all', $findUsersOptions);
-		$findGroupsOptions = $this->Permission->Group->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+
+		// Find groups.
+		$findGroupsOptions = $this->Permission->Group->getFindOptions('Group::index', User::get('Role.name'), $findGroupData);
 		$groups = $this->Permission->Group->find('all', $findGroupsOptions);
 
 		// Count the number of users for each group.

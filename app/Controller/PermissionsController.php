@@ -169,7 +169,7 @@ class PermissionsController extends AppController {
 	}
 
 /**
- * View applied permissions on an instance
+ * View permissions applied to an aco
  *
  * @param string $acoModelName the model of the target aco model instance
  * @param string $acoInstanceId the uuid of the target aco model instance

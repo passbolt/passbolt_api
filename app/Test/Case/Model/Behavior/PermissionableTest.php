@@ -119,6 +119,11 @@ class PermissionnableTest extends CakeTestCase {
 		}
 	}
 
+	public function testFindAuthorizedUserInvalidAcoInstanceId() {
+		$this->setExpectedException('InvalidArgumentException', 'The acoInstanceId is invalid');
+		$this->Resource->findAuthorizedUsers('wrong-uuid');
+	}
+
 	public function testFindAuthorizedUser() {
 		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
 		$matrix = PermissionMatrix::importCsv($matrixPath);

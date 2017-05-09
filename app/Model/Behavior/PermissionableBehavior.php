@@ -213,6 +213,11 @@ class PermissionableBehavior extends ModelBehavior {
 			$acoInstanceId = $this->id;
 		}
 
+		// acoInstanceId has to be a valid uuid.
+		if (!Common::isUuid($acoInstanceId)) {
+			throw new InvalidArgumentException('The acoInstanceId is invalid');
+		}
+
 		// If no find options given, return all users.
 		if (empty($findOptions)) {
 			$findOptions = $model->User->getFindOptions('User::index', User::get('Role.name'));

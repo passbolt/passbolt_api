@@ -727,4 +727,125 @@ hcciUFw5
 		$this->assertTrue(count($secrets) == 0);
 	}
 
+/**
+ * Test the function findUsersIdsMemberOfGroups()
+ * Retrieve all the users who are member of a multiple groups
+ */
+	public function testFindUsersIdsMemberOfGroups() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// If no groups given, it should return an empty array.
+		$groupsIds = [];
+		$usersIds = $this->GroupUser->findUsersIdsMemberOfGroups($groupsIds);
+		$this->assertEmpty($usersIds);
+
+		// A user member of one group should be returned when looking for the group he is member of
+		$groupsIds = [Common::uuid('group.id.board')];
+		$usersIds = $this->GroupUser->findUsersIdsMemberOfGroups($groupsIds);
+		$this->assertCount(1, $usersIds);
+		$this->assertContains(Common::uuid('user.id.hedy'), $usersIds);
+
+		// A user member of multiple groups should be returned when looking for a group he is member of
+		$groupsIds = [Common::uuid('group.id.developer')];
+		$usersIds = $this->GroupUser->findUsersIdsMemberOfGroups($groupsIds);
+		$this->assertCount(1, $usersIds);
+		$this->assertContains(Common::uuid('user.id.irene'), $usersIds);
+
+		// A user member of multiple groups should be returned when looking for multiple groups he is member of
+		$groupsIds = [Common::uuid('group.id.developer'), Common::uuid('group.id.ergonom')];
+		$usersIds = $this->GroupUser->findUsersIdsMemberOfGroups($groupsIds);
+		$this->assertCount(1, $usersIds);
+		$this->assertContains(Common::uuid('user.id.irene'), $usersIds);
+
+		// Multiple members of multiple groups should be returned when looking for multiple groups they are member of
+		// Remove wang from one of the requested groups to ensure the function return well users that are members of both groups.
+		$this->GroupUser->deleteAll([
+			'group_id' => Common::uuid('group.id.it_support'),
+			'user_id' => Common::uuid('user.id.wang')
+		]);
+		$groupsIds = [Common::uuid('group.id.human_resource'), Common::uuid('group.id.it_support')];
+		$usersIds = $this->GroupUser->findUsersIdsMemberOfGroups($groupsIds);
+		$this->assertCount(3, $usersIds);
+		$this->assertContains(Common::uuid('user.id.ping'), $usersIds);
+		$this->assertContains(Common::uuid('user.id.thelma'), $usersIds);
+		$this->assertContains(Common::uuid('user.id.ursula'), $usersIds);
+		$this->assertNotContains(Common::uuid('user.id.wang'), $usersIds);
+	}
+
+/**
+ * Test the function findGroupsIdsHavingMembers()
+ * Retrieve all the groups having all the members
+ */
+	public function testFindGroupsIdsHavingMembers() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// If no users given, it should return an empty array.
+		$usersIds = [];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingMembers($usersIds);
+		$this->assertEmpty($groupsIds);
+
+		// A group having one member should be returned when looking for one of its members
+		$usersIds = [Common::uuid('user.id.hedy')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingMembers($usersIds);
+		$this->assertCount(1, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.board'), $groupsIds);
+
+		// A group having multiple members should be returned when looking for several of them
+		$usersIds = [Common::uuid('user.id.frances'), Common::uuid('user.id.grace')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingMembers($usersIds);
+		$this->assertCount(1, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.accounting'), $groupsIds);
+
+		// Multiple groups having the same member should be returned when looking for it
+		$usersIds = [Common::uuid('user.id.irene')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingMembers($usersIds);
+		$this->assertCount(3, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.creative'), $groupsIds);
+		$this->assertContains(Common::uuid('group.id.developer'), $groupsIds);
+		$this->assertContains(Common::uuid('group.id.ergonom'), $groupsIds);
+
+		// Multiple groups having the same requested members should be returned when looking for them
+		$usersIds = [Common::uuid('user.id.ping'), Common::uuid('user.id.thelma')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingMembers($usersIds);
+		$this->assertCount(2, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.human_resource'), $groupsIds);
+		$this->assertContains(Common::uuid('group.id.it_support'), $groupsIds);
+	}
+
+
+	/**
+	 * Test the function findGroupsIdsHavingManagers()
+	 * Retrieve all the groups having all the managers
+	 */
+	public function testFindGroupsIdsHavingManagers() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// If no users given, it should return an empty array.
+		$usersIds = [];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingManagers($usersIds);
+		$this->assertEmpty($groupsIds);
+
+		// A group having one member should be returned when looking for one of its manager
+		$usersIds = [Common::uuid('user.id.frances')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingManagers($usersIds);
+		$this->assertCount(1, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.accounting'), $groupsIds);
+
+		// A group having multiple managers should be returned when looking for several of them
+		$usersIds = [Common::uuid('user.id.ping'), Common::uuid('user.id.thelma')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingManagers($usersIds);
+		$this->assertCount(1, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.human_resource'), $groupsIds);
+
+		// Multiple groups having the same manager should be returned when looking for it
+		$usersIds = [Common::uuid('user.id.irene')];
+		$groupsIds = $this->GroupUser->findGroupsIdsHavingManagers($usersIds);
+		$this->assertCount(3, $groupsIds);
+		$this->assertContains(Common::uuid('group.id.creative'), $groupsIds);
+		$this->assertContains(Common::uuid('group.id.developer'), $groupsIds);
+		$this->assertContains(Common::uuid('group.id.ergonom'), $groupsIds);
+	}
 }
