@@ -207,7 +207,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         }).start();
 
         // Attach the component to the dialog.
-        var groupEdit = dialog.add(passbolt.component.GroupEdit, {
+        dialog.add(passbolt.component.GroupEdit, {
             id: 'js_edit_group',
             data: {
                 Group: group
