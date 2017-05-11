@@ -165,13 +165,7 @@ class SeleniumTestsController extends AppController {
  */
 	public function error404($case = 'message') {
 		$this->request->invalidateFields = 'stuffs';
-		switch ($case) {
-			case 'exception':
-				throw new NotFoundException();
-			default:
-				$this->Message->error('404 test not found', ['code' => 404]);
-				return;
-		}
+		throw new NotFoundException();
 	}
 
 /**

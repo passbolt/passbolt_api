@@ -126,10 +126,6 @@ class CakeErrorControllerTest extends ControllerTestCase {
         $this->setExpectedException('HttpException', '404 test not found');
         $this->testAction('/seleniumTests/error404.json', array('return' => 'contents', 'method' => 'GET'), true);
     }
-    public function test404Json2() {
-        $this->setExpectedException('HttpException', 'Not Found');
-        $this->testAction('/seleniumTests/error404/exception.json', array('return' => 'contents', 'method' => 'GET'), true);
-    }
 
     /**
      * Check 404 on public page
@@ -137,10 +133,6 @@ class CakeErrorControllerTest extends ControllerTestCase {
     public function test404Page() {
         $this->setExpectedException('HttpException', '404 test not found');
         $this->testAction('/seleniumTests/error404', array('return' => 'contents', 'method' => 'GET'), true);
-    }
-    public function test404Page2() {
-        $this->setExpectedException('HttpException', 'Not Found');
-        $this->testAction('/seleniumTests/error404/exception', array('return' => 'contents', 'method' => 'GET'), true);
     }
 
     /**
