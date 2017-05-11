@@ -2,10 +2,9 @@
 /**
  * Share Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.ShareController
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ * 				  2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @since        version 2.12.12
  */
 App::uses('AppController', 'Controller');
 App::uses('PermissionsController', 'Controller');
@@ -82,7 +81,7 @@ class ShareControllerSimulateTest extends ControllerTestCase {
 	}
 
 	public function testSimulateWrongIdProvided() {
-		$this->setExpectedException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The aco id is invalid');
 
 		$userId = Common::uuid('user.id.user');
 		$data = array(

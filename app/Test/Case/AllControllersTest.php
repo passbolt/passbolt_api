@@ -12,9 +12,11 @@ class AllControllersTest extends CakeTestSuite {
 		$suite = new CakeTestSuite('All controllers tests');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Groups');
-		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Users');
-		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Share');
+		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Permissions');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Resources');
+		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Users');
+		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Setup');
+		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Share');
 		return $suite;
 	}
 }

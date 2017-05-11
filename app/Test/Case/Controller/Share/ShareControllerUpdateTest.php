@@ -2,10 +2,9 @@
 /**
  * Share Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.ShareController
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ * 				  2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @since        version 2.12.12
  */
 App::uses('AppController', 'Controller');
 App::uses('PermissionsController', 'Controller');
@@ -17,7 +16,7 @@ App::uses('UserResourcePermission', 'Model');;
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
 
-class ShareControllerTest extends ControllerTestCase {
+class ShareControllerUpdateTest extends ControllerTestCase {
 
 	public $fixtures = array(
 		'app.resource',
@@ -74,22 +73,18 @@ class ShareControllerTest extends ControllerTestCase {
 		return $res;
 	}
 
-/******************************************************
- * UPDATE TESTS
- ******************************************************/
-
 	public function testUpdateAcoNotValid() {
 		$this->setExpectedException('HttpException', 'The call to entry point with parameter User is not allowed');
 		$this->_updateCall('User', Common::uuid('resource.id.debian'), array());
 	}
 
 	public function testUpdateNoPermissions() {
-		$this->setExpectedException('HttpException', 'No permissions were provided');
+		$this->setExpectedException('HttpException', 'No permission data provided.');
 		$this->_updateCall('Resource', Common::uuid('resource.id.debian'), array());
 	}
 
 	public function testUpdateWrongIdProvided() {
-		$this->setExpectedException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The aco id is not valid');
 		$data = array(
 			'Permissions' => array(
 				array('Permission' => array())
@@ -99,7 +94,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateFakeIdProvided() {
-		$this->setExpectedException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('HttpException', 'The aco id is not valid');
 		$data = array(
 			'Permissions' => array(
 				array('Permission' => array())
@@ -109,7 +104,7 @@ class ShareControllerTest extends ControllerTestCase {
 	}
 
 	public function testUpdateNoPermissionsProvided() {
-		$this->setExpectedException('HttpException', 'No permissions were provided');
+		$this->setExpectedException('HttpException', 'No permission data provided');
 		$data = array(
 			'Permissions' => array(
 
@@ -232,7 +227,7 @@ class ShareControllerTest extends ControllerTestCase {
 				)
 			),
 		);
-		$this->setExpectedException('HttpException', 'The number of secrets provided doesn\'t match the 1 users who have now access to the resources');
+		$this->setExpectedException('HttpException', 'The number of secrets provided does not match the 1 users who have now access to the resources');
 		$this->_updateCall('Resource', $acoInstanceId, $data);
 	}
 
@@ -402,7 +397,7 @@ hcciUFw5
 
 		$this->assertTrue(
 			!empty($exist),
-			"Adding a permission should have actually added the permission, but the permission doesn't exist."
+			"Adding a permission should have actually added the permission, but the permission does not exist."
 		);
 	}
 
@@ -534,7 +529,7 @@ hcciUFw5
 				),
 			),
 		);
-		$this->setExpectedException('HttpException', "The ARO instance $userId for the model User doesn't exist or the user is not allowed to access it");
+		$this->setExpectedException('HttpException', "The ARO instance $userId for the model User does not exist or the user is not allowed to access it");
 		$this->_updateCall('Resource', $rsId, $data);
 	}
 

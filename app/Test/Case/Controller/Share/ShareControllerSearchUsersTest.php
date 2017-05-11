@@ -2,10 +2,9 @@
 /**
  * Share Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.ShareController
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ * 				  2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @since        version 2.12.12
  */
 App::uses('AppController', 'Controller');
 App::uses('PermissionsController', 'Controller');
@@ -66,34 +65,47 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->User->setInactive();
 	}
 
+/**
+ * Test fails if aco id is missing
+ */
 	public function testSearchUsersMissingId() {
-		$this->setExpectedException('HttpException', "The resource id is missing");
+		$this->setExpectedException('BadRequestException', "The aco id is missing");
 		// go through the addAcoPermissions because of routes
 		$this->testAction("/share/searchUsers/resource/", array('method' => 'get', 'return' => 'contents'));
 	}
 
+/**
+ * Test fails if aco id is not valid uuid
+ */
 	public function testSearchUsersInvalidId() {
 		$id = 'badId';
-		$this->setExpectedException('HttpException', "The resource id is invalid");
+		$this->setExpectedException('BadRequestException', "The aco id is not valid");
 		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
+/**
+ * Test fails if aco id does not exist
+ */
 	public function testSearchUsersDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', "The resource does not exist");
+		$this->setExpectedException('NotFoundException', "The aco id does not exist for model resource.");
 		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
+/**
+ * Test fails if user does not have right to share this item
+ */
 	public function testSearchUsersNotAuthorized() {
 		$id = Common::uuid('resource.id.debian');
 		$user = $this->User->findById(Common::uuid('user.id.ada'));
 		$this->User->setActive($user);
-
-		$this->setExpectedException('HttpException', "You are not authorized to share this resource");
+		$this->setExpectedException('ForbiddenException', "You are not authorized to share this.");
 		$this->testAction("/share/search-users/resource/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
-	// Test exclude already granted users
+/**
+ * Test exclude already granted users
+ */
 	public function testSearchUsersExcludeAlreadyGrantedUsers() {
 		$id = Common::uuid('resource.id.debian');
 		$getOptions = array(
@@ -107,7 +119,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertFalse(in_array(Common::uuid('group.id.board'), $groupsIds));
 	}
 
-	// Test filter users by keywords
+/**
+ * Test filter users by keywords (first name, last name and emails)
+ */
 	public function testSearchUsersFilterUsersByKeywords() {
 		$id = Common::uuid('resource.id.debian');
 		$getOptions = array('method' => 'get', 'return' => 'contents');
@@ -131,7 +145,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
-	// Test filter users by legacy keywords
+/**
+ * Test filter users by keywords (legacy)
+ */
 	public function testSearchUsersFilterUsersByLegacyKeywords() {
 		$id = Common::uuid('resource.id.debian');
 		$getOptions = array('method' => 'get', 'return' => 'contents');
@@ -155,7 +171,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertTrue(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
-	// Test filter groups by keywords
+/**
+ * Test filter groups by keywords
+ */
 	public function testSearchUsersFilterGroupsByKeywords() {
 		$id = Common::uuid('resource.id.fsfe');
 		$getOptions = array(
@@ -170,7 +188,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertTrue(in_array(Common::uuid('group.id.marketing'), $groupsIds));
 	}
 
-	// Test shouldn't return inactive users.
+/**
+ * Test search shouldn't return inactive users.
+ */
 	public function testSearchUsersExcludeNonActive() {
 		$this->User->id = Common::uuid('user.id.carol');
 		$fields = $this->User->getFindFields('User::edit', User::get('Role.name'));
@@ -189,7 +209,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertFalse(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
 
-	// Test shouldn't return deleted groups.
+/**
+ * Test search should not return deleted groups.
+ */
 	public function testSearchUsersExcludeDeletedGroups() {
 		$this->Group->id = Common::uuid('group.id.marketing');
 		$this->Group->save(['deleted' => 1], false);
@@ -207,7 +229,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertFalse(in_array(Common::uuid('group.id.marketing'), $groupsIds));
 	}
 
-	// Test, as admin, it shouldn't return deleted groups.
+/**
+ * Test search as admin I also should not see deleted groups.
+ */
 	public function testAdminSearchUsersExcludeDeletedGroups() {
 		$userD = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->id = $userD['User']['id'];
@@ -229,7 +253,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertFalse(in_array(Common::uuid('group.id.marketing'), $groupsIds));
 	}
 
-	// Test filter by keywords shouldn't return inactive users.
+/**
+ * Test filter by keywords should not return inactive users.
+ */
 	public function testSearchUsersByKeywordsExcludeNonActiveUsers() {
 		$this->User->id = Common::uuid('user.id.edith');
 		$this->User->save(['active' => 0], false, ['active']);
@@ -251,7 +277,9 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		$this->assertFalse(in_array(Common::uuid('user.id.edith'), $usersIds));
 	}
 
-	// Test, as admin, it shouldn't return inactive users.
+/**
+ * Test search as admin, it shouldn't return inactive users.
+ */
 	public function testAdminSearchUsersExcludeNonActiveUsers() {
 		$userD = $this->User->findById(Common::uuid('user.id.dame'));
 		$this->User->id = $userD['User']['id'];
@@ -273,5 +301,4 @@ class ShareControllerSearchUsersTest extends ControllerTestCase {
 		// The user shouldn't be in the list of returned users.
 		$this->assertFalse(in_array(Common::uuid('user.id.carol'), $usersIds));
 	}
-
 }

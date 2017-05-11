@@ -27,7 +27,7 @@ class PermissionsController extends AppController {
 
 		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
-			throw new BadRequestException(__('The model %s is not permissionable.', $acoModelName));
+			throw new BadRequestException(__('The model %s does not support permissions.', $acoModelName));
 		}
 		// no aco instance id given
 		if (is_null($acoInstanceId)) {
@@ -154,7 +154,7 @@ class PermissionsController extends AppController {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET'));
 		}
 		if (!$this->Permission->isValidAco($acoModelName)) {
-			throw new BadRequestException(__('The model %s is not permissionable.', $acoModelName));
+			throw new BadRequestException(__('The model %s does not support permissions.', $acoModelName));
 		}
 		if (is_null($acoInstanceId)) {
 			throw new BadRequestException(__('The id is missing for model %s.', $acoModelName));
