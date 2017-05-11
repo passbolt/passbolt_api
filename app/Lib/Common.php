@@ -81,4 +81,22 @@ class Common extends CakeObject {
  		$baseUrl = explode('?', $url);
 		return (preg_match('/(.json){1,}$/', $baseUrl[0]) === 1);
  	}
+
+/**
+ * Normalize string to boolean if it looks like one
+ * 'TRUE', 'True', 'true', '1' becomes true
+ * 'FALSE', 'False', 'false', '0' becomes false
+ *
+ * @param string $str the string to normalize
+ * @return boolean|string if original string is not bool
+ */
+ 	public static function normalizeIfBoolean($str) {
+		if((strtolower($str) === 'true' || $str === '1')) {
+			return true;
+		} elseif ((strtolower($str) === 'false' || $str === '0')) {
+			return false;
+		} else {
+			return $str;
+		}
+ 	}
 }

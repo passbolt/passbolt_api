@@ -7,9 +7,76 @@
  */
 App::uses('Component', 'Controller');
 App::uses('QueryStringComponent', 'Controller/Component');
+App::uses('ComponentCollection', 'Controller');
+App::uses('Controller', 'Controller');
 
 // Test Class
 class QueryStringComponentTest extends CakeTestCase {
+
+/**
+ * Main check
+ */
+	public function testGetSuccess() {
+		$componentCollection = new ComponentCollection();
+		$controller = new Controller();
+		$controller->request = new stdClass();
+		$controller->request->query = [
+			'filter' => [
+				'has-managers' => 'cf3d0099-e814-4413-ac8c-45a84917372d',
+				'is-favorited' => 'true'
+			],
+			'order' => ['User.name DESC', 'Group.name'],
+			'contain' => ['group' => 'true'],
+			'modified_after' => '1272509157' // legacy item
+		];
+		$allowedQueryItems = [
+			'filter' => ['has-managers', 'modified-after'],
+			'contain' => ['group', 'user'],
+			'order' => ['Group.name', 'User.name']
+		];
+		$expectedQuery = [
+			'filter' => [
+				'has-managers' => [
+					0 => 'cf3d0099-e814-4413-ac8c-45a84917372d'
+				],
+				'modified-after' => '1272509157'
+			],
+			'order' => [
+				0 => 'User.name DESC',
+				1 => 'Group.name'
+			],
+			'contain' => [
+				'group' => true
+			]
+		];
+		$queryString = new QueryStringComponent($componentCollection);
+		$queryString->initialize($controller);
+		$sanitizedQuery = $queryString->get($allowedQueryItems);
+		$this->assertTrue(($sanitizedQuery === $expectedQuery));
+	}
+
+/**
+ * REWRITE Legacy Rules
+ */
+/**
+ * modified_after should be filter[modified-after]
+ */
+	public function testRewriteModified() {
+		$query['modified_after'] = strtotime('now');
+		$results = QueryStringComponent::rewriteLegacyItems($query);
+		$this->assertNotEmpty($results['filter']['modified-after']);
+		$this->assertTrue(!isset($results['modified_after']));
+	}
+
+/**
+ * Keywords should be treated as filter[keywords]
+ */
+	public function testRewriteKeywords() {
+		$query['keywords'] = 'something';
+		$results = QueryStringComponent::rewriteLegacyItems($query);
+		$this->assertNotEmpty($results['filter']['keywords']);
+		$this->assertTrue(!isset($results['keywords']));
+	}
 
 /**
  * FILTER QUERY STRING VALIDATION TESTS
@@ -75,7 +142,7 @@ class QueryStringComponentTest extends CakeTestCase {
  */
 	public function testContainsValidationMultipleFails () {
 		$contain = [
-			'group' => '1',
+			'group' => true,
 			'user' => 'javascript:alert("ok")'
 		];
 		$this->setExpectedException('ValidationException', sprintf('"%s" is not a valid contain value.', $contain['user']));
@@ -87,7 +154,7 @@ class QueryStringComponentTest extends CakeTestCase {
  */
 	public function testContainsOrderSuccess() {
 		$contain = [
-			'user' => '1'
+			'user' => true
 		];
 		$this->assertTrue(QueryStringComponent::validateContain($contain));
 	}
@@ -97,8 +164,8 @@ class QueryStringComponentTest extends CakeTestCase {
  */
 	public function testContainsValidationMultipleSuccess () {
 		$contain = [
-			'user' => '1',
-			'group' => '0'
+			'user' => true,
+			'group' => false
 		];
 		$this->assertTrue(QueryStringComponent::validateContain($contain));
 	}
@@ -121,8 +188,9 @@ class QueryStringComponentTest extends CakeTestCase {
 		$order = [
 			0 => 'javascript:alert("ok")'
 		];
+		$allowed = ['order' => ['User.name']];
 		$this->setExpectedException('ValidationException', sprintf('"%s" is not a valid order', $order[0]));
-		QueryStringComponent::validateOrders($order);
+		QueryStringComponent::validateOrders($order, $allowed);
 	}
 
 /**
@@ -133,8 +201,9 @@ class QueryStringComponentTest extends CakeTestCase {
 			'User.modified_by ASC',
 			'Group DESC',
 		];
+		$allowed = ['order' => ['User.modified_by']];
 		$this->setExpectedException('ValidationException', sprintf('Group DESC" is not a valid order'));
-		QueryStringComponent::validateOrders($order);
+		QueryStringComponent::validateOrders($order, $allowed);
 	}
 
 /**
@@ -144,7 +213,8 @@ class QueryStringComponentTest extends CakeTestCase {
 		$order = [
 			0 => 'Group.name ASC'
 		];
-		$this->assertTrue(QueryStringComponent::validateOrders($order));
+		$allowed = ['order' => ['Group.name']];
+		$this->assertTrue(QueryStringComponent::validateOrders($order, $allowed));
 	}
 
 /**
@@ -155,7 +225,8 @@ class QueryStringComponentTest extends CakeTestCase {
  			'User.modified_by ASC',
  			'Group.name DESC',
 		];
-		$this->assertTrue(QueryStringComponent::validateOrders($order));
+		$allowed = ['order' => ['Group.name', 'User.modified_by']];
+		$this->assertTrue(QueryStringComponent::validateOrders($order, $allowed));
  	}
 
 /**
@@ -163,7 +234,7 @@ class QueryStringComponentTest extends CakeTestCase {
  */
 	public function testOrderValidationEmptySuccess () {
 		$order = [];
-		$this->assertTrue(QueryStringComponent::validateOrders($order));
+		$this->assertTrue(QueryStringComponent::validateOrders($order, []));
 	}
 
 /**
@@ -174,9 +245,6 @@ class QueryStringComponentTest extends CakeTestCase {
 			'',
 			'b',
 			'b.c AU',
-			'User.modified_by',
-			'Group.name',
-			'Group.name',
 			'Group.name JUNK',
 		];
 		foreach ($orders as $order) {
@@ -189,6 +257,7 @@ class QueryStringComponentTest extends CakeTestCase {
  */
 	public function testOrderValidationRegexSuccess () {
 		$orders = [
+			'Group.name',
 			'User.modified_by ASC',
 		];
 		foreach ($orders as $order) {

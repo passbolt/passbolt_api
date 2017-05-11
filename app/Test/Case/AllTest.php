@@ -17,6 +17,7 @@ class AllTest extends CakeTestSuite {
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Groups');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Users');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Share');
+		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Controller' . DS . 'Resources');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Model');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Model' . DS . 'Behavior');
 		$suite->addTestDirectory(TESTS . 'Case' . DS . 'Model' . DS . 'Utility');
