@@ -11,7 +11,7 @@ class QueryStringComponent extends Component {
 /**
  * @const regular expression to validate orders
  */
-	const ORDER_REGEXP = '/^[a-zA-Z]+(\.){1}([a-z_]+){1}( ){1}(ASC|DESC){1}$/';
+	const ORDER_REGEXP = '/^[a-zA-Z]+(\.){1}([a-z_]+){1}(( ){1}(ASC|DESC){1}){0,1}$/';
 
 /**
  * @var Controller $controller convenience reference to the parent controller
@@ -41,7 +41,7 @@ class QueryStringComponent extends Component {
 		$query = self::extractQueryItems($query);
 		$query = self::unsetUnwantedQueryItems($query, $allowedQueryItems);
 		$query = self::normalizeQueryItems($query);
-		self::validateQueryItems($query);
+		self::validateQueryItems($query, $allowedQueryItems);
 		return $query;
 	}
 
@@ -71,6 +71,21 @@ class QueryStringComponent extends Component {
 	 	if(isset($query['order']) && !is_array($query['order'])) {
 			$query['order'] = [$query['order']];
 	 	}
+	 	// filters with is-* means we are expecting a boolean
+		// we accept 'TRUE', 'true', '1' as true and the rest is set to false
+	 	if (isset($query['filter'])) {
+	 		foreach ($query['filter'] as $filterName => $filter) {
+	 			if (substr($filterName, 0, 3) === "is-") {
+					$query['contain'][$filterName] = Common::normalizeIfBoolean($filter);
+				}
+	 		}
+	 	}
+	 	// idem with contain clauses
+		if (isset($query['contain'])) {
+			foreach ($query['contain'] as $containName => $contain) {
+				$query['contain'][$containName] = Common::normalizeIfBoolean($contain);
+			}
+		}
 	 	return $query;
 	 }
 
@@ -86,7 +101,7 @@ class QueryStringComponent extends Component {
 			} else {
 				if(is_array($items)) {
 					foreach($items as $subkey => $subItem) {
-						if (is_string($subkey) && !in_array($subkey,$allowedQueryItems[$key])) {
+						if (is_string($subkey) && !in_array($subkey, $allowedQueryItems[$key])) {
 							unset($query[$key][$subkey]);
 						}
 					}
@@ -128,8 +143,7 @@ class QueryStringComponent extends Component {
  * @throws BadRequestException if a validation error occurs
  * @return bool true if validate
  */
-	static function validateQueryItems($query) {
-
+	static function validateQueryItems($query, $allowedQueryItems) {
 		foreach($query as $key => $parameters) {
 			switch ($key) {
 				case 'filter':
@@ -141,7 +155,7 @@ class QueryStringComponent extends Component {
 					break;
 				case 'order':
 					try {
-						self::validateOrders($parameters);
+						self::validateOrders($parameters, $allowedQueryItems);
 					} catch (ValidationException $e) {
 						throw new BadRequestException(__('Invalid order.') . ' ' . $e->getMessage());
 					}
@@ -185,6 +199,13 @@ class QueryStringComponent extends Component {
 							throw new ValidationException(__('"%s" is not a valid timestamp for filter %s.', $timestamp, $filter));
 						}
 					break;
+					case 'is-favorite':
+					case 'is-owned-by-me':
+					case 'is-shared-with-me':
+						if (!is_bool($values)) {
+							throw new ValidationException(__('"%s" is not a valid value for filter %s.', $values, $filter));
+						}
+					break;
 				}
 			}
 		}
@@ -199,10 +220,14 @@ class QueryStringComponent extends Component {
  * @throws ValidationException if the group name does not validate
  * @return bool true if valid
  */
-	static function validateOrders($orders = null) {
+	static function validateOrders($orders = null, $allowedQueryItems = null) {
 		if (isset($orders)) {
 			foreach ($orders as $i => $orderName) {
 				if (preg_match(self::ORDER_REGEXP, $orderName) !== 1) {
+					throw new ValidationException(__('"%s" is not a valid order.', $orderName));
+				}
+				$order = explode(' ', $orderName); // remove ASC DESC if any
+				if(!in_array($order[0], $allowedQueryItems['order'])) {
 					throw new ValidationException(__('"%s" is not a valid order.', $orderName));
 				}
 			}
@@ -220,7 +245,7 @@ class QueryStringComponent extends Component {
 	static function validateContain($contain = null) {
 		if (isset($contain)) {
 			foreach ($contain as $item => $value) {
-				if ($value !== '1' && $value !== '0') {
+				if (!is_bool($value)) {
 					throw new ValidationException(__('"%s" is not a valid contain value.', $value));
 				}
 			}
