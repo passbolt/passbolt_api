@@ -9,6 +9,7 @@
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('Common', 'Controller/Component');
 App::uses('Role', 'Model');
+App::uses('GroupUser', 'Model');
 App::uses('Security', 'Utility');
 App::uses('CakeEvent', 'Event');
 
@@ -625,18 +626,13 @@ class User extends AppModel {
 							}
 						}
 						if (isset($data['filter']['has-groups'])) {
-							$conditions['joins'][] = array(
-								'table' => 'users',
-								'alias' => 'UserHasGroups',
-								'type' => 'inner',
-								'conditions' => array(
-									'User.id = UserHasGroups.id',
-									"(SELECT COUNT(*) FROM groups_users SubGroupUser
-									  WHERE SubGroupUser.user_id = UserHasGroups.id
-									  AND SubGroupUser.group_id IN ('" . implode("', '", $data['filter']['has-groups']) . "')) = " . count($data['filter']['has-groups'])
-								)
-							);
-							if (!isset($data['contain']) || !in_array('user', $data['contain'])) $data['contain'][] = 'group';
+							$GroupUser = Common::getModel('GroupUser');
+							$usersIds = $GroupUser->findUsersIdsMemberOfGroups($data['filter']['has-groups']);
+							$conditions['conditions']['User.id'] = $usersIds;
+							if (!isset($data['contain']) || !in_array('group', $data['contain'])) $data['contain'][] = 'group';
+						}
+						if (!empty($data['exclude-users'])) {
+							$conditions['conditions']['User.id NOT IN'] = $data['exclude-users'];
 						}
 						break;
 
@@ -644,28 +640,8 @@ class User extends AppModel {
 						// Use conditions already defined for the index case
 						$conditions = User::getFindConditions('User::index', $role, $data);
 
-						// If user is admin, he is also not allowed to see non active users.
-						// Nobody can share a password with a user who has not completed his setup.
-						if ($role == Role::ADMIN) {
-							$conditions['conditions']['User.active'] = 1;
-						}
-
-						// Only return users who don't have a direct permission defined for the given aco instance
-						$conditions['joins'][] = [
-							'table' => 'users',
-							'alias' => 'UserToGrant',
-							'type' => 'inner',
-							'conditions' => [
-								'User.id = UserToGrant.id
-								AND UserToGrant.id NOT IN (
-									SELECT Permission.aro_foreign_key
-									FROM permissions Permission
-									WHERE Permission.aco = "' . $data['Permission.aco'] . '"
-										AND Permission.aco_foreign_key = "' . $data['Permission.aco_foreign_key'] . '"
-										AND Permission.aro_foreign_key = UserToGrant.id
-								)',
-							],
-						];
+						// By default only active users are returned.
+						$conditions['conditions']['User.active'] = 1;
 						break;
 
 					default:

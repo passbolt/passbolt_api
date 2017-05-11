@@ -240,6 +240,64 @@ class GroupUser extends AppModel {
 	}
 
 /**
+ * Find users who are all member of all the given groups.
+ * @param $groupsIds
+ * @return array
+ */
+	public function findUsersIdsMemberOfGroups($groupsIds) {
+		$result = $this->find('all', [
+			'fields' => [
+				'GroupUser.user_id',
+				'COUNT(GroupUser.user_id) as count_rows'
+			],
+			'conditions' => [
+				'GroupUser.group_id' => $groupsIds
+			],
+			'group' => 'GroupUser.user_id HAVING count_rows = ' . count($groupsIds)
+		]);
+		return Hash::extract($result, '{n}.GroupUser.user_id');
+	}
+
+/**
+ * Find groups having all the given members.
+ * @param $usersIds
+ * @return array
+ */
+	public function findGroupsIdsHavingMembers($usersIds) {
+		$result = $this->find('all', [
+			'fields' => [
+				'GroupUser.group_id',
+				'COUNT(GroupUser.group_id) as count_rows'
+			],
+			'conditions' => [
+				'GroupUser.user_id' => $usersIds
+			],
+			'group' => 'GroupUser.group_id HAVING count_rows = ' . count($usersIds)
+		]);
+		return Hash::extract($result, '{n}.GroupUser.group_id');
+	}
+
+/**
+ * Find groups having all the given managers.
+ * @param $usersIds
+ * @return array
+ */
+	public function findGroupsIdsHavingManagers($usersIds) {
+		$result = $this->find('all', [
+			'fields' => [
+				'GroupUser.group_id',
+				'COUNT(GroupUser.group_id) as count_rows'
+			],
+			'conditions' => [
+				'GroupUser.user_id' => $usersIds,
+				'GroupUser.is_admin' => 1
+			],
+			'group' => 'GroupUser.group_id HAVING count_rows = ' . count($usersIds)
+		]);
+		return Hash::extract($result, '{n}.GroupUser.group_id');
+	}
+
+/**
  * Prepare a bulk update operation.
  *
  * Will validate the various operations to be executed, and return an array of the actions to be done.
