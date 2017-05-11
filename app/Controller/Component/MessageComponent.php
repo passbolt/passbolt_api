@@ -54,25 +54,13 @@ class MessageComponent extends Component {
  * @param string $message title (optional)
  * @return void
  */
-	public function success($message = '') {
-		$this->__add(Status::SUCCESS, $message);
-	}
-
-/**
- * Add a message to the queue
- *
- * @param string $level error|notice|warning|success
- * @param string $message title (optional)
- * @access private
- * @return void
- */
-	private function __add($level = Status::ERROR, $message = null) {
+	public function success($message = null) {
 		// The response message
 		$response = [
 			'header' => [],
 			'body' => []
 		];
-		$level = strtolower($level);
+		$level = strtolower(Status::SUCCESS);
 
 		// By default, the title is the controller name.
 		$title = strtolower('app_' . $this->controller->name . '_' . $this->controller->action . '_' . $level);
