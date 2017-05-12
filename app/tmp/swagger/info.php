@@ -7,7 +7,7 @@
  *     host="https://passbolt.dev/",
  *     basePath="/",
  *     @SWG\Info(
- *         version="1.5.0",
+ *         version="1.5.0-RC1",
  *         title="Passbolt JSON API",
  *         description="",
  *         termsOfService="https://www.passbolt.com/terms/",
