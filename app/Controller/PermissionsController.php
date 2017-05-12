@@ -181,8 +181,8 @@ class PermissionsController extends AppController {
 		$returnValue = $this->Permission->find('all', $findOptions);
 
 		// Return data.
-		$this->Message->success();
 		$this->set('data', $returnValue);
+		$this->Message->success();
 	}
 
 /**
@@ -258,8 +258,8 @@ class PermissionsController extends AppController {
 
 		$findOptions = $ModelView->getFindOptions($viewCase, User::get('Role.name'), $findData);
 		$result = $ModelView->find('first', $findOptions);
-		$this->Message->success();
 		$this->set('data', $result);
+		$this->Message->success();
 	}
 
 /**

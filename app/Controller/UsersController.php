@@ -218,8 +218,8 @@ class UsersController extends AppController {
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
-		$this->Message->success(__('The user has been saved successfully.'));
 		$this->set('data', $user);
+		$this->Message->success(__('The user has been saved successfully.'));
 	}
 
 /**
@@ -336,8 +336,8 @@ class UsersController extends AppController {
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
-		$this->Message->success(__("The user has been updated successfully"));
 		$this->set('data', $user);
+		$this->Message->success(__("The user has been updated successfully"));
 	}
 
 /**
@@ -390,8 +390,8 @@ class UsersController extends AppController {
 		$users = $this->User->find('all', $options);
 		$user = reset($users);
 
-		$this->Message->success(__('The avatar has been updated successfully'));
 		$this->set('data', $user);
+		$this->Message->success(__('The avatar has been updated successfully'));
 	}
 
 /**
@@ -555,8 +555,8 @@ class UsersController extends AppController {
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
-		$this->Message->success(__("The user has been updated successfully"));
 		$this->set('data', $user);
+		$this->Message->success(__("The user has been updated successfully"));
 	}
 
 /**

@@ -216,7 +216,7 @@ class SetupController extends AppController {
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
-		$this->Message->success(__("The recovery has been completed successfuly."));
 		$this->set('data', $user);
+		$this->Message->success(__("The recovery has been completed successfuly."));
 	}
 }

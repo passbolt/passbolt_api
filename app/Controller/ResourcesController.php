@@ -244,7 +244,6 @@ class ResourcesController extends AppController {
 		]);
 		$addedResource = $this->Resource->find('first', $addedResourceFindOptions);
 		$this->set('data', $addedResource);
-
 		$this->Message->success(__('The resource was successfully saved.'));
 	}
 

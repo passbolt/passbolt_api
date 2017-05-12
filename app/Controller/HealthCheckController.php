@@ -54,9 +54,9 @@ class HealthCheckController extends AppController {
     public function status() {
         if(!$this->request->is('json')) {
             $this->layout = 'empty';
-        }
+        };
+		$this->set('data', 'OK');
         $this->Message->success(__("OK"));
-        $this->set('data', 'OK');
     }
 
 /**
