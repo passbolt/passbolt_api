@@ -76,7 +76,7 @@ class QueryStringComponent extends Component {
 	 	if (isset($query['filter'])) {
 	 		foreach ($query['filter'] as $filterName => $filter) {
 	 			if (substr($filterName, 0, 3) === "is-") {
-					$query['contain'][$filterName] = Common::normalizeIfBoolean($filter);
+					$query['filter'][$filterName] = Common::normalizeIfBoolean($filter);
 				}
 	 		}
 	 	}
