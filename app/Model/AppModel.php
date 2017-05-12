@@ -5,7 +5,7 @@
  * This file is application-wide model file. You can put all
  * application-wide model-related methods here.
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Model', 'Model');

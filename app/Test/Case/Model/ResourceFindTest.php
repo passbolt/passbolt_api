@@ -2,7 +2,7 @@
 /**
  * Resource Model Test
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @package       app.Test.Case.Model.ResourceTest
  * @since         version 2.12.7
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html

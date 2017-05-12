@@ -2,9 +2,8 @@
 /**
  * AnonymousStatistic Model Test
  *
- * @copyright		(c) 2015-present Bolt Softwares Pvt Ltd
- * @package			app.Test.Case.Model.AnonymousStatisticTest
- * @license			http://www.passbolt.com/license
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AnonymousStatistic', 'Model');
 App::uses('AppTestCase', 'Test');

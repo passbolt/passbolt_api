@@ -2,7 +2,7 @@
 /**
  * SeleniumTests Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @package      app.Test.Case.Controller.SeleniumTestsControllerTest
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @since        version 2.12.12

@@ -2,7 +2,7 @@
 /**
  * App Config task
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Hash', 'Utility');
@@ -75,7 +75,7 @@ class AppConfigTask extends AppShell {
 /**
  * Main application configuration file
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $config = ' . var_export($config, true) . ';';

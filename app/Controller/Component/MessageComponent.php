@@ -5,7 +5,7 @@
  * This class replace cake flash method. It offers options to qualify the end-user messages
  * But more importantly this component is also used to format the JSON API responses
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 app::uses('ControllerLog', 'Model');
