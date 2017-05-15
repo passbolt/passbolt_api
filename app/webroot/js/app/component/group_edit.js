@@ -45,9 +45,8 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
     afterStart: function() {
         this.options.data.Group = this.options.data.Group || {};
         this.group = this.options.data.Group;
-
         this.formState = (this.group.id == undefined ? 'create' : 'edit');
-
+        this.changeList = [];
         // Is the user an admin.
         this.isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin' ? true : false;
         this.isGroupManager = this.formState == 'edit' ? this.group.isGroupManager(passbolt.model.User.getCurrent()) : false;
@@ -134,7 +133,41 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
             this.options.state = 'ready';
         }
 
+        this.showFeedback();
+
         this.on();
+    },
+
+    /**
+     * Show a visual feedback as per the form status.
+     * Feedback can be:
+     * - The group is empty, please add a group manager.
+     * - You need to click save for the changes to take place.
+     * - Only the group manager can add new people to a group
+     */
+    showFeedback: function() {
+        var feedback = [];
+        if (this.formState == 'create' && this.groupUserList.options.items.length == 0) {
+            feedback.push(__('The group is empty, please add a group manager.'));
+        }
+        if (this.formState == 'edit' && !this.isGroupManager) {
+            feedback.push(__('Only the group manager can add new people to a group.'));
+        }
+        // Check if any changes is there.
+        if (this.changeList.length) {
+            feedback.push(__('You need to click save for the changes to take place.'));
+        }
+
+        $('.message.feedback').empty();
+        if (feedback.length) {
+            feedback.forEach(function(fb) {
+                $('.message.feedback').append('<span>' + fb + '</span>');
+            });
+            $('.message.feedback').removeClass('hidden');
+        }
+        else {
+            $('.message.feedback').addClass('hidden');
+        }
     },
 
     /**
@@ -396,6 +429,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
      */
     '{mad.bus.element} passbolt.plugin.group.edit.group_users_updated': function(el, ev, data) {
         var self = this;
+        self.changeList = data.changeList;
         setTimeout(function() {
             self.groupUserList.options.items.each(function(item) {
                 var userId = item.user_id,
@@ -413,6 +447,7 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
                     self.setGroupUserItemState(groupUserId, null);
                 }
             });
+            self.showFeedback();
         }, 0);
     },
 
