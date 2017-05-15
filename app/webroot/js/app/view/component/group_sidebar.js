@@ -17,6 +17,7 @@ var GroupSidebar = passbolt.view.component.GroupSidebar = passbolt.view.componen
      * @param {HTMLEvent} ev The event which occurred
      */
     'a#js_edit_members_button click': function (el, ev) {
+        ev.preventDefault();
         this.element.trigger('request_group_edition');
     }
 

@@ -4,7 +4,8 @@
  * This class serves as a space for convenience functions (mostly static)
  * that need to be globally available within this application.
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -52,8 +53,8 @@ class Common extends CakeObject {
  * @return bool true if str is a UUID
  */
 	public static function isUuid($str) {
-		return is_string($str) && preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/',
-			$str);
+		$uuidRegex = '/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/';
+		return (is_string($str) && preg_match($uuidRegex, $str) === 1);
 	}
 
 /**
@@ -62,4 +63,40 @@ class Common extends CakeObject {
 	public static function isCli() {
 		return (php_sapi_name() === "cli");
 	}
+
+/**
+ * Return true if valid timestamp
+ *
+ * @param string $timestamp unixtimestamp
+ * @return bool true if unix timestamp
+ */
+	public static function isTimestamp($timestamp) {
+		return ((string) (int) $timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
+	}
+
+/**
+ * Return true if valid Json url
+ */
+ 	public static function isJsonUrl($url) {
+ 		$baseUrl = explode('?', $url);
+		return (preg_match('/(.json){1,}$/', $baseUrl[0]) === 1);
+ 	}
+
+/**
+ * Normalize string to boolean if it looks like one
+ * 'TRUE', 'True', 'true', '1' becomes true
+ * 'FALSE', 'False', 'false', '0' becomes false
+ *
+ * @param string $str the string to normalize
+ * @return boolean|string if original string is not bool
+ */
+ 	public static function normalizeIfBoolean($str) {
+		if((strtolower($str) === 'true' || $str === '1')) {
+			return true;
+		} elseif ((strtolower($str) === 'false' || $str === '0')) {
+			return false;
+		} else {
+			return $str;
+		}
+ 	}
 }

@@ -2,13 +2,13 @@
 /**
  * Permissionable Behavior Test
  *
- * @copyright (c) 2016-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2016 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('User', 'Model');
 App::uses('Resource', 'Model');
 App::uses('PermissionType', 'Model');
- App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
 
 class PermissionnableTest extends CakeTestCase {
 
@@ -117,6 +117,11 @@ class PermissionnableTest extends CakeTestCase {
 				);
 			}
 		}
+	}
+
+	public function testFindAuthorizedUserInvalidAcoInstanceId() {
+		$this->setExpectedException('InvalidArgumentException', 'The acoInstanceId is invalid');
+		$this->Resource->findAuthorizedUsers('wrong-uuid');
 	}
 
 	public function testFindAuthorizedUser() {

@@ -2,10 +2,9 @@
 /**
  * Gpgkeys Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.GpgkeysController
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @since        version 2.13.3
  */
 App::uses('AppController', 'Controller');
 App::uses('GpgkeysController', 'Controller');
@@ -13,7 +12,6 @@ App::uses('Gpgkey', 'Model');
 App::uses('User', 'Model');
 
 // Uses sessions
-// App::uses('CakeSession', 'Model/Datasource'); // doesn't work here
 if (!class_exists('CakeSession')) {
 	require CAKE . 'Model/Datasource/CakeSession.php';
 }
@@ -30,9 +28,9 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		'app.controller_log'
 	);
 
-	/**
-	 * Setup.
-	 */
+/**
+ * Setup
+ */
 	public function setUp() {
 		$this->User = ClassRegistry::init('User');
 		$this->Gpgkey = ClassRegistry::init('Gpgkey');
@@ -42,137 +40,119 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 	}
 
-	/**
-	 * Test index.
-	 */
-	public function testIndex() {
-		// Test normal index.
-		$result = json_decode(
-			$this->testAction('/gpgkeys.json',
-				array(
-					'return' => 'contents',
-					'method' => 'GET'
-				),
-				true
-			));
-		$this->assertEquals(
-			$result->header->status,
-			Status::SUCCESS,
-			'/gpgkeys.json return something'
-		);
-
-		// Test deleting everything, and calling index again.
-		$this->Gpgkey->deleteAll(array(
-				'Gpgkey.id <>' => null
-			));
-		$result = json_decode(
-			$this->testAction(
-				'/gpgkeys.json',
-				array(
-					'return' => 'contents',
-					'method' => 'GET'
-				),
-				true
-			));
-		$this->assertEquals(
-			$result->header->status,
-			Status::NOTICE,
-			'/gpgkeys.json return a warning'
-		);
+/**
+ * TEST INDEX
+ */
+/**
+ * Test index success
+ */
+	public function testIndexSuccess() {
+		$result = json_decode($this->testAction('/gpgkeys.json', ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/gpgkeys.json return something');
 	}
 
-	/**
-	 * Test index with the filters.
-	 */
-	public function testIndexFilters() {
+/**
+ * Test index success if no key is set
+ */
+	public function testIndexSuccessEmpty() {
+		$this->Gpgkey->deleteAll(['Gpgkey.id <>' => null]);
+		$result = json_decode($this->testAction('/gpgkeys.json', ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/gpgkeys.json return empty data');
+	}
+
+/**
+ * Test index with the legacy modified filter set in the past
+ */
+	public function testIndexFiltersModifiedLegacyPast() {
 		// Test filter modified_after with a date in the past.
-		$date = strtotime('1980-12-14 00:00:00');
-		$result = json_decode(
-			$this->testAction(
-				"/gpgkeys.json",
-				array(
-					'return' => 'contents',
-					'method' => 'GET',
-					'data' => array(
-						'modified_after' => strval($date)
-					)
-				),
-				true
-			));
-
-		$this->assertEquals(
-			$result->header->status,
-			Status::SUCCESS,
-			'Gpgkeys Controller should return something when modified after is in the past'
-		);
-
-		// Test filter modified_after with a date in the future.
-		$date = strtotime('2020-12-14 00:00:00');
-
-		$result2 = json_decode(
-			$this->testAction(
-				"/gpgkeys.json",
-				array(
-					'return' => 'contents',
-					'method' => 'GET',
-					'data' => array(
-						'modified_after' => strval($date)
-					)
-				),
-				true
-			));
-
-		$this->assertEquals(
-			$result2->header->status,
-			Status::NOTICE,
-			'Gpgkeys Controller should return nothing when modified after filter date is in the future'
-		);
-
+		$url = '/gpgkeys.json?modified_after=' . strval(strtotime('1980-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
 	}
 
-	/**
-	 * Test view with a uuid not valid.
-	 */
-	public function testViewGpgkeyIdNotValid() {
-		$this->setExpectedException('HttpException', 'The user id is invalid');
-		$this->testAction(
-			"/gpgkeys/badid.json",
-			array('method' => 'get', 'return' => 'contents')
-		);
+/**
+ * Test index with the legacy modified filter set in the future
+ */
+	public function testIndexFiltersModifiedLegacyFuture() {
+		$url = '/gpgkeys.json?modified_after=' . strval(strtotime('2026-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
 	}
 
-	/**
-	 * Test view with uuid non existing.
-	 */
-	public function testViewGpgkeyDoesNotExist() {
+/**
+ * Test index with the legacy modified filter set in the past
+ */
+	public function testIndexFiltersModifiedPast() {
+		// Test filter modified_after with a date in the past.
+		$url = '/gpgkeys.json?filter[modified-after]=' . strval(strtotime('1980-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
+	}
+
+/**
+ * Test index with the legacy modified filter set in the future
+ */
+	public function testIndexFiltersModifiedFuture() {
+		$url = '/gpgkeys.json?filter[modified-after]=' . strval(strtotime('2026-12-14 00:00:00'));
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS);
+	}
+
+/**
+ * Test index with invalid modified filter date
+ */
+	public function testIndexFiltersModifiedInvalid() {
+		$url = '/gpgkeys.json?filter[modified-after]=' . 'not a timestamp';
+		$this->setExpectedException('BadRequestException', "Invalid filter. \"not a timestamp\" is not a valid timestamp for filter modified-after.");
+		$this->testAction($url, ['return' => 'contents', 'method' => 'GET']);
+	}
+
+/**
+ * Test index with invalid legacy modified filter date
+ */
+	public function testIndexFiltersModifiedLegacyInvalid() {
+		$url = '/gpgkeys.json?modified_after=' . 'not a timestamp';
+		$this->setExpectedException('BadRequestException', "Invalid filter. \"not a timestamp\" is not a valid timestamp for filter modified-after.");
+		$this->testAction($url, ['return' => 'contents', 'method' => 'GET']);
+	}
+
+/**
+ * TEST VIEW
+ */
+/**
+ * Test view with a uuid not valid.
+ */
+	public function testViewUserIdNotValid() {
+		$this->setExpectedException('BadRequestException', 'The user id is not valid');
+		$this->testAction("/gpgkeys/badid.json", ['method' => 'get', 'return' => 'contents']);
+	}
+
+/**
+ * Test view with uuid non existing.
+ */
+	public function testViewUserDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', 'The user id is invalid');
-		$this->testAction(
-			"/gpgkeys/{$id}.json",
-			array('method' => 'get', 'return' => 'contents')
-		);
+		$this->setExpectedException('NotFoundException', 'The user does not exist.');
+		$this->testAction("/gpgkeys/{$id}.json", ['method' => 'get', 'return' => 'contents']);
 	}
 
-	/**
-	 * Normal test view.
-	 */
-	public function testView() {
+/**
+ * Test view success
+ */
+	public function testViewSuccess() {
 		$gpgkey = $this->Gpgkey->findByUserId(Common::uuid('user.id.ada'));
-		$result = json_decode(
-			$this->testAction("/gpgkeys/{$gpgkey['Gpgkey']['user_id']}.json",
-				array(
-					'return' => 'contents',
-					'method' => 'GET'
-				),
-				true)
-		);
-		$this->assertEquals($result->header->status, Status::SUCCESS,'/gpgkey return something');
+		$url = "/gpgkeys/{$gpgkey['Gpgkey']['user_id']}.json";
+		$result = json_decode($this->testAction($url, ['return' => 'contents', 'method' => 'GET'], true));
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/gpgkey return something');
 	}
 
-	/**
-	 * Test adding a key.
-	 */
-	public function testAdd() {
+/**
+ * TEST ADD
+ */
+/**
+ * Test adding a key.
+ */
+	public function testAddSuccess() {
 		$pubKey = file_get_contents( Configure::read('GPG.testKeys.path') . 'test_public.key');
 		$user = $this->User->findById(Common::uuid('user.id.user'));
 		$this->User->setActive($user);
@@ -181,7 +161,7 @@ class GpgkeysControllerTest extends ControllerTestCase {
 			array(
 				'data' => array(
 					'Gpgkey' => array(
-						'key' =>$pubKey
+						'key' => $pubKey
 					),
 				),
 				'method' => 'post',
@@ -211,11 +191,10 @@ class GpgkeysControllerTest extends ControllerTestCase {
 		);
 	}
 
-	/**
-	 * Test that adding a key removes the user previous keys.
-	 */
+/**
+ * Test that adding a key removes the user previous keys.
+ */
 	public function testAddRemovePreviousKeys() {
-		$pubkey= array();
 		$pubKey[] = file_get_contents(Configure::read('GPG.testKeys.path') . 'test_public.key');
 		$pubKey[] = '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
@@ -294,7 +273,7 @@ x0kL7izI0GKheZwmWTsww5V+bCP5+g==
 		$this->User->setActive($user);
 
 		// Number of insertion rounds.
-		$rounds = sizeof($pubKey);
+		$rounds = count($pubKey);
 		foreach ($pubKey as $key) {
 			$result = json_decode(
 				$this->testAction('/gpgkeys.json',
@@ -329,16 +308,14 @@ x0kL7izI0GKheZwmWTsww5V+bCP5+g==
 			));
 
 		// Assertion.
-		$this->assertEquals (
-			$nbDeletedKeys,
-			$rounds,
+		$this->assertEquals($nbDeletedKeys, $rounds,
 			"Add : /gpgkeys.json : after add, the number of deleted keys in the db should be " . ($rounds)
 		);
 	}
 
-	/**
-	 * Test adding an invalid key.
-	 */
+/**
+ * Test adding an invalid key.
+ */
 	public function testAddInvalidKey() {
 		$pubKey = 'invalidkey';
 		$user = $this->User->findById(Common::uuid('user.id.user'));
@@ -348,7 +325,7 @@ x0kL7izI0GKheZwmWTsww5V+bCP5+g==
 			array(
 				'data' => array(
 					'Gpgkey' => array(
-						'key' =>$pubKey
+						'key' => $pubKey
 					),
 				),
 				'method' => 'post',
@@ -357,4 +334,30 @@ x0kL7izI0GKheZwmWTsww5V+bCP5+g==
 		);
 	}
 
+/**
+ * Test adding with no data
+ */
+	public function testAddNoData() {
+		$this->setExpectedException('BadRequestException', 'No key data provided.');
+		$data = ['Something' => []];
+		$this->testAction('/gpgkeys.json', ['method' => 'post', 'return' => 'contents', 'data' => $data]);
+	}
+
+/**
+ * Test adding with no key data.
+ */
+	public function testAddNoKeyData() {
+		$this->setExpectedException('BadRequestException', 'No key data provided.');
+		$data = ['Gpgkey' => []];
+		$this->testAction('/gpgkeys.json', ['method' => 'post', 'return' => 'contents', 'data' => $data]);
+	}
+
+/**
+ * Test adding with an empty key.
+ */
+	public function testAddEmptyKeyData() {
+		$this->setExpectedException('BadRequestException', 'No key data provided.');
+		$data = ['Gpgkey' => ['key' => []]];
+		$this->testAction('/gpgkeys.json', ['method' => 'post', 'return' => 'contents', 'data' => $data]);
+	}
 }

@@ -2,7 +2,7 @@
 /**
  * Gpg Key Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -421,8 +421,10 @@ class Gpgkey extends AppModel {
 			case 'GpgKey::index':
 				$conditions['conditions']['Gpgkey.deleted'] = 0;
 
-				if (isset($data['filter']['is-modified-after'])) {
-					$conditions['conditions']['Gpgkey.modified >='] = $data['filter']['is-modified-after'];
+				if (isset($data['filter']['modified-after'])) {
+					// convert timestamp to mysql condition
+					$datetime = date('Y-m-d H:i:s', $data['filter']['modified-after']);
+					$conditions['conditions']['Gpgkey.modified >='] = $datetime;
 				}
 				break;
 
@@ -433,7 +435,6 @@ class Gpgkey extends AppModel {
 				];
 				break;
 		}
-
 		return $conditions;
 	}
 

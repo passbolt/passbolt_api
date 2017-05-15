@@ -2,7 +2,7 @@
 /**
  * GroupUser Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -237,6 +237,64 @@ class GroupUser extends AppModel {
 		]);
 		return $countGroupAdmins;
 
+	}
+
+/**
+ * Find users who are all member of all the given groups.
+ * @param $groupsIds
+ * @return array
+ */
+	public function findUsersIdsMemberOfGroups($groupsIds) {
+		$result = $this->find('all', [
+			'fields' => [
+				'GroupUser.user_id',
+				'COUNT(GroupUser.user_id) as count_rows'
+			],
+			'conditions' => [
+				'GroupUser.group_id' => $groupsIds
+			],
+			'group' => 'GroupUser.user_id HAVING count_rows = ' . count($groupsIds)
+		]);
+		return Hash::extract($result, '{n}.GroupUser.user_id');
+	}
+
+/**
+ * Find groups having all the given members.
+ * @param $usersIds
+ * @return array
+ */
+	public function findGroupsIdsHavingMembers($usersIds) {
+		$result = $this->find('all', [
+			'fields' => [
+				'GroupUser.group_id',
+				'COUNT(GroupUser.group_id) as count_rows'
+			],
+			'conditions' => [
+				'GroupUser.user_id' => $usersIds
+			],
+			'group' => 'GroupUser.group_id HAVING count_rows = ' . count($usersIds)
+		]);
+		return Hash::extract($result, '{n}.GroupUser.group_id');
+	}
+
+/**
+ * Find groups having all the given managers.
+ * @param $usersIds
+ * @return array
+ */
+	public function findGroupsIdsHavingManagers($usersIds) {
+		$result = $this->find('all', [
+			'fields' => [
+				'GroupUser.group_id',
+				'COUNT(GroupUser.group_id) as count_rows'
+			],
+			'conditions' => [
+				'GroupUser.user_id' => $usersIds,
+				'GroupUser.is_admin' => 1
+			],
+			'group' => 'GroupUser.group_id HAVING count_rows = ' . count($usersIds)
+		]);
+		return Hash::extract($result, '{n}.GroupUser.group_id');
 	}
 
 /**

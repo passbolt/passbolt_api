@@ -2,7 +2,8 @@
 /**
  * Share Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ShareController extends AppController {
@@ -11,7 +12,7 @@ class ShareController extends AppController {
  * @var array components used in this controller
  */
 	public $components = [
-		'Filter',
+		'QueryString',
 		'EmailNotificator',
 	];
 
@@ -38,15 +39,15 @@ class ShareController extends AppController {
 	private function __updatePermissions($acoModelName, $acoInstanceId, $permissions) {
 		// the aco instance instance is not allowed.
 		$this->loadModel($acoModelName);
-		$acoExist = $this->$acoModelName->exists($acoInstanceId);
+		$acoExist = $this->{$acoModelName}->exists($acoInstanceId);
 		if (!$acoExist) {
-			throw new Exception(__('The Resource id is invalid'));
+			throw new BadRequestException(__('The aco id is not valid.'));
 		}
 
 		// Check if a user is authorized.
-		$isAuthorized = $this->$acoModelName->isAuthorized($acoInstanceId, PermissionType::OWNER);
+		$isAuthorized = $this->{$acoModelName}->isAuthorized($acoInstanceId, PermissionType::OWNER);
 		if (!$isAuthorized) {
-			throw new Exception(__('Your are not allowed to add a permission to the %s', $acoModelName));
+			throw new ForbiddenException(__('Your are not allowed to add a permission to the %s.', $acoModelName));
 		}
 
 		foreach ($permissions as $permission) {
@@ -60,13 +61,13 @@ class ShareController extends AppController {
 			if ($deleteCase || $updateCase) {
 				// Validate Permission id is a uuid.
 				if (!Common::isUuid($permission['Permission']['id'])) {
-					throw new Exception(__('The permission with id %s is invalid', $permission['Permission']['id']));
+					throw new BadRequestException(__('The permission with id %s is invalid.', $permission['Permission']['id']));
 				}
 
 				// Validate Permission Id.
 				$exist = $this->Permission->exists($permission['Permission']['id']);
 				if (!$exist) {
-					throw new Exception(__('The permission with id %s does not exist',
+					throw new NotFoundException(__('The permission with id %s does not exist',
 						$permission['Permission']['id']));
 				}
 
@@ -78,21 +79,21 @@ class ShareController extends AppController {
 					]
 				]);
 				if (empty($permissionBelongsToAcoInstance)) {
-					throw new Exception(__('Could not delete permission id %s', $permission['Permission']['id']));
+					throw new InternalErrorException(__('Could not delete permission id %s.', $permission['Permission']['id']));
 				}
 
 				// Everything ok, we process with saving the data.
 				if ($deleteCase) {
 					$del = $this->Permission->delete($permission['Permission']['id']);
 					if (!$del) {
-						throw new Exception(__('Could not delete permission id %s', $permission['Permission']['id']));
+						throw new InternalErrorException(__('Could not delete permission id %s.', $permission['Permission']['id']));
 					}
 				} elseif ($updateCase) {
 					// Update.
 					$this->Permission->id = $permission['Permission']['id'];
 					$update = $this->Permission->saveField('type', $permission['Permission']['type'], true);
 					if (!$update) {
-						throw new Exception(__('Could not save permission id %s', $permission['Permission']['id']));
+						throw new InternalErrorException(__('Could not save permission id %s.', $permission['Permission']['id']));
 					}
 				}
 			} elseif ($saveCase) {
@@ -102,34 +103,28 @@ class ShareController extends AppController {
 
 				// check if the target ACO model is permissionable
 				if (!$this->Permission->isValidAro($aroModelName)) {
-					throw new Exception(__('The aro model %s is not permissionable', $aroModelName));
+					throw new BadRequestException(__('The aro model %s does not support permissions.', $aroModelName));
 				}
-
-				// no aco instance id given
 				if (is_null($aroInstanceId)) {
-					throw new Exception(__('The %s id is missing', $aroModelName));
+					throw new BadRequestException(__('The id is missing for model %s.', $aroModelName));
 				}
-
-				// the aro instance id is invalid
 				if (!Common::isUuid($aroInstanceId)) {
-					throw new Exception(__('The %s id is invalid', $aroModelName));
+					throw new BadRequestException(__('The id is invalid for model %s.', $aroModelName));
 				}
 
 				// Check aro exists.
 				$this->loadModel($aroModelName);
-				$exists = $this->$aroModelName->exists($aroInstanceId);
+				$exists = $this->{$aroModelName}->exists($aroInstanceId);
 
 				// If aro is a user, we make sure it is also active, and not deleted.
-				if ($exists && $aroModelName == 'User') {
-					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'active' => 1, 'deleted' => 0]]);
-				}
 				// If aro is a group, we make sure it is not deleted.
-				else if ($exists && $aroModelName == 'Group') {
-					$exists = $this->$aroModelName->find('first', ['conditions' => ['id' => $aroInstanceId, 'deleted' => 0]]);
+				if ($exists && $aroModelName == 'User') {
+					$exists = $this->{$aroModelName}->find('first', ['conditions' => ['id' => $aroInstanceId, 'active' => 1, 'deleted' => 0]]);
+				} else if ($exists && $aroModelName == 'Group') {
+					$exists = $this->{$aroModelName}->find('first', ['conditions' => ['id' => $aroInstanceId, 'deleted' => 0]]);
 				}
-
 				if (!$exists) {
-					throw new Exception(__('The ARO instance %s for the model %s doesn\'t exist or the user is not allowed to access it',
+					throw new NotFoundException(__('The ARO instance %s for the model %s does not exist or the user is not allowed to access it',
 						$aroInstanceId, $aroModelName));
 				}
 
@@ -143,7 +138,7 @@ class ShareController extends AppController {
 					]
 				]);
 				if ($p) {
-					throw new Exception(__('The permission to be created already exists'));
+					throw new BadRequestException(__('The permission to be created already exists.'));
 				}
 
 				// Everything clear, we save permission.
@@ -158,12 +153,12 @@ class ShareController extends AppController {
 				$this->Permission->set($data);
 				$v = $this->Permission->validates();
 				if (!$v) {
-					throw new Exception(__('Could not validate model Permission during creation'));
+					throw new BadRequestException(__('Could not validate permission during creation.'));
 				}
 				$this->Permission->create();
 				$s = $this->Permission->save($data, ['atomic' => false]);
 				if (!$s) {
-					throw new Exception(__('Could not save model Permission'));
+					throw new InternalErrorException(__('Could not savep ermission.'));
 				}
 			}
 		}
@@ -184,7 +179,7 @@ class ShareController extends AppController {
 	private function __processAddedSecrets($acoInstanceId, $addedUsers, $secrets) {
 		// Add secrets for added users.
 		if (count($addedUsers) != count($secrets)) {
-			throw new Exception(__("The number of secrets provided doesn't match the %s users who have now access to the resources",
+			throw new BadRequestException(__("The number of secrets provided does not match the %s users who have now access to the resources",
 				count($addedUsers)));
 		}
 
@@ -199,7 +194,7 @@ class ShareController extends AppController {
 			}
 			// If a user doesn't have its secret provided, we throw an exception.
 			if (!$secretProvided) {
-				throw new Exception(__("The secret for user id %s is not provided", $userId));
+				throw new BadRequestException(__("The secret for user id %s is not provided.", $userId));
 			}
 
 			// Save secret.
@@ -212,14 +207,14 @@ class ShareController extends AppController {
 			$this->Secret->set($data);
 			$v = $this->Secret->validates();
 			if (!$v) {
-				throw new Exception(__("Invalid secret provided for user %s and resource %s", $userId, $acoInstanceId));
+				throw new BadRequestException(__("Invalid secret provided for user %s and resource %s.", $userId, $acoInstanceId));
 			}
 
 			// Save secret.
 			$this->Secret->create();
 			$s = $this->Secret->save($data);
 			if (!$s) {
-				throw new Exception(__("Could not save secret for user %s and resource %s", $userId, $acoInstanceId));
+				throw new InternalErrorException(__("Could not save secret for user %s and resource %s.", $userId, $acoInstanceId));
 			}
 		}
 	}
@@ -229,7 +224,7 @@ class ShareController extends AppController {
  *
  * @param string $acoInstanceId uuid of the aco instance
  * @param array $removedUsers list of removed users
- * @throws Exception
+ * @throws InternalErrorException
  * @return void
  */
 	private function __processRemovedSecrets($acoInstanceId, $removedUsers) {
@@ -243,7 +238,7 @@ class ShareController extends AppController {
 				]
 			);
 			if (!$del) {
-				throw new Exception(__("Could not delete secrets"));
+				throw new InternalErrorException(__("Could not delete secrets."));
 			}
 		}
 	}
@@ -264,29 +259,21 @@ class ShareController extends AppController {
 		$acoModelName = ucfirst($acoModelName);
 		$AcoModel = Common::getModel($acoModelName);
 
-		// check the HTTP request method
+		// check the request sanity
 		if (!$this->request->is('post')) {
-			return $this->Message->error(__('Invalid request method, should be POST'));
+			throw new MethodNotAllowedException(__('Invalid request method, should be POST.'));
 		}
-
-		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
-			return $this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
+			throw new BadRequestException(__('The call to entry point with parameter %s is not allowed.', $acoModelName));
 		}
-
-		// no aco instance id given
 		if (is_null($acoInstanceId)) {
-			return $this->Message->error(__('The %s id is missing', $acoModelName));
+			throw new BadRequestException(__('The aco id is missing.'));
 		}
-
-		// the aco instance id is invalid.
 		if (!Common::isUuid($acoInstanceId)) {
-			return $this->Message->error(__('The %s id is invalid', $acoModelName));
+			throw new BadRequestException(__('The aco id is invalid.'));
 		}
-
-		// If permissions are not provided, call is useless.
 		if (empty($permissions) || is_null($permissions)) {
-			return $this->Message->error(__('No permissions were provided'));
+			throw new BadRequestException(__('No permissions were provided.'));
 		}
 
 		// Retrieve authorized users before applying the changes.
@@ -297,7 +284,7 @@ class ShareController extends AppController {
 			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
 		} catch (Exception $e) {
 			$this->Permission->rollback();
-			return $this->Message->error($e->getMessage());
+			throw $e;
 		}
 
 		// Retrieve the users after changes.
@@ -315,22 +302,17 @@ class ShareController extends AppController {
 		$removedUsers = array_diff($usersCurrent, $usersAfterChanges);
 
 		// Prepare output.
-		$added = $this->User->find(
-			'all',
+		$added = $this->User->find('all',
 			array_merge(
 				['conditions' => ['User.id' => $addedUsers]],
 				$this->User->getFindFields('User::edit')['fields']['User']
 			));
-		$removed = $this->User->find(
-			'all',
+		$removed = $this->User->find('all',
 			array_merge(
 				['conditions' => ['User.id' => $removedUsers]],
 				$this->User->getFindFields('User::edit')['fields']['User']
 			));
-		$data = [
-			'changes' => ['added' => $added, 'removed' => $removed]
-		];
-
+		$data = ['changes' => ['added' => $added, 'removed' => $removed]];
 		$this->set('data', $data);
 		$this->Message->success(__('Simulate successful'));
 	}
@@ -340,42 +322,38 @@ class ShareController extends AppController {
  *
  * @param string $acoModelName aco model name
  * @param string $acoInstanceId aco instance uuid
+ * @throws MethodNotAllowedException if the http request method is not put
+ * @throws BadRequestException if the $acoModelName is not in the whitelist
+ * @throws BadRequestException if the $acoInstranceId is missing or is not valid
+ * @throws BadRequestException if no permission data was provided
+ * @throws Exception from __processRemovedSecrets and __processAddedSecrets
  * @return void
  */
 	public function update($acoModelName = '', $acoInstanceId = null) {
 		// Should be capitalized
 		$acoModelName = ucfirst($acoModelName);
-		// Get permissions from request.
-		$permissions = isset($this->request->data['Permissions']) ?
-			$this->request->data['Permissions'] : null;
-		// Get secrets.
-		$secrets = isset($this->request->data['Secrets']) ?
-			$this->request->data['Secrets'] : null;
 
 		// check the HTTP request method
 		if (!$this->request->is('put')) {
-			return $this->Message->error(__('Invalid request method, should be PUT'));
+			throw new MethodNotAllowedException(__('Invalid request method, should be PUT.'));
 		}
-
-		// check if the target ACO model is permissionable
 		if (!$this->Permission->isValidAco($acoModelName)) {
-			return $this->Message->error(__('The call to entry point with parameter %s is not allowed', $acoModelName));
+			throw new BadRequestException(__('The call to entry point with parameter %s is not allowed.', $acoModelName));
 		}
-
-		// no aco instance id given
 		if (is_null($acoInstanceId)) {
-			return $this->Message->error(__('The %s id is missing', $acoModelName));
+			throw new BadRequestException(__('The aco id is missing.'));
 		}
-
-		// the aco instance id is invalid.
 		if (!Common::isUuid($acoInstanceId)) {
-			return $this->Message->error(__('The %s id is invalid', $acoModelName));
+			throw new BadRequestException(__('The aco id is not valid.'));
+		}
+		// If permissions are not provided, call is useless.
+		$permissions = isset($this->request->data['Permissions']) ? $this->request->data['Permissions'] : null;
+		if (empty($permissions) || is_null($permissions)) {
+			throw new BadRequestException(__('No permission data provided.'));
 		}
 
-		// If permissions are not provided, call is useless.
-		if (empty($permissions) || is_null($permissions)) {
-			return $this->Message->error(__('No permissions were provided'));
-		}
+		// Secrets validation is done later in __processAddedSecrets
+		$secrets = isset($this->request->data['Secrets']) ? $this->request->data['Secrets'] : null;
 
 		// Get list of current permissions for the given ACO.
 		$AcoModel = Common::getModel($acoModelName);
@@ -387,7 +365,7 @@ class ShareController extends AppController {
 			$this->__updatePermissions($acoModelName, $acoInstanceId, $permissions);
 		} catch (Exception $e) {
 			$this->Permission->rollback();
-			return $this->Message->error($e->getMessage());
+			throw $e;
 		}
 
 		// Get new permissions after all changes.
@@ -408,7 +386,7 @@ class ShareController extends AppController {
 			$this->__processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
 		} catch (Exception $e) {
 			$this->Permission->rollback();
-			return $this->Message->error($e->getMessage());
+			throw $e;
 		}
 
 		// Everything ok, we can commit.
@@ -476,113 +454,69 @@ class ShareController extends AppController {
  * Search users/groups who can receive a permission for a target item.
  * Renders a json object containing the users and groups
  *
+ * @throws MethodNotAllowedException if the http request method is not PUT
+ * @throws BadRequestException if the $model does not support permissions
+ * @throws BadRequestException if the $id is missing or is not a valid UUID
+ * @throws NotFoundException if the id does not exist for this model
+ * @throws ForbiddenException if the user is not allowed to share this item
  * @return void
- *
- * @SWG\Get(
- *   path="/groups/searchUsers/{model}/{id}.json",
- *   summary="Find users and groups",
- * @SWG\Parameter(
- *     name="model",
- *     in="path",
- *     required=true,
- *     type="string",
- *     description="the type of the target instance to search users and groups for",
- *   ),
- * @SWG\Parameter(
- *     name="id",
- *     in="path",
- *     required=true,
- *     type="string",
- *     description="the target instance instance uuid to search users and groups for",
- *   ),
- * @SWG\Parameter(
- *     name="filter",
- *     in="query",
- *     description="A list of filter",
- *     required=false,
- *     type="string",
- * 	   enum={
- * 		 "keywords",
- * 	   }
- *   ),
- * @SWG\Response(
- *     response=200,
- *     description="An array of users and groups",
- *     @SWG\Schema(
- *       type="object",
- *       properties={
- *         @SWG\Property(
- *           property="header",
- *           ref="#/definitions/Header"
- *         ),
- *         @SWG\Property(
- *           property="body",
- *           type="array",
- *           items={
- * 				"$ref"="#/definitions/User",
- * 				"$ref"="#/definitions/Group"
- *           }
- *         )
- *       }
- *     )
- *   )
- * )
  */
 	public function searchUsers($model = null, $id = null) {
-		$data = [];
-		$model = ucfirst($model);
-
-		// check the HTTP request method
+		// check the request sanity
 		if (!$this->request->is('get')) {
-			$this->Message->error(__('Invalid request method, should be GET'));
-			return;
+			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
-
-		// check if the target ACO model is permissionable
+		$model = ucfirst($model);
 		if (!$this->Permission->isValidAco($model)) {
-			$this->Message->error(__('The model %s is not permissionable', $model));
-			return;
+			throw new BadRequestException(__('The model %s does not support permissions.', $model));
 		}
-
-		// the instance id is missing
-		if (is_null($id)) {
-			$this->Message->error(__('The %s id is missing', strtolower($model)));
-			return;
+		if (!isset($id)) {
+			throw new BadRequestException(__('The aco id is missing.'));
 		}
-
-		// the instance id is invalid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The %s id is invalid', strtolower($model)));
-			return;
+			throw new BadRequestException(__('The aco id is not valid.'));
 		}
 
 		// find the instance
-		$resource = $this->Permission->$model->findById($id);
+		$resource = $this->Permission->{$model}->findById($id);
 		if (empty($resource)) {
-			$this->Message->error(__('The %s does not exist', strtolower($model)), ['code' => 404]);
+			throw new NotFoundException(__('The aco id does not exist for model %s.', strtolower($model)));
 		}
 
 		// check if user is authorized to share the resource
 		// the user can share a resource only if he is owner of this resource
-		if (!$this->Permission->$model->isAuthorized($id, PermissionType::OWNER)) {
-			$this->Message->error(__('You are not authorized to share this %s', strtolower($model)), ['code' => 403]);
-			return;
+		if (!$this->Permission->{$model}->isAuthorized($id, PermissionType::OWNER)) {
+			throw new ForbiddenException(__('You are not authorized to share this.'));
 		}
 
 		// Extract request parameters.
-		$data['filter'] = $this->request->params['filter'];
+		$allowedQueryItems = ['filter' => ['keywords']];
+		$findUserData = $findGroupData = $this->QueryString->get($allowedQueryItems);
 
-		// @deprecated PASSBOLT-1571 Backward compatibility with passbolt 1.4.0
-		if (isset($this->request->query['keywords'])) {
-			$data['filter']['keywords'][] = $this->request->query['keywords'];
-		}
+		// Retrieve the users and groups who already have a direct permission for the resource and exclude them from the
+		$findPermissionsData = [
+			'Permission' => [
+				'aco' => $model,
+				'aco_foreign_key' => $id
+			]
+		];
+		$findPermissionsOptions = $this->Permission->getFindOptions('viewByAco', User::get('Role.name'), $findPermissionsData);
+		$permissions = $this->Permission->find('all', $findPermissionsOptions);
 
-		// Find all the users and all the groups who can receive a direct permission.
-		$data['Permission.aco_foreign_key'] = $id;
-		$data['Permission.aco'] = $model;
-		$findUsersOptions = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+		// Exclude users who have already a permission from the find users request.
+		$alreadySharedWithUsersIds = Hash::extract($permissions, '{n}.Permission[aro=User].aro_foreign_key');
+		$findUserData['exclude-users'] = $alreadySharedWithUsersIds;
+
+		// Exclude groups who have already a permission from the find groups request.
+		$alreadySharedWithGroupsIds = Hash::extract($permissions, '{n}.Permission[aro=Group].aro_foreign_key');
+		$findGroupData['exclude-groups'] = $alreadySharedWithGroupsIds;
+
+		// Find users.
+		$findUsersOptions = $this->Permission->User->getFindOptions('Share::searchUsers', User::get('Role.name'), $findUserData);
 		$users = $this->Permission->User->find('all', $findUsersOptions);
-		$findGroupsOptions = $this->Permission->Group->getFindOptions('Share::searchUsers', User::get('Role.name'), $data);
+
+		// Find groups.
+		$findGroupsOptions = $this->Permission->Group->getFindOptions('Group::index', User::get('Role.name'), $findGroupData);
 		$groups = $this->Permission->Group->find('all', $findGroupsOptions);
 
 		// Count the number of users for each group.

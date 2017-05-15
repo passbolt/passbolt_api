@@ -204,7 +204,7 @@ class CommentsController extends AppController {
  * @return void
  */
 	public function delete($id = null) {
-		// check request sanity
+		// Check request sanity
 		if (!$this->request->is('delete')) {
 			throw new MethodNotAllowedException(__('Invalid request method, should be DELETE.'));
 		}

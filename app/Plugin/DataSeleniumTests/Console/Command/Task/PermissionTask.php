@@ -4,7 +4,7 @@
  * This is a temporary file that replaces the permissions on group and categories.
  * This is following the decision to scale down the number of features for the release.
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @package      app.plugins.DataUnitTests.Console.Command.Task.PermissionTask
  * @since        version 2.12.11

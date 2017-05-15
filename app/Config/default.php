@@ -2,7 +2,7 @@
 /**
  * Main application configuration file
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $config = [
@@ -10,7 +10,6 @@ $config = [
 	'App' => [
 		'name' => 'Passbolt',
 		'punchline' => 'Open source password manager for teams',
-		'copyright' => '© 2017 Bolt Softwares Pvt Ltd',
 		'title' => '%s | Passbolt', // %s = title_for_layout
 
 		// Do you want search engine robots to index your site
@@ -112,14 +111,6 @@ $config = [
 		'authenticate' => [
 			'Gpg'
 		],
-	],
-	// Internationalization
-	// Note: Not in used at the moment
-	'i18n' => [
-		'locale' => 'en-EN',
-		'language' => 'en',
-		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary', // default dictionary file name
 	],
 	// Enable or disable generic model associations
 	// For example which models comments is available for

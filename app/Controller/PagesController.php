@@ -3,7 +3,7 @@
  * Static content controller.
  * This file will render views from views/pages/
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');

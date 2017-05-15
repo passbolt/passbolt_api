@@ -5,7 +5,7 @@
  * This file is application-wide model file. You can put all
  * application-wide model-related methods here.
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Model', 'Model');
@@ -83,7 +83,7 @@ class AppModel extends Model {
 		$findOptions = array_merge($findOptions, $findConditions);
 
 		// Prepare contain instructions.
-		$data['contain'] = static::prepareFindContain(
+		$data['contain'] = static::mergeFindContain(
 			static::getFindContain($case, $role),
 			isset($data['contain']) ? $data['contain'] : []
 		);
@@ -150,7 +150,7 @@ class AppModel extends Model {
  *  ];
  *
  */
-	public static function prepareFindContain($defaultContain, $requestedContain) {
+	public static function mergeFindContain($defaultContain, $requestedContain) {
 		$finalContain = [];
 		// Check default contain values. Only retain the one that have been explicitly requested in data, or that
 		// are equal to 1 by default.
@@ -303,7 +303,6 @@ class AppModel extends Model {
 			if ($data[$this->alias][$key] == $needle) {
 				$found = true;
 				array_unshift($path, $data[$this->alias]['id']);
-
 				return $path;
 			}
 			// search in the children
@@ -317,7 +316,6 @@ class AppModel extends Model {
 				}
 			}
 		}
-
 		return $path;
 	}
 

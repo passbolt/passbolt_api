@@ -16,12 +16,12 @@ class Group extends AppModel {
 	public $actsAs = [
 		'Trackable',
 		'SuperJoin',
-		'Containable',
+		'Containable'
 	];
 
 	public $hasMany = [
 		'GroupUser' => [
-			'className' => 'GroupUser',
+			'className' => 'GroupUser'
 		],
 		'GroupResourcePermission'
 	];
@@ -39,8 +39,7 @@ class Group extends AppModel {
 
 	public $hasAndBelongsToMany = [
 		'User' => [
-			'className' => 'User',
-
+			'className' => 'User'
 		]
 	];
 
@@ -51,7 +50,7 @@ class Group extends AppModel {
  * @return array cakephp validation rules
  */
 	public static function getValidationRules($case = 'default') {
-		$default = [
+		return [
 			'id' => [
 				'uuid' => [
 					'rule' => 'uuid',
@@ -73,14 +72,6 @@ class Group extends AppModel {
 				],
 			]
 		];
-		switch ($case) {
-			default:
-			case 'default':
-				$rules = $default;
-				break;
-		}
-
-		return $rules;
 	}
 
 /**
@@ -112,57 +103,22 @@ class Group extends AppModel {
 					}
 				}
 				if (isset($data['filter']['has-users'])) {
-					$hasUsers = $data['filter']['has-users'];
-					$conditions['joins'][] = array(
-						'table' => 'groups',
-						'alias' => 'GroupsHasUsers',
-						'conditions' => array(
-							'Group.id = GroupsHasUsers.id',
-							"(SELECT COUNT(*) FROM groups_users SubGroupUser
-							  WHERE SubGroupUser.group_id = GroupsHasUsers.id
-							  AND SubGroupUser.user_id IN ('" . implode("','", $hasUsers) . "')) = " . count($hasUsers)
-						)
-					);
+					$GroupUser = Common::getModel('GroupUser');
+					$groupsIds = $GroupUser->findGroupsIdsHavingMembers($data['filter']['has-users']);
+					$conditions['conditions']['Group.id'] = $groupsIds;
 					if (!isset($data['contain']) || !in_array('user', $data['contain'])) $data['contain'][] = 'user';
 				}
 				if (isset($data['filter']['has-managers'])) {
-					$hasManagers = $data['filter']['has-managers'];
-					$conditions['joins'][] = array(
-						'table' => 'groups', 'alias' => 'GroupHasManagers',
-						'conditions' => array(
-							'Group.id = GroupHasManagers.id',
-							"(SELECT COUNT(*) FROM groups_users SubGroupUser
-							  WHERE SubGroupUser.group_id = GroupHasManagers.id
-							  AND SubGroupUser.is_admin = 1
-							  AND SubGroupUser.user_id IN ('" . implode("','", $hasManagers) . "')) = " . count($hasManagers)
-						)
-					);
+					$GroupUser = Common::getModel('GroupUser');
+					$groupsIds = $GroupUser->findGroupsIdsHavingManagers($data['filter']['has-managers']);
+					$conditions['conditions']['Group.id'] = $groupsIds;
 					if (!isset($data['contain']) || !in_array('user', $data['contain'])) $data['contain'][] = 'user';
 				}
-
+				if (!empty($data['exclude-groups'])) {
+					$conditions['conditions']['Group.id NOT IN'] = $data['exclude-groups'];
+				}
 				break;
 
-			case 'Share::searchUsers':
-				// Use conditions already defined for the index case
-				$conditions = Group::getFindConditions('Group::index', $role, $data);
-
-				// Only return users who don't have a direct permission defined for the given aco instance
-				$conditions['joins'][] = [
-					'table' => 'groups',
-					'alias' => 'GroupToGrant',
-					'type' => 'inner',
-					'conditions' => [
-						'Group.id = GroupToGrant.id
-						AND GroupToGrant.id NOT IN (
-							SELECT Permission.aro_foreign_key
-							FROM permissions Permission
-							WHERE Permission.aco = "' . $data['Permission.aco'] . '"
-								AND Permission.aco_foreign_key = "' . $data['Permission.aco_foreign_key'] . '"
-								AND Permission.aro_foreign_key = GroupToGrant.id
-						)',
-					],
-				];
-				break;
 			default:
 				$conditions = ['conditions' => []];
 		}
@@ -182,7 +138,6 @@ class Group extends AppModel {
 		switch ($case) {
 			case 'Group::view':
 			case 'Group::index':
-			case 'Share::searchUsers':
 				$fields = [
 					'fields' => [
 						'Group.id',
@@ -260,21 +215,10 @@ class Group extends AppModel {
 				$fields = ['fields' => ['name', 'created_by', 'modified_by']];
 				break;
 			case 'Group::exists':
-				$fields = [
-					'fields' => [
-						'Group.id',
-						'Group.deleted',
-					]
-				];
+				$fields = ['fields' => ['Group.id', 'Group.deleted']];
 				break;
 			case 'Group::edit':
-				$fields = [
-					'fields' => [
-						'name',
-						'modified',
-						'modified_by'
-					]
-				];
+				$fields = ['fields' => ['name', 'modified', 'modified_by']];
 				break;
 			default:
 				$fields = ['fields' => []];
@@ -301,12 +245,6 @@ class Group extends AppModel {
 					'modifier' => 0
 				];
 				break;
-			case 'Share::searchUsers':
-				$contain = [
-					'user' => 0,
-					'resource' => 0,
-					'modifier' => 0
-				];
 		}
 		return $contain;
 	}
@@ -319,9 +257,7 @@ class Group extends AppModel {
  * @return array
  */
 	public static function getFindAllowedOrder($case = null, $role = null) {
-		return [
-			'Group.name',
-		];
+		return ['Group.name'];
 	}
 
 /**
@@ -338,7 +274,6 @@ class Group extends AppModel {
 		if ($id === null) {
 			$id = $this->getID();
 		}
-
 		if ($id === false) {
 			return false;
 		}
@@ -406,7 +341,6 @@ class Group extends AppModel {
 					'Group.deleted' => false,
 				],
 			]);
-
 			return empty($exist);
 		}
 	}

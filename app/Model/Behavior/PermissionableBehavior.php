@@ -2,7 +2,7 @@
 /**
  * Permission Behavior
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -211,6 +211,11 @@ class PermissionableBehavior extends ModelBehavior {
 		// If instance id is not provided as parameter, we get it from the model.
 		if (is_null($acoInstanceId)) {
 			$acoInstanceId = $this->id;
+		}
+
+		// acoInstanceId has to be a valid uuid.
+		if (!Common::isUuid($acoInstanceId)) {
+			throw new InvalidArgumentException('The acoInstanceId is invalid');
 		}
 
 		// If no find options given, return all users.

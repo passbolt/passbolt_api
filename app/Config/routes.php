@@ -2,7 +2,7 @@
 /**
  * Routes configuration
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 /**
@@ -55,13 +55,6 @@
  * ...and connect the rest of 'Pages' controller's URLs.
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
-
-/**
- * Load all plugin routes. See the CakePlugin documentation on
- * Custom route for dictionary controller
- */
-	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
-	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
 
 /**
  * Custom route for validation rules controller

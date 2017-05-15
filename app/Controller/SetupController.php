@@ -2,7 +2,8 @@
 /**
  * Setup Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ * 				  2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -43,48 +44,42 @@ class SetupController extends AppController {
 	public function install($userId = null, $token = null) {
 		$this->layout = 'default';
 
-		// check if the id is provided
-		if (is_null($userId)) {
-			throw new BadRequestException(__('User id not provided'));
+		// Check request sanity
+		if (!isset($userId)) {
+			throw new BadRequestException(__('The user id is missing.'));
 		}
-
-		// check if the id is valid
 		if (!Common::isUuid($userId)) {
-			throw new BadRequestException(__('User id is incorrect'));
+			throw new BadRequestException(__('The user id is not valid.'));
 		}
-
-		// Check if token is provided.
-		if (is_null($token)) {
-			throw new BadRequestException(__('Token not provided'));
+		if (!isset($token)) {
+			throw new BadRequestException(__('The authentication token is missing.'));
 		}
 
 		// Check that the token exists
 		$authToken = $this->User->AuthenticationToken->findFirstByToken($token);
 		if (empty($authToken)) {
-			return $this->Message->error(__('Invalid token'));
+			throw new BadRequestException(__('The authentication token is not valid.'));
 		}
 
 		// Check that token is not expired
 		$isNotExpiredToken = $this->User->AuthenticationToken->isNotExpired($token);
 		if (!$isNotExpiredToken) {
-			return $this->Message->error(__('Expired token'));
+			throw new BadRequestException(__('The authentication token is expired.'));
 		}
 
 		// Check if token is valid.
 		$isValidToken = $this->AuthenticationToken->isValid($token, $userId);
 		if (!$isValidToken) {
-			throw new NotFoundException(__('Invalid token'));
+			throw new NotFoundException(__('The authentication token is not valid.'));
 		}
 
 		// Retrieve the user.
 		$data = ['User.id' => $userId];
 		$o = $this->User->getFindOptions('Setup::userInfo', Role::GUEST, $data);
 		$user = $this->User->find('first', $o);
-
 		if (empty($user)) {
-			throw new NotFoundException(__('User not found'));
+			throw new NotFoundException(__('The user does not exist.'));
 		}
-
 		$this->set('user', $user);
 
 		// Parse the user agent
@@ -104,25 +99,21 @@ class SetupController extends AppController {
 	public function recover($userId = null, $token = null) {
 		$this->layout = 'default';
 
-		// check if the id is provided
-		if (is_null($userId)) {
-			throw new BadRequestException(__('User id not provided'));
+		// Check request sanity
+		if (!isset($userId)) {
+			throw new BadRequestException(__('The user id is missing.'));
 		}
-
-		// check if the id is valid
 		if (!Common::isUuid($userId)) {
-			throw new BadRequestException(__('User id is incorrect'));
+			throw new BadRequestException(__('The user id is not valid.'));
 		}
-
-		// Check if token is provided.
-		if (is_null($token)) {
-			throw new BadRequestException(__('Token not provided'));
+		if (!isset($token)) {
+			throw new BadRequestException(__('The authentication token is missing.'));
 		}
 
 		// Check if token is valid.
 		$token = $this->AuthenticationToken->isValid($token, $userId);
 		if (empty($token)) {
-			throw new NotFoundException(__('Token not found'));
+			throw new BadRequestException(__('The authentication token is not valid.'));
 		}
 
 		// Retrieve the user.
@@ -131,7 +122,7 @@ class SetupController extends AppController {
 		$user = $this->User->find('first', $o);
 
 		if (empty($user)) {
-			throw new NotFoundException(__('User not found'));
+			throw new NotFoundException(__('The user does not exist.'));
 		}
 
 		$this->set('user', $user);
@@ -152,19 +143,15 @@ class SetupController extends AppController {
 		header('Access-Control-Allow-Origin: *');
 		header('Access-Control-Allow-Methods: PUT, OPTIONS');
 
-		// Check the HTTP request method.
+		// Check the request sanity
 		if (!$this->request->is('put')) {
-			return $this->Message->error(__('Invalid request method, should be PUT'));
+			throw new MethodNotAllowedException(__('Invalid request method, should be PUT.'));
 		}
-
-		// Check if the id is provided
 		if (!isset($id)) {
-			return $this->Message->error(__('The user id is missing'));
+			throw new BadRequestException(__('The user id is missing.'));
 		}
-
-		// Check if the id is valid
 		if (!Common::isUuid($id)) {
-			return $this->Message->error(__('The user id is invalid'));
+			throw new BadRequestException(__('The user id is not valid.'));
 		}
 
 		// Instantiate user model.
@@ -173,7 +160,7 @@ class SetupController extends AppController {
 		// Get the resource
 		$user = $this->User->findById($id);
 		if (!$user) {
-			return $this->Message->error(__('The user does not exist'), ['code' => 404]);
+			throw new NotFoundException(__('The user does not exist.'));
 		}
 
 		// Store request data in data.
@@ -185,19 +172,13 @@ class SetupController extends AppController {
 			$data = json_decode(json_encode($data), true);
 		}
 
-		if (!isset($data['AuthenticationToken'])) {
-			return $this->Message->error(__('No data were provided'));
-		}
-
-		// Check if token is provided.
-		if (!isset($data['AuthenticationToken']['token'])) {
-			return $this->Message->error(__('Token not provided'));
-		}
-
 		// Check that token is valid.
+		if (!isset($data['AuthenticationToken']) || !isset($data['AuthenticationToken']['token'])) {
+			throw new BadRequestException(__('No authentication token data provided.'));
+		}
 		$validToken = $this->User->AuthenticationToken->isValid($data['AuthenticationToken']['token'], $id);
 		if (!$validToken) {
-			return $this->Message->error(__('Invalid token'));
+			throw new BadRequestException(__('The authentication token is not valid.'));
 		}
 
 		// Check that key provided belongs to user.
@@ -208,7 +189,7 @@ class SetupController extends AppController {
 			// Extract data from the key
 			$gpgkeyData = $this->User->Gpgkey->buildGpgkeyDataFromKey($gpgkeyData['key']);
 			if ($gpgkeyData == false) {
-				return $this->Message->error(__('The key provided couldn\'t be used'));
+				throw new BadRequestException(__('The key provided could not be used.'));
 			}
 
 			$userKey = $this->User->Gpgkey->find('first', [
@@ -218,7 +199,7 @@ class SetupController extends AppController {
 					],
 				]);
 			if (empty($userKey)) {
-				return $this->Message->error(__('The key provided doesn\'t belong to given user'));
+				throw new BadRequestException(__('The key provided does not belong to given user.'));
 			}
 		}
 
@@ -226,9 +207,8 @@ class SetupController extends AppController {
 		// Deactivate Token.
 		try {
 			$this->User->AuthenticationToken->setInactive($data['AuthenticationToken']['token']);
-		}
-		catch (Exception $e) {
-			return $this->Message->error(__('Could not update token'));
+		} catch (Exception $e) {
+			throw new InternalErrorException(__('Could not update token.'));
 		}
 
 		// Return information in case of success.
@@ -236,8 +216,7 @@ class SetupController extends AppController {
 		$options = $this->User->getFindOptions('User::view', User::get('Role.name'), $data);
 		$user = $this->User->find('first', $options);
 
-		$this->Message->success(__("The recovery has been completed successfuly"));
 		$this->set('data', $user);
+		$this->Message->success(__("The recovery has been completed successfuly."));
 	}
-
 }

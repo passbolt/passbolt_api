@@ -203,7 +203,7 @@ module.exports = function(grunt) {
 	// Register Tasks
 
 	// Npm styleguide deploy
-	grunt.registerTask('update-styleguide', ['shell:updatestyleguide','copy:styleguide']);
+	grunt.registerTask('styleguide-update', ['shell:updatestyleguide','copy:styleguide']);
 
 	// Npm libs deploy
 	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);

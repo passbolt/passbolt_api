@@ -2,7 +2,7 @@
 /**
  * Main application configuration file
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @package      app.Config.app
  * @since        version 2.12.7
@@ -17,13 +17,6 @@ $config = array(
 		'number' => '2.12.9',
 		'name' => 'What\'s hapenin\'',
 		'song' => 'http://youtu.be/DaRG0ukxYqQ'
-	),
-	// Internationalization
-	'i18n' => array(
-		'locale' => 'en-EN',
-		'language' => 'en',
-		'timezone' => 'GTM+1',
-		'dictionary' => 'jsDictionary' // default dictionary file name
 	),
 	// Authentication & Authorisation
 	'Auth' => array(

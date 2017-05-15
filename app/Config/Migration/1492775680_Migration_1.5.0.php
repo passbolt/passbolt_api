@@ -22,6 +22,12 @@ class Migration_1_5_0 extends CakeMigration {
  */
 	public $migration = [
 		'up' => [
+			'alter_field' => [
+				'resources' => [
+					'username' => ['null' => true],
+					'uri' => ['null' => true],
+				]
+			],
 			'create_field' => [
 				'groups_users' => [
 					'is_admin' => ['type' => 'boolean', 'null' => false, 'default' => '0']
