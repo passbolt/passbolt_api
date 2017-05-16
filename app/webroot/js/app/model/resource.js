@@ -65,15 +65,6 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 	},
 
 	findAll: function (params, success, error) {
-		// a filter is provided, format it as GET request parameter
-		if(typeof params.filter != 'undefined') {
-			var filer = params.filter;
-			delete params.filter;
-			// add the filter to the request param
-			var formatedFilter = filer.toRequest();
-			$.extend(params, formatedFilter);
-		}
-
 		return mad.net.Ajax.request({
 			url: APP_URL + 'resources.json',
 			type: 'GET',

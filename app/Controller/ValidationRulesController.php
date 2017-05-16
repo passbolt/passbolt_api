@@ -2,7 +2,7 @@
 /**
  * Validation Rules Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class ValidationRulesController extends AppController {
@@ -50,5 +50,4 @@ class ValidationRulesController extends AppController {
 			throw new HttpException(__('No validation rules defined'));
 		}
 	}
-
 }

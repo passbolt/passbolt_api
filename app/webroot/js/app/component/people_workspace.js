@@ -4,18 +4,20 @@ import 'mad/component/confirm';
 import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb';
+import 'app/component/groups';
 //import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
+import 'app/component/group_edit';
+import 'app/component/group_sidebar';
 import 'app/form/user/create';
-//import 'app/form/group/create'; // @roadmap
 import 'app/model/user';
-//import 'app/model/group'; // @roadmap
 import 'app/model/filter';
 
 import 'app/view/template/people_workspace.ejs!';
 import 'app/view/template/component/create_button.ejs!';
+import 'app/view/template/component/create_button_dropdown.ejs!';
 
 /**
  * @inherits {mad.Component}
@@ -39,10 +41,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 		// The current selected groups
         selectedGroups: new can.Model.List(),
 		// The current filter
-        filter: new passbolt.model.Filter({
-            label: __('All users'),
-            type: passbolt.model.Filter.SHORTCUT
-        }),
+        filter: null,
 		// Override the silentLoading parameter.
 		silentLoading: false,
 		// Filter the workspace with this filter settings.
@@ -55,10 +54,9 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 	 */
 	getDefaultFilterSettings: function() {
 		return new passbolt.model.Filter({
+            id: 'default',
 			label: __('All users'),
-			case: 'all_items',
-			type: passbolt.model.Filter.SHORTCUT,
-			keywords: ''
+            order: ['Profile.last_name ASC']
 		});
 	}
 
@@ -92,20 +90,44 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         );
         secWkMenu.start();
 
-		// Create user capability is only available to admin user
+		// Create user / group capability is only available to admin user.
 		if (role == 'admin') {
-			// Instantiate the create button controller.
-			this.options.createButton = mad.helper.Component.create(
-				$('.main-action-wrapper'),
-				'last',
-				mad.component.Button, {
-					id: 'js_wsp_create_button',
-					templateBased: true,
-					templateUri: 'app/view/template/component/create_button.ejs',
-					tag: 'a',
-					cssClasses: ['button', 'primary']
-				}
-			).start();
+            var self = this;
+            var createButtonMenuItems = [
+                new mad.model.Action({
+                    id: uuid(),
+                    label: __('New user'),
+                    cssClasses: ['create-user'],
+                    action: function () {
+                        self.options.createButton.view.close();
+                        mad.bus.trigger('request_user_creation');
+                    }
+                }),
+                new mad.model.Action({
+                    id: uuid(),
+                    label: __('New group'),
+                    cssClasses: ['create-group'],
+                    action: function () {
+                        self.options.createButton.view.close();
+                        mad.bus.trigger('request_group_creation');
+                    }
+                })
+            ];
+
+            // Instantiate the create button component.
+            this.options.createButton = mad.helper.Component.create(
+            	$('.main-action-wrapper'),
+            	'last',
+                mad.component.ButtonDropdown, {
+                    id: 'js_wsp_create_button',
+                    templateBased: true,
+                    templateUri: 'app/view/template/component/create_button_dropdown.ejs',
+                    tag: 'a',
+                    cssClasses: ['button', 'primary'],
+                    items: createButtonMenuItems
+                }
+            ).start();
+
 		}
 
         // Instantiate the password workspace breadcrumb controller
@@ -113,28 +135,34 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         this.breadcrumCtl.start();
 
         // Instanciate the users filter controller.
-        var userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
-        userShortcut.start();
+        this.userShortcut = new passbolt.component.UserShortcuts('#js_wsp_users_filter_shortcuts', {});
+        this.userShortcut.start();
 
-        // Removed group choosed for #PASSBOLT-787
-        //// Instanciate the group chooser controller.
-        //this.grpChooser = new passbolt.component.GroupChooserController('#js_wsp_users_group_chooser', {
-        //'selectedGroups': this.options.selectedGroups
-        //});
-        //this.grpChooser.start();
+        // Instanciate the users groups controller.
+        var groups = new passbolt.component.Groups('#js_wsp_users_groups', {
+            selectedGroups: this.options.selectedGroups
+        });
+        groups.start();
 
-        // Instanciate the passwords browser controller.
+        // Instantiate the passwords browser controller.
         var userBrowserController = new passbolt.component.UserBrowser('#js_wsp_users_browser', {
             selectedUsers: this.options.selectedUsers
         });
         userBrowserController.start();
 
-        // Instanciate the resource details controller
-        var userSidebar = new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
+        // Instantiate the user details controller
+        new passbolt.component.UserSidebar($('.js_wsp_users_sidebar_second', this.element), {
             id: 'js_user_details',
             selectedItems: this.options.selectedUsers
         });
         $('.js_wsp_users_sidebar_second', this.element).hide();
+
+        //// Instantiate the gtroup details controller
+        new passbolt.component.GroupSidebar($('.js_wsp_groups_sidebar_second', this.element), {
+            id: 'js_group_details',
+            selectedItems: this.options.selectedGroups
+        });
+        $('.js_wsp_groups_sidebar_second', this.element).hide();
 
         // A filter has been given in options.
         // If not given, set one by default.
@@ -167,42 +195,126 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
         this._super();
     },
 
+    /**
+     * Open EditGroupDialog.
+     * @param group
+     */
+    openEditGroupDialog: function(group) {
+        // get the dialog
+        var dialog = new mad.component.Dialog(null, {
+            label: group.id == undefined || group.id == '' ? __('Create group') : __('Edit group'),
+            cssClasses: ['edit-group-dialog','dialog-wrapper']
+        }).start();
+
+        // Attach the component to the dialog.
+        dialog.add(passbolt.component.GroupEdit, {
+            id: 'js_edit_group',
+            data: {
+                Group: group
+            }
+        });
+    },
+
+    /**
+     * Delete a group.
+     * @param group
+     */
+    deleteGroup: function(group) {
+        // First do a dry run to determine whether the group can be deleted.
+        group.deleteDryRun(group.id)
+            .then(
+                function success(response) {
+                    var contentH2 = __('You are about to delete the group "%s"!', group.name);
+                    var contentText = '';
+                    if (response.length == 0) {
+                        contentText = __('This group is not associated with any password. You are good to go!');
+                    }
+                    else if(response.length > 0) {
+                        contentText = __('This group is associated with %s passwords. All users in this group will lose access to these passwords.', response.length);
+                    }
+
+                    var confirm = new mad.component.Confirm(
+                        null,
+                        {
+                            label: __('Are you sure ?'),
+                            subtitle: contentH2,
+                            content: contentText,
+                            submitButton: {
+                                label: __('delete group'),
+                                cssClasses: [
+                                    'warning'
+                                ]
+                            },
+                            action: function() {
+                                // Destroy group.
+                                group.destroy();
+                            }
+                        }).start();
+                },
+                function error(errorResponse) {
+                    var response = errorResponse.responseJSON.body;
+                    // Build a list of resources for displaying.
+                    var listResources = '';
+                    response.forEach(function(elt, index) {
+                        listResources += (index > 0 ? ', ' + elt.Resource.name : elt.Resource.name);
+                    });
+                    // Subtitle and content.
+                    var contentH2 = __('You are trying to delete the group "%s"!', group.name);
+                    var contentText = __(
+                        'This group is the sole owner of %s %s: %s. You need to transfer the ownership to other users before you can proceed.',
+                        response.length,
+                        response.length > 1 ? __('passwords') : __('password'),
+                        listResources
+                    );
+
+                    // Display confirm dialog.
+                    var confirm = new mad.component.Confirm(
+                        null,
+                        {
+                            label: __('You cannot delete this group!'),
+                            subtitle: contentH2,
+                            content: contentText,
+                            submitButton: {
+                                label: __('Got it!'),
+                                cssClasses: []
+                            },
+                            action: function() {
+                                mad.component.Confirm.closeLatest();
+                            }
+                        }).start();
+                }
+            );
+
+    },
+
     /* ************************************************************** */
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
 
-	/**
-	 * Observe when the user wants to create a new user
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 */
-	'{createButton.element} click': function (el, ev) {
-		mad.bus.trigger('request_user_creation');
-	},
-
-    /**
-     * Observe when group is selected
-     * @param {HTMLElement} el The element the event occurred on
-     * @param {HTMLEvent} ev The event which occurred
-     * @param {passbolt.model.Group} group The selected group
-     */
-    '{mad.bus.element} group_selected': function (el, ev, group) {
-        // reset the selected resources
-        this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
-        // Set the new filter
-        this.options.filter.attr({
-            foreignModels: {
-                Group: new can.List([group])
-            },
-            type: passbolt.model.Filter.FOREIGN_MODEL
-        });
-        // propagate a special event on bus
-        mad.bus.trigger('filter_users_browser', this.options.filter);
-
-        // Add the group to the list of selected groups.
-        this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
-        this.options.selectedGroups.push(group);
-    },
+    // /**
+    //  * Observe when group is selected
+    //  * @param {HTMLElement} el The element the event occurred on
+    //  * @param {HTMLEvent} ev The event which occurred
+    //  * @param {passbolt.model.Group} group The selected group
+    //  */
+    // '{mad.bus.element} group_selected': function (el, ev, group) {
+    //     console.log('group_selected');
+    //     // reset the selected resources
+    //     this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
+    //     // Set the new filter
+    //     this.options.filter.attr({
+    //         foreignModels: {
+    //             Group: new can.List([group])
+    //         },
+    //         type: passbolt.model.Filter.FOREIGN_MODEL
+    //     });
+    //     // propagate a special event on bus
+    //     mad.bus.trigger('filter_users_browser', this.options.filter);
+    //
+    //     // Add the group to the list of selected groups.
+    //     this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
+    //     this.options.selectedGroups.push(group);
+    // },
 
     /**
      * When a new filter is applied to the workspace.
@@ -211,7 +323,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @param {passbolt.model.Filter} filter, the filter being applied.
      */
     '{mad.bus.element} filter_workspace': function (el, ev, filter) {
-        // If the filter applied is "all groups", then empty the list of selected groups.
+        // If the filter applied is "all users", then empty the list of selected groups.
         if (typeof filter.name != 'undefined') {
             if(filter.name == 'all') {
                 this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
@@ -231,25 +343,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      */
     '{mad.bus.element} request_group_creation': function (el, ev, data) {
         var group = new passbolt.model.Group();
-
-        // Get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Create a new Group')})
-            .start();
-
-        // Attach the component to the dialog.
-        var form = dialog.add(passbolt.form.group.Create, {
-            data: group,
-            callbacks : {
-                submit: function (data) {
-                    var instance = new passbolt.model.Group(
-                        data['passbolt.model.Group']
-                    )
-                        .save();
-                    dialog.remove();
-                }
-            }
-        });
-        form.load(group);
+        this.openEditGroupDialog(group);
     },
 
     /**
@@ -258,23 +352,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_group_edition': function (el, ev, group) {
-        // get the dialog
-        var dialog = new mad.component.Dialog(null, {label: __('Edit a Group')})
-            .start();
-
-        // attach the component to the dialog
-        var form = dialog.add(passbolt.form.group.Create, {
-            data: group,
-            callbacks : {
-                submit: function (data) {
-                    group.attr(data['passbolt.model.Group'])
-                        .save();
-                    dialog.remove();
-                }
-            }
-        });
-
-        form.load(group);
+        this.openEditGroupDialog(group);
     },
 
     /**
@@ -283,7 +361,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * @param {HTMLEvent} ev The event which occurred
      */
     '{mad.bus.element} request_group_deletion': function (el, ev, group) {
-        group.destroy();
+        this.deleteGroup(group);
     },
 
     /**
@@ -414,6 +492,21 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                 }
             }
         }
+    },
+
+    /**
+     * Reset the filters.
+     *
+     * Unselect the group if it was selected, and select All users instead.
+     *
+     * @param el
+     * @param ev
+     * @param data
+     */
+    '{mad.bus.element} reset_filters': function(el, ev) {
+        var filter = passbolt.model.Filter.model({name: 'all'});
+        mad.bus.trigger('filter_workspace', filter);
+        this.userShortcut.selectItem(this.userShortcut.options.items[0]);
     }
 
 });

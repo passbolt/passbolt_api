@@ -3,7 +3,8 @@
  * Favorites controller
  * Control the starred items
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class FavoritesController extends AppController {
@@ -13,94 +14,82 @@ class FavoritesController extends AppController {
  *
  * @param string $foreignModelName the target foreign model
  * @param string $foreignId the uuid of the target instance to get comments for
+ * @throws MethodNotAllowedException if the request is not POST
+ * @throws BadRequestException if favorites are not enabled for $foreignModelName
+ * @throws BadRequestException if the $foreignId is not a valid UUID
+ * @throws NotFoundException if the $foreignId does not exist
+ * @throws BadRequestException if the record is already stared
+ * @throws InternalErrorException if the favorite could not be saved
  * @return void
  */
 	public function add($foreignModelName = null, $foreignId = null) {
 		$foreignModelName = Inflector::camelize($foreignModelName);
 		$userId = User::get('id');
 
-		// check the HTTP request method
+		// check the request sanity
 		if (!$this->request->is('post')) {
-			$this->Message->error(__('Invalid request method, should be POST'));
-			return;
+			throw new MethodNotAllowedException(__('Invalid request method, should be POST.'));
 		}
-
-		// check if the target foreign model is favoritable
 		if (!$this->Favorite->isValidForeignModel($foreignModelName)) {
-			$this->Message->error(__('The model %s is not favoritable', $foreignModelName));
-			return;
+			throw new BadRequestException(__('Favorites are not possible on this type of resource (%s).', $foreignModelName));
 		}
-
-		// the instance id is invalid
 		if (!Common::isUuid($foreignId)) {
-			$this->Message->error(__('The %s id is invalid', $foreignModelName));
-			return;
+			throw new BadRequestException(__('The resource id is not valid.'));
 		}
-
-		// the foreign instance does not exist
-		// the authorization to access the record is provided by the permissionable behavior, so if a user is not authorized to
-		// access the instance record, the exists method should return false
 		$this->loadModel($foreignModelName);
-		if (!$this->$foreignModelName->exists($foreignId)) {
-			$this->Message->error(__('The %s does not exist', $foreignModelName), ['code' => 404]);
-			return;
+		if (!$this->{$foreignModelName}->exists($foreignId)) {
+			throw new NotFoundException(__('The resource does not exist.'));
 		}
-
-		$favorite = $this->Favorite->find('first', [
-			'conditions' => ['user_id' => $userId, 'foreign_id' => $foreignId]
-		]);
-
-		// Already stared
+		$favorite = $this->Favorite->find('first', ['conditions' => ['user_id' => $userId, 'foreign_id' => $foreignId]]);
 		if (!empty($favorite)) {
-			$this->Message->error(__('This record was already starred!'));
-			return;
-		} else {
-			$this->Favorite->create([
-				'user_id' => $userId,
-				'foreign_id' => $foreignId,
-				'foreign_model' => strtolower($foreignModelName)
-			]);
-			$favorite = $this->Favorite->save();
-			$this->set('data', $favorite);
-			$this->Message->success(__('This record was successfully starred!'));
-			return;
+			throw new BadRequestException(__('This record is already marked as favorite.'));
 		}
+
+		// Add the favorite
+		$this->Favorite->create([
+			'user_id' => $userId,
+			'foreign_id' => $foreignId,
+			'foreign_model' => strtolower($foreignModelName)
+		]);
+		$favorite = $this->Favorite->save();
+		if ($favorite === false) {
+			throw new InternalErrorException(__('The favorite could not be added.'));
+		}
+		$this->set('data', $favorite);
+		$this->Message->success(__('This record was successfully starred!'));
 	}
 
 /**
  * Unfav/unstar a given record for a given model
  *
  * @param string $id the uuid of the resource
+ * @throws MethodNotAllowedException if the request method is not DELETE
+ * @throws BadRequestException if the resource id is not a valid UUID
+ * @throws NotFoundException if the favorite id does not exist
+ * @throws ForbiddenException if the current user is not the owner of the favorite
+ * @throws InternalErrorException if the favorite could not be deleted
  * @return void
  */
 	public function delete($id = null) {
-		// check the HTTP request method
+		// check the request sanity
 		if (!$this->request->is('delete')) {
-			$this->Message->error(__('Invalid request method, should be DELETE'));
-			return;
+			throw new MethodNotAllowedException(__('Invalid request method, should be DELETE.'));
 		}
-
-		// the id is invalid
 		if (!Common::isUuid($id)) {
-			$this->Message->error(__('The starred id is not valid', $id));
-			return;
+			throw new BadRequestException(__('The resource id is not valid.'));
 		}
-
-		// no favorite found
 		$favorite = $this->Favorite->findById($id);
 		if (empty($favorite)) {
-			$this->Message->error(__('The record is not in your starred item list'), ['code' => 404]);
-			return;
+			throw new NotFoundException(__('The favorite does not exist.'));
 		}
-
-		// if the current user is not the owner of the favorite
 		if ($favorite['Favorite']['user_id'] != User::get('id')) {
-			$this->Message->error(__('Your are not allowed to remove this record from your starred item list'),
-				['code' => 403]);
-			return;
+			throw new ForbiddenException(__('Your are not allowed to delete this favorite.'));
 		}
 
-		$this->Favorite->delete($favorite['Favorite']['id']);
+		// Delete
+		if (!$this->Favorite->delete($id)) {
+			throw new InternalErrorException('The favorite could not be deleted.');
+		}
 		$this->Message->success(__('This record was removed from your starred item list'));
 	}
 }

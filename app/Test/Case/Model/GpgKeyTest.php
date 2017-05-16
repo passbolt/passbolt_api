@@ -2,10 +2,8 @@
 /**
  * Role Model Test
  *
- * @copyright	 (c) 2015-present Bolt Softwares Pvt Ltd
- * @package	   app.Test.Case.Model.RoleTest
- * @since		 version 2.12.7
- * @license	   http://www.passbolt.com/license
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('User', 'Model');
 App::uses('Role', 'Model');
@@ -334,28 +332,43 @@ ffvdXuT2n3w=
 		}
 	}
 
+
 	/**
-	 * Test GetFindFields
+	 * Test getFindFields
 	 */
 	public function testGetFindFields() {
 		$default = ['fields' => []];
-		$this->assertNotEquals($default, GpgKey::getFindFields('view'), 'Find fields missing for view');
-		$this->assertNotEquals($default, GpgKey::getFindFields('index'), 'Find fields missing for index');
-		$this->assertNotEquals($default, GpgKey::getFindFields('delete'), 'Find fields should be empty for delete');
-		$this->assertNotEquals($default, GpgKey::getFindFields('save'), 'Find fields should be empty for save');
-		$this->assertEquals($default, GpgKey::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+		$defaultCases = ['not_existing_case'];
+		$customCases = ['GpgKey::view', 'GpgKey::index', 'GpgKey::save'];
+
+		// Default fields return.
+		foreach($defaultCases as $case) {
+			$this->assertEquals($default, Gpgkey::getFindFields($case), "Find fields missing for case : $case");
+		}
+
+		// Custom fields return.
+		foreach($customCases as $case) {
+			$this->assertNotEquals($default, Gpgkey::getFindConditions($case), "Find fields should be empty for case : $case");
+		}
 	}
 
 	/**
-	 * Test GetFindFields
+	 * Test getFindConditions
 	 */
 	public function testGetFindConditions() {
 		$default = ['conditions' => []];
-		$this->assertNotEquals($default, GpgKey::getFindConditions('index'), 'Find conditions missing for view');
-		$this->assertNotEquals($default, GpgKey::getFindConditions('view'), 'Find conditions missing for add');
-		$this->assertEquals($default, GpgKey::getFindConditions('delete'), 'Find conditions should be empty for add');
-		$this->assertEquals($default, GpgKey::getFindConditions('save'), 'Find conditions should be empty for edit');
-		$this->assertEquals($default, GpgKey::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+		$defaultCases = ['not_existing_case', 'GpgKey::save'];
+		$customCases = ['GpgKey::view', 'GpgKey::index'];
+
+		// Test find conditions cases == default.
+		foreach($defaultCases as $case) {
+			$this->assertEquals($default, GpgKey::getFindConditions($case), "Find conditions should be empty for case : $case");
+		}
+
+		// Test find conditions cases != default.
+		foreach($customCases as $case) {
+			$this->assertNotEquals($default, GpgKey::getFindConditions($case), "Find conditions missing for case : $case");
+		}
 	}
 
 	/**

@@ -24,7 +24,14 @@ var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.Grou
 	attributes: {
 		id: 'string',
 		group_id: 'string',
-		user_id: 'string'
+		user_id: 'string',
+		User: 'passbolt.model.User.model',
+		Group: 'passbolt.model.Group.model'
+	},
+
+	membershipType: {
+		0 : __('Member'),
+		1 : __('Group manager')
 	},
 
 	/* ************************************************************** */
@@ -35,7 +42,7 @@ var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.Grou
 	 * Create a new groupUser
 	 * @param {array} attrs Attributes of the new groupUser
 	 * @return {jQuery.Deferred)
- */
+ 	 */
 	create : function (attrs, success, error) {
 		var self = this;
 		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
@@ -58,7 +65,7 @@ var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.Grou
 	 * Destroy a groupUser following the given parameter
 	 * @params {string} id the id of the instance to remove
 	 * @return {jQuery.Deferred)
- */
+	 */
 	destroy : function (id, success, error) {
 		var params = {id:id};
 		return mad.net.Ajax.request({
@@ -74,7 +81,7 @@ var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.Grou
 	 * Find a groupUser following the given parameter
 	 * @param {array} params Optional parameters
 	 * @return {jQuery.Deferred)
- */
+ 	 */
 	findOne: function (params, success, error) {
 		params.children = params.children || false;
 		return mad.net.Ajax.request({
@@ -90,7 +97,7 @@ var GroupUser = passbolt.model.GroupUser = mad.Model.extend('passbolt.model.Grou
 	 * Find a bunch of groupsUsers following the given parameters
 	 * @param {array} params Optional parameters
 	 * @return {jQuery.Deferred)
- */
+ 	 */
 	findAll: function (params, success, error) {
 		return mad.net.Ajax.request({
 			url: APP_URL + 'groupsUsers.json',

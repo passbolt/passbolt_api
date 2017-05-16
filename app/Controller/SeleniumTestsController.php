@@ -2,7 +2,7 @@
 /**
  * SeleniumTests Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 // Uses EmailQueue.
@@ -165,13 +165,7 @@ class SeleniumTestsController extends AppController {
  */
 	public function error404($case = 'message') {
 		$this->request->invalidateFields = 'stuffs';
-		switch ($case) {
-			case 'exception':
-				throw new NotFoundException();
-			default:
-				$this->Message->error('404 test not found', ['code' => 404]);
-				return;
-		}
+		throw new NotFoundException();
 	}
 
 /**

@@ -2,7 +2,7 @@
 /**
  * Authentication Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');
@@ -53,7 +53,7 @@ class AuthControllerTest extends ControllerTestCase {
  */
 	public function testNotAllowed() {
 		// test getting all the users with the anonymous user
-		$this->setExpectedException('HttpException', 'You need to login to access this location');
+		$this->setExpectedException('ForbiddenException', 'You need to login to access this location');
 		$r = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET'), true));
 	}
 
@@ -63,7 +63,7 @@ class AuthControllerTest extends ControllerTestCase {
  */
 	public function testLoginServerKeyFingerprintMissing() {
 		Configure::delete('GPG.serverKey.fingerprint');
-		$this->setExpectedException('CakeException', 'The GnuPG config for the server is not available or incomplete');
+		$this->setExpectedException('InternalErrorException', 'The GnuPG config for the server is not available or incomplete');
 		json_decode($this->testAction('/auth/login', array('return' => 'contents', 'method' => 'GET'), true));
 	}
 
@@ -73,7 +73,7 @@ class AuthControllerTest extends ControllerTestCase {
  */
 	public function testLoginBadServerKeyFingerprint() {
 		Configure::write('GPG.serverKey.fingerprint', '0000000000000000000000000000000000000000');
-		$this->setExpectedException('CakeException', 'The GPG Server key defined in the config is not found in the gpg keyring');
+		$this->setExpectedException('InternalErrorException', 'The GPG Server key defined in the config is not found in the gpg keyring');
 		json_decode($this->testAction('/auth/login', array('return' => 'contents', 'method' => 'GET'), true));
 	}
 
@@ -82,7 +82,7 @@ class AuthControllerTest extends ControllerTestCase {
  */
 	public function testVerifyBadConfig() {
 		Configure::write('GPG.serverKey.public', 'wrong');
-		$this->setExpectedException('HttpException', 'The public key for this passbolt instance was not found.');
+		$this->setExpectedException('InternalErrorException', 'The public key for this passbolt instance was not found.');
 		json_decode($this->testAction('/auth/verify.json', array('return' => 'contents', 'method' => 'GET'), true));
 	}
 
@@ -367,7 +367,7 @@ class AuthControllerTest extends ControllerTestCase {
 		foreach ($this->_keys as $name => $key) {
 			$types = array('public', 'private');
 			foreach ($types as $type) {
-				if(isset($key[$type])) {
+				if (isset($key[$type])) {
 					$keydata = file_get_contents($key[$type]);
 					if (!$this->_gpg->import($keydata)) {
 						echo 'could not import ' . $type . ' key' . $key['fingerprint'];

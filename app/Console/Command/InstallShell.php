@@ -2,7 +2,7 @@
 /**
  * Our Install command
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppShell', 'Console/Command');
@@ -75,29 +75,14 @@ class InstallShell extends AppShell {
 	}
 
 /**
- * Display the passbolt ascii banner
- *
- * @return void
- */
-	protected function _welcome() {
-		$this->out('     ____                  __          ____  ');
-		$this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
-		$this->out('   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/ ');
-		$this->out('  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /    ');
-		$this->out(' /_/    \__,_/____/____/_.___/\____/_/\__/   ');
-		$this->out('');
-		$this->out(' Open source password manager for teams');
-		$this->out(' (c) 2015-present passbolt.com');
-		$this->out('');
-		$this->hr();
-	}
-
-/**
  * Main shell entry point
  *
  * @return bool
  */
 	public function main() {
+        $this->out(' Install shell');
+        $this->hr();
+
 		// init gnupg keyring
 		try {
 			$this->initGpgKeyring();

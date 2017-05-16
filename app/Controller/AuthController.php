@@ -2,7 +2,7 @@
 /**
  * Auth Controller
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -81,10 +81,7 @@ class AuthController extends AppController {
 				}
 				$this->Message->success();
 			} else {
-				$this->Message->error(
-					__('The public key for this passbolt instance was not found.'),
-					['code' => '500']
-				);
+                throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
 			}
 		}
 	}

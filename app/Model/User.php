@@ -2,13 +2,14 @@
 /**
  * User Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('Common', 'Controller/Component');
 App::uses('Role', 'Model');
+App::uses('GroupUser', 'Model');
 App::uses('Security', 'Utility');
 App::uses('CakeEvent', 'Event');
 
@@ -499,7 +500,7 @@ class User extends AppModel {
  *
  * @throws Exception
  */
-	public static function getFindConditions($case = null, $role = Role::GUEST, $data = null) {
+	public static function getFindConditions($case = null, $role = Role::GUEST, &$data = null) {
 		$conditions = [];
 
 		switch ($role) {
@@ -516,6 +517,7 @@ class User extends AppModel {
 							$conditions['conditions']['User.id'] = $data['User.id'];
 						}
 						break;
+
 					case 'Setup::userInfo':
 						$conditions = [
 							'conditions' => [
@@ -525,6 +527,7 @@ class User extends AppModel {
 							]
 						];
 						break;
+
 					case 'Recovery::userInfo':
 						$conditions = [
 							'conditions' => [
@@ -534,6 +537,7 @@ class User extends AppModel {
 							]
 						];
 						break;
+
 					case 'User::activation':
 						$conditions = [
 							'conditions' => [
@@ -560,6 +564,7 @@ class User extends AppModel {
 							]
 						];
 						break;
+
 					case 'User::GpgAuth':
 						$conditions = [
 							'conditions' => [
@@ -569,6 +574,7 @@ class User extends AppModel {
 							]
 						];
 						break;
+
 					case 'Resource::users':
 						$conditions = [
 							'conditions' => [
@@ -578,6 +584,7 @@ class User extends AppModel {
 						];
 						$conditions['conditions']['User.id'] = $data['User.ids'];
 						break;
+
 					case 'User::view':
 						$conditions = [
 							'conditions' => [
@@ -607,35 +614,25 @@ class User extends AppModel {
 						if ($role == Role::USER) {
 							$conditions['conditions']['User.active'] = 1;
 						}
-						// If filter on group.
-						if (isset($data['foreignModels']['Group.id'])) {
-							$conditions['conditions']['Group.id'] = $data['foreignModels']['Group.id'];
-						}
 						// If filter on keywords.
-						if (isset($data['keywords'])) {
-							$keywords = explode(' ', $data['keywords']);
+						if (isset($data['filter']['keywords'][0])) {
+							$keywords = explode(' ', trim($data['filter']['keywords'][0]));
 							foreach ($keywords as $keyword) {
-								$conditions['conditions']["AND"][]['OR'] = [
+								$conditions['conditions']['AND'][]['OR'] = [
 									'User.username LIKE' => "%$keyword%",
 									'Profile.first_name LIKE' => "%$keyword%",
 									'Profile.last_name LIKE' => "%$keyword%",
 								];
 							}
 						}
-						// If exclude users.
-						if (isset($data['excludedUsers'])) {
-							$conditions['conditions']["AND"]["NOT"][] = ['User.id' => $data['excludedUsers']];
+						if (isset($data['filter']['has-groups'])) {
+							$GroupUser = Common::getModel('GroupUser');
+							$usersIds = $GroupUser->findUsersIdsMemberOfGroups($data['filter']['has-groups']);
+							$conditions['conditions']['User.id'] = $usersIds;
+							if (!isset($data['contain']) || !in_array('group', $data['contain'])) $data['contain'][] = 'group';
 						}
-						// Order the data.
-						if (isset($data['order'])) {
-							switch ($data['order']) {
-								case 'modified':
-									$conditions['order'] = ['User.modified DESC'];
-									break;
-							}
-						} else {
-							// By default order alphabetically
-							$conditions['order'] = ['Profile.last_name ASC'];
+						if (!empty($data['exclude-users'])) {
+							$conditions['conditions']['User.id NOT IN'] = $data['exclude-users'];
 						}
 						break;
 
@@ -643,29 +640,8 @@ class User extends AppModel {
 						// Use conditions already defined for the index case
 						$conditions = User::getFindConditions('User::index', $role, $data);
 
-						// If user is admin, he is also not allowed to see non active users.
-						// Nobody can share a password with a user who has not completed his setup.
-						if ($role == Role::ADMIN) {
-							$conditions['conditions']['User.active'] = 1;
-						}
-
-						// Only return users who don't have a direct permission defined for the given aco instance
-						$conditions['joins'][] = [
-							'table' => 'users',
-							'alias' => 'UserToGrant',
-							'type' => 'inner',
-							'conditions' => [
-								'
-								User.id = UserToGrant.id
-								AND UserToGrant.id NOT IN (
-									SELECT Permission.aro_foreign_key
-									FROM permissions Permission
-									WHERE Permission.aco = "' . $data['aco'] . '"
-										AND Permission.aco_foreign_key = "' . $data['aco_foreign_key'] . '"
-										AND Permission.aro_foreign_key = UserToGrant.id
-								)',
-							],
-						];
+						// By default only active users are returned.
+						$conditions['conditions']['User.active'] = 1;
 						break;
 
 					default:
@@ -688,22 +664,24 @@ class User extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = null, $role = null) {
+	public static function getFindFields($case = null, $role = null, $data = null) {
+		$fields = ['fields' => []];
+
 		switch ($case) {
 			case 'User::view':
 			case 'User::index':
-			default:
+			case 'Setup::userInfo':
+			case 'Recovery::userInfo':
 				$fields = [
 					'fields' => [
-						'DISTINCT User.id',
+						'User.id',
 						'User.username',
 						'User.role_id',
 						'User.created',
 						'User.modified',
 						'User.created_by',
-						'User.modified_by',
+						'User.modified_by'
 					],
-					'superjoin' => ['Group'],
 					'contain' => [
 						'Role' => [
 							'fields' => [
@@ -749,14 +727,6 @@ class User extends AppModel {
 								'Gpgkey.key',
 							],
 						],
-						'Group' => [
-							'fields' => [
-								'Group.id',
-								'Group.name',
-								'Group.created',
-								'Group.modified'
-							],
-						],
 						'GroupUser' => [
 							'fields' => [
 								'GroupUser.group_id',
@@ -774,6 +744,34 @@ class User extends AppModel {
 				if ($role !== null && ($role == Role::ADMIN || $role == Role::ROOT)) {
 					$fields['fields'][] = 'User.active';
 				}
+				break;
+			case 'User::GpgAuth':
+				$fields = [
+					'fields' => [
+						'User.id',
+						'User.username',
+					],
+					'contain' => [
+						'Role' => [
+							'fields' => [
+								'Role.id',
+								'Role.name',
+							]
+						],
+						'Gpgkey' => [
+							'fields' => [
+								'Gpgkey.uid',
+								'Gpgkey.bits',
+								'Gpgkey.fingerprint',
+								'Gpgkey.key_id',
+								'Gpgkey.key_created',
+								'Gpgkey.expires',
+								'Gpgkey.type',
+								'Gpgkey.key',
+							],
+						],
+					]
+				];
 				break;
 			case 'User::activation':
 				$fields = [
@@ -848,9 +846,93 @@ class User extends AppModel {
 					]
 				];
 				break;
+			case 'Group::index':
+			case 'Group::view':
+				$fields = [
+					'fields' => [
+						'User.id',
+						'User.username',
+						'User.role_id',
+						'User.created',
+						'User.modified',
+						'User.created_by',
+						'User.modified_by',
+					],
+				];
+				break;
+			case 'Share::searchUsers':
+				$fields = [
+					'fields' => [
+						'User.id',
+						'User.username',
+						'User.role_id',
+						'User.created',
+						'User.modified',
+						'User.created_by',
+						'User.modified_by',
+					],
+					'contain' => [
+						'Role' => [
+							'fields' => [
+								'Role.id',
+								'Role.name',
+							]
+						],
+						'Profile' => [
+							'fields' => [
+								'Profile.id',
+								'Profile.first_name',
+								'Profile.last_name',
+								'Profile.created',
+								'Profile.modified'
+							],
+							'Avatar' => [
+								'fields' => [
+									'Avatar.id',
+									'Avatar.user_id',
+									'Avatar.foreign_key',
+									'Avatar.model',
+									'Avatar.filename',
+									'Avatar.filesize',
+									'Avatar.mime_type',
+									'Avatar.extension',
+									'Avatar.hash',
+									'Avatar.path',
+									'Avatar.adapter',
+									'Avatar.created',
+									'Avatar.modified'
+								]
+							]
+						],
+						'Gpgkey' => [
+							'fields' => [
+								'Gpgkey.key_id',
+							],
+						],
+					]
+				];
 		}
 
 		return $fields;
+	}
+
+/**
+ * Return the list of order instructions allowed for each case, with their default value
+ *
+ * @param null $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindAllowedOrder($case = null, $role = null) {
+		return [
+			'User.username',
+			'User.created',
+			'User.modified',
+			'Profile.first_name',
+			'Profile.last_name',
+			'Profile.created',
+			'Profile.modified'
+		];
 	}
 
 /**

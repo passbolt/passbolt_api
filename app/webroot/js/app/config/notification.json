@@ -34,9 +34,9 @@
             "app_users_editavatar_error": {
                 "msg": "%header.message%"
             },
-		  "plugin_secret_copy_success": {
+			"plugin_secret_copy_success": {
 			"msg": "The password has been copied to clipboard"
-		  },
+			},
 			"plugin_clipboard_copy_success": {
 				"msg": "The %name% has been copied to clipboard"
 			},
@@ -54,7 +54,16 @@
             },
             "app_share_update_success": {
               "msg": "The permissions have been updated successfully"
-            }
+            },
+			"app_groups_add_success": {
+				"msg": "The group has been added successfully"
+			},
+			"app_groups_edit_success": {
+				"msg": "The group has been edited successfully"
+			},
+			"app_groups_add_error": {
+				"msg": "The group could not be saved"
+			}
 		}
 	}
 }

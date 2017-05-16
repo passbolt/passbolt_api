@@ -2,10 +2,9 @@
 /**
  * Comments Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.CommentsController
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *            (c) 2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @since        version 2.13.3
  */
 App::uses('AppController', 'Controller');
 App::uses('CommentsController', 'Controller');
@@ -40,6 +39,12 @@ class CommentsControllerTest extends ControllerTestCase {
 		'app.controller_log'
 	);
 
+/**
+ * setUp
+ * Init the modesl and set the current user to Dame
+ *
+ * @return void
+ */
 	public function setUp() {
 		parent::setUp();
 		$this->User = ClassRegistry::init('User');
@@ -50,62 +55,70 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->User->setActive($user);
 	}
 
+/**
+ * TESTS FOR VIEW
+ */
+/**
+ * Test can not view comment on a model that does not implement the commentable behavior
+ */
 	public function testViewNotCommentable() {
 		$model = 'User';
-		$this->setExpectedException('HttpException', "The model {$model} is not commentable");
+		$this->setExpectedException('BadRequestException', "Comments are not possible on this type of resource ($model)");
 		$this->testAction("/comments/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
-	public function testViewModelIdIsMissing() {
-		// Unable to test missing id param because of route
-	}
-
-	/**
-	 * Test that invalid uuid are not accepted.
-	 */
+/**
+ * Test that invalid uuid are not accepted.
+ */
 	public function testViewIdIsNotValid() {
 		$model = 'Resource';
-		$this->setExpectedException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('BadRequestException', 'The resource id is not valid');
 		$this->testAction("/comments/$model/badId.json", array('method' => 'get', 'return' => 'contents'));
 
 		$id = '00000000-1111-1111-1111-000000000000';
-		$this->setExpectedException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('BadRequestException', 'The resource id is not valid');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
-	/**
-	 * Test a non existing uuid.
-	 */
+/**
+ * Test that cannot view comments for a non existing uuid.
+ */
 	public function testViewDoesNotExist() {
 		$model = 'resource';
 		$id = Common::uuid('not-valid-reference');
 
-		$this->setExpectedException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('NotFoundException', 'The resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
+/**
+ * Test that cannot view comment if no permission
+ */
 	public function testViewAndPermission() {
 		$model = 'resource';
 		$id = Common::uuid('resource.id.inkscape');
 
-		// Looking at the matrix of permission Irene should not be able to read the resource cpp1-pwd1
-		$user = $this->User->findById(Common::uuid('user.id.irene'));
+		// Looking at the matrix of permission frances should not be able to read the resource inkscape
+		$user = $this->User->findById(Common::uuid('user.id.frances'));
 		$this->User->setActive($user);
 
-		$this->setExpectedException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('NotFoundException', 'The resource does not exist');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'get', 'return' => 'contents'));
 	}
 
-	public function testView() {
+/**
+ * Test view comments works if everything is alright
+ */
+	public function testViewSuccess() {
 		$getOptions = array(
-			 'method' => 'get',
-			 'return' => 'contents'
+			'method' => 'get',
+			'return' => 'contents'
 		);
 
 		$model = 'resource';
 		$rsId = Common::uuid('resource.id.apache');
-		$result = json_decode($this->testAction("/comments/$model/{$rsId}.json", $getOptions), true);
-		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/comments/viewForeignComments/$model/{$rsId}.json : The test should return a success but is returning {$result['header']['status']}");
+		$result = json_decode($this->testAction("/comments/$model/$rsId.json", $getOptions), true);
+		$this->assertEquals(Status::SUCCESS, $result['header']['status'], "/comments/viewForeignComments/$model/$rsId.json : The test should return a success but is returning {$result['header']['status']}");
 
 		// We expect 1 root comment
 		$this->assertEquals(count($result['body']), 1, "We expect 1 root comment");
@@ -113,41 +126,58 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->assertEquals(count($result['body'][0]['children']), 1, "We expect 1 root comment");
 	}
 
+/**
+ * TEST FOR ADD
+ */
+/**
+ * Test adding a comment fails on a model that does not implement commentable behavior
+ */
 	public function testAddNotCommentable() {
 		$model = 'User';
-		$this->setExpectedException('HttpException', "The model {$model} is not commentable");
+		$this->setExpectedException('BadRequestException', "Comments are not possible on this type of resource ($model).");
 		$this->testAction("/comments/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
-	public function testAddModelIdIsMissing() {
-		// Unable to test missing id param because of route
-	}
-
+/**
+ * Test adding fails if comment id is not a valid UUID
+ */
 	public function testAddIdIsNotValid() {
 		$model = 'Resource';
-		$this->setExpectedException('HttpException', 'The Resource id is invalid');
+		$this->setExpectedException('BadRequestException', 'The resource id is not valid.');
 		$this->testAction("/comments/$model/badId.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
+/**
+ * Test adding fails if comment id does not exist
+ */
 	public function testAddDoesNotExist() {
 		$model = 'resource';
 		$id = Common::uuid('not-valid-reference');
 
-		$this->setExpectedException('HttpException', 'The Resource does not exist');
+		$this->setExpectedException('NotFoundException', 'The resource does not exist.');
 		$this->testAction("/comments/$model/$id.json", array('method' => 'post', 'return' => 'contents'));
 	}
 
+/**
+ * Test adding fails when no data is provided
+ */
 	public function testAddNoDataProvided() {
 		$model = 'resource';
 		$rsId = Common::uuid('resource.id.debian');
-		$this->setExpectedException('HttpException', 'No data were provided');
-		$this->testAction("/comments/$model/{$rsId}.json", array(
-			 'method' => 'post',
-			 'return' => 'contents'
+		$this->setExpectedException('HttpException', 'No comment data provided.');
+		$this->testAction("/comments/$model/$rsId.json", array(
+			'method' => 'post',
+			'return' => 'contents'
 		));
 	}
 
+/**
+ * Test adding fails when the user does not have permission on the record
+ */
 	public function testAddAndPermission() {
+		$user = $this->User->findById(Common::uuid('user.id.frances'));
+		$this->User->setActive($user);
+
 		$model = 'resource';
 		$rsId = Common::uuid('resource.id.inkskape');
 
@@ -155,21 +185,47 @@ class CommentsControllerTest extends ControllerTestCase {
 			'method' => 'post',
 			'return' => 'contents',
 			'data' => array('Comment' => array(
-				'content' => 'UNIT TEST comment',
+				'content' => 'UNIT TEST comment'
 			))
 		);
 
-		$this->setExpectedException('HttpException', 'The Resource does not exist');
-		$srvResult = json_decode($this->testAction("/comments/$model/$rsId.json", $postOptions), true);
+		$this->setExpectedException('HttpException', 'The resource does not exist.');
+		$this->testAction("/comments/$model/$rsId.json", $postOptions);
 	}
 
-	public function testAdd() {
+/**
+ * Test edit fails if data does not validate
+ */
+	public function testAddValidationFails() {
 		$model = 'resource';
 		$rsId = Common::uuid('resource.id.debian');
 		$postOptions = array(
-			 'method' => 'post',
-			 'return' => 'contents',
-			 'data' => array('Comment' => array(
+			'method' => 'post',
+			'return' => 'contents',
+			'data' => array('Comment' => array(
+				'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+								ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+								ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+								reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
+								mollit anim id est laborum.'
+			))
+		);
+
+		$this->setExpectedException('BadRequestException', 'Could not validate comment data.');
+		$this->testAction("/comments/$model/$rsId.json", $postOptions);
+	}
+
+/**
+ * Test add everything goes well
+ */
+	public function testAddSuccess() {
+		$model = 'resource';
+		$rsId = Common::uuid('resource.id.debian');
+		$postOptions = array(
+			'method' => 'post',
+			'return' => 'contents',
+			'data' => array('Comment' => array(
 				'content' => 'UNIT TEST comment',
 			))
 		);
@@ -190,37 +246,54 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->assertTrue(!empty($path), "The result should contain the comment {$srvResult['body']['Comment']['id']}, but it is not found.");
 	}
 
+/**
+ * TEST FOR EDIT
+ */
+/**
+ * Test edit fails with comment id missing
+ */
 	public function testEditCommentIdIsMissing() {
-		$this->setExpectedException('HttpException', 'The comment id is missing');
+		$this->setExpectedException('BadRequestException', 'The comment id is missing.');
 		$this->testAction("/comments.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
+/**
+ * Test edit fails with invalid comment id
+ */
 	public function testEditCommentIdNotValid() {
-		$this->setExpectedException('HttpException', 'The comment id is invalid');
+		$this->setExpectedException('BadRequestException', 'The comment id is not valid.');
 		$this->testAction("/comments/badid.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
+/**
+ * Test edit fails if comment does not exist
+ */
 	public function testEditCommentIdDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
-		$this->setExpectedException('HttpException', 'The comment does not exist');
+		$this->setExpectedException('NotFoundException', 'The comment does not exist.');
 		$this->testAction("/comments/{$id}.json", array('method' => 'put', 'return' => 'contents'));
 	}
 
+/**
+ * Test edit fails if user is not the owner of the comment
+ */
 	public function testEditNotOwner() {
 		$putOptions = array(
-			 'method' => 'put',
-			 'return' => 'contents',
-			 'data' => array('Comment' => array(
+			'method' => 'put',
+			'return' => 'contents',
+			'data' => array('Comment' => array(
 				'content' => 'this is an edited short comment'
 			))
 		);
 		$id = Common::uuid('comment.id.apache-1'); // has to exist, and user has not to be owner
-		$this->setExpectedException('HttpException', 'Your are not allowed to edit this comment');
+		$this->setExpectedException('ForbiddenException', 'You are not allowed to edit this comment.');
 		$this->testAction("/comments/$id.json", $putOptions);
 	}
 
-	// test edit
-	public function testEdit() {
+/**
+ * Test edit fails if data does not validate
+ */
+	public function testEditValidationFails() {
 		$commentParentId = Common::uuid('comment.id.apache-1');
 		$resourceId = Common::uuid('resource.id.apache');
 		$commentContent = 'new comment';
@@ -237,11 +310,47 @@ class CommentsControllerTest extends ControllerTestCase {
 		$comment = $this->Comment->save();
 		$commentId = $this->Comment->id;
 
-		// try to edit an existing comment whose the user is not the owner
 		$putOptions = array(
-			 'method' => 'put',
-			 'return' => 'contents',
-			 'data' => array('Comment' => array(
+			'method' => 'put',
+			'return' => 'contents',
+			'data' => array('Comment' => array(
+				'content' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
+								ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+								ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in 
+								reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+								Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt 
+								mollit anim id est laborum.'
+			))
+		);
+
+		$this->setExpectedException('BadRequestException', 'Could not validate comment data.');
+		$this->testAction("/comments/$commentId.json", $putOptions);
+	}
+
+/**
+ * Test edit works when everything goes well
+ */
+	public function testEditSuccess() {
+		$commentParentId = Common::uuid('comment.id.apache-1');
+		$resourceId = Common::uuid('resource.id.apache');
+		$commentContent = 'new comment';
+		$commentId = null;
+
+		// insert a comment
+		$this->Comment->create();
+		$this->Comment->set(array(
+			'foreign_model' => 'Resource',
+			'foreign_id' => $resourceId,
+			'content' => $commentContent,
+			'parent_id' => $commentParentId
+		));
+		$comment = $this->Comment->save();
+		$commentId = $this->Comment->id;
+
+		$putOptions = array(
+			'method' => 'put',
+			'return' => 'contents',
+			'data' => array('Comment' => array(
 				'content' => 'new comment edited'
 			))
 		);
@@ -250,35 +359,52 @@ class CommentsControllerTest extends ControllerTestCase {
 		$this->assertEquals($putOptions['data']['Comment']['content'], $srvResult['body']['Comment']['content'], "/comments/edit/$commentId.json : The server should return a comment which has same content than the posted value");
 	}
 
+/**
+ * TEST FOR DELETE
+ */
+/**
+ * Test delete fails when comment id is missing
+ */
 	public function testDeleteCommentIdIsMissing() {
 		$this->setExpectedException('HttpException', 'The comment id is missing');
 		$this->testAction("/comments.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
+/**
+ * Test delete fails when comment id is not valid UUID
+ */
 	public function testDeleteCommentIdNotValid() {
-		$this->setExpectedException('HttpException', 'The comment id is invalid');
+		$this->setExpectedException('HttpException', 'The comment id is not valid');
 		$this->testAction("/comments/badid.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
+/**
+ * Test delete fails when comment does not exist
+ */
 	public function testDeleteCommentIdDoesNotExist() {
 		$id = Common::uuid('not-valid-reference');
 		$this->setExpectedException('HttpException', 'The comment does not exist');
 		$this->testAction("/comments/{$id}.json", array('method' => 'delete', 'return' => 'contents'));
 	}
 
+/**
+ * Test delete fails when user is not the owner
+ */
 	public function testDeleteNotOwner() {
 		$putOptions = array(
-			 'method' => 'delete',
-			 'return' => 'contents'
+			'method' => 'delete',
+			'return' => 'contents'
 		);
 
 		$id = Common::uuid('comment.id.apache-1'); // has to exist, and user has not to be owner
-		$this->setExpectedException('HttpException', 'Your are not allowed to delete this comment');
+		$this->setExpectedException('HttpException', 'You are not allowed to delete this comment.');
 		$this->testAction("/comments/$id.json", $putOptions);
 	}
 
-	// test delete
-	public function testDelete() {
+/**
+ * Test delete works when everything goes well
+ */
+	public function testDeleteSuccess() {
 		$commentParentId = Common::uuid('comment.id.apache-1');
 		$resourceId = Common::uuid('resource.id.apache');
 		$commentContent = 'new comment';
@@ -308,8 +434,8 @@ class CommentsControllerTest extends ControllerTestCase {
 
 		// try to delete a comment which has children
 		$deleteOptions = array(
-			 'method' => 'delete',
-			 'return' => 'contents'
+			'method' => 'delete',
+			'return' => 'contents'
 		);
 		$srvResult = json_decode($this->testAction("/comments/$commentId.json", $deleteOptions), true);
 		$this->assertEquals(Status::SUCCESS, $srvResult['header']['status'], "/comments/$commentId.json : The test should return a success but is returning {$srvResult['header']['status']}");

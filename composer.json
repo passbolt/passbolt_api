@@ -21,7 +21,7 @@
 		"source": "https://github.com/passbolt/passbolt"
 	},
 	"require": {
-		"php": ">=5.3.0",
+		"php": ">=5.4.0",
 		"ext-mcrypt": "*"
 	},
 	"require-dev": {
@@ -29,7 +29,7 @@
 		"cakephp/debug_kit" : "^2.2.0",
 		"cakephp/cakephp-codesniffer": "^1.0.0",
         "zircote/swagger-php": "^2.0",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "~1.0"
 	},
 	"config": {
 		"vendor-dir": "Vendor"

@@ -2,7 +2,7 @@
 /**
  * Insert Secret Task
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @package      app.plugins.DataExtras.Console.Command.Task.SecretTask
  * @since        version 2.12.11
@@ -102,6 +102,8 @@ class SecretTask extends ModelTask {
             // Bower = this_23-04
             case Common::uuid('resource.id.centos') :
                 return 'this_23-04';
+            case Common::uuid('resource.id.enligthenment') :
+                return 'azaertyuiop';
             // Centos = very weak
             default :
                 return $this->getDummyPassword();

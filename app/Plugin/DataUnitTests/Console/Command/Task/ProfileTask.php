@@ -2,7 +2,7 @@
 /**
  * Insert Comment Task
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @package      app.plugins.DataExtras.Console.Command.Task.ProfileTask
  * @since        version 2.12.11
@@ -203,8 +203,6 @@ class ProfileTask extends ModelTask {
 			'first_name' => 'Nancy',
 			'last_name' => 'Leveson'
 		));
-
-		// Users with no access
 		$c[] = array('Profile' => array(
 			'id' => Common::uuid('profile.id.orna'),
 			'user_id' => Common::uuid('user.id.orna'),
@@ -213,6 +211,24 @@ class ProfileTask extends ModelTask {
 			'title' => 'Ms',
 			'first_name' => 'Orna',
 			'last_name' => 'Berry'
+		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.ping'),
+			'user_id' => Common::uuid('user.id.ping'),
+			'gender' => 'f',
+			'date_of_birth' => '1958-12-01',
+			'title' => 'Ms',
+			'first_name' => 'Ping',
+			'last_name' => 'Fu'
+		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.ruth'),
+			'user_id' => Common::uuid('user.id.ruth'),
+			'gender' => 'f',
+			'date_of_birth' => '1924-01-01',
+			'title' => 'Ms',
+			'first_name' => 'Ruth',
+			'last_name' => 'Teitelbaum'
 		));
 		$c[] = array('Profile' => array(
 			'id' => Common::uuid('profile.id.sofia'),
@@ -224,13 +240,31 @@ class ProfileTask extends ModelTask {
 			'last_name' => 'Kovalevskaya'
 		));
 		$c[] = array('Profile' => array(
-			'id' => Common::uuid('profile.id.ruth'),
-			'user_id' => Common::uuid('user.id.ruth'),
+			'id' => Common::uuid('profile.id.thelma'),
+			'user_id' => Common::uuid('user.id.thelma'),
 			'gender' => 'f',
-			'date_of_birth' => '1924-01-01',
+			'date_of_birth' => '1924-02-21',
 			'title' => 'Ms',
-			'first_name' => 'Ruth',
-			'last_name' => 'Teitelbaum'
+			'first_name' => 'Thelma',
+			'last_name' => 'Estrin'
+		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.ursula'),
+			'user_id' => Common::uuid('user.id.ursula'),
+			'gender' => 'f',
+			'date_of_birth' => '1924-02-21',
+			'title' => 'Ms',
+			'first_name' => 'Ursula',
+			'last_name' => 'Martin'
+		));
+		$c[] = array('Profile' => array(
+			'id' => Common::uuid('profile.id.wang'),
+			'user_id' => Common::uuid('user.id.wang'),
+			'gender' => 'f',
+			'date_of_birth' => '1966-01-01',
+			'title' => 'Ms',
+			'first_name' => 'Wang',
+			'last_name' => 'Xiaoyun'
 		));
 		return $c;
 	}

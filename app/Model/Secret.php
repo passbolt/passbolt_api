@@ -2,7 +2,7 @@
 /**
  * Secret model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -105,6 +105,11 @@ class Secret extends AppModel {
 					'rule' => ['resourceExists', null],
 					'message' => __('The resource provided does not exist')
 				],
+				'uniqueRelationship' => [
+					'rule' => ['uniqueRelationship'],
+					'on' => 'create',
+					'message' => __('The Secret entered is a duplicate')
+				]
 			],
 			'data' => [
 				'isnotBlank' => [
@@ -172,6 +177,22 @@ class Secret extends AppModel {
 	}
 
 /**
+ * Check if a Secret for the given resource_id and user_id already exists.
+ * Custom Validation Rule
+ *
+ * @return bool
+ */
+	public function uniqueRelationship() {
+		$secret = $this->data['Secret'];
+		$combination = [
+			'Secret.resource_id' => $secret['resource_id'],
+			'Secret.user_id' => $secret['user_id'],
+		];
+		return $this->isUnique($combination, false);
+	}
+
+
+/**
  * Return the find conditions to be used for a given context.
  *
  * @param null|string $case The target case.
@@ -179,7 +200,7 @@ class Secret extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = null, $role = null, $data = null) {
+	public static function getFindConditions($case = null, $role = null, &$data = null) {
 		$conditions = [
 			'conditions' => []
 		];
@@ -194,7 +215,7 @@ class Secret extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		switch ($case) {
 			case 'view':
 			case 'save':

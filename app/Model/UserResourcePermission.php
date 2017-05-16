@@ -2,7 +2,7 @@
 /**
  * UserResourcePermission Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class UserResourcePermission extends AppModel {
@@ -41,7 +41,7 @@ class UserResourcePermission extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
 		$conditions = [];
 
 		switch ($case) {
@@ -60,9 +60,6 @@ class UserResourcePermission extends AppModel {
 						'UserResourcePermission.permission_id !=' => null,
 						// permissions relative to the target resource
 						'UserResourcePermission.resource_id' => $data['UserResourcePermission']['resource_id'],
-						// only permission which have been defined directly for users
-						'Permission.aro' => 'User',
-						'Permission.aro_foreign_key = UserResourcePermission.user_id'
 					]
 				];
 				break;
@@ -84,7 +81,7 @@ class UserResourcePermission extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
 		$fields = ['fields' => []];
 		switch ($case) {
 			case 'findByUserAndResource':

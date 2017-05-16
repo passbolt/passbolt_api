@@ -70,7 +70,7 @@ var Permissions = passbolt.component.sidebarSection.Permissions = mad.Component.
 						if (obj.aro == 'User') {
 							return obj.User.Profile.avatarPath('small');
 						} else {
-							return 'img/group_default.png';
+							return 'img/avatar/group_default.png';
 						}
 					}
 				},
@@ -157,14 +157,6 @@ var Permissions = passbolt.component.sidebarSection.Permissions = mad.Component.
 		});
 	},
 
-	/**
-	 * Refresh permissions.
-	 * This is an alias for loadPermissions.
-	 */
-	refresh: function() {
-		this.loadPermissions();
-	},
-
 	/* ************************************************************** */
 	/* LISTEN TO THE VIEW EVENTS                                      */
 	/* ************************************************************** */
@@ -176,20 +168,8 @@ var Permissions = passbolt.component.sidebarSection.Permissions = mad.Component.
 	 */
 	' request_resource_permissions_edit' : function(el, ev) {
 		mad.bus.trigger('request_resource_sharing', this.options.acoInstance);
-	},
-
-	/* ************************************************************** */
-	/* LISTEN TO THE MODEL EVENTS                                      */
-	/* ************************************************************** */
-
-	/**
-	 * Listen when a resource has been updated, and refresh.
-	 *
-	 * Modifying the permissions of a resource trigger a resource updated event.
-	 */
-	'{passbolt.model.Resource} updated': function(el, ev, data) {
-		this.refresh();
 	}
+
 });
 
 export default Permissions;

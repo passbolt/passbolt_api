@@ -2,7 +2,7 @@
 /**
  * Insert Group Task
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  * @package      app.plugins.DataUnitTests.Console.Command.Task.GroupTask
  * @since        version 2.12.11
@@ -18,63 +18,153 @@ class GroupTask extends ModelTask {
 
 	protected function getData() {
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.management'),
-			'name' => 'management',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
-		));
-		$g[] = array('Group' => array(
 			'id' => Common::uuid('group.id.accounting'),
-			'name' => 'accounting dpt',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'name' => 'Accounting',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.human'),
-			'name' => 'human resources',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.board'),
+			'name' => 'Board',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.developers'),
-			'name' => 'developers',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.creative'),
+			'name' => 'Creative',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.developers_team_leads'),
-			'name' => 'developers team leads',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.developer'),
+			'name' => 'Developer',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.developers_drupal'),
-			'name' => 'developers drupal',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.ergonom'),
+			'name' => 'Ergonom',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.developers_cakephp'),
-			'name' => 'developers cakephp',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.freelancer'),
+			'name' => 'Freelancer',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.freelancers'),
-			'name' => 'freelancers',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.human_resource'),
+			'name' => 'Human resource',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.company_a'),
-			'name' => 'company a',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.it_support'),
+			'name' => 'IT support',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.company_b'),
-			'name' => 'company b',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.leadership_team'),
+			'name' => 'Leadership team',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.users'),
-			'name' => 'Users',
-			'created' => '2012-12-17 13:39:25', 'modified' => '2012-07-04 13:39:25', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
+			'id' => Common::uuid('group.id.management'),
+			'name' => 'Management',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
 		));
 		$g[] = array('Group' => array(
-			'id' => Common::uuid('group.id.no_privilege'),
-			'name' => 'no privilege',
+			'id' => Common::uuid('group.id.marketing'),
+			'name' => 'Marketing',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.network'),
+			'name' => 'Network',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.operations'),
+			'name' => 'Operations',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.procurement'),
+			'name' => 'Procurement',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.quality_assurance'),
+			'name' => 'Quality assurance',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.resource_planning'),
+			'name' => 'Resource planning',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.sales'),
+			'name' => 'Sales',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.traffic'),
+			'name' => 'Traffic',
+			'created' => '2016-01-29 13:39:25',
+			'modified' => '2016-01-29 13:39:25',
+			'created_by' => Common::uuid('user.id.admin'),
+			'modified_by' => Common::uuid('user.id.admin')
+		));
+		$g[] = array('Group' => array(
+			'id' => Common::uuid('group.id.deleted'),
+			'name' => 'deleted',
+			'deleted' => 1,
 			'created' => '2016-02-02 18:59:05', 'modified' => '2016-02-02 18:59:05', 'created_by' => Common::uuid('user.id.anonymous'), 'modified_by' => Common::uuid('user.id.anonymous')
 		));
 

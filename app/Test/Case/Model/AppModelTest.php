@@ -2,10 +2,8 @@
 /**
  * Application Model Test
  *
- * @copyright		(c) 2015-present Bolt Softwares Pvt Ltd
- * @package			app.Test.Case.Model.CommentTest
- * @since			version 2.12.12
- * @license			http://www.passbolt.com/license
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
+ * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppModel', 'Model');
 App::uses('AppTestCase', 'Test');

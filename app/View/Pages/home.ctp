@@ -2,7 +2,7 @@
 /**
  * Home Page
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 	$this->assign('title', __('Passbolt - The simple password management system'));
@@ -28,12 +28,10 @@
 		app : {
 			name: "<?php echo Configure::read('App.name'); ?>",
 			description: "<?php echo Configure::read('App.punchline'); ?>",
-			copyright: "<?php echo Configure::read('App.copyright'); ?>",
 			title: "<?php echo Configure::read('App.title'); ?>",
 			version: {
 				number: "<?php echo Configure::read('App.version.number'); ?>",
-				name: "<?php echo Configure::read('App.version.name'); ?>",
-				song: "<?php echo Configure::read('App.version.song'); ?>"
+				name: "<?php echo Configure::read('App.version.name'); ?>"
 			},
 			url: "<?php echo Router::url('/',true); ?>",
 			debug: "<?php echo Configure::read('debug'); ?>",

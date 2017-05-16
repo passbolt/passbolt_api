@@ -11,9 +11,9 @@ services:
 
 matrix:
   include:
-    # PHP 5.5 / MYSQL 5.5
-    - php: 5.5
-      env: DB=mysql MYSQL_VERSION=5.5
+    # PHP 5.4 / MYSQL 5.6
+    - php: 5.4
+      env: DB=mysql MYSQL_VERSION=5.6
       dist: trusty
       sudo: required
       addons: &php5_addon
@@ -25,6 +25,13 @@ matrix:
             - php5-curl
             - php5-mcrypt
             - php5-mysql
+
+    # PHP 5.5 / MYSQL 5.5
+    - php: 5.5
+      env: DB=mysql MYSQL_VERSION=5.5
+      dist: trusty
+      sudo: required
+      addons: *php5_addon
       # Mysql 5.5 requires extra operations to be installed.
       before_install: &before_install_mysql55
         - sudo service mysql stop
@@ -98,6 +105,7 @@ before_script:
         'login' => 'root',
         'password' => '',
         'persistent' => false,
+        'prefix' => '',
       );
       public \$test = array(
         'datasource' => 'Database/Mysql',
@@ -106,6 +114,7 @@ before_script:
         'login' => 'root',
         'password' => '',
         'persistent' => false,
+        'prefix' => '',
       );
     }" > app/Config/database.php
   - cp app/Config/core.php.default app/Config/core.php

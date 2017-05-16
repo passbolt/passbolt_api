@@ -2,8 +2,8 @@
 /**
  * Application Controller
  * Application-wide methods, all controllers inherit them
- * 
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ *
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -137,9 +137,16 @@ class AppController extends Controller {
  * @return void
  */
 	protected function _sanitize() {
+		// If the request is a json request, check if the request body as send as a json object.
+		if ($this->request->is('json') && empty($this->request->data)) {
+			$jsonData = $this->request->input('json_decode', true);
+			if (!empty($jsonData)) {
+				$this->request->data = $jsonData;
+			}
+		}
+
 		// Before sanitizing, keep the original data.
 		$this->request->dataRaw = $this->request->data;
-		//$this->request->queryRaw = $this->request->query;
 
 		// Sanitize any controller parameters.
 		if (isset($this->request->params) && !empty($this->request->params)) {
@@ -217,7 +224,7 @@ class AppController extends Controller {
 		// Add a callback to the JSON detector
 		$this->request->addDetector('json', [
 			'callback' => function ($request) {
-				return (preg_match('/(.json){1,}$/', Router::url(null, true)) || $request->is('ajax'));
+				return (Common::isJsonUrl(Router::url(null, true)) || $request->is('ajax'));
 			}
 		]);
 	}
