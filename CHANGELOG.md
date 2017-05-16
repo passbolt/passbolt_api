@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.5.0]
+## [1.5.0] - 2017-05-16
 ### Added
 - PASSBOLT-1950: As a user I can see which groups a password is shared with from the sidebar
 - PASSBOLT-1953: As a user I can share a password with a group
