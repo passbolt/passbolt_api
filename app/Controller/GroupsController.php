@@ -399,7 +399,10 @@ class GroupsController extends AppController {
 		$this->Group->set($data);
 		$validates = $this->Group->validates(['fieldList' => ['name']]);
 		if (!$validates) {
-			throw new ValidationException(__('The group name could not be validated.'), $this->Group->validationErrors);
+			throw new ValidationException(
+				__('The group name could not be validated.'),
+				['Group' => $this->Group->validationErrors]
+			);
 		}
 
 		// Get the fields for the edit operation and save

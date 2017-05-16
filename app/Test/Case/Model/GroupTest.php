@@ -62,10 +62,10 @@ class GroupTest extends CakeTestCase {
 	}
 
 /**
- * Test Name Validation where a similar name already exists.
+ * Test Name Validation on create where a similar name already exists.
  * @return void
  */
-	public function testNameAlreadyExistValidation() {
+	public function testNameAlreadyExistOnCreateValidation() {
 		$group = [
 			'name' => 'testgroup',
 		];
@@ -77,6 +77,50 @@ class GroupTest extends CakeTestCase {
 		$this->Group->set($group);
 		$validates = $this->Group->validates(array('fieldList' => array('name')));
 		$this->assertFalse($validates, 'A group with the same name as an existing one shouldn\'t validate');
+	}
+
+/**
+ * Test Name Validation on update where a similar name already exists.
+ * @return void
+ */
+	public function testNameAlreadyExistOnUpdateSameNameValidation() {
+		$group = [
+			'name' => 'testgroup',
+		];
+
+		$this->Group->create();
+		$group = $this->Group->save($group);
+
+		$this->Group->id = $group['Group']['id'];
+		$this->Group->set($group);
+		$validates = $this->Group->validates(array('fieldList' => array('name')));
+		$this->assertTrue($validates, 'A group updated with the same name should validate');
+	}
+
+/**
+ * Test Name Validation on update where a similar name already exists.
+ * @return void
+ */
+	public function testNameAlreadyExistOnUpdateDifferentNameValidation() {
+		$group = [
+			'name' => 'testgroup',
+		];
+
+		$this->Group->create();
+		$groupA = $this->Group->save($group);
+
+		$group = [
+			'name' => 'mygroup',
+		];
+
+		$this->Group->create();
+		$groupB = $this->Group->save($group);
+
+		$this->Group->id = $groupB['Group']['id'];
+		$groupB['Group']['name'] = $groupA['Group']['name'];
+		$this->Group->set($groupB);
+		$validates = $this->Group->validates(array('fieldList' => array('name')));
+		$this->assertFalse($validates, 'A group updated with the name of another group shouldn\'t validate');
 	}
 
 /**

@@ -66,7 +66,6 @@ class Group extends AppModel {
 				],
 				'unique' => [
 					'shared' => false,
-					'on' => 'create',
 					'rule' => ['checkGroupNameIsUnique', null],
 					'message' => __('The group name provided is already used by another group'),
 				],
@@ -339,6 +338,7 @@ class Group extends AppModel {
 				'conditions' => [
 					'Group.name' => $check['name'],
 					'Group.deleted' => false,
+					'Group.id <>' => $this->id
 				],
 			]);
 			return empty($exist);
