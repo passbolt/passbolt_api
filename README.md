@@ -22,7 +22,7 @@ Passbolt is distributed under the [Affero General Public License v3](http://www.
 ## About Passbolt
 
 Passbolt is an open source password manager for teams. It allows you to securely share and store credentials.
-For instance, the wifi password of your office, the administrator password of a router or your organisation's social media account passwords, all of them can be secured using Passbolt.
+For instance, the wifi password of your office, the administrator password of a router or your organisation's social media account passwords, all of them can be secured using passbolt.
 
 Passbolt is different from the other password managers because:
 - It is primarily designed for teams and not individuals
@@ -43,7 +43,7 @@ Find out more: [https://www.passbolt.com](https://www.passbolt.com "Passbolt Hom
 
 ### Trying out passbolt
 
-You can try a demo of Passbolt at https://demo.passbolt.com.
+You can try a demo of passbolt at https://demo.passbolt.com.
 
 You will need to install a plugin, you can find some help here:
 https://www.passbolt.com/help/start/firefox
@@ -53,16 +53,16 @@ https://www.passbolt.com/help/start/firefox
 You can install passbolt on your own machine. Follow the instructions on the website here:
 https://www.passbolt.com/help/tech/install
 
-## Contributing to Passbolt
+## Contributing to passbolt
 
 Please check out CONTRIBUTING.md for more information on how to get involved!
 
 ## Reporting a security issue
 
-If you've found a security-related issue in Passbolt, please don't open an issue on GitHub.
+If you've found a security-related issue in passbolt, please don't open an issue on GitHub.
 Instead contact us at security@passbolt.com. In the spirit of responsible disclosure we ask that the reporter keep the issue confidential until we announce it.
 
-The Passbolt team will take the following actions:
+The passbolt team will take the following actions:
 - Try first to reproduce the issue and confirm the vulnerability.
 - Acknowledge to the reporter that we have received the issue and are working on a fix.
 - Get a fix/patch prepared and create associated automated tests.
@@ -73,9 +73,4 @@ The Passbolt team will take the following actions:
 
 ## Credits
 
-Passbolt team rocket:
- - [Cédric Alfonsi](https://github.com/cedricalfonsi "Cédric Alfonsi")
- - [Rémy Bertot](https://github.com/stripthis "Rémy Bertot")
- - [Kevin Muller](https://github.com/kevinmuller "Kevin Muller")
-
-And also: https://www.passbolt.com/credits
+https://www.passbolt.com/credits
