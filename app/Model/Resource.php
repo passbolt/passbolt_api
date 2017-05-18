@@ -76,7 +76,6 @@ class Resource extends AppModel {
  * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = [
-		'SuperJoin',
 		'Containable',
 		'Trackable',
 		'Favoritable',
