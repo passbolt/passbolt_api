@@ -16,6 +16,9 @@ var Confirm = mad.component.Confirm = mad.component.Dialog.extend('mad.component
                 // Will be added to button, primary, js-dialog-confirm
             ]
         },
+        cancelButton: {
+            label: __('cancel')
+        },
         content: '',
         closeAfterAction: true,
         action: null
@@ -34,6 +37,7 @@ var Confirm = mad.component.Confirm = mad.component.Dialog.extend('mad.component
         this.setViewData('content', this.options.content);
         this.setViewData('subtitle', this.options.subtitle);
         this.setViewData('submitButton', this.options.submitButton);
+        this.setViewData('cancelButton', this.options.cancelButton);
     },
 
     /**

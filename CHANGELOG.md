@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PASSBOLT-2070: Delete unused code / exclude external libs from coverage
 - PASSBOLT-2071: Drop exec bits from files which don't need them (GITHUB PR #67)
+- PASSBOLT-2073: As AP I should see a warning on the login page if the plugin and the api are not compatible
 
 ## [1.5.0] - 2017-05-16
 ### Added

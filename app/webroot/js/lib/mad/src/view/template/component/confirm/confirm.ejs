@@ -15,11 +15,11 @@
                 </strong>
             </p>
             <% } %>
-            <p><%= content %></p>
+            <p><%== content %></p>
         </div>
     </div>
     <div class="submit-wrapper clearfix">
         <input type="submit" value="<%= submitButton.label %>" class="button primary js-dialog-confirm <%= submitButton.cssClasses.join(' ') %>" id="confirm-button">
-        <a class="js-dialog-cancel cancel">cancel</a>
+        <a class="js-dialog-cancel cancel"><%= cancelButton.label %></a>
     </div>
 </div>

@@ -32,7 +32,8 @@ module.exports = function(grunt) {
 				'<%= config.webroot %>/js/lib/underscore',
 				'<%= config.webroot %>/js/lib/xregexp',
 				'<%= config.webroot %>/js/lib/jssha',
-				'<%= config.webroot %>/js/lib/urijs'
+				'<%= config.webroot %>/js/lib/urijs',
+				'<%= config.webroot %>/js/lib/semver'
 			]
 		},
 		shell: {
@@ -159,15 +160,33 @@ module.exports = function(grunt) {
 					dest: '<%= config.webroot %>/js/lib/urijs/',
 					nonull: true,
 					expand: true
+				}, {
+					// semver
+					cwd: '<%= config.modules_path %>/semver/',
+					src: 'semver.js',
+					dest: '<%= config.webroot %>/js/lib/semver/',
+					nonull: true,
+					expand: true
 				}]
 			}
 		},
 		"steal-build": {
-			default: {
+			app: {
 				options: {
 					system: {
 						config: "./app/webroot/js/stealconfig.js",
 						main: "app/passbolt"
+					},
+					buildOptions: {
+						minify: true
+					}
+				}
+			},
+			login: {
+				options: {
+					system: {
+						config: "./app/webroot/js/stealconfig.js",
+						main: "app/login"
 					},
 					buildOptions: {
 						minify: true
@@ -209,9 +228,11 @@ module.exports = function(grunt) {
 	grunt.registerTask('lib-deploy', ['clean:lib', 'copy:lib', 'shell:mad_lib_patch']);
 
 	// Build mad & all the demos apps to ensure that everything compile
-	grunt.registerTask("build", ["steal-build"]);
+	grunt.registerTask("build", ["steal-build:app", "steal-build:login"]);
+	grunt.registerTask("build-app", ["steal-build:app"]);
+	grunt.registerTask("build-login", ["steal-build:login"]);
 
 	// 'grunt' default
-	grunt.registerTask('default', ["steal-build"]);
+	grunt.registerTask('default', ["steal-build:app", "steal-build:login"]);
 
 };
