@@ -2,11 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.5.1] - 2017-05-18
+## [1.5.1]
 ### Fixed
 - PASSBOLT-2070: Delete unused code / exclude external libs from coverage
-- PASSBOLT-2071: Drop exec bits from files which don't need them (GITHUB PR #67)
+- PASSBOLT-2071: Drop exec bits from files which don't need them (@OdyX GITHUB PR #67)
 - PASSBOLT-2073: As AP I should see a warning on the login page if the plugin and the api are not compatible
+- PASSBOLT-2029: PHP7 compatibility, fix deprecated cakePHP String class calls (@leomazzo GITHUB-64)
 
 ## [1.5.0] - 2017-05-16
 ### Added
