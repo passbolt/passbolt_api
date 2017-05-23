@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.5.1]
+## [1.5.1] - 2017-05-23
 ### Fixed
 - PASSBOLT-2070: Delete unused code / exclude external libs from coverage
 - PASSBOLT-2071: Drop exec bits from files which don't need them (@OdyX GITHUB PR #67)
