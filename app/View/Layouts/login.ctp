@@ -30,5 +30,13 @@
 </div>
 <?php echo $this->element('footer'); ?>
 <?php echo $this->element('scriptBottom'); ?>
+<?php
+	if(Configure::read('App.js.build') === 'production') : ?>
+<script type="text/javascript" src="/js/lib/steal/steal.production.js" config="/js/stealconfig.js" main="app/login" env="production"></script>
+<?php else: ?>
+<script type="text/javascript" src="/js/lib/steal/steal.js" config="/js/stealconfig.js" main="app/login"></script>
+<?php
+endif;
+?>
 </body>
 </html>

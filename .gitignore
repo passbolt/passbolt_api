@@ -59,6 +59,7 @@ composer.lock
 /nbproject
 .idea
 *.mo
+.project
 
 # IDE and editor specific files #
 #################################

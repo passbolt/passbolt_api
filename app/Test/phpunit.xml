@@ -6,9 +6,14 @@
             <directory suffix=".php">../Controller</directory>
             <directory suffix=".php">../Model</directory>
             <directory suffix=".php">../View</directory>
-            <!--<exclude>-->
-                <!--<directory suffix=".php">../Console</directory>-->
-            <!--</exclude>-->
+            <exclude>
+                <file>../Console/cake.php</file>
+                <file>../Console/build_po.php</file>
+                <file>../Console/Command/SchemaShell.php</file>
+                <file>../Console/Command/Task/FixtureTask.php</file>
+                <file>../Model/Behavior/TrackableBehavior.php</file>
+                <!--<directory suffix=".php">../tests</directory>-->
+            </exclude>
         </whitelist>
     </filter>
 </phpunit>

@@ -13,7 +13,7 @@ import 'lib/p3_narrow/p3.narrow';
 $(document).ready(function () {
 	// The deferreds returned by the ajax calls which retrieve the application configurations.
 	var appConfigDeferred = null,
-		notifConfigDeferred = null;;
+		notifConfigDeferred = null;
 
 	// Adds classes to an element (body by default) based on document width.
 	$.p3.narrow({

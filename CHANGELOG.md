@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.1] - 2017-05-23
+### Fixed
+- PASSBOLT-2070: Delete unused code / exclude external libs from coverage
+- PASSBOLT-2071: Drop exec bits from files which don't need them (@OdyX GITHUB PR #67)
+- PASSBOLT-2073: As AP I should see a warning on the login page if the plugin and the api are not compatible
+- PASSBOLT-2029: PHP7 compatibility, fix deprecated cakePHP String class calls (@leomazzo GITHUB-64)
+- PASSBOLT-2074: Delete confirmation dialogs should fit the latest styleguide
+
 ## [1.5.0] - 2017-05-16
 ### Added
 - PASSBOLT-1950: As a user I can see which groups a password is shared with from the sidebar
@@ -235,7 +243,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.5.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.5.1...HEAD
+[1.5.1]: https://github.com/passbolt/passbolt_api/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/passbolt/passbolt_api/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/passbolt/passbolt_api/compare/v1.3.2...v1.4.0
 [1.3.2]: https://github.com/passbolt/passbolt_api/compare/v1.3.1...v1.3.2

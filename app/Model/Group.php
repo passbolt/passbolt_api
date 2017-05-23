@@ -15,7 +15,6 @@ class Group extends AppModel {
 
 	public $actsAs = [
 		'Trackable',
-		'SuperJoin',
 		'Containable'
 	];
 
