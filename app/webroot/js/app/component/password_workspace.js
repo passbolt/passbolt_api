@@ -224,7 +224,11 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			null,
 			{
 				label: __('Do you really want to delete password ?'),
-				content: __('Please confirm you really want to delete the password. After clicking ok, it will be deleted permanently.'),
+				content: __('Please confirm you really want to delete the password. After clicking ok, the password will be <strong>deleted permanently</strong>.'),
+				submitButton: {
+					label: __('delete password'),
+					cssClasses: ['warning']
+				},
 				action: function() {
 					for (var i=2; i < args.length; i++) {
 						var rs = args[i];

@@ -454,7 +454,11 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 			null,
 			{
 				label: __('Do you really want to delete user ?'),
-				content: __('Please confirm you really want to delete the user. After clicking ok, it will be deleted permanently.'),
+				content: __('Please confirm you really want to delete the user. After clicking ok, the user will be <strong>deleted permanently</strong>.'),
+                submitButton: {
+                    label: __('delete user'),
+                    cssClasses: ['warning']
+                },
 				action: function() {
 					for (var i=2; i < args.length; i++) {
 						var user = args[i];

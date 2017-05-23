@@ -3,6 +3,7 @@ import 'mad/component/tree';
 import 'app/view/component/comments_list';
 import 'app/view/component/comments';
 import 'app/model/comment';
+import 'app/view/template/component/comment/comment_item.ejs!';
 
 /**
  * @inherits mad.component.Tree
@@ -24,7 +25,7 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
 		viewClass: passbolt.view.component.CommentsList,
 		itemClass: passbolt.model.Comment,
 		templateUri: 'mad/view/template/component/tree.ejs',
-		itemTemplateUri: 'js/app/view/template/component/comment/comment_item.ejs',
+		itemTemplateUri: 'app/view/template/component/comment/comment_item.ejs',
 		foreignModel:null,
 		foreignId:null,
         selfLoad:false,
@@ -57,8 +58,8 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
             var self = this;
             // load the comments for the given context
             passbolt.model.Comment.findAll({
-                'foreignModel'	: this.options.foreignModel,
-                'foreignId'		: this.options.foreignId
+                foreignModel: this.options.foreignModel,
+                foreignId: this.options.foreignId
             }, function (comments, response, request) {
                 // load the tree with the comments
                 self.load(comments);
@@ -95,7 +96,11 @@ var CommentsList = passbolt.component.CommentsList = mad.component.Tree.extend('
             null,
             {
                 label: __('Do you really want to delete comment ?'),
-                content: __('Please confirm you really want to delete the comment. After clicking ok, it will be deleted permanently.'),
+                content: __('Please confirm you really want to delete the comment. After clicking ok, the comment will be <strong>deleted permanently</strong>.'),
+				submitButton: {
+					label: __('delete comment'),
+					cssClasses: ['warning']
+				},
                 action: function() {
                     mad.bus.trigger('request_delete_comment', data);
                 }

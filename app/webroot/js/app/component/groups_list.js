@@ -25,7 +25,7 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         selfLoad:false,
         itemClass: passbolt.model.Group,
         templateUri: 'mad/view/template/component/tree.ejs',
-        itemTemplateUri: 'js/app/view/template/component/group_item.ejs',
+        itemTemplateUri: 'app/view/template/component/group_item.ejs',
         prefixItemId: 'group_',
         selectedGroups: can.Model.List(),
         selectedFilter: null,
