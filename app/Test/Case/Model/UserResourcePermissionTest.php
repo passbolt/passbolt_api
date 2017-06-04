@@ -10,6 +10,7 @@
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
 App::uses('UserResourcePermission', 'Model');
+App::uses('Resource', 'Model');
 App::uses('PermissionMatrix', 'Test/Data');
 
 if (!class_exists('CakeSession')) {
@@ -36,13 +37,15 @@ class UserResourcePermissionTest extends CakeTestCase
 	public function setUp()
 	{
 		parent::setUp();
+		$this->User = ClassRegistry::init('User');
+		$this->Resource = ClassRegistry::init('Resource');
 		$this->Permission = ClassRegistry::init('Permission');
 		$this->UserResourcePermission = ClassRegistry::init('UserResourcePermission');
 		$this->PermissionType = ClassRegistry::init('PermissionType');
 	}
 
 /******************************************************
- * INTEGRITY TESTS
+ * Test that the view works as expected, based on the permission matrix.
  ******************************************************/
 
 	/**
@@ -81,4 +84,97 @@ class UserResourcePermissionTest extends CakeTestCase
 		}
 	}
 
+/******************************************************
+ * Test the function : findAuthorizedResourcesIds
+ ******************************************************/
+
+	/**
+	 * Invalid $userId argument
+	 */
+	function testFindAuthorizedResourcesIdsInvalidUserId() {
+		$this->setExpectedException('InvalidArgumentException', '$userId is not a valid uuid');
+		$this->UserResourcePermission->findAuthorizedResourcesIds('wrong-user-id');
+	}
+
+	/**
+	 * Invalid $permissionType argument
+	 */
+	function testFindAuthorizedResourcesIdsInvalidPermissionType() {
+		$this->setExpectedException('InvalidArgumentException', '$permissionType is not a valid permission type');
+		$this->UserResourcePermission->findAuthorizedResourcesIds(Common::uuid('user.id.user'), 'wrong-permission-type');
+	}
+
+	/**
+	 * Check that the permissions defined in the matrix match the resources returned by the function.
+	 */
+	function testFindAuthorizedResourcesIds() {
+		$PermissionType = Common::getModel('PermissionType');
+		$permissionsTypes = [
+			$PermissionType::READ,
+			$PermissionType::UPDATE,
+			$PermissionType::OWNER
+		];
+
+		$userId = Common::uuid('user.id.admin');
+		$user = $this->User->findById($userId);
+		$this->User->setActive($user);
+
+		$matrixPath = TESTS . '/Data/view_users_resources_permissions.csv';
+		$matrix = PermissionMatrix::importCsv($matrixPath, 'user');
+
+		foreach ($matrix as $userAlias => $expectedPermissions) {
+			$userId = Common::uuid('user.id.' . $userAlias);
+
+			foreach ($permissionsTypes as $permissionsType) {
+				// Expected resources for the permission type
+				$expectedResourcesIds = [];
+				foreach ($expectedPermissions as $resourceAlias => $expectedPermission) {
+					if ($expectedPermission >= $permissionsType) {
+						$expectedResourcesIds[] = Common::uuid('resource.id.' . $resourceAlias);
+					}
+				}
+				$resourcesIds = $this->UserResourcePermission->findAuthorizedResourcesIds($userId, $permissionsType);
+				$this->assertEquals(count($resourcesIds), count($expectedResourcesIds));
+				$this->assertTrue(sort($resourcesIds), sort($expectedResourcesIds));
+			}
+		}
+	}
+
+/******************************************************
+ * Test the function : findSoleOwnerSharedResourcesIds
+ ******************************************************/
+
+	/**
+	 * Invalid $userId argument
+	 */
+	function testFindSoleOwnerSharedResourcesIdsInvalidUserId() {
+		$this->setExpectedException('InvalidArgumentException', '$userId is not a valid uuid');
+		$this->UserResourcePermission->findSoleOwnerSharedResourcesIds('wrong-user-id');
+	}
+
+	/**
+	 * Check that functions return well the resources whose are shared and have only a sole owner
+	 */
+	function testFindSoleOwnerSharedResourcesIds() {
+		$userId = Common::uuid('user.id.admin');
+		$user = $this->User->findById($userId);
+		$this->User->setActive($user);
+
+		// Check the function return empty if the user is owner of no resources.
+		$resourcesIds = $this->UserResourcePermission->findSoleOwnerSharedResourcesIds(Common::uuid('user.id.user'));
+		$this->assertEmpty($resourcesIds);
+
+		// Check the function return an empty array if the user is owner of a resources shared with nobody.
+		$this->Resource->create();
+		$this->Resource->save(['name' => 'resource-test']);
+		$resources = $this->Resource->find('all');
+		$this->assertCount(1, $resources);
+		$resourcesIds = $this->UserResourcePermission->findSoleOwnerSharedResourcesIds(Common::uuid('user.id.user'));
+		$this->assertEmpty($resourcesIds);
+
+		// Check the function return the resources a user is the sole owner if shared with others.
+		$resourcesIds = $this->UserResourcePermission->findSoleOwnerSharedResourcesIds(Common::uuid('user.id.ada'));
+		$this->assertCount(1, $resourcesIds);
+		$this->assertContains(Common::uuid('resource.id.apache'), $resourcesIds);
+	}
 }

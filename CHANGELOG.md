@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- PASSBOLT-2044: As an admin I shouldn’t be able to delete a user who is the sole owner of passwords shared with others
+
 ## [1.5.1] - 2017-05-23
 ### Fixed
 - PASSBOLT-2070: Delete unused code / exclude external libs from coverage

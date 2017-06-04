@@ -30,6 +30,8 @@ class UsersControllerDeleteTest extends ControllerTestCase {
 		'app.user_agent',
 		'app.controller_log',
 		'app.resource',
+		'app.favorite',
+		'app.secret',
 		'app.permission',
 		'app.permissions_type',
 		'app.permission_view',
@@ -128,6 +130,61 @@ class UsersControllerDeleteTest extends ControllerTestCase {
 			"/users/{$id}.json",
 			array('return' => 'contents', 'method' => 'delete'),
 			true
+		);
+	}
+
+/**
+ * Test delete fails if user is the sole owner of some shared passwords
+ *
+ * @return void
+ */
+	public function testDeleteUserIsSoleOwner() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		$this->setExpectedException('ValidationException', 'The user is sole owner of some passwords. Transfer the ownership before deleting.');
+		$userId = Common::uuid('user.id.ada');
+		$this->testAction(
+			"/users/{$userId}.json",
+			array(
+				'method' => 'delete',
+				'return' => 'contents'
+			)
+		);
+	}
+
+/**
+ * Test dry-run delete in a normal scenario.
+ *
+ * @return void
+ */
+	public function testDeleteDryRunSuccess() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// the user to delete
+		$userId = Common::uuid('user.id.user');
+		$result = json_decode(
+			$this->testAction(
+				"/users/{$userId}/dry-run.json",
+				array(
+					'method' => 'delete',
+					'return' => 'contents'
+				)
+			),
+			true
+		);
+		$this->assertEquals(
+			Status::SUCCESS,
+			$result['header']['status'],
+			"delete /users/{$userId}.json : The test should return a success but is returning {$result['header']['status']}"
+		);
+
+		$deleted = $this->User->findById($userId);
+		$this->assertEquals(
+			0,
+			$deleted['User']['deleted'],
+			"delete /users/{$userId}.json : after delete, the value of the field deleted should be 1 but is {$deleted['User']['deleted']}"
 		);
 	}
 

@@ -106,6 +106,7 @@ class User extends AppModel {
 	public $hasMany = [
 		'GroupUser',
 		'Secret',
+		'UserResourcePermission',
 		// Custom join with ControllerLog to retrieve the last logged in date.
 		// The results of this will be processed in the afterFind
 		// and integrated directly in the user object with column name last_logged_in.
