@@ -141,4 +141,62 @@ class UsersControllerIndexTest extends ControllerTestCase {
 		$this->assertEquals($result->body[0]->User->username, 'betty@passbolt.com');
 	}
 
+/**
+ * Test a call to index filtered by is-active as LU
+ *
+ * @return void
+ */
+	public function testLUIndexFilteredByIsActive() {
+		$user = $this->User->findById(Common::uuid('user.id.user'));
+		$this->User->setActive($user);
+
+		$data = array(
+			'filter' => [
+				'is-active' => false
+			]
+		);
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
+		$this->assertNotEmpty($result->body);
+		$usersIds = Hash::extract($result->body, "{n}.User.id");
+		$this->assertContains(Common::uuid('user.id.ada'), $usersIds);
+		$this->assertNotContains(Common::uuid('user.id.orna'), $usersIds);
+	}
+
+/**
+ * Test a call to index filtered by is-active as AD
+ *
+ * @return void
+ */
+	public function testADIndexFilteredByIsActive() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		// Retrieve inactive users
+		$data = array(
+			'filter' => [
+				'is-active' => false
+			]
+		);
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
+		$this->assertNotEmpty($result->body);
+		$usersIds = Hash::extract($result->body, "{n}.User.id");
+		$this->assertNotContains(Common::uuid('user.id.ada'), $usersIds);
+		$this->assertContains(Common::uuid('user.id.orna'), $usersIds);
+
+		// Retrieve active users
+		$data = array(
+			'filter' => [
+				'is-active' => true
+			]
+		);
+		$result = json_decode($this->testAction('/users.json', array('return' => 'contents', 'method' => 'GET', 'data' => $data), true));
+		$this->assertEquals($result->header->status, Status::SUCCESS, '/users return something');
+		$this->assertNotEmpty($result->body);
+		$usersIds = Hash::extract($result->body, "{n}.User.id");
+		$this->assertContains(Common::uuid('user.id.ada'), $usersIds);
+		$this->assertNotContains(Common::uuid('user.id.orna'), $usersIds);
+	}
+
 }

@@ -126,9 +126,17 @@ class UsersController extends AppController {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
 
+		// Allowed query filters.
+		$allowedQueryFilters = ['keywords', 'has-groups'];
+
+		// Admin is allowed to use the filter is-active
+		if (User::isAdmin()) {
+			$allowedQueryFilters[] = 'is-active';
+		}
+
 		// Extract parameters from query string
 		$allowedQueryItems = [
-			'filter' => ['keywords', 'has-groups'],
+			'filter' => $allowedQueryFilters,
 			'order' => $this->User->getFindAllowedOrder('UsersController::index'),
 		];
 		$params = $this->QueryString->get($allowedQueryItems);
