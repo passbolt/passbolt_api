@@ -31,11 +31,17 @@
 <?php echo $this->element('footer'); ?>
 <?php echo $this->element('scriptBottom'); ?>
 <?php
-	if(Configure::read('App.js.build') === 'production') : ?>
-<script type="text/javascript" src="/js/lib/steal/steal.production.js" config="/js/stealconfig.js" main="app/login" env="production"></script>
-<?php else: ?>
-<script type="text/javascript" src="/js/lib/steal/steal.js" config="/js/stealconfig.js" main="app/login"></script>
-<?php
+if(Configure::read('App.js.build') === 'production') :
+    echo $this->html->script('/js/lib/steal/steal.production.js', [
+        'config' => Router::url('/js/stealconfig.js'),
+        'main' => 'app/login',
+        'env' => 'production'
+    ]);
+else:
+    echo $this->html->script('/js/lib/steal/steal.js', [
+        'config' => Router::url('/js/stealconfig.js'),
+        'main' => 'app/login',
+    ]);
 endif;
 ?>
 </body>

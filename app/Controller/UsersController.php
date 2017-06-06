@@ -105,7 +105,7 @@ class UsersController extends AppController {
 
 		$url = parse_url($referer);
 		// If the referer was not the register url, we also redirect to /register page.
-		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== '/register') {
+		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== Router::url('/register')) {
 			$this->redirect("/register");
 			return;
 		}
