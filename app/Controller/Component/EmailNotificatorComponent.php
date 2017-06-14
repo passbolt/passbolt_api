@@ -458,4 +458,38 @@ class EmailNotificatorComponent extends Component {
 			$template
 		);
 	}
+
+/**
+ * Send a notification email regarding a user deleted from a group.
+ *
+ * @param $senderId the user who deleted the user from the group
+ * @param $groupUser the deleted group user
+ * @return void
+ */
+	public function groupDeleteUser($senderId, $groupUser) {
+		// Get account info.
+		$recipient = $this->_getAuthorInfo($groupUser['GroupUser']['user_id']);
+		$sender = $this->_getAuthorInfo($senderId);
+
+		// Get group info.
+		$group = $this->Group->findById($groupUser['GroupUser']['group_id']);
+
+		// Default subject.
+		$subject = __("%s removed you from the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
+
+		$template = 'group_delete_user';
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			$subject, [
+			'sender' => $sender,
+			'groupUser' => $groupUser,
+			'group' => $group,
+			'user' => $recipient,
+			'deletedTime' => time(),
+		],
+			$template
+		);
+	}
 }

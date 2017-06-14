@@ -298,6 +298,9 @@ class GroupsController extends AppController {
 			foreach ($changes['created'] as $groupUser) {
 				$this->EmailNotificator->groupAddUser(User::get('id'), $groupUser);
 			}
+			foreach ($changes['deleted'] as $groupUser) {
+				$this->EmailNotificator->groupDeleteUser(User::get('id'), $groupUser);
+			}
 		}
 
 		// Success response.
