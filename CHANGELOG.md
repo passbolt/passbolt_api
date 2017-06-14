@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2044: As an admin I shouldn’t be able to delete a user who is the sole owner of passwords shared with others
 - PASSBOLT-2078: As GM/AD I shouldn't be able to add a user who didn't complete the registration process to a group I edit/create
 - PASSBOLT-2111: As an admin I should be able to install passbolt under mydomain.tld/passbolt
+- PASSBOLT-2099: As a user I should receive a notification when I am added to a group
 
 ## [1.5.1] - 2017-05-23
 ### Fixed

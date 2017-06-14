@@ -13,7 +13,8 @@ class GroupsController extends AppController {
  * @var array list of supported components
  */
 	public $components = [
-		'QueryString'
+		'QueryString',
+		'EmailNotificator',
 	];
 
 /**
@@ -137,6 +138,7 @@ class GroupsController extends AppController {
 			throw new BadRequestException(__('Data validation error.'));
 		}
 
+		$savedGroupUsers = [];
 		foreach($postData['GroupUsers'] as $groupUser) {
 			if(!isset($groupUser['GroupUser']) || empty($groupUser['GroupUser'])) {
 				$this->Group->rollback();
@@ -155,14 +157,23 @@ class GroupsController extends AppController {
 			// Save GroupUser
 			$fields = $this->Group->GroupUser->getFindFields('add', User::get('Role.name'));
 			$savedGroupUser = $this->Group->GroupUser->save($postData, true, $fields['fields']);
+			$savedGroupUsers[] = $savedGroupUser;
 			if ($savedGroupUser == false) {
 				$this->Group->rollback();
 				throw new InternalErrorException(__('GroupUser could not be saved.'));
 			}
 		}
 
-		// Begin transaction
+		// End transaction
 		$this->Group->commit();
+
+		// Email notification.
+		foreach ($savedGroupUsers as $groupUser) {
+			if (User::get('id') === $groupUser['GroupUser']['user_id']) {
+				continue;
+			}
+			$this->EmailNotificator->groupAddUser(User::get('id'), $groupUser);
+		}
 
 		// Get find options and get all groups.
 		$options = ['contain' => ['user'], 'Group.id' => $groupSaved['Group']['id']];
@@ -282,6 +293,11 @@ class GroupsController extends AppController {
 		// In case of dry run, add output.
 		if ($isDryRun) {
 			$res['dry-run'] = $dryRunOutput;
+		} else {
+			// Email notification.
+			foreach ($changes['created'] as $groupUser) {
+				$this->EmailNotificator->groupAddUser(User::get('id'), $groupUser);
+			}
 		}
 
 		// Success response.

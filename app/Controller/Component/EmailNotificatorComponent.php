@@ -19,6 +19,11 @@ class EmailNotificatorComponent extends Component {
 	public $User;
 
 /**
+ * @var Group $Group model instance
+ */
+	public $Group;
+
+/**
  * @var Resource $v model instance
  */
 	public $Resource;
@@ -43,6 +48,7 @@ class EmailNotificatorComponent extends Component {
 	public function initialize(Controller $controller) {
 		$this->Permission = Common::getModel('Permission');
 		$this->User = Common::getModel('User');
+		$this->Group = Common::getModel('Group');
 		$this->Resource = Common::getModel('Resource');
 		$this->Secret = Common::getModel('Secret');
 		$this->Comment = Common::getModel('Comment');
@@ -391,7 +397,7 @@ class EmailNotificatorComponent extends Component {
 	}
 
 /**
- * Send a notification email regarding a an account recovery.
+ * Send a notification email regarding an account recovery.
  *
  * @param uuid $toUserId user id of the recipient
  * @param array $data
@@ -415,6 +421,39 @@ class EmailNotificatorComponent extends Component {
 			[
 				'account' => $recipient,
 				'token' => $data['token'],
+			],
+			$template
+		);
+	}
+
+/**
+ * Send a notification email regarding a user added to a group.
+ *
+ * @param $senderId the user who added the user to the group
+ * @param $groupUser the added group user
+ * @return void
+ */
+	public function groupAddUser($senderId, $groupUser) {
+		// Get account info.
+		$recipient = $this->_getAuthorInfo($groupUser['GroupUser']['user_id']);
+		$sender = $this->_getAuthorInfo($senderId);
+
+		// Get group info.
+		$group = $this->Group->findById($groupUser['GroupUser']['group_id']);
+
+		// Default subject.
+		$subject = __("%s added you to the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
+
+		$template = 'group_add_user';
+
+		// Send notification.
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			$subject, [
+				'sender' => $sender,
+				'groupUser' => $groupUser,
+				'group' => $group,
+				'user' => $recipient,
 			],
 			$template
 		);
