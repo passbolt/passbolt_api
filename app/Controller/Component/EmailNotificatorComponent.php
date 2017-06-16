@@ -19,6 +19,16 @@ class EmailNotificatorComponent extends Component {
 	public $User;
 
 /**
+ * @var Group $Group model instance
+ */
+	public $Group;
+
+/**
+ * @var Group $GroupUser model instance
+ */
+	public $GroupUser;
+
+/**
  * @var Resource $v model instance
  */
 	public $Resource;
@@ -43,6 +53,8 @@ class EmailNotificatorComponent extends Component {
 	public function initialize(Controller $controller) {
 		$this->Permission = Common::getModel('Permission');
 		$this->User = Common::getModel('User');
+		$this->Group = Common::getModel('Group');
+		$this->GroupUser = Common::getModel('GroupUser');
 		$this->Resource = Common::getModel('Resource');
 		$this->Secret = Common::getModel('Secret');
 		$this->Comment = Common::getModel('Comment');
@@ -57,7 +69,7 @@ class EmailNotificatorComponent extends Component {
  * @param string $userId UUID
  * @return array $author, empty if not found or null on error
  */
-	protected function _getAuthorInfo($userId) {
+	protected function _getUserInfo($userId) {
 		$author = $this->User->find(
 			'first',
 			[
@@ -134,7 +146,7 @@ class EmailNotificatorComponent extends Component {
 		);
 
 		// Get sharer info.
-		$sharer = $this->_getAuthorInfo($data['sharer_id']);
+		$sharer = $this->_getUserInfo($data['sharer_id']);
 
 		// Send notification.
 		$this->EmailNotification->send(
@@ -168,7 +180,7 @@ class EmailNotificatorComponent extends Component {
 		$resource = $this->Resource->findById($data['resource_id'], ['name']);
 
 		// Get invite sender.
-		$sender = $this->_getAuthorInfo($comment['Comment']['created_by']);
+		$sender = $this->_getUserInfo($comment['Comment']['created_by']);
 
 		// Send notification.
 		$this->EmailNotification->send(
@@ -197,7 +209,7 @@ class EmailNotificatorComponent extends Component {
 		//$recipient = $this->User->findById($toUserId);
 
 		// Get invite sender.
-		$sender = $this->_getAuthorInfo($toUserId);
+		$sender = $this->_getUserInfo($toUserId);
 
 		// Get resource.
 		$resource = $this->Resource->find(
@@ -256,7 +268,7 @@ class EmailNotificatorComponent extends Component {
 		$recipient = $this->User->findById($toUserId);
 
 		// Get sender info.
-		$sender = $this->_getAuthorInfo($data['sender_id']);
+		$sender = $this->_getUserInfo($data['sender_id']);
 
 		// Get resource.
 		$resource = $this->Resource->find(
@@ -315,7 +327,7 @@ class EmailNotificatorComponent extends Component {
 		$recipient = $this->User->findById($toUserId);
 
 		// Get sender info.
-		$sender = $this->_getAuthorInfo($data['deleter_id']);
+		$sender = $this->_getUserInfo($data['deleter_id']);
 
 		// Send notification.
 		$this->EmailNotification->send(
@@ -356,7 +368,7 @@ class EmailNotificatorComponent extends Component {
 		);
 
 		// Get invite sender.
-		$sender = $this->_getAuthorInfo($data['creator_id']);
+		$sender = $this->_getUserInfo($data['creator_id']);
 
 		$self = isset($data['self']) && $data['self'] == true;
 
@@ -391,7 +403,7 @@ class EmailNotificatorComponent extends Component {
 	}
 
 /**
- * Send a notification email regarding a an account recovery.
+ * Send a notification email regarding an account recovery.
  *
  * @param uuid $toUserId user id of the recipient
  * @param array $data
@@ -401,7 +413,7 @@ class EmailNotificatorComponent extends Component {
  */
 	public function accountRecoveryNotification($toUserId, $data) {
 		// Get account info.
-		$recipient = $this->_getAuthorInfo($toUserId);
+		$recipient = $this->_getUserInfo($toUserId);
 
 		// Default subject.
 		$subject = __("Your account recovery, %s!", $recipient['Profile']['first_name']);
@@ -418,5 +430,176 @@ class EmailNotificatorComponent extends Component {
 			],
 			$template
 		);
+	}
+
+/**
+ * Send a notification email to the users that have been added to a group.
+ *
+ * @param $senderId the user who performed the operation
+ * @param $group The target group
+ * @param $groupUsers the added group users
+ * @return void
+ */
+	public function groupAddUsers($senderId, $group, $groupUsers) {
+		// Get sender account info.
+		$sender = $this->_getUserInfo($senderId);
+
+		// Notify added users
+		$template = 'group_add_user';
+
+		foreach ($groupUsers as $groupUser) {
+			// Get recipient account info.
+			$recipient = $this->_getUserInfo($groupUser['GroupUser']['user_id']);
+
+			// Default subject.
+			$subject = __("%s added you to the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
+
+			// Send notification.
+			$this->EmailNotification->send(
+				$recipient['User']['username'],
+				$subject, [
+				'sender' => $sender,
+				'groupUser' => $groupUser,
+				'group' => $group,
+				'user' => $recipient,
+			],
+				$template
+			);
+		}
+	}
+
+/**
+ * Send a notification email to the users that have been removed from a group.
+ *
+ * @param $senderId the user who performed the operation
+ * @param $group The target group
+ * @param $groupUsers the removed group users
+ * @return void
+ */
+	public function groupDeleteUsers($senderId, $group, $groupUsers) {
+		// Get sender account info.
+		$sender = $this->_getUserInfo($senderId);
+
+		// Email template.
+		$template = 'group_delete_user';
+
+		foreach ($groupUsers as $groupUser) {
+			// Get recipient account info.
+			$recipient = $this->_getUserInfo($groupUser['GroupUser']['user_id']);
+
+			// Default subject.
+			$subject = __("%s removed you from the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
+
+			// Send notification.
+			$this->EmailNotification->send(
+				$recipient['User']['username'],
+				$subject, [
+				'sender' => $sender,
+				'groupUser' => $groupUser,
+				'group' => $group,
+				'user' => $recipient,
+				'deletedTime' => time(),
+			],
+				$template
+			);
+		}
+	}
+
+/**
+ * Send a notification email to the group managers after a group update.
+ *
+ * Except :
+ *  - the user who made the changes.
+ *  - the new group managers. They will receive another email mentioning  :
+ *    - They have been added to a group as group manager
+ *    - Their role changed and they are now group manager
+ *
+ * @param string $senderId the user who performed the operation
+ * @param GroupUser $group The target group
+ * @param array $data the changes
+ *  - created: the created GroupUser
+ *  - deleted: the removed GroupUser
+ *  - updated: the updated GroupUser
+ * @return void
+ */
+	public function groupUpdatedSummary($senderId, $group, $data = array()) {
+		$addedUsers = [];
+		$deletedUsers = [];
+		$updatedRoles = [];
+		$notificationTime = time();
+
+		// Exclude new group managers.
+		$groupManagersToExclude = Hash::extract($data['updated'], '{n}.GroupUser[is_admin=true].user_id');
+
+		// The user who made the change shouldn't receive the notification as well.
+		$groupManagersToExclude[] = User::get('id');
+
+		// Retrieve the other group managers.
+		$groupManagers = $this->GroupUser->find('all', [
+			'conditions' => [
+				'GroupUser.group_id' => $group['Group']['id'],
+				'GroupUser.is_admin' => 1,
+				'GroupUser.user_id NOT IN' => $groupManagersToExclude,
+			]
+		]);
+
+		// If no other group managers to notify.
+		if (empty($groupManagers)) {
+			return;
+		}
+
+		// Get sender account info.
+		$sender = $this->_getUserInfo($senderId);
+
+		// Email template.
+		$template = 'group_updated_summary';
+
+		// Email subject.
+		$subject = __("%s updated members of the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
+
+		// Retrieve added users info.
+		if (!empty($data['created'])) {
+			foreach ($data['created'] as $groupUser) {
+				$addedUsers[] = array_merge(
+					$this->_getUserInfo($groupUser['GroupUser']['user_id']),
+					$groupUser
+				);
+			}
+		}
+
+		// Retrieve deleted users info.
+		if (!empty($data['deleted'])) {
+			foreach ($data['deleted'] as $groupUser) {
+				$deletedUsers[] = array_merge(
+					$this->_getUserInfo($groupUser['GroupUser']['user_id']),
+					$groupUser
+				);
+			}
+		}
+
+		// Retrieve updated users info.		if (!empty($data['deleted'])) {
+		foreach ($data['updated'] as $groupUser) {
+			$updatedRoles[] = array_merge(
+				$this->_getUserInfo($groupUser['GroupUser']['user_id']),
+				$groupUser
+			);
+		}
+
+		// Send notifications.
+		foreach ($groupManagers as $groupManager) {
+			// Get recipient account info.
+			$recipient = $this->_getUserInfo($groupManager['GroupUser']['user_id']);
+
+			$this->EmailNotification->send(
+				$recipient['User']['username'],
+				$subject, [
+				'sender' => $sender,
+				'group' => $group,
+				'addedUsers' => $addedUsers,
+				'deletedUsers' => $deletedUsers,
+				'updatedRoles' => $updatedRoles,
+				'notificationTime' => $notificationTime,
+			], $template);
+		}
 	}
 }

@@ -175,4 +175,85 @@ class UserResourcePermission extends AppModel {
 		}
 		return $fields;
 	}
+
+/**
+ * Get the list of resources ids that are accessible for a given permission by a user.
+ *
+ * @param string $userId The user identifier
+ * @param string $permissionType The permission identifier, by default 1 (READ)
+ * @return array Array of resources ids that are accessible for a given permission by the user
+ *
+ * @throws InvalidArgumentException if the argument userId is not a valid uuid
+ * @throws InvalidArgumentException if the argument $permissionType is not a valid permission type
+ */
+	public function findAuthorizedResourcesIds($userId, $permissionType = PermissionType::READ) {
+		if (!Common::isUuid($userId)) {
+			throw new InvalidArgumentException('$userId is not a valid uuid');
+		}
+		if (!PermissionType::isValidSerial($permissionType)) {
+			throw new InvalidArgumentException('$permissionType is not a valid permission type');
+		}
+
+		// Find the resources the user is authorized to access with the permission type given in argument.
+		$result = $this->find('all', [
+			'conditions' => [
+				'user_id' => $userId,
+				'permission_type >=' => $permissionType
+			]
+		]);
+
+		return Hash::extract($result, '{n}.UserResourcePermission.resource_id');
+	}
+
+/**
+ * Find the resources whose sole owner is the given user.
+ *
+ * @param uuid $userId id of the user.
+ * @return array Array of resources that are solely owned by the user.
+ *
+ * @throws InvalidArgumentException if the argument userId is not a valid uuid
+ */
+	public function findSoleOwnerSharedResourcesIds($userId) {
+		if (!Common::isUuid($userId)) {
+			throw new InvalidArgumentException('$userId is not a valid uuid');
+		}
+
+		// Find the resources ids the user is authorized to administrate.
+		$authorizedResourcesIds = $this->findAuthorizedResourcesIds($userId, PermissionType::OWNER);
+
+		// Filter to keep only the resources shared with others
+		// - Get all the user_resource_permission rows that :
+		// - * Includes the resources the user is owner ($authorizedResourcesIds).
+		// - * And have resources shared with others users than the user.
+		$result = $this->find('all', [
+			'fields' => [
+				'UserResourcePermission.resource_id',
+				'COUNT(UserResourcePermission.user_id) as count_rows',
+			],
+			'conditions' => [
+				'resource_id' => $authorizedResourcesIds,
+			],
+			'group' => 'UserResourcePermission.resource_id HAVING count_rows > 1',
+		]);
+		$sharedResourcesIds = Hash::extract($result, '{n}.UserResourcePermission.resource_id');
+
+		// Filter to keep only the resources the user is the sole owner.
+		// - Get all the user_resource_permission rows that :
+		// - * Includes the resources the user is owner, and shared with others ($sharedResourcesIds).
+		// - * And have resources owned only by the user.
+		$result = $this->find('all', [
+			'fields' => [
+				'UserResourcePermission.resource_id',
+				'COUNT(UserResourcePermission.user_id) as count_rows',
+			],
+			'conditions' => [
+				'resource_id' => $sharedResourcesIds,
+				'permission_type' => PermissionType::OWNER,
+			],
+			'group' => 'UserResourcePermission.resource_id HAVING count_rows = 1',
+		]);
+		$soleOwnerResourcesIds = Hash::extract($result, '{n}.UserResourcePermission.resource_id');
+
+		return $soleOwnerResourcesIds;
+	}
 }

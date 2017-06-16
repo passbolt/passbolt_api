@@ -2,12 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.5.1]
+## [Unreleased]
+### Added
+- PASSBOLT-2099: As a user I should receive a notification when I am added to a group
+- PASSBOLT-2100: As a user I should receive a notification when I am deleted of a group
+- PASSBOLT-2102: As a group manager I should receive a notification when another group manager added a user to a group I manage
+- PASSBOLT-2103: As a group manager I should receive a notification when another group manager removed a user from a group I manage
+- PASSBOLT-2140: As a group manager I should receive a notification when another group manager changed the role of a user of a group I manage
+
+### Fixed
+- PASSBOLT-2044: As an admin I shouldn’t be able to delete a user who is the sole owner of passwords shared with others
+- PASSBOLT-2078: As GM/AD I shouldn't be able to add a user who didn't complete the registration process to a group I edit/create
+- PASSBOLT-2111: As an admin I should be able to install passbolt under mydomain.tld/passbolt
+
+## [1.5.1] - 2017-05-23
 ### Fixed
 - PASSBOLT-2070: Delete unused code / exclude external libs from coverage
 - PASSBOLT-2071: Drop exec bits from files which don't need them (@OdyX GITHUB PR #67)
 - PASSBOLT-2073: As AP I should see a warning on the login page if the plugin and the api are not compatible
 - PASSBOLT-2029: PHP7 compatibility, fix deprecated cakePHP String class calls (@leomazzo GITHUB-64)
+- PASSBOLT-2074: Delete confirmation dialogs should fit the latest styleguide
 
 ## [1.5.0] - 2017-05-16
 ### Added

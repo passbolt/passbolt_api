@@ -268,7 +268,7 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                     );
 
                     // Display confirm dialog.
-                    var confirm = new mad.component.Confirm(
+                    new mad.component.Confirm(
                         null,
                         {
                             label: __('You cannot delete this group!'),
@@ -284,37 +284,85 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
                         }).start();
                 }
             );
+    },
 
+    /**
+     * Request the user to confirm the user delete.
+     *
+     * @param {passbolt.model.User} user The user to delete.
+     */
+    requestUserDeleteConfirmation: function(user) {
+        new mad.component.Confirm(null, {
+            label: __('Do you really want to delete user ?'),
+            content:  __('Please confirm you really want to delete the user. After clicking ok, the user will be <strong>deleted permanently</strong>.'),
+            submitButton: {
+                label: __('delete user'),
+                cssClasses: ['warning']
+            },
+            action: function() {
+                user.destroy();
+            }
+        }).start();
+    },
+
+    /**
+     * Notify the user regarding the delete failure.
+     *
+     * @param {passbolt.model.User} user The user to delete.
+     * @param {passbolt.model.Resource} resources The resources the user is the sole owner.
+     */
+    displayDeleteUserSoleOwnerErrorDialog: function(user, resources) {
+        new mad.component.Confirm(null, {
+            label: __('You cannot delete this user!'),
+            subtitle: __('You are trying to delete the user "%s"!', user.Profile.fullName()),
+            content:  __('This user is the sole owner of %s %s: %s. You need to transfer the ownership to other users before you can proceed.',
+                resources.length,
+                resources.length > 1 ? __('passwords') : __('password'),
+                resources.reduce(function(result, resource) {
+                    return result + (result != '' ? ', ' : '') + resource.Resource.name;
+                }, '')
+            ),
+            submitButton: {
+                label: __('Got it!'),
+                cssClasses: []
+            },
+            action: function() {
+                mad.component.Confirm.closeLatest();
+            }
+        }).start();
+    },
+
+    /**
+     * Delete a user.
+     *
+     * Request a dry-run delete on the API.
+     * - If the dry-run is a success, ask the user to confirm the deletion;
+     * - If the dry-run failed, notify the user about the reasons.
+     *
+     * @param {passbolt.model.User} user The user to delete.
+     */
+    deleteUser: function(user) {
+        var self = this;
+
+        user.deleteDryRun(user.id)
+            // In case of success.
+            .then(function() {
+                // Display the delete confirmation dialog.
+                self.requestUserDeleteConfirmation(user);
+            })
+            // In case of error.
+            .then(null, function(response) {
+                // Display the error dialog.
+                if (response.responseJSON.body) {
+                    var resources = response.responseJSON.body;
+                    self.displayDeleteUserSoleOwnerErrorDialog(user, resources);
+                }
+            });
     },
 
     /* ************************************************************** */
     /* LISTEN TO THE APP EVENTS */
     /* ************************************************************** */
-
-    // /**
-    //  * Observe when group is selected
-    //  * @param {HTMLElement} el The element the event occurred on
-    //  * @param {HTMLEvent} ev The event which occurred
-    //  * @param {passbolt.model.Group} group The selected group
-    //  */
-    // '{mad.bus.element} group_selected': function (el, ev, group) {
-    //     console.log('group_selected');
-    //     // reset the selected resources
-    //     this.options.selectedUsers.splice(0, this.options.selectedUsers.length);
-    //     // Set the new filter
-    //     this.options.filter.attr({
-    //         foreignModels: {
-    //             Group: new can.List([group])
-    //         },
-    //         type: passbolt.model.Filter.FOREIGN_MODEL
-    //     });
-    //     // propagate a special event on bus
-    //     mad.bus.trigger('filter_users_browser', this.options.filter);
-    //
-    //     // Add the group to the list of selected groups.
-    //     this.options.selectedGroups.splice(0, this.options.selectedGroups.length);
-    //     this.options.selectedGroups.push(group);
-    // },
 
     /**
      * When a new filter is applied to the workspace.
@@ -445,27 +493,10 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * Observe when the user requests a user deletion
      * @param {HTMLElement} el The element the event occurred on
      * @param {HTMLEvent} ev The event which occurred
-     * @param {passbolt.model.User} user1 A target user to delete
-     * @param {passbolt.model.User} [user2 ...] Other users to delete
+     * @param {passbolt.model.User} user A target user to delete
      */
-    '{mad.bus.element} request_user_deletion': function (el, ev) {
-		var args = arguments;
-		var confirm = new mad.component.Confirm(
-			null,
-			{
-				label: __('Do you really want to delete user ?'),
-				content: __('Please confirm you really want to delete the user. After clicking ok, it will be deleted permanently.'),
-				action: function() {
-					for (var i=2; i < args.length; i++) {
-						var user = args[i];
-						if (!(user instanceof passbolt.model.User)) {
-							throw new mad.error.Exception('The parameter ' + i + ' should be an instance of passbolt.model.User');
-						}
-						user.destroy();
-					}
-				}
-			}
-		).start();
+    '{mad.bus.element} request_user_deletion': function (el, ev, user) {
+        this.deleteUser(user);
     },
 
     /**

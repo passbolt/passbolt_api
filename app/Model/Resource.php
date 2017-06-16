@@ -254,6 +254,9 @@ class Resource extends AppModel {
 					$conditions['conditions']['AND'][] = ['Resource.created_by <>' => User::get('User.id')];
 					if (!isset($data['contain']) || !in_array('Modifier', $data['contain'])) $data['contain'][] = 'Modifier';
 				}
+				if (isset($data['has-resource_id'])) {
+					$conditions['conditions']['AND']['Resource.id'] = $data['has-resource_id'];
+				}
 				break;
 
 			default:

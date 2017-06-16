@@ -131,7 +131,8 @@ var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', /** 
             type: 'DELETE',
             params: params,
             success: success,
-            error: error
+            error: error,
+			silentNotify: true
         });
     }
 
