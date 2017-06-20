@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2078: As GM/AD I shouldn't be able to add a user who didn't complete the registration process to a group I edit/create
 - PASSBOLT-2111: As an admin I should be able to install passbolt under mydomain.tld/passbolt
 - PASSBOLT-2142: As an admin I should not see multiple ASCII banner when running the install script
+- PASSBOLT-1959: As LU when I unshare a password with a user or a group, associated secrets should be destroyed
 
 ## [1.5.1] - 2017-05-23
 ### Fixed
