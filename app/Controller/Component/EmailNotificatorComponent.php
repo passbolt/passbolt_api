@@ -577,12 +577,14 @@ class EmailNotificatorComponent extends Component {
 			}
 		}
 
-		// Retrieve updated users info.		if (!empty($data['deleted'])) {
-		foreach ($data['updated'] as $groupUser) {
-			$updatedRoles[] = array_merge(
-				$this->_getUserInfo($groupUser['GroupUser']['user_id']),
-				$groupUser
-			);
+		// Retrieve updated users info.
+		if (!empty($data['updated'])) {
+			foreach ($data['updated'] as $groupUser) {
+				$updatedRoles[] = array_merge(
+					$this->_getUserInfo($groupUser['GroupUser']['user_id']),
+					$groupUser
+				);
+			}
 		}
 
 		// Send notifications.
