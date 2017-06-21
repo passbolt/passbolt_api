@@ -1,7 +1,7 @@
 <?php
 $config = [
 	'App.version' => [
-		'number' => '1.5.1',
-		'name' => 'Grapevine'
+		'number' => '1.6.0',
+		'name' => 'Let\'s groove'
 	],
 ];
