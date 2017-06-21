@@ -13,7 +13,8 @@ class GroupsController extends AppController {
  * @var array list of supported components
  */
 	public $components = [
-		'QueryString'
+		'QueryString',
+		'EmailNotificator',
 	];
 
 /**
@@ -137,6 +138,7 @@ class GroupsController extends AppController {
 			throw new BadRequestException(__('Data validation error.'));
 		}
 
+		$savedGroupUsers = [];
 		foreach($postData['GroupUsers'] as $groupUser) {
 			if(!isset($groupUser['GroupUser']) || empty($groupUser['GroupUser'])) {
 				$this->Group->rollback();
@@ -155,19 +157,25 @@ class GroupsController extends AppController {
 			// Save GroupUser
 			$fields = $this->Group->GroupUser->getFindFields('add', User::get('Role.name'));
 			$savedGroupUser = $this->Group->GroupUser->save($postData, true, $fields['fields']);
+			$savedGroupUsers[] = $savedGroupUser;
 			if ($savedGroupUser == false) {
 				$this->Group->rollback();
 				throw new InternalErrorException(__('GroupUser could not be saved.'));
 			}
 		}
 
-		// Begin transaction
+		// End transaction
 		$this->Group->commit();
 
 		// Get find options and get all groups.
 		$options = ['contain' => ['user'], 'Group.id' => $groupSaved['Group']['id']];
 		$options = $this->Group->getFindOptions('Group::view', User::get('Role.name'), $options);
 		$group = $this->Group->find('first', $options);
+
+		// Email notification.
+		if (!empty($savedGroupUsers)) {
+			$this->EmailNotificator->groupAddUsers(User::get('id'), $group, $savedGroupUsers);
+		}
 
 		// Success response.
 		$this->set('data', $group);
@@ -282,6 +290,19 @@ class GroupsController extends AppController {
 		// In case of dry run, add output.
 		if ($isDryRun) {
 			$res['dry-run'] = $dryRunOutput;
+		} else {
+			// Notify by email the users who have been added to the group.
+			if (!empty($changes['created'])) {
+				$this->EmailNotificator->groupAddUsers(User::get('id'), $group, $changes['created']);
+			}
+			// Notify by email the users who have been removed from the group.
+			if (!empty($changes['deleted'])) {
+				$this->EmailNotificator->groupDeleteUsers(User::get('id'), $group, $changes['deleted']);
+			}
+			// Notify by email other group managers about the changes.
+			if (!empty($changes['created']) || !empty($changes['deleted']) || !empty($changes['updated'])) {
+				$this->EmailNotificator->groupUpdatedSummary(User::get('id'), $group, $changes);
+			}
 		}
 
 		// Success response.

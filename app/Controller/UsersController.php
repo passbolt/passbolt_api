@@ -105,7 +105,7 @@ class UsersController extends AppController {
 
 		$url = parse_url($referer);
 		// If the referer was not the register url, we also redirect to /register page.
-		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== '/register') {
+		if (!isset($url['path']) || empty($url['path']) || $url['path'] !== Router::url('/register')) {
 			$this->redirect("/register");
 			return;
 		}
@@ -126,9 +126,17 @@ class UsersController extends AppController {
 			throw new MethodNotAllowedException(__('Invalid request method, should be GET.'));
 		}
 
+		// Allowed query filters.
+		$allowedQueryFilters = ['keywords', 'has-groups'];
+
+		// Admin is allowed to use the filter is-active
+		if (User::isAdmin()) {
+			$allowedQueryFilters[] = 'is-active';
+		}
+
 		// Extract parameters from query string
 		$allowedQueryItems = [
-			'filter' => ['keywords', 'has-groups'],
+			'filter' => $allowedQueryFilters,
 			'order' => $this->User->getFindAllowedOrder('UsersController::index'),
 		];
 		$params = $this->QueryString->get($allowedQueryItems);
@@ -569,6 +577,7 @@ class UsersController extends AppController {
  * @throws BadRequestException if the user id is the same as the current user
  * @throws NotFoundException if the user does not exist
  * @throws InternalErrorException if the user could not be deleted
+ * @throws ValidationException if the user is the sole owner of some shared passwords
  * @return void
  */
 	public function delete($id = null) {
@@ -576,7 +585,7 @@ class UsersController extends AppController {
 		if (!$this->request->is('delete')) {
 			throw new BadRequestException(__('Invalid request method, should be DELETE.'));
 		}
-		if (User::get('Role.name') != Role::ADMIN) {
+		if (!User::isAdmin()) {
 			throw new ForbiddenException(__('You are not authorized to access that location.'));
 		}
 		if (!isset($id)) {
@@ -589,12 +598,39 @@ class UsersController extends AppController {
 			throw new BadRequestException(__('You are not allowed to delete yourself.'));
 		}
 
-		// If the user exists try to soft delete
+		// Retrieve the user to delete.
 		$o = $this->User->getFindOptions('User::view', User::get('Role.name'), ['User.id' => $id]);
 		$user = $this->User->find('first', $o);
 		if (!$user) {
 			throw new NotFoundException(__('The user does not exist.'));
 		}
+
+		// Is dry run ?
+		$isDryRun = in_array('dry-run', $this->params['pass']);
+
+		// Does the user the sole owner of resources shared with others.
+		$resourcesIds = $this->User->UserResourcePermission->findSoleOwnerSharedResourcesIds($id);
+		if (!empty($resourcesIds)) {
+			$Resource = Common::getModel('Resource');
+
+			// Retrieve the resources that require an ownership transfer.
+			$Resource->Behaviors->unload('Permissionable');
+			$resourcesFindData = ['has-resource_id' => $resourcesIds];
+			$resourcesFindOptions = $Resource->getFindOptions('Resource::index', User::get('Role.name'), $resourcesFindData);
+			$resources = $Resource->find('all', $resourcesFindOptions);
+			$Resource->Behaviors->load('Permissionable');
+
+			throw new ValidationException(
+				__('The user is sole owner of some passwords. Transfer the ownership before deleting.'),
+				$resources
+			);
+		}
+
+		// In case of dry-run, notify the requester that the user can be deleted.
+		if ($isDryRun) {
+			return $this->Message->success(__("The user can be deleted."));
+		}
+
 		try {
 			$this->User->softDelete($id);
 		} catch(Exception $e) {

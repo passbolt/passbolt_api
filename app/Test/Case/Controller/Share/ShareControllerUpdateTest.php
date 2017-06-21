@@ -47,14 +47,15 @@ class ShareControllerUpdateTest extends ControllerTestCase {
 
 		$this->User = Common::getModel('User');
 		$this->Resource = Common::getModel('Resource');
+		$this->Secret = Common::getModel('Secret');
 		$this->Permission = Common::getModel('Permission');
 		$this->UserResourcePermission = Common::getModel('UserResourcePermission');
 
 		$this->session = new CakeSession();
 		$this->session->init();
 
-		$user = $this->User->findById(Common::uuid('user.id.dame'));
-		$this->User->setActive($user);
+		$this->user = $this->User->findById(Common::uuid('user.id.dame'));
+		$this->User->setActive($this->user);
 	}
 
 	public function tearDown() {
@@ -181,18 +182,16 @@ class ShareControllerUpdateTest extends ControllerTestCase {
 		$this->_updateCall('Resource', $acoInstanceId, $data);
 	}
 
-	public function testUpdateDeletePermission() {
-		$acoInstanceId = Common::uuid('resource.id.debian');
+	public function testUpdateDeleteUserPermission() {
+		$resourceId = Common::uuid('resource.id.centos');
+		$userId = Common::uuid('user.id.ada');
+		$permissionId = Common::uuid('permission.id.' . $resourceId . '-' . $userId);
 
-		// Get a permission that belongs to the resource
-		$directPerm = $this->Permission->find('first', array(
-			'conditions' => array(
-				'aco' => 'Resource',
-				'aco_foreign_key' => Common::uuid('resource.id.debian'),
-				'aro' => 'User',
-			)
-		));
-		$permissionId = $directPerm['Permission']['id'];
+		// Check that the permission exists before deleting.
+		$exist = $this->Permission->exists($permissionId);
+		$this->assertTrue($exist);
+
+		// Delete the permission
 		$data = array(
 			'Permissions' => array(
 				array(
@@ -203,7 +202,7 @@ class ShareControllerUpdateTest extends ControllerTestCase {
 				)
 			),
 		);
-		$res = json_decode($this->_updateCall('Resource', $acoInstanceId, $data), true);
+		$res = json_decode($this->_updateCall('Resource', $resourceId, $data), true);
 		$this->assertEquals(Status::SUCCESS, $res['header']['status'],
 			"Deleting a permission should have returned a success, but returned {$res['header']['status']}"
 		);
@@ -211,6 +210,54 @@ class ShareControllerUpdateTest extends ControllerTestCase {
 		// Observe that the permission is deleted.
 		$exist = $this->Permission->exists($permissionId);
 		$this->assertFalse($exist, "Deleting a permission should have actually deleted the permission, but the permission still exists.");
+
+		// Observe that the secret has been destroyed
+		$secret = $this->Secret->find('first', array('conditions' => array(
+			'resource_id' => $resourceId,
+			'user_id' => $userId
+		)));
+		$this->assertEmpty($secret);
+	}
+
+	public function testUpdateDeleteGroupPermission() {
+		$this->User->setInactive();
+		$this->user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($this->user);
+
+		$resourceId = Common::uuid('resource.id.cakephp');
+		$groupId = Common::uuid('group.id.freelancer');
+		$permissionId = Common::uuid('permission.id.' . $resourceId . '-' . $groupId);
+
+		// Check that the permission exists before deleting.
+		$exist = $this->Permission->exists($permissionId);
+		$this->assertTrue($exist);
+
+		// Delete the permission
+		$data = array(
+			'Permissions' => array(
+				array(
+					'Permission' => array (
+						'id' => $permissionId,
+						'delete' => '1',
+					)
+				)
+			),
+		);
+		$res = json_decode($this->_updateCall('Resource', $resourceId, $data), true);
+		$this->assertEquals(Status::SUCCESS, $res['header']['status'],
+			"Deleting a permission should have returned a success, but returned {$res['header']['status']}"
+		);
+
+		// Observe that the permission is deleted.
+		$exist = $this->Permission->exists($permissionId);
+		$this->assertFalse($exist);
+
+		// Observe that the secret of a member of the group has also been destroyed
+		$secret = $this->Secret->find('first', array('conditions' => array(
+			'resource_id' => $resourceId,
+			'user_id' => Common::uuid('user.id.jean')
+		)));
+		$this->assertEmpty($secret);
 	}
 
 	public function testUpdateAddSecretsNotProvided() {

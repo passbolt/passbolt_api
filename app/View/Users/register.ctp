@@ -34,7 +34,7 @@ $inputDefault = ['inputDefaults' => ['error' => [ 'attributes' => ['class' => 'm
 				</fieldset>
 				<div class="actions-wrapper">
 					<div class="submit"><input type="submit" class="button primary big" value="<?php echo __('register'); ?>"></div>
-					<a href="/login" class="secondary"><?php echo __('already a member?'); ?></a>
+					<a href="<?php echo Router::url('/login'); ?>" class="secondary"><?php echo __('already a member?'); ?></a>
 				</div>
 				<?php echo $this->Form->end();?>
 			</div>

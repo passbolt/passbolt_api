@@ -23,7 +23,7 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 	'_success': function () {
 		// send a notification on the event bus for any successful response.
 		// the notification system will take care of filtering what should be displayed.
-		if (mad.bus) {
+		if (mad.bus && (this.request.silentNotify == undefined || !this.request.silentNotify)) {
 			mad.bus.trigger('passbolt_notify', {
 				title: this.response.header.title,
 				status: this.response.header.status,
@@ -35,7 +35,7 @@ mad.net.ResponseHandler.extend('passbolt.net.ResponseHandler', /** @static */ {
 
 	'_error': function() {
         // Trigger notification.
-        if (mad.bus) {
+        if (mad.bus && (this.request.silentNotify == undefined || !this.request.silentNotify)) {
             mad.bus.trigger('passbolt_notify', {
                 title: this.response.header.title,
                 status: this.response.header.status,

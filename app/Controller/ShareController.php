@@ -382,6 +382,7 @@ class ShareController extends AppController {
 
 		// Manage added users and removed users.
 		try {
+			$this->__processRemovedSecrets($acoInstanceId, $removedUsers);
 			$this->__processRemovedSecrets($acoInstanceId, $addedUsers);
 			$this->__processAddedSecrets($acoInstanceId, $addedUsers, $secrets);
 		} catch (Exception $e) {

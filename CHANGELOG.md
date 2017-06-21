@@ -2,6 +2,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+## [1.6.0] - 2017-06-21
+### Added
+- PASSBOLT-2099: As a user I should receive a notification when I am added to a group
+- PASSBOLT-2100: As a user I should receive a notification when I am deleted of a group
+- PASSBOLT-2102: As a group manager I should receive a notification when another group manager added a user to a group I manage
+- PASSBOLT-2103: As a group manager I should receive a notification when another group manager removed a user from a group I manage
+- PASSBOLT-2140: As a group manager I should receive a notification when another group manager changed the role of a user of a group I manage
+- PASSBOLT-2138: The TLS parameter should be part of the default email configuration
+
+### Fixed
+- PASSBOLT-2044: As an admin I shouldn’t be able to delete a user who is the sole owner of passwords shared with others
+- PASSBOLT-2078: As GM/AD I shouldn't be able to add a user who didn't complete the registration process to a group I edit/create
+- PASSBOLT-2111: As an admin I should be able to install passbolt under mydomain.tld/passbolt
+- PASSBOLT-2142: As an admin I should not see multiple ASCII banner when running the install script
+- PASSBOLT-1959: As LU when I unshare a password with a user or a group, associated secrets should be destroyed
+- PASSBOLT-1954: Security: Trackable behavior should override created_by and deleted_by when provided
+
+
 ## [1.5.1] - 2017-05-23
 ### Fixed
 - PASSBOLT-2070: Delete unused code / exclude external libs from coverage
@@ -243,7 +263,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.5.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.0...HEAD
+[1.6.0]: https://github.com/passbolt/passbolt_api/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/passbolt/passbolt_api/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/passbolt/passbolt_api/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/passbolt/passbolt_api/compare/v1.3.2...v1.4.0

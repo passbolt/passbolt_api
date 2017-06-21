@@ -51,7 +51,7 @@ class Migration_1_3_0 extends CakeMigration {
 		// Check if anonymous statistic is already configured (this should not happen, but who knows..)
 		$isConfigured = !empty($instanceId) && Common::isUuid($instanceId);
 		if (!$isConfigured) {
-			// Get Cake Shell fror prompt.
+			// Get Cake Shell for prompt.
 			$CakeShell = new AppShell();
 
 			// Ask user.
