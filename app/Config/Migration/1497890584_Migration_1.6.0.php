@@ -20,7 +20,9 @@ class Migration_1_6_0 extends CakeMigration {
  *
  * @var array $migration
  */
-	public $migration = [];
+	public $migration = [
+		'up' => []
+	];
 
 /**
  * Before migration callback

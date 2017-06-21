@@ -47,7 +47,7 @@ class Migration_1_5_0 extends CakeMigration {
 			$GroupUser = ClassRegistry::init('GroupUser');
 			$fields = $GroupUser->getColumnTypes();
 			if (isset($fields['is_admin'])) {
-				$this->migration = [];
+				$this->migration = ['up' => []];
 			}
 		}
 		return true;
