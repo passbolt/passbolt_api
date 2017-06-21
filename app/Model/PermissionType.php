@@ -37,7 +37,7 @@ class PermissionType extends AppModel {
  * @param string $type The type to check
  * @return bool
  */
-	public function isValidSerial($type) {
+	public static function isValidSerial($type) {
 		switch ($type) {
 			case self::READ:
 			case self::UPDATE:
