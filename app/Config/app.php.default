@@ -30,6 +30,30 @@ $config = [
 			]
 		],
 	],
+	// Notification configuration - toggle system wide enabled or disabled by notification type
+	'Notification' => [
+		'shared' => [
+			'active' => true,
+			],
+		'new'  => [
+			'active' => true,
+			],
+		'comment'  => [
+			'active' => true,
+			],
+		'update'  => [
+			'active' => true,
+			],
+		'delete'  => [
+			'active' => true,
+			],
+		'groupadd'  => [
+			'active' => true,
+			],
+		'groupdelete'  => [
+			'active' => true,
+			],
+		],
 	// Analytics configuration
 	'Analytics' => [
 		'piwik' => [
