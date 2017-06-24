@@ -53,6 +53,9 @@ $config = [
 		'groupdelete'  => [
 			'active' => true,
 			],
+		'groupupdate'  => [
+			'active' => true,
+			],
 		],
 	// Analytics configuration
 	'Analytics' => [
