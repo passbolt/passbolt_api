@@ -149,6 +149,9 @@ class EmailNotificatorComponent extends Component {
 		$sharer = $this->_getUserInfo($data['sharer_id']);
 
 		// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.shared.active');
+		if ($notification_enabled) {
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
 			__("%s shared %s with you", $sharer['Profile']['first_name'], $resource['Resource']['name']),
@@ -158,6 +161,7 @@ class EmailNotificatorComponent extends Component {
 			],
 			'new_password_share'
 		);
+		}
 	}
 
 /**
@@ -183,6 +187,9 @@ class EmailNotificatorComponent extends Component {
 		$sender = $this->_getUserInfo($comment['Comment']['created_by']);
 
 		// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.comment.active');
+		if ($notification_enabled) {
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
 			__("%s commented on %s", $sender['Profile']['first_name'], $resource['Resource']['name']),
@@ -193,6 +200,7 @@ class EmailNotificatorComponent extends Component {
 			],
 			'password_comment_new'
 		);
+		}
 	}
 
 /**
@@ -240,6 +248,9 @@ class EmailNotificatorComponent extends Component {
 		);
 
 		// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.new.active');
+		if ($notification_enabled) {
 		$this->EmailNotification->send(
 			$sender['User']['username'],
 			__("Password %s has been added", $resource['Resource']['name']),
@@ -249,6 +260,7 @@ class EmailNotificatorComponent extends Component {
 			],
 			'password_added'
 		);
+		}
 	}
 
 /**
@@ -299,6 +311,9 @@ class EmailNotificatorComponent extends Component {
 		);
 
 		// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.update.active');
+		if ($notification_enabled) {
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
 			__("Password %s has been updated", $data['resource_old_name']),
@@ -309,6 +324,7 @@ class EmailNotificatorComponent extends Component {
 			],
 			'password_updated'
 		);
+		}
 	}
 
 /**
@@ -330,6 +346,9 @@ class EmailNotificatorComponent extends Component {
 		$sender = $this->_getUserInfo($data['deleter_id']);
 
 		// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.delete.active');
+		if ($notification_enabled) {
 		$this->EmailNotification->send(
 			$recipient['User']['username'],
 			__("Password %s has been deleted", $data['resource_name']),
@@ -341,6 +360,7 @@ class EmailNotificatorComponent extends Component {
 			],
 			'password_deleted'
 		);
+		}
 	}
 
 /**
@@ -455,6 +475,9 @@ class EmailNotificatorComponent extends Component {
 			$subject = __("%s added you to the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
 
 			// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.groupadd.active');
+		if ($notification_enabled) {
 			$this->EmailNotification->send(
 				$recipient['User']['username'],
 				$subject, [
@@ -466,6 +489,7 @@ class EmailNotificatorComponent extends Component {
 				$template
 			);
 		}
+	}
 	}
 
 /**
@@ -491,6 +515,9 @@ class EmailNotificatorComponent extends Component {
 			$subject = __("%s removed you from the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
 
 			// Send notification.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.groupdelete.active');
+		if ($notification_enabled) {
 			$this->EmailNotification->send(
 				$recipient['User']['username'],
 				$subject, [
@@ -503,6 +530,7 @@ class EmailNotificatorComponent extends Component {
 				$template
 			);
 		}
+	}
 	}
 
 /**
@@ -588,6 +616,9 @@ class EmailNotificatorComponent extends Component {
 		}
 
 		// Send notifications.
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.groupupdate.active');
+		if ($notification_enabled) {
 		foreach ($groupManagers as $groupManager) {
 			// Get recipient account info.
 			$recipient = $this->_getUserInfo($groupManager['GroupUser']['user_id']);
@@ -602,6 +633,7 @@ class EmailNotificatorComponent extends Component {
 				'updatedRoles' => $updatedRoles,
 				'notificationTime' => $notificationTime,
 			], $template);
+		}
 		}
 	}
 }
