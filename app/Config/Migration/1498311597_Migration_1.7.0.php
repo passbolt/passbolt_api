@@ -1,7 +1,8 @@
 <?php
 App::uses('AnonymousStatistic', 'Model');
+App::uses('PassboltMigration', 'Lib');
 
-class Migration_1_7_0 extends CakeMigration {
+class Migration_1_7_0 extends PassboltMigration {
 
 /**
  * Migration description
@@ -37,6 +38,7 @@ class Migration_1_7_0 extends CakeMigration {
  * @return bool Should process continue
  */
 	public function after($direction) {
+		parent::after($direction);
 		// Move anonymous_statistics.php file from app/Config to /tmp
 		if (file_exists(APP . 'Config' . DS . 'anonymous_statistics.php')) {
 			if (!file_exists(AnonymousStatistic::ConfigFilePath)) {
