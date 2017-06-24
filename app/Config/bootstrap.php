@@ -15,6 +15,7 @@
 $commonCache = Configure::read('Cache.Common');
 Cache::config('default', $commonCache);
 
+
 /**
  * App Configuration
  */
@@ -24,8 +25,11 @@ Configure::load('default'); // Default config
 if (file_exists(APP . 'Config' . DS . 'app.php')) {
     Configure::load('app'); // Merge current instance config
 }
-if (file_exists(APP . 'Config' . DS . 'anonymous_statistics.php')) {
-	Configure::load('anonymous_statistics'); // anonymous statistics config
+
+// Alternative config reader for tmp configs.
+Configure::config('tmp', new PhpReader(TMP . 'config' . DS));
+if (file_exists(TMP . 'config' . DS . 'anonymous_statistics.php')) {
+	Configure::load('anonymous_statistics', 'tmp'); // anonymous statistics config
 }
 
 /**
