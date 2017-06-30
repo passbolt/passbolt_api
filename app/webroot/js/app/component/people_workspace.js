@@ -18,6 +18,7 @@ import 'app/model/filter';
 import 'app/view/template/people_workspace.ejs!';
 import 'app/view/template/component/create_button.ejs!';
 import 'app/view/template/component/create_button_dropdown.ejs!';
+import 'app/view/template/component/user/user_delete_error_dialog.ejs!';
 
 /**
  * @inherits {mad.Component}
@@ -309,19 +310,13 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
      * Notify the user regarding the delete failure.
      *
      * @param {passbolt.model.User} user The user to delete.
-     * @param {passbolt.model.Resource} resources The resources the user is the sole owner.
+     * @param {array} data An object containing the error target
      */
-    displayDeleteUserSoleOwnerErrorDialog: function(user, resources) {
+    displayDeleteUserErrorDialog: function(user, data) {
         new mad.component.Confirm(null, {
             label: __('You cannot delete this user!'),
             subtitle: __('You are trying to delete the user "%s"!', user.Profile.fullName()),
-            content:  __('This user is the sole owner of %s %s: %s. You need to transfer the ownership to other users before you can proceed.',
-                resources.length,
-                resources.length > 1 ? __('passwords') : __('password'),
-                resources.reduce(function(result, resource) {
-                    return result + (result != '' ? ', ' : '') + resource.Resource.name;
-                }, '')
-            ),
+            content:  mad.View.render('app/view/template/component/user/user_delete_error_dialog.ejs', data),
             submitButton: {
                 label: __('Got it!'),
                 cssClasses: []
@@ -354,8 +349,8 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
             .then(null, function(response) {
                 // Display the error dialog.
                 if (response.responseJSON.body) {
-                    var resources = response.responseJSON.body;
-                    self.displayDeleteUserSoleOwnerErrorDialog(user, resources);
+                    var data = response.responseJSON.body;
+                    self.displayDeleteUserErrorDialog(user, data);
                 }
             });
     },

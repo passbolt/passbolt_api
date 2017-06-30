@@ -298,6 +298,30 @@ class GroupUser extends AppModel {
 	}
 
 /**
+ * Find groups having as sole manager a given user.
+ * @param $userId
+ * @return array
+ */
+	public function findGroupsIdsHavingSoleManager($userId) {
+		$result = [];
+		$groupUsers = $this->find('all', [
+			'fields' => [
+				'GroupUser.group_id',
+			],
+			'conditions' => [
+				'GroupUser.user_id' => $userId,
+				'GroupUser.is_admin' => 1
+			]
+		]);
+		foreach ($groupUsers as $groupUser) {
+			if ($this->countGroupAdmins($groupUser['GroupUser']['group_id']) < 2) {
+				$result[] = $groupUser['GroupUser']['group_id'];
+			}
+		}
+		return $result;
+	}
+
+/**
  * Prepare a bulk update operation.
  *
  * Will validate the various operations to be executed, and return an array of the actions to be done.

@@ -605,30 +605,45 @@ class UsersController extends AppController {
 			throw new NotFoundException(__('The user does not exist.'));
 		}
 
+		// Data to return in case of error.
+		$errorData = array();
+
 		// Is dry run ?
 		$isDryRun = in_array('dry-run', $this->params['pass']);
 
-		// Does the user the sole owner of resources shared with others.
+		// Retrieve the resources for which the user is the sole owner of.
 		$resourcesIds = $this->User->UserResourcePermission->findSoleOwnerSharedResourcesIds($id);
 		if (!empty($resourcesIds)) {
 			$Resource = Common::getModel('Resource');
-
 			// Retrieve the resources that require an ownership transfer.
 			$Resource->Behaviors->unload('Permissionable');
 			$resourcesFindData = ['has-resource_id' => $resourcesIds];
 			$resourcesFindOptions = $Resource->getFindOptions('Resource::index', User::get('Role.name'), $resourcesFindData);
-			$resources = $Resource->find('all', $resourcesFindOptions);
+			$errorData['resources'] = $Resource->find('all', $resourcesFindOptions);
 			$Resource->Behaviors->load('Permissionable');
+		}
 
+		// Retrieve the groups for which the user is the sole manager.
+		$groupsIds = $this->User->GroupUser->findGroupsIdsHavingSoleManager($id);
+		if (!empty($groupsIds)) {
+			$Group = Common::getModel('Group');
+			// Retrieve the groups that require an ownership transfer.
+			$groupsFindData = ['has-group_id' => $groupsIds];
+			$o = $Group->getFindOptions('Group::index', User::get('Role.name'), $groupsFindData);
+			$errorData['groups'] = $Group->find('all', $o);
+		}
+
+		// If the user is sole owner of some resources, or the user is the sole manager of some groups.
+		if (!empty($errorData)) {
 			throw new ValidationException(
-				__('The user is sole owner of some passwords. Transfer the ownership before deleting.'),
-				$resources
+				__('The user cannot be deleted. You need to transfer some ownerships to other users before you can proceed.'),
+				$errorData
 			);
 		}
 
 		// In case of dry-run, notify the requester that the user can be deleted.
 		if ($isDryRun) {
-			return $this->Message->success(__("The user can be deleted."));
+			return $this->Message->success(__('The user can be deleted.'));
 		}
 
 		try {

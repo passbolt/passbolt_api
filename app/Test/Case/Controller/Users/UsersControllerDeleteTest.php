@@ -142,8 +142,28 @@ class UsersControllerDeleteTest extends ControllerTestCase {
 		$user = $this->User->findById(Common::uuid('user.id.admin'));
 		$this->User->setActive($user);
 
-		$this->setExpectedException('ValidationException', 'The user is sole owner of some passwords. Transfer the ownership before deleting.');
+		$this->setExpectedException('ValidationException', 'The user cannot be deleted. You need to transfer some ownerships to other users before you can proceed.');
 		$userId = Common::uuid('user.id.ada');
+		$this->testAction(
+			"/users/{$userId}.json",
+			array(
+				'method' => 'delete',
+				'return' => 'contents'
+			)
+		);
+	}
+
+/**
+ * Test delete fails if user is the sole group manager of some groups
+ *
+ * @return void
+ */
+	public function testDeleteUserIsSoleGroupManager() {
+		$user = $this->User->findById(Common::uuid('user.id.admin'));
+		$this->User->setActive($user);
+
+		$this->setExpectedException('ValidationException', 'The user cannot be deleted. You need to transfer some ownerships to other users before you can proceed.');
+		$userId = Common::uuid('user.id.frances');
 		$this->testAction(
 			"/users/{$userId}.json",
 			array(

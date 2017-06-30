@@ -115,6 +115,9 @@ class Group extends AppModel {
 				if (!empty($data['exclude-groups'])) {
 					$conditions['conditions']['Group.id NOT IN'] = $data['exclude-groups'];
 				}
+				if (isset($data['has-group_id'])) {
+					$conditions['conditions']['AND']['Group.id'] = $data['has-group_id'];
+				}
 				break;
 
 			default:

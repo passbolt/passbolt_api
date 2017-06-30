@@ -76,7 +76,7 @@
                                 <tr>
                                     <td valign="top" class="textContent">
                                         Name: <?php echo $group['Group']['name'] ?><br>
-                                        Your role: <?php echo $groupUser['GroupUser']['is_admin'] ? _('Group manager') : __('Member') ?>
+                                        Your role: <?php echo $groupUser['GroupUser']['is_admin'] ? __('Group manager') : __('Member') ?>
                                     </td>
                                 </tr>
                             </table>

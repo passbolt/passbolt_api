@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
 - PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification
 - PASSBOLT-2174: Edit group dialog should be marked as ready if an admin edit a group the admin is not group manager
+- PASSBOLT-2155: As AD I shouldn't be able to delete as user if the user is the sole group manager of a group
 
 ## [1.6.0] - 2017-06-21
 ### Added
@@ -24,7 +25,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2142: As an admin I should not see multiple ASCII banner when running the install script
 - PASSBOLT-1959: As LU when I unshare a password with a user or a group, associated secrets should be destroyed
 - PASSBOLT-1954: Security: Trackable behavior should override created_by and deleted_by when provided
-
 
 ## [1.5.1] - 2017-05-23
 ### Fixed
