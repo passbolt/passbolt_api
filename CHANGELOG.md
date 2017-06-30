@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
+- PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification
 
 ## [1.6.0] - 2017-06-21
 ### Added
