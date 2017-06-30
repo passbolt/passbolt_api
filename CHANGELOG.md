@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
 
 ## [1.6.0] - 2017-06-21
 ### Added

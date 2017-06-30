@@ -3,7 +3,7 @@ import 'app/model/group';
 import 'app/view/component/groups_list';
 import 'app/view/template/component/group_item.ejs!';
 
-/*
+/**
  * @class passbolt.component.GroupsList
  * @inherits mad.component.Tree
  * @parent index
@@ -22,7 +22,6 @@ import 'app/view/template/component/group_item.ejs!';
 var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('passbolt.component.GroupsList', /** @static */ {
 
     defaults: {
-        selfLoad:false,
         itemClass: passbolt.model.Group,
         templateUri: 'mad/view/template/component/tree.ejs',
         itemTemplateUri: 'app/view/template/component/group_item.ejs',
@@ -41,28 +40,32 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
                     return obj.isAllowedToEdit(currentUser);
                 }
             }
-        })
+        }),
+        state: 'loading',
+        silentLoading: false
     }
 
 }, /** @prototype */ {
 
     /**
-     * Init callback.
-     * @param el
-     * @param opts
+     * AfterStart hook.
      */
-    init: function (el, opts) {
-        this._super(el, opts);
+    afterStart: function () {
         var self = this;
+
         // Load the groups.
-        passbolt.model.Group.findAll({
+        var findOptions = {
             contain: {user: 1},
-            order: ['Group.name ASC'],
-            silent: false
-        }, function (groups, response, request) {
-            // Load the tree component with the groups.
-            self.load(groups);
-        });
+            order: ['Group.name ASC']
+        };
+        passbolt.model.Group.findAll(findOptions)
+            .then(function (groups) {
+                // Load the tree component with the groups.
+                self.load(groups);
+                self.setState('ready');
+            });
+
+        this._super();
     },
 
     /**
