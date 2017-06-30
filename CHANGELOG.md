@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
 - PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification
+- PASSBOLT-2174: Edit group dialog should be marked as ready if an admin edit a group the admin is not group manager
 
 ## [1.6.0] - 2017-06-21
 ### Added
