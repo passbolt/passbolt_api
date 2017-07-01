@@ -88,7 +88,10 @@ class Group extends AppModel {
 			case 'Group::edit':
 			case 'Group::view':
 			case 'Group::exists':
-				$conditions = ['conditions' => ['Group.deleted' => 0, 'Group.id' => $data['Group.id']]];
+				$conditions = ['conditions' => [
+					'Group.deleted' => 0,
+					'Group.id' => $data['Group.id'],
+				]];
 				break;
 
 			case 'Group::index':

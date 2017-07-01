@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification
 - PASSBOLT-2174: Edit group dialog should be marked as ready if an admin edit a group the admin is not group manager
 - PASSBOLT-2155: As AD I shouldn't be able to delete as user if the user is the sole group manager of a group
+- PASSBOLT-2075: Users should be removed from the groups they are member of after a soft delete operation
 
 ## [1.6.0] - 2017-06-21
 ### Added
