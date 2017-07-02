@@ -1043,6 +1043,7 @@ class User extends AppModel {
  */
 	public function softDelete($userId) {
 		$Permission = ClassRegistry::init('Permission');
+		$GroupUser = ClassRegistry::init('GroupUser');
 
 		// Begin transaction
 		$dataSource = $this->getDataSource();
@@ -1063,7 +1064,17 @@ class User extends AppModel {
 		$deleteOptions = ['Permission.aro_foreign_key' => $userId];
 		if (!$Permission->deleteAll($deleteOptions, false)) {
 			$dataSource->rollback();
-			throw new Exception(__('Unable to delete de user\'s permissions'));
+			throw new Exception(__('Unable to delete the user\'s permissions'));
+		}
+
+		// Remove the user from the groups the user was member of.
+		$groupsUsers = $GroupUser->find('all', ['conditions' => [
+			'user_id' => $userId
+		]]);
+		foreach ($groupsUsers as $groupUser) {
+			if (!$GroupUser->deleteGroupUser($groupUser)) {
+				throw new Exception(__('Unable to remove the user %s from the group %s', $userId, $groupUser['GroupUser']['group_id']));
+			}
 		}
 
 		// Everything fine, we commit.

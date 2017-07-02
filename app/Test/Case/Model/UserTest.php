@@ -43,6 +43,7 @@ class UserTest extends CakeTestCase {
 	public function setup() {
 		parent::setUp();
 		$this->User = ClassRegistry::init('User');
+		$this->GroupUser = ClassRegistry::init('GroupUser');
 		$this->Permission = ClassRegistry::init('Permission');
 	}
 
@@ -543,5 +544,27 @@ class UserTest extends CakeTestCase {
 		$this->User->softDelete($userA['User']['id']);
 		$permissions = $this->Permission->find('all', array('conditions' => array('aro_foreign_key' => $userA['User']['id'])));
 		$this->assertEmpty($permissions);
+	}
+
+	/**
+	 * Test that the user is well removed from all the groups the user was member of when the user is soft deleted
+	 */
+	public function testSoftDeleteDeleteGroupUsers() {
+		$user = $this->User->findFirstByUsername('admin@passbolt.com');
+		$this->User->setActive($user);
+
+		// Retrieve the user to soft delete
+		$userW = $this->User->findFirstByUsername('wang@passbolt.com');
+
+		// The user should member of at least one group to make this test relevant
+		$groupUsers = $this->GroupUser->findByUserId($userW['User']['id']);
+		$this->assertNotEmpty($groupUsers);
+
+		// Soft delete the user
+		$this->User->softDelete($userW['User']['id']);
+
+		// Check that the user is not member of any groups anymore
+		$groupUsers = $this->GroupUser->findByUserId($userW['User']['id']);
+		$this->assertEmpty($groupUsers);
 	}
 }

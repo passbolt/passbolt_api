@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification
 - PASSBOLT-2174: Edit group dialog should be marked as ready if an admin edit a group the admin is not group manager
 - PASSBOLT-2155: As AD I shouldn't be able to delete as user if the user is the sole group manager of a group
+- PASSBOLT-2075: Users should be removed from the groups they are member of after a soft delete operation
 - PASSBOLT-1934: GITHUB-40: As a user I should be allowed to add the a ldap path as username
 - PASSBOLT-2156: GITHUB-94: As a user I should be allowed to add text in JSON format in the description
 - PASSBOLT-2122: GITHUB-85: Username should be Minimum 1 characters in length (and not 3)
