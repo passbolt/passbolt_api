@@ -193,6 +193,12 @@ class QueryStringComponent extends Component {
 							}
 						}
 					break;
+					case 'is-shared-with-group':
+						$groupId = $values;
+						if(!Common::isUuid($groupId)) {
+							throw new ValidationException(__('"%s" is not a valid group id for filter %s.', $groupId, $filter));
+						}
+						break;
 					case 'modified-after':
 						$timestamp = $values;
 						if (!Common::isTimestamp($timestamp)) {

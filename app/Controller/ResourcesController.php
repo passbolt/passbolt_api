@@ -31,7 +31,7 @@ class ResourcesController extends AppController {
 
 		// Extract parameters from query string
 		$allowedQueryItems = [
-			'filter' => ['is-favorite', 'is-owned-by-me', 'is-shared-with-me'],
+			'filter' => ['is-favorite', 'is-owned-by-me', 'is-shared-with-me', 'is-shared-with-group'],
 			'contain' => [ 'Creator', 'Favorite', 'Modifier', 'Secret'],
 			'order' => $this->Resource->getFindAllowedOrder('ResourcesController::index'),
 		];
