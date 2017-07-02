@@ -145,10 +145,10 @@ class Resource extends AppModel {
 					'message' => __('A name is required')
 				],
 				'alphaNumericAndSpecial' => [
-					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
 					'required' => 'create',
 					'allowEmpty' => false,
-					'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
+					'message' => __('Name should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ = ( ) [ ] { } \' " /'),
 				],
 				'size' => [
 					'rule' => ['lengthBetween', 3, 64],
@@ -156,14 +156,14 @@ class Resource extends AppModel {
 				]
 			],
 			'username' => [
-				'alphaNumeric' => [
+				'alphaNumericAndSpecial' => [
 					'allowEmpty' => true,
 					'required' => false,
-					'rule' => '/^[a-zA-Z0-9\-_@.]*$/',
-					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _ . @'),
+					'rule' => "/^[\p{L}\d,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
+					'message' => __('Username should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ = ( ) [ ] { } \' " /'),
 				],
 				'size' => [
-					'rule' => ['lengthBetween', 3, 64],
+					'rule' => ['lengthBetween', 1, 64],
 					'message' => __('Username should be between %s and %s characters long', 3, 64),
 				]
 			],
@@ -184,8 +184,8 @@ class Resource extends AppModel {
 			],
 			'uri' => [
 				'url' => [
-					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
-					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /.'),
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\-_\(\[\)\]'\"\/]*$/u",
+					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
 				],
 				'size' => [
@@ -195,10 +195,10 @@ class Resource extends AppModel {
 			],
 			'description' => [
 				'alphaNumericAndSpecial' => [
-					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
-					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /')
+					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ - _ = ( ) [ ] { } \' " /')
 				],
 				'maxLength' => [
 					'rule' => ['lengthBetween', 0, 10000],
