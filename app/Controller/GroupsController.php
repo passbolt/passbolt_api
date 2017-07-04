@@ -299,6 +299,10 @@ class GroupsController extends AppController {
 			if (!empty($changes['deleted'])) {
 				$this->EmailNotificator->groupDeleteUsers(User::get('id'), $group, $changes['deleted']);
 			}
+			// Notify by email the users regarding their membership update.
+			if (!empty($changes['updated'])) {
+				$this->EmailNotificator->groupUpdateUsers(User::get('id'), $group, $changes['updated']);
+			}
 			// Notify by email other group managers about the changes.
 			if (!empty($changes['created']) || !empty($changes['deleted']) || !empty($changes['updated'])) {
 				$this->EmailNotificator->groupUpdatedSummary(User::get('id'), $group, $changes);

@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-2147: As a group member I should receive a notification when my role in the group has changed
+
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
 - PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification

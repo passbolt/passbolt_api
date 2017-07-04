@@ -506,6 +506,43 @@ class EmailNotificatorComponent extends Component {
 	}
 
 /**
+ * Send a notification email to the users whom the role has been updated.
+ *
+ * @param $senderId the user who performed the operation
+ * @param $group The target group
+ * @param $groupUsers the updated group users
+ * @return void
+ */
+	public function groupUpdateUsers($senderId, $group, $groupUsers) {
+		// Get sender account info.
+		$sender = $this->_getUserInfo($senderId);
+
+		// Email template.
+		$template = 'group_update_user';
+
+		foreach ($groupUsers as $groupUser) {
+			// Get recipient account info.
+			$recipient = $this->_getUserInfo($groupUser['GroupUser']['user_id']);
+
+			// Default subject.
+			$subject = __("%s updated your group membership", $sender['Profile']['first_name'], $group['Group']['name']);
+
+			// Send notification.
+			$this->EmailNotification->send(
+				$recipient['User']['username'],
+				$subject, [
+				'sender' => $sender,
+				'groupUser' => $groupUser,
+				'group' => $group,
+				'user' => $recipient,
+				'updateTime' => time(),
+			],
+				$template
+			);
+		}
+	}
+
+/**
  * Send a notification email to the group managers after a group update.
  *
  * Except :
