@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - PASSBOLT-2147: As a group member I should receive a notification when my role in the group has changed
+- PASSBOLT-2148: As a group manager I should receive a notification when a user who is part of one (or more) groups I manage is deleted
 
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed

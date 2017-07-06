@@ -646,11 +646,19 @@ class UsersController extends AppController {
 			return $this->Message->success(__('The user can be deleted.'));
 		}
 
+		// Find the groups the users was member of, before deleting the associations GroupUser.
+		$groupsUsers = $this->User->GroupUser->find('all', ['conditions' => [
+			'user_id' => $id
+		]]);
+
 		try {
 			$this->User->softDelete($id);
 		} catch(Exception $e) {
 			throw new InternalErrorException(__('Could not delete the user.'));
 		}
+
+		// Notify by email the group managers of groups the user was member.
+		$this->EmailNotificator->userDeletedGroupManagerNotification(User::get('id'), $user, $groupsUsers);
 
 		// Everything went fine, commit the changes
 		$this->Message->success(__('The user was successfully deleted.'));

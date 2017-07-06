@@ -552,11 +552,11 @@ class EmailNotificatorComponent extends Component {
  *    - Their role changed and they are now group manager
  *
  * @param string $senderId the user who performed the operation
- * @param GroupUser $group The target group
+ * @param Group $group The target group
  * @param array $data the changes
- *  - created: the created GroupUser
- *  - deleted: the removed GroupUser
- *  - updated: the updated GroupUser
+ *  - created {array}: array of created GroupUser
+ *  - deleted {array}: array of removed GroupUser
+ *  - updated {array}: array of updated GroupUser
  * @return void
  */
 	public function groupUpdatedSummary($senderId, $group, $data = array()) {
@@ -566,8 +566,12 @@ class EmailNotificatorComponent extends Component {
 		$notificationTime = time();
 
 		// Exclude newly added group manager and members that have been granted group manager.
-		$groupManagersToExclude = Hash::extract($data['updated'], '{n}.GroupUser[is_admin=true].user_id');
-		$groupManagersToExclude = array_merge($groupManagersToExclude, Hash::extract($data['created'], '{n}.GroupUser[is_admin=true].user_id'));
+		if (!empty($data['updated'])) {
+			$groupManagersToExclude = Hash::extract($data['updated'], '{n}.GroupUser[is_admin=true].user_id');
+		}
+		if (!empty($data['created'])) {
+			$groupManagersToExclude = array_merge($groupManagersToExclude, Hash::extract($data['created'], '{n}.GroupUser[is_admin=true].user_id'));
+		}
 
 		// The user who made the change shouldn't receive the notification as well.
 		$groupManagersToExclude[] = User::get('id');
@@ -639,6 +643,57 @@ class EmailNotificatorComponent extends Component {
 				'deletedUsers' => $deletedUsers,
 				'updatedRoles' => $updatedRoles,
 				'notificationTime' => $notificationTime,
+			], $template);
+		}
+	}
+
+	/**
+	 * Send a notification email to the group managers after a user delete.
+	 *
+	 * @param string $senderId the user who performed the operation
+	 * @param User $user The deleted user
+	 * @param GroupUser $groupsUsers The deleted group users
+	 * @return void
+	 */
+	function userDeletedGroupManagerNotification($senderId, $user, $groupsUsers) {
+		// Get sender account info.
+		$sender = $this->_getUserInfo($senderId);
+
+		// Email template.
+		$template = 'user_deleted_group_manager_summary';
+
+		// Email subject.
+		$subject = __("%s deleted a user", $sender['Profile']['first_name']);
+
+		// An associative array containing the groups (value) the deleted user was member of grouped by group manager (key).
+		$data = [];
+
+		// Aggregate the data.
+		foreach ($groupsUsers as $groupUser) {
+			$group = $this->Group->findById($groupUser['GroupUser']['group_id']);
+			$groupManagers = $this->GroupUser->find('all', ['conditions' => [
+				'is_admin' => 1,
+				'group_id' => $groupUser['GroupUser']['group_id']
+			]]);
+			foreach($groupManagers as $groupManager) {
+				$data[$groupManager['GroupUser']['user_id']][] = [
+					'GroupUser' => $groupUser['GroupUser'],
+					'Group' => $group['Group']
+				];
+			}
+		}
+
+		// Send the notification.
+		foreach ($data as $groupManagerId => $item) {
+			$groupManager = $this->_getUserInfo($groupManagerId);
+
+			$this->EmailNotification->send(
+				$groupManager['User']['username'],
+				$subject, [
+				'sender' => $sender,
+				'user' => $user,
+				'data' => $item,
+				'deleteTime' => time()
 			], $template);
 		}
 	}
