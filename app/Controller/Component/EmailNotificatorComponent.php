@@ -564,6 +564,7 @@ class EmailNotificatorComponent extends Component {
 		$deletedUsers = [];
 		$updatedRoles = [];
 		$notificationTime = time();
+		$groupManagersToExclude = [];
 
 		// Exclude newly added group manager and members that have been granted group manager.
 		if (!empty($data['updated'])) {
