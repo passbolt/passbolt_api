@@ -5,7 +5,7 @@
                 <a href="#" title="<%= mappedItem.label %>'"><span><%= mappedItem.label %></span></a>
             </div>
         </div>
-        <% if (mappedItem.canEdit == true) { %>
+        <% if (withMenu == true && mappedItem.canEdit == true) { %>
         <div class="right-cell more-ctrl">
             <a href="#"><span>more</span></a>
         </div>

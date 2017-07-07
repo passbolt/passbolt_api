@@ -1,5 +1,5 @@
 import 'mad/component/component';
-import 'app/component/groups_list';
+import 'app/component/people_groups_list';
 import 'app/view/template/component/groups.ejs!';
 
 /*
@@ -32,10 +32,10 @@ var Groups = passbolt.component.Groups = mad.Component.extend('passbolt.componen
      * @see {mad.Component}
      */
     afterStart: function() {
-        var groupsList = new passbolt.component.GroupsList($('#js_wsp_users_groups_list', this.element), {
+        var peopleGroupsList = new passbolt.component.PeopleGroupsList($('#js_wsp_users_groups_list', this.element), {
             selectedGroups: this.options.selectedGroups
         });
-        groupsList.start();
+        peopleGroupsList.start();
     }
 
 });
