@@ -1,9 +1,21 @@
 {
-    "name": "cakephp/app",
-    "description": "CakePHP skeleton app",
-    "homepage": "http://cakephp.org",
-    "type": "project",
-    "license": "MIT",
+    "name": "passbolt/passbolt",
+    "description": "Open source password manager for teams",
+    "type": "application",
+    "keywords": ["password", "passbolt"],
+    "homepage": "https://www.passbolt.com",
+    "license": "AGPL-3.0",
+    "authors": [
+        {
+            "name": "Passbolt Team",
+            "homepage": "https://www.passbolt.com/credits"
+        }
+    ],
+    "support": {
+        "bugs": "https://github.com/passbolt/passbolt/issues",
+        "help": "https://www.passbolt.com/help",
+        "source": "https://github.com/passbolt/passbolt"
+    },
     "require": {
         "php": ">=5.6",
         "cakephp/cakephp": "3.4.*",
