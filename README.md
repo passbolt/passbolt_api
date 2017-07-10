@@ -1,51 +1,76 @@
-# CakePHP Application Skeleton
 
-[![Build Status](https://img.shields.io/travis/cakephp/app/master.svg?style=flat-square)](https://travis-ci.org/cakephp/app)
-[![License](https://img.shields.io/packagist/l/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
+	      ____                  __          ____
+	     / __ \____  _____ ____/ /_  ____  / / /_
+	    / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/
+	   / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
+	  /_/    \__,_/____/____/_,___/\____/_/\__/
 
-A skeleton for creating applications with [CakePHP](http://cakephp.org) 3.x.
+	The open-source password management solution for teams
+	(c) 2017 Passbolt SARL
+	https://www.passbolt.com
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+[![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
+[![Build Status](https://saucelabs.com/buildstatus/passbolt)](https://saucelabs.com/beta/builds/c32d4f7b34c94ebdab39baed17b4d975)
+[![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt_api/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt_api?branch=master)
 
-## Installation
+[![Build Status](https://saucelabs.com/browser-matrix/passbolt.svg)](https://saucelabs.com/beta/builds/2b2d0f3a120a4818a137fda932a86c75)
 
-1. Download [Composer](http://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+## License
 
-If Composer is installed globally, run
+Passbolt is distributed under the [Affero General Public License v3](http://www.gnu.org/licenses/agpl-3.0.html)
 
-```bash
-composer create-project --prefer-dist cakephp/app
-```
+## About Passbolt
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
+Passbolt is an open source password manager for teams. It allows you to securely share and store credentials.
+For instance, the wifi password of your office, the administrator password of a router or your organisation's social media account passwords, all of them can be secured using passbolt.
 
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
+Passbolt is different from the other password managers because:
+- It is primarily designed for teams and not individuals
+- It is free & open source
+- It is respectful of privacy
+- It is based on OpenPGP, a proven cryptographic standard
+- It is easy to use for both novices and IT professionals alike
+- It is extensible thanks to its RESTful API
 
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
+Find out more: [https://www.passbolt.com](https://www.passbolt.com "Passbolt Homepage")
 
-```bash
-bin/cake server -p 8765
-```
+### What does it look like?
 
-Then visit `http://localhost:8765` to see the welcome page.
+[![Login](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-login-275.png)](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-login.png)
+[![Browse passwords](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot4-275.png)](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot4.png)
+[![Share passwords](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share-275.png)](https://raw.githubusercontent.com/passbolt/passbolt_styleguide/master/src/img/screenshots/teaser-screenshot-share.png)
 
-## Update
 
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
+### Trying out passbolt
 
-## Configuration
+You can try a demo of passbolt at https://demo.passbolt.com.
 
-Read and edit `config/app.php` and setup the `'Datasources'` and any other
-configuration relevant for your application.
+You will need to install a plugin, you can find some help here:
+https://www.passbolt.com/help/start/firefox
 
-## Layout
+## Installing passbolt
 
-The app skeleton uses a subset of [Foundation](http://foundation.zurb.com/) CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+You can install passbolt on your own machine. Follow the instructions on the website here:
+https://www.passbolt.com/help/tech/install
+
+## Contributing to passbolt
+
+Please check out CONTRIBUTING.md for more information on how to get involved!
+
+## Reporting a security issue
+
+If you've found a security-related issue in passbolt, please don't open an issue on GitHub.
+Instead contact us at security@passbolt.com. In the spirit of responsible disclosure we ask that the reporter keep the issue confidential until we announce it.
+
+The passbolt team will take the following actions:
+- Try first to reproduce the issue and confirm the vulnerability.
+- Acknowledge to the reporter that we have received the issue and are working on a fix.
+- Get a fix/patch prepared and create associated automated tests.
+- Prepare a post describing the vulnerability and the possible exploits.
+- Release new versions of all affected major versions.
+- Prominently feature the problem in the release announcement.
+- Give credit in the release announcement to the reporter if they so desire.
+
+## Credits
+
+https://www.passbolt.com/credits
