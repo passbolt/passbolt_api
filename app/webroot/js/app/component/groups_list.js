@@ -42,7 +42,13 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
             }
         }),
         state: 'loading',
-        silentLoading: false
+        silentLoading: false,
+        defaultGroupFilter: {},
+        // Wether we want a menu associated to the group or not.
+        // If set to true, the view will render a menu icon  at the end of the line, that can be clicked.
+        // on click, it will trigger a item_menu_clicked event.
+        // see password_categories.js for a practical implementation sample.
+        withMenu: false
     }
 
 }, /** @prototype */ {
@@ -51,21 +57,33 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
      * AfterStart hook.
      */
     afterStart: function () {
+        this.setViewData('withMenu', this.options.withMenu);
+        this.loadGroups(this.options.defaultGroupFilter);
+        this._super();
+    },
+
+    /**
+     * Load groups after retrieving them from API according to a given filter.
+     * @param json filter
+     *   The filter required. Provide {} if no filter
+     *   Example: {"has-users":"xxx-xxx-xxx-xxx-xxx"}
+     */
+    loadGroups: function(filter) {
         var self = this;
 
         // Load the groups.
         var findOptions = {
             contain: {user: 1},
-            order: ['Group.name ASC']
+            order: ['Group.name ASC'],
+            filter: filter
         };
-        passbolt.model.Group.findAll(findOptions)
-            .then(function (groups) {
-                // Load the tree component with the groups.
-                self.load(groups);
-                self.setState('ready');
-            });
 
-        this._super();
+        passbolt.model.Group.findAll(findOptions)
+          .then(function (groups) {
+              // Load the tree component with the groups.
+              self.load(groups);
+              self.setState('ready');
+          });
     },
 
     /**
@@ -104,72 +122,14 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         // Propagate the filter by group component.
         this.selectedFilter = new passbolt.model.Filter({
             id: 'workspace_filter_group_' + group.id,
-			label: group.name + __(' (group)'),
-			rules: {
-				'has-groups': group.id
-			},
+            label: group.name + __(' (group)'),
+            rules: {
+            'has-groups': group.id
+            },
             order: ['Profile.last_name ASC']
-		});
-		mad.bus.trigger('filter_workspace', this.selectedFilter);
+        });
+        mad.bus.trigger('filter_workspace', this.selectedFilter);
 	},
-
-    /**
-     * Show the contextual menu
-     * @param {passbolt.model.Resource} item The item to show the contextual menu for
-     * @param {string} x The x position where the menu will be rendered
-     * @param {string} y The y position where the menu will be rendered
-     * @param {HTMLElement} eventTarget The element the event occurred on
-     */
-    showContextualMenu: function (item, x, y, eventTarget) {
-
-        var currentUser = passbolt.model.User.getCurrent(),
-            isAdmin = (currentUser.Role.name == 'admin');
-
-        // Get the offset position of the clicked item.
-        var $item = $('#' + this.options.prefixItemId + item.id);
-        var item_offset = $('.more-ctrl a', $item).offset();
-
-        // Instantiate the contextual menu menu.
-        var contextualMenu = new mad.component.ContextualMenu(null, {
-            state: 'hidden',
-            source: eventTarget,
-            coordinates: {
-                x: x,
-                y: item_offset.top
-            }
-        });
-        contextualMenu.start();
-
-        // Add Edit group action.
-        var action = new mad.model.Action({
-            id: 'js_group_browser_menu_edit',
-            label: 'Edit group',
-            initial_state: 'ready',
-            action: function (menu) {
-                mad.bus.trigger('request_group_edition', item);
-                menu.remove();
-            }
-        });
-        contextualMenu.insertItem(action);
-
-        // Add Delete group action if the user is an admin.
-        if (isAdmin) {
-            var action = new mad.model.Action({
-                id: 'js_group_browser_menu_remove',
-                label: 'Delete group',
-                initial_state: 'ready',
-                action: function (menu) {
-                    // var secret = item.Secret[0].data;
-                    mad.bus.trigger('request_group_deletion', item);
-                    menu.remove();
-                }
-            });
-            contextualMenu.insertItem(action);
-        }
-
-        // Display the menu.
-        contextualMenu.setState('ready');
-    },
 
 	/* ************************************************************** */
 	/* LISTEN TO THE MODEL EVENTS */
@@ -236,32 +196,16 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         }
     },
 
-	/* ************************************************************** */
-	/* LISTEN TO THE VIEW EVENTS */
-	/* ************************************************************** */
-
-	/**
-	 * Observe when an item is selected.
-	 *
-	 * @param {HTMLElement} el The element the event occurred on
-	 * @param {HTMLEvent} ev The event which occurred
-	 * @param {mixed} item The selected item instance or its id
-	 * @param {HTMLEvent} ev The source event which occurred
-	 */
-	' item_selected': function (el, ev, item, srcEvent) {
-		this.select(item);
-	},
-
     /**
-     * An item has been clicked on the menu icon
-     * @param {HTMLElement} el The element the event occurred on
-     * @param {HTMLEvent} ev The event which occurred
-     * @param {passbolt.model.Group} item The right selected item instance or its id
-     * @param {HTMLEvent} srcEvent The source event which occurred
-     */
-    ' item_menu_clicked': function (el, ev, item, srcEvent) {
-        // Show contextual menu.
-        this.showContextualMenu(item, srcEvent.pageX, srcEvent.pageY, srcEvent.target);
+    * Observe when an item is selected.
+    *
+    * @param {HTMLElement} el The element the event occurred on
+    * @param {HTMLEvent} ev The event which occurred
+    * @param {mixed} item The selected item instance or its id
+    * @param {HTMLEvent} ev The source event which occurred
+    */
+    ' item_selected': function (el, ev, item, srcEvent) {
+        this.select(item);
     }
 });
 

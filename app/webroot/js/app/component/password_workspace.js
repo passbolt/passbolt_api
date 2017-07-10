@@ -7,9 +7,9 @@ import 'app/component/resource_actions_tab';
 import 'app/component/resource_sidebar';
 import 'app/component/resource_shortcuts';
 import 'app/component/workspace_secondary_menu';
+import 'app/component/password_categories';
 import 'app/form/resource/create';
 import 'app/model/filter';
-
 import 'app/view/template/password_workspace.ejs!';
 import 'app/view/template/component/create_button.ejs!';
 
@@ -32,6 +32,8 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		templateUri: 'app/view/template/password_workspace.ejs',
 		// The current selected resources
 		selectedRs: new can.Model.List(),
+		// The current selected groups
+		selectedGroups: new can.Model.List(),
 		// The current filter
 		filter: null,
 		// Override the silentLoading parameter.
@@ -97,6 +99,12 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		// Instantiate the password workspace breadcrumb controller
 		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
 		this.breadcrumCtl.start();
+
+		// Instanciate the users groups controller.
+		var passwordCategories = new passbolt.component.PasswordCategories('#js_wsp_pwd_password_categories', {
+			selectedGroups: this.options.selectedGroups
+		});
+		passwordCategories.start();
 
 		// Instantiate the passwords browser controller
 		var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', {

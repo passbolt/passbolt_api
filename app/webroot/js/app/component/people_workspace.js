@@ -5,7 +5,6 @@ import 'app/component/people_workspace_menu';
 import 'app/component/workspace_secondary_menu';
 import 'app/component/people_breadcrumb';
 import 'app/component/groups';
-//import 'app/component/group_chooser'; // @roadmap
 import 'app/component/user_browser';
 import 'app/component/user_shortcuts';
 import 'app/component/user_sidebar';
@@ -37,16 +36,16 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
     defaults: {
         label: 'People',
         templateUri: 'app/view/template/people_workspace.ejs',
-		// The current selected users
+        // The current selected users
         selectedUsers: new can.Model.List(),
-		// The current selected groups
+        // The current selected groups
         selectedGroups: new can.Model.List(),
-		// The current filter
+        // The current filter
         filter: null,
-		// Override the silentLoading parameter.
-		silentLoading: false,
-		// Filter the workspace with this filter settings.
-		filterSettings: null
+        // Override the silentLoading parameter.
+        silentLoading: false,
+        // Filter the workspace with this filter settings.
+        filterSettings: null
     },
 
 	/**
@@ -55,9 +54,9 @@ var PeopleWorkspace = passbolt.component.PeopleWorkspace = mad.Component.extend(
 	 */
 	getDefaultFilterSettings: function() {
 		return new passbolt.model.Filter({
-            id: 'default',
-			label: __('All users'),
-            order: ['Profile.last_name ASC']
+        id: 'default',
+        label: __('All users'),
+        order: ['Profile.last_name ASC']
 		});
 	}
 
