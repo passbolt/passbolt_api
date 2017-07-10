@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - PASSBOLT-2147: As a group member I should receive a notification when my role in the group has changed
+- PASSBOLT-2133: As LU I should be able to filter passwords by group on the passwords workspace
 
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
