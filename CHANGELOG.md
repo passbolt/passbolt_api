@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - PASSBOLT-2147: As a group member I should receive a notification when my role in the group has changed
 - PASSBOLT-2148: As a group manager I should receive a notification when a user who is part of one (or more) groups I manage is deleted
-
+- PASSBOLT-2225: As a demo user it should be explicit that I need to use a throway email account
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
 - PASSBOLT-2172: Newly added group manager shouldn't receive the group update summary notification
