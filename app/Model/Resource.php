@@ -159,7 +159,7 @@ class Resource extends AppModel {
 				'alphaNumericAndSpecial' => [
 					'allowEmpty' => true,
 					'required' => false,
-					'rule' => "/^[\p{L}\d,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
 					'message' => __('Username should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ = ( ) [ ] { } \' " /'),
 				],
 				'size' => [
@@ -195,7 +195,7 @@ class Resource extends AppModel {
 			],
 			'description' => [
 				'alphaNumericAndSpecial' => [
-					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/\r\n\s]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ = ( ) [ ] { } \' " /')

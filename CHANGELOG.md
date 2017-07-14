@@ -18,6 +18,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1934: GITHUB-40: As a user I should be allowed to add the a ldap path as username
 - PASSBOLT-2156: GITHUB-94: As a user I should be allowed to add text in JSON format in the description
 - PASSBOLT-2122: GITHUB-85: Username should be Minimum 1 characters in length (and not 3)
+- PASSBOLT-2180: GITHUB-85: As a user I should be allowed to add a space in a resource username
+- PASSBOLT-2125: GITHUB-86: As a logged in user creating/editing a password I should be able to use new line characters in the description
 
 ## [1.6.0] - 2017-06-21
 ### Added

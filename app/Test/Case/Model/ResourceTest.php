@@ -124,7 +124,7 @@ class ResourceTest extends AppTestCase {
 			'ARABIC' . str_replace(' ', '', self::randString($len - 6, self::getMask('alphaArabic'))) => true,
 			'RUSSIAN' . str_replace(' ', '', self::randString($len - 7, self::getMask('alphaRussian'))) => true,
 			// Spaces
-			'txt with spaces' => false,
+			'txt with spaces' => true,
 			"txt\twith\ttabs" => false,
 			"txt\nwith\nnew\nlines" => false,
 			// Special characters
@@ -235,8 +235,8 @@ class ResourceTest extends AppTestCase {
 			'RUSSIAN' . self::randString($len - 7, self::getMask('alphaRussian')) => true,
 			// Spaces
 			'txt with spaces' => true,
-			"txt\twith\ttabs" => false,
-			"txt\nwith\nnew\nlines" => false,
+			"txt\twith\ttabs" => true,
+			"txt\nwith\nnew\nlines" => true,
 			// Special characters
 			',.-_([)]\'{}":' => true,
 			'?!#&' => true,
