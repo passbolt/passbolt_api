@@ -502,10 +502,11 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				self.setState(states);
 			});
 		}
-		this.filterSettings = filter;
 
 		// When the resources have been retrieved.
 		$.when(def).done(function() {
+			self.filterSettings = filter;
+
 			// Mark the ordered column if any.
 			var orders = filter.getOrders();
 			if (orders && orders[0]) {

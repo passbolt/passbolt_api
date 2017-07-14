@@ -30,7 +30,13 @@ $inputDefault = ['inputDefaults' => ['error' => [ 'attributes' => ['class' => 'm
 					<legend><?php echo __('Please enter your username and password'); ?></legend>
 					<?php echo $this->Form->input('Profile.first_name', array('label' => __('First name'), 'class' =>' fluid')); ?>
 					<?php echo $this->Form->input('Profile.last_name', array('label' => __('Last name'), 'class' =>' fluid')); ?>
-					<?php echo $this->Form->input('User.username', array('label' => __('Email'), 'class' =>' fluid')); ?>
+					<div class="input text required">
+						<label for="UserUsername">Email</label>
+						<input name="data[User][username]" class=" fluid" placeholder="ex: something@mailinator.com" maxlength="50" id="UserUsername" required="required" type="text">
+						<span class="message">Please only use a
+							<a href="https://en.wikipedia.org/wiki/Disposable_email_address" target="_blank" rel="nofollow">
+								disposable email address</a>.</span>
+					</div>
 				</fieldset>
 				<div class="actions-wrapper">
 					<div class="submit"><input type="submit" class="button primary big" value="<?php echo __('register'); ?>"></div>

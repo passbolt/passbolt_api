@@ -404,10 +404,11 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
                 }
             });
         }
-        this.filterSettings = filter;
 
         // Once the call API done, if any, filter locally the result by keywords if any.
         $.when(def).done(function() {
+            self.filterSettings = filter;
+
             // Mark the ordered column if any.
             var orders = filter.getOrders();
             if (orders && orders[0]) {

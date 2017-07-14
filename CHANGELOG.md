@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - PASSBOLT-2147: As a group member I should receive a notification when my role in the group has changed
+- PASSBOLT-2148: As a group manager I should receive a notification when a user who is part of one (or more) groups I manage is deleted
+- PASSBOLT-2225: As a demo user it should be explicit that I need to use a throway email account
 - PASSBOLT-2133: As LU I should be able to filter passwords by group on the passwords workspace
 
 ### Fixed
