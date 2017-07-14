@@ -48,7 +48,10 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
         // If set to true, the view will render a menu icon  at the end of the line, that can be clicked.
         // on click, it will trigger a item_menu_clicked event.
         // see password_categories.js for a practical implementation sample.
-        withMenu: false
+        withMenu: false,
+        // After load hook.
+        // If not null, should be a function with a group parameter.
+        afterLoad: function(groups){}
     }
 
 }, /** @prototype */ {
@@ -82,6 +85,9 @@ var GroupsList = passbolt.component.GroupsList = mad.component.Tree.extend('pass
           .then(function (groups) {
               // Load the tree component with the groups.
               self.load(groups);
+              if (self.options.afterLoad != null) {
+                  self.options.afterLoad(groups);
+              }
               self.setState('ready');
           });
     },

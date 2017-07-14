@@ -23,7 +23,8 @@ var PasswordCategories = passbolt.component.PasswordCategories = mad.Component.e
 
   defaults: {
     templateUri: 'app/view/template/component/password_categories.ejs',
-    selectedGroups: new can.Model.List()
+    selectedGroups: new can.Model.List(),
+    state: 'hidden' // Is hidden by default, and will be displayed only when there are groups to show.
   }
 
 }, /** @prototype */ {
@@ -33,10 +34,16 @@ var PasswordCategories = passbolt.component.PasswordCategories = mad.Component.e
    * @see {mad.Component}
    */
   afterStart: function() {
+    var self = this;
     var passwordCategoriesGroupsList = new passbolt.component.PasswordCategoriesGroupsList($('#js_wsp_password_categories_groups_list', this.element), {
       selectedGroups: this.options.selectedGroups,
       defaultGroupFilter: {
         "has-users" : passbolt.model.User.getCurrent().id
+      },
+      afterLoad: function(groups) {
+        if (groups.length > 0) {
+          self.setState('ready');
+        }
       }
     });
     passwordCategoriesGroupsList.start();
