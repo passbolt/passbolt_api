@@ -1,5 +1,4 @@
 import 'mad/view/component/tree';
-//import 'app/component/comments';
 
 passbolt.component.sidebarSection = passbolt.component.sidebarSection || {};
 
@@ -16,11 +15,11 @@ passbolt.component.sidebarSection = passbolt.component.sidebarSection || {};
  * @return {passbolt.component.SidebarSection}
  */
 var SidebarSection = passbolt.component.SidebarSection = mad.Component.extend('passbolt.component.SidebarSection', /** @static */ {
-	'defaults': {
-		'label': 'Sidebar Section Component',
-		'viewClass': passbolt.view.component.ResourceDetails,
+	defaults: {
+		label: 'Sidebar Section Component',
+		viewClass: passbolt.view.component.ResourceDetails,
 		// the resource to bind the component on
-		'resource': null
+		resource: null
 	}
 }, /** @prototype */ {
 
