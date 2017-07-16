@@ -22,6 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2180: GITHUB-85: As a user I should be allowed to add a space in a resource username
 - PASSBOLT-2125: GITHUB-86: As a logged in user creating/editing a password I should be able to use new line characters in the description
 - PASSBOLT-2188: Regression: As LU when I search for a user it shouldn't make an API request
+- PASSBOLT-2234: Regression: As newly added GM I shouldn't receive the group update summary when I'm just added as GM
 
 ## [1.6.0] - 2017-06-21
 ### Added
