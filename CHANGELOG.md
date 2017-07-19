@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2188: Regression: As LU when I search for a user it shouldn't make an API request
 - PASSBOLT-2234: Regression: As newly added GM I shouldn't receive the group update summary when I'm just added as GM
 - PASSBOLT-2235: As AD editing a group the dialog shouldn't be marked as ready until the members list is loaded
+- PASSBOLT-2105: Anonymous statistics: fix "Warning Error: file_put_contents" issue at installation
 
 ## [1.6.0] - 2017-06-21
 ### Added
