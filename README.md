@@ -13,6 +13,7 @@
 [![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
 [![Build Status](https://saucelabs.com/buildstatus/passbolt)](https://saucelabs.com/beta/builds/c32d4f7b34c94ebdab39baed17b4d975)
 [![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt_api/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt_api?branch=master)
+[![Docker Pulls](https://img.shields.io/docker/pulls/passbolt/passbolt.svg)](https://hub.docker.com/r/passbolt/passbolt/tags/)
 
 [![Build Status](https://saucelabs.com/browser-matrix/passbolt.svg)](https://saucelabs.com/beta/builds/2b2d0f3a120a4818a137fda932a86c75)
 
