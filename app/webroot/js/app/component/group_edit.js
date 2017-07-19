@@ -129,10 +129,9 @@ var GroupEdit = passbolt.component.GroupEdit = mad.Component.extend('passbolt.co
 
         // The component is marked as ready if :
         // - In a create group use case ;
-        // - If editing a group with no group manager right (it means we don't expect the plugin to inject the search users field);
         // The component is marked as loading if we expect the plugin to inject the search user field. See the observer of the event
         // passbolt.plugin.group.edit.group_loaded.
-        if (this.formState == 'create' || !this.isGroupManager) {
+        if (this.formState == 'create') {
             this.options.state = 'ready';
         }
 

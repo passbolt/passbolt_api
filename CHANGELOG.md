@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2148: As a group manager I should receive a notification when a user who is part of one (or more) groups I manage is deleted
 - PASSBOLT-2225: As a demo user it should be explicit that I need to use a throway email account
 - PASSBOLT-2133: As LU I should be able to filter passwords by group on the passwords workspace
+- PASSBOLT-2012: As a user I can see which groups a user is a member of from the sidebar
 
 ### Fixed
 - PASSBOLT-2171: The group list component should be marked as ready once the API request is completed
@@ -20,6 +21,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2122: GITHUB-85: Username should be Minimum 1 characters in length (and not 3)
 - PASSBOLT-2180: GITHUB-85: As a user I should be allowed to add a space in a resource username
 - PASSBOLT-2125: GITHUB-86: As a logged in user creating/editing a password I should be able to use new line characters in the description
+- PASSBOLT-2188: Regression: As LU when I search for a user it shouldn't make an API request
+- PASSBOLT-2234: Regression: As newly added GM I shouldn't receive the group update summary when I'm just added as GM
+- PASSBOLT-2235: As AD editing a group the dialog shouldn't be marked as ready until the members list is loaded
 
 ## [1.6.0] - 2017-06-21
 ### Added

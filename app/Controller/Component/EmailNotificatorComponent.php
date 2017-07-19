@@ -568,12 +568,11 @@ class EmailNotificatorComponent extends Component {
 
 		// Exclude newly added group manager and members that have been granted group manager.
 		if (!empty($data['updated'])) {
-			$groupManagersToExclude = Hash::extract($data['updated'], '{n}.GroupUser[is_admin=true].user_id');
+			$groupManagersToExclude = Hash::extract($data['updated'], '{n}.GroupUser[is_admin=1].user_id');
 		}
 		if (!empty($data['created'])) {
-			$groupManagersToExclude = array_merge($groupManagersToExclude, Hash::extract($data['created'], '{n}.GroupUser[is_admin=true].user_id'));
+			$groupManagersToExclude = array_merge($groupManagersToExclude, Hash::extract($data['created'], '{n}.GroupUser[is_admin=1].user_id'));
 		}
-
 		// The user who made the change shouldn't receive the notification as well.
 		$groupManagersToExclude[] = User::get('id');
 
