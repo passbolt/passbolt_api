@@ -2,14 +2,14 @@
 App::uses('AnonymousStatistic', 'Model');
 App::uses('PassboltMigration', 'Lib');
 
-class Migration_1_7_0 extends PassboltMigration {
+class Migration_1_6_1 extends PassboltMigration {
 
 /**
  * Migration description
  *
  * @var string
  */
-	public $description = 'Migration_1_7_0';
+	public $description = 'Migration_1_6_1';
 
 /**
  * Actions to be performed
@@ -44,10 +44,10 @@ class Migration_1_7_0 extends PassboltMigration {
 
 		// Move anonymous_statistics.php file from app/Config to /tmp
 		if (file_exists(APP . 'Config' . DS . 'anonymous_statistics.php')) {
-			if (!file_exists(AnonymousStatistic::ConfigFilePath)) {
-				mkdir(AnonymousStatistic::ConfigFilePath);
+			if (!file_exists(AnonymousStatistic::CONFIG_FILE_PATH)) {
+				mkdir(AnonymousStatistic::CONFIG_FILE_PATH);
 			}
-			rename(APP . 'Config' . DS . 'anonymous_statistics.php', AnonymousStatistic::ConfigFilePath . DS . 'anonymous_statistics.php');
+			rename(APP . 'Config' . DS . 'anonymous_statistics.php', AnonymousStatistic::CONFIG_FILE_PATH . DS . 'anonymous_statistics.php');
 		}
 
 		// Remove the deleted users from the groups they were member of.
