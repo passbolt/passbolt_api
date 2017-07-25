@@ -163,7 +163,7 @@ class ResourceTest extends AppTestCase {
 		$testcases = array(
 			'' => true,
 			't' => false,
-			'?!#&' => true,
+			'?!#&@!=+%$*~' => true,
 			'test' => true,
 			'test@test.com' => true,
 			'test<' => false,
