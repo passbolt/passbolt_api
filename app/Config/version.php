@@ -2,6 +2,6 @@
 $config = [
 	'App.version' => [
 		'number' => '1.6.1',
-		'name' => 'Let\'s groove'
+		'name' => 'Fresh'
 	],
 ];
