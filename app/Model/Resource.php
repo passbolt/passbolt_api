@@ -195,7 +195,7 @@ class Resource extends AppModel {
 			],
 			'description' => [
 				'alphaNumericAndSpecial' => [
-					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/\r\n\s]*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/\s]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
 					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ = ( ) [ ] { } \' " /')
