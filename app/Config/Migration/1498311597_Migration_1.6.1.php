@@ -44,10 +44,10 @@ class Migration_1_6_1 extends PassboltMigration {
 
 		// Move anonymous_statistics.php file from app/Config to /tmp
 		if (file_exists(APP . 'Config' . DS . 'anonymous_statistics.php')) {
-			if (!file_exists(AnonymousStatistic::CONFIG_FILE_PATH)) {
-				mkdir(AnonymousStatistic::CONFIG_FILE_PATH);
+			if (!file_exists(AnonymousStatistic::getConfigFilePath())) {
+				mkdir(AnonymousStatistic::getConfigFilePath());
 			}
-			rename(APP . 'Config' . DS . 'anonymous_statistics.php', AnonymousStatistic::CONFIG_FILE_PATH . DS . 'anonymous_statistics.php');
+			rename(APP . 'Config' . DS . 'anonymous_statistics.php', AnonymousStatistic::getConfigFilePath() . DS . 'anonymous_statistics.php');
 		}
 
 		// Remove the deleted users from the groups they were member of.
