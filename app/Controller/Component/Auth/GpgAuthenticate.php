@@ -3,7 +3,7 @@
  * GpgAuthenticate
  * Manages a GPG based authentication scheme
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
@@ -168,7 +168,7 @@ class GpgAuthenticate extends BaseAuthenticate {
 		// load base configuration
 		$this->_config = Configure::read('GPG');
 		if (!isset($this->_config['serverKey']['fingerprint'])) {
-			throw new CakeException('The GnuPG config for the server is not available or incomplete');
+			throw new InternalErrorException('The GnuPG config for the server is not available or incomplete');
 		}
 		$keyid = $this->_config['serverKey']['fingerprint'];
 
@@ -176,12 +176,12 @@ class GpgAuthenticate extends BaseAuthenticate {
 		$this->_gpg = new gnupg();
 		$info = $this->_gpg->keyinfo($keyid);
 		if (empty($info)) {
-			throw new CakeException('The GPG Server key defined in the config is not found in the gpg keyring');
+			throw new InternalErrorException('The GPG Server key defined in the config is not found in the gpg keyring');
 		}
 
 		// set the key to be used for decrypting
 		if (!$this->_gpg->adddecryptkey($keyid, $this->_config['serverKey']['passphrase'])) {
-			throw new CakeException('The GPG Server key defined in the config cannot be used to decrypt');
+			throw new InternalErrorException('The GPG Server key defined in the config cannot be used to decrypt');
 		}
 
 		$this->_gpg->seterrormode(gnupg::ERROR_EXCEPTION);
@@ -199,12 +199,12 @@ class GpgAuthenticate extends BaseAuthenticate {
 		$info = $this->_gpg->keyinfo($keyid);
 		if (empty($info)) {
 			if (!$this->_gpg->import($user['Gpgkey']['key'])) {
-				throw new CakeException('The GnuPG key for the user could not be imported');
+				throw new InternalErrorException('The GnuPG key for the user could not be imported');
 			}
 			// check that the imported key match the fingerprint
 			$info = $this->_gpg->keyinfo($keyid);
 			if (empty($info)) {
-				throw new CakeException('The GnuPG key for the user is not available or not working');
+				throw new InternalErrorException('The GnuPG key for the user is not available or not working');
 			}
 		}
 		$this->_gpg->addencryptkey($keyid);

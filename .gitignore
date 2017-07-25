@@ -6,6 +6,11 @@
 /app/Config/anonymous_statistics.php
 /app/Config/email.php
 
+# Temp config files #
+#####################
+/app/tmp/config
+/app/tmp/config/*
+
 # User specific #
 #################
 /app/webroot/img/public/*
@@ -59,6 +64,7 @@ composer.lock
 /nbproject
 .idea
 *.mo
+.project
 
 # IDE and editor specific files #
 #################################

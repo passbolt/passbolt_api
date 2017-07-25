@@ -2,7 +2,8 @@
 /**
  * Resource model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ *                2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 /**
@@ -75,7 +76,6 @@ class Resource extends AppModel {
  * @link http://api20.cakephp.org/class/model#
  */
 	public $actsAs = [
-		'SuperJoin',
 		'Containable',
 		'Trackable',
 		'Favoritable',
@@ -145,10 +145,10 @@ class Resource extends AppModel {
 					'message' => __('A name is required')
 				],
 				'alphaNumericAndSpecial' => [
-					'rule' => "/^[\p{L}\d ,.\-_\(\[\)\]']*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
 					'required' => 'create',
 					'allowEmpty' => false,
-					'message' => __('Name should only contain alphabets, numbers and the special characters : , . - _ ( ) [ ] \''),
+					'message' => __('Name should only contain alphabets, numbers and the special characters : , . : ; ? ! @ & - _ = ( ) [ ] { } \' " /'),
 				],
 				'size' => [
 					'rule' => ['lengthBetween', 3, 64],
@@ -156,14 +156,14 @@ class Resource extends AppModel {
 				]
 			],
 			'username' => [
-				'alphaNumeric' => [
+				'alphaNumericAndSpecial' => [
 					'allowEmpty' => true,
 					'required' => false,
-					'rule' => '/^[a-zA-Z0-9\-_@.]*$/',
-					'message' => __('Username should only contain alphabets, numbers only and the special characters : - _ . @'),
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/]*$/u",
+					'message' => __('Username should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ = ( ) [ ] { } \' " /'),
 				],
 				'size' => [
-					'rule' => ['lengthBetween', 3, 64],
+					'rule' => ['lengthBetween', 1, 64],
 					'message' => __('Username should be between %s and %s characters long', 3, 64),
 				]
 			],
@@ -185,7 +185,7 @@ class Resource extends AppModel {
 			'uri' => [
 				'url' => [
 					'rule' => "/^[\p{L}\d ,.:;?@!=+%$&*#~\-_\(\[\)\]'\"\/]*$/u",
-					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! @ = + % $ & * # - _ ( ) [ ] \' " /.'),
+					'message' => __('URI should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ ( ) [ ] \' " /.'),
 					'allowEmpty' => true,
 				],
 				'size' => [
@@ -195,10 +195,10 @@ class Resource extends AppModel {
 			],
 			'description' => [
 				'alphaNumericAndSpecial' => [
-					'rule' => "/^[\p{L}\d ,.:;?@!\-_\(\[\)\]'\"\/]*$/u",
+					'rule' => "/^[\p{L}\d ,.:;?@#&!\=\-_\(\[\)\]\{\}'\"\/\s]*$/u",
 					'required' => false,
 					'allowEmpty' => true,
-					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! @ - _ ( ) [ ] \' " /')
+					'message' => __('Description should only contain alphabets, numbers and the special characters : , . : ; ? ! # @ & - _ = ( ) [ ] { } \' " /')
 				],
 				'maxLength' => [
 					'rule' => ['lengthBetween', 0, 10000],
@@ -217,14 +217,13 @@ class Resource extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = Role::USER, $data = null) {
-		$conditions = [];
+	public static function getFindConditions($case = 'view', $role = Role::USER, &$data = null) {
+		$conditions = ['conditions' => []];
 
 		switch ($case) {
-			case 'exists':
-			case 'add':
-			case 'edit':
-			case 'view':
+			case 'Resource::exists':
+			case 'Resource::view':
+			case 'Group::edit':
 				$conditions = [
 					'conditions' => [
 						'Resource.deleted' => 0,
@@ -232,49 +231,42 @@ class Resource extends AppModel {
 					]
 				];
 				break;
-			case 'index':
-				$conditions = ['conditions' => ['Resource.deleted' => 0]];
-				if (isset($data['keywords'])) {
-					$keywords = explode(' ', $data['keywords']);
+
+			case 'Resource::index':
+				$conditions = ['conditions' => [
+					'Resource.deleted' => 0,
+				]];
+				if (isset($data['filter']['keywords'][0])) {
+					$keywords = explode(' ', trim($data['filter']['keywords'][0]));
 					foreach ($keywords as $keyword) {
-						$conditions['conditions']["AND"][] = ['Resource.name LIKE' => '%' . $keyword . '%'];
+						$conditions['conditions']['AND'][] = ['Resource.name LIKE' => '%' . $keyword . '%'];
 					}
 				}
-				if (isset($data['case'])) {
-					switch ($data['case']) {
-						case 'favorite':
-							$conditions['conditions']["AND"][] = ['Favorite.id IS NOT NULL'];
-							break;
-
-						case 'own':
-							$conditions['conditions']["AND"][] = ['Resource.created_by' => User::get('User.id')];
-							break;
-
-						case 'shared':
-							$conditions['conditions']["AND"][] = ['Resource.created_by <>' => User::get('User.id')];
-							break;
-
-					}
+				if (isset($data['filter']['is-favorite'])) {
+					$conditions['conditions']['AND'][] = 'Favorite.id IS NOT NULL';
+					if (!isset($data['contain']) || !in_array('Favorite', $data['contain'])) $data['contain'][] = 'Favorite';
 				}
-				if (isset($data['order'])) {
-					switch ($data['order']) {
-						case 'modified':
-							$conditions['order'] = ['Resource.modified DESC'];
-							break;
-
-						case 'expiry_date':
-							$conditions['order'] = ['Resource.expiry_date DESC'];
-							break;
-
-					}
-				} else {
-					// By default order by created date
-					$conditions['order'] = ['Resource.modified DESC'];
+				if (isset($data['filter']['is-owned-by-me'])) {
+					$conditions['conditions']['AND'][] = ['Resource.created_by' => User::get('User.id')];
+					if (!isset($data['contain']) || !in_array('Creator', $data['contain'])) $data['contain'][] = 'Creator';
+				}
+				if (isset($data['filter']['is-shared-with-me'])) {
+					$conditions['conditions']['AND'][] = ['Resource.created_by <>' => User::get('User.id')];
+					if (!isset($data['contain']) || !in_array('Modifier', $data['contain'])) $data['contain'][] = 'Modifier';
+				}
+				if (isset($data['filter']['is-shared-with-group'])) {
+					$GroupResourcePermission = Common::getModel('GroupResourcePermission');
+					$resources = $GroupResourcePermission->findAuthorizedResources($data['filter']['is-shared-with-group']);
+					$resourceIds = Hash::extract($resources, '{n}.Resource.id');
+					$conditions['conditions']['AND']['Resource.id'] = $resourceIds;
+				}
+				if (isset($data['has-resource_id'])) {
+					$conditions['conditions']['AND']['Resource.id'] = $data['has-resource_id'];
 				}
 				break;
 
 			default:
-				$conditions = ['conditions' => []];
+				break;
 		}
 
 		return $conditions;
@@ -288,9 +280,11 @@ class Resource extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
+		$fields = ['fields' => []];
+
 		switch ($case) {
-			case 'exists':
+			case 'Resource::exists':
 				$fields = [
 					'fields' => [
 						'Resource.id',
@@ -300,8 +294,9 @@ class Resource extends AppModel {
 					'callbacks' => false
 				];
 				break;
-			case 'view':
-			case 'index':
+
+			case 'Resource::view':
+			case 'Resource::index':
 				$fields = [
 					'fields' => [
 						'DISTINCT Resource.id',
@@ -312,17 +307,24 @@ class Resource extends AppModel {
 						'Resource.description',
 						'Resource.created',
 						'Resource.modified',
-						'Favorite.id',
-						'Favorite.user_id',
-						'Favorite.created',
-						'Creator.id',
-						'Creator.username',
-						'Modifier.id',
-						'Modifier.username'
 					],
-					'contain' => [
-						'Favorite',
-						'Secret' => [
+				];
+
+				// If contain requested, add the query contain.
+				if (isset($data['contain'])) {
+					// If contain Favorite.
+					if (in_array('Favorite', $data['contain'])) {
+						$fields['contain']['Favorite'] = [
+							'fields' => [
+								'Favorite.id',
+								'Favorite.user_id',
+								'Favorite.created',
+							]
+						];
+					}
+					// If contain Secret.
+					if (in_array('Secret', $data['contain'])) {
+						$fields['contain']['Secret'] = [
 							'fields' => [
 								'Secret.id',
 								'Secret.user_id',
@@ -330,19 +332,36 @@ class Resource extends AppModel {
 								'Secret.created',
 								'Secret.modified',
 							],
-							// We get only the secret for the current user.
 							'conditions' => [
 								'Secret.user_id' => User::get('id')
 							],
-						],
-						'Creator',
-						'Modifier'
-					]
-				];
+						];
+					}
+					// If contain Creator.
+					if (in_array('Creator', $data['contain'])) {
+						$fields['contain']['Creator'] = [
+							'fields' => [
+								'Creator.id',
+								'Creator.username',
+							]
+						];
+					}
+					// If contain Modifier.
+					if (in_array('Modifier', $data['contain'])) {
+						$fields['contain']['Modifier'] = [
+							'fields' => [
+								'Modifier.id',
+								'Modifier.username',
+							]
+						];
+					}
+				}
 				break;
-			case 'delete':
+
+			case 'Resource::delete':
 				$fields = ['fields' => ['deleted']];
 				break;
+
 			case 'Resource::edit':
 				$fields = [
 					'fields' => [
@@ -354,7 +373,30 @@ class Resource extends AppModel {
 					]
 				];
 				break;
-			case 'save':
+
+			case 'Group::edit':
+				$fields = [
+					'fields' => [
+						'DISTINCT Resource.id',
+						'Resource.name',
+					],
+					'contain' => [
+						'Secret' => [
+							'fields' => [
+								'Secret.id',
+								'Secret.user_id',
+								'Secret.data',
+							],
+							// We get only the secret for the current user.
+							'conditions' => [
+								'Secret.user_id' => User::get('id')
+							],
+						],
+					]
+				];
+				break;
+
+			case 'Resource::save':
 				$fields = [
 					'fields' => [
 						'name',
@@ -370,12 +412,54 @@ class Resource extends AppModel {
 					]
 				];
 				break;
+
 			default:
-				$fields = ['fields' => []];
 				break;
 		}
 
 		return $fields;
+	}
+
+/**
+ * Return the list of contain instructions allowed, with their default values.
+ *
+ * @param string $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindContain($case = 'view', $role = null) {
+		$contain = [];
+		switch ($case) {
+			case 'Resource::view':
+			case 'Resource::index':
+				$contain = [
+					'Creator' => 1,
+					'Favorite' => 1,
+					'Modifier' => 1,
+					'Secret' => 1,
+				];
+				break;
+		}
+		return $contain;
+	}
+
+/**
+ * Return the list of order instructions allowed for each case, with their default value
+ *
+ * @param null $case
+ * @param null $role
+ * @return array
+ */
+	public static function getFindAllowedOrder($case = null, $role = null) {
+		return [
+			'Resource.name',
+			'Resource.username',
+			'Resource.expiry_date',
+			'Resource.uri',
+			'Resource.description',
+			'Resource.created',
+			'Resource.modified',
+		];
 	}
 
 /**
@@ -405,7 +489,7 @@ class Resource extends AppModel {
 		// Validate the secrets provided.
 		// Make sure there is a secret per user with whom it's shared, nothing more, nothing less.
 		// Get list of current permissions for the given ACO.
-		$permsUsers = $this->getAuthorizedUsers($resourceId);
+		$permsUsers = $this->findAuthorizedUsers($resourceId);
 		$permsUsers = Hash::extract($permsUsers, '{n}.User.id');
 
 		// Get the list of users corresponding to the secrets, without duplicates.
@@ -487,7 +571,7 @@ class Resource extends AppModel {
 		}
 
 		$data = ['Resource.id' => $id];
-		$o = $this->getFindOptions('exists', User::get('Role.name'), $data);
+		$o = $this->getFindOptions('Resource::exists', User::get('Role.name'), $data);
 		return !(bool)$this->find('count', $o);
 	}
 
@@ -510,7 +594,7 @@ class Resource extends AppModel {
 			'id' => $id,
 			'deleted' => 1
 		];
-		$fields = $this->getFindFields('delete', User::get('Role.name'));
+		$fields = $this->getFindFields('Resource::delete', User::get('Role.name'));
 		if (!$this->save($data, true, $fields['fields'])) {
 			$dataSource->rollback();
 			throw new Exception(__('Unable to soft delete the resource'));

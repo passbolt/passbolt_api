@@ -2,7 +2,7 @@
 /**
  * Permission Behavior
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -59,7 +59,7 @@ class PermissionableBehavior extends ModelBehavior {
 			];
 			$queryData['contain'] = array_merge($queryData['contain'], $contain);
 
-			// Return only acos the user is authorized to access.
+			// Filter only acos the user is authorized to access.
 			if (empty($queryData['conditions'])) {
 				$queryData['conditions'] = [];
 			}
@@ -161,23 +161,18 @@ class PermissionableBehavior extends ModelBehavior {
  */
 	public function getPermission(Model &$model, $id, $aroId = null, $aroType = 'User') {
 		$aroId = !is_null($aroId) ? $aroId : User::get('id');
-		$targetPermissionModelName = $aroType . $model->alias . 'Permission';
-		$TargetPermissionModel = Common::getModel($targetPermissionModelName);
+		$UserResourcePermission = Common::getModel('UserResourcePermission');
 
 		$findOptions = [
-			'fields' => [
-				'permission_id',
-				'permission_type'
-			],
 			'conditions' => [
-				$targetPermissionModelName . '.' . strtolower($aroType) . '_id' => $aroId,
-				$targetPermissionModelName . '.' . Inflector::underscore($model->alias) . '_id' => $id,
+				'UserResourcePermission.user_id' => $aroId,
+				'UserResourcePermission.resource_id' => $id,
 			],
 			'contain' => [
 				'Permission(id, type)'
 			]
 		];
-		$result = $TargetPermissionModel->find('first', $findOptions);
+		$result = $UserResourcePermission->find('first', $findOptions);
 
 		return $result;
 	}
@@ -203,38 +198,43 @@ class PermissionableBehavior extends ModelBehavior {
 	}
 
 /**
- * Get a list of users who have a permissions record at least >= to READ
+ * Find users who have the permission to at least read the resource
  *
  * @param Model &$model reference to the type of record.
  * @param string|null $acoInstanceId uuid
+ * @param array (optional) $findOptions The users find options
  * @return array|null
  */
-	public function getAuthorizedUsers(Model &$model, $acoInstanceId = null) {
-		// Get aco key name.
-		$acoKeyName = strtolower($model->alias) . '_id';
+	public function findAuthorizedUsers(Model &$model, $acoInstanceId = null, $findOptions = array()) {
+		$model = Common::getModel("UserResourcePermission");
 
 		// If instance id is not provided as parameter, we get it from the model.
 		if (is_null($acoInstanceId)) {
 			$acoInstanceId = $this->id;
 		}
 
-		// Build corresponding model.
-		$model = Common::getModel("User{$model->alias}Permission");
+		// acoInstanceId has to be a valid uuid.
+		if (!Common::isUuid($acoInstanceId)) {
+			throw new InvalidArgumentException('The acoInstanceId is invalid');
+		}
 
-		// Retrieve the list of users.
-		$users = $model->find('all', [
+		// If no find options given, return all users.
+		if (empty($findOptions)) {
+			$findOptions = $model->User->getFindOptions('User::index', User::get('Role.name'));
+		}
+
+		// Retrieve only users who have the permissions to read the resource.
+		$findOptions['joins'][] = [
+			'table' => 'users_resources_permissions',
+			'alias' => 'UserResourcePermission',
+			'type' => 'inner',
 			'conditions' => [
-				$acoKeyName => $acoInstanceId
-			],
-			'contain' => [
-				'User' => [
-					'fields' => [
-						'User.id'
-					]
-				]
+				"UserResourcePermission.user_id = User.id
+				AND UserResourcePermission.resource_id = '$acoInstanceId'"
 			]
-		]);
+		];
 
+		$users = $model->User->find('all', $findOptions);
 		return $users;
 	}
 }

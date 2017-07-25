@@ -2,7 +2,7 @@
 /**
  * Resource Model Test
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @package       app.Test.Case.Model.ResourceTest
  * @since         version 2.12.7
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
@@ -14,6 +14,7 @@ App::uses('AppTestCase', 'Test');
 class ResourceTest extends AppTestCase {
 
 	public $fixtures = array(
+		'app.controller_log',
 		'app.resource',
 		'app.user',
 		'app.role',
@@ -51,7 +52,7 @@ class ResourceTest extends AppTestCase {
 			// Not empty
 			'' => false,
 			// Email
-			'test@test.com' => false,
+			'test@test.com' => true,
 			// too short
 			'sh' => false,
 			// too long
@@ -73,8 +74,12 @@ class ResourceTest extends AppTestCase {
 			"txt\twith\ttabs" => false,
 			"txt\nwith\nnew\nlines" => false,
 			// Special characters
-			',.-_([)]\'' => true,
-			'?!#' => false,
+			',.-_([)]\'{}:"' => true,
+			'?!#&' => true,
+			// HTML entities
+			'<>' => false,
+			// JSON
+			'{"private-key":"xxx"}' => true,
 			// Digit accepted
 			'0123456789' => true,
 			// Html
@@ -104,31 +109,35 @@ class ResourceTest extends AppTestCase {
 			'' => true,
 			// Email are not accepted
 			'test@test.com' => true,
-			// too short
-			'sh' => false,
 			// too long
 			'toolong' . self::randString($len - 6, self::getMask('alphaASCII')) => false,
 			// Short but enough
-			'sho' => true,
+			'a' => true,
 			// Long but not too long
 			'long' . self::randString($len - 4, self::getMask('alphaASCII')) => true,
 			// Languages
 			'ASCII' . self::randString($len - 5, self::getMask('alphaASCII')) => true,
 			'ASCIIUPPER' . self::randString($len - 10, self::getMask('alphaASCIIUpper')) => true,
-			'ACCENT' . self::randString($len - 6, self::getMask('alphaAccent')) => false,
-			'LATIN' . self::randString($len - 5, self::getMask('alphaLatin')) => false,
-			'CHINESE' . self::randString($len - 7, self::getMask('alphaChinese')) => false,
-			'ARABIC' . self::randString($len - 6, self::getMask('alphaArabic')) => false,
-			'RUSSIAN' . self::randString($len - 7, self::getMask('alphaRussian')) => false,
+			'ACCENT' . self::randString($len - 6, self::getMask('alphaAccent')) => true,
+			'LATIN' . str_replace(' ', '', self::randString($len - 5, self::getMask('alphaLatin'))) => true,
+			'CHINESE' . str_replace(' ', '', self::randString($len - 7, self::getMask('alphaChinese'))) => true,
+			'ARABIC' . str_replace(' ', '', self::randString($len - 6, self::getMask('alphaArabic'))) => true,
+			'RUSSIAN' . str_replace(' ', '', self::randString($len - 7, self::getMask('alphaRussian'))) => true,
 			// Spaces
-			'txt with spaces' => false,
+			'txt with spaces' => true,
 			"txt\twith\ttabs" => false,
 			"txt\nwith\nnew\nlines" => false,
 			// Special characters
-			',.-_([)]\'' => false,
-			'?!#' => false,
+			',.-_([)]\'{}:"' => true,
+			'?!#&' => true,
+			// HTML entities.
+			'<>' => false,
+			// JSON
+			'{"private-key":"xxx"}' => true,
 			// Digit accepted
 			'0123456789' => true,
+			// Ldap path
+			'cn=admin,dc=example,dc=com' => true,
 			// Html
 			'<strong>test</strong>' => false,
 		);
@@ -154,7 +163,7 @@ class ResourceTest extends AppTestCase {
 		$testcases = array(
 			'' => true,
 			't' => false,
-			'?!#' => true,
+			'?!#&' => true,
 			'test' => true,
 			'test@test.com' => true,
 			'test<' => false,
@@ -226,13 +235,16 @@ class ResourceTest extends AppTestCase {
 			'RUSSIAN' . self::randString($len - 7, self::getMask('alphaRussian')) => true,
 			// Spaces
 			'txt with spaces' => true,
-			"txt\twith\ttabs" => false,
-			"txt\nwith\nnew\nlines" => false,
+			"txt\twith\ttabs" => true,
+			"txt\nwith\nnew\nlines" => true,
 			// Special characters
-			',.-_([)]\'' => true,
-			'?!#' => false,
+			',.-_([)]\'{}":' => true,
+			'?!#&' => true,
+			'<>' => false,
 			// Digit accepted
 			'0123456789' => true,
+			// JSON
+			'{"private-key":"xxx"}' => true,
 			// Html
 			'<strong>test</strong>' => false,
 			// Too long
@@ -251,49 +263,41 @@ class ResourceTest extends AppTestCase {
 	}
 
 	/**
-	 * Test GetFindFields
+	 * Test getFindFields
 	 */
 	public function testGetFindFields() {
 		$default = ['fields' => []];
-		$this->assertNotEquals($default, Resource::getFindFields('view'), 'Find fields missing for view');
-		$this->assertNotEquals($default, Resource::getFindFields('index'), 'Find fields missing for index');
-		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
-		$this->assertNotEquals($default, Resource::getFindFields('Resource::edit'), 'Find fields missing for delete');
-		$this->assertNotEquals($default, Resource::getFindFields('save'), 'Find fields missing for delete');
-		$this->assertNotEquals($default, Resource::getFindFields('delete'), 'Find fields missing for delete');
+		$defaultCases = ['not_existing_case'];
+		$customCases = ['Resource::exists', 'Resource::save', 'Resource::edit', 'Resource::view', 'Resource::index'];
 
-		$this->assertEquals($default, Resource::getFindFields('rubish'), 'Find fields should be empty for wrong find');
+		// Default fields return.
+		foreach($defaultCases as $case) {
+			$this->assertEquals($default, Resource::getFindFields($case), "Find fields missing for case : $case");
+		}
+
+		// Custom fields return.
+		foreach($customCases as $case) {
+			$this->assertNotEquals($default, Resource::getFindConditions($case), "Find fields should be empty for case : $case");
+		}
 	}
 
 	/**
-	 * Test GetFindFields
+	 * Test getFindConditions
 	 */
 	public function testGetFindConditions() {
 		$default = ['conditions' => []];
-		$this->assertNotEquals($default, Resource::getFindConditions('add'), 'Find conditions missing for add');
-		$this->assertNotEquals($default, Resource::getFindConditions('edit'), 'Find conditions missing for edit');
-		$this->assertNotEquals($default, Resource::getFindConditions('view'), 'Find conditions missing for view');
-		$this->assertNotEquals($default, Resource::getFindConditions('index'), 'Find conditions missing for index');
+		$defaultCases = ['not_existing_case', 'Resource::save', 'Resource::edit', 'not_existing_case'];
+		$customCases = ['Resource::exists', 'Resource::view', 'Resource::index'];
 
-		// Default conditions
-		$conditions = ['conditions' => ['Resource.deleted' => 0]];
-		// filter cases checks
-		$cases = ['favorite', 'own', 'shared'];
-		foreach($cases as $case) {
-			$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['case' => $case]),
-				'Find conditions missing for index case ' . $case);
-		}
-		// search by keyword
-		$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['keywords' => 'one or two']),
-				'Find conditions missing for index by keywords');
-		// order cases checks
-		$cases = ['modified', 'expiry_date'];
-		foreach($cases as $case) {
-			$this->assertNotEquals($conditions, Resource::getFindConditions('index', Role::USER, ['order' => $case]),
-					'Find conditions missing for index case ' . $case);
+		// Test find conditions cases == default.
+		foreach($defaultCases as $case) {
+			$this->assertEquals($default, Resource::getFindConditions($case), "Find conditions should be empty for case : $case");
 		}
 
-		$this->assertEquals($default, Resource::getFindConditions('rubish'), 'Find conditions should be empty for wrong find');
+		// Test find conditions cases != default.
+		foreach($customCases as $case) {
+			$this->assertNotEquals($default, Resource::getFindConditions($case), "Find conditions missing for case : $case");
+		}
 	}
 
 	/**
@@ -343,6 +347,9 @@ class ResourceTest extends AppTestCase {
 	 * Test save a list of secrets corresponding to a resource.
 	 */
 	public function testSaveSecretsEmptySecrets() {
+		$user = $this->User->findById(Common::uuid('user.id.ada'));
+		$this->User->setActive($user);
+
 		$this->setExpectedException('Exception', 'The list of secrets provided is invalid');
 		$this->Resource->saveSecrets(Common::uuid(), []);
 	}

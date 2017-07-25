@@ -28,6 +28,15 @@ App::uses('Shell', 'Console');
 class AppShell extends Shell {
 
 /**
+ * Display the passbolt ascii banner
+ *
+ * @return void
+ */
+    protected function _welcome() {
+		$this->out();
+    }
+
+/**
  * Execute function
  *
  * @return void

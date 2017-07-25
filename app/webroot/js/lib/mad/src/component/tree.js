@@ -36,6 +36,8 @@ var Tree = mad.component.Tree = mad.Component.extend('mad.component.Tree', {
         items: new can.Model.List(),
         // The map used to transform the raw data into expected view format.
         map: null,
+        // Prefix the id of each row.
+        prefixItemId: '',
         // The callbacks the component offers to the dev to bind their code.
         callbacks: {
             // An item is left click selected.

@@ -5,7 +5,7 @@
  * This file should load/create any application wide configuration settings, such as
  * Caching, Logging, loading additional configuration files.
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -15,14 +15,21 @@
 $commonCache = Configure::read('Cache.Common');
 Cache::config('default', $commonCache);
 
+
 /**
  * App Configuration
  */
 Configure::load('version'); // Version
 Configure::load('default'); // Default config
-Configure::load('app'); // Merge current instance config
-if (file_exists(APP . 'Config' . DS . 'anonymous_statistics.php')) {
-	Configure::load('anonymous_statistics'); // anonymous statistics config
+
+if (file_exists(APP . 'Config' . DS . 'app.php')) {
+    Configure::load('app'); // Merge current instance config
+}
+
+// Alternative config reader for tmp configs.
+Configure::config('tmp', new PhpReader(TMP . 'config' . DS));
+if (file_exists(TMP . 'config' . DS . 'anonymous_statistics.php')) {
+	Configure::load('anonymous_statistics', 'tmp'); // anonymous statistics config
 }
 
 /**

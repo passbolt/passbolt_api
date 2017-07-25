@@ -2,7 +2,7 @@
 /**
  * Gpg Key Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -390,9 +390,7 @@ class Gpgkey extends AppModel {
 
 		if ($info) {
 			$data['Gpgkey'] = array_merge(
-				[
-					'key' => $key
-				],
+				['key' => $key],
 				$info
 			);
 			if (!empty($data['Gpgkey']['expires'])) {
@@ -416,23 +414,27 @@ class Gpgkey extends AppModel {
  * @param null|array $data (optional) Optional data to build the find conditions.
  * @return array
  */
-	public static function getFindConditions($case = 'view', $role = null, $data = null) {
+	public static function getFindConditions($case = 'view', $role = null, &$data = null) {
+		$conditions = ['conditions' => []];
+
 		switch ($case) {
-			case 'index':
-				$conditions = ['Gpgkey.deleted' => 0];
-				if (isset($data['modified_after'])) {
-					$conditions['Gpgkey.modified >='] = $data['modified_after'];
+			case 'GpgKey::index':
+				$conditions['conditions']['Gpgkey.deleted'] = 0;
+
+				if (isset($data['filter']['modified-after'])) {
+					// convert timestamp to mysql condition
+					$datetime = date('Y-m-d H:i:s', $data['filter']['modified-after']);
+					$conditions['conditions']['Gpgkey.modified >='] = $datetime;
 				}
-				$conditions = ['conditions' => $conditions];
 				break;
-			case 'view':
-				$conditions = ['conditions' => ['Gpgkey.deleted' => 0, 'Gpgkey.user_id' => $data['Gpgkey.user_id']]];
-				break;
-			default:
-				$conditions = ['conditions' => []];
+
+			case 'GpgKey::view':
+				$conditions['conditions'] = [
+					'Gpgkey.deleted' => 0,
+					'Gpgkey.user_id' => $data['Gpgkey.user_id']
+				];
 				break;
 		}
-
 		return $conditions;
 	}
 
@@ -444,10 +446,12 @@ class Gpgkey extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = 'view', $role = null) {
+	public static function getFindFields($case = 'view', $role = null, $data = null) {
+		$fields = ['fields' => []];
+
 		switch ($case) {
-			case 'view':
-			case 'index':
+			case 'GpgKey::view':
+			case 'GpgKey::index':
 				$fields = [
 					'fields' => [
 						'id',
@@ -464,14 +468,8 @@ class Gpgkey extends AppModel {
 					]
 				];
 				break;
-			case 'delete':
-				$fields = [
-					'fields' => [
-						'deleted'
-					]
-				];
-				break;
-			case 'save':
+
+			case 'GpgKey::save':
 				$fields = [
 					'fields' => [
 						'id',
@@ -489,9 +487,6 @@ class Gpgkey extends AppModel {
 						'modified_by',
 					]
 				];
-				break;
-			default:
-				$fields = ['fields' => []];
 				break;
 		}
 

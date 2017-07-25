@@ -2,7 +2,7 @@
 /**
  * Profile Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('ProfileAvatar', 'Model');
@@ -159,7 +159,7 @@ class Profile extends AppModel {
  * @return array $fields
  * @access public
  */
-	public static function getFindFields($case = null, $role = null) {
+	public static function getFindFields($case = null, $role = null, $data = null) {
 		switch ($case) {
 			case 'view':
 				$fields = [

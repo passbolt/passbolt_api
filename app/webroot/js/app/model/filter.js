@@ -4,13 +4,7 @@ import 'mad/model/model';
  * @inherits {mad.Model}
  * @parent index
  *
- * The Filter model used for the search
- *
- * target : Resource / User
- * keywords : string
- * conditions : Group = *
- * order : conditions of order,
- * script:
+ * The Filter model is used to manipulate workspace filters.
  *
  * @constructor
  * Creates a filter
@@ -20,78 +14,81 @@ import 'mad/model/model';
 var Filter = passbolt.model.Filter = passbolt.Model.extend('passbolt.model.Filter', /** @static */ {
 
 	attributes: {
-		// Label of the filter
+		// Filter identifier
+		id: 'string',
+		// Filter label
 		label: 'string',
-		// Filter type
-		type: 'string',
-		// Filter by keywords
-		keywords: 'string',
-		// Filter on a specific case (modified ... )
-		case: 'string',
-		// Filter functions of a foreign model
-		foreignModels: 'array',
-		// Order by
-		order: 'array',
-		// Prefix the filter param by
-		requestPrefix: 'string'
-	},
-
-	// Available shortcut types
-	SHORTCUT: 1,
-	FOREIGN_MODEL: 2,
-	KEYWORD: 3,
-	TAG: 4
+		// Filter rules
+		rules: 'object',
+		// Filter order, should the result be ordered
+		order: 'array'
+	}
 
 }, /** @prototype */ {
 
-	init: function(attrs) {
-		if(typeof attrs == 'undefined' || typeof attrs['requestPrefix'] == 'undefined') {
-			this.requestPrefix = 'filter_';
+	/**
+	 * Instantiate a new filter.
+	 */
+	init: function() {
+		if (!this.id) {
+			this.attr('id', uuid());
 		}
-		if(typeof attrs == 'undefined' || typeof attrs['foreignModels'] == 'undefined') {
-			this.foreignModels = new can.List([]);
+		if(!this.rules) {
+			this.rules = new can.Map();
+		}
+		if(!this.order) {
+			this.order = new can.Map();
+		} else if(typeof this.order.attr() === 'string') {
+			this.order = new can.Map(this.order.attr());
 		}
 	},
 
 	/**
-	 * Format the filter to be passed in an ajax request
-	 */
-	toRequest: function() {
-		var returnValue = {};
-
-		if(this['case'] != null) {
-			returnValue[this.requestPrefix + 'case'] = this['case'];
+	 * Get the order.
+	 * @returns {*}
+     */
+	getOrders: function() {
+		if (this.order) {
+			return this.order.attr();
 		}
-		if(this.order != null) {
-			returnValue[this.requestPrefix + 'order'] = this.order;
-		}
-		var foreignModels = this.foreignModels.attr();
-		for(var foreignModel in foreignModels) {
-			returnValue[this.requestPrefix + 'model_' + [foreignModel.toLowerCase()]] = can.map(this.foreignModels[foreignModel], function (instance, i) { return instance.id; }).join(',');
-		}
-
-		return returnValue;
+		return [];
 	},
 
 	/**
-	 * Get the foreign model which will apply to the filter
-	 * @param {string} name The condition name
-	 * @return {string}
+	 * Get a rule.
+	 * @param name {string} The rule name
+	 * @return {mixed} The rule value
 	 */
-	getForeignModels: function(name) {
-		var returnValue = [];
-		if(typeof this.foreignModels != 'undefined' && typeof this.foreignModels[name] != 'undefined') {
-			returnValue = this.foreignModels[name];
-		}
-		return returnValue;
+	getRule: function(name) {
+		return this.rules.attr(name);
 	},
 
 	/**
-	 * Get the keywords
-	 * @return {string}
+	 * Set a new rule, or change an existing rule value.
+	 * @param name {string} The rule name
+	 * @param value {mixed} The rule value
 	 */
-	getKeywords: function() {
-		return typeof this.keywords != 'undefined' ? this.keywords : '';
+	setRule: function(name, value) {
+		this.rules.attr(name, value);
+	},
+
+	/**
+	 * Get filters.
+	 * @param excludedRules {array} The rules to exclude
+	 * @return {object} Return the data that compose this filter
+	 */
+	getRules: function(excludedRules) {
+		var rules = this.rules ? this.rules.serialize() : {};
+
+		// Exclude the rules given as parameters.
+		if(excludedRules && excludedRules.length) {
+			for(var i in excludedRules) {
+				if(typeof rules[excludedRules[i]] != 'undefined'){
+					delete rules[excludedRules[i]];
+				}
+			}
+		}
+		return rules;
 	}
 
 });

@@ -3,7 +3,7 @@
  * v1.3.0 Migration script
  * see. https://www.passbolt.com/release/notes#v1.3.0
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 
@@ -51,7 +51,7 @@ class Migration_1_3_0 extends CakeMigration {
 		// Check if anonymous statistic is already configured (this should not happen, but who knows..)
 		$isConfigured = !empty($instanceId) && Common::isUuid($instanceId);
 		if (!$isConfigured) {
-			// Get Cake Shell fror prompt.
+			// Get Cake Shell for prompt.
 			$CakeShell = new AppShell();
 
 			// Ask user.

@@ -7,9 +7,9 @@ import 'app/component/resource_actions_tab';
 import 'app/component/resource_sidebar';
 import 'app/component/resource_shortcuts';
 import 'app/component/workspace_secondary_menu';
+import 'app/component/password_categories';
 import 'app/form/resource/create';
 import 'app/model/filter';
-
 import 'app/view/template/password_workspace.ejs!';
 import 'app/view/template/component/create_button.ejs!';
 
@@ -32,8 +32,10 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		templateUri: 'app/view/template/password_workspace.ejs',
 		// The current selected resources
 		selectedRs: new can.Model.List(),
+		// The current selected groups
+		selectedGroups: new can.Model.List(),
 		// The current filter
-		filter: new passbolt.model.Filter(),
+		filter: null,
 		// Override the silentLoading parameter.
 		silentLoading: false
 	},
@@ -44,11 +46,9 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 	 */
 	getDefaultFilterSettings: function() {
 		return new passbolt.model.Filter({
+			id: 'default',
 			label: __('All items'),
-			order: 'modified',
-			case: 'all_items',
-			type: passbolt.model.Filter.SHORTCUT,
-			keywords: ''
+			order: ['Resource.modified DESC']
 		});
 	}
 
@@ -99,6 +99,12 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 		// Instantiate the password workspace breadcrumb controller
 		this.breadcrumCtl = new passbolt.component.PasswordBreadcrumb($('#js_wsp_password_breadcrumb'), {});
 		this.breadcrumCtl.start();
+
+		// Instanciate the users groups controller.
+		var passwordCategories = new passbolt.component.PasswordCategories('#js_wsp_pwd_password_categories', {
+			selectedGroups: this.options.selectedGroups
+		});
+		passwordCategories.start();
 
 		// Instantiate the passwords browser controller
 		var passwordBrowserController = new passbolt.component.PasswordBrowser('#js_wsp_pwd_browser', {
@@ -226,7 +232,11 @@ var PasswordWorkspace = passbolt.component.PasswordWorkspace = mad.Component.ext
 			null,
 			{
 				label: __('Do you really want to delete password ?'),
-				content: __('Please confirm you really want to delete the password. After clicking ok, it will be deleted permanently.'),
+				content: __('Please confirm you really want to delete the password. After clicking ok, the password will be <strong>deleted permanently</strong>.'),
+				submitButton: {
+					label: __('delete password'),
+					cssClasses: ['warning']
+				},
 				action: function() {
 					for (var i=2; i < args.length; i++) {
 						var rs = args[i];

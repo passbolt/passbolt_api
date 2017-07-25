@@ -3,7 +3,7 @@
  * SchemaMigrationTask
  * Make sure a fresh install mark the migrations as done
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
@@ -44,6 +44,18 @@ class SchemaMigrationTask extends ModelTask {
 		]];
 		$us[] = ['SchemaMigration' => [
 			'class' => 'Migration_1_4_0',
+			'type' => 'app',
+		]];
+		$us[] = ['SchemaMigration' => [
+			'class' => 'Migration_1_5_0',
+			'type' => 'app',
+		]];
+		$us[] = ['SchemaMigration' => [
+			'class' => 'Migration_1_6_0',
+			'type' => 'app',
+		]];
+		$us[] = ['SchemaMigration' => [
+			'class' => 'Migration_1_6_1',
 			'type' => 'app',
 		]];
 		return $us;

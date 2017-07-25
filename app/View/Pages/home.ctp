@@ -2,7 +2,7 @@
 /**
  * Home Page
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 	$this->assign('title', __('Passbolt - The simple password management system'));
@@ -10,12 +10,21 @@
 
 	// See. fetch('scriptBottom')
 	$this->start('scriptBottom');
-	if(Configure::read('App.js.build') === 'production') : ?>
-<script type="text/javascript" src="/js/lib/steal/steal.production.js" config="js/stealconfig.js" main="app/passbolt" env="production"></script>
-<?php else: ?>
-<script type="text/javascript" src="/js/lib/steal/steal.js" config="js/stealconfig.js" main="passbolt"></script>
-<?php
-	endif;
+
+    // Load application.
+    if(Configure::read('App.js.build') === 'production') :
+        echo $this->html->script('/js/lib/steal/steal.production.js', [
+            'config' => Router::url('/js/stealconfig.js'),
+            'main' => 'app/passbolt',
+            'env' => 'production'
+        ]);
+    else:
+        echo $this->html->script('/js/lib/steal/steal.js', [
+            'config' => Router::url('/js/stealconfig.js'),
+            'main' => 'app/passbolt',
+        ]);
+    endif;
+
  	$this->end();
 
 	// See. fetch('scriptHeader')
@@ -28,14 +37,12 @@
 		app : {
 			name: "<?php echo Configure::read('App.name'); ?>",
 			description: "<?php echo Configure::read('App.punchline'); ?>",
-			copyright: "<?php echo Configure::read('App.copyright'); ?>",
 			title: "<?php echo Configure::read('App.title'); ?>",
 			version: {
 				number: "<?php echo Configure::read('App.version.number'); ?>",
-				name: "<?php echo Configure::read('App.version.name'); ?>",
-				song: "<?php echo Configure::read('App.version.song'); ?>"
+				name: "<?php echo Configure::read('App.version.name'); ?>"
 			},
-			url: "<?php echo Router::url('/',true); ?>",
+			url: "<?php echo Router::fullBaseUrl(); ?>/",
 			debug: "<?php echo Configure::read('debug'); ?>",
 			server_timezone: "<?php echo date_default_timezone_get(); ?>"
 		},

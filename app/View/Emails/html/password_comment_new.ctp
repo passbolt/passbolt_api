@@ -117,7 +117,7 @@
 								<table border="0" cellpadding="0" cellspacing="0" width="260" class="emailButton">
 									<tr>
 										<td align="center" valign="middle" class="buttonContent">
-											<a href="<?php echo Router::url('/',true); ?>" target="_blank">view it with passbolt</a>
+											<a href="<?php echo Router::url('/',true); ?>" target="_blank">view it in passbolt</a>
 										</td>
 									</tr>
 								</table>

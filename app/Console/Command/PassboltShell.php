@@ -3,7 +3,7 @@
 /**
  * Passbolt client console
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppShell', 'Console/Command');
@@ -15,7 +15,24 @@ class PassboltShell extends AppShell {
  *
  * @var array
  */
-	public $tasks = array('RegisterUser', 'AppConfig', 'CoreConfig');
+	public $tasks = array('Healthcheck', 'RegisterUser', 'AppConfig', 'CoreConfig');
+
+/**
+ * Display the passbolt ascii banner
+ *
+ * @return void
+ */
+	protected function _welcome() {
+		$this->hr();
+		$this->out('     ____                  __          ____  ');
+		$this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
+		$this->out('   / /_/ / __ `/ ___/ ___/ __ \/ __ \/ / __/ ');
+		$this->out('  / ____/ /_/ (__  |__  ) /_/ / /_/ / / /    ');
+		$this->out(' /_/    \__,_/____/____/_.___/\____/_/\__/   ');
+		$this->out('');
+		$this->out(' Open source password manager for teams');
+		$this->hr();
+	}
 
 /**
  * Get command options parser
@@ -26,7 +43,11 @@ class PassboltShell extends AppShell {
 		$parser = parent::getOptionParser();
 		$parser
 			->description(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'))
-			->addSubcommand('register_user', array(
+            ->addSubcommand('healthcheck', array(
+                'help' => __('Check the configuration of the passbolt installation and associated environment'),
+                'parser' => $this->Healthcheck->getOptionParser()
+            ))
+            ->addSubcommand('register_user', array(
 				'help' => __('Register new user'),
 				'parser' => $this->RegisterUser->getOptionParser()
 			))
@@ -40,14 +61,6 @@ class PassboltShell extends AppShell {
 			));
 
 		return $parser;
-	}
-
-/**
- * Display the passbolt prompt.
- *
- * @return void
- */
-	protected function _welcome() {
 	}
 
 /**

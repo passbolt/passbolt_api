@@ -2,7 +2,7 @@
 /**
  * Routes configuration
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 /**
@@ -23,7 +23,7 @@
 	Router::mapResources('secrets');
 	Router::mapResources('permissions');
 	Router::mapResources('comments');
-//	Router::mapResources('groups');
+	Router::mapResources('groups');
 //	Router::mapResources('groupsUsers');
 
 /**
@@ -57,13 +57,6 @@
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
 /**
- * Load all plugin routes. See the CakePlugin documentation on
- * Custom route for dictionary controller
- */
-	Router::connect('/dictionary/*', array('controller' => 'dictionaries', 'action' => 'view'));
-	Router::connect('/dictionaries/*', array('controller' => 'dictionaries', 'action' => 'view'));
-
-/**
  * Custom route for validation rules controller
  */
 	Router::connect('/validation/:model', array('controller' => 'ValidationRules', 'action' => 'view'), array('pass' => array('model')));
@@ -82,11 +75,14 @@
 /**
  * Custom route for groups controller
  */
-//	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index'));
-//	Router::connect('/groups/index/*', array('controller' => 'groups', 'action' => 'index'));
-//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
-//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'));
-//	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'view', '[method]' => 'GET'));
+	Router::connect('/groups', array('controller' => 'groups', 'action' => 'index', '[method]' => 'GET'));
+	Router::connect('/groups/index', array('controller' => 'groups', 'action' => 'index', '[method]' => 'GET'));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'view', '[method]' => 'GET'));
+	Router::connect('/groups', array('controller' => 'groups', 'action' => 'create', '[method]' => 'POST'));
+	Router::connect('/groups/*/:dry-run', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'), array('pass' => array('dry-run')));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'edit', '[method]' => 'PUT'));
+	Router::connect('/groups/*/:dry-run', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'), array('pass' => array('dry-run')));
+	Router::connect('/groups/*', array('controller' => 'groups', 'action' => 'delete', '[method]' => 'DELETE'));
 
 /**
  * Group User
@@ -114,6 +110,7 @@
 	Router::connect('/users/index/*', array('controller' => 'users', 'action' => 'index'));
 	Router::connect('/register', array('controller' => 'users', 'action' => 'register'));
 	Router::connect('/register/thankyou', array('controller' => 'users', 'action' => 'register_thankyou'));
+	Router::connect('/users/*/:dry-run', array('controller' => 'users', 'action' => 'delete', '[method]' => 'DELETE'), array('pass' => array('dry-run')));
 	Router::connect('/users/*', array('controller' => 'users', 'action' => 'delete', '[method]' => 'DELETE'));
 	Router::connect('/users/password/*', array('controller' => 'users', 'action' => 'editPassword', '[method]' => 'PUT'));
 	Router::connect('/users/avatar/*', array('controller' => 'users', 'action' => 'editAvatar', '[method]' => 'POST'));
@@ -144,7 +141,8 @@
 /**
  * Custom route for share
  */
-	Router::connect('/share/:resource/:id', array('controller' => 'share', 'action' => 'update', '[method]' => 'PUT'), array('pass' => array('resource', 'id')));
+	Router::connect('/share/:model/:id', array('controller' => 'share', 'action' => 'update', '[method]' => 'PUT'), array('pass' => array('model', 'id')));
+	Router::connect('/share/simulate/:model/:id', array('controller' => 'share', 'action' => 'simulate', '[method]' => 'POST'), array('pass' => array('model', 'id')));
 	Router::connect('/share/search-users/:model/:id', array('controller' => 'share', 'action' => 'searchUsers', '[method]' => 'GET'), array('pass' => array('model', 'id')));
 
 /**
@@ -172,6 +170,7 @@
  * Custom route for setup health check page
  */
 	Router::connect('/healthcheck', array('controller' => 'HealthCheck', 'action' => 'index'));
+    Router::connect('/healthcheck/status', array('controller' => 'HealthCheck', 'action' => 'status'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

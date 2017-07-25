@@ -1,6 +1,5 @@
 import  'mad/component/menu';
 
-
 /**
  * @inherits {mad.component.Menu}
  * @parent index
@@ -29,11 +28,11 @@ var AppNavigationRight = passbolt.component.AppNavigationRight = mad.component.M
 	afterStart: function () {
 		var menuItems = [
 			new mad.model.Action({
-				'id': uuid(),
-				'label': __('logout'),
-				'cssClasses': ['logout'],
-				'action': function () {
-					document.location.href = APP_URL + '/logout';
+				id: uuid(),
+				label: __('logout'),
+				cssClasses: ['logout'],
+				action: function () {
+					document.location.href = APP_URL + '/auth/logout';
 				}
 			})
 		];

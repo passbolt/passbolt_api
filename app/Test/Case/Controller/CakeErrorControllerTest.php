@@ -2,9 +2,8 @@
 /**
  * Favorites Controller Tests
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
- * @package      app.Test.Case.Controller.FavoritesControllerTest
- * @since        version 2.12.7
+ * @copyright (c) 2015-2016 Bolt Softwares Pvt Ltd
+ * 				  2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('AppController', 'Controller');
@@ -45,9 +44,9 @@ class CakeErrorControllerTest extends ControllerTestCase {
         parent::setUp();
     }
 
-    /**
-     * Test render
-     */
+/**
+ * Test render
+ */
     function testRenderMockedSuccess() {
         $this->CakeErrorController = new CakeErrorController();
         $this->CakeErrorController->request = new CakeRequest();
@@ -79,9 +78,9 @@ class CakeErrorControllerTest extends ControllerTestCase {
         unset($this->CakeErrorController);
     }
 
-    /**
-     * Test render
-     */
+/**
+ * Test render
+ */
     function testRenderMockedMessageSuccess() {
         $this->CakeErrorController = new CakeErrorController();
         $this->CakeErrorController->request = new CakeRequest();
@@ -111,55 +110,43 @@ class CakeErrorControllerTest extends ControllerTestCase {
         unset($this->CakeErrorController);
     }
 
-	/**
-	 * Check config is ok to run the tests
-	 */
+/**
+ * Check config is ok to run the tests
+ */
 	public function testSeleniumConfig() {
 		$configok = Configure::read('App.selenium.active');
 		$this->assertTrue($configok, 'Selenium.active should be unabled in config to run these tests');
 	}
 
-    /**
-     * Check 404 on public JSON endpoint
-     */
+/**
+ * Check 404 on public JSON endpoint
+ */
     public function test404Json() {
-        $this->setExpectedException('HttpException', '404 test not found');
+        $this->setExpectedException('NotFoundException');
         $this->testAction('/seleniumTests/error404.json', array('return' => 'contents', 'method' => 'GET'), true);
     }
-    public function test404Json2() {
-        $this->setExpectedException('HttpException', 'Not Found');
-        $this->testAction('/seleniumTests/error404/exception.json', array('return' => 'contents', 'method' => 'GET'), true);
-    }
 
-    /**
-     * Check 404 on public page
-     */
+/**
+ * Check 404 on public page
+ */
     public function test404Page() {
-        $this->setExpectedException('HttpException', '404 test not found');
+        $this->setExpectedException('NotFoundException');
         $this->testAction('/seleniumTests/error404', array('return' => 'contents', 'method' => 'GET'), true);
     }
-    public function test404Page2() {
-        $this->setExpectedException('HttpException', 'Not Found');
-        $this->testAction('/seleniumTests/error404/exception', array('return' => 'contents', 'method' => 'GET'), true);
-    }
 
-    /**
-     * Check if a bad request exception is thrown on a public endpoint with invalid method
-     */
+/**
+ * Check if a bad request exception is thrown on a public endpoint with invalid method
+ */
     public function testBadRequest() {
-        $this->setExpectedException('HttpException', 'Invalid request method, should be PUT');
+        $this->setExpectedException('BadRequestException', 'Invalid request method, should be PUT');
         $this->testAction('/users/validateAccount/xxx.json', array('return' => 'contents', 'method' => 'GET'), true);
     }
 
-    /**
-     * Check if a ForbiddenException is thrown when accessing a non public json endpoint
-     */
+/**
+ * Check if a ForbiddenException is thrown when accessing a non public json endpoint
+ */
     public function testNotAuthorizedJSON() {
-        $this->setExpectedException('HttpException', 'You need to login to access this location');
+        $this->setExpectedException('ForbiddenException', 'You need to login to access this location');
         $this->testAction('/users/view/xxx.json', array('return' => 'contents', 'method' => 'GET'), true);
-    }
-
-    public function testErrorControllerRender() {
-
     }
 }

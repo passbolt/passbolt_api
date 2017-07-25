@@ -4,10 +4,10 @@
  *
  * @SWG\Swagger(
  *     schemes={"http"},
- *     host="http://192.168.99.100:8081/var/www/passbolt/app/Console/",
+ *     host="https://passbolt.dev/",
  *     basePath="/",
  *     @SWG\Info(
- *         version="1.3.2",
+ *         version="1.5.0-RC1",
  *         title="Passbolt JSON API",
  *         description="",
  *         termsOfService="https://www.passbolt.com/terms/",

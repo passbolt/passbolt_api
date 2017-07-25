@@ -2,7 +2,7 @@
 /**
  * Register form view (for guest role)
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 $this->assign('title',	__('Register'));
@@ -30,11 +30,11 @@ $inputDefault = ['inputDefaults' => ['error' => [ 'attributes' => ['class' => 'm
 					<legend><?php echo __('Please enter your username and password'); ?></legend>
 					<?php echo $this->Form->input('Profile.first_name', array('label' => __('First name'), 'class' =>' fluid')); ?>
 					<?php echo $this->Form->input('Profile.last_name', array('label' => __('Last name'), 'class' =>' fluid')); ?>
-					<?php echo $this->Form->input('User.username', array('label' => __('Email'), 'class' =>' fluid')); ?>
+					<?php echo $this->Form->input('User.username', array('label' => __('Email'), 'class' =>' fluid', 'after' => '<span class="message">Please only use a <a href="https://en.wikipedia.org/wiki/Disposable_email_address" target="_blank" rel="nofollow">disposable email address</a>.</span>')); ?>
 				</fieldset>
 				<div class="actions-wrapper">
 					<div class="submit"><input type="submit" class="button primary big" value="<?php echo __('register'); ?>"></div>
-					<a href="/login" class="secondary"><?php echo __('already a member?'); ?></a>
+					<a href="<?php echo Router::url('/login'); ?>" class="secondary"><?php echo __('already a member?'); ?></a>
 				</div>
 				<?php echo $this->Form->end();?>
 			</div>

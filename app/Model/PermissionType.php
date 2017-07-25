@@ -2,7 +2,7 @@
 /**
  * PermissionType Model
  *
- * @copyright (c) 2015-present Bolt Softwares Pvt Ltd
+ * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 class PermissionType extends AppModel {
@@ -37,7 +37,7 @@ class PermissionType extends AppModel {
  * @param string $type The type to check
  * @return bool
  */
-	public function isValidSerial($type) {
+	public static function isValidSerial($type) {
 		switch ($type) {
 			case self::READ:
 			case self::UPDATE:

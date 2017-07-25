@@ -8,6 +8,17 @@ var Confirm = mad.component.Confirm = mad.component.Dialog.extend('mad.component
         label: 'Confirm component',
         viewClass: mad.view.component.Confirm,
         templateUri: 'mad/view/template/component/confirm/confirm.ejs',
+        subtitle: null,
+        submitButton: {
+            label: __('OK'),
+            cssClasses: [
+                // Extra css classes.
+                // Will be added to button, primary, js-dialog-confirm
+            ]
+        },
+        cancelButton: {
+            label: __('cancel')
+        },
         content: '',
         closeAfterAction: true,
         action: null
@@ -24,6 +35,9 @@ var Confirm = mad.component.Confirm = mad.component.Dialog.extend('mad.component
     init: function(el, options) {
         this._super(el, options);
         this.setViewData('content', this.options.content);
+        this.setViewData('subtitle', this.options.subtitle);
+        this.setViewData('submitButton', this.options.submitButton);
+        this.setViewData('cancelButton', this.options.cancelButton);
     },
 
     /**

@@ -101,12 +101,24 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
     },
 
     /**
-     * Get the column model of the grid.
+     * Get a target column model of the grid.
+     * If no target
      *
+     * @param {string} name (optional) The name of the column model to retrieve, if not provided return all.
      * @return {mad.model.Model}
      */
-    getColumnModel: function () {
-        return this.options.columnModel;
+    getColumnModel: function (name) {
+        var returnValue = null;
+        if (name != undefined) {
+            for (var i in this.options.columnModel) {
+                if (this.options.columnModel[i].name == name) {
+                    return this.options.columnModel[i];
+                }
+            }
+        } else {
+            returnValue = this.options.columnModel;
+        }
+        return returnValue;
     },
 
     /**
@@ -358,6 +370,27 @@ var Grid = mad.component.Grid = mad.Component.extend('mad.component.Grid', {
         });
 
         return this;
+    },
+
+    /**
+     * Does the item exist
+     * @param {mad.model.Model} item The item to check if it existing
+     * @return {boolean}
+     */
+    itemExists: function (item) {
+        return this.view.getItemElement(item).length > 0 ? true : false;
+    },
+
+    /**
+     * Reset the filtering
+     */
+    resetFilter: function () {
+        var self = this;
+        this.options.isFiltered = false;
+
+        can.each(this.options.items, function(item, i) {
+            self.view.showItem(item);
+        });
     },
 
     /**

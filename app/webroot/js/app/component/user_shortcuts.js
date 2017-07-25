@@ -30,34 +30,42 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
         var menuItems = [
             new mad.model.Action({
                 id: 'js_users_wsp_filter_all',
-                case: 'all_items',
                 label: __('All users'),
-                action: function () {
-                    var filter = new passbolt.model.Filter({
-                        label: __('All users'),
-                        case: 'all_items',
-                        type: passbolt.model.Filter.SHORTCUT
-                    });
-                    mad.bus.trigger('filter_workspace', filter);
-                }
+                filter: passbolt.component.PeopleWorkspace.getDefaultFilterSettings()
             }), new mad.model.Action({
                 id: 'js_users_wsp_filter_recently_modified',
-                case : 'recently_modified',
                 label: __('Recently modified'),
-                action: function () {
-                    var filter = new passbolt.model.Filter({
-                        label: __('Recently modified'),
-                        case : 'recently_modified',
-                        order: 'modified',
-                        type: passbolt.model.Filter.SHORTCUT
-                    });
-                    mad.bus.trigger('filter_workspace', filter);
-                }
+                filter: new passbolt.model.Filter({
+                    id: 'workspace_filter_modified',
+                    label: __('Recently modified'),
+                    order: ['User.modified DESC']
+                })
             })
         ];
         this.load(menuItems);
         // Select first item.
         this.selectItem(menuItems[0]);
+    },
+
+    /* ************************************************************** */
+    /* LISTEN TO THE VIEW EVENTS */
+    /* ************************************************************** */
+
+    /**
+     * An item has been selected
+     * @parent mad.component.Menu.view_events
+     * @param {HTMLElement} el The element the event occured on
+     * @param {HTMLEvent} ev The event which occured
+     * @param {string} item The selected item
+     * @return {void}
+     */
+    ' item_selected': function (el, ev, item) {
+        this._super(el, ev, item);
+
+        // If this item is not disabled, try to execute the item action.
+        if (!item.state.is('disabled')) {
+            mad.bus.trigger('filter_workspace', item.filter);
+        }
     },
 
     /* ************************************************************** */
@@ -73,16 +81,14 @@ var UserShortcuts = passbolt.component.UserShortcuts = mad.component.Menu.extend
     '{mad.bus.element} filter_workspace': function (element, evt, filter) {
         var self = this;
 
-        if (filter.type != passbolt.model.Filter.SHORTCUT) {
-            this.unselectAll();
-        } else {
-            this.options.items.each(function(item, i) {
-                if (item.case == filter.case) {
-                    self.selectItem(item);
-                    return;
-                }
-            });
-        }
+        this.unselectAll();
+
+        // If the filter is relative to a filter registered in this component, select it.
+        this.options.items.each(function(item) {
+            if (item.filter.id == filter.id) {
+                self.selectItem(item);
+            }
+        });
     }
 });
 

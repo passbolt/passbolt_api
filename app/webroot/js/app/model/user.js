@@ -79,17 +79,8 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 	},
 
 	findAll: function (params, success, error) {
-		// a filter is provided, format it as GET request parameter
-		if(typeof params.filter != 'undefined') {
-			var filter = params.filter;
-			delete params.filter;
-			// add the filter to the request param
-			var formattedFilter = filter.toRequest();
-			$.extend(params, formattedFilter);
-		}
-
 		return mad.net.Ajax.request({
-			url: APP_URL + '/users',
+			url: APP_URL + '/users.json',
 			type: 'GET',
 			params: params,
 			success: success,
@@ -125,28 +116,6 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 			type: 'PUT',
 			params: params,
 			success: success,
-			error: error
-		}).pipe(function (data, textStatus, jqXHR) {
-			//pipe the result to convert cakephp response format into can format
-			var def = $.Deferred();
-			def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-			return def;
-		});
-	},
-
-	updatePassword : function(attrs, success, error) {
-		var self = this;
-		// format data as expected by cakePHP
-		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-		// add the root of the params, it will be used in the url template
-		params.id = attrs['id'];
-
-		return mad.net.Ajax.request({
-			url: APP_URL + 'users/password/{id}',
-			type: 'PUT',
-			params: params,
-			success: success,
-			silentLoading: true,
 			error: error
 		}).pipe(function (data, textStatus, jqXHR) {
 			//pipe the result to convert cakephp response format into can format
@@ -199,14 +168,24 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 	},
 
 	/**
-	 * Save a new password.
-	 * @return {can.Deferred}
+	 * Attempt a dry run of delete.
+	 *
+	 * @param id
+	 * @param attrs
+	 * @param success
+	 * @param error
+	 * @returns {*|jQuery.deferred}
 	 */
-	savePassword: function() {
-		// Custom update.
-		// Use the makeRequest operation of Can to support the local object update
-		// feature and its events system which is awesome.
-		return can.Model._makeRequest(this, 'updatePassword', null, null, 'updated');
+	deleteDryRun : function(id, attrs, success, error) {
+		var params = {id:id};
+		return mad.net.Ajax.request({
+			url: APP_URL + 'users/{id}/dry-run.json',
+			type: 'DELETE',
+			params: params,
+			success: success,
+			error: error,
+			silentNotify: true
+		});
 	}
 
 });
