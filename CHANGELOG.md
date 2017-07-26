@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [1.6.1] - 2017-07-26
 ### Added
 - PASSBOLT-2147: As a group member I should receive a notification when my role in the group has changed
 - PASSBOLT-2148: As a group manager I should receive a notification when a user who is part of one (or more) groups I manage is deleted
@@ -285,7 +287,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.1...HEAD
+[1.6.1]: https://github.com/passbolt/passbolt_api/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/passbolt/passbolt_api/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/passbolt/passbolt_api/compare/v1.5.0...v1.5.1
 [1.5.0]: https://github.com/passbolt/passbolt_api/compare/v1.4.0...v1.5.0
