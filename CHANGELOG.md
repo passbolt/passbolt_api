@@ -2,7 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [Unreleased]	
+- PASSBOLT-2270: Fix modified_by not set on resource edit regression 
+- PASSBOLT-2271: Fix no wrap issue on resource description
 
 ## [1.6.1] - 2017-07-26
 ### Added
