@@ -331,4 +331,26 @@ class ResourcesControllerEditTest extends ControllerTestCase
 		$this->assertEquals("test", $updatedResource['Resource']['name'],
 			"update /resources/$rsId.json : The test should have modified the name into 'test', but name is still {$updatedResource['Resource']['name']}");
 	}
+
+/**
+ * Test a normal edit operation.
+ */
+	public function testEditModifiedBy()
+	{
+		$rsId = Common::uuid('resource.id.debian');
+		$resource = $this->Resource->findById($rsId);
+		$this->assertEquals($resource['Resource']['modified_by'], Common::uuid('user.id.dame'));
+
+		$user = $this->User->findById(Common::uuid('user.id.edith'));
+		$this->User->setActive($user);
+
+		// Update the resource
+		$r['Resource']['id'] = $rsId;
+		$r['Resource']['name'] = "test";
+		$data = ['Resource' => $r];
+		$this->testAction("/resources/$rsId.json", ['data' => $data, 'method' => 'put']);
+
+		$resource = $this->Resource->findById($rsId);
+		$this->assertEquals($resource['Resource']['modified_by'], Common::uuid('user.id.edith'));
+	}
 }

@@ -370,6 +370,8 @@ class Resource extends AppModel {
 						'expiry_date',
 						'uri',
 						'description',
+						'created_by',
+						'modified_by',
 					]
 				];
 				break;

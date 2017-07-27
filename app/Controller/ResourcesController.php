@@ -315,7 +315,7 @@ class ResourcesController extends AppController {
 
 			// Save data.
 			$save = $this->Resource->save(
-				$resourcepost, [
+				$this->Resource->data, [
 				'validate' => false,
 				'fieldList' => $fields['fields'],
 				'atomic' => false
