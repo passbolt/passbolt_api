@@ -193,20 +193,16 @@ class EmailNotificatorComponent extends Component {
 		$sender = $this->_getUserInfo($comment['Comment']['created_by']);
 
 		// Send notification.
-		// Check boolean notification setting and execute send if active is true.
-		$notification_enabled = Configure::read('Notification.comment.active');
-		if ($notification_enabled) {
-			$this->EmailNotification->send(
-				$recipient['User']['username'],
-				__("%s commented on %s", $sender['Profile']['first_name'], $resource['Resource']['name']),
-				[
-					'sender' => $sender,
-					'resource' => $resource,
-					'comment' => $comment
-				],
-				'password_comment_new'
-			);
-		}
+		$this->EmailNotification->send(
+			$recipient['User']['username'],
+			__("%s commented on %s", $sender['Profile']['first_name'], $resource['Resource']['name']),
+			[
+				'sender' => $sender,
+				'resource' => $resource,
+				'comment' => $comment
+			],
+			'password_comment_new'
+		);
 	}
 
 /**
@@ -538,21 +534,17 @@ class EmailNotificatorComponent extends Component {
 			$subject = __("%s removed you from the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
 
 			// Send notification.
-			// Check boolean notification setting and execute send if active is true.
-			$notification_enabled = Configure::read('Notification.groupdelete.active');
-			if ($notification_enabled) {
-					$this->EmailNotification->send(
-						$recipient['User']['username'],
-						$subject, [
-						'sender' => $sender,
-						'groupUser' => $groupUser,
-						'group' => $group,
-						'user' => $recipient,
-						'deletedTime' => time(),
-					],
-						$template
-					);
-			}
+			$this->EmailNotification->send(
+				$recipient['User']['username'],
+				$subject, [
+				'sender' => $sender,
+				'groupUser' => $groupUser,
+				'group' => $group,
+				'user' => $recipient,
+				'deletedTime' => time(),
+			],
+				$template
+			);
 		}
 	}
 
