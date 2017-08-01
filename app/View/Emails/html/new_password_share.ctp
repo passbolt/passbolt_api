@@ -77,7 +77,10 @@
 										<td valign="top" class="textContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 14px;line-height: 125%;text-align: Left;padding-bottom: 20px;">
 
 											Name : <?php echo $resource['Resource']['name']; ?><br/>
+
+											<?php if(Configure::read('EmailNotification.show.username')) : ?>
 											Username : <?php echo $resource['Resource']['username']; ?><br/>
+											<?php endif; ?>
 											Url : <a href="<?php echo $resource['Resource']['uri']; ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo $resource['Resource']['uri']; ?></a><br/>
 											Description : <?php echo $resource['Resource']['description']; ?><br/>
 										</td>
@@ -137,7 +140,7 @@
 	</td>
 </tr>
 <!-- // MODULE ROW -->
-
+<?php if(Configure::read('EmailNotification.show.secret')) : ?>
 <!-- MODULE ROW // TITLE AND TEXT -->
 <tr>
 	<td align="center" valign="top" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
@@ -189,3 +192,4 @@
 	</td>
 </tr>
 <!-- // MODULE ROW -->
+<?php endif; ?>

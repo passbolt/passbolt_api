@@ -234,7 +234,8 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
 													<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
 														<tr>
 															<td valign="top" class="textContentLast" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 12px;line-height: 125%;text-align: center;padding-bottom: 20px;">
-																This email is an automatic notification sent by <a href="<?php echo Router::url('/',true) ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo Router::url('/',true) ?></a>. You can choose which messages you wish to receive from your profile in the "email notifications" section.
+																This email is an automatic notification sent by <a href="<?php echo Router::url('/',true) ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo Router::url('/',true) ?></a>.
+																You can disable these notifications by requesting an administrator to delete your account.
 															</td>
 														</tr>
 													</table>

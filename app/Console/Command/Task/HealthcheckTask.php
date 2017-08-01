@@ -444,6 +444,11 @@ class HealthcheckTask extends AppShell {
             __('Using non-compiled Javascript. Passbolt will be slower'),
             __('Set App.js.build to production in app/Config/app.php')
         );
+		$this->warn(
+			$checks['application']['emailNotificationDisabled'],
+			__('All email notifications will be sent.'),
+			__('Some email notifications are disabled by the administrator.')
+		);
     }
 
 /**

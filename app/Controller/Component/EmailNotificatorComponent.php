@@ -110,6 +110,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function passwordSharedNotification($toUserId, $data) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.password.share')) {
+			return;
+		}
+
 		// get resource.
 		$resource = $this->Resource->find(
 			'first',
@@ -170,6 +175,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function passwordCommentNotification($toUserId, $data) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.password.comment')) {
+			return;
+		}
+
 		// Get recipient info.
 		$recipient = $this->User->findById($toUserId);
 
@@ -183,16 +193,20 @@ class EmailNotificatorComponent extends Component {
 		$sender = $this->_getUserInfo($comment['Comment']['created_by']);
 
 		// Send notification.
-		$this->EmailNotification->send(
-			$recipient['User']['username'],
-			__("%s commented on %s", $sender['Profile']['first_name'], $resource['Resource']['name']),
-			[
-				'sender' => $sender,
-				'resource' => $resource,
-				'comment' => $comment
-			],
-			'password_comment_new'
-		);
+		// Check boolean notification setting and execute send if active is true.
+		$notification_enabled = Configure::read('Notification.comment.active');
+		if ($notification_enabled) {
+			$this->EmailNotification->send(
+				$recipient['User']['username'],
+				__("%s commented on %s", $sender['Profile']['first_name'], $resource['Resource']['name']),
+				[
+					'sender' => $sender,
+					'resource' => $resource,
+					'comment' => $comment
+				],
+				'password_comment_new'
+			);
+		}
 	}
 
 /**
@@ -205,8 +219,10 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function passwordCreatedNotification($toUserId, $data) {
-		// Get recipient info.
-		//$recipient = $this->User->findById($toUserId);
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.password.create')) {
+			return;
+		}
 
 		// Get invite sender.
 		$sender = $this->_getUserInfo($toUserId);
@@ -264,6 +280,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function passwordUpdatedNotification($toUserId, $data) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.password.update')) {
+			return;
+		}
+
 		// Get recipient info.
 		$recipient = $this->User->findById($toUserId);
 
@@ -323,6 +344,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function passwordDeletedNotification($toUserId, $data) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.password.delete')) {
+			return;
+		}
+
 		// Get recipient info.
 		$recipient = $this->User->findById($toUserId);
 
@@ -354,6 +380,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function accountCreationNotification($toUserId, $data) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.user.create')) {
+			return;
+		}
+
 		// Get recipient info.
 		$recipient = $this->User->find(
 			'first',
@@ -412,6 +443,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function accountRecoveryNotification($toUserId, $data) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.user.recover')) {
+			return;
+		}
+
 		// Get account info.
 		$recipient = $this->_getUserInfo($toUserId);
 
@@ -441,6 +477,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function groupAddUsers($senderId, $group, $groupUsers) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.group.user.add')) {
+			return;
+		}
+
 		// Get sender account info.
 		$sender = $this->_getUserInfo($senderId);
 
@@ -455,6 +496,7 @@ class EmailNotificatorComponent extends Component {
 			$subject = __("%s added you to the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
 
 			// Send notification.
+			// Check boolean notification setting and execute send if active is true.
 			$this->EmailNotification->send(
 				$recipient['User']['username'],
 				$subject, [
@@ -477,6 +519,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function groupDeleteUsers($senderId, $group, $groupUsers) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.group.user.delete')) {
+			return;
+		}
+
 		// Get sender account info.
 		$sender = $this->_getUserInfo($senderId);
 
@@ -491,17 +538,21 @@ class EmailNotificatorComponent extends Component {
 			$subject = __("%s removed you from the group %s", $sender['Profile']['first_name'], $group['Group']['name']);
 
 			// Send notification.
-			$this->EmailNotification->send(
-				$recipient['User']['username'],
-				$subject, [
-				'sender' => $sender,
-				'groupUser' => $groupUser,
-				'group' => $group,
-				'user' => $recipient,
-				'deletedTime' => time(),
-			],
-				$template
-			);
+			// Check boolean notification setting and execute send if active is true.
+			$notification_enabled = Configure::read('Notification.groupdelete.active');
+			if ($notification_enabled) {
+					$this->EmailNotification->send(
+						$recipient['User']['username'],
+						$subject, [
+						'sender' => $sender,
+						'groupUser' => $groupUser,
+						'group' => $group,
+						'user' => $recipient,
+						'deletedTime' => time(),
+					],
+						$template
+					);
+			}
 		}
 	}
 
@@ -514,6 +565,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function groupUpdateUsers($senderId, $group, $groupUsers) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.group.user.update')) {
+			return;
+		}
+
 		// Get sender account info.
 		$sender = $this->_getUserInfo($senderId);
 
@@ -560,6 +616,11 @@ class EmailNotificatorComponent extends Component {
  * @return void
  */
 	public function groupUpdatedSummary($senderId, $group, $data = array()) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.group.manager.update')) {
+			return;
+		}
+
 		$addedUsers = [];
 		$deletedUsers = [];
 		$updatedRoles = [];
@@ -656,6 +717,11 @@ class EmailNotificatorComponent extends Component {
 	 * @return void
 	 */
 	function userDeletedGroupManagerNotification($senderId, $user, $groupsUsers) {
+		// Notification toggle check
+		if (!Configure::read('EmailNotification.send.group.manager.delete')) {
+			return;
+		}
+
 		// Get sender account info.
 		$sender = $this->_getUserInfo($senderId);
 

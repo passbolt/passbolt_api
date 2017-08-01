@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]	
 - PASSBOLT-2270: Fix modified_by not set on resource edit regression 
 - PASSBOLT-2271: Fix no wrap issue on resource description
+- PASSBOLT-2284: As an administrator I can set which notifications are enabled for my organization #98
+- PASSBOLT-2284: As an administrator I can prevent encrypted secret or username to be sent in email notification #114
 
 ## [1.6.1] - 2017-07-26
 ### Added

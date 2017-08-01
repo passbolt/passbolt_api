@@ -151,4 +151,41 @@ $config = [
 		// Instance ID. (will be populated at installation).
 		'instanceId' => '',
 	],
+	// Email notification settings
+	'EmailNotification' => [
+		// Allow to disable displaying the armored secret in the email
+		// WARNING: make sure you have backups in place if you disable these
+		// see. https://www.passbolt.com/help/tech/backup
+		'show' => [
+			'secret' => true,
+			'username' => true
+		],
+		// Choose which emails are sent system wide
+		'send' => [
+			'password' => [
+				'share' => true,
+				'comment' => true,
+				'create' => true,
+				'update' => true,
+				'delete' => true,
+			],
+			'user' => [
+				// WARNING: disabling these will prevent user from signing up
+				'create' => true,
+				'recover' => true,
+			],
+			'group' => [
+				'user' => [
+					'add' => true,
+					'delete' => true,
+					'update' => true,
+				],
+				'manager' => [
+					// notify manager when group user is updated / deleted
+					'update' => true,
+					'delete' => true,
+				]
+			]
+		]
+	]
 ];

@@ -200,6 +200,7 @@ class Healthchecks {
         $checks['application']['seleniumDisabled'] = !Configure::read('App.selenium.active');
         $checks['application']['registrationClosed'] = !Configure::read('App.registration.public');
         $checks['application']['jsProd'] = (Configure::read('App.js.build') === 'production');
+		$checks['application']['emailNotificationDisabled'] = !(preg_match('/false/', json_encode(Configure::read('EmailNotification.send'))) === 1);
 
         $checks = array_merge(Healthchecks::appUser(), $checks);
         return $checks;
