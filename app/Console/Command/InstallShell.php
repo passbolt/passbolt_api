@@ -103,8 +103,8 @@ class InstallShell extends AppShell {
 
 		// Perform a sanity check and init gnupg keyring
 		try {
-			$this->_installationHealthchecks();
-			$this->initGpgKeyring();
+			$this->installationHealthchecks();
+			$this->_initGpgKeyring();
 		} catch(Exception $e) {
 			$this->out($e->getMessage());
 			$this->out('<error>Installation failed.</error>');
@@ -227,7 +227,7 @@ class InstallShell extends AppShell {
 /**
  * Installation healthchecks
  */
-	protected function _installationHealthchecks() {
+	public function installationHealthchecks() {
 		// Make sure the baseline config files are present
 		$checks = Healthchecks::configFiles();
 		foreach ($checks['configFile'] as $file => $enabled) {
@@ -248,15 +248,15 @@ class InstallShell extends AppShell {
 			throw new CakeException('The GnuPG config for the server is not available or incomplete');
 		}
 		// Check if keyring is present and writable
-		if (!$checks['gpg']['gpgHome']) {
+		if (!$checks['gpg']['gpgHome'] || !$checks['gpg']['gpgHomeWritable']) {
 			throw new CakeException("The GPG keyring location is not set or not writable.");
 		}
 
 		// In production don't accept default GPG server key
 		if (!Configure::read('debug')) {
-			if ($checks['gpg']['gpgKeyDefault']) {
-				$msg = "Default GnuPG server key cannot be used in production.";
-				$msg .= "Please change the values of 'GPG.server' in 'APP/Config/app.php' with your server key information.";
+			if (!$checks['gpg']['gpgKeyNotDefault']) {
+				$msg = "Default GnuPG server key cannot be used in production. ";
+				$msg .= "Please change the values of 'GPG.server' in 'APP/Config/app.php' with your server key information. ";
 				$msg .= "If you don't have yet a server key, please generate one, take a look at the install documentation.";
 				throw new CakeException($msg);
 			}
@@ -285,7 +285,7 @@ class InstallShell extends AppShell {
  * @return void
  * @throws CakeException
  */
-	public function initGpgKeyring() {
+	protected function _initGpgKeyring() {
 		$config = Configure::read();
 		// Import the private key in the GPG keyring
 		try {

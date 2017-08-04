@@ -83,8 +83,8 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgKeyringDoesNotExist() {
 		// use put_env directly since the config item is set as an environment variable in the bootstrap
 		putenv('GNUPGHOME=/bogus/location/.gnupg');
-		$this->setExpectedException('CakeException', 'GPG Keyring is not available or not writable.');
-		$this->Shell->initGpgKeyring();
+		$this->setExpectedException('CakeException', 'The GPG keyring location is not set or not writable.');
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -95,8 +95,8 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgKeyringNotWritable() {
 		// use put_env directly since the config item is set as an environment variable in the bootstrap
 		putenv('GNUPGHOME=/root/.gnupg');
-		$this->setExpectedException('CakeException', 'GPG Keyring is not available or not writable.');
-		$this->Shell->initGpgKeyring();
+		$this->setExpectedException('CakeException', 'The GPG keyring location is not set or not writable.');
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -107,7 +107,7 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgServerKeyFingerprintConfigNotFound() {
 		Configure::delete('GPG.serverKey.fingerprint');
 		$this->setExpectedException('CakeException', 'The GnuPG config for the server is not available or incomplete');
-		$this->Shell->initGpgKeyring();
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -118,7 +118,7 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgServerKeyPrivateConfigNotFound() {
 		Configure::delete('GPG.serverKey.private');
 		$this->setExpectedException('CakeException', 'The GnuPG config for the server is not available or incomplete');
-		$this->Shell->initGpgKeyring();
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -129,7 +129,7 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgServerKeyPublicConfigNotFound() {
 		Configure::delete('GPG.serverKey.public');
 		$this->setExpectedException('CakeException', 'The GnuPG config for the server is not available or incomplete');
-		$this->Shell->initGpgKeyring();
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -141,7 +141,7 @@ class InstallShellTest extends CakeTestCase {
 		$privatePath = TMP . DS . 'no_private_key_here.key';
 		Configure::write('GPG.serverKey.private', $privatePath);
 		$this->setExpectedException('CakeException', 'No private key found at the given path ' . $privatePath);
-		$this->Shell->initGpgKeyring();
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -152,8 +152,8 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgServerKeyPrivateDoNotMatchFingerprint() {
 		Configure::write('GPG.serverKey.fingerprint', 'C73D232B0BFF4B27F4B5C8FB4CA07E2AD8A7B3D3');
 		Configure::write('GPG.serverKey.public', Configure::read('GPG.testKeys.path') . DS . 'server_prod_unsecure_public.key');
-		$this->setExpectedException('CakeException', 'The private key does not match the fingerprint mentioned in the config');
-		$this->Shell->initGpgKeyring();
+		$this->setExpectedException('CakeException', 'The server key fingerprint does not match');
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -165,7 +165,7 @@ class InstallShellTest extends CakeTestCase {
 		$privatePath = TMP . DS . 'no_public_key_here.key';
 		Configure::write('GPG.serverKey.public', $privatePath);
 		$this->setExpectedException('CakeException', 'No public key found at the given path ' . $privatePath);
-		$this->Shell->initGpgKeyring();
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -176,8 +176,8 @@ class InstallShellTest extends CakeTestCase {
 	public function testGpgServerKeyPublicDoNotMatchFingerprint() {
 		Configure::write('GPG.serverKey.fingerprint', 'C73D232B0BFF4B27F4B5C8FB4CA07E2AD8A7B3D3');
 		Configure::write('GPG.serverKey.private', Configure::read('GPG.testKeys.path') . DS . 'server_prod_unsecure_private.key');
-		$this->setExpectedException('CakeException', 'The public key does not match the fingerprint mentioned in the config');
-		$this->Shell->initGpgKeyring();
+		$this->setExpectedException('CakeException', 'The server key fingerprint does not match');
+		$this->Shell->installationHealthchecks();
 	}
 
 /**
@@ -188,8 +188,8 @@ class InstallShellTest extends CakeTestCase {
 	public function testProductionGpgServerKey() {
 		Configure::write('debug', 0);
 		Configure::write('GPG.serverKey.fingerprint', '2FC8945833C51946E937F9FED47B0811573EE67E');
-		$this->setExpectedException('CakeException', 'Default GnuPG server key cannot be used in production. Please change the values of \'GPG.server\' in \'APP/Config/app.php\' with your server key information. If you don\'t have yet a server key, please generate one, take a look at the install documentation.');
-		$this->Shell->initGpgKeyring();
+		$this->setExpectedException('CakeException');
+		$this->Shell->installationHealthchecks();
 	}
 
 /**

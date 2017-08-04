@@ -44,7 +44,7 @@ class HealthCheckControllerTest extends ControllerTestCase {
                 'phpVersion', 'pcre', 'tmpWritable', 'imgPublicWritable'
             ],
             'gpg' => [
-                'gpgKey', 'gpgKeyDefault'
+                'gpgKey', 'gpgKeyNotDefault'
             ]
         ];
         foreach ($checks as $groupName => $groups) {

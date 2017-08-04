@@ -470,7 +470,7 @@ class HealthcheckTask extends AppShell {
         );
         if($checks['gpg']['gpgKey']) {
             $this->assert(
-                $checks['gpg']['gpgKeyDefault'],
+                $checks['gpg']['gpgKeyNotDefault'],
                 __('The server gpg key is not the default one'),
                 __('Do not use the default gpg key for the server'),
                 [

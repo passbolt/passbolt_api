@@ -224,7 +224,7 @@ class Healthchecks {
 
          // Check fingerprint is set
          $checks['gpg']['gpgKey'] = (Configure::read('GPG.serverKey.fingerprint') != null);
-         $checks['gpg']['gpgKeyDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
+         $checks['gpg']['gpgKeyNotDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
 
          // Check keyring location is set and writable
 		 $checks['gpg']['gpgHome'] = (getenv('GNUPGHOME') !== false);
