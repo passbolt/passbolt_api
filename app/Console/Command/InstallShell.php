@@ -104,7 +104,7 @@ class InstallShell extends AppShell {
 		// Perform a sanity check and init gnupg keyring
 		try {
 			$this->_installationHealthchecks();
-			$this->_initGpgKeyring();
+			$this->initGpgKeyring();
 		} catch(Exception $e) {
 			$this->out($e->getMessage());
 			$this->out('<error>Installation failed.</error>');
@@ -285,7 +285,7 @@ class InstallShell extends AppShell {
  * @return void
  * @throws CakeException
  */
-	protected function _initGpgKeyring() {
+	public function initGpgKeyring() {
 		$config = Configure::read();
 		// Import the private key in the GPG keyring
 		try {
