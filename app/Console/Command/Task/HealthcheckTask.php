@@ -6,7 +6,6 @@
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
  */
 App::uses('Healthchecks', 'Lib');
-App::uses('Healthchecks', 'Lib');
 
 class HealthcheckTask extends AppShell {
 /**
@@ -445,7 +444,7 @@ class HealthcheckTask extends AppShell {
             __('Set App.js.build to production in app/Config/app.php')
         );
 		$this->warn(
-			$checks['application']['emailNotificationDisabled'],
+			$checks['application']['emailNotificationEnabled'],
 			__('All email notifications will be sent.'),
 			__('Some email notifications are disabled by the administrator.')
 		);
@@ -500,6 +499,32 @@ class HealthcheckTask extends AppShell {
             __('The directory containing the keyring is not writable by %s.', $processUser['name']),
             __('Double check the keyring location and the permission.')
         );
+
+		$this->assert(
+			$checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'],
+			__('The public key file is defined in app/config.php and readable.'),
+			__('The public key file is not defined in app/config.php or not readable.')
+		);
+		$this->assert(
+			$checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'],
+			__('The public key file is defined in app/config.php and readable.'),
+			__('The public key file is not defined in app/config.php or not readable.')
+		);
+		$this->assert(
+			$checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint'],
+			__('The server key fingerprint matches the one defined in app/config.php.'),
+			__('e'),
+			[
+				__('Double check the key fingerprint, example: '),
+				"sudo su -s /bin/bash -c \"gpg --list-keys --fingerprint --home /home/www-data/.gnupg\" www-data | grep -i -B 2 'Passbolt Server'"
+			]
+		);
+		$this->assert(
+			$checks['gpg']['gpgKeyPublicEmail'],
+			__('There is a valid email id defined for the server key.'),
+			__('The server key does not have a valid email id.'),
+			__('Edit or generate another key with a valid email id.')
+		);
     }
 
 /**

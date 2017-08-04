@@ -500,9 +500,20 @@ class Gpgkey extends AppModel {
  * @return bool
  */
 	static public function isValidFingerprint($fingerprint) {
-		// we expect a SHA1 fingerprint
-		$pattern = '/^[A-F0-9]{40}$/';
-
-		return (preg_match($pattern, $fingerprint) === 1);
+		return (preg_match('/^[A-F0-9]{40}$/', $fingerprint) === 1);
 	}
+
+/**
+ * Check for valid email inside GPG key UID
+ *
+ * @param string gpg key uid
+ * @return string
+ */
+ 	static public function uidContainValidEmail($uid) {
+ 		preg_match('/<(\S+@\S+)>$/', $uid, $matches);
+ 		if (isset($matches[1])) {
+ 			return Validation::email($matches[1]);
+ 		}
+ 		return false;
+ 	}
 }

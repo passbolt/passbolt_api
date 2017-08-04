@@ -7,6 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2271: Fix no wrap issue on resource description
 - PASSBOLT-2284: As an administrator I can set which notifications are enabled for my organization #98
 - PASSBOLT-2284: As an administrator I can prevent encrypted secret or username to be sent in email notification #114
+- PASSBOLT-1943: As an administrator I should not be able to install passbolt on a hostname that is not RFC3986 compliant
+- PASSBOLT-1937: As an administrator I should not be be able to install passbolt with a server key without an email id
+- PASSBOLT-2002: Refactor install script to reuse healthcheck library
 
 ## [1.6.1] - 2017-07-26
 ### Added
