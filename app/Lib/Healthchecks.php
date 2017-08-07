@@ -3,8 +3,7 @@ App::uses('Validation', 'Utility');
 App::uses('Migration', 'Lib/Migration');
 App::uses('HttpSocket', 'Network/Http');
 
-// Uses Gpg key model and utility
-App::import('Model', 'GpgKey');
+// Uses Gpg utility
 if (!class_exists('\Passbolt\Gpg')) {
 	App::import( 'Model/Utility', 'Gpg' );
 }
@@ -256,7 +255,8 @@ class Healthchecks {
 			 if ($publicKeyInfo['fingerprint'] === Configure::read('GPG.serverKey.fingerprint')) {
 				$checks['gpg']['gpgKeyPublicFingerprint'] = true;
 			 }
-			 $checks['gpg']['gpgKeyPublicEmail'] = GpgKey::uidContainValidEmail($publicKeyInfo['uid']);
+			 $GpgKey = Common::getModel('GpgKey');
+			 $checks['gpg']['gpgKeyPublicEmail'] = $GpgKey::uidContainValidEmail($publicKeyInfo['uid']);
 		 }
 		 return $checks;
      }
