@@ -2,9 +2,9 @@
 App::uses('Validation', 'Utility');
 App::uses('Migration', 'Lib/Migration');
 App::uses('HttpSocket', 'Network/Http');
-App::uses('GpgKey', 'Model');
 
-// Uses Gpg Utility.
+// Uses Gpg key model and utility
+App::import('Model', 'GpgKey');
 if (!class_exists('\Passbolt\Gpg')) {
 	App::import( 'Model/Utility', 'Gpg' );
 }
