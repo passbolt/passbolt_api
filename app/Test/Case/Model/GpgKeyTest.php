@@ -399,4 +399,24 @@ ffvdXuT2n3w=
 		$this->assertFalse($this->Gpgkey->checkCreatedIsInPast(null));
 	}
 
+	/**
+	 * Check checkCreatedIsInPast parameter is null
+	 */
+	public function testUidContainValidEmail() {
+		$uids = [
+			'Ada Lovelace <ada@passbolt.com>',
+			'Ada <ada+test@passbolt.com>'
+		];
+		foreach ($uids as $uid) {
+			$this->assertTrue(GpgKey::uidContainValidEmail($uid));
+		}
+		$uids = [
+			'Ada Lovelace',
+			'Ada <adatestpassbolt.com>'
+		];
+		foreach ($uids as $uid) {
+			$this->assertFalse(GpgKey::uidContainValidEmail($uid));
+		}
+	}
+
 }
