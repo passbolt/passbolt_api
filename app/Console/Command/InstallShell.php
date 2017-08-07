@@ -107,6 +107,7 @@ class InstallShell extends AppShell {
 			$this->_initGpgKeyring();
 		} catch(Exception $e) {
 			$this->out($e->getMessage());
+			$this->out('Please run ./app/Console/cake passbolt healthcheck for more information and help.');
 			$this->out('<error>Installation failed.</error>');
 			return false;
 		}
@@ -232,14 +233,14 @@ class InstallShell extends AppShell {
 		$checks = Healthchecks::configFiles();
 		foreach ($checks['configFile'] as $file => $enabled) {
 			if (!$enabled) {
-				throw new CakeException('One (or more) config file is missing. Please run ./app/Console/cake passbolt healthcheck');
+				throw new CakeException('One config file is missing (' . $file . ').');
 			}
 		}
 
 		// Check application url config
 		$checks = Healthchecks::core();
 		if (!$checks['core']['validFullBaseUrl'] || !$checks['core']['fullBaseUrlReachable']) {
-			throw new CakeException('The fullBaseUrl is not set or not reachable. Please run ./app/Console/cake passbolt healthcheck');
+			throw new CakeException('The fullBaseUrl is not set or not reachable.');
 		}
 
 		// Check that a GPG configuration id is provided
