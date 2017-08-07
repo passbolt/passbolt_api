@@ -240,7 +240,7 @@ class InstallShell extends AppShell {
 		// Check application url config
 		$checks = Healthchecks::core();
 		if (!$checks['core']['validFullBaseUrl'] || !$checks['core']['fullBaseUrlReachable']) {
-			throw new CakeException('The fullBaseUrl is not set or not reachable.');
+			throw new CakeException('The fullBaseUrl is not set or not reachable. ' . $checks['core']['info']['fullBaseUrl']);
 		}
 
 		// Check that a GPG configuration id is provided

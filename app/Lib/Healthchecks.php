@@ -78,7 +78,7 @@ class Healthchecks {
         $checks['core']['debugDisabled'] = (Configure::read('debug') === 0);
         $checks['core']['salt'] = (Configure::read('Security.salt') !== 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
         $checks['core']['cipherSeed'] = (Configure::read('Security.cipherSeed') !== '76859309657453542496749683645');
-        $checks['core']['fullBaseUrl'] = (Configure::read('App.fullBaseUrl') !== 'http://localhost');
+        $checks['core']['fullBaseUrl'] = (Configure::read('App.fullBaseUrl') !== null);
         $checks['core']['validFullBaseUrl'] = Validation::url(Configure::read('App.fullBaseUrl'), true);
         $checks['core']['info']['fullBaseUrl'] = Configure::read('App.fullBaseUrl');
 
