@@ -362,12 +362,12 @@ ffvdXuT2n3w=
 
 		// Test find conditions cases == default.
 		foreach($defaultCases as $case) {
-			$this->assertEquals($default, GpgKey::getFindConditions($case), "Find conditions should be empty for case : $case");
+			$this->assertEquals($default, Gpgkey::getFindConditions($case), "Find conditions should be empty for case : $case");
 		}
 
 		// Test find conditions cases != default.
 		foreach($customCases as $case) {
-			$this->assertNotEquals($default, GpgKey::getFindConditions($case), "Find conditions missing for case : $case");
+			$this->assertNotEquals($default, Gpgkey::getFindConditions($case), "Find conditions missing for case : $case");
 		}
 	}
 
@@ -408,14 +408,14 @@ ffvdXuT2n3w=
 			'Ada <ada+test@passbolt.com>'
 		];
 		foreach ($uids as $uid) {
-			$this->assertTrue(GpgKey::uidContainValidEmail($uid));
+			$this->assertTrue(Gpgkey::uidContainValidEmail($uid));
 		}
 		$uids = [
 			'Ada Lovelace',
 			'Ada <adatestpassbolt.com>'
 		];
 		foreach ($uids as $uid) {
-			$this->assertFalse(GpgKey::uidContainValidEmail($uid));
+			$this->assertFalse(Gpgkey::uidContainValidEmail($uid));
 		}
 	}
 
