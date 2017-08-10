@@ -70,7 +70,7 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 	destroy : function (id, success, error) {
 		var params = {id:id};
 		return mad.net.Ajax.request({
-			url: APP_URL + '/users/{id}',
+			url: APP_URL + 'users/{id}',
 			type: 'DELETE',
 			params: params,
 			success: success,
@@ -80,7 +80,7 @@ var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', /** @st
 
 	findAll: function (params, success, error) {
 		return mad.net.Ajax.request({
-			url: APP_URL + '/users.json',
+			url: APP_URL + 'users.json',
 			type: 'GET',
 			params: params,
 			success: success,

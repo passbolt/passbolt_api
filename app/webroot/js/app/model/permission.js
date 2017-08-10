@@ -97,7 +97,7 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 
 	findOne: function (params, success, error) {
 		return mad.net.Ajax.request({
-			url: APP_URL + '/permissions/{id}',
+			url: APP_URL + 'permissions/{id}',
 			type: 'GET',
 			params: params,
 			success: success,
@@ -115,7 +115,7 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 		// add the root of the params, it will be used in the url template
 		params.id = id;
 		return mad.net.Ajax.request({
-			url: APP_URL + '/permissions/{id}',
+			url: APP_URL + 'permissions/{id}',
 			type: 'PUT',
 			params: params,
 			success: success,
@@ -178,7 +178,7 @@ var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Pe
 	 */
 	searchUsers: function (params, success, error) {
 		return mad.net.Ajax.request({
-			url: APP_URL + '/share/search-users/{model}/{id}.json',
+			url: APP_URL + 'share/search-users/{model}/{id}.json',
 			type: 'GET',
 			params: params,
 			success: success,

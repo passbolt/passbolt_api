@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1943: As an administrator I should not be able to install passbolt on a hostname that is not RFC3986 compliant
 - PASSBOLT-1937: As an administrator I should not be be able to install passbolt with a server key without an email id
 - PASSBOLT-2002: Refactor install script to reuse healthcheck library
+- PASSBOLT-2301: Remove additional slashes in passbolt.js urls such as model/users::find #142
 
 ## [1.6.1] - 2017-07-26
 ### Added

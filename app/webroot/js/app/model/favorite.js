@@ -31,7 +31,7 @@ var Favorite = passbolt.model.Favorite = mad.Model.extend('passbolt.model.Favori
 	create : function (attrs, success, error) {
 		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 		return mad.net.Ajax.request({
-			url: APP_URL + '/favorites/' + attrs['foreign_model'].toLowerCase() + '/' + attrs['foreign_id'],
+			url: APP_URL + 'favorites/' + attrs['foreign_model'].toLowerCase() + '/' + attrs['foreign_id'],
 			type: 'POST',
 			params: params,
 			success: success,
@@ -48,7 +48,7 @@ var Favorite = passbolt.model.Favorite = mad.Model.extend('passbolt.model.Favori
 	destroy : function (id, success, error) {
 		var params = {id:id};
 		return mad.net.Ajax.request({
-			url: APP_URL + '/favorites/' + id,
+			url: APP_URL + 'favorites/' + id,
 			type: 'DELETE',
 			params: params,
 			success: success,

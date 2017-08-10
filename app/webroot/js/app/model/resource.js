@@ -39,7 +39,7 @@ var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.R
 		var self = this;
 		var params = mad.model.serializer.CakeSerializer.to(attrs, this);
 		return mad.net.Ajax.request({
-			url: APP_URL + '/resources',
+			url: APP_URL + 'resources',
 			type: 'POST',
 			params: params,
 			success: success,

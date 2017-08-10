@@ -34,7 +34,7 @@ var Profile = passbolt.model.Profile = mad.Model.extend('passbolt.model.Profile'
 
 	findAll: function (params, success, error) {
 		return mad.net.Ajax.request({
-			url: APP_URL + '/profiles',
+			url: APP_URL + 'profiles',
 			type: 'GET',
 			params: params,
 			success: success,
