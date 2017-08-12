@@ -2,15 +2,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]	
-- PASSBOLT-2270: Fix modified_by not set on resource edit regression 
-- PASSBOLT-2271: Fix no wrap issue on resource description
+## [1.6.2] - 2017-08-12
+### Added
 - PASSBOLT-2284: As an administrator I can set which notifications are enabled for my organization #98
 - PASSBOLT-2284: As an administrator I can prevent encrypted secret or username to be sent in email notification #114
+
+### Fixed
+- PASSBOLT-2301: Remove additional slashes in passbolt.js urls such as model/users::find #142
+- PASSBOLT-2270: Fix modified_by not set on resource edit regression
+- PASSBOLT-2271: Fix no wrap issue on resource description
 - PASSBOLT-1943: As an administrator I should not be able to install passbolt on a hostname that is not RFC3986 compliant
 - PASSBOLT-1937: As an administrator I should not be be able to install passbolt with a server key without an email id
 - PASSBOLT-2002: Refactor install script to reuse healthcheck library
-- PASSBOLT-2301: Remove additional slashes in passbolt.js urls such as model/users::find #142
 
 ## [1.6.1] - 2017-07-26
 ### Added
@@ -89,7 +92,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1881: Add support for groups in the permission system
 - PASSBOLT-1952: Add support for groups in the fixtures
 - PASSBOLT-1928: Deploy styleguide with groups support
-	
+
 ### Fixed
 - PASSBOLT-1614: Abstract user/password grid functions into the mad framework grid library
 - PASSBOLT-1571: API query string filters: better naming conventions and implementation
@@ -295,7 +298,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.2...HEAD
+[1.6.2]: https://github.com/passbolt/passbolt_api/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/passbolt/passbolt_api/compare/v1.6.0...v1.6.1
 [1.6.0]: https://github.com/passbolt/passbolt_api/compare/v1.5.1...v1.6.0
 [1.5.1]: https://github.com/passbolt/passbolt_api/compare/v1.5.0...v1.5.1
