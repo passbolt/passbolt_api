@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataUnitTests.Console.Command.Task.ProfileTask
+ * @package      app.plugins.DataTests.Console.Command.Task.ProfileTask
  * @since        version 2.12.11
  */
 

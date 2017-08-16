@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataUnitTests.Console.Command.Task.GroupUserTask
+ * @package      app.plugins.DataTests.Console.Command.Task.GroupUserTask
  * @since        version 2.12.11
  */
 
@@ -17,7 +17,7 @@ App::uses('GroupUser', 'Model');
 class GroupUserTask extends ModelTask {
 
 	public $model = 'GroupUser';
-	
+
 	protected function getData() {
 		// Accounting
 		$gu[] = array('GroupUser' => array(

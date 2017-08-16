@@ -9,7 +9,7 @@
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
 App::uses('GroupResourcePermission', 'Model');
-App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataTests.Data');
 
 if (!class_exists('CakeSession')) {
 	require CAKE . 'Model/Datasource/CakeSession.php';
@@ -80,7 +80,7 @@ class GroupResourcePermissionTest extends CakeTestCase {
 		$resources = Hash::extract($resources, '{n}.Resource.id');
 
 		// Get permission matrix for groups.
-		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
+		$matrixPath = App::pluginPath('DataTests') . '/Data/groups_resources_permissions.csv';
 		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 
 		// Build an array of expected resources id.

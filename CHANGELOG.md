@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- PASSBOLT-2316: Cake3 ground work - Merge the selenium & phpunit dummy data sets
+
 ## [1.6.2] - 2017-08-12
 ### Added
 - PASSBOLT-2284: As an administrator I can set which notifications are enabled for my organization #98

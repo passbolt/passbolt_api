@@ -71,7 +71,7 @@ $config = [
 		// Test keys location
 		// Only used for running unit or selenium tests
 		'testKeys' => [
-			'path' => APP . 'Plugin' . DS . 'DataUnitTests' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS,
+			'path' => APP . 'Plugin' . DS . 'DataTests' . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'gpg' . DS,
 		]
 	],
 	// Define when logs entry are stored

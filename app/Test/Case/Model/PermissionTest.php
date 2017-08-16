@@ -9,7 +9,7 @@
  */
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
- App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+ App::uses('PermissionMatrix', 'DataTests.Data');
 
 if (!class_exists('CakeSession')) {
 	require CAKE . 'Model/Datasource/CakeSession.php';

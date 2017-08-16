@@ -14,7 +14,7 @@ App::uses('Resource', 'Model');
 App::uses('UserResourcePermission', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
-App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataTests.Data');
 
 class PermissionsControllerViewTest extends ControllerTestCase {
 
@@ -38,15 +38,15 @@ class PermissionsControllerViewTest extends ControllerTestCase {
 	public $user;
 
 	public $session;
-	
+
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->User = Common::getModel('User');
 		$this->Resource = Common::getModel('Resource');
 		$this->Permission = Common::getModel('Permission');
 		$this->UserResourcePermission = Common::getModel('UserResourcePermission');
-		
+
 		$this->session = new CakeSession();
 		$this->session->init();
 
@@ -99,7 +99,7 @@ class PermissionsControllerViewTest extends ControllerTestCase {
 		$expectedUsersPermissions = array();
 		$expectedGroupsPermissions = array();
 
-		$matrixPath = CakePlugin::path('DataSeleniumTests') . '/Data/users_resources_permissions.csv';
+		$matrixPath = CakePlugin::path('DataTests') . '/Data/users_resources_permissions.csv';
 		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $userPermissions) {
 			// Retrieve the direct users permissions defined for the resource
@@ -111,7 +111,7 @@ class PermissionsControllerViewTest extends ControllerTestCase {
 			}
 		}
 
-		$matrixPath = CakePlugin::path('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
+		$matrixPath = CakePlugin::path('DataTests') . '/Data/groups_resources_permissions.csv';
 		$matrix = PermissionMatrix::importCsv($matrixPath, 'resource');
 		foreach ($matrix as $resourceAlias => $groupPermissions) {
 			// Retrieve the direct users permissions defined for the resource

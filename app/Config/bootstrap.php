@@ -120,8 +120,7 @@ if (Configure::read('debug') > 0 && Configure::read('App.selenium')) {
 // Fixtures
 CakePlugin::load('DataDefault');
 if (Configure::read('debug') > 0) {
-	CakePlugin::load('DataSeleniumTests');
-	CakePlugin::load('DataUnitTests');
+	CakePlugin::load('DataTests');
 }
 
 require_once dirname(dirname(__DIR__)) . DS . 'Vendor' . DS . 'autoload.php';

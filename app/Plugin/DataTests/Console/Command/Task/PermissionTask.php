@@ -6,7 +6,7 @@
  *
  * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataUnitTests.Console.Command.Task.PermissionTask
+ * @package      app.plugins.DataTests.Console.Command.Task.PermissionTask
  * @since        version 2.12.11
  */
 
@@ -14,7 +14,7 @@ require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task'
 
 App::uses('Permission', 'Model');
 App::uses('PermissionType', 'Model');
-App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataTests.Data');
 
 class PermissionTask extends ModelTask {
 
@@ -23,7 +23,7 @@ class PermissionTask extends ModelTask {
 	protected function getData() {
 		$ps = [];
 
-		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/users_resources_permissions.csv';
+		$matrixPath = App::pluginPath('DataTests') . '/Data/users_resources_permissions.csv';
 		$permissionMatrix = PermissionMatrix::importCsv($matrixPath);
 		foreach ($permissionMatrix as $resourceAlias => $usersExpectedPermissions) {
 			$userResourcePermissions[Common::uuid('resource.id.' . $resourceAlias)] = [];
@@ -47,7 +47,7 @@ class PermissionTask extends ModelTask {
 			}
 		}
 
-		$matrixPath = App::pluginPath('DataSeleniumTests') . '/Data/groups_resources_permissions.csv';
+		$matrixPath = App::pluginPath('DataTests') . '/Data/groups_resources_permissions.csv';
 		$groupPermissionMatrix = PermissionMatrix::importCsv($matrixPath);
 		foreach ($groupPermissionMatrix as $resourceAlias => $groupsExpectedPermissions) {
 			// Retrieve the direct users permissions defined for the resource

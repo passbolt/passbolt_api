@@ -4,7 +4,7 @@
  *
  * @copyright (c) 2015 Bolt Softwares Pvt Ltd
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataUnitTests.Console.Command.Task.CommentTask
+ * @package      app.plugins.DataTests.Console.Command.Task.CommentTask
  * @since        version 2.12.11
  */
 
@@ -14,9 +14,9 @@ App::uses('Comment', 'Model');
 App::uses('Resource', 'Model');
 
 class CommentTask extends ModelTask {
-	
+
 	public $model = 'Comment';
-	
+
 	protected function getData() {
 		$this->Resource = $this->_getModel('Resource');
 

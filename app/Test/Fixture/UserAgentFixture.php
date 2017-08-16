@@ -23,6 +23,10 @@ class UserAgentFixture extends CakeTestFixture {
  * @var array
  */
 	public $records = array(
+		array(
+			'id' => '7c1e3bcf-d39c-3c99-a541-de6058a9e250',
+			'name' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:54.0) Gecko/20100101 Firefox/54.0'
+		),
 	);
 
 }

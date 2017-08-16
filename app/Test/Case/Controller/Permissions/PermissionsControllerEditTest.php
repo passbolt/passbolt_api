@@ -14,7 +14,7 @@ App::uses('Resource', 'Model');
 App::uses('UserResourcePermission', 'Model');
 App::uses('CakeSession', 'Model');
 App::uses('CakeSession', 'Model/Datasource');
-App::uses('PermissionMatrix', 'DataSeleniumTests.Data');
+App::uses('PermissionMatrix', 'DataTests.Data');
 
 class PermissionsControllerEditTest extends ControllerTestCase {
 
@@ -38,15 +38,15 @@ class PermissionsControllerEditTest extends ControllerTestCase {
 	public $user;
 
 	public $session;
-	
+
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->User = Common::getModel('User');
 		$this->Resource = Common::getModel('Resource');
 		$this->Permission = Common::getModel('Permission');
 		$this->UserResourcePermission = Common::getModel('UserResourcePermission');
-		
+
 		$this->session = new CakeSession();
 		$this->session->init();
 

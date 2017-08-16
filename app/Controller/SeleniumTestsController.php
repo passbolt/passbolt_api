@@ -142,12 +142,12 @@ class SeleniumTestsController extends AppController {
  * @param string $dummy data set name
  * @return void
  */
-	public function resetInstance($dummy = 'seleniumtests') {
+	public function resetInstance($dummy = 'tests') {
 		// Install job shell.
 		$job = new InstallShell();
 		$job->startup();
 		// If dummy data is requested.
-		if ($dummy == 'default' || $dummy == 'seleniumtests' || $dummy == 'unittests') {
+		if ($dummy == 'default' || $dummy == 'tests') {
 			$job->params['data'] = $dummy;
 			$job->params['quick'] = 'true';
 		}
