@@ -63,24 +63,22 @@ class SecretTask extends ModelTask {
     /**
      * Encrypt a password with the user public key.
      * @param $password
-     * @param $userId
+     * @param $user
      * @return string $encrypted encrypted password
      */
-    protected function encryptPassword($password, $userId) {
+    protected function encryptPassword($password, $user) {
         $GpgkeyTask = $this->Tasks->load('Data.Gpgkey');
 	    $GpgkeyTask->params = $this->params;
-        $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($userId);
-        $Gpgkey = $this->_getModel('Gpgkey');
-        $key = $Gpgkey->find("first", array('conditions' => array(
-            'Gpgkey.user_id' => $userId,
-            'Gpgkey.deleted' => 0
-        )));
+        $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user['User']['id']);
 
-	    $Gpg = new \Passbolt\Gpg();
-        $Gpg->setEncryptKey($key['Gpgkey']['key']);
-	    $encrypted = $Gpg->encrypt($password);
+		// Import the key
+		exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
+		// Encrypt the password
+		$command = "echo -n " . escapeshellarg($password) . " | gpg --encrypt -r " . $user['User']['username'] . " -a --trust-model always";
+		exec($command, $output);
 
-        return $encrypted;
+        $encrypted = implode("\n", $output);
+		return $encrypted;
     }
 
     /**
@@ -131,7 +129,7 @@ class SecretTask extends ModelTask {
             foreach ($us as $u) {
                 $isAuthorized = $Resource->isAuthorized($r['Resource']['id'], PermissionType::READ, $u['User']['id']);
                 if ($isAuthorized) {
-                    $passwordEncrypted = $this->encryptPassword($password, $u['User']['id']);
+                    $passwordEncrypted = $this->encryptPassword($password, $u);
                     $s[] = array('Secret'=>array(
                         'id' => Common::uuid(),
                         'user_id' => $u['User']['id'],
