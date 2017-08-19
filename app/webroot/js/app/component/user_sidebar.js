@@ -45,11 +45,13 @@ var UserSidebar = passbolt.component.UserSidebar = passbolt.component.Sidebar.ex
 	afterStart: function () {
 		this._super();
 
-		// Instantiate the groups list component for the current user.
-		var userGroups = new passbolt.component.sidebarSection.UserGroups($('#js_user_groups', this.element), {
-			selectedUser: this.options.selectedItem
-		});
-		userGroups.start();
+		if (this.options.selectedItem.active == '1') {
+			// Instantiate the groups list component for the current user.
+			var userGroups = new passbolt.component.sidebarSection.UserGroups($('#js_user_groups', this.element), {
+				selectedUser: this.options.selectedItem
+			});
+			userGroups.start();
+		}
 	},
 
 	/* ************************************************************** */

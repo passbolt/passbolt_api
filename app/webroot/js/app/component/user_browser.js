@@ -5,6 +5,7 @@ import 'app/model/user';
 import 'app/model/group';
 import 'app/model/profile';
 import 'app/view/component/user_browser';
+import 'app/view/template/component/user/gridItem.ejs!';
 
 /**
  * @class passbolt.component.UserBrowserController
@@ -35,7 +36,9 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
         // Prefix each row id with user_
         prefixItemId: 'user_',
         // Override the silentLoading parameter.
-        silentLoading: false
+        silentLoading: false,
+        // Customized gridItem template to add
+        itemTemplateUri: 'app/view/template/component/user/gridItem.ejs',
     }
 
 }, /** @prototype */ {
@@ -61,6 +64,7 @@ var UserBrowser = passbolt.component.UserBrowser = mad.component.Grid.extend('pa
             username: 'username',
             modified: 'modified',
             last_logged_in: 'last_logged_in',
+            active: 'active',
             Group: 'Group',
             Profile: 'Profile'
         });

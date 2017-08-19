@@ -23,9 +23,14 @@
 				<span class="label"><%= __('Modified') %></span>
 				<span class="value"><%= datetimeGetTimeAgo(user.modified) %></span>
 			</li>
+			<li class="status">
+				<span class="label"><%= __('Status') %></span>
+				<span class="value"><%= (user.active == '1' ? 'Activated' : 'Activation pending') %></span>
+			</li>
 		</ul>
 	</div>
 
+	<% if (user.active == '1') { %>
 	<!-- User groups list -->
 	<div class="groups" id="js_user_groups"></div>
 
@@ -62,6 +67,7 @@
 			</li>
 		</ul>
 	</div>
+	<% } %>
 
 </div>
 
