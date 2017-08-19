@@ -100,6 +100,23 @@ class DataShell extends AppShell {
 					'DataTests.Secret',
 					'DataTests.Comment'
 				);
+			case 'largetests':
+				return array(
+					// defaults
+					'DataDefault.SchemaMigration',
+					'DataDefault.Role',
+					'DataDefault.PermissionType',
+					// tests data set
+					'DataTests.LargeUser',
+					'DataTests.LargeGpgkey', // Based on the users in the database, needs to be done after DataTests.User
+					'DataTests.LargeProfile',
+					'DataTests.Avatar',
+					'DataTests.LargeResource',
+					'DataTests.LargeGroup',
+					'DataTests.LargeGroupUser',
+					'DataTests.LargePermission',
+					'DataTests.Secret',
+				);
 		}
 	}
 

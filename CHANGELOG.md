@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - PASSBOLT-2316: Cake3 ground work - Merge the selenium & phpunit dummy data sets
+- PASSBOLT-2317: Speed up dummy secret task
+- PASSBOLT-2327: Add a large set of dummy data
 
 ## [1.6.2] - 2017-08-12
 ### Added
