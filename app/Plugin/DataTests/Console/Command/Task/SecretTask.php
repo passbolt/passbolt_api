@@ -111,8 +111,8 @@ class SecretTask extends ModelTask {
             case Common::uuid('resource.id.centos') :
 				$password = 'this_23-04';
 				break;
-            case Common::uuid('resource.id.enligthenment') :
-				$password = 'azaertyuiop';
+            case Common::uuid('resource.id.enlightenment') :
+				$password = 'azertyuiop';
 				break;
             // Centos = very weak
             default :
