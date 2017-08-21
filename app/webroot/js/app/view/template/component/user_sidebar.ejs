@@ -30,7 +30,7 @@
 		</ul>
 	</div>
 
-	<% if (user.active == '1') { %>
+	<% if (user.active === undefined || user.active == '1') { %>
 	<!-- User groups list -->
 	<div class="groups" id="js_user_groups"></div>
 

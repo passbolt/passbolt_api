@@ -45,7 +45,9 @@ var UserSidebar = passbolt.component.UserSidebar = passbolt.component.Sidebar.ex
 	afterStart: function () {
 		this._super();
 
-		if (this.options.selectedItem.active == '1') {
+		// active field will not be provided for non admin users,
+		// but we still want to display information regarding groups.
+		if (this.options.selectedItem.active === undefined || this.options.selectedItem.active == '1') {
 			// Instantiate the groups list component for the current user.
 			var userGroups = new passbolt.component.sidebarSection.UserGroups($('#js_user_groups', this.element), {
 				selectedUser: this.options.selectedItem
