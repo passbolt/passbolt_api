@@ -83,29 +83,45 @@ class SecretTask extends ModelTask {
 
     /**
      * Get a password for a given resource, get a random one if not found / unspecified
-     * @param null $resource id
+     * @param null $resourceId id
      * @return string password
      */
-    protected function getPassword($resource = null) {
-        switch ($resource) {
+    protected function getPassword($resourceId = null) {
+		static $passwords = [];
+
+		if (isset($passwords[$resourceId])) {
+			return $passwords[$resourceId];
+		}
+
+		$password = '';
+        switch ($resourceId) {
             // Apache = very strong
             case Common::uuid('resource.id.apache') :
-                return '_upjvh-p@wAHP18D}OmY05M';
+				$password = '_upjvh-p@wAHP18D}OmY05M';
+				break;
             // April = strong
             case Common::uuid('resource.id.april') :
-                return 'z"(-1s]3&Itdno:vPt';
+				$password = 'z"(-1s]3&Itdno:vPt';
+				break;
             // Bower = fair
             case Common::uuid('resource.id.bower') :
-                return 'CL]m]x(o{sA#QW';
+				$password = 'CL]m]x(o{sA#QW';
+				break;
             // Bower = this_23-04
             case Common::uuid('resource.id.centos') :
-                return 'this_23-04';
-            case Common::uuid('resource.id.enligthenment') :
-                return 'azaertyuiop';
+				$password = 'this_23-04';
+				break;
+            case Common::uuid('resource.id.enlightenment') :
+				$password = 'azertyuiop';
+				break;
             // Centos = very weak
             default :
-                return $this->getDummyPassword();
+				$password = $this->getDummyPassword();
+				break;
         }
+
+		$passwords[$resourceId] = $password;
+		return $password;
     }
 
     /**
@@ -113,33 +129,31 @@ class SecretTask extends ModelTask {
      * @return array
      */
     protected function getData() {
-        $User = $this->_getModel('User');
+		$User = $this->_getModel('User');
+		$UserResourcePermission = $this->_getModel('UserResourcePermission');
 		$Resource = $this->_getModel('Resource');
 		$Resource->Behaviors->disable('Permissionable'); // cannot do a findAll otherwise
-        $rs = $Resource->find('all');
-        $us = $User->find('all');
+		$users = $User->find('all');
 
         // Insertion for all users who can access to available resources.
         // We insert dummy data, same secret for everyone.
         $s = [];
 
-        foreach($rs as $r) {
-            $password = $this->getPassword($r['Resource']['id']);
-            //echo  $r['Resource']['name'] . ':' . $password . "\n";
-            foreach ($us as $u) {
-                $isAuthorized = $Resource->isAuthorized($r['Resource']['id'], PermissionType::READ, $u['User']['id']);
-                if ($isAuthorized) {
-                    $passwordEncrypted = $this->encryptPassword($password, $u);
-                    $s[] = array('Secret'=>array(
-                        'id' => Common::uuid(),
-                        'user_id' => $u['User']['id'],
-                        'resource_id' => $r['Resource']['id'],
-                        'data' => $passwordEncrypted,
-                        'created_by' => $u['User']['id']
-                    ));
-                }
-            }
-        }
+		foreach ($users as $user) {
+			$resourcesIds = $UserResourcePermission->findAuthorizedResourcesIds($user['User']['id']);
+			foreach ($resourcesIds as $resourceId) {
+				$password = $this->getPassword($resourceId);
+				$passwordEncrypted = $this->encryptPassword($password, $user);
+				$s[] = array('Secret'=>array(
+					'id' => Common::uuid(),
+					'user_id' => $user['User']['id'],
+					'resource_id' => $resourceId,
+					'data' => $passwordEncrypted,
+					'created_by' => $user['User']['id']
+				));
+			}
+		}
+
         return $s;
     }
 }

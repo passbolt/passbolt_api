@@ -31,9 +31,9 @@ class GpgkeyTask extends ModelTask {
 			$keyFileName = $gpgkeyPath . $uprefix[0] . '_public.key';
 		} else {
 			$keyFileName = $gpgkeyPath . 'passbolt_dummy_key.asc';
-			$this->out('Warning: could not find key ' . $uprefix[0] . '_public.key' . ' for ' . $u['User']['username']);
-			$this->out('         at path ' . $gpgkeyPath);
-			$this->out('         using ' . $keyFileName . ' instead.');
+//			$this->out('Warning: could not find key ' . $uprefix[0] . '_public.key' . ' for ' . $u['User']['username']);
+//			$this->out('         at path ' . $gpgkeyPath);
+//			$this->out('         using ' . $keyFileName . ' instead.');
 		}
 		return $keyFileName;
 	}

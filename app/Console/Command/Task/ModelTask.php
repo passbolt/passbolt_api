@@ -10,6 +10,12 @@ App::import('Model', 'User');
 class ModelTask extends AppShell {
 
 /**
+ * Should the data be validated on save?
+ * @var bool
+ */
+	public $validateOnSave = true;
+
+/**
  * Get Model
  *
  * @param string $model name
@@ -61,7 +67,7 @@ class ModelTask extends AppShell {
 	public function insertItem($item, $Model) {
 		$Model->create();
 		try {
-			if (!$Model->save($item)) {
+			if (!$Model->save($item, $this->validateOnSave)) {
 				$this->out('Unable to validate data for insert in ' . $Model->name);
 				$this->out(pr($Model->data));
 				$this->out(pr($Model->validationErrors));
