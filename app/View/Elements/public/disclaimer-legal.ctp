@@ -1,11 +1,12 @@
 <div class="message-wrapper">
 	<p class="message error"><strong><?php echo __('Disclaimer:'); ?></strong>
-		<a href="https://en.wikipedia.org/wiki/Disposable_email_address" target="_blank" rel="nofollow">
-			<?php echo __('please use a disposable email address.'); ?></a><p>
-	<p class="message warning">
-		<?php echo __('This is a demo instance of passbolt for trial purposes only.'); ?>
-		<?php echo __('Do not use it to store sensitive information.'); ?>
-		<?php echo __('Do not use it if you are not confortable with other testers being able to see your name and email address.'); ?>
+		<?php echo __('Please use a disposable email address.'); ?>
+		<?php echo __('Do not use your real email address if you are not confortable with other testers being able to see it.'); ?>
+	</p>
+	<p class="message warning"><strong><?php echo __('Warning:'); ?></strong>
+	  <?php echo __('Demo data will be deleted periodically.') ?>
+	  <?php echo __('This is a demo instance of passbolt for trial purposes only.'); ?>
+	  <?php echo __('Do not use it to store sensitive information.'); ?>
 	</p>
 </div>
 <p>
