@@ -43,12 +43,9 @@ use Cake\Routing\Route\DashedRoute;
  */
 Router::defaultRouteClass(DashedRoute::class);
 
-
 Router::prefix('Users', function ($routes) {
-
     $routes->setExtensions(['json']);
     $routes->get('/', ['controller' => 'UserIndex', 'action' => 'index'], 'users:index');
-
 });
 
 Router::scope('/', function (RouteBuilder $routes) {

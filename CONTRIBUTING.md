@@ -17,6 +17,11 @@ composer install --dev
 ```
 ./vendor/bin/phpcs --config-set installed_paths ~/www/passbolt_api/vendor/cakephp/cakephp-codesniffer
 ```
+- Check the CakePHP standard is present
+```
+./vendor/bin/phpcs -i
+The installed coding standards are MySource, PEAR, PSR1, PSR2, Squiz, Zend and CakePHP
+```
 - Run phpcs in the relevant directories
 ```
 ./vendor/bin/phpcs --standard=CakePHP config

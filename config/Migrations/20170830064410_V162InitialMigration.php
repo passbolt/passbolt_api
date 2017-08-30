@@ -1,11 +1,30 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+namespace App\config\Migrations;
+
 use Migrations\AbstractMigration;
 
 class V162InitialMigration extends AbstractMigration
 {
+    /**
+     * Up
+     *
+     * @return void
+     */
     public function up()
     {
-
         $this->table('authentication_tokens', ['id' => false, 'primary_key' => ['id']])
             ->addColumn('id', 'string', [
                 'default' => null,
@@ -922,28 +941,5 @@ class V162InitialMigration extends AbstractMigration
                 'null' => true,
             ])
             ->create();
-    }
-
-    public function down()
-    {
-        $this->dropTable('authentication_tokens');
-        $this->dropTable('comments');
-        $this->dropTable('controller_logs');
-        $this->dropTable('email_queue');
-        $this->dropTable('favorites');
-        $this->dropTable('file_storage');
-        $this->dropTable('gpgkeys');
-        $this->dropTable('groups');
-        $this->dropTable('groups_users');
-        $this->dropTable('permissions');
-        $this->dropTable('permissions_types');
-        $this->dropTable('profiles');
-        $this->dropTable('resources');
-        $this->dropTable('roles');
-        $this->dropTable('schema_migrations');
-        $this->dropTable('secrets');
-        $this->dropTable('user_agents');
-        $this->dropTable('users');
-        $this->dropTable('users_resources_permissions');
     }
 }
