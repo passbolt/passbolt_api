@@ -18,6 +18,12 @@ use App\Controller\AppController;
 
 class UserIndexController extends AppController
 {
+    /**
+     * Get all users
+     * Maps to GET /users.json
+     *
+     * @return void
+     */
     public function index()
     {
         $this->loadModel('Users');

@@ -220,3 +220,8 @@ Type::build('timestamp')
 if (Configure::read('debug')) {
     Plugin::load('DebugKit', ['bootstrap' => true]);
 }
+
+/*
+ * Enable Migration Plugin
+ */
+Plugin::load('Migrations');
