@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Utility\Text;
 
 /**
  * Application Controller
@@ -65,5 +66,31 @@ class AppController extends Controller
         ) {
             $this->set('_serialize', true);
         }
+    }
+
+    /**
+     * Success renders set the variables used to render the json view
+     * All passbolt response contains an header (metadata like status) an a body (data)
+     *
+     * @param array $body data for the body section
+     * @return void
+     */
+    protected function success($body = null)
+    {
+        $prefix = $this->request->getParam('prefix');
+        $action = $this->request->getParam('action');
+        $this->set([
+            'header' => [
+                'id' => Text::uuid(),
+                'status' => 'success',
+                'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'servertime' => time(),
+                'message' => null,
+                'controller' => $prefix,
+                'action' => $action
+            ],
+            'body' => $body,
+            '_serialize' => ['header', 'body']
+        ]);
     }
 }

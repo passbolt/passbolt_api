@@ -19,8 +19,7 @@ use App\Controller\AppController;
 class UserIndexController extends AppController
 {
     /**
-     * Get all users
-     * Maps to GET /users.json
+     * User Index action
      *
      * @return void
      */
@@ -28,9 +27,6 @@ class UserIndexController extends AppController
     {
         $this->loadModel('Users');
         $users = $this->Users->find('all');
-        $this->set([
-            'users' => $users,
-            '_serialize' => ['users']
-        ]);
+        $this->success($users);
     }
 }
