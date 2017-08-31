@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+./vendor/bin/phpcs --standard=CakePHP config
+./vendor/bin/phpcs --standard=CakePHP src
+./vendor/bin/phpcs --standard=CakePHP tests

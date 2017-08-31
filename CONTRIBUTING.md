@@ -24,7 +24,5 @@ The installed coding standards are MySource, PEAR, PSR1, PSR2, Squiz, Zend and C
 ```
 - Run phpcs in the relevant directories
 ```
-./vendor/bin/phpcs --standard=CakePHP config
-./vendor/bin/phpcs --standard=CakePHP src
-./vendor/bin/phpcs --standard=CakePHP tests
+./bin/checkstyle
 ```
