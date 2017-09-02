@@ -59,7 +59,8 @@ class SessionsSchema extends CakeSchema {
 		'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
 		'data' => array('type' => 'text', 'null' => true, 'default' => null),
 		'expires' => array('type' => 'integer', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
 	);
 
 }

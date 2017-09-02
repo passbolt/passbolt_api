@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- feature/PASSBOLT-2371: Force the charset of the cake_sessions table in utf8
 
 [1.6.3] - 2017-08-21
 ### Fixed
