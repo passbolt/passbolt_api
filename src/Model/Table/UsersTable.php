@@ -18,6 +18,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use App\Model\Entity\Role;
 
 /**
  * Users Model
@@ -69,19 +70,16 @@ class UsersTable extends Table
         $this->hasMany('AuthenticationTokens', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('ControllerLogs', [
-            'foreignKey' => 'user_id'
-        ]);
         $this->hasMany('Favorites', [
             'foreignKey' => 'user_id'
         ]);
         $this->hasMany('FileStorage', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Gpgkeys', [
+        $this->hasOne('Gpgkeys', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Profiles', [
+        $this->hasOne('Profiles', [
             'foreignKey' => 'user_id'
         ]);
         $this->hasMany('Secrets', [
@@ -150,5 +148,45 @@ class UsersTable extends Table
         $rules->add($rules->existsIn(['role_id'], 'Roles'));
 
         return $rules;
+    }
+
+    public function findIndex(Query $query, array $options)
+    {
+        // Default associated data
+        $query->contain([
+            'Roles',
+            'Profiles',
+            //'Profiles.Avatar',
+            'Gpgkeys',
+            //'GroupUsers'
+        ]);
+
+        // Filter out guests, inactive and deleted users
+        $where = [
+            'Users.deleted' => false,
+            'Users.active' => true,
+            'Roles.name <>' => Role::GUEST
+        ];
+
+        // if user is admin, we allow seing inactive users via the 'is-active' filter
+        if ($options['role'] === Role::ADMIN) {
+            if (isset($options['filter']['is-active'])) {
+                $where['active'] = ($options['filter']['is-active'] ? true : false);
+            }
+        }
+        $query->where($where);
+        return $query;
+    }
+
+    /**
+     * Build the query that fetches the user data during authentication
+     *
+     * @param Query $query
+     * @param array $options
+     * @return Query $query
+     */
+    public function findAuth(Query $query, array $options)
+    {
+        return $query->contain(['Roles']);
     }
 }

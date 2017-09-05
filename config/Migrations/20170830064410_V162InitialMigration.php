@@ -12,7 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\config\Migrations;
 
 use Migrations\AbstractMigration;
 
@@ -25,6 +24,11 @@ class V162InitialMigration extends AbstractMigration
      */
     public function up()
     {
+        // If people are migrating from v1 - skip
+        $exists = $this->hasTable('users');
+        if($exists) return;
+
+        // If this is a fresh install
         $this->table('authentication_tokens', ['id' => false, 'primary_key' => ['id']])
             ->addColumn('id', 'string', [
                 'default' => null,

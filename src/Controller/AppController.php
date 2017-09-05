@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
  *
- * Licensed under The MIT License
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link      http://cakephp.org CakePHP(tm) Project
- * @since     0.2.9
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
  */
 namespace App\Controller;
 
@@ -43,7 +43,18 @@ class AppController extends Controller
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
-        $this->loadComponent('Flash');
+        $this->loadComponent('User');
+
+        /*
+         * Auth Component
+         */
+        $this->loadComponent('Auth', [
+            'authenticate' => [
+                'Form' => [
+                    'finder' => 'auth'
+                ]
+            ]
+        ]);
 
         /*
          * Enable the following components for recommended CakePHP security settings.
@@ -51,21 +62,6 @@ class AppController extends Controller
          */
         //$this->loadComponent('Security');
         //$this->loadComponent('Csrf');
-    }
-
-    /**
-     * Before render callback.
-     *
-     * @param \Cake\Event\Event $event The beforeRender event.
-     * @return \Cake\Network\Response|null|void
-     */
-    public function beforeRender(Event $event)
-    {
-        if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
-        ) {
-            $this->set('_serialize', true);
-        }
     }
 
     /**
@@ -92,5 +88,15 @@ class AppController extends Controller
             'body' => $body,
             '_serialize' => ['header', 'body']
         ]);
+
+        // render a legacy JSON view by default
+        $apiVersion = $this->request->getQuery('api-version');
+        if (!isset($apiVersion) || $apiVersion === 'v1') {
+            $tpl = '/' . ucfirst($prefix) . '/json/index';
+            $this->viewBuilder()
+                ->setLayout('default')
+                ->setClassName('LegacyJson')
+                ->setTemplate($tpl);
+        }
     }
 }

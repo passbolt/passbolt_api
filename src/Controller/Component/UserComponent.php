@@ -12,32 +12,25 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+namespace App\Controller\Component;
 
-use Migrations\AbstractMigration;
+use Cake\Controller\Component;
+use App\Model\Entity\Role;
 
-class V200ActiveMustBeBoolean extends AbstractMigration
+class UserComponent extends Component
 {
-    /**
-     * Up
-     *
-     * @return void
-     */
-    public function up()
-    {
-        $this->table('authentication_tokens')
-            ->changeColumn('active', 'boolean', [
-                'default' => '1',
-                'limit' => null,
-                'null' => false,
-            ])
-            ->update();
 
-        $this->table('users')
-            ->changeColumn('active', 'boolean', [
-                'default' => '0',
-                'limit' => null,
-                'null' => false,
-            ])
-            ->update();
+    public $components = ['Auth'];
+
+    /**
+     * Return the current user role or GUEST if the user is not identified
+     * @return string
+     */
+    public function role() {
+        $role = $this->Auth->user('Role.name');
+        if (!isset($role)) {
+            return Role::GUEST;
+        }
+        return $role;
     }
 }

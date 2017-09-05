@@ -12,34 +12,25 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Users;
 
-use App\Controller\AppController;
-use Cake\Event\Event;
+use Migrations\AbstractMigration;
 
-class UserIndexController extends AppController
+class V200DropUnusedFields extends AbstractMigration
 {
     /**
-     * Before filter
-     *
-     * @param Event $event
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->Auth->allow('index');
-        return parent::beforeFilter($event);
-    }
-
-    /**
-     * User Index action
+     * Up
      *
      * @return void
      */
-    public function index()
+    public function up()
     {
-        $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role() ])->all();
-        $this->success($users);
+        $this->table('profiles')
+            ->removeColumn('gender')
+            ->removeColumn('date_of_birth')
+            ->removeColumn('title')
+            ->removeColumn('timezone')
+            ->removeColumn('locale')
+            ->update();
+
     }
 }
