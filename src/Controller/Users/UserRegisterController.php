@@ -17,7 +17,7 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use Cake\Event\Event;
 
-class UserIndexController extends AppController
+class UserRegisterController extends AppController
 {
     /**
      * Before filter
@@ -27,21 +27,28 @@ class UserIndexController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        // TODO do not allow index to be public
-        $this->Auth->allow('index');
+        $this->Auth->allow('register');
 
         return parent::beforeFilter($event);
     }
 
     /**
-     * User Index action
+     * Register user action
      *
      * @return void
      */
-    public function index()
+    public function register()
     {
-        $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role()]);
-        $this->success($users);
+        $this->loadModel('User');
+        $user = $this->User->newEntity();
+        if ($this->request->is('post')) {
+            $user = $this->User->patchEntity($user, $this->request->getData());
+            if ($this->User->save($user)) {
+                $this->Flash->success(__('Your user has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('Unable to add your user.'));
+        }
+        $this->set('user', $user);
     }
 }

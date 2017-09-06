@@ -24,18 +24,6 @@ class ProfilesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.profiles',
-        'app.users',
-        'app.roles',
-        'app.controller_logs',
-        'app.authentication_tokens',
-        'app.favorites',
-        'app.file_storage',
-        'app.gpgkeys',
-        'app.secrets',
-        'app.users_resources_permissions',
-        'app.groups',
-        'app.groups_users'
     ];
 
     /**

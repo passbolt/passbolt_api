@@ -17,6 +17,7 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class UserViewController extends AppController
@@ -29,6 +30,7 @@ class UserViewController extends AppController
      */
     public function beforeFilter(Event $event)
     {
+        // TODO do not allow view to be public
         $this->Auth->allow('view');
 
         return parent::beforeFilter($event);
@@ -37,6 +39,8 @@ class UserViewController extends AppController
     /**
      * User Index action
      *
+     * @throws BadRequestException if the user id is not a uuid or 'me'
+     * @throws NotFoundException if the user does not exist
      * @param string $id uuid|me
      * @return void
      */

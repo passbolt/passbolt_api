@@ -15,6 +15,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Role;
+use Aura\Intl\Exception;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -158,10 +159,16 @@ class UsersTable extends Table
      *
      * @param Query $query a query instance
      * @param array $options options
+     * @throws Exception if no role is specified
      * @return Query
      */
     public function findIndex(Query $query, array $options)
     {
+        // Options must contain a role
+        if (!isset($options['role'])) {
+            throw new Exception(__('User table findIndex should have a role set in options.'));
+        }
+
         // Default associated data
         $query->contain([
             'Roles',
@@ -190,38 +197,22 @@ class UsersTable extends Table
     }
 
     /**
-     * Build the query that fetches data for user view
+     * Find view
      *
-     * @param Query $query a query instance
-     * @param array $options options
+     * @param Query $query
+     * @param array $options
+     * @throws Exception if no id is specified
      * @return Query
      */
-    public function findView(Query $query, array $options)
-    {
-        // Default associated data
-        $query->contain([
-            'Roles',
-            'Profiles',
-            //'Profiles.Avatar',
-            'Gpgkeys',
-            'GroupsUsers'
-        ]);
-
-        // Filter out guests, inactive and deleted users
-        $where = [
-            'Users.deleted' => false,
-            'Users.active' => true,
-            'Roles.name <>' => Role::GUEST,
-            'Users.id' => $options['id']
-        ];
-
-        // if user is admin, we allow seing inactive users via the 'is-active' filter
-        if ($options['role'] === Role::ADMIN) {
-            if (isset($options['filter']['is-active'])) {
-                $where['active'] = ($options['filter']['is-active'] ? true : false);
-            }
+    public function findView(Query $query, array $options) {
+        // Options must contain an id
+        if (!isset($options['id'])) {
+            throw new Exception(__('User table findView should have an id set in options.'));
         }
-        $query->where($where);
+        // Same rule than index apply
+        // with a specific id requested
+        $query = $this->findIndex($query, $options);
+        $query->where(['Users.id' => $options['id']]);
 
         return $query;
     }

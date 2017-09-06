@@ -24,18 +24,6 @@ class RolesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.roles',
-        'app.controller_logs',
-        'app.users',
-        'app.authentication_tokens',
-        'app.favorites',
-        'app.file_storage',
-        'app.gpgkeys',
-        'app.profiles',
-        'app.secrets',
-        'app.users_resources_permissions',
-        'app.groups',
-        'app.groups_users'
     ];
 
     /**

@@ -9,20 +9,15 @@ composer install --dev
 - Configure your test database in app.php datasources section.
 - Run phpunit:
 ```
-./vendor/bin/phpunit
+composer run-script test
 ```
 
 ## How do I check the code standards
-- Add the CakePHP standard to your phpcs config. You must specify an absolute path.
+- To display the error and warning
 ```
-./vendor/bin/phpcs --config-set installed_paths ~/www/passbolt_api/vendor/cakephp/cakephp-codesniffer
+composer run-script cs-check
 ```
-- Check the CakePHP standard is present
+- To autofix what is fixable
 ```
-./vendor/bin/phpcs -i
-The installed coding standards are MySource, PEAR, PSR1, PSR2, Squiz, Zend and CakePHP
-```
-- Run phpcs in the relevant directories
-```
-./bin/checkstyle
+composer run-script cs-fix
 ```

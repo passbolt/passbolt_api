@@ -43,6 +43,13 @@ use Cake\Routing\Route\DashedRoute;
  */
 Router::defaultRouteClass(DashedRoute::class);
 
+
+// User registration
+Router::scope('/', function (RouteBuilder $routes) {
+    $routes->redirect('register', 'users/register');
+});
+
+// User prefixed routes
 Router::prefix('Users', function ($routes) {
     $routes->setExtensions(['json']);
 
@@ -52,6 +59,11 @@ Router::prefix('Users', function ($routes) {
     $routes->connect('/:id', ['controller' => 'UserView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
+
+    $routes->connect('/register', ['controller' => 'UserRegister', 'action' => 'register'])
+        ->setPass(['id'])
+        ->setMethods(['GET','POST']);
+
 });
 
 Router::scope('/', function (RouteBuilder $routes) {
