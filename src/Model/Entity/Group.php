@@ -17,29 +17,19 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * User Entity
+ * Group Entity
  *
  * @property string $id
- * @property string $role_id
- * @property string $username
- * @property bool $active
+ * @property string $name
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
  *
- * @property \App\Model\Entity\Role $role
- * @property \App\Model\Entity\AuthenticationToken[] $authentication_tokens
- * @property \App\Model\Entity\Favorite[] $favorites
- * @property \App\Model\Entity\FileStorage[] $file_storage
- * @property \App\Model\Entity\Gpgkey[] $gpgkeys
- * @property \App\Model\Entity\Profile[] $profiles
- * @property \App\Model\Entity\Secret[] $secrets
- * @property \App\Model\Entity\UsersResourcesPermission[] $users_resources_permissions
- * @property \App\Model\Entity\Group[] $groups
+ * @property \App\Model\Entity\User[] $users
  */
-class User extends Entity
+class Group extends Entity
 {
 
     /**

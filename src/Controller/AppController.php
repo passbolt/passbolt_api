@@ -92,11 +92,7 @@ class AppController extends Controller
         // render a legacy JSON view by default
         $apiVersion = $this->request->getQuery('api-version');
         if (!isset($apiVersion) || $apiVersion === 'v1') {
-            $tpl = '/' . ucfirst($prefix) . '/json/index';
-            $this->viewBuilder()
-                ->setLayout('default')
-                ->setClassName('LegacyJson')
-                ->setTemplate($tpl);
+            $this->viewBuilder()->setClassName('LegacyJson');
         }
     }
 }

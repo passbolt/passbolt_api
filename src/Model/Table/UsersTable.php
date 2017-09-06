@@ -88,6 +88,9 @@ class UsersTable extends Table
         $this->hasMany('UsersResourcesPermissions', [
             'foreignKey' => 'user_id'
         ]);
+        $this->hasMany('GroupsUsers', [
+            'foreignKey' => 'user_id'
+        ]);
         $this->belongsToMany('Groups', [
             'foreignKey' => 'user_id',
             'targetForeignKey' => 'group_id',
@@ -158,7 +161,7 @@ class UsersTable extends Table
             'Profiles',
             //'Profiles.Avatar',
             'Gpgkeys',
-            //'GroupUsers'
+            'GroupsUsers'
         ]);
 
         // Filter out guests, inactive and deleted users

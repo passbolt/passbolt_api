@@ -1,10 +1,30 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace App\View;
 
 use Cake\View\View;
+use Cake\Core\Configure;
+use App\View\Helper\LegacyApiHelper;
 
 class LegacyJsonView extends View
 {
+    public function initialize()
+    {
+        parent::initialize();
+    }
+
     /**
      * Render a JSON view.
      *
@@ -27,30 +47,44 @@ class LegacyJsonView extends View
      */
     public function render($view = null, $layout = null)
     {
+        $jsonOptions = self::getJsonOptions();
+
+        // format body object (result set expected)
+        if (isset($this->viewVars['body'])) {
+            $body = LegacyApiHelper::formatResultSet($this->viewVars['body']);
+        }
+
+        // if no view is selected, encode and return
+        if (!isset($view)) {
+            return json_encode(['header' => $this->viewVars['header'], 'body' => $body], $jsonOptions);
+        } else {
+            $this->viewVars['body'] = $body;
+            $this->viewVars['_jsonOptions'] = $jsonOptions;
+            return parent::render($view, $layout);
+        }
+    }
+
+    /**
+     * Get Json Options
+     * Build them from view vars or fall back to defaults
+     *
+     * @return int
+     */
+    protected function getJsonOptions() {
         // Use same default json options than JsonView
         if (isset($this->viewVars['_jsonOptions'])) {
             if ($this->viewVars['_jsonOptions'] === false) {
-                $this->viewVars['_jsonOptions'] = 0;
+                $jsonOptions = 0;
+            } else {
+                $jsonOptions = $this->viewVars['_jsonOptions'];
             }
         } else {
-            $this->viewVars['_jsonOptions'] = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT |
+            $jsonOptions = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT |
                 JSON_PARTIAL_OUTPUT_ON_ERROR;
         }
-
-        $return = parent::render($view, $layout);
-
-        // Enable jsonp
-        if (!empty($this->viewVars['_jsonp'])) {
-            $jsonpParam = $this->viewVars['_jsonp'];
-            if ($this->viewVars['_jsonp'] === true) {
-                $jsonpParam = 'callback';
-            }
-            if ($this->request->getQuery($jsonpParam)) {
-                $return = sprintf('%s(%s)', h($this->request->getQuery($jsonpParam)), $return);
-                $this->response->type('js');
-            }
+        if (Configure::read('debug')) {
+            $jsonOptions |= JSON_PRETTY_PRINT;
         }
-
-        return $return;
+        return $jsonOptions;
     }
 }

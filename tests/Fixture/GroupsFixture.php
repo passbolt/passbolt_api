@@ -4,10 +4,10 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * UsersFixture
+ * GroupsFixture
  *
  */
-class UsersFixture extends TestFixture
+class GroupsFixture extends TestFixture
 {
 
     /**
@@ -18,9 +18,7 @@ class UsersFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'role_id' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'username' => ['type' => 'string', 'length' => 50, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'active' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
+        'name' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'deleted' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
@@ -43,13 +41,11 @@ class UsersFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 'e747ca64-f270-4823-8466-eadb9a502f69',
-            'role_id' => 'Lorem ipsum dolor sit amet',
-            'username' => 'Lorem ipsum dolor sit amet',
-            'active' => 1,
+            'id' => '9ae84a0d-e090-47ad-822d-81a1968f2561',
+            'name' => 'Lorem ipsum dolor sit amet',
             'deleted' => 1,
-            'created' => '2017-09-06 04:15:06',
-            'modified' => '2017-09-06 04:15:06',
+            'created' => '2017-09-06 04:06:33',
+            'modified' => '2017-09-06 04:06:33',
             'created_by' => 'Lorem ipsum dolor sit amet',
             'modified_by' => 'Lorem ipsum dolor sit amet'
         ],
