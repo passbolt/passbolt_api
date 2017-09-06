@@ -1,20 +1,21 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
  *
- * Licensed under The MIT License
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @since         3.3.4
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
  */
 namespace App\Controller;
 
 use Cake\Event\Event;
+use Cake\Utility\Text;
 
 /**
  * Error Handling Controller
@@ -34,16 +35,6 @@ class ErrorController extends AppController
     }
 
     /**
-     * beforeFilter callback.
-     *
-     * @param \Cake\Event\Event $event Event.
-     * @return \Cake\Network\Response|null|void
-     */
-    public function beforeFilter(Event $event)
-    {
-    }
-
-    /**
      * beforeRender callback.
      *
      * @param \Cake\Event\Event $event Event.
@@ -53,16 +44,30 @@ class ErrorController extends AppController
     {
         parent::beforeRender($event);
 
-        $this->viewBuilder()->setTemplatePath('Error');
-    }
+        if($this->request->is('json')) {
+            $prefix = $this->request->getParam('prefix');
+            $action = $this->request->getParam('action');
+            $this->set([
+                'header' => [
+                    'id' => Text::uuid(),
+                    'status' => 'error',
+                    'title' => 'app_' . $prefix . '_' . $action . '_error',
+                    'servertime' => time(),
+                    'message' => $this->viewVars['message'],
+                    'code' => $this->viewVars['code'],
+                    'controller' => $prefix,
+                    'action' => $action
+                ],
+                'body' => null, // TODO validation errors if any
+                '_serialize' => ['header', 'body']
+            ]);
 
-    /**
-     * afterFilter callback.
-     *
-     * @param \Cake\Event\Event $event Event.
-     * @return \Cake\Network\Response|null|void
-     */
-    public function afterFilter(Event $event)
-    {
+            // render a legacy JSON view by default
+            $apiVersion = $this->request->getQuery('api-version');
+            if (!isset($apiVersion) || $apiVersion === 'v1') {
+                $this->viewBuilder()->setClassName('LegacyJson');
+            }
+        }
+        $this->viewBuilder()->setTemplatePath('Error');
     }
 }
