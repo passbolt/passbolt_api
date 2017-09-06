@@ -14,8 +14,8 @@
  */
 namespace App\Controller\Component;
 
-use Cake\Controller\Component;
 use App\Model\Entity\Role;
+use Cake\Controller\Component;
 
 class UserComponent extends Component
 {
@@ -24,13 +24,16 @@ class UserComponent extends Component
 
     /**
      * Return the current user role or GUEST if the user is not identified
+     *
      * @return string
      */
-    public function role() {
+    public function role()
+    {
         $role = $this->Auth->user('Role.name');
         if (!isset($role)) {
             return Role::GUEST;
         }
+
         return $role;
     }
 }

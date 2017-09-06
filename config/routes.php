@@ -45,7 +45,13 @@ Router::defaultRouteClass(DashedRoute::class);
 
 Router::prefix('Users', function ($routes) {
     $routes->setExtensions(['json']);
-    $routes->connect('/', ['controller' => 'UserIndex', 'action' => 'index']);
+
+    $routes->connect('/', ['controller' => 'UserIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['controller' => 'UserView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
 });
 
 Router::scope('/', function (RouteBuilder $routes) {

@@ -14,11 +14,11 @@
  */
 namespace App\Model\Table;
 
+use App\Model\Entity\Role;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use App\Model\Entity\Role;
 
 /**
  * Users Model
@@ -153,6 +153,13 @@ class UsersTable extends Table
         return $rules;
     }
 
+    /**
+     * Build the query that fetches data for user index
+     *
+     * @param Query $query a query instance
+     * @param array $options options
+     * @return Query
+     */
     public function findIndex(Query $query, array $options)
     {
         // Default associated data
@@ -178,14 +185,52 @@ class UsersTable extends Table
             }
         }
         $query->where($where);
+
+        return $query;
+    }
+
+    /**
+     * Build the query that fetches data for user view
+     *
+     * @param Query $query a query instance
+     * @param array $options options
+     * @return Query
+     */
+    public function findView(Query $query, array $options)
+    {
+        // Default associated data
+        $query->contain([
+            'Roles',
+            'Profiles',
+            //'Profiles.Avatar',
+            'Gpgkeys',
+            'GroupsUsers'
+        ]);
+
+        // Filter out guests, inactive and deleted users
+        $where = [
+            'Users.deleted' => false,
+            'Users.active' => true,
+            'Roles.name <>' => Role::GUEST,
+            'Users.id' => $options['id']
+        ];
+
+        // if user is admin, we allow seing inactive users via the 'is-active' filter
+        if ($options['role'] === Role::ADMIN) {
+            if (isset($options['filter']['is-active'])) {
+                $where['active'] = ($options['filter']['is-active'] ? true : false);
+            }
+        }
+        $query->where($where);
+
         return $query;
     }
 
     /**
      * Build the query that fetches the user data during authentication
      *
-     * @param Query $query
-     * @param array $options
+     * @param Query $query a query instance
+     * @param array $options options
      * @return Query $query
      */
     public function findAuth(Query $query, array $options)

@@ -14,17 +14,12 @@
  */
 namespace App\View;
 
-use Cake\View\View;
-use Cake\Core\Configure;
 use App\View\Helper\LegacyApiHelper;
+use Cake\Core\Configure;
+use Cake\View\View;
 
 class LegacyJsonView extends View
 {
-    public function initialize()
-    {
-        parent::initialize();
-    }
-
     /**
      * Render a JSON view.
      *
@@ -48,20 +43,28 @@ class LegacyJsonView extends View
     public function render($view = null, $layout = null)
     {
         $jsonOptions = self::getJsonOptions();
+        $body = $this->viewVars['body'];
 
-        // format body object (result set expected)
-        if (isset($this->viewVars['body'])) {
-            $body = LegacyApiHelper::formatResultSet($this->viewVars['body']);
+        // format body object
+        if (isset($body) && is_object($body)) {
+            // ignore anything that is not a result set or entity
+            if (get_parent_class($body) === 'Cake\ORM\Entity') {
+                $name = LegacyApiHelper::getEntityName($body);
+                $body = LegacyApiHelper::formatEntity($body, $name);
+            } elseif (get_class($body) === 'Cake\ORM\Query') {
+                $body = LegacyApiHelper::formatResultSet($body);
+            }
         }
 
         // if no view is selected, encode and return
-        if (!isset($view)) {
+//        if (!isset($view)) {
             return json_encode(['header' => $this->viewVars['header'], 'body' => $body], $jsonOptions);
-        } else {
-            $this->viewVars['body'] = $body;
-            $this->viewVars['_jsonOptions'] = $jsonOptions;
-            return parent::render($view, $layout);
-        }
+//        } else {
+//            $this->viewVars['body'] = $body;
+//            $this->viewVars['_jsonOptions'] = $jsonOptions;
+//
+//            return parent::render($view, $layout);
+//        }
     }
 
     /**
@@ -70,7 +73,8 @@ class LegacyJsonView extends View
      *
      * @return int
      */
-    protected function getJsonOptions() {
+    protected function getJsonOptions()
+    {
         // Use same default json options than JsonView
         if (isset($this->viewVars['_jsonOptions'])) {
             if ($this->viewVars['_jsonOptions'] === false) {
@@ -85,6 +89,7 @@ class LegacyJsonView extends View
         if (Configure::read('debug')) {
             $jsonOptions |= JSON_PRETTY_PRINT;
         }
+
         return $jsonOptions;
     }
 }

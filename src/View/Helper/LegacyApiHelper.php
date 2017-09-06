@@ -14,18 +14,31 @@
  */
 namespace App\View\Helper;
 
-use Cake\View\Helper;
 use Cake\Utility\Inflector;
+use Cake\View\Helper;
 
 class LegacyApiHelper extends Helper
 {
     /**
+     * Return entity name
+     *
+     * @param object $entity Cake\ORM\Entity
+     * @return bool|string
+     */
+    public static function getEntityName($entity)
+    {
+        // example: App\Model\User becomes User
+        return substr(get_class($entity), strrpos(get_class($entity), '\\') + 1);
+    }
+
+    /**
      * Format a model name
      *
-     * @param string $name
+     * @param string $name the model name
      * @return string new name
      */
-    static public function formatModelName($name) {
+    public static function formatModelName($name)
+    {
         $new_name = null;
         if (strpos($name, '_') !== false) {
             // example: groups_users becomes GroupUser
@@ -37,6 +50,7 @@ class LegacyApiHelper extends Helper
             // example: groups becomes Group
             $new_name = ucfirst(Inflector::singularize($name));
         }
+
         return $new_name;
     }
 
@@ -44,28 +58,29 @@ class LegacyApiHelper extends Helper
      * Format an entity to an array
      *
      * @param object $entity Cake\ORM\Entity
-     * @param string $name
+     * @param string $name see getEntityName
      * @return array new entity
      */
-    static public function formatEntity($entity, $name) {
+    public static function formatEntity($entity, $name)
+    {
         $result = [];
         foreach ($entity->visibleProperties() as $property) {
             $value = $entity->get($property);
             if (is_string($value) || is_bool($value) || is_numeric($value) || is_null($value)) {
                 // example: id
                 $result[$name][$property] = $value;
-            } elseif (is_object($value) && get_class($value) === 'Cake\I18n\FrozenTime')  {
+            } elseif (is_object($value) && get_class($value) === 'Cake\I18n\FrozenTime') {
                 // example: modified
                 $result[$name][$property] = $value->toDateTimeString();
-            } elseif(is_object($value) && get_parent_class($value) === 'Cake\ORM\Entity') {
+            } elseif (is_object($value) && get_parent_class($value) === 'Cake\ORM\Entity') {
                 // example: gpgkey
                 $name = self::formatModelName($property);
                 $result[$name] = self::formatEntity($value, $name)[$name];
-            } elseif(is_object($value) && get_class($value) === 'Cake\ORM\Entity') {
+            } elseif (is_object($value) && get_class($value) === 'Cake\ORM\Entity') {
                 // example: scafolded model
                 $name = self::formatModelName($property);
                 $result[$name] = self::formatEntity($value, $name)[$name];
-            } elseif(is_array($value)) {
+            } elseif (is_array($value)) {
                 // example: groups_users
                 $name = self::formatModelName($property);
                 foreach ($value as $i => $entity2) {
@@ -73,23 +88,26 @@ class LegacyApiHelper extends Helper
                 }
             }
         }
+
         return $result;
     }
 
     /**
      * Format a result set to an array
      *
-     * @param $resultSet
+     * @param object $resultSet Cake\ORM\Query
      * @return array new result set
      */
-    static public function formatResultSet($resultSet) {
+    public static function formatResultSet($resultSet)
+    {
         $i = 0;
         $results = [];
         foreach ($resultSet as $entity) {
-            $name = substr(get_class($entity), strrpos(get_class($entity), '\\') + 1);
+            $name = self::getEntityName($entity);
             $results[$i] = self::formatEntity($entity, $name);
             $i++;
         }
+
         return $results;
     }
 }

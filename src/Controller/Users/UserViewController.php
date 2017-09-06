@@ -16,8 +16,10 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Network\Exception\BadRequestException;
+use Cake\Validation\Validation;
 
-class UserIndexController extends AppController
+class UserViewController extends AppController
 {
     /**
      * Before filter
@@ -27,7 +29,7 @@ class UserIndexController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow('index');
+        $this->Auth->allow('view');
 
         return parent::beforeFilter($event);
     }
@@ -35,12 +37,26 @@ class UserIndexController extends AppController
     /**
      * User Index action
      *
+     * @param string $id uuid|me
      * @return void
      */
-    public function index()
+    public function view($id)
     {
+        // Check request sanity
+        if (!Validation::uuid($id)) {
+            if ($id === 'me') {
+                $id = $this->User->id(); // me returns the currently logged-in user
+            } else {
+                throw new BadRequestException(__('The user id is not valid.'));
+            }
+        }
+
+        // Retrieve the user
         $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role()]);
-        $this->success($users);
+        $user = $this->Users->find('view', ['id' => $id, 'role' => $this->User->role() ])->first();
+        if (empty($user)) {
+            throw new NotFoundException(__('The user does not exist.'));
+        }
+        $this->success($user);
     }
 }
