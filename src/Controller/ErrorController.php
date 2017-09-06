@@ -44,7 +44,7 @@ class ErrorController extends AppController
     {
         parent::beforeRender($event);
 
-        if($this->request->is('json')) {
+        if ($this->request->is('json')) {
             $prefix = $this->request->getParam('prefix');
             $action = $this->request->getParam('action');
             $this->set([
