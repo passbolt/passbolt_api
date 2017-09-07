@@ -4,18 +4,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * GroupsUser Entity
+ * AuthenticationToken Entity
  *
  * @property string $id
- * @property string $group_id
+ * @property string $token
  * @property string $user_id
- * @property bool $is_admin
+ * @property bool $active
  * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  *
- * @property \App\Model\Entity\Group $group
  * @property \App\Model\Entity\User $user
  */
-class GroupsUser extends Entity
+class AuthenticationToken extends Entity
 {
 
     /**

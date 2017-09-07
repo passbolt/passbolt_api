@@ -16,6 +16,8 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Network\Exception\InternalErrorException;
+use JsonSchema\Exception\ValidationException;
 
 class UserRegisterController extends AppController
 {
@@ -57,19 +59,31 @@ class UserRegisterController extends AppController
     public function registerPost() {
         // Validate user data
         $this->loadModel('Users');
-        $user = $this->Users->newEntity(
-            $this->request->getData(),
-            ['validate' => 'register']
-        );
-        // Entity failed validation.
+        $user = $this->Users->newEntity($this->request->getData(), ['validate' => 'register']);
+å
+        // If validation fails and request is json return the validation errors
+        // Otherwise render the registration form with the errors
         if ($user->errors()) {
+            if ($this->request->is('json')) {
+                $this->set('errors', $user->errors());
+                throw new ValidationException(__('Could not validate user data'));
+            }
             $this->viewBuilder()
                 ->setTemplatePath('/Users')
                 ->setTemplate('register');
             $this->set('user', $user);
+            return;
         }
-        if ($this->Users->save($user)) {
-            echo 'saved'; die;
-        }
+
+        // Save user and create authentication token
+        // in one transaction
+        $this->Users->getConnection()->transactional(function () use ($user) {
+            if (!$this->Users->save($user)) {
+                throw new InternalErrorException(__('The user could not be saved'));
+            }
+            $this->loadModel('AuthenticationToken');
+            $user = $this->AuthenticationToken->newEntity()
+        });
+        $this->set('user', $user);
     }
 }

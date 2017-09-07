@@ -7,22 +7,21 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * GroupsUsers Model
+ * AuthenticationTokens Model
  *
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Groups
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
- * @method \App\Model\Entity\GroupsUser get($primaryKey, $options = [])
- * @method \App\Model\Entity\GroupsUser newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken get($primaryKey, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\AuthenticationToken findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class GroupsUsersTable extends Table
+class AuthenticationTokensTable extends Table
 {
 
     /**
@@ -35,17 +34,15 @@ class GroupsUsersTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('groups_users');
+        $this->setTable('authentication_tokens');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Groups', [
-            'foreignKey' => 'group_id'
-        ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -58,13 +55,18 @@ class GroupsUsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->scalar('id')
+            ->uuid('id')
             ->allowEmpty('id', 'create');
 
         $validator
-            ->boolean('is_admin')
-            ->requirePresence('is_admin', 'create')
-            ->notEmpty('is_admin');
+            ->scalar('token')
+            ->requirePresence('token', 'create')
+            ->notEmpty('token');
+
+        $validator
+            ->boolean('active')
+            ->requirePresence('active', 'create')
+            ->notEmpty('active');
 
         return $validator;
     }
@@ -78,7 +80,6 @@ class GroupsUsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['group_id'], 'Groups'));
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;

@@ -127,16 +127,6 @@ class UsersTable extends Table
             ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
-        $validator
-            ->uuid('created_by', __('Created by must be a valid UUID.'))
-            ->requirePresence('created_by', 'create', __('Modified by is required.'))
-            ->notEmpty('created_by');
-
-        $validator
-            ->uuid('modified_by', __('Modified by must be a valid UUID.'))
-            ->requirePresence('modified_by', ['create', 'update'])
-            ->notEmpty('modified_by', __('Modified by is required.'));
-
         return $validator;
     }
 

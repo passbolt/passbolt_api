@@ -26,8 +26,6 @@ use Cake\ORM\Entity;
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
- * @property string $created_by
- * @property string $modified_by
  *
  * @property \App\Model\Entity\Role $role
  * @property \App\Model\Entity\AuthenticationToken[] $authentication_tokens
