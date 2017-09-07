@@ -1,6 +1,20 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace App\Model\Table;
 
+use App\Utility\Common;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -72,6 +86,16 @@ class AuthenticationTokensTable extends Table
     }
 
     /**
+     * Register validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRegister(Validator $validator) {
+        return self::validationDefault($validator);
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -83,5 +107,24 @@ class AuthenticationTokensTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
+    }
+
+    /**
+     * Populate token
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if ($options['validate'] === 'register') {
+            // Token is cryptographically secure uuid4
+            // Override if it is set
+            // Do not use Text::uuid
+            $data['token'] = Common::uuid();
+            $data['active'] = true;
+        }
     }
 }

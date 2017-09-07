@@ -80,8 +80,9 @@ class UsersTable extends Table
         $this->hasOne('Gpgkeys', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasOne('Profiles', [
-            'foreignKey' => 'user_id'
+        $this->hasMany('Profiles', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
         ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'user_id'
@@ -230,5 +231,22 @@ class UsersTable extends Table
     public function findAuth(Query $query, array $options)
     {
         return $query->contain(['Roles']);
+    }
+
+    /**
+     * Event fired before request data is converted into entities
+     * Set user to inactive and not deleted on register
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (isset($options['validate']) && $options['validate'] === 'register') {
+            $data['active'] = false;
+            $data['deleted'] = false;
+        }
     }
 }

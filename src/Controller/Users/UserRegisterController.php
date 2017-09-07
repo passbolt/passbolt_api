@@ -31,7 +31,9 @@ class UserRegisterController extends AppController
     {
         $this->Auth->allow('registerGet');
         $this->Auth->allow('registerPost');
-        $this->Auth->allow('registerThankyou');
+
+        $this->loadModel('Users');
+        $this->loadModel('AuthenticationTokens');
 
         return parent::beforeFilter($event);
     }
@@ -44,7 +46,6 @@ class UserRegisterController extends AppController
      */
     public function registerGet()
     {
-        $this->loadModel('Users');
         $this->viewBuilder()
             ->setTemplatePath('/Users')
             ->setTemplate('register');
@@ -58,9 +59,11 @@ class UserRegisterController extends AppController
      */
     public function registerPost() {
         // Validate user data
-        $this->loadModel('Users');
-        $user = $this->Users->newEntity($this->request->getData(), ['validate' => 'register']);
-å
+        $user = $this->Users->newEntity(
+            $this->request->getData(),
+            ['validate' => 'register', 'associated' => ['Profiles']]
+        );
+
         // If validation fails and request is json return the validation errors
         // Otherwise render the registration form with the errors
         if ($user->errors()) {
@@ -81,9 +84,18 @@ class UserRegisterController extends AppController
             if (!$this->Users->save($user)) {
                 throw new InternalErrorException(__('The user could not be saved'));
             }
-            $this->loadModel('AuthenticationToken');
-            $user = $this->AuthenticationToken->newEntity()
+            $this->set('user', $user);
+            $token = $this->AuthenticationTokens->newEntity(
+                ['user_id' => $user->id], ['validate' => 'register']
+            );
+            if (!$this->AuthenticationTokens->save($token)) {
+                throw new InternalErrorException(__('The authentication token could not be saved'));
+            }
+            $this->set('token', $token);
         });
-        $this->set('user', $user);
+
+        $this->viewBuilder()
+            ->setTemplatePath('/Users')
+            ->setTemplate('register_thank_you');
     }
 }
