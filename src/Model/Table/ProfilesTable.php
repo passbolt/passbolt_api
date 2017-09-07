@@ -72,16 +72,29 @@ class ProfilesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('first_name')
             ->requirePresence('first_name', 'create')
-            ->notEmpty('first_name');
+            ->notEmpty('first_name')
+            ->utf8('first_name', 'First name should be a valid utf8 string.')
+            ->maxLength('first_name', 255, __('The first name length should be maximum 254 characters.'));
 
         $validator
-            ->scalar('last_name')
             ->requirePresence('last_name', 'create')
-            ->notEmpty('last_name');
+            ->notEmpty('last_name')
+            ->utf8('last_name', 'Last name should be a valid utf8 string.')
+            ->maxLength('last_name', 255, __('The last name length should be maximum 254 characters.'));
 
         return $validator;
+    }
+
+    /**
+     * Register validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRegister(Validator $validator)
+    {
+        return $this->validationDefault($validator);
     }
 
     /**

@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V200DropUnusedFields extends AbstractMigration
+class V200IncreaseEmailSize extends AbstractMigration
 {
     /**
      * Up
@@ -24,13 +24,8 @@ class V200DropUnusedFields extends AbstractMigration
      */
     public function up()
     {
-        $this->table('profiles')
-            ->removeColumn('gender')
-            ->removeColumn('date_of_birth')
-            ->removeColumn('title')
-            ->removeColumn('timezone')
-            ->removeColumn('locale')
+        $this->table('users')
+            ->changeColumn('username', 'string', array('limit' => 254))
             ->update();
-
     }
 }

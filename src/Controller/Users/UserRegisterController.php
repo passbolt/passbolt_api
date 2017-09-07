@@ -27,28 +27,49 @@ class UserRegisterController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow('register');
+        $this->Auth->allow('registerGet');
+        $this->Auth->allow('registerPost');
+        $this->Auth->allow('registerThankyou');
 
         return parent::beforeFilter($event);
     }
 
     /**
-     * Register user action
+     * Register user action GET
+     * Display a registration form
      *
-     * @return void
+     * @return object \Cake\Http\Response or void
      */
-    public function register()
+    public function registerGet()
     {
-        $this->loadModel('User');
-        $user = $this->User->newEntity();
-        if ($this->request->is('post')) {
-            $user = $this->User->patchEntity($user, $this->request->getData());
-            if ($this->User->save($user)) {
-                $this->Flash->success(__('Your user has been saved.'));
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('Unable to add your user.'));
-        }
+        $this->loadModel('Users');
+        $this->viewBuilder()
+            ->setTemplatePath('/Users')
+            ->setTemplate('register');
+        $user = $this->Users->newEntity();
         $this->set('user', $user);
+    }
+
+    /**
+     * Register user action POST
+     * @return object|void \Cake\Http\Response or void
+     */
+    public function registerPost() {
+        // Validate user data
+        $this->loadModel('Users');
+        $user = $this->Users->newEntity(
+            $this->request->getData(),
+            ['validate' => 'register']
+        );
+        // Entity failed validation.
+        if ($user->errors()) {
+            $this->viewBuilder()
+                ->setTemplatePath('/Users')
+                ->setTemplate('register');
+            $this->set('user', $user);
+        }
+        if ($this->Users->save($user)) {
+            echo 'saved'; die;
+        }
     }
 }

@@ -60,9 +60,13 @@ Router::prefix('Users', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/register', ['controller' => 'UserRegister', 'action' => 'register'])
+    $routes->connect('/register', ['controller' => 'UserRegister', 'action' => 'registerGet'])
         ->setPass(['id'])
-        ->setMethods(['GET','POST']);
+        ->setMethods(['GET']);
+
+    $routes->connect('/register', ['controller' => 'UserRegister', 'action' => 'registerPost'])
+        ->setPass(['id'])
+        ->setMethods(['POST']);
 
 });
 

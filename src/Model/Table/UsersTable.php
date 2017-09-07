@@ -108,13 +108,14 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->scalar('id')
+            ->uuid('id',  __('User id by must be a valid UUID.'))
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('username')
-            ->requirePresence('username', 'create')
-            ->notEmpty('username');
+            ->requirePresence('username', 'create',  __('A username is required.'))
+            ->notEmpty('username', __('A username is required.'))
+            ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
+            ->email('username', true, __('The username should be a valid email address.'));
 
         $validator
             ->boolean('active')
@@ -127,16 +128,27 @@ class UsersTable extends Table
             ->notEmpty('deleted');
 
         $validator
-            ->scalar('created_by')
-            ->requirePresence('created_by', 'create')
+            ->uuid('created_by', __('Created by must be a valid UUID.'))
+            ->requirePresence('created_by', 'create', __('Modified by is required.'))
             ->notEmpty('created_by');
 
         $validator
-            ->scalar('modified_by')
-            ->requirePresence('modified_by', 'create')
-            ->notEmpty('modified_by');
+            ->uuid('modified_by', __('Modified by must be a valid UUID.'))
+            ->requirePresence('modified_by', ['create', 'update'])
+            ->notEmpty('modified_by', __('Modified by is required.'));
 
         return $validator;
+    }
+
+    /**
+     * Register validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRegister(Validator $validator)
+    {
+        return $this->validationDefault($validator);
     }
 
     /**
@@ -199,12 +211,13 @@ class UsersTable extends Table
     /**
      * Find view
      *
-     * @param Query $query
-     * @param array $options
+     * @param Query $query a query instance
+     * @param array $options options
      * @throws Exception if no id is specified
      * @return Query
      */
-    public function findView(Query $query, array $options) {
+    public function findView(Query $query, array $options)
+    {
         // Options must contain an id
         if (!isset($options['id'])) {
             throw new Exception(__('User table findView should have an id set in options.'));

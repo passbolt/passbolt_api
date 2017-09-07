@@ -12,20 +12,24 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-?>
-<h1>Register</h1>
-<?php
-echo $this->Form->create($user, [
-    'context' => [
-        'validator' => [
-            'Users' => 'register',
-            'Profiles' => 'register'
-        ]
-    ]
-]);
-echo $this->Form->control('profile.first_name');
-echo $this->Form->control('profile.last_name');
-echo $this->Form->control('username');
-echo $this->Form->button(__('register'));
-echo $this->Form->end();
-?>
+
+use Migrations\AbstractMigration;
+
+class V200DropUnusedProfileFields extends AbstractMigration
+{
+    /**
+     * Up
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $this->table('profiles')
+            ->removeColumn('gender')
+            ->removeColumn('date_of_birth')
+            ->removeColumn('title')
+            ->removeColumn('timezone')
+            ->removeColumn('locale')
+            ->update();
+    }
+}
