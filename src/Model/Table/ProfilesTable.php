@@ -124,10 +124,10 @@ class ProfilesTable extends Table
     public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
     {
         if (isset($data['first_name'])) {
-            $data['first_name'] = Common::mb_ucfirst($data['first_name']);
+            $data['first_name'] = Common::ucfirst($data['first_name']);
         }
         if (isset($data['last_name'])) {
-            $data['last_name'] = Common::mb_ucfirst($data['last_name']);
+            $data['last_name'] = Common::ucfirst($data['last_name']);
         }
     }
 }

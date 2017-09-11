@@ -80,9 +80,8 @@ class UsersTable extends Table
         $this->hasOne('Gpgkeys', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Profiles', [
+        $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
         ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'user_id'
@@ -109,11 +108,11 @@ class UsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->uuid('id',  __('User id by must be a valid UUID.'))
+            ->uuid('id', __('User id by must be a valid UUID.'))
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('username', 'create',  __('A username is required.'))
+            ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmpty('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
             ->email('username', true, __('The username should be a valid email address.'));
@@ -151,8 +150,12 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['username']));
-        $rules->add($rules->existsIn(['role_id'], 'Roles'));
+        $rules->add($rules->isUnique(['username']), 'uniqueUsername', [
+            'message' => __('This username is already in use.')
+        ]);
+//        $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
+//            'message' => __('This is not a valid role')
+//        ]);
 
         return $rules;
     }

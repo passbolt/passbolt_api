@@ -91,7 +91,8 @@ class AuthenticationTokensTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator) {
+    public function validationRegister(Validator $validator)
+    {
         return self::validationDefault($validator);
     }
 

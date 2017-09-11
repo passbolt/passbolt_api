@@ -15,10 +15,11 @@
 namespace App\Utility;
 
 use Aura\Intl\Exception;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
+use Ramsey\Uuid\Uuid;
 
-class Common {
+class Common
+{
 
     /**
      * Return a UUID v4 or v5
@@ -29,14 +30,15 @@ class Common {
      * @throws Exception if dependencies to generate random uuid are not met
      * @return string uuid4|uuid5
      */
-    static function uuid($seed = null)
+    public static function uuid($seed = null)
     {
-        if (!isset ($seed)) {
+        if (!isset($seed)) {
             // Generate a version 4 (random) UUID object
             // uses random_bytes on php7
             // uses openssl_random_bytes on php5
             try {
                 $uuid4 = Uuid::uuid4();
+
                 return $uuid4->toString();
             } catch (UnsatisfiedDependencyException $e) {
                 throw new Exception('Cannot generate a random UUID, some dependencies are missing.');
@@ -55,9 +57,10 @@ class Common {
      * @param string $string string to convert
      * @return string
      */
-    static function mb_ucfirst($string)
+    public static function ucfirst($string)
     {
         $string = mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1);
+
         return $string;
     }
 }
