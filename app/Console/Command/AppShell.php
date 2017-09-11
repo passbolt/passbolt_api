@@ -37,10 +37,18 @@ class AppShell extends Shell {
     }
 
 /**
- * Execute function
- *
- * @return void
+ * Some of the passbolt commands shouldn't be executed as root.
+ * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
  */
-	public function execute() {
+	public function rootNotAllowed() {
+		if (PROCESS_USER == 'root') {
+			$this->out('<error>Passbolt commands cannot be executed as root.</error>');
+			$this->out('');
+			$this->out('The command should be executed with the same user as your web server.');
+			$this->out('By instance : su -s /bin/bash -c "' . APP . 'Console/cake COMMAND" HTTP_USER');
+			$this->out('HTTP_USER can differ regarding your environment : www-data, nginx, http');
+			exit(1);
+		}
 	}
+
 }

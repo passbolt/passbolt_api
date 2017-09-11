@@ -138,7 +138,7 @@ class InstallShellTest extends CakeTestCase {
  * @return void
  */
 	public function testGpgServerKeyPrivateNotFound() {
-		$privatePath = TMP . DS . 'no_private_key_here.key';
+		$privatePath = TMP . 'no_private_key_here.key';
 		Configure::write('GPG.serverKey.private', $privatePath);
 		$this->setExpectedException('CakeException', 'No private key found at the given path ' . $privatePath);
 		$this->Shell->installationHealthchecks();

@@ -63,12 +63,4 @@ class PassboltShell extends AppShell {
 		return $parser;
 	}
 
-/**
- * Main shell entry point
- *
- * @return bool
- */
-	public function main() {
-	}
-
 }

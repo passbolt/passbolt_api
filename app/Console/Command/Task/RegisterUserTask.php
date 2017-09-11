@@ -58,6 +58,10 @@ class RegisterUserTask extends AppShell {
  * @return void
  */
 	public function execute() {
+		// Root user is not allowed to execute this command.
+		// This command needs to be executed with the same user as the webserver.
+		$this->rootNotAllowed();
+
 		static $count = 0;
 		$count++;
 
