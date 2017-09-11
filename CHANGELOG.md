@@ -6,7 +6,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - feature/PASSBOLT-2371: Force the charset of the cake_sessions table in utf8
 
-[1.6.3] - 2017-08-21
+## [1.6.4] - 2017-08-31
+### Fixed
+- PASSBOLT-2358: As a user registering on the demo instance I must understand the disclaimer
+
+## [1.6.3] - 2017-08-21
 ### Fixed
 - PASSBOLT-2316: Merge the selenium & phpunit dummy data sets
 - PASSBOLT-2317: Speed up dummy secret creation task
@@ -309,7 +313,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.4...HEAD
+[1.6.4]: https://github.com/passbolt/passbolt_api/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/passbolt/passbolt_api/compare/v1.6.2...v1.6.3
 [1.6.2]: https://github.com/passbolt/passbolt_api/compare/v1.6.1...v1.6.2
 [1.6.1]: https://github.com/passbolt/passbolt_api/compare/v1.6.0...v1.6.1
