@@ -245,17 +245,15 @@ class Healthchecks {
          $checks['gpg']['gpgKey'] = (Configure::read('GPG.serverKey.fingerprint') != null);
          $checks['gpg']['gpgKeyNotDefault'] = (Configure::read('GPG.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
 
-         // Check keyring location is set and writable
-		 // If the keyring location has been overridden.
-		 if (!empty(getenv('GNUPGHOME'))) {
-			 $checks['gpg']['info']['gpgHome'] = getenv('GNUPGHOME');
-		 }
-		 // Use the default user .gnupg location.
-		 else {
+         // If no keyring location has been set, use the default one ~/.gnupg.
+		 $gnupgHome = getenv('GNUPGHOME');
+		 if (empty($gnupgHome)) {
 			 $uid = posix_getuid();
 			 $user = posix_getpwuid($uid);
-			 $checks['gpg']['info']['gpgHome'] = $user['dir'] . '/.gnupg';
+			 $gnupgHome = $user['dir'] . '/.gnupg';
 		 }
+
+		 $checks['gpg']['info']['gpgHome'] = $gnupgHome;
 		 $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
 		 $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
 
@@ -286,10 +284,20 @@ class Healthchecks {
 			 $checks['gpg']['gpgKeyPublicEmail'] = Gpgkey::uidContainValidEmail($publicKeyInfo['uid']);
 		 }
 
+		 // Check that the private key is present in the keyring.
+		 $checks['gpg']['gpgKeyPrivateInKeyring'] = false;
+		 if ($checks['gpg']['gpgHome'] && Configure::read('GPG.serverKey.fingerprint')) {
+			 $gpg = new Passbolt\Gpg();
+			 $keyInfo = $gpg->getKeyInfoFromKeyring(Configure::read('GPG.serverKey.fingerprint'));
+			 if (!empty($keyInfo)) {
+				 $checks['gpg']['gpgKeyPrivateInKeyring'] = true;
+			 }
+		 }
+
 		 // Check that the server can be used for encrypting/decrypting
-		 if ($checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint']) {
+		 if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
 			 $_gpg = new gnupg();
-			 $_gpg->addencryptkey( Configure::read('GPG.serverKey.fingerprint'));
+			 $_gpg->addencryptkey(Configure::read('GPG.serverKey.fingerprint'));
 			 $_gpg->addsignkey(Configure::read('GPG.serverKey.fingerprint'), Configure::read('GPG.serverKey.passphrase'));
 			 $messageToEncrypt = 'test message';
 			 $encryptedMessage = '';
@@ -297,14 +305,18 @@ class Healthchecks {
 			 // Try to encrypt a message.
 			 try {
 				 $encryptedMessage = $_gpg->encryptsign($messageToEncrypt);
-				 $checks['gpg']['canEncrypt'] = true;
+				 if ($encryptedMessage !== false) {
+					 $checks['gpg']['canEncrypt'] = true;
+				 } else {
+					 $checks['gpg']['canEncrypt'] = false;
+				 }
 			 }
 			 catch ( Exception $e ) {
 				 $checks['gpg']['canEncrypt'] = false;
 			 }
 
 			 // Try to decrypt the message.
-			 if (!empty($encryptedMessage)) {
+			 if ($checks['gpg']['canEncrypt']) {
 				 $_gpg->adddecryptkey(Configure::read('GPG.serverKey.fingerprint'), Configure::read('GPG.serverKey.passphrase'));
 				 $decryptedMessage = '';
 
@@ -319,16 +331,6 @@ class Healthchecks {
 				 catch ( Exception $e ) {
 					 $checks['gpg']['canDecrypt'] = false;
 				 }
-			 }
-		 }
-
-		 // Check that the private key is present in the keyring.
-		 $checks['gpg']['gpgKeyPrivateInKeyring'] = false;
-		 if ($checks['gpg']['gpgHome'] && Configure::read('GPG.serverKey.fingerprint')) {
-			 $gpg = new Passbolt\Gpg();
-			 $keyInfo = $gpg->getKeyInfoFromKeyring(Configure::read('GPG.serverKey.fingerprint'));
-			 if (!empty($keyInfo)) {
-				 $checks['gpg']['gpgKeyPrivateInKeyring'] = true;
 			 }
 		 }
 

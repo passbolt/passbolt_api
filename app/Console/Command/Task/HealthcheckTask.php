@@ -572,7 +572,7 @@ class HealthcheckTask extends AppShell {
 			[
 				__('Import the private server key in the keyring of the user the webserver is running as.'),
 				__('you can try:'),
-				'sudo su -s /bin/bash -c "gpg --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . ' --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER
+				'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER
 			]
 		);
 		$this->assert(
@@ -582,15 +582,15 @@ class HealthcheckTask extends AppShell {
 			__('Edit or generate another key with a valid email id.')
 		);
 
-		if ($checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint']) {
+		if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
 			$this->assert(
 				$checks['gpg']['canEncrypt'],
 				__('The public key can be used to encrypt and sign a message.'),
 				__('The public key cannot be used to encrypt and sign a message'),
-				__('Make sure that the server public key is valid.')
+				__('Make sure that the server public key is valid and that there is no passphrase.')
 			);
 
-			if ($checks['gpg']['canDecrypt']) {
+			if ($checks['gpg']['canEncrypt']) {
 				$this->assert(
 					$checks['gpg']['canDecrypt'],
 					__('The private key can be used to decrypt a message.'),
