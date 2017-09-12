@@ -581,6 +581,24 @@ class HealthcheckTask extends AppShell {
 			__('The server key does not have a valid email id.'),
 			__('Edit or generate another key with a valid email id.')
 		);
+
+		if ($checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint']) {
+			$this->assert(
+				$checks['gpg']['canEncrypt'],
+				__('The public key can be used to encrypt and sign a message.'),
+				__('The public key cannot be used to encrypt and sign a message'),
+				__('Make sure that the server public key is valid.')
+			);
+
+			if ($checks['gpg']['canDecrypt']) {
+				$this->assert(
+					$checks['gpg']['canDecrypt'],
+					__('The private key can be used to decrypt a message.'),
+					__('The private key cannot be used to decrypt a message'),
+					__('Make sure that the server private key is valid and that there is no passphrase.')
+				);
+			}
+		}
     }
 
 /**

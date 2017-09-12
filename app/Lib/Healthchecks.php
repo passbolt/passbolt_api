@@ -286,6 +286,42 @@ class Healthchecks {
 			 $checks['gpg']['gpgKeyPublicEmail'] = Gpgkey::uidContainValidEmail($publicKeyInfo['uid']);
 		 }
 
+		 // Check that the server can be used for encrypting/decrypting
+		 if ($checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint']) {
+			 $_gpg = new gnupg();
+			 $_gpg->addencryptkey( Configure::read('GPG.serverKey.fingerprint'));
+			 $_gpg->addsignkey(Configure::read('GPG.serverKey.fingerprint'), Configure::read('GPG.serverKey.passphrase'));
+			 $messageToEncrypt = 'test message';
+			 $encryptedMessage = '';
+
+			 // Try to encrypt a message.
+			 try {
+				 $encryptedMessage = $_gpg->encryptsign($messageToEncrypt);
+				 $checks['gpg']['canEncrypt'] = true;
+			 }
+			 catch ( Exception $e ) {
+				 $checks['gpg']['canEncrypt'] = false;
+			 }
+
+			 // Try to decrypt the message.
+			 if (!empty($encryptedMessage)) {
+				 $_gpg->adddecryptkey(Configure::read('GPG.serverKey.fingerprint'), Configure::read('GPG.serverKey.passphrase'));
+				 $decryptedMessage = '';
+
+				 try {
+					 $_gpg->decryptverify($encryptedMessage, $decryptedMessage);
+					 if ($decryptedMessage !== $messageToEncrypt) {
+						 $checks['gpg']['canDecrypt'] = false;
+					 } else {
+						 $checks['gpg']['canDecrypt'] = true;
+					 }
+				 }
+				 catch ( Exception $e ) {
+					 $checks['gpg']['canDecrypt'] = false;
+				 }
+			 }
+		 }
+
 		 // Check that the private key is present in the keyring.
 		 $checks['gpg']['gpgKeyPrivateInKeyring'] = false;
 		 if ($checks['gpg']['gpgHome'] && Configure::read('GPG.serverKey.fingerprint')) {
