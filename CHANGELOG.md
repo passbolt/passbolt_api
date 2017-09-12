@@ -4,10 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- feature/PASSBOLT-2371: Force the charset of the cake_sessions table in utf8
-- feature/PASSBOLT-2325: As system administrator I shouldn't be able to execute passbolt CLI commands as root
-- feature/PASSBOLT-2397: As system administrator I should see in the healthcheck if app/tmp content and app/webroot/img/public content are writable
-- feature/PASSBOLT-1991: As system administrator I should see in the healthcheck if the server key can be used for encrypting/decrypting
+- PASSBOLT-2371: Force the charset of the cake_sessions table in utf8
+- PASSBOLT-2325: As system administrator I shouldn't be able to execute passbolt CLI commands as root
+- PASSBOLT-2397: As system administrator I should see in the healthcheck if app/tmp content and app/webroot/img/public content are writable
+- PASSBOLT-1991: As system administrator I should see in the healthcheck if the server key can be used for encrypting/decrypting
+- PASSBOLT-2383: Add + and \ to the list of allowed characters for the Resource fields : name, username and description
 
 ## [1.6.4] - 2017-08-31
 ### Fixed

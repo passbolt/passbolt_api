@@ -75,7 +75,7 @@ class ResourceTest extends AppTestCase {
 			"txt\nwith\nnew\nlines" => false,
 			// Special characters
 			',.-_([)]\'{}:"' => true,
-			'?!#&' => true,
+			'?!#&+\\' => true,
 			// HTML entities
 			'<>' => false,
 			// JSON
@@ -129,7 +129,7 @@ class ResourceTest extends AppTestCase {
 			"txt\nwith\nnew\nlines" => false,
 			// Special characters
 			',.-_([)]\'{}:"' => true,
-			'?!#&' => true,
+			'?!#&+\\' => true,
 			// HTML entities.
 			'<>' => false,
 			// JSON
@@ -239,7 +239,7 @@ class ResourceTest extends AppTestCase {
 			"txt\nwith\nnew\nlines" => true,
 			// Special characters
 			',.-_([)]\'{}":' => true,
-			'?!#&' => true,
+			'?!#&+\\' => true,
 			'<>' => false,
 			// Digit accepted
 			'0123456789' => true,
