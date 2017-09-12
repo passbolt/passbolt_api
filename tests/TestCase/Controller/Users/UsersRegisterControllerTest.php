@@ -57,7 +57,6 @@ class UsersRegisterControllerTest extends IntegrationTestCase
         $roles = TableRegistry::get('Roles');
         $role = $roles->get($user->get('role_id'));
         $this->assertEquals(Role::USER, $role->name);
-
     }
 
     public function testUserRegisterPostFailValidation()
@@ -108,7 +107,8 @@ class UsersRegisterControllerTest extends IntegrationTestCase
         }
     }
 
-    public function testUserRegisterPostSafeguard() {
+    public function testUserRegisterPostSafeguard()
+    {
         // TODO check one cannot override the following fields
         // id, active, deleted, created, modified, role
         $this->markTestIncomplete();

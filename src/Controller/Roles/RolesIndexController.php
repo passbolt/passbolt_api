@@ -41,10 +41,7 @@ class RolesIndexController extends AppController
     public function index()
     {
         $this->loadModel('Roles');
-        $roles = $this->Roles
-            ->find('all')
-            ->cache('all_roles')
-            ->all();
+        $roles = $this->Roles->find('all');
         $this->success($roles);
     }
 }
