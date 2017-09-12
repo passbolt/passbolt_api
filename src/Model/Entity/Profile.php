@@ -23,7 +23,6 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property string $first_name
  * @property string $last_name
- * @property string $locale
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  *
@@ -31,7 +30,6 @@ use Cake\ORM\Entity;
  */
 class Profile extends Entity
 {
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -42,7 +40,9 @@ class Profile extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'id' => false,
+        'user_id' => false,
+        'first_name' => false,
+        'last_name' => false
     ];
 }

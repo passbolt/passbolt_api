@@ -17,14 +17,12 @@ class AuthenticationTokensFixture extends TestFixture
      */
     // @codingStandardsIgnoreStart
     public $fields = [
-        'id' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'token' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'user_id' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'id' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'token' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
+        'user_id' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'active' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '1', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        'created_by' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
-        'modified_by' => ['type' => 'string', 'length' => 36, 'null' => false, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
         ],
@@ -42,14 +40,12 @@ class AuthenticationTokensFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '067cb2b2-a132-47a3-bfc8-2454ec0c741b',
-            'token' => 'Lorem ipsum dolor sit amet',
-            'user_id' => 'Lorem ipsum dolor sit amet',
+            'id' => '6db3d37c-cd90-4e87-9357-c1ccdfdbe42e',
+            'token' => '99fab90b-55be-40da-bc94-f516e2e40f57',
+            'user_id' => '679a0cfc-b603-466c-998d-212089a5f9d5',
             'active' => 1,
-            'created' => '2017-09-07 07:24:25',
-            'modified' => '2017-09-07 07:24:25',
-            'created_by' => 'Lorem ipsum dolor sit amet',
-            'modified_by' => 'Lorem ipsum dolor sit amet'
+            'created' => '2017-09-12 05:03:14',
+            'modified' => '2017-09-12 05:03:14'
         ],
     ];
 }

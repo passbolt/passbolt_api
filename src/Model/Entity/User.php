@@ -50,7 +50,12 @@ class User extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'id' => false,
+        'username' => false,
+        'active' => false,
+        'deleted' => false,
+
+        // associated data
+        'profile' => false
     ];
 }

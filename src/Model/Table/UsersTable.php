@@ -127,6 +127,10 @@ class UsersTable extends Table
             ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
+        $validator
+            ->requirePresence('profile', 'create')
+            ->notEmpty('profile');
+
         return $validator;
     }
 

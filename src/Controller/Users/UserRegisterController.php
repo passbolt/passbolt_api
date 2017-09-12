@@ -16,6 +16,7 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use JsonSchema\Exception\ValidationException;
 
@@ -91,8 +92,8 @@ class UserRegisterController extends AppController
         // Otherwise render the registration form with the errors
         if ($user->getErrors()) {
             if ($this->request->is('json')) {
-                $this->set('errors', $user->errors());
-                throw new ValidationException(__('Could not validate user data'));
+                $this->set('errors', $user->getErrors());
+                throw new BadRequestException(__('Could not validate user data.'));
             } else {
                 $this->viewBuilder()
                     ->setTemplatePath('/Users')
@@ -115,7 +116,22 @@ class UserRegisterController extends AppController
         // Build entity and perform basic check
         $user = $this->Users->newEntity(
             $this->request->getData(),
-            ['validate' => 'register', 'associated' => ['Profiles']]
+            [
+                'validate' => 'register',
+                'accessibleFields' => [
+                    'username' => true,
+                    'profile' => true
+                ],
+                'associated' => [
+                    'Profiles' => [
+                        'validate' => 'register',
+                        'accessibleFields' => [
+                            'first_name' => true,
+                            'last_name' => true
+                        ]
+                    ]
+                ]
+            ]
         );
         $this->set('user', $user);
 
@@ -141,8 +157,8 @@ class UserRegisterController extends AppController
             ['user_id' => $user->id],
             ['validate' => 'register']
         );
-        if (!$this->AuthenticationTokens->save($token)) {
-            throw new InternalErrorException(__('The authentication token could not be saved'));
+        if (!$this->AuthenticationTokens->save($token, ['checkRules' => false, 'atomic' => false])) {
+            throw new InternalErrorException(__('The authentication token could not be saved.'));
         }
         $this->set('token', $token);
 
@@ -161,7 +177,7 @@ class UserRegisterController extends AppController
         $result = $this->Users->save($user, ['checkRules' => false, 'atomic' => false]);
         $this->set('user', $user);
         if (!$result) {
-            throw new InternalErrorException(__('The user could not be saved'));
+            throw new InternalErrorException(__('The user could not be saved.'));
         }
     }
 
