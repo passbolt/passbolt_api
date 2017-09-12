@@ -14,10 +14,11 @@
  */
 namespace App\Test\TestCase\Controller;
 
+use App\Model\Entity\Role;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
 
-class UserRegisterControllerTest extends IntegrationTestCase
+class UsersRegisterControllerTest extends IntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
 
@@ -43,11 +44,20 @@ class UserRegisterControllerTest extends IntegrationTestCase
         $users = TableRegistry::get('Users');
         $query = $users->find()->where(['username' => $data['username']]);
         $this->assertEquals(1, $query->count());
+        $user = $query->first();
+        $this->assertFalse($user->active);
+        $this->assertFalse($user->deleted);
 
         // Check profile exist
         $profiles = TableRegistry::get('Profiles');
         $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
         $this->assertEquals(1, $query->count());
+
+        // Check role exist
+        $roles = TableRegistry::get('Roles');
+        $role = $roles->get($user->get('role_id'));
+        $this->assertEquals(Role::USER, $role->name);
+
     }
 
     public function testUserRegisterPostFailValidation()
@@ -100,7 +110,7 @@ class UserRegisterControllerTest extends IntegrationTestCase
 
     public function testUserRegisterPostSafeguard() {
         // TODO check one cannot override the following fields
-        // id, active, deleted, created, modified
+        // id, active, deleted, created, modified, role
         $this->markTestIncomplete();
     }
 }

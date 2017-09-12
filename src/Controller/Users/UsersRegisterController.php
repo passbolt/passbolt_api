@@ -20,7 +20,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use JsonSchema\Exception\ValidationException;
 
-class UserRegisterController extends AppController
+class UsersRegisterController extends AppController
 {
     /**
      * Before filter
@@ -120,7 +120,10 @@ class UserRegisterController extends AppController
                 'validate' => 'register',
                 'accessibleFields' => [
                     'username' => true,
-                    'profile' => true
+                    'profile' => true,
+                    'active' => true, // reset in beforeMarshal
+                    'deleted' => true, // idem
+                    'role_id' => true, // idem
                 ],
                 'associated' => [
                     'Profiles' => [

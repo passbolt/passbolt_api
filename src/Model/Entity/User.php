@@ -54,6 +54,7 @@ class User extends Entity
         'username' => false,
         'active' => false,
         'deleted' => false,
+        'role_id' => false,
 
         // associated data
         'profile' => false

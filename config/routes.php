@@ -44,32 +44,48 @@ use Cake\Routing\Route\DashedRoute;
 Router::defaultRouteClass(DashedRoute::class);
 
 
-// User registration
+/**
+ * Shorthands and legacy redirect
+ */
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->redirect('register', 'users/register');
 });
 
-// User prefixed routes
+/**
+ * Roles prefixed routes
+ */
 Router::prefix('Users', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'UserIndex', 'action' => 'index'])
+    $routes->connect('/', ['controller' => 'UsersIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['controller' => 'UserView', 'action' => 'view'])
+    $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/register', ['controller' => 'UserRegister', 'action' => 'registerGet'])
+    $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerGet'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/register', ['controller' => 'UserRegister', 'action' => 'registerPost'])
+    $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
-
 });
 
+/**
+ * Roles prefixed routes
+ */
+Router::prefix('Roles', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
+/**
+ * Other default routes
+ */
 Router::scope('/', function (RouteBuilder $routes) {
     /**
      * Here, we are connecting '/' (base path) to a controller called 'Pages',

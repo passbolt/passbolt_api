@@ -20,7 +20,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
-class UserViewController extends AppController
+class UsersViewController extends AppController
 {
     /**
      * Before filter

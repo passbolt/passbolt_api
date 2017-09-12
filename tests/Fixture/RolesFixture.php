@@ -40,11 +40,29 @@ class RolesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => 'd44a8469-177b-4a4f-8217-b86941fe68f1',
-            'name' => 'Lorem ipsum dolor sit amet',
-            'description' => 'Lorem ipsum dolor sit amet',
-            'created' => '2017-09-12 05:04:02',
-            'modified' => '2017-09-12 05:04:02'
-        ],
+            'id' => "23d941d5-3676-3443-afdb-aaf2456f3b49",
+            'name' => "admin",
+            'description' => "Organization administrator",
+            'created' => "2012-07-04T13:39:25+00:00",
+            'modified' => "2012-07-04T13:39:25+00:00",
+        ],[
+            'id'  => "49aad81e-4f70-3380-a92e-12292597409f",
+            'name' => "guest",
+            'description' => "Non logged in user",
+            'created' => "2012-07-04T13:39:25+00:00",
+            'modified' => "2012-07-04T13:39:25+00:00",
+        ],[
+            'id'  => "857760a6-4f9d-3f1b-a292-95b630bcf03f",
+            'name' => "root",
+            'description' => "Super Administrator",
+            'created' => "2012-07-04T13:39:25+00:00",
+            'modified' => "2012-07-04T13:39:25+00:00"
+        ],[
+            'id'  => "d1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc",
+            'name' => "user",
+            'description' => "Logged in user",
+            'created' => "2012-07-04T13:39:25+00:00",
+            'modified' => "2012-07-04T13:39:25+00:00",
+        ]
     ];
 }

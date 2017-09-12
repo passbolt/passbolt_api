@@ -15,6 +15,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Role;
+use App\Model\Table\RolesTable;
 use Aura\Intl\Exception;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -157,9 +158,9 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['username']), 'uniqueUsername', [
             'message' => __('This username is already in use.')
         ]);
-//        $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-//            'message' => __('This is not a valid role')
-//        ]);
+        $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
+            'message' => __('This is not a valid role')
+        ]);
 
         return $rules;
     }
@@ -252,8 +253,15 @@ class UsersTable extends Table
     public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
     {
         if (isset($options['validate']) && $options['validate'] === 'register') {
+            // Do not allow the user to set these flags
             $data['active'] = false;
             $data['deleted'] = false;
+
+            // Set role to Role::USER by default
+            $role = $this->Roles->find('all')
+                ->where(['name' => Role::USER])
+                ->first();
+            $data['role_id'] = $role->id;
         }
     }
 }

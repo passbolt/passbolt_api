@@ -17,7 +17,7 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use Cake\Event\Event;
 
-class UserIndexController extends AppController
+class UsersIndexController extends AppController
 {
     /**
      * Before filter
