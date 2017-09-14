@@ -1,2 +1,0 @@
-1504608582
-a:20:{i:0;s:21:"authentication_tokens";i:1;s:8:"comments";i:2;s:15:"controller_logs";i:3;s:11:"email_queue";i:4;s:9:"favorites";i:5;s:12:"file_storage";i:6;s:7:"gpgkeys";i:7;s:6:"groups";i:8;s:12:"groups_users";i:9;s:11:"permissions";i:10;s:17:"permissions_types";i:11;s:8:"phinxlog";i:12;s:8:"profiles";i:13;s:9:"resources";i:14;s:5:"roles";i:15;s:17:"schema_migrations";i:16;s:7:"secrets";i:17;s:11:"user_agents";i:18;s:5:"users";i:19;s:27:"users_resources_permissions";}
