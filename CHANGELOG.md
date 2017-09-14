@@ -13,6 +13,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2325: As system administrator I shouldn't be able to execute passbolt CLI commands as root
 - PASSBOLT-2397: As system administrator I should see in the healthcheck if app/tmp content and app/webroot/img/public content are writable
 - PASSBOLT-1991: As system administrator I should see in the healthcheck if the server key can be used for encrypting/decrypting
+
+### Security
 - PASSBOLT-2409: Noopener on resource url in password workspace
 - PASSBOLT-2402: XSS on resource url in password workspace
 
