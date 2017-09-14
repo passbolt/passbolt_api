@@ -1,13 +1,11 @@
 <?php
 /**
- * Insert Permission Task.
+ * Insert Large Permission Task.
  * This is a temporary file that replaces the permissions on group and categories.
  * This is following the decision to scale down the number of features for the release.
  *
- * @copyright (c) 2015 Bolt Softwares Pvt Ltd
+ * @copyright (c) 2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataTests.Console.Command.Task.PermissionTask
- * @since        version 2.12.11
  */
 
 require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');

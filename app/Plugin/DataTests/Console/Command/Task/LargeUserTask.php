@@ -1,11 +1,9 @@
 <?php
 /**
- * Insert User Task
+ * Insert Large User Task
  *
- * @copyright (c) 2015 Bolt Softwares Pvt Ltd
+ * @copyright (c) 2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataExtras.Console.Command.Task.UserTask
- * @since        version 2.12.11
  */
 
 require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');

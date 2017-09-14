@@ -1,11 +1,9 @@
 <?php
 /**
- * Insert GroupUser Task
+ * Insert Large GroupUser Task
  *
- * @copyright (c) 2015 Bolt Softwares Pvt Ltd
+ * @copyright (c) 2017-present Passbolt SARL
  * @licence GNU Affero General Public License http://www.gnu.org/licenses/agpl-3.0.en.html
- * @package      app.plugins.DataTests.Console.Command.Task.GroupUserTask
- * @since        version 2.12.11
  */
 
 require_once(ROOT . DS . APP_DIR . DS . 'Console' . DS . 'Command' . DS . 'Task' . DS . 'ModelTask.php');
