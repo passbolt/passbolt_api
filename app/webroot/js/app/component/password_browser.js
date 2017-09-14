@@ -170,7 +170,7 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				mad.helper.Html.create(
 					cellElement,
 					'inside_replace',
-					'<a href="' + uri.toString() + '" target="_blank">' + cellValue + '</a>'
+					'<a href="' + uri.toString() + '" target="_blank" rel="noopener">' + cellValue + '</a>'
 				);
 			}
 		}), new mad.model.GridColumn({
