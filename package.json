@@ -1,6 +1,6 @@
 {
 	"name": "Passbolt",
-	"version": "1.6.3",
+	"version": "1.6.5",
 	"license": "AGPL-3.0",
 	"homepage": "https://www.passbolt.com",
 	"dependencies": {

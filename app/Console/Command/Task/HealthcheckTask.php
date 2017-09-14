@@ -103,6 +103,10 @@ class HealthcheckTask extends AppShell {
  * @return void
  */
 	public function execute() {
+		// Root user is not allowed to execute this command.
+		// This command needs to be executed with the same user as the webserver.
+		$this->rootNotAllowed();
+
         $results = [];
 
         // display options
@@ -167,17 +171,29 @@ class HealthcheckTask extends AppShell {
             __('PCRE has not been compiled with Unicode support'),
             __('Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring')
         );
-        $this->assert(
-            $checks['environment']['tmpWritable'],
-            __('The app/tmp directory is writable'),
-            __('The app/tmp directory is not writable'),
-            __('try: chmod -R 770 app/tmp')
-        );
+		$this->assert(
+			$checks['environment']['tmpWritable'],
+			__('The temporary directory and its content are writable'),
+			__('The temporary directory and its content are not writable'),
+			[
+				__('Ensure the temporary directory and its content are writable by the user the webserver is running as.'),
+				__('you can try:'),
+				'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . APP . 'tmp',
+				'sudo chmod 775 $(find ' . APP . 'tmp -type d)',
+				'sudo chmod 664 $(find ' . APP . 'tmp -type f)',
+			]
+		);
         $this->assert(
             $checks['environment']['imgPublicWritable'],
-            __('The app/webroot/img/public directory is writable'),
-            __('The app/webroot/img/public directory is not writable'),
-            __('try: chmod -R 770 app/webroot/img/public')
+            __('The public image directory and its content are writable'),
+            __('The public image directory and its content are not writable'),
+			[
+				__('Ensure the public image directory and its content are writable by the user the webserver is running as.'),
+				__('you can try:'),
+				'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . IMAGES . 'public',
+				'sudo chmod 775 $(find ' . IMAGES . 'public -type d)',
+				'sudo chmod 664 $(find ' . IMAGES . 'public -type f)',
+			]
         );
     }
 
@@ -195,35 +211,35 @@ class HealthcheckTask extends AppShell {
         $this->assert(
             $checks['configFile']['core'],
             __('The core config file is present'),
-            __('The core config file is missing in app/Core'),
+            __('The core config file is missing in %s', APP . 'Config'),
             [
-                __('Copy %s to %s', 'app/Config/core.php.default', 'app/Config/core.php'),
+                __('Copy %s to %s', APP . 'Config/core.php.default', APP . 'Config/core.php'),
                 __('Set the App.fullBaseUrl, Security.cipherSeed, and Security.salt')
             ]
         );
         $this->assert(
             $checks['configFile']['database'],
             __('The database config file is present'),
-            __('The database config file is missing in app/Core'),
+            __('The database config file is missing in %s', APP . 'Config'),
             [
-                __('Copy %s to %s', 'app/Config/database.php.default', 'app/Config/database.php'),
+                __('Copy %s to %s', APP . 'Config/database.php.default', APP . 'Config/database.php'),
                 __('Set the host, database, username, password')
             ]
         );
         $this->assert(
             $checks['configFile']['email'],
             __('The email config file is present'),
-            __('The email config file is missing in app/Config'),
+            __('The email config file is missing in %s', APP . 'Config'),
             [
-                __('Copy %s to %s', 'app/Config/email.php.default', 'app/Config/email.php'),
+                __('Copy %s to %s', APP . 'Config/email.php.default', APP . 'Config/email.php'),
                 __('Set the SMTP host, username, password and more if needed')
             ]
         );
         $this->assert(
             $checks['configFile']['app'],
             __('The application config file is present'),
-            __('The application config file is missing in app/Core'),
-            __('Copy %s to %s', 'app/Config/app.php.default', 'app/Config/app.php')
+            __('The application config file is missing in %s', APP . 'Config'),
+            __('Copy %s to %s',  APP . 'Config/app.php.default',  APP . 'Config/app.php')
         );
     }
 
@@ -260,7 +276,7 @@ class HealthcheckTask extends AppShell {
             $checks['core']['cipherSeed'],
             __('Unique value set for security.cipherSeed'),
             __('Default value found for security.cipherSeed'),
-            __('Edit the security.salt in %s', 'app/Config/core.php')
+            __('Edit the security.cipherSeed in %s', 'app/Config/core.php')
         );
         $this->assert(
             $checks['core']['fullBaseUrl'],
@@ -357,14 +373,17 @@ class HealthcheckTask extends AppShell {
             __('No table found'),
             [
                 __('Run the install script to install the database tables'),
-                'su -s /bin/bash -c "./app/Console/cake install" www-data'
+                'sudo su -s /bin/bash -c "' . APP . 'Console/cake install" ' . PROCESS_USER
             ]
         );
         $this->assert(
             $checks['database']['defaultContent'],
             __('Some default content is present'),
             __('No default content found'),
-            __('Run the install script to set the default content such as roles and permission types')
+			[
+				__('Run the install script to set the default content such as roles and permission types'),
+				'sudo su -s /bin/bash -c "' . APP . 'Console/cake install" ' . PROCESS_USER
+			]
         );
         $this->assert(
             $checks['application']['schema'],
@@ -372,7 +391,7 @@ class HealthcheckTask extends AppShell {
             __('The database schema is not up to date.'),
             [
                 __('Run the migration scripts:'),
-                './app/Console/cake Migrations.migration run all',
+				'sudo su -s /bin/bash -c "' . APP . 'Console/cake Migrations.migration run all" ' . PROCESS_USER,
                 __('See. https://www.passbolt.com/help/tech/update')
             ]
         );
@@ -483,40 +502,77 @@ class HealthcheckTask extends AppShell {
                 $checks['gpg']['gpgKey'],
                 __('The server gpg key is set'),
                 __('The server gpg key is not set'),
-                __('Create a key, export it and add the fingerprint to app/Config/app.php')
+				[
+					__('Create a key, export it and add the fingerprint to app/Config/app.php'),
+					__('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+				]
             );
         }
         $this->assert(
             $checks['gpg']['gpgHome'],
             __('The environment variable GNUPGHOME is set to %s', $checks['gpg']['info']['gpgHome']),
-            __('The environment variable GNUPGHOME is not set'),
-            __('Edit app/config.php with the location of the gnupg keyring.')
+            __('The environment variable GNUPGHOME is set to %s, but the directory doesn\'t exist.', $checks['gpg']['info']['gpgHome']),
+			[
+				__('Ensure the keyring location exists and is accessible by the user the webserver is running as.'),
+				__('you can try:'),
+				'sudo mkdir ' . $checks['gpg']['info']['gpgHome'],
+				'sudo chown -R '. PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
+				'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
+				__('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in app/Config/app.php.'),
+			]
         );
-        $processUser = posix_getpwuid(posix_geteuid());
-        $this->assert(
-            $checks['gpg']['gpgHomeWritable'],
-            __('The directory containing the keyring is writable by %s.', $processUser['name']),
-            __('The directory containing the keyring is not writable by %s.', $processUser['name']),
-            __('Double check the keyring location and the permission.')
-        );
-
+		if ($checks['gpg']['gpgHome']) {
+			$this->assert(
+				$checks['gpg']['gpgHomeWritable'],
+				__('The directory %s containing the keyring is writable by the user the webserver is running as.', $checks['gpg']['info']['gpgHome']),
+				__('The directory %s containing the keyring is not writable by the user the webserver is running as.', $checks['gpg']['info']['gpgHome']),
+				[
+					__('Ensure the keyring location is accessible by the user the webserver is running as.'),
+					__('you can try:'),
+					'sudo chown -R '. PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
+					'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
+				]
+			);
+		}
 		$this->assert(
 			$checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'],
 			__('The public key file is defined in app/config.php and readable.'),
-			__('The public key file is not defined in app/config.php or not readable.')
+			__('The public key file is not defined in app/config.php or not readable.'),
+			[
+				__('Ensure the public key file is defined by the variable GPG.serverKey.public in app/Config/app.php.'),
+				__('Ensure the public key defined in app/Config/app.php exists and is accessible by the user the webserver is running as.'),
+				__('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+			]
 		);
 		$this->assert(
 			$checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'],
-			__('The public key file is defined in app/config.php and readable.'),
-			__('The public key file is not defined in app/config.php or not readable.')
+			__('The private key file is defined in app/config.php and readable.'),
+			__('The public key file is not defined in app/config.php or not readable.'),
+			[
+				__('Ensure the private key file is defined by the variable GPG.serverKey.private in app/Config/app.php.'),
+				__('Ensure the private key defined in app/Config/app.php exists and is accessible by the user the webserver is running as.'),
+				__('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+			]
 		);
 		$this->assert(
 			$checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint'],
 			__('The server key fingerprint matches the one defined in app/config.php.'),
-			__('e'),
+			__('The server key fingerprint doesn\'t match the one defined in app/config.php.'),
 			[
 				__('Double check the key fingerprint, example: '),
-				"sudo su -s /bin/bash -c \"gpg --list-keys --fingerprint --home /home/www-data/.gnupg\" www-data | grep -i -B 2 'Passbolt Server'"
+				'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',
+				__('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
+				__('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+			]
+		);
+		$this->{$checks['database']['tablesCount']?'assert':'warn'}(
+			$checks['gpg']['gpgKeyPrivateInKeyring'],
+			__('The server key defined in the app/Config.php is in the keyring.'),
+			__('The server key defined in the app/Config.php is not in the keyring'),
+			[
+				__('Import the private server key in the keyring of the user the webserver is running as.'),
+				__('you can try:'),
+				'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER
 			]
 		);
 		$this->assert(
@@ -525,6 +581,24 @@ class HealthcheckTask extends AppShell {
 			__('The server key does not have a valid email id.'),
 			__('Edit or generate another key with a valid email id.')
 		);
+
+		if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
+			$this->assert(
+				$checks['gpg']['canEncrypt'],
+				__('The public key can be used to encrypt and sign a message.'),
+				__('The public key cannot be used to encrypt and sign a message'),
+				__('Make sure that the server public key is valid and that there is no passphrase.')
+			);
+
+			if ($checks['gpg']['canEncrypt']) {
+				$this->assert(
+					$checks['gpg']['canDecrypt'],
+					__('The private key can be used to decrypt a message.'),
+					__('The private key cannot be used to decrypt a message'),
+					__('Make sure that the server private key is valid and that there is no passphrase.')
+				);
+			}
+		}
     }
 
 /**

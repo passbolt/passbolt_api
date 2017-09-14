@@ -98,7 +98,11 @@ class InstallShell extends AppShell {
  * @return bool
  */
 	public function main() {
-        $this->out(' Install shell');
+		// Root user is not allowed to execute this command.
+		// This command needs to be executed with the same user as the webserver.
+		$this->rootNotAllowed();
+
+		$this->out(' Install shell');
         $this->hr();
 
 		// Perform a sanity check and init gnupg keyring

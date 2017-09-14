@@ -52,7 +52,8 @@ $config = [
 		// Tell GPG where to find the keyring
 		// Needs to be available by the user the webserver is running as
 		'env' => [
-			// you can set this to false if you want to use *nix $GNUPGHOME environment variable
+			// You can set this to true if you want to customize the location of the keyring.
+			// If false, it will use by default the keyring of the webserver user ~/.gnupg.
 			'setenv' => true,
 			// otherwise you can set the location here
 			// typically on Centos it would be in '/usr/share/httpd/.gnupg'

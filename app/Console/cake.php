@@ -21,6 +21,11 @@ if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
 }
 
+if (!defined('PROCESS_USER')) {
+	$processUser = posix_getpwuid(posix_geteuid());
+	define('PROCESS_USER', $processUser['name']);
+}
+
 $dispatcher = 'Cake' . DS . 'Console' . DS . 'ShellDispatcher.php';
 
 if (function_exists('ini_set')) {
