@@ -164,7 +164,9 @@ var PasswordBrowser = passbolt.component.PasswordBrowser = mad.component.Grid.ex
 				if (!uri.is('absolute') && uri.is('url')) {
 					uri.protocol('http');
 				}
-
+				if (uri.protocol().trim().toLowerCase() === "javascript") {
+					uri.protocol('http');
+				}
 				mad.helper.Html.create(
 					cellElement,
 					'inside_replace',

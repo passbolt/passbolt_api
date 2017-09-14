@@ -82,4 +82,18 @@ class ModelTask extends AppShell {
 			die;
 		}
 	}
+
+	/**
+	 * Insert an item using the model save functionality
+	 *
+	 * @param array $item array to insert
+	 * @param Model $Model object to insert the data with
+	 * @return void
+	 */
+	public function tryInsertItem($item, $Model) {
+		$Model->create();
+		if (!$Model->save($item, $this->validateOnSave)) {
+			throw new ValidationException('Validation failed');
+		}
+	}
 }

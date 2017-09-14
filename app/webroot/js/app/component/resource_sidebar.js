@@ -41,15 +41,17 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 	 */
 	beforeRender: function () {
 		this._super();
-        if (this.options.selectedItem != null) {
+		if (this.options.selectedItem != null) {
 			// Format the resource URI.
 			var uri = URI(this.options.selectedItem.uri);
-			// If the uri is an url and is not absolute.
+			// If the uri is an url and is not absolute or the protocol is javascript
 			// Add the default http:// protocol
 			if (!uri.is('absolute') && uri.is('url')) {
 				uri.protocol('http');
 			}
-
+			if (uri.protocol().trim().toLowerCase() === "javascript") {
+				uri.protocol('http');
+			}
 			// Send the resource formatted uri to the view
 			this.setViewData('resourceFormattedUri', uri.toString());
             // Send the resource to the view
@@ -57,7 +59,7 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
             // Send the secret strength label to the view
             var secretStrength = passbolt.model.SecretStrength.getSecretStrength(this.options.selectedItem.Secret.data);
             this.setViewData('secretStrength', secretStrength);
-        }
+		}
 	},
 
 	/**
@@ -65,7 +67,7 @@ var ResourceSidebar = passbolt.component.ResourceSidebar = passbolt.component.Si
 	 * @see {mad.Component}
 	 */
 	afterStart: function () {
-        this._super();
+		this._super();
 
 		// Instantiate the description controller for the current resource.
 		var descriptionController = new passbolt.component.sidebarSection.Description($('#js_rs_details_description', this.element), {

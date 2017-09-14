@@ -1,0 +1,2 @@
+1504608582
+a:2:{s:2:"id";a:7:{s:4:"type";s:6:"string";s:4:"null";b:0;s:7:"default";N;s:6:"length";i:36;s:3:"key";s:7:"primary";s:7:"collate";s:15:"utf8_unicode_ci";s:7:"charset";s:4:"utf8";}s:4:"name";a:6:{s:4:"type";s:6:"string";s:4:"null";b:1;s:7:"default";N;s:6:"length";i:512;s:7:"collate";s:15:"utf8_unicode_ci";s:7:"charset";s:4:"utf8";}}
