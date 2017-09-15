@@ -16,6 +16,8 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\NotFoundException;
 
 class UsersIndexController extends AppController
 {

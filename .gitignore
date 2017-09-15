@@ -3,3 +3,5 @@
 /tmp/*
 /logs/*
 .idea
+node_modules/
+

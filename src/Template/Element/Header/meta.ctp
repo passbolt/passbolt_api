@@ -12,25 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use Cake\Core\Configure;
 ?>
-<!DOCTYPE html>
-<html class="passbolt no-js no-passboltplugin alpha version" lang="en">
-<head>
-    <?= $this->Html->charset() ?>
-
-    <title>Passbolt | <?= $this->fetch('title') ?></title>
-    <?= $this->element('Header/meta') ?>
-
-    <?= $this->Html->css('main.min.css') ?>
-</head>
-<body>
-<div id="container" class="error page <?= $this->fetch('pageClass') ?>">
-<?= $this->element('Navigation/default'); ?>
-<div id="content">
-<?= $this->Flash->render() ?>
-<?= $this->fetch('content') ?>
-</div>
-<?= $this->element('Footer/default'); ?>
-</div>
-</body>
-</html>
+<?= $this->element('Header/banner'); ?>
+    <meta name="description" content="<?= Configure::read('passbolt.meta.description'); ?>">
+    <meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
+    <meta name="robots" content="<?= Configure::read('passbolt.meta.robots'); ?>">
+    <meta name="viewport" content="width=device-width">

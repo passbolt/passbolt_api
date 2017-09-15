@@ -75,6 +75,8 @@ use Cake\Utility\Security;
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
+    Configure::load('passbolt', 'default', false);
+    Configure::load('version', 'default', false);
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
