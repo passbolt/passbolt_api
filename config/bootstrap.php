@@ -33,6 +33,13 @@ if (!extension_loaded('mbstring')) {
 }
 
 /*
+ * You can remove this if you are confident you have gnupg installed.
+ */
+if (!extension_loaded('gnupg')) {
+    throw new Exception('PHP Gnupg library is not installed');
+}
+
+/*
  * Configure paths required to find CakePHP + general filepath
  * constants
  */
@@ -76,7 +83,7 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('passbolt', 'default', false);
-    Configure::load('version', 'default', false);
+    Configure::load('version', 'default', true); // merge with passbolt config
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");
 }
@@ -155,7 +162,7 @@ ConnectionManager::setConfig(Configure::consume('Datasources'));
 Email::setConfigTransport(Configure::consume('EmailTransport'));
 Email::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
-Security::salt(Configure::consume('Security.salt'));
+Security::setSalt(Configure::consume('Security.salt'));
 
 /*
  * The default crypto extension in 3.0 is OpenSSL.
@@ -227,3 +234,10 @@ if (Configure::read('debug')) {
  * Enable Migration Plugin
  */
 Plugin::load('Migrations');
+
+/*
+ * Gpg Config
+ */
+if (getenv('GNUPGHOME') === false) {
+    putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+}

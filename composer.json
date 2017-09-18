@@ -22,7 +22,8 @@
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "~1.0",
         "cakephp/plugin-installer": "~1.0",
-        "ramsey/uuid": "^3.7"
+        "ramsey/uuid": "^3.7",
+        "singpolyma/openpgp-php": "^0.3.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -30,12 +31,6 @@
         "cakephp/bake": "~1.1",
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0"
-    },
-    "suggest": {
-        "markstory/asset_compress": "An asset compression plugin which provides file concatenation and a flexible filter system for preprocessing and minification.",
-        "dereuromark/cakephp-ide-helper": "After baking your code, this keeps your annotations in sync with the code evolving from there on for maximum IDE and PHPStan compatibility.",
-        "phpunit/phpunit": "Allows automated tests to be run without system-wide install.",
-        "cakephp/cakephp-codesniffer": "Allows to check the code against the coding standards used in CakePHP."
     },
     "autoload": {
         "psr-4": {

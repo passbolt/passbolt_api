@@ -18,7 +18,6 @@ use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
-use JsonSchema\Exception\ValidationException;
 
 class UsersRegisterController extends AppController
 {
@@ -49,6 +48,7 @@ class UsersRegisterController extends AppController
     {
         $this->viewBuilder()
             ->setTemplatePath('/Users')
+            ->setLayout('login')
             ->setTemplate('register');
         $user = $this->Users->newEntity();
         $this->set('user', $user);
@@ -97,6 +97,7 @@ class UsersRegisterController extends AppController
             } else {
                 $this->viewBuilder()
                     ->setTemplatePath('/Users')
+                    ->setLayout('login')
                     ->setTemplate('register');
             }
 
@@ -195,6 +196,7 @@ class UsersRegisterController extends AppController
         if (!$this->request->is('json')) {
             $this->viewBuilder()
                 ->setTemplatePath('/Users')
+                ->setLayout('login')
                 ->setTemplate('register_thank_you');
         } else {
             parent::success($body);
