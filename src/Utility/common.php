@@ -45,7 +45,7 @@ class Common
             }
         } else {
             // Generate a version 5 (name-based and hashed with SHA1) UUID object
-            $uuid5 = Uuid::uuid5('passbolt_api', $seed);
+            $uuid5 = Uuid::uuid5('d5447ca1-950f-459d-8b20-86ddfdd0f922', $seed);
 
             return $uuid5->toString();
         }

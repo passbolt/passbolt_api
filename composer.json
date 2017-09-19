@@ -2,7 +2,10 @@
     "name": "passbolt/passbolt",
     "description": "Open source password manager for teams",
     "type": "application",
-    "keywords": ["password", "passbolt"],
+    "keywords": [
+        "password",
+        "passbolt"
+    ],
     "homepage": "https://www.passbolt.com",
     "license": "AGPL-3.0",
     "authors": [
@@ -39,7 +42,9 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src"
+            "App\\": "src",
+            "PassboltData\\": "./plugins/PassboltData/src",
+            "PassboltDummyData\\": "./plugins/PassboltDummyData/src"
         }
     },
     "autoload-dev": {
