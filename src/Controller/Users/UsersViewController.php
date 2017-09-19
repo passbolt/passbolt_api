@@ -15,6 +15,7 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use Aura\Intl\Exception;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;

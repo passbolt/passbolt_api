@@ -1,23 +1,17 @@
 <?php
 /**
- * Routes configuration
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
  *
- * In this file, you set up routes to your controllers and their actions.
- * Routes are very important mechanism that allows you to freely connect
- * different URLs to chosen controllers and their actions (functions).
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
  */
-
 use Cake\Core\Plugin;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
@@ -25,24 +19,8 @@ use Cake\Routing\Route\DashedRoute;
 
 /**
  * The default class to use for all routes
- *
- * The following route classes are supplied with CakePHP and are appropriate
- * to set as the default:
- *
- * - Route
- * - InflectedRoute
- * - DashedRoute
- *
- * If no call is made to `Router::defaultRouteClass()`, the class used is
- * `Route` (`Cake\Routing\Route\Route`)
- *
- * Note that `Route` does not do any inflections on URLs which will result in
- * inconsistently cased URLs when used with `:plugin`, `:controller` and
- * `:action` markers.
- *
  */
 Router::defaultRouteClass(DashedRoute::class);
-
 
 /**
  * Shorthands and legacy redirect
@@ -52,16 +30,12 @@ Router::scope('/', function (RouteBuilder $routes) {
 });
 
 /**
- * Roles prefixed routes
+ * Users prefixed routes
  */
 Router::prefix('Users', function ($routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['controller' => 'UsersIndex', 'action' => 'index'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
-        ->setPass(['id'])
         ->setMethods(['GET']);
 
     $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerGet'])
@@ -71,6 +45,10 @@ Router::prefix('Users', function ($routes) {
     $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
+
+    $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
 });
 
 /**
@@ -81,41 +59,6 @@ Router::prefix('Roles', function ($routes) {
 
     $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
-});
-
-/**
- * Other default routes
- */
-Router::scope('/', function (RouteBuilder $routes) {
-    /**
-     * Here, we are connecting '/' (base path) to a controller called 'Pages',
-     * its action called 'display', and we pass a param to select the view file
-     * to use (in this case, src/Template/Pages/home.ctp)...
-     */
-    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-
-    /**
-     * ...and connect the rest of 'Pages' controller's URLs.
-     */
-    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-
-    /**
-     * Connect catchall routes for all controllers.
-     *
-     * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for
-     *    `$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'DashedRoute']);`
-     *    `$routes->connect('/:controller/:action/*', [], ['routeClass' => 'DashedRoute']);`
-     *
-     * Any route class can be used with this method, such as:
-     * - DashedRoute
-     * - InflectedRoute
-     * - Route
-     * - Or your own route class
-     *
-     * You can remove these routes once you've connected the
-     * routes you want in your application.
-     */
-    $routes->fallbacks(DashedRoute::class);
 });
 
 /**
