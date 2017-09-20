@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Controller\Events\EmailsListener;
 use Cake\Core\Configure;
 use Cake\Controller\Controller;
 use Cake\Network\Exception\NotFoundException;
@@ -56,6 +57,9 @@ class AppController extends Controller
                 ]
             ]
         ]);
+
+        $emails = new EmailsListener();
+        $this->getEventManager()->on($emails);
 
         /*
          * Enable the following components for recommended CakePHP security settings.

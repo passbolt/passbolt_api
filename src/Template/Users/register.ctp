@@ -31,9 +31,11 @@ $formContext = [
             <h2><?= __('Try passbolt demo today!'); ?></h2>
             <p>
                 <?= __('Enter your details in the form.'); ?>
+
                 <?= __('We will send you an email to get you started.'); ?>
+
             </p>
-            <?= $this->element('public/disclaimer-legal'); ?>
+<?= $this->element('public/disclaimer-legal'); ?>
         </div>
         <div class="col4 push1 last">
             <div class="logo">
@@ -41,11 +43,15 @@ $formContext = [
             </div>
             <div class="users register form">
                 <?= $this->Form->create($user, $formContext);?>
+
                 <fieldset>
                     <legend><?= __('Please enter your username and password'); ?></legend>
                     <?= $this->Form->control('profile.first_name'); ?>
+
                     <?= $this->Form->control('profile.last_name'); ?>
+
                     <?= $this->Form->control('username'); ?>
+
                     <p>
                         <input type="checkbox" name="disclaimer" id="disclaimer" value="value" required="required">
                         <label for="disclaimer" style="font-size:.9em"><?= __('I understand the disclaimer. I agree with the Terms of Service and Privacy Policy.'); ?></label>
@@ -56,6 +62,7 @@ $formContext = [
                     </div>
                 </fieldset>
                 <?= $this->Form->end();?>
+
             </div>
         </div>
     </div>

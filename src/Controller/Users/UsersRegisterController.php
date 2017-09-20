@@ -56,8 +56,11 @@ class UsersRegisterController extends AppController
             ->setTemplatePath('/Users')
             ->setLayout('login')
             ->setTemplate('register');
+
         $user = $this->Users->newEntity();
         $this->set('user', $user);
+
+        $this->success();
     }
 
     /**
@@ -67,6 +70,13 @@ class UsersRegisterController extends AppController
      */
     public function registerPost()
     {
+        // By default users see the register form again
+        // if something goes wrong they can try again
+        $this->viewBuilder()
+            ->setTemplatePath('/Users')
+            ->setLayout('login')
+            ->setTemplate('register');
+
         $user = $this->_buildAndValidateUser();
         if ($this->_handleValidationError($user)) {
             return;
@@ -74,16 +84,23 @@ class UsersRegisterController extends AppController
 
         // Save user and create authentication token in one transaction
         // rollback if an exception is thrown
-        $this->Users->getConnection()->transactional(function () use ($user) {
+        $token = null;
+        $this->Users->getConnection()->transactional(function () use ($user, &$token) {
             $this->_saveUser($user);
             $token = $this->_buildAuthToken($user);
         });
-
         if ($this->_handleValidationError($user)) {
             return;
         }
 
-        // todo even to build email with token
+        // Create an event to build email with token
+        $event = new Event('UsersRegisterController.registerPost.success', $this, [
+            'user' => $user, 'token' => $token
+        ]);
+        $this->getEventManager()->dispatch($event);
+
+        // Display thank you page or user
+        $this->viewBuilder()->setTemplate('register_thank_you');
         $this->success($user);
     }
 
@@ -100,16 +117,9 @@ class UsersRegisterController extends AppController
             if ($this->request->is('json')) {
                 $this->set('errors', $user->getErrors());
                 throw new BadRequestException(__('Could not validate user data.'));
-            } else {
-                $this->viewBuilder()
-                    ->setTemplatePath('/Users')
-                    ->setLayout('login')
-                    ->setTemplate('register');
             }
-
             return true;
         }
-
         return false;
     }
 
@@ -191,21 +201,4 @@ class UsersRegisterController extends AppController
         }
     }
 
-    /**
-     * Handle success response
-     *
-     * @param array $body data for the body section
-     * @return void
-     */
-    protected function success($body = null)
-    {
-        if (!$this->request->is('json')) {
-            $this->viewBuilder()
-                ->setTemplatePath('/Users')
-                ->setLayout('login')
-                ->setTemplate('register_thank_you');
-        } else {
-            parent::success($body);
-        }
-    }
 }

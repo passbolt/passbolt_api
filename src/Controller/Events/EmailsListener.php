@@ -12,26 +12,24 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-?>
-<!DOCTYPE html>
-<html class="passbolt no-js no-passboltplugin alpha version" lang="en">
-<head>
-    <?= $this->Html->charset() ?>
+namespace App\Controller\Events;
 
-    <title>Passbolt | <?= $this->fetch('title') ?></title>
-    <?= $this->element('Header/meta') ?>
+use Cake\Event\Event;
+use Cake\Event\EventListenerInterface;
+use Cake\Log\Log;
 
-    <?= $this->fetch('css') ?>
-</head>
-<body>
-<div id="container" class="page <?= $this->fetch('pageClass') ?>">
-<?= $this->element('Navigation/default'); ?>
-<div id="content">
-<?= $this->Flash->render() ?>
-<?= $this->fetch('content') ?>
+class EmailsListener implements EventListenerInterface
+{
 
-</div>
-<?= $this->element('Footer/default'); ?>
-</div>
-</body>
-</html>
+    public function implementedEvents()
+    {
+        return [
+            'UsersRegisterController.registerPost.success' => 'sendRegisterEmail',
+        ];
+    }
+
+    public function sendRegisterEmail(Event $event, $data)
+    {
+        Log::error('sendRegisterEmail');
+    }
+}
