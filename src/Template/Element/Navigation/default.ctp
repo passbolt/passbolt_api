@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 use Cake\Routing\Router;
+use Cake\Core\Configure;
 ?>
 <!-- header navigation -->
 <header>
@@ -23,7 +24,9 @@ use Cake\Routing\Router;
                     <li class="home with-link"><a href="<?= Router::url('/') ?>"><span><?= __('home') ?></span></a></li>
                     <li class="left"><a href="<?= Router::url('/') ?>"><span><?= __('home') ?></span></a></li>
                     <li class="right"><a href="<?= Router::url('/login') ?>"><span><?= __('login') ?></span></a></li>
+<?php if (Configure::read('passbolt.registration.public') === true) : ?>
                     <li class="right"><a href="<?= Router::url('/register') ?>"><span><?= __('register') ?></span></a></li>
+<?php endif; ?>
                 </ul>
             </div>
         </nav>

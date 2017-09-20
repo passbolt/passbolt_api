@@ -15,9 +15,11 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\NotFoundException;
 
 class UsersRegisterController extends AppController
 {
@@ -29,8 +31,12 @@ class UsersRegisterController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow('registerGet');
-        $this->Auth->allow('registerPost');
+        if (Configure::read('passbolt.registration.public') === true) {
+            $this->Auth->allow('registerGet');
+            $this->Auth->allow('registerPost');
+        } else {
+            throw new NotFoundException();
+        };
 
         $this->loadModel('Users');
         $this->loadModel('AuthenticationTokens');

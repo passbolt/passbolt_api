@@ -27,6 +27,9 @@ return [
                 'private' => CONFIG . 'gpg' . DS . 'unsecure_private.key',
                 'passphrase' => '', // not supported - leave empty
             ]
+        ],
+        'registration' => [
+            'public' => true
         ]
     ]
 ];

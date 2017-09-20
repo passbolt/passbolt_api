@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e55be87e514d668ffcdf7e1dd3940b21",
+    "content-hash": "96f0d94f69088f9c25a4318450c84b7d",
     "packages": [
         {
             "name": "aura/intl",
@@ -287,6 +287,238 @@
             ],
             "description": "A composer installer for CakePHP 3.0+ plugins.",
             "time": "2017-03-21T13:48:47+00:00"
+        },
+        {
+            "name": "donatj/phpuseragentparser",
+            "version": "v0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/donatj/PhpUserAgent.git",
+                "reference": "73c819d4c7de034f1bfb7c7a36259192d7d7472a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/donatj/PhpUserAgent/zipball/73c819d4c7de034f1bfb7c7a36259192d7d7472a",
+                "reference": "73c819d4c7de034f1bfb7c7a36259192d7d7472a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "camspiers/json-pretty": "0.1.*",
+                "donatj/drop": "*",
+                "phpunit/phpunit": ">=4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Source/UserAgentParser.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jesse G. Donat",
+                    "email": "donatj@gmail.com",
+                    "homepage": "http://donatstudios.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Simple, streamlined PHP user-agent parser",
+            "homepage": "http://donatstudios.com/PHP-Parser-HTTP_USER_AGENT",
+            "keywords": [
+                "browser",
+                "browser detection",
+                "parser",
+                "user agent",
+                "useragent"
+            ],
+            "time": "2017-03-01T22:19:13+00:00"
+        },
+        {
+            "name": "guzzlehttp/guzzle",
+            "version": "6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/promises": "^1.0",
+                "guzzlehttp/psr7": "^1.4",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "phpunit/phpunit": "^4.0 || ^5.0",
+                "psr/log": "^1.0"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "6.2-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/functions_include.php"
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "time": "2017-06-22T18:50:49+00:00"
+        },
+        {
+            "name": "guzzlehttp/promises",
+            "version": "v1.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/promises.git",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Guzzle promises library",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2016-12-20T10:07:11+00:00"
+        },
+        {
+            "name": "guzzlehttp/psr7",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/psr7.git",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "psr/http-message": "~1.0"
+            },
+            "provide": {
+                "psr/http-message-implementation": "1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Tobias Schultze",
+                    "homepage": "https://github.com/Tobion"
+                }
+            ],
+            "description": "PSR-7 message implementation that also provides common utility methods",
+            "keywords": [
+                "http",
+                "message",
+                "request",
+                "response",
+                "stream",
+                "uri",
+                "url"
+            ],
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -1116,6 +1348,172 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2017-07-29T21:54:42+00:00"
+        },
+        {
+            "name": "thadafinser/package-info",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ThaDafinser/PackageInfo.git",
+                "reference": "3cc580385cf694ba83eda3bbf7ea716a2253ea5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ThaDafinser/PackageInfo/zipball/3cc580385cf694ba83eda3bbf7ea716a2253ea5a",
+                "reference": "3cc580385cf694ba83eda3bbf7ea716a2253ea5a",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "php": "~5.6|~7.0"
+            },
+            "require-dev": {
+                "composer/composer": "^1.2.0",
+                "phpunit/phpunit": "^5.4.7"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "PackageInfo\\Installer"
+            },
+            "autoload": {
+                "psr-4": {
+                    "PackageInfo\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ThaDafinser",
+                    "email": "martin.keckeis1@gmail.com"
+                }
+            ],
+            "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
+            "time": "2016-08-09T11:14:48+00:00"
+        },
+        {
+            "name": "thadafinser/user-agent-parser",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ThaDafinser/UserAgentParser.git",
+                "reference": "15d45577cb5b0f45cddd638e25d17da430084347"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ThaDafinser/UserAgentParser/zipball/15d45577cb5b0f45cddd638e25d17da430084347",
+                "reference": "15d45577cb5b0f45cddd638e25d17da430084347",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.1",
+                "php": "~5.6|~7.0",
+                "thadafinser/package-info": "^1.0"
+            },
+            "conflict": {
+                "browscap/browscap-php": "<3,>=4",
+                "donatj/phpuseragentparser": "<0.5,>=1",
+                "jenssegers/agent": "<2.3,>=3",
+                "mimmi20/wurfl": "<1.6.4,>=2",
+                "mobiledetect/mobiledetectlib": "<2.7.5,>=3",
+                "piwik/device-detector": "<3.6,>=4",
+                "sinergi/browser-detector": "<6,>=7",
+                "ua-parser/uap-php": "<3.4.3,>=4",
+                "whichbrowser/parser": "<2.0.10,>=3",
+                "woothee/woothee": "<1.2,>=2",
+                "zsxsoft/php-useragent": "<1.2,>=2"
+            },
+            "require-dev": {
+                "browscap/browscap-php": "^3.0",
+                "donatj/phpuseragentparser": "^0.5.0",
+                "endorphin-studio/browser-detector": "^3.0",
+                "friendsofphp/php-cs-fixer": "^1.11",
+                "handsetdetection/php-apikit": "^4.1.10",
+                "jenssegers/agent": "^2.3",
+                "mimmi20/wurfl": "^1.7.1.1",
+                "mobiledetect/mobiledetectlib": "^2.7.5",
+                "phpunit/phpunit": "^5.6.8",
+                "piwik/device-detector": "^3.6",
+                "sinergi/browser-detector": "^6.0",
+                "ua-parser/uap-php": "^3.4.3",
+                "whichbrowser/parser": "^2.0.10",
+                "woothee/woothee": "^1.2",
+                "zsxsoft/php-useragent": ">=1.2,<1.4"
+            },
+            "suggest": {
+                "browscap/browscap-php": "Needed to use Provider\\BrowscapPhp",
+                "donatj/phpuseragentparser": "Needed to use Provider\\DonatjUAParser",
+                "endorphin-studio/browser-detector": "Needed to use Provider\\Endorphin",
+                "handsetdetection/php-apikit": "Needed to use Provider\\HandsetDetection",
+                "jenssegers/agent": "Needed to use Provider\\JenssegersAgent",
+                "mimmi20/wurfl": "Needed to use Provider\\Wurfl",
+                "piwik/device-detector": "Needed to use Provider\\PiwikDeviceDetector",
+                "sinergi/browser-detector": "Needed to use Provider\\SinergiBrowserDetector",
+                "ua-parser/uap-php": "Needed to use Provider\\UAParser",
+                "whichbrowser/parser": "Needed to use Provider\\WhichBrowser",
+                "woothee/woothee": "Needed to use Provider\\Woothee",
+                "zsxsoft/php-useragent": "Needed to use Provider\\Zsxsoft"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "UserAgentParser\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ThaDafinser",
+                    "email": "martin.keckeis1@gmail.com"
+                }
+            ],
+            "description": "UserAgent parsing done right http://useragent.mkf.solutions/",
+            "keywords": [
+                "Browscap",
+                "Device detection",
+                "DeviceAtlas",
+                "NeutrinoApiCom",
+                "Rendering engine",
+                "UA parser",
+                "UdgerCom",
+                "User agent detection",
+                "User agent parser",
+                "UserAgentApiCom",
+                "UserAgentParser",
+                "UserAgentStringCom",
+                "WhatIsMyBrowserCom",
+                "Wurfl",
+                "bot detection",
+                "browser",
+                "detection",
+                "device",
+                "donatj",
+                "engine",
+                "get_browser",
+                "jenssegers",
+                "mobile detection",
+                "mobile detector",
+                "mobile device detection",
+                "operating system",
+                "os",
+                "parser",
+                "piwik",
+                "sinergi",
+                "sniffing",
+                "ua",
+                "ua-parser",
+                "uaparser",
+                "user agent",
+                "useragent",
+                "whichbrowser",
+                "woothee"
+            ],
+            "time": "2017-02-16T13:22:30+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",

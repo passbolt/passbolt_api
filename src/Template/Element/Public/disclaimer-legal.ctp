@@ -11,8 +11,7 @@
 </div>
 <p>
     <?php
-    echo __('By signing up, you agree to the %s Terms of Service %s and %s Privacy Policy %s, including our use of Cookies.',
-        '<a href="https://www.passbolt.com/terms">','</a>',
-        '<a href="https://www.passbolt.com/privacy">','</a>'
+    echo __('By signing up, you agree to the {0}Terms of Service{2} and {1}Privacy Policy{2}, including our use of Cookies.',
+        '<a href="https://www.passbolt.com/terms">', '<a href="https://www.passbolt.com/privacy">','</a>'
     ); ?>
 </p>

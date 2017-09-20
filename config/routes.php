@@ -27,6 +27,7 @@ Router::defaultRouteClass(DashedRoute::class);
  */
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->redirect('register', '/users/register');
+    $routes->redirect('login', '/auth/login');
 });
 
 
@@ -40,6 +41,17 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     $routes->connect('/home', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
         ->setMethods(['GET']);
+});
+
+/**
+ * Authentication routes
+ */
+Router::scope('/auth', function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/login', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginGet'])
+        ->setMethods(['GET']);
+
 });
 
 /**
