@@ -1,0 +1,23 @@
+{
+    "name": "your-name-here/PassboltDummyData",
+    "description": "PassboltDummyData plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "cakephp/cakephp": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PassboltDummyData\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PassboltDummyData\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

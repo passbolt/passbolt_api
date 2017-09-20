@@ -36,3 +36,7 @@ try {
 }
 
 Plugin::load('Migrations');
+Plugin::load('PassboltData', ['bootstrap' => true, 'routes' => false]);
+if (Configure::read('debug') > 0) {
+    Plugin::load('PassboltDummyData', ['bootstrap' => true, 'routes' => false]);
+}
