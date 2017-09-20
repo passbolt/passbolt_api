@@ -29,6 +29,19 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->redirect('register', '/users/register');
 });
 
+
+/**
+ * Home page
+ */
+Router::scope('/', function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
+    $routes->connect('/', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/home', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
 /**
  * Users prefixed routes
  */

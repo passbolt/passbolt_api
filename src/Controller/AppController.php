@@ -14,7 +14,9 @@
  */
 namespace App\Controller;
 
+use Cake\Core\Configure;
 use Cake\Controller\Controller;
+use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Text;
 
 /**
@@ -72,13 +74,13 @@ class AppController extends Controller
      */
     protected function success($body = null)
     {
-        $prefix = $this->request->getParam('prefix');
-        $action = $this->request->getParam('action');
+        $prefix = strtolower($this->request->getParam('prefix'));
+        $action = strtolower($this->request->getParam('action'));
         $this->set([
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'success',
-                'title' => 'app_' . $prefix . '_' . $action . '_success',
+//                'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'servertime' => time(),
                 'message' => null,
                 'controller' => $prefix,
@@ -89,9 +91,17 @@ class AppController extends Controller
         ]);
 
         // render a legacy JSON view by default
-        $apiVersion = $this->request->getQuery('api-version');
-        if (!isset($apiVersion) || $apiVersion === 'v1') {
-            $this->viewBuilder()->setClassName('LegacyJson');
+        if($this->request->is('json')) {
+            $apiVersion = $this->request->getQuery('api-version');
+            if (!isset($apiVersion) || $apiVersion === 'v1') {
+                $this->viewBuilder()->setClassName('LegacyJson');
+            }
+        }
+        else if (!Configure::read('debug')) {
+            $template = $this->viewBuilder()->getTemplate();
+            if (!isset($template)) {
+                throw new NotFoundException(__('Page not found.'));
+            }
         }
     }
 }

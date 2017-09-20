@@ -12,12 +12,15 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Core\Configure;
-use Cake\Routing\Router;
 ?>
-<?= $this->element('Header/banner'); ?>
-    <meta name="description" content="<?= Configure::read('passbolt.meta.description'); ?>">
-    <meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
-    <meta name="robots" content="<?= Configure::read('passbolt.meta.robots'); ?>">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+<div class="launching-screen">
+    <div class="launching-screen-holder">
+        <div class="logo no-img">
+            <h1><span>Passbolt</span></h1>
+        </div>
+        <div class="progress-bar-wrapper">
+            <span class="progress-bar big infinite"><span class="progress "></span></span>
+        </div>
+        <p class="details"><?= __('loading, please wait...'); ?></p>
+    </div>
+</div>
