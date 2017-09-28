@@ -56,7 +56,6 @@ class UsersViewController extends AppController
                 throw new BadRequestException(__('The user id is not valid.'));
             }
         }
-
         // Retrieve the user
         $this->loadModel('Users');
         $user = $this->Users->find('view', ['id' => $id, 'role' => $this->User->role() ])->first();

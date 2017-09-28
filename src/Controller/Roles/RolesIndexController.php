@@ -20,28 +20,26 @@ use Cake\Event\Event;
 class RolesIndexController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        // TODO do not allow index to be public
-        $this->Auth->allow('index');
-
-        return parent::beforeFilter($event);
-    }
-
-    /**
      * Roles Index action
      *
      * @return void
      */
     public function index()
     {
+        if($this->Auth->user()) {
+            echo 'ok';
+        } else{
+            echo '!ok';
+        }
+        die;
         $this->loadModel('Roles');
         $roles = $this->Roles->find('all');
+
+        $this->viewBuilder()
+            ->setTemplatePath('Empty')
+            ->setLayout('empty')
+            ->setTemplate('empty');
+
         $this->success($roles);
     }
 }

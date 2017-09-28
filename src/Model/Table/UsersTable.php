@@ -90,9 +90,9 @@ class UsersTable extends Table
         $this->hasMany('UsersResourcesPermissions', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('GroupsUsers', [
-            'foreignKey' => 'user_id'
-        ]);
+//        $this->hasMany('GroupsUsers', [
+//            'foreignKey' => 'user_id'
+//        ]);
         $this->belongsToMany('Groups', [
             'foreignKey' => 'user_id',
             'targetForeignKey' => 'group_id',
@@ -186,7 +186,7 @@ class UsersTable extends Table
             'Profiles',
             //'Profiles.Avatar',
             'Gpgkeys',
-            'GroupsUsers'
+//            'GroupsUsers'
         ]);
 
         // Filter out guests, inactive and deleted users
@@ -234,11 +234,21 @@ class UsersTable extends Table
      *
      * @param Query $query a query instance
      * @param array $options options
+     * @throws Exception if fingerprint id is not set
      * @return Query $query
      */
     public function findAuth(Query $query, array $options)
     {
-        return $query->contain(['Roles']);
+        // Options must contain an id
+        if (!isset($options['fingerprint'])) {
+            throw new Exception(__('User table findAuth should have a fingerprint id set in options.'));
+        }
+        // auth query is always done as guest
+        $options['role'] = Role::GUEST;
+
+        // Use default index option (active:true, deleted:false) and contains
+        $query = $this->findIndex($query, $options);
+        return $query->where(['Gpgkeys.fingerprint' => $options['fingerprint']]);
     }
 
     /**

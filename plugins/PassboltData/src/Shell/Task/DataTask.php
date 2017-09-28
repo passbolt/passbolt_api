@@ -52,6 +52,9 @@ abstract class DataTask extends Shell
         // Flush all the previously stored data.
         $this->_Entity->deleteAll([]);
 
+        $conn = \Cake\Datasource\ConnectionManager::get('default');
+        $conn->logQueries(true);
+
         // Insert the data in the db.
         $data = $this->_getData();
         foreach ($data as $row) {

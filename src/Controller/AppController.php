@@ -15,11 +15,12 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailsListener;
+use App\Auth\GpgAuthenticate;
 use Cake\Core\Configure;
 use Cake\Controller\Controller;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Text;
-
+use Cake\Routing\Router;
 /**
  * Application Controller
  *
@@ -52,12 +53,26 @@ class AppController extends Controller
          */
         $this->loadComponent('Auth', [
             'authenticate' => [
-                'Form' => [
-                    'finder' => 'auth'
-                ]
-            ]
+                'Gpg'
+            ],
+            'loginAction' => [
+                'prefix' => 'Auth',
+                'controller' => 'AuthLogin',
+                'action' => 'loginGet',
+                '_method' => 'GET'
+            ],
         ]);
 
+        $this->response = $this->response
+            ->withHeader('X-GPGAuth-Version', '1.3.0')
+            ->withHeader('X-GPGAuth-Login-URL', '/auth/login')
+            ->withHeader('X-GPGAuth-Logout-URL', '/auth/logout')
+            ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
+            ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json');
+
+        /*
+         * Email notifications
+         */
         $emails = new EmailsListener();
         $this->getEventManager()->on($emails);
 
@@ -84,7 +99,6 @@ class AppController extends Controller
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'success',
-//                'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'servertime' => time(),
                 'message' => null,
                 'controller' => $prefix,
@@ -94,14 +108,36 @@ class AppController extends Controller
             '_serialize' => ['header', 'body']
         ]);
 
+        $this->renderLegacyJson();
+    }
+
+    protected function error($message = null, $body = null)
+    {
+        $prefix = strtolower($this->request->getParam('prefix'));
+        $action = strtolower($this->request->getParam('action'));
+        $this->set([
+            'header' => [
+                'id' => Text::uuid(),
+                'status' => 'error',
+                'servertime' => time(),
+                'message' => $message,
+                'controller' => $prefix,
+                'action' => $action
+            ],
+            'body' => $body,
+            '_serialize' => ['header', 'body']
+        ]);
+    }
+
+    protected function renderLegacyJson()
+    {
         // render a legacy JSON view by default
         if($this->request->is('json')) {
             $apiVersion = $this->request->getQuery('api-version');
             if (!isset($apiVersion) || $apiVersion === 'v1') {
                 $this->viewBuilder()->setClassName('LegacyJson');
             }
-        }
-        else if (!Configure::read('debug')) {
+        } else if (!Configure::read('debug')) {
             $template = $this->viewBuilder()->getTemplate();
             if (!isset($template)) {
                 throw new NotFoundException(__('Page not found.'));

@@ -40,6 +40,7 @@ class DataInstallerShell extends Shell
                 $task->afterExecute();
             }
         }
+        return true;
     }
 
     /**

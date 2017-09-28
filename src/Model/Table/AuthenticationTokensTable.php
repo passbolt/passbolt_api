@@ -15,10 +15,12 @@
 namespace App\Model\Table;
 
 use App\Utility\Common;
-use Cake\ORM\Query;
+use Cake\Core\Configure;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Cake\Network\Exception\InternalErrorException;
 
 /**
  * AuthenticationTokens Model
@@ -111,21 +113,75 @@ class AuthenticationTokensTable extends Table
     }
 
     /**
-     * Populate token
+     * Build the authentication token
      *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
+     * @param $userId
+     * @return \App\Model\Entity\AuthenticationToken
      */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    public function generate($userId)
     {
-        if ($options['validate'] === 'register') {
-            // Token is cryptographically secure uuid4
-            // Override if it is set
-            // Do not use Text::uuid
-            $data['token'] = Common::uuid();
-            $data['active'] = true;
+        $token = $this->newEntity([
+            'user_id' => $userId,
+            'token' => Common::uuid(),
+            'active' => true
+        ]);
+        if (!$this->save($token, ['checkRules' => false, 'atomic' => false])) {
+            throw new InternalErrorException(__('The authentication token could not be saved.'));
         }
+        return $token;
+    }
+
+    /**
+     * Check if a token exist and is valid for a given user.
+     *
+     * A valid token :
+     *  - belongs to the given user &&
+     *  - is active &&
+     *  - is not expired ;
+     *
+     * @param string $tokenId uuid of the token to check
+     * @param string $userId uuid of the user
+     * @return bool true if it is valid
+     */
+    public function isValid($tokenId, $userId)
+    {
+        // Are ids valid uuid?
+        if (!Validation::uuid($tokenId) || !Validation::uuid($userId)) {
+            return false;
+        }
+
+        // Does token exist?
+        $token = $this->find('all')
+            ->where(['token' => $tokenId, 'user_id' => $userId, 'active' => true ])
+            ->first();
+        if (empty($token)) {
+            return false;
+        }
+
+        // Is it expired?
+        $valid = $token->created->wasWithinLast(Configure::read('passbolt.auth.tokenExpiry'));
+        if (!$valid) {
+            // update the token to inactive
+            $token->active = false;
+            $this->save($token);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Set a token as inactive
+     *
+     * @param $tokenId
+     */
+    public function setInactive($tokenId) {
+        $token = $this->find('all')
+            ->where(['token' => $tokenId, 'active' => true ])
+            ->first();
+
+        $token->active = false;
+        $this->save($token);
     }
 }

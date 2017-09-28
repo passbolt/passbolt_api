@@ -54,6 +54,29 @@ class AuthLoginController extends AppController
 
     public function loginPost()
     {
+        $user = $this->Auth->identify();
+        $gpgAuth = $this->Auth->getAuthenticate('Gpg');
+        $this->response = $gpgAuth->getUpdatedResponse();
 
+        if ($user) {
+            $this->Auth->setUser($user);
+            $this->success($user);
+        } else {
+            // Login failure, same as GET
+            if(!$this->request->is('JSON')) {
+                $this->set('userAgent', $this->User->agent());
+                $this->viewBuilder()
+                    ->setLayout('login')
+                    ->setTemplatePath('/Auth')
+                    ->setTemplate('login');
+            } else {
+                $message = 'The authentication failed.';
+                $debug = $this->response->getHeader('X-GPGAuth-Debug');
+                if (isset($debug) && count($debug) === 1) {
+                    $message .= ' ' . $debug[0];
+                }
+                $this->error($message, json_encode($this->request));
+            }
+        }
     }
 }

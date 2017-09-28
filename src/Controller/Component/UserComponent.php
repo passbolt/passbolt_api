@@ -15,6 +15,7 @@
 namespace App\Controller\Component;
 
 use App\Model\Entity\Role;
+use Aura\Intl\Exception;
 use Cake\Controller\Component;
 use UserAgentParser\Provider\DonatjUAParser;
 
@@ -56,11 +57,15 @@ class UserComponent extends Component
         if (!isset($this->_userAgent)) {
             // Parse the user agent string.
             try {
+                $agent = env('HTTP_USER_AGENT');
+                if ($agent === null) {
+                    throw new Exception('undefined user agent');
+                }
                 // For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
                 // browser information. Other parser are available, check out the project repository for more information:
                 // https://github.com/ThaDafinser/UserAgentParser
                 $provider = new DonatjUAParser();
-                $parser = $provider->parse(env('HTTP_USER_AGENT'));
+                $parser = $provider->parse($agent);
                 $this->_userAgent['Browser']['name'] = $parser->getBrowser()->getName();
                 $this->_userAgent['Browser']['version'] = $parser->getBrowser()->getVersion()->getComplete();
             } catch (Exception $e) {

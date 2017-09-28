@@ -30,33 +30,52 @@ class UsersRegisterControllerTest extends IntegrationTestCase
 
     public function testUserRegisterPostSuccess()
     {
-        $data = [
-            'username' => 'username@passbolt.com',
-            'profile' => [
-                'first_name' => 'test_first_name',
-                'last_name' => 'test_last_name'
+        $success = [
+            'chinese_name' => [
+                'username' => 'ping.fu@passbolt.com',
+                'profile' => [
+                    'first_name' => '傅',
+                    'last_name' => '苹'
+                ],
             ],
+            'slavic_name' => [
+                'username' => 'borka@passbolt.com',
+                'profile' => [
+                    'first_name' => 'Borka',
+                    'last_name' => 'Jerman Blažič'
+                ],
+            ],
+            'french_name' => [
+                'username' => 'aurore@passbolt.com',
+                'profile' => [
+                    'first_name' => 'Aurore',
+                    'last_name' => 'Avarguès-Weber'
+                ],
+            ]
         ];
-        $this->post('/users/register', $data);
-        $this->assertResponseSuccess();
 
-        // Check user was saved
-        $users = TableRegistry::get('Users');
-        $query = $users->find()->where(['username' => $data['username']]);
-        $this->assertEquals(1, $query->count());
-        $user = $query->first();
-        $this->assertFalse($user->active);
-        $this->assertFalse($user->deleted);
+        foreach ($success as $case => $data) {
+            $this->post('/users/register', $data);
+            $this->assertResponseSuccess();
 
-        // Check profile exist
-        $profiles = TableRegistry::get('Profiles');
-        $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
-        $this->assertEquals(1, $query->count());
+            // Check user was saved
+            $users = TableRegistry::get('Users');
+            $query = $users->find()->where(['username' => $data['username']]);
+            $this->assertEquals(1, $query->count());
+            $user = $query->first();
+            $this->assertFalse($user->active);
+            $this->assertFalse($user->deleted);
 
-        // Check role exist
-        $roles = TableRegistry::get('Roles');
-        $role = $roles->get($user->get('role_id'));
-        $this->assertEquals(Role::USER, $role->name);
+            // Check profile exist
+            $profiles = TableRegistry::get('Profiles');
+            $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
+            $this->assertEquals(1, $query->count());
+
+            // Check role exist
+            $roles = TableRegistry::get('Roles');
+            $role = $roles->get($user->get('role_id'));
+            $this->assertEquals(Role::USER, $role->name);
+        }
     }
 
     public function testUserRegisterPostFailValidation()

@@ -28,8 +28,9 @@ Router::defaultRouteClass(DashedRoute::class);
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->redirect('register', '/users/register');
     $routes->redirect('login', '/auth/login');
+    $routes->redirect('users/login', '/auth/login');
+    $routes->redirect('logout', '/auth/logout');
 });
-
 
 /**
  * Home page
@@ -41,6 +42,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     $routes->connect('/home', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
         ->setMethods(['GET']);
+
 });
 
 /**
@@ -52,6 +54,17 @@ Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->connect('/login', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginGet'])
         ->setMethods(['GET']);
 
+    $routes->connect('/login', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginPost'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/verify', ['prefix' => 'Auth', 'controller' => 'AuthVerify', 'action' => 'verifyGet'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/verify', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginPost'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logoutGet'])
+        ->setMethods(['GET']);
 });
 
 /**

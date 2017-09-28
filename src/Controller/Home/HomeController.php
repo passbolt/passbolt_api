@@ -20,20 +20,6 @@ use Cake\Event\Event;
 class HomeController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        // TODO do not allow index to be public
-        $this->Auth->allow('index');
-
-        return parent::beforeFilter($event);
-    }
-
-    /**
      * Password workspace page action
      *
      * @return void

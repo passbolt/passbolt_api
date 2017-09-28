@@ -238,6 +238,16 @@ Plugin::load('Migrations');
 /*
  * Gpg Config
  */
-if (getenv('GNUPGHOME') === false) {
+
+if (Configure::read('passbolt.gpg.putenv')) {
     putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
+
+
+Log::config('current',
+    [
+        'className' => 'File',
+        'path' => LOGS.date('Y-m').DS, // you don't need a DS between LOGS and date()
+        'scopes' => ['daily','queriesLog'],
+        'file' => date('Y-m-d'),
+    ]);

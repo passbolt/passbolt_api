@@ -42,8 +42,6 @@ class ErrorController extends AppController
      */
     public function beforeRender(Event $event)
     {
-        parent::beforeRender($event);
-
         if ($this->request->is('json')) {
             $prefix = $this->request->getParam('prefix');
             $action = $this->request->getParam('action');
@@ -51,7 +49,7 @@ class ErrorController extends AppController
                 'header' => [
                     'id' => Text::uuid(),
                     'status' => 'error',
-                    'title' => 'app_' . $prefix . '_' . $action . '_error',
+//                    'title' => 'app_' . $prefix . '_' . $action . '_error',
                     'servertime' => time(),
                     'message' => $this->viewVars['message'],
                     'code' => $this->viewVars['code'],
@@ -69,5 +67,6 @@ class ErrorController extends AppController
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');
+
     }
 }

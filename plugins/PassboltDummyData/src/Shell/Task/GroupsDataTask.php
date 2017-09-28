@@ -188,7 +188,6 @@ class GroupsDataTask extends DataTask
         $groups[] = [
             'id' => Common::uuid('group.id.deleted'),
             'name' => 'deleted',
-            'deleted' => 0,
             'deleted' => 1,
             'created' => '2016-02-02 18:59:05',
             'modified' => '2016-02-02 18:59:05',

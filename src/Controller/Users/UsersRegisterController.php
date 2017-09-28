@@ -59,7 +59,6 @@ class UsersRegisterController extends AppController
 
         $user = $this->Users->newEntity();
         $this->set('user', $user);
-
         $this->success();
     }
 
@@ -87,7 +86,7 @@ class UsersRegisterController extends AppController
         $token = null;
         $this->Users->getConnection()->transactional(function () use ($user, &$token) {
             $this->_saveUser($user);
-            $token = $this->_buildAuthToken($user);
+            $token = $this->AuthenticationTokens->generate($user->id);
         });
         if ($this->_handleValidationError($user)) {
             return;
@@ -165,27 +164,6 @@ class UsersRegisterController extends AppController
     }
 
     /**
-     * Build and save authentication token
-     *
-     * @param \Cake\Datasource\EntityInterface $user user entity
-     * @throws InternalErrorException if token can not be saved
-     * @return \App\Model\Entity\AuthenticationToken $token token
-     */
-    protected function _buildAuthToken($user)
-    {
-        $token = $this->AuthenticationTokens->newEntity(
-            ['user_id' => $user->id],
-            ['validate' => 'register']
-        );
-        if (!$this->AuthenticationTokens->save($token, ['checkRules' => false, 'atomic' => false])) {
-            throw new InternalErrorException(__('The authentication token could not be saved.'));
-        }
-        $this->set('token', $token);
-
-        return $token;
-    }
-
-    /**
      * Save a user entity
      *
      * @throws InternalErrorException if user could not be saved
@@ -200,5 +178,4 @@ class UsersRegisterController extends AppController
             throw new InternalErrorException(__('The user could not be saved.'));
         }
     }
-
 }
