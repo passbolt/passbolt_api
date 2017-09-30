@@ -236,18 +236,13 @@ if (Configure::read('debug')) {
 Plugin::load('Migrations');
 
 /*
+ * Enable EmailQueue plugin
+ */
+Plugin::load('EmailQueue');
+
+/*
  * Gpg Config
  */
-
 if (Configure::read('passbolt.gpg.putenv')) {
     putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
-
-
-Log::config('current',
-    [
-        'className' => 'File',
-        'path' => LOGS.date('Y-m').DS, // you don't need a DS between LOGS and date()
-        'scopes' => ['daily','queriesLog'],
-        'file' => date('Y-m-d'),
-    ]);

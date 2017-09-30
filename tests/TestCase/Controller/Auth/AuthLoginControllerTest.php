@@ -276,12 +276,6 @@ class AuthLoginControllerTest extends IntegrationTestCase
         // Authentication token should be disabled at that stage
         $isValid = $AuthToken->isValid($uuid,Common::uuid('user.id.ada'));
         $this->assertFalse($isValid, 'There should not be a valid auth token');
-
-        // Check if we can access users
-        $this->get('/users.json');
-        $result = json_decode($this->_getBodyAsString());
-        pr($result);
-        $this->assertTrue(count($result->body) > 1, 'There should be some users');
     }
 
     // ====== UTILITIES =========================================================

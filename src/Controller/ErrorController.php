@@ -16,7 +16,7 @@ namespace App\Controller;
 
 use Cake\Event\Event;
 use Cake\Utility\Text;
-
+use Cake\Routing\Router;
 /**
  * Error Handling Controller
  *
@@ -43,8 +43,6 @@ class ErrorController extends AppController
     public function beforeRender(Event $event)
     {
         if ($this->request->is('json')) {
-            $prefix = $this->request->getParam('prefix');
-            $action = $this->request->getParam('action');
             $this->set([
                 'header' => [
                     'id' => Text::uuid(),
@@ -53,8 +51,7 @@ class ErrorController extends AppController
                     'servertime' => time(),
                     'message' => $this->viewVars['message'],
                     'code' => $this->viewVars['code'],
-                    'controller' => $prefix,
-                    'action' => $action
+                    'url' => Router::url(),
                 ],
                 'body' => null, // TODO validation errors if any
                 '_serialize' => ['header', 'body']

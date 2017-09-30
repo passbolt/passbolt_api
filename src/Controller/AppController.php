@@ -93,40 +93,34 @@ class AppController extends Controller
      */
     protected function success($body = null)
     {
-        $prefix = strtolower($this->request->getParam('prefix'));
-        $action = strtolower($this->request->getParam('action'));
         $this->set([
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'success',
                 'servertime' => time(),
                 'message' => null,
-                'controller' => $prefix,
-                'action' => $action
+                'url' => Router::url(),
             ],
             'body' => $body,
             '_serialize' => ['header', 'body']
         ]);
-
         $this->renderLegacyJson();
     }
 
     protected function error($message = null, $body = null)
     {
-        $prefix = strtolower($this->request->getParam('prefix'));
-        $action = strtolower($this->request->getParam('action'));
         $this->set([
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'error',
                 'servertime' => time(),
                 'message' => $message,
-                'controller' => $prefix,
-                'action' => $action
+                'url' => Router::url(),
             ],
             'body' => $body,
             '_serialize' => ['header', 'body']
         ]);
+        $this->renderLegacyJson();
     }
 
     protected function renderLegacyJson()

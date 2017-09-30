@@ -63,6 +63,12 @@ Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->connect('/verify', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginPost'])
         ->setMethods(['POST']);
 
+    $routes->connect('/checksession', ['prefix' => 'Auth', 'controller' => 'AuthCheckSession', 'action' => 'checkSessionGet'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/checkSession', ['prefix' => 'Auth', 'controller' => 'AuthCheckSession', 'action' => 'checkSessionGet'])
+        ->setMethods(['GET']);
+
     $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logoutGet'])
         ->setMethods(['GET']);
 });

@@ -28,7 +28,8 @@
         "ramsey/uuid": "^3.7",
         "singpolyma/openpgp-php": "^0.3.0",
         "thadafinser/user-agent-parser": "^2.0",
-        "donatj/phpuseragentparser": "^0.7.0"
+        "donatj/phpuseragentparser": "^0.7.0",
+        "passbolt/cakephp-email-queue": "^3.1"
     },
     "require-dev": {
         "psy/psysh": "@stable",
