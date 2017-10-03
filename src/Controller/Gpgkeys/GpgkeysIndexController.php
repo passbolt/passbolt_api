@@ -12,13 +12,19 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Roles;
+namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
 
-class RolesIndexController extends AppController
+class GpgkeysIndexController extends AppController
 {
+    public function beforeFilter(Event $event)
+    {
+        $this->Auth->allow('index');
+        parent::beforeFilter($event);
+    }
+
     /**
      * Roles Index action
      *
@@ -26,8 +32,10 @@ class RolesIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Roles');
-        $roles = $this->Roles->find('all');
-        $this->success($roles);
+        $this->loadModel('Gpgkeys');
+        $whitelist = ['filter' => ['modified-after']];
+        $options = $this->QueryString->get($whitelist);
+        $gpgkeys = $this->Gpgkeys->find('index', $options);
+        $this->success($gpgkeys);
     }
 }

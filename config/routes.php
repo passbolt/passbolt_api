@@ -96,6 +96,19 @@ Router::prefix('Users', function ($routes) {
 });
 
 /**
+ * Gpgkeys prefixed routes
+ */
+Router::prefix('/gpgkeys', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Roles prefixed routes
  */
 Router::prefix('Roles', function ($routes) {

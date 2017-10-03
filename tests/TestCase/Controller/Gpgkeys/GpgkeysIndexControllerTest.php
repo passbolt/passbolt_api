@@ -12,22 +12,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Roles;
+namespace App\Test\TestCase\Controller;
 
-use App\Controller\AppController;
-use Cake\Event\Event;
+use App\Model\Entity\Role;
+use Cake\ORM\TableRegistry;
+use Cake\TestSuite\IntegrationTestCase;
 
-class RolesIndexController extends AppController
+class UsersRegisterControllerTest extends IntegrationTestCase
 {
-    /**
-     * Roles Index action
-     *
-     * @return void
-     */
-    public function index()
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
+
+    public function testGpgkeysIndexNotAllowedError()
     {
-        $this->loadModel('Roles');
-        $roles = $this->Roles->find('all');
-        $this->success($roles);
+        $this->get('/users/register');
+    }
+
+    public function testUserRegisterPostSuccess()
+    {
     }
 }
