@@ -26,5 +26,14 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->getJson('/resources.json');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        $resource = $this->_responseJsonBody[0]->Resource;
+        $attributesNames = ['id', 'name', 'username', 'uri', 'description', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
+        $this->assertObjectHasAttributes($attributesNames, $resource);
+    }
+
+    public function testNotAuthenticatedError()
+    {
+        $this->getJson('/resources.json');
+        $this->assertAuthenticationError();
     }
 }
