@@ -32,7 +32,7 @@ class GpgkeysDataTask extends DataTask
      * @param $userId
      * @return string
      */
-    protected function _getGpgkeyPath($userId) {
+    public function getGpgkeyPath($userId) {
         $Users = TableRegistry::get('Users');
         $user = $Users->find('all')->where(['id' => $userId])->first();
         $prefix = $user->username;
@@ -52,7 +52,7 @@ class GpgkeysDataTask extends DataTask
      * @return string
      */
     protected function _getUserKey($userId) {
-        $key = file_get_contents($this->_getGpgkeyPath($userId));
+        $key = file_get_contents($this->getGpgkeyPath($userId));
         return $key;
     }
 

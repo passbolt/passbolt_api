@@ -117,27 +117,27 @@ class ResourcesTable extends Table
     /**
      * Build the query that fetches data for resource index
      *
-     * @param Query $query a query instance
      * @param array $options options
-     * @throws Exception if no role is specified
+     * @throws Exception if the options contain Secrets but user_id is not provided
      * @return Query
      */
-    public function findIndex(Query $query, array $options)
+    public function findIndex(array $options)
     {
-        // Options must contain a role
-        if (!isset($options['role'])) {
-            throw new Exception(__('User table findIndex should have a role set in options.'));
+        $query = $this->query();
+        $query->select();
+
+        // If contains Secrets.
+        if (isset($options['contain']['secrets'])) {
+            if (!isset($options['user_id'])) {
+                throw new Exception(__('Resource table findIndex should have a user_id set in options if the options contain Secrets.'));
+            }
+            $query->contain('Secrets', function($q) use ($options) {
+                return $q->where(['user_id' => $options['user_id']]);
+            });
         }
 
-        // Default associated data
-        $query->contain([
-        ]);
-
-        // Filter out guests, inactive and deleted users
-        $where = [
-            'Resources.deleted' => false
-        ];
-        $query->where($where);
+        // Filter out deleted resources
+        $query->where(['deleted' => false]);
 
         return $query;
     }
