@@ -14,33 +14,115 @@
  */
 namespace App\Test\TestCase;
 
-use App\Application;
-use Cake\Error\Middleware\ErrorHandlerMiddleware;
-use Cake\Http\MiddlewareQueue;
-use Cake\Routing\Middleware\AssetMiddleware;
-use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\TestSuite\IntegrationTestCase;
+use App\Utility\Common;
 
-/**
- * ApplicationTest class
- */
 class ApplicationTest extends IntegrationTestCase
 {
+    /**
+     * The response for the most recent json request.
+     *
+     * @var Object|array
+     */
+    protected $_responseJson;
 
     /**
-     * testMiddleware
+     * The response header for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonHeader;
+
+    /**
+     * The response body for the most recent json request.
+     *
+     * @var Object
+     */
+    protected $_responseJsonBody;
+
+    /**
+     * Asserts that the latest json request is a success.
      *
      * @return void
      */
-    public function testMiddleware()
+    public function assertSuccess()
     {
-        $app = new Application(dirname(dirname(__DIR__)) . '/config');
-        $middleware = new MiddlewareQueue();
-
-        $middleware = $app->middleware($middleware);
-
-        $this->assertInstanceOf(ErrorHandlerMiddleware::class, $middleware->get(0));
-        $this->assertInstanceOf(AssetMiddleware::class, $middleware->get(1));
-        $this->assertInstanceOf(RoutingMiddleware::class, $middleware->get(2));
+        $this->assertResponseOk();
+        $this->assertEquals('success', $this->_responseJsonHeader->status, 'The request should be a success');
     }
+
+    /**
+     * Asserts that the latest json request failed.
+     *
+     * @return void
+     */
+    public function assertError()
+    {
+        $this->assertEquals('error', $this->_responseJsonHeader->status, 'The request should be an error');
+    }
+
+    /**
+     * Asserts that the json response status code is an error.
+     *
+     * @return void
+     */
+    public function assertAuthenticationError()
+    {
+        $this->assertError();
+        $this->assertResponseCode(403);
+        $this->assertEquals('You need to login to access this location.', $this->_responseJsonHeader->message);
+    }
+
+    /**
+     * Asserts that an object has specified attributes.
+     *
+     * @param string $attributesNames
+     * @param object $object
+     */
+    public function assertObjectHasAttributes($attributesNames, $object)
+    {
+        foreach($attributesNames as $attributeName) {
+            $this->assertObjectHasAttribute($attributeName, $object);
+        }
+    }
+
+    /**
+     * Authenticate as a user.
+     *
+     * @param string $userFirstName The user first name.
+     * @return void
+     */
+    public function authenticateAs($userFirstName)
+    {
+        $this->session([
+            'Auth' => [
+                'User' => [
+                    'id' => Common::uuid('user.id.' . $userFirstName),
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * Performs a GET json request using the current request data.
+     *
+     * The response of the dispatched request will be stored as
+     * a property (_responseJson). You can use various assert
+     * methods to check the response.
+     *
+     * @param string|array $url The URL to request.
+     * @return void
+     * @throws Exception
+     */
+    public function getJson($url)
+    {
+        $this->get($url);
+        $this->_responseJson = json_decode($this->_getBodyAsString());
+        if (empty($this->_responseJson)) {
+            throw new Exception('The result of the request is not a valid json.');
+        }
+        $this->_responseJsonHeader = $this->_responseJson->header;
+        $this->_responseJsonBody = $this->_responseJson->body;
+    }
+
 }

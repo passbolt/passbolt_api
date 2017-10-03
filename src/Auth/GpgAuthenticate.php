@@ -221,7 +221,7 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         $info = $this->_gpg->keyinfo($keyid);
         if (empty($info)) {
-            if (!$this->_gpg->import($user['Gpgkey']['key'])) {
+            if (!$this->_gpg->import($user->gpgkey->armored_key)) {
                 throw new InternalErrorException('The GnuPG key for the user could not be imported');
             }
             // check that the imported key match the fingerprint

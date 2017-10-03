@@ -23,7 +23,8 @@ return [
                         'PassboltDummyData.UsersData',
                         'PassboltDummyData.ProfilesData',
                         'PassboltDummyData.GroupsData',
-                        'PassboltDummyData.GpgkeysData'
+                        'PassboltDummyData.GpgkeysData',
+                        'PassboltDummyData.ResourcesData'
                     ]
                 ],
                 'fixturize' => [
@@ -32,7 +33,8 @@ return [
                         'PassboltDummyData.UsersData',
                         'PassboltDummyData.ProfilesData',
                         'PassboltDummyData.GroupsData',
-                        'PassboltDummyData.GpgkeysData'
+                        'PassboltDummyData.GpgkeysData',
+                        'PassboltDummyData.ResourcesData'
                     ]
                 ]
             ],

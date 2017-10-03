@@ -80,7 +80,7 @@ class GpgkeysDataTask extends DataTask
                 'key_id' => $info['key_id'],
                 'fingerprint' => $info['fingerprint'],
                 'type' => $info['type'],
-                'expires' => !empty($info['expires']) ? date('Y-m-d H:i:s', $info['expires']) : '',
+                'expires' => !empty($info['expires']) ? date('Y-m-d H:i:s', $info['expires']) : null,
                 'key_created' => date('Y-m-d H:i:s', $info['key_created']),
                 'deleted' => false,
                 'created' => date('Y-m-d H:i:s'),
