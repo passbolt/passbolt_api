@@ -12,21 +12,21 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Users;
+namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 
-class UsersIndexController extends AppController
+class ResourcesIndexController extends AppController
 {
     /**
-     * User Index action
+     * Resource Index action
      *
      * @return void
      */
     public function index()
     {
-        $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role()]);
-        $this->success($users);
+        $this->loadModel('Resources');
+        $resources = $this->Resources->find('index', ['role' => $this->User->role()]);
+        $this->success($resources);
     }
 }

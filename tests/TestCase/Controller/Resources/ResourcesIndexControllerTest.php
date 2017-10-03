@@ -12,21 +12,19 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Users;
+namespace App\Test\TestCase\Controller;
 
-use App\Controller\AppController;
+use App\Test\TestCase\ApplicationTest;
 
-class UsersIndexController extends AppController
+class ResourcesIndexControllerTest extends ApplicationTest
 {
-    /**
-     * User Index action
-     *
-     * @return void
-     */
-    public function index()
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.resources'];
+
+    public function testGetSuccess()
     {
-        $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role()]);
-        $this->success($users);
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json');
+        $this->assertSuccess();
+        $this->assertGreaterThan(1, count($this->_responseJsonBody));
     }
 }

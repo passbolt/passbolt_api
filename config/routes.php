@@ -74,6 +74,26 @@ Router::scope('/auth', function (RouteBuilder $routes) {
 });
 
 /**
+ * Resources prefixed routes
+ */
+Router::prefix('Resources', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['controller' => 'ResourcesIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
+/**
+ * Roles prefixed routes
+ */
+Router::prefix('Roles', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Users prefixed routes
  */
 Router::prefix('Users', function ($routes) {
@@ -92,16 +112,6 @@ Router::prefix('Users', function ($routes) {
 
     $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
-        ->setMethods(['GET']);
-});
-
-/**
- * Roles prefixed routes
- */
-Router::prefix('Roles', function ($routes) {
-    $routes->setExtensions(['json']);
-
-    $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 });
 

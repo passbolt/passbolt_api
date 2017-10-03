@@ -12,21 +12,20 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Users;
 
-use App\Controller\AppController;
+use Migrations\AbstractMigration;
 
-class UsersIndexController extends AppController
+class V200DropUnusedResourceFields extends AbstractMigration
 {
     /**
-     * User Index action
+     * Up
      *
      * @return void
      */
-    public function index()
+    public function up()
     {
-        $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role()]);
-        $this->success($users);
+        $this->table('resources')
+            ->removeColumn('expiry_date')
+            ->update();
     }
 }
