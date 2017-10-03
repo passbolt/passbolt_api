@@ -180,7 +180,7 @@ class GpgkeysTable extends Table
         // Same rule than index apply
         // with a specific id requested
         $query = $this->findIndex($query, $options);
-        $query->where(['Gpgkeys.id' => $options['id']]);
+        $query->where(['id' => $options['id']]);
 
         return $query;
     }

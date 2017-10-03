@@ -15,6 +15,7 @@
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
@@ -35,7 +36,7 @@ class GpgkeysViewController extends AppController
         }
         // Retrieve the user
         $this->loadModel('Gpgkeys');
-        $gpgkeys = $this->Gpgkeys->find('view', ['id' => $id, 'role' => $this->User->role() ])->first();
+        $gpgkeys = $this->Gpgkeys->find('view', ['id' => $id ])->first();
         if (empty($gpgkeys)) {
             throw new NotFoundException(__('The gpg key does not exist.'));
         }

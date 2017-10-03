@@ -14,20 +14,42 @@
  */
 namespace App\Test\TestCase\Controller;
 
-use App\Model\Entity\Role;
+use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\I18n\Time;
 
-class UsersRegisterControllerTest extends IntegrationTestCase
+class GpgkeysIndexControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
+    public $fixtures = ['app.users', 'app.roles', 'app.gpgkeys'];
 
     public function testGpgkeysIndexNotAllowedError()
     {
-        $this->get('/users/register');
+        $this->getJson('/gpgkeys.json');
+        $this->assertAuthenticationError();
     }
 
-    public function testUserRegisterPostSuccess()
+    public function testGpgkeysIndexSuccess()
     {
+        $this->authenticateAs('ada');
+        $this->getJson('/gpgkeys.json');
+        $this->assertSuccess();
+        $this->assertGreaterThan(20, count($this->_responseJsonBody));
+    }
+
+    public function testGpgKeysIndexModifiedAfterSuccess() {
+        $Gpgkeys = TableRegistry::get('Gpgkeys');
+
+        // Find a key at a given time and modify it
+        $t = Time::parse('now');
+        sleep(1);
+        $gpgkey = $Gpgkeys->find('all')->first();
+        $gpgkey->modified = Time::parse('now');
+        $Gpgkeys->save($gpgkey);
+
+        // Find the keys modified since then
+        $this->authenticateAs('ada');
+        $this->getJson('/gpgkeys.json?filter[modified-after]=' . $t->toUnixString());
+        $this->assertSuccess();
+        $this->assertCount(1, $this->_responseJsonBody);
     }
 }

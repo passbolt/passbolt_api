@@ -19,14 +19,8 @@ use Cake\Event\Event;
 
 class GpgkeysIndexController extends AppController
 {
-    public function beforeFilter(Event $event)
-    {
-        $this->Auth->allow('index');
-        parent::beforeFilter($event);
-    }
-
     /**
-     * Roles Index action
+     * Gpgkey Index action
      *
      * @return void
      */
