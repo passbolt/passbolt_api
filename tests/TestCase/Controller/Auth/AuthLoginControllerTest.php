@@ -21,7 +21,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Cake\TestSuite\IntegrationTestCase;
-use PassboltDummyData\Shell\Task\GpgkeysDataTask;
+use PassboltTestData\Shell\Task\GpgkeysDataTask;
 
 class AuthLoginControllerTest extends IntegrationTestCase
 {

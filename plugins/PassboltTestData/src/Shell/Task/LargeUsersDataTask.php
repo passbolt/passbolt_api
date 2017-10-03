@@ -12,11 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltDummyData\Shell\Task;
+namespace PassboltTestData\Shell\Task;
 
 use App\Utility\Common;
 use Cake\Core\Configure;
-use PassboltData\Shell\Task\DataTask;
 
 class LargeUsersDataTask extends DataTask
 {
@@ -43,7 +42,7 @@ class LargeUsersDataTask extends DataTask
             'created_by' => Common::uuid('user.id.admin'),
             'modified_by' => Common::uuid('user.id.admin')
         ];
-        for ($i = 0; $i < Configure::read('PassboltDummyData.scenarios.large.install.count'); $i++) {
+        for ($i = 0; $i < Configure::read('PassboltTestData.scenarios.large.install.count'); $i++) {
             $users[] = [
                 'id' => Common::uuid('user.id.user_' . $i),
                 'username' => 'user_' . $i . '@passbolt.com',

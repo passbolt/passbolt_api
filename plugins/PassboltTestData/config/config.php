@@ -14,27 +14,29 @@
  */
 
 return [
-    'PassboltDummyData' => [
+    'PassboltTestData' => [
         'scenarios' => [
             'default' => [
                 'install' => [
                     'shellTasks' => [
-                        'PassboltData.RolesData',
-                        'PassboltDummyData.UsersData',
-                        'PassboltDummyData.ProfilesData',
-                        'PassboltDummyData.GroupsData',
-                        'PassboltDummyData.GpgkeysData',
-                        'PassboltDummyData.ResourcesData'
+                        'PassboltTestData.RolesData',
+                        'PassboltTestData.UsersData',
+                        'PassboltTestData.ProfilesData',
+                        'PassboltTestData.GroupsData',
+                        'PassboltTestData.GpgkeysData',
+                        'PassboltTestData.ResourcesData',
+                        'PassboltTestData.SecretsData'
                     ]
                 ],
                 'fixturize' => [
                     'shellTasks' => [
-                        'PassboltData.RolesData',
-                        'PassboltDummyData.UsersData',
-                        'PassboltDummyData.ProfilesData',
-                        'PassboltDummyData.GroupsData',
-                        'PassboltDummyData.GpgkeysData',
-                        'PassboltDummyData.ResourcesData'
+                        'PassboltTestData.RolesData',
+                        'PassboltTestData.UsersData',
+                        'PassboltTestData.ProfilesData',
+                        'PassboltTestData.GroupsData',
+                        'PassboltTestData.GpgkeysData',
+                        'PassboltTestData.ResourcesData',
+                        'PassboltTestData.SecretsData'
                     ]
                 ]
             ],
@@ -42,13 +44,13 @@ return [
                 'install' => [
                     'count' => 300,
                     'shellTasks' => [
-                        'PassboltData.RolesData',
-                        'PassboltDummyData.LargeUsersData',
+                        'PassboltTestData.RolesData',
+                        'PassboltTestData.LargeUsersData',
                     ]
                 ],
                 'fixturize' => [
                     'shellTasks' => [
-                        'PassboltDummyData.LargeUsersData',
+                        'PassboltTestData.LargeUsersData',
                     ]
                 ]
             ],

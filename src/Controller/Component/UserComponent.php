@@ -31,6 +31,16 @@ class UserComponent extends Component
     protected $_userAgent = null;
 
     /**
+     * Return the current user id if the user is identified
+     *
+     * @return string
+     */
+    public function id()
+    {
+        return $this->Auth->user('id');
+    }
+
+    /**
      * Return the current user role or GUEST if the user is not identified
      *
      * @return string

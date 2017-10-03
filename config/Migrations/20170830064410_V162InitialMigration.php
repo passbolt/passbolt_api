@@ -26,7 +26,7 @@ class V162InitialMigration extends AbstractMigration
     {
         // If people are migrating from v1 - skip
         $exists = $this->hasTable('users');
-        if($exists) return;
+        if ($exists) return;
 
         // If this is a fresh install
         $this->table('authentication_tokens', ['id' => false, 'primary_key' => ['id']])
@@ -923,27 +923,37 @@ class V162InitialMigration extends AbstractMigration
             ])
             ->create();
 
-        $this->table('users_resources_permissions', ['id' => false, 'primary_key' => ['']])
-            ->addColumn('user_id', 'string', [
-                'default' => null,
-                'limit' => 36,
-                'null' => false,
-            ])
-            ->addColumn('resource_id', 'string', [
-                'default' => null,
-                'limit' => 36,
-                'null' => false,
-            ])
-            ->addColumn('permission_id', 'string', [
-                'default' => null,
-                'limit' => 36,
-                'null' => true,
-            ])
-            ->addColumn('permission_type', 'biginteger', [
-                'default' => null,
-                'limit' => 11,
-                'null' => true,
-            ])
-            ->create();
+        $rolesData = [
+            [
+                'id' => '0d51c3a8-5e67-5e3d-882f-e1868966d817',
+                'name' => 'admin',
+                'description' => 'Organization administrator',
+                'created' => '2012-07-04 13:39:25',
+                'modified' => '2012-07-04 13:39:25',
+            ],
+            [
+                'id' => '6f02b8d2-e24c-51fe-a452-5a027c26dbef',
+                'name' => 'guest',
+                'description' => 'Non logged in user',
+                'created' => '2012-07-04 13:39:25',
+                'modified' => '2012-07-04 13:39:25',
+            ],
+            [
+                'id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
+                'name' => 'user',
+                'description' => 'Logged in user',
+                'created' => '2012-07-04 13:39:25',
+                'modified' => '2012-07-04 13:39:25',
+            ],
+            [
+                'id' => 'eeda6af2-38dc-5e34-b86d-7687878bc38a',
+                'name' => 'root',
+                'description' => 'Super Administrator',
+                'created' => '2012-07-04 13:39:25',
+                'modified' => '2012-07-04 13:39:25',
+            ],
+        ];
+        $this->insert('roles', $rolesData);
     }
+
 }

@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltDummyData\Shell;
+namespace PassboltTestData\Shell;
 
 use Cake\Console\Shell;
 use Cake\Core\Configure;
@@ -20,7 +20,7 @@ use Cake\Core\Configure;
 /**
  * Fixturize shell command.
  */
-class DummyFixturizeShell extends Shell
+class FixturizeShell extends Shell
 {
 
     /**
@@ -30,7 +30,7 @@ class DummyFixturizeShell extends Shell
      */
     public function main()
     {
-        $shellTasks = Configure::read('PassboltDummyData.scenarios.' . $this->args[0] . '.fixturize.shellTasks');
+        $shellTasks = Configure::read('PassboltTestData.scenarios.' . $this->args[0] . '.fixturize.shellTasks');
         if (!is_null($shellTasks)) {
             foreach ($shellTasks as $shellTask) {
                 $task = $this->Tasks->load($shellTask);
@@ -55,7 +55,7 @@ class DummyFixturizeShell extends Shell
         $parser->addArgument('scenario', [
             'help' => 'The scenario to fixturize.',
             'required' => true,
-            'choices' =>  array_keys(Configure::read('PassboltDummyData.scenarios')),
+            'choices' =>  array_keys(Configure::read('PassboltTestData.scenarios')),
         ])->setDescription(__('Fixturize a dummy scenario.'));
         return $parser;
     }

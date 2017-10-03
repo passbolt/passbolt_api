@@ -12,18 +12,17 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltDummyData\Shell\Task;
+namespace PassboltTestData\Shell\Task;
 
 use App\Utility\Common;
 use App\Utility\Gpg;
 use Cake\ORM\TableRegistry;
-use PassboltData\Shell\Task\DataTask;
 
 class GpgkeysDataTask extends DataTask
 {
     public $entityName = 'Gpgkeys';
 
-    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltDummyData' . DS . 'src' .
+    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'src' .
         DS . 'Shell' . DS . 'Task' . DS . 'gpg' . DS;
 
     /**
@@ -32,7 +31,7 @@ class GpgkeysDataTask extends DataTask
      * @param $userId
      * @return string
      */
-    protected function _getGpgkeyPath($userId) {
+    public function getGpgkeyPath($userId) {
         $Users = TableRegistry::get('Users');
         $user = $Users->find('all')->where(['id' => $userId])->first();
         $prefix = $user->username;
@@ -52,7 +51,7 @@ class GpgkeysDataTask extends DataTask
      * @return string
      */
     protected function _getUserKey($userId) {
-        $key = file_get_contents($this->_getGpgkeyPath($userId));
+        $key = file_get_contents($this->getGpgkeyPath($userId));
         return $key;
     }
 

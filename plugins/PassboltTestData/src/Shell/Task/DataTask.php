@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltData\Shell\Task;
+namespace PassboltTestData\Shell\Task;
 
 use Cake\Console\Shell;
 use Exception;

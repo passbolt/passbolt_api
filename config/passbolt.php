@@ -23,7 +23,7 @@ return [
         ],
         'gpg' => [
             'putenv' => true, // replace GNUPGHOME even if it is set
-            'keyring' => '/home/www-data/.gnupg',
+            'keyring' => '/var/lib/nginx/.gnupg',
             'serverKey' => [
                 'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
                 'public' => CONFIG . 'gpg' . DS . 'unsecure.key',

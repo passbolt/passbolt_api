@@ -12,10 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltDummyData\Shell\Task;
+namespace PassboltTestData\Shell\Task;
 
 use App\Utility\Common;
-use PassboltData\Shell\Task\DataTask;
 
 class ProfilesDataTask extends DataTask
 {

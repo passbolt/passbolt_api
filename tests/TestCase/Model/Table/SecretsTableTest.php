@@ -1,22 +1,22 @@
 <?php
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\GpgkeysTable;
+use App\Model\Table\SecretsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\GpgkeysTable Test Case
+ * App\Model\Table\SecretsTable Test Case
  */
-class GpgkeysTableTest extends TestCase
+class SecretsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \App\Model\Table\GpgkeysTable
+     * @var \App\Model\Table\SecretsTable
      */
-    public $Gpgkeys;
+    public $Secrets;
 
     /**
      * Fixtures
@@ -24,18 +24,18 @@ class GpgkeysTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.gpgkeys',
+        'app.secrets',
         'app.users',
         'app.roles',
         'app.authentication_tokens',
         'app.favorites',
         'app.file_storage',
+        'app.gpgkeys',
         'app.profiles',
-        'app.secrets',
         'app.users_resources_permissions',
-        'app.groups_users',
         'app.groups',
-        'app.keys'
+        'app.groups_users',
+        'app.resources'
     ];
 
     /**
@@ -46,8 +46,8 @@ class GpgkeysTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Gpgkeys') ? [] : ['className' => GpgkeysTable::class];
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys', $config);
+        $config = TableRegistry::exists('Secrets') ? [] : ['className' => SecretsTable::class];
+        $this->Secrets = TableRegistry::get('Secrets', $config);
     }
 
     /**
@@ -57,7 +57,7 @@ class GpgkeysTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->Gpgkeys);
+        unset($this->Secrets);
 
         parent::tearDown();
     }
