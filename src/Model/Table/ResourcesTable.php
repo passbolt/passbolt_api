@@ -121,7 +121,7 @@ class ResourcesTable extends Table
      * @throws Exception if the options contain Secrets but user_id is not provided
      * @return Query
      */
-    public function findIndex(array $options)
+    public function findIndex(array $options = [])
     {
         $query = $this->query();
         $query->select();

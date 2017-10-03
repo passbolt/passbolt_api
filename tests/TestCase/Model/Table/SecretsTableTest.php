@@ -27,7 +27,6 @@ class SecretsTableTest extends TestCase
         'app.secrets',
         'app.users',
         'app.roles',
-        'app.controller_logs',
         'app.authentication_tokens',
         'app.favorites',
         'app.file_storage',

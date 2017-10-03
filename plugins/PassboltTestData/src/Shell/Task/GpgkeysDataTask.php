@@ -12,18 +12,17 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltDummyData\Shell\Task;
+namespace PassboltTestData\Shell\Task;
 
 use App\Utility\Common;
 use App\Utility\Gpg;
 use Cake\ORM\TableRegistry;
-use PassboltData\Shell\Task\DataTask;
 
 class GpgkeysDataTask extends DataTask
 {
     public $entityName = 'Gpgkeys';
 
-    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltDummyData' . DS . 'src' .
+    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'src' .
         DS . 'Shell' . DS . 'Task' . DS . 'gpg' . DS;
 
     /**

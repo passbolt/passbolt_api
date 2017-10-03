@@ -12,15 +12,15 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltDummyData\Shell;
+namespace PassboltTestData\Shell;
 
+use Cake\Console\Shell;
 use Cake\Core\Configure;
-use PassboltData\Shell\DataInstallerShell;
 
 /**
  * Installer shell command.
  */
-class DummyInstallerShell extends DataInstallerShell
+class InstallerShell extends Shell
 {
 
     /**
@@ -36,9 +36,33 @@ class DummyInstallerShell extends DataInstallerShell
         $parser->addArgument('scenario', [
             'help' => 'The scenario to play.',
             'required' => true,
-            'choices' => array_keys(Configure::read('PassboltDummyData.scenarios'))
+            'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
         ])->setDescription(__('Populate the database with dummy data test.'));
         return $parser;
+    }
+
+    /**
+     * main() method.
+     *
+     * @return bool|int|null Success or error code.
+     */
+    public function main()
+    {
+        $shellTtasks = $this->_getShellTasks();
+
+        foreach ($shellTtasks as $shellTask) {
+            $task = $this->Tasks->load($shellTask);
+            $task->params['quiet'] = isset($this->params['quiet']) && $this->params['quiet'] == 1 ? 1 : 0;
+            $task->params['connection'] = isset($this->params['connection']) ? $this->params['connection'] : 'default';
+            if (method_exists($task, "beforeExecute")) {
+                $task->beforeExecute();
+            }
+            $task->execute();
+            if (method_exists($task, "afterExecute")) {
+                $task->afterExecute();
+            }
+        }
+        return true;
     }
 
     /**
@@ -47,7 +71,7 @@ class DummyInstallerShell extends DataInstallerShell
      */
     protected function _getShellTasks()
     {
-        $scenarios = Configure::read('PassboltDummyData.scenarios');
+        $scenarios = Configure::read('PassboltTestData.scenarios');
         $scenario = $scenarios[$this->args[0]];
         return $scenario['install']['shellTasks'];
     }
