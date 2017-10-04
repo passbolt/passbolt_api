@@ -47,6 +47,11 @@ class ResourcesTable extends Table
         $this->hasMany('UsersResourcesPermissions', [
             'foreignKey' => 'resource_id'
         ]);
+        $this->hasOne('Creator', [
+            'className' => 'Users',
+            'bindingKey' => 'created_by',
+            'foreignKey' => 'id'
+        ]);
     }
 
     /**
@@ -132,12 +137,17 @@ class ResourcesTable extends Table
                 throw new Exception(__('Resource table findIndex should have a user_id set in options if the options contain secret.'));
             }
             $query->contain('Secrets', function($q) use ($options) {
-                return $q->where(['user_id' => $options['user_id']]);
+                return $q->where(['Secrets.user_id' => $options['user_id']]);
             });
         }
 
+        // If contains Creator.
+        if (isset($options['contain']['creator'])) {
+            $query->contain('Creator');
+        }
+
         // Filter out deleted resources
-        $query->where(['deleted' => false]);
+        $query->where(['Resources.deleted' => false]);
 
         return $query;
     }
@@ -158,7 +168,7 @@ class ResourcesTable extends Table
             throw new Exception(__('Resource table findView should have an id set in options.'));
         }
 
-        $query->where(['id' => $options['id']]);
+        $query->where(['Resources.id' => $options['id']]);
 
         return $query;
     }

@@ -28,7 +28,7 @@ class ResourcesIndexController extends AppController
         $this->loadModel('Resources');
 
         // Retrieve and sanity the query options.
-        $whitelist = ['contain' => ['secret']];
+        $whitelist = ['contain' => ['secret', 'creator']];
         $options = $this->QueryString->get($whitelist);
 
         // If the result contains the secrets, include only the current user secret.

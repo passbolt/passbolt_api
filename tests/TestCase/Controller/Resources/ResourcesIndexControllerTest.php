@@ -42,6 +42,16 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertObjectHasAttribute('modified', $secret);
     }
 
+    protected function _assertUserAttributes($user) {
+        $this->assertObjectHasAttribute('id', $user);
+        $this->assertObjectHasAttribute('role_id', $user);
+        $this->assertObjectHasAttribute('username', $user);
+        $this->assertObjectHasAttribute('active', $user);
+        $this->assertObjectHasAttribute('deleted', $user);
+        $this->assertObjectHasAttribute('created', $user);
+        $this->assertObjectHasAttribute('modified', $user);
+    }
+
     public function testIndexSuccess()
     {
         $this->authenticateAs('ada');
@@ -53,6 +63,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->_assertResourceAttributes($this->_responseJsonBody[0]);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
     }
 
     public function testIndexApiV1Success()
@@ -67,6 +78,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('Creator', $this->_responseJsonBody[0]);
     }
 
     public function testIndexSuccessContainsSecrets()
@@ -94,6 +106,31 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody[0]);
         $this->assertCount(1, $this->_responseJsonBody[0]->Secret);
         $this->_assertSecretAttributes($this->_responseJsonBody[0]->Secret[0]);
+    }
+
+    public function testIndexSuccessContainsCreator()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?api-version=2&contain[creator]=1');
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->_assertResourceAttributes($this->_responseJsonBody[0]);
+        $this->assertObjectHasAttribute('creator', $this->_responseJsonBody[0]);
+        $this->_assertUserAttributes($this->_responseJsonBody[0]->creator);
+    }
+
+    public function testIndexSuccessApiV1ContainsCreator()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?contain[creator]=1');
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
+        $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
+        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody[0]);
+        $this->_assertUserAttributes($this->_responseJsonBody[0]->Creator);
     }
 
     public function testIndexErrorNotAuthenticated()

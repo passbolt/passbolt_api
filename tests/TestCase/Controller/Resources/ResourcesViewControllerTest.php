@@ -43,6 +43,16 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertObjectHasAttribute('modified', $secret);
     }
 
+    protected function _assertUserAttributes($user) {
+        $this->assertObjectHasAttribute('id', $user);
+        $this->assertObjectHasAttribute('role_id', $user);
+        $this->assertObjectHasAttribute('username', $user);
+        $this->assertObjectHasAttribute('active', $user);
+        $this->assertObjectHasAttribute('deleted', $user);
+        $this->assertObjectHasAttribute('created', $user);
+        $this->assertObjectHasAttribute('modified', $user);
+    }
+
     public function testViewSuccess()
     {
         $this->authenticateAs('dame');
@@ -99,6 +109,33 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->Secret);
         $this->_assertSecretAttributes($this->_responseJsonBody->Secret[0]);
+    }
+
+    public function testViewSuccessContainsCreator()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?api-version=2&contain[creator]=1");
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->_assertResourceAttributes($this->_responseJsonBody);
+        $this->assertObjectHasAttribute('creator', $this->_responseJsonBody);
+        $this->_assertUserAttributes($this->_responseJsonBody->creator);
+    }
+
+    public function testViewSuccessApiV1ContainsCreator()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?contain[creator]=1");
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
+        $this->_assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody);
+        $this->_assertUserAttributes($this->_responseJsonBody->Creator);
     }
 
     public function testViewErrorNotAuthenticated()

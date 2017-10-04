@@ -17,8 +17,8 @@ use Cake\ORM\Entity;
  * @property string $created_by
  * @property string $modified_by
  *
+ * @property \App\Model\Entity\User $creator
  * @property \App\Model\Entity\Secret[] $secrets
- * @property \App\Model\Entity\UsersResourcesPermission[] $users_resources_permissions
  */
 class Resource extends Entity
 {
@@ -42,7 +42,7 @@ class Resource extends Entity
         'modified' => false,
         'created_by' => false,
         'modified_by' => false,
-        'secrets' => false,
-        'users_resources_permissions' => false
+        'creator' => false,
+        'secrets' => false
     ];
 }
