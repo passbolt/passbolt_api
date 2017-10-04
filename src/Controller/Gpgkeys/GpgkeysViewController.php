@@ -12,39 +12,34 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Users;
+namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
-class UsersViewController extends AppController
+class GpgkeysViewController extends AppController
 {
     /**
-     * User View action
+     * Roles View action
      *
-     * @throws BadRequestException if the user id is not a uuid or 'me'
-     * @throws NotFoundException if the user does not exist
-     * @param string $id uuid|me
+     * @param string $id uuid of the gpgkey
      * @return void
      */
     public function view($id)
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
-            if ($id === 'me') {
-                $id = $this->User->id(); // me returns the currently logged-in user
-            } else {
-                throw new BadRequestException(__('The user id is not valid.'));
-            }
+            throw new BadRequestException(__('The gpg key id is not valid.'));
         }
         // Retrieve the user
-        $this->loadModel('Users');
-        $user = $this->Users->find('view', ['id' => $id, 'role' => $this->User->role() ])->first();
-        if (empty($user)) {
-            throw new NotFoundException(__('The user does not exist.'));
+        $this->loadModel('Gpgkeys');
+        $gpgkeys = $this->Gpgkeys->find('view', ['id' => $id ])->first();
+        if (empty($gpgkeys)) {
+            throw new NotFoundException(__('The gpg key does not exist.'));
         }
-        $this->success($user);
+        $this->success($gpgkeys);
     }
 }

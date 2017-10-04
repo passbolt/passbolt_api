@@ -65,16 +65,15 @@ class GpgAuthenticate extends BaseAuthenticate
      */
     public function authenticate(ServerRequest $request, Response $response)
     {
-        // Init gpg object and load server key
-        $this->__getData($request);
-        $this->__initKeyring();
-        $this->_response = $response;
-
-        // Begin process by checking if the user exist and his key is valid
-        $this->_response = $this->_response
+        $this->_response = $response
             ->withHeader('X-GPGAuth-Authenticated', 'false')
             ->withHeader('X-GPGAuth-Progress', 'stage0');
 
+        // Init gpg object and load server key
+        $this->__getData($request);
+        $this->__initKeyring();
+
+        // Begin process by checking if the user exist and his key is valid
         $user = $this->__identifyUserWithFingerprint();
         if ($user === false) {
             // If the user doesn't exist, we want to mention it in the debug anyway (no matter we are in debug mode or not)
@@ -208,7 +207,6 @@ class GpgAuthenticate extends BaseAuthenticate
         if (!$this->_gpg->adddecryptkey($keyid, $this->_config['serverKey']['passphrase'])) {
             throw new InternalErrorException('The GPG Server key defined in the config cannot be used to decrypt');
         }
-
     }
 
     /**

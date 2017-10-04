@@ -74,6 +74,20 @@ Router::scope('/auth', function (RouteBuilder $routes) {
 });
 
 /**
+ * Gpgkeys prefixed routes
+ */
+Router::prefix('/gpgkeys', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Resources prefixed routes
  */
 Router::prefix('Resources', function ($routes) {
@@ -116,6 +130,16 @@ Router::prefix('Users', function ($routes) {
 
     $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
+        ->setMethods(['GET']);
+});
+
+/**
+ * Roles prefixed routes
+ */
+Router::prefix('Roles', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 });
 

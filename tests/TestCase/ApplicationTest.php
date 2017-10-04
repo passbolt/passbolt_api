@@ -48,7 +48,7 @@ class ApplicationTest extends IntegrationTestCase
     public function assertSuccess()
     {
         $this->assertResponseOk();
-        $this->assertEquals('success', $this->_responseJsonHeader->status, 'The request should be a success');
+        $this->assertEquals('success', $this->_responseJsonHeader->status, 'The request status should be a success.');
     }
 
     /**

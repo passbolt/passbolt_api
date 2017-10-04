@@ -144,4 +144,45 @@ class GpgkeysTable extends Table
         }
         return false;
     }
+
+    /**
+     * Build the query that fetches data for user index
+     *
+     * @param Query $query a query instance
+     * @param array $options options
+     * @throws Exception if no role is specified
+     * @return Query
+     */
+    public function findIndex(Query $query, array $options)
+    {
+        $query->where(['deleted' => false]);
+        if (isset($options['filter']['modified-after'])) {
+           $modified = date('Y-m-d H:i:s', $options['filter']['modified-after']);
+           $query->where(['modified >' => $modified]);
+        }
+        return $query;
+    }
+
+    /**
+     * Find view
+     *
+     * @param Query $query a query instance
+     * @param array $options options
+     * @throws Exception if no id is specified
+     * @return Query
+     */
+    public function findView(Query $query, array $options)
+    {
+        // Options must contain an id
+        if (!isset($options['id'])) {
+            throw new Exception(__('Gpgkey table findView should have an id set in options.'));
+        }
+        // Same rule than index apply
+        // with a specific id requested
+        $query = $this->findIndex($query, $options);
+        $query->where(['id' => $options['id']]);
+
+        return $query;
+    }
+
 }
