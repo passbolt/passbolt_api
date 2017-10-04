@@ -28,14 +28,9 @@ class GpgkeysTableTest extends TestCase
         'app.users',
         'app.roles',
         'app.authentication_tokens',
-        'app.favorites',
-        'app.file_storage',
         'app.profiles',
         'app.secrets',
-        'app.users_resources_permissions',
-        'app.groups_users',
-        'app.groups',
-        'app.keys'
+        'app.groups'
     ];
 
     /**

@@ -25,8 +25,7 @@ class ResourcesTableTest extends TestCase
      */
     public $fixtures = [
         'app.resources',
-        'app.secrets',
-        'app.users_resources_permissions'
+        'app.secrets'
     ];
 
     /**

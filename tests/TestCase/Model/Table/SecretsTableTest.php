@@ -28,13 +28,9 @@ class SecretsTableTest extends TestCase
         'app.users',
         'app.roles',
         'app.authentication_tokens',
-        'app.favorites',
-        'app.file_storage',
         'app.gpgkeys',
         'app.profiles',
-        'app.users_resources_permissions',
         'app.groups',
-        'app.groups_users',
         'app.resources'
     ];
 
