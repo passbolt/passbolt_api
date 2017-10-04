@@ -18,7 +18,6 @@ use App\Controller\AppController;
 use Aura\Intl\Exception;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
@@ -39,7 +38,7 @@ class UsersViewController extends AppController
     }
 
     /**
-     * User Index action
+     * User View action
      *
      * @throws BadRequestException if the user id is not a uuid or 'me'
      * @throws NotFoundException if the user does not exist

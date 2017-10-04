@@ -57,16 +57,16 @@ class ResourcesDataTask extends DataTask
             'modified' => date('Y-m-d H:i:s', strtotime('-1 years')),
         ];
         $resources[] = [
-            'id' => Common::uuid('resource.id.centos'),
-            'name' => 'centos',
-            'username' => 'root',
-            'uri' => 'centos.org',
-            'description' => 'The CentOS Linux distribution is a platform derived from Red Hat Enterprise Linux (RHEL).',
+            'id' => Common::uuid('resource.id.cakephp'),
+            'name' => 'cakephp',
+            'username' => 'cake',
+            'uri' => 'cakephp.org',
+            'description' => 'The rapid and tasty php development framework',
             'deleted' => 0,
-            'created_by' => Common::uuid('user.id.dame'),
-            'modified_by' => Common::uuid('user.id.dame'),
-            'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
-            'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
+            'created_by' => Common::uuid('user.id.ada'),
+            'modified_by' => Common::uuid('user.id.ada'),
+            'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
         ];
         $resources[] = [
             'id' => Common::uuid('resource.id.canjs'),
@@ -81,16 +81,16 @@ class ResourcesDataTask extends DataTask
             'modified' => date('Y-m-d H:i:s', strtotime('-1 weeks')),
         ];
         $resources[] = [
-            'id' => Common::uuid('resource.id.cakephp'),
-            'name' => 'cakephp',
-            'username' => 'cake',
-            'uri' => 'cakephp.org',
-            'description' => 'The rapid and tasty php development framework',
+            'id' => Common::uuid('resource.id.centos'),
+            'name' => 'centos',
+            'username' => 'root',
+            'uri' => 'centos.org',
+            'description' => 'The CentOS Linux distribution is a platform derived from Red Hat Enterprise Linux (RHEL).',
             'deleted' => 0,
-            'created_by' => Common::uuid('user.id.ada'),
-            'modified_by' => Common::uuid('user.id.ada'),
-            'created' => date('Y-m-d H:i:s', strtotime('-2 hours')),
-            'modified' => date('Y-m-d H:i:s', strtotime('-1 hours')),
+            'created_by' => Common::uuid('user.id.dame'),
+            'modified_by' => Common::uuid('user.id.dame'),
+            'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
         ];
         $resources[] = [
             'id' => Common::uuid('resource.id.chai'),
@@ -185,6 +185,26 @@ class ResourcesDataTask extends DataTask
             'modified_by' => Common::uuid('user.id.edith')
         ];
         $resources[] = [
+            'id' => Common::uuid('resource.id.git'),
+            'name' => 'Git',
+            'username' => 'git',
+            'uri' => 'git-scm.com',
+            'description' => 'Git is a free and open source distributed version control system.',
+            'deleted' => 0,
+            'created_by' => Common::uuid('user.id.dame'),
+            'modified_by' => Common::uuid('user.id.dame')
+        ];
+        $resources[] = [
+            'id' => Common::uuid('resource.id.gnupg'),
+            'name' => 'Gnupg',
+            'username' => 'gpg',
+            'uri' => 'gnupg.org',
+            'description' => 'GnuPG is a complete and free implementation of the OpenPGP standard as defined by RFC4880',
+            'deleted' => 0,
+            'created_by' => Common::uuid('user.id.carol'),
+            'modified_by' => Common::uuid('user.id.carol')
+        ];
+        $resources[] = [
             'id' => Common::uuid('resource.id.grogle'),
             'name' => 'Grogle',
             'username' => 'grd',
@@ -205,26 +225,6 @@ class ResourcesDataTask extends DataTask
             'modified_by' => Common::uuid('user.id.betty')
         ];
         $resources[] = [
-            'id' => Common::uuid('resource.id.gnupg'),
-            'name' => 'Gnupg',
-            'username' => 'gpg',
-            'uri' => 'gnupg.org',
-            'description' => 'GnuPG is a complete and free implementation of the OpenPGP standard as defined by RFC4880',
-            'deleted' => 0,
-            'created_by' => Common::uuid('user.id.carol'),
-            'modified_by' => Common::uuid('user.id.carol')
-        ];
-        $resources[] = [
-            'id' => Common::uuid('resource.id.git'),
-            'name' => 'Git',
-            'username' => 'git',
-            'uri' => 'git-scm.com',
-            'description' => 'Git is a free and open source distributed version control system.',
-            'deleted' => 0,
-            'created_by' => Common::uuid('user.id.dame'),
-            'modified_by' => Common::uuid('user.id.dame')
-        ];
-        $resources[] = [
             'id' => Common::uuid('resource.id.inkscape'),
             'name' => 'Inkscape',
             'username' => 'vector',
@@ -233,6 +233,16 @@ class ResourcesDataTask extends DataTask
             'deleted' => 0,
             'created_by' => Common::uuid('user.id.edith'),
             'modified_by' => Common::uuid('user.id.edith')
+        ];
+        $resources[] = [
+            'id' => Common::uuid('resource.id.jquery'),
+            'name' => 'Jquery',
+            'username' => 'jquery',
+            'uri' => 'jquery.com',
+            'description' => 'jQuery is a cross-platform JavaScript library designed to simplify the client-side scripting of HTML.',
+            'deleted' => 1,
+            'created_by' => Common::uuid('user.id.dame'),
+            'modified_by' => Common::uuid('user.id.dame')
         ];
 
         return $resources;

@@ -54,11 +54,25 @@ class ApplicationTest extends IntegrationTestCase
     /**
      * Asserts that the latest json request failed.
      *
+     * @param null $code (optional) Expected response code
+     * @param string $message (optional) Expected response message.
      * @return void
      */
-    public function assertError()
+    public function assertError($code = null, $message = '')
     {
         $this->assertEquals('error', $this->_responseJsonHeader->status, 'The request should be an error');
+
+        // If expected response code given.
+        if (!is_null($code)) {
+            $this->assertResponseCode($code);
+        } else {
+            $this->assertResponseError();
+        }
+
+        // If message given.
+        if (!empty($message)) {
+            $this->assertRegExp("/$message/", $this->_responseJsonHeader->message);
+        }
     }
 
     /**
@@ -68,9 +82,7 @@ class ApplicationTest extends IntegrationTestCase
      */
     public function assertAuthenticationError()
     {
-        $this->assertError();
-        $this->assertResponseCode(403);
-        $this->assertEquals('You need to login to access this location.', $this->_responseJsonHeader->message);
+        $this->assertError(403, 'You need to login to access this location.');
     }
 
     /**

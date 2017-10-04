@@ -141,4 +141,25 @@ class ResourcesTable extends Table
 
         return $query;
     }
+
+
+    /**
+     * Build the query that fetches data for resource view
+     *
+     * @param array $options options
+     * @throws Exception if the options contain Secrets but user_id is not provided
+     * @return Query
+     */
+    public function findView(array $options = [])
+    {
+        $query = $this->findIndex($options);
+
+        if (!isset($options['id'])) {
+            throw new Exception(__('Resource table findView should have an id set in options.'));
+        }
+
+        $query->where(['id' => $options['id']]);
+
+        return $query;
+    }
 }
