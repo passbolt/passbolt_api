@@ -127,9 +127,9 @@ class ResourcesTable extends Table
         $query->select();
 
         // If contains Secrets.
-        if (isset($options['contain']['secrets'])) {
+        if (isset($options['contain']['secret'])) {
             if (!isset($options['user_id'])) {
-                throw new Exception(__('Resource table findIndex should have a user_id set in options if the options contain Secrets.'));
+                throw new Exception(__('Resource table findIndex should have a user_id set in options if the options contain secret.'));
             }
             $query->contain('Secrets', function($q) use ($options) {
                 return $q->where(['user_id' => $options['user_id']]);

@@ -72,7 +72,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
     public function testIndexSuccessContainsSecrets()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&contain[secrets]=1');
+        $this->getJson('/resources.json?api-version=2&contain[secret]=1');
         $this->assertSuccess();
 
         // Expected fields.
@@ -85,7 +85,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
     public function testIndexSuccessApiV1ContainsSecrets()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?contain[secrets]=1');
+        $this->getJson('/resources.json?contain[secret]=1');
         $this->assertSuccess();
 
         // Expected fields.

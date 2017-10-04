@@ -35,19 +35,22 @@ class ResourcesViewController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource id is not valid.'));
         }
-
         $this->loadModel('Resources');
-        $findOptions = [
-            'id' => $id
-        ];
 
-        $containParam = $this->request->getQuery('contain');
-        if (isset($containParam['secrets']) && $containParam['secrets'] == '1') {
-            $findOptions['contain']['secrets'] = true;
-            $findOptions['user_id'] = $this->User->id();
+        // Retrieve and sanity the query options.
+        $whitelist = ['contain' => ['secret']];
+        $options = $this->QueryString->get($whitelist);
+
+        // If the result contains the secrets, include only the current user secret.
+        if (isset($options['contain']['secret']) && $options['contain']['secret']) {
+            $options['user_id'] = $this->User->id();
         }
 
-        $resource = $this->Resources->findView($findOptions)->first();
+        // Filter by resource id.
+        $options['id'] = $id;
+
+        // Retrieve the resource.
+        $resource = $this->Resources->findView($options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

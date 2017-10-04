@@ -76,7 +76,7 @@ class ResourcesViewControllerTest extends ApplicationTest
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?api-version=2&contain[secrets]=1");
+        $this->getJson("/resources/$resourceId.json?api-version=2&contain[secret]=1");
         $this->assertSuccess();
 
         // Expected fields.
@@ -90,7 +90,7 @@ class ResourcesViewControllerTest extends ApplicationTest
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?contain[secrets]=1");
+        $this->getJson("/resources/$resourceId.json?contain[secret]=1");
         $this->assertSuccess();
 
         // Expected fields.

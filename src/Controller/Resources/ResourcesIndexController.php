@@ -26,17 +26,18 @@ class ResourcesIndexController extends AppController
     public function index()
     {
         $this->loadModel('Resources');
-        $findOptions = [
-            'contain' => []
-        ];
 
-        $containParam = $this->request->getQuery('contain');
-        if (isset($containParam['secrets']) && $containParam['secrets'] == '1') {
-            $findOptions['contain']['secrets'] = true;
-            $findOptions['user_id'] = $this->User->id();
+        // Retrieve and sanity the query options.
+        $whitelist = ['contain' => ['secret']];
+        $options = $this->QueryString->get($whitelist);
+
+        // If the result contains the secrets, include only the current user secret.
+        if (isset($options['contain']['secret']) && $options['contain']['secret']) {
+            $options['user_id'] = $this->User->id();
         }
 
-        $resources = $this->Resources->findIndex($findOptions);
+        // Retrieve the resources.
+        $resources = $this->Resources->findIndex($options);
         $this->success($resources);
     }
 }
