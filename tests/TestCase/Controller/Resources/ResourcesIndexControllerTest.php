@@ -133,6 +133,31 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->_assertUserAttributes($this->_responseJsonBody[0]->Creator);
     }
 
+    public function testIndexSuccessContainsModifier()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?api-version=2&contain[modifier]=1');
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->_assertResourceAttributes($this->_responseJsonBody[0]);
+        $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody[0]);
+        $this->_assertUserAttributes($this->_responseJsonBody[0]->modifier);
+    }
+
+    public function testIndexSuccessApiV1ContainsModifier()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?contain[modifier]=1');
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
+        $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
+        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
+        $this->_assertUserAttributes($this->_responseJsonBody[0]->Modifier);
+    }
+
     public function testIndexErrorNotAuthenticated()
     {
         $this->getJson('/resources.json');

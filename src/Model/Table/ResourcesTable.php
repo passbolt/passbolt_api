@@ -52,6 +52,11 @@ class ResourcesTable extends Table
             'bindingKey' => 'created_by',
             'foreignKey' => 'id'
         ]);
+        $this->hasOne('Modifier', [
+            'className' => 'Users',
+            'bindingKey' => 'modified_by',
+            'foreignKey' => 'id'
+        ]);
     }
 
     /**
@@ -141,9 +146,14 @@ class ResourcesTable extends Table
             });
         }
 
-        // If contains Creator.
+        // If contains creator.
         if (isset($options['contain']['creator'])) {
             $query->contain('Creator');
+        }
+
+        // If contains modifier.
+        if (isset($options['contain']['modifier'])) {
+            $query->contain('Modifier');
         }
 
         // Filter out deleted resources

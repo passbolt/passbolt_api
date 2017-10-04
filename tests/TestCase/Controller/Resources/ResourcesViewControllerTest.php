@@ -138,6 +138,33 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->_assertUserAttributes($this->_responseJsonBody->Creator);
     }
 
+    public function testViewSuccessContainsModifier()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?api-version=2&contain[modifier]=1");
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->_assertResourceAttributes($this->_responseJsonBody);
+        $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
+        $this->_assertUserAttributes($this->_responseJsonBody->modifier);
+    }
+
+    public function testViewSuccessApiV1ContainsModifier()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?contain[modifier]=1");
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
+        $this->_assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
+        $this->_assertUserAttributes($this->_responseJsonBody->Modifier);
+    }
+
     public function testViewErrorNotAuthenticated()
     {
         $resourceId = Common::uuid('resource.id.bower');
