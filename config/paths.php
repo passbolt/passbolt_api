@@ -52,6 +52,11 @@ define('CONFIG', ROOT . DS . 'config' . DS);
 define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
 
 /**
+ * File path to the webroot directory.
+ */
+define('IMAGES', WWW_ROOT . 'img' . DS);
+
+/**
  * Path to the tests directory.
  */
 define('TESTS', ROOT . DS . 'tests' . DS);
