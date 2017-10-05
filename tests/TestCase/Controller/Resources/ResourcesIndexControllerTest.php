@@ -12,45 +12,16 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
+use App\Utility\Common;
+use Cake\Utility\Hash;
 
 class ResourcesIndexControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.resources', 'app.secrets'];
-
-    protected function _assertResourceAttributes($resource) {
-        $this->assertObjectHasAttribute('id', $resource);
-        $this->assertObjectHasAttribute('name', $resource);
-        $this->assertObjectHasAttribute('username', $resource);
-        $this->assertObjectHasAttribute('uri', $resource);
-        $this->assertObjectHasAttribute('description', $resource);
-        $this->assertObjectHasAttribute('deleted', $resource);
-        $this->assertObjectHasAttribute('created', $resource);
-        $this->assertObjectHasAttribute('modified', $resource);
-        $this->assertObjectHasAttribute('created_by', $resource);
-        $this->assertObjectHasAttribute('modified_by', $resource);
-    }
-
-    protected function _assertSecretAttributes($secret) {
-        $this->assertObjectHasAttribute('id', $secret);
-        $this->assertObjectHasAttribute('user_id', $secret);
-        $this->assertObjectHasAttribute('resource_id', $secret);
-        $this->assertObjectHasAttribute('data', $secret);
-        $this->assertObjectHasAttribute('created', $secret);
-        $this->assertObjectHasAttribute('modified', $secret);
-    }
-
-    protected function _assertUserAttributes($user) {
-        $this->assertObjectHasAttribute('id', $user);
-        $this->assertObjectHasAttribute('role_id', $user);
-        $this->assertObjectHasAttribute('username', $user);
-        $this->assertObjectHasAttribute('active', $user);
-        $this->assertObjectHasAttribute('deleted', $user);
-        $this->assertObjectHasAttribute('created', $user);
-        $this->assertObjectHasAttribute('modified', $user);
-    }
+    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
 
     public function testIndexSuccess()
     {
@@ -60,7 +31,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
@@ -75,7 +46,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]->Resource);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('Creator', $this->_responseJsonBody[0]);
@@ -88,10 +59,10 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertSuccess();
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody[0]);
         $this->assertCount(1, $this->_responseJsonBody[0]->secrets);
-        $this->_assertSecretAttributes($this->_responseJsonBody[0]->secrets[0]);
+        $this->assertSecretAttributes($this->_responseJsonBody[0]->secrets[0]);
     }
 
     public function testIndexSuccessApiV1ContainsSecrets()
@@ -102,10 +73,10 @@ class ResourcesIndexControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]->Resource);
         $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody[0]);
         $this->assertCount(1, $this->_responseJsonBody[0]->Secret);
-        $this->_assertSecretAttributes($this->_responseJsonBody[0]->Secret[0]);
+        $this->assertSecretAttributes($this->_responseJsonBody[0]->Secret[0]);
     }
 
     public function testIndexSuccessContainsCreator()
@@ -115,9 +86,9 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertSuccess();
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
         $this->assertObjectHasAttribute('creator', $this->_responseJsonBody[0]);
-        $this->_assertUserAttributes($this->_responseJsonBody[0]->creator);
+        $this->assertUserAttributes($this->_responseJsonBody[0]->creator);
     }
 
     public function testIndexSuccessApiV1ContainsCreator()
@@ -128,9 +99,9 @@ class ResourcesIndexControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]->Resource);
         $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody[0]);
-        $this->_assertUserAttributes($this->_responseJsonBody[0]->Creator);
+        $this->assertUserAttributes($this->_responseJsonBody[0]->Creator);
     }
 
     public function testIndexSuccessContainsModifier()
@@ -140,9 +111,9 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertSuccess();
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody[0]);
-        $this->_assertUserAttributes($this->_responseJsonBody[0]->modifier);
+        $this->assertUserAttributes($this->_responseJsonBody[0]->modifier);
     }
 
     public function testIndexSuccessApiV1ContainsModifier()
@@ -153,9 +124,94 @@ class ResourcesIndexControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody[0]);
-        $this->_assertResourceAttributes($this->_responseJsonBody[0]->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody[0]->Resource);
         $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
-        $this->_assertUserAttributes($this->_responseJsonBody[0]->Modifier);
+        $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
+    }
+
+    public function testIndexSuccessContainsFavorite()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?api-version=2&contain[favorite]=1');
+        $this->assertSuccess();
+
+        // Expected fields.
+        $resourceId = Common::uuid('resource.id.apache');
+        $favoriteResource = current(array_filter($this->_responseJsonBody, function($resource) use ($resourceId) {
+            return $resource->id == $resourceId;
+        }));
+        $this->assertResourceAttributes($favoriteResource);
+        $this->assertObjectHasAttribute('favorite', $favoriteResource);
+        $this->assertFavoriteAttributes($favoriteResource->favorite);
+    }
+
+    public function testIndexSuccessApiV1ContainsFavorite()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?contain[favorite]=1');
+        $this->assertSuccess();
+
+        // Expected fields.
+        $resourceId = Common::uuid('resource.id.apache');
+        $favoriteResource = current(array_filter($this->_responseJsonBody, function($resource) use ($resourceId) {
+            return $resource->Resource->id == $resourceId;
+        }));
+        $this->assertObjectHasAttribute('Resource', $favoriteResource);
+        $this->assertResourceAttributes($favoriteResource->Resource);
+        $this->assertObjectHasAttribute('Favorite', $favoriteResource);
+        $this->assertFavoriteAttributes($favoriteResource->Favorite);
+    }
+
+    public function testIndexSuccessFilterOnFavorite()
+    {
+        $this->authenticateAs('dame');
+        $this->getJson('/resources.json?api-version=2&filter[is-favorite]=1');
+        $this->assertSuccess();
+        $this->assertCount(2, $this->_responseJsonBody);
+
+        // Check that the result contain only the expected favorite resources.
+        $favoriteResourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
+        $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
+
+        // Expected fields.
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
+
+        // Favorite field shouldn't be present by default even when filtering by favorite.
+        $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
+    }
+
+    public function testIndexSuccessFilterOnFavoriteContainFavorite()
+    {
+        $this->authenticateAs('dame');
+        $this->getJson('/resources.json?api-version=2&filter[is-favorite]=1&contain[favorite]=1');
+        $this->assertSuccess();
+        $this->assertCount(2, $this->_responseJsonBody);
+
+        // Check that the result contain only the expected favorite resources.
+        $favoriteResourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
+        $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
+
+        // Expected fields.
+        $this->assertResourceAttributes($this->_responseJsonBody[0]);
+
+        // Favorite field shouldn't be added automatically.
+        $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody[0]);
+        $this->assertFavoriteAttributes($this->_responseJsonBody[0]->favorite);
+    }
+
+    public function testIndexSuccessFilterOutFavorite()
+    {
+        $this->authenticateAs('dame');
+        $this->getJson('/resources.json?api-version=2&filter[is-favorite]=0');
+        $this->assertSuccess();
+        $this->assertGreaterThan(2, count($this->_responseJsonBody));
+
+        // Check that the result doesn\'t contain the favorite resources.
+        $favoriteResourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
+        $this->assertEquals(0, count(array_intersect($expectedResources, $favoriteResourcesIds)));
     }
 
     public function testIndexErrorNotAuthenticated()

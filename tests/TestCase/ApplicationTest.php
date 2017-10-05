@@ -99,6 +99,50 @@ class ApplicationTest extends IntegrationTestCase
     }
 
     /**
+     * Asserts that an object has all the attributes a resource should have.
+     *
+     * @param object $resource
+     */
+    protected function assertResourceAttributes($resource)
+    {
+        $attributes = ['id', 'name', 'username', 'uri', 'description', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
+        $this->assertObjectHasAttributes($attributes, $resource);
+    }
+
+    /**
+     * Asserts that an object has all the attributes a secret should have.
+     *
+     * @param object $secret
+     */
+    protected function assertSecretAttributes($secret)
+    {
+        $attributes = ['id', 'user_id', 'resource_id', 'data', 'created', 'modified'];
+        $this->assertObjectHasAttributes($attributes, $secret);
+    }
+
+    /**
+     * Asserts that an object has all the attributes a user should have.
+     *
+     * @param object $user
+     */
+    protected function assertUserAttributes($user)
+    {
+        $attributes = ['id', 'role_id', 'username', 'active', 'deleted', 'created', 'modified'];
+        $this->assertObjectHasAttributes($attributes, $user);
+    }
+
+    /**
+     * Asserts that an object has all the attributes a favorite should have.
+     *
+     * @param object $favorite
+     */
+    protected function assertFavoriteAttributes($favorite)
+    {
+        $attributes = ['id', 'user_id', 'foreign_id', 'foreign_model', 'created'];
+        $this->assertObjectHasAttributes($attributes, $favorite);
+    }
+
+    /**
      * Authenticate as a user.
      *
      * @param string $userFirstName The user first name.

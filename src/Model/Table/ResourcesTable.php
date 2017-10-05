@@ -1,4 +1,18 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -9,8 +23,9 @@ use Cake\Validation\Validator;
 /**
  * Resources Model
  *
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
- * @property \App\Model\Table\UsersResourcesPermissionsTable|\Cake\ORM\Association\HasMany $UsersResourcesPermissions
  *
  * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
  * @method \App\Model\Entity\Resource newEntity($data = null, array $options = [])
@@ -44,9 +59,6 @@ class ResourcesTable extends Table
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id'
         ]);
-        $this->hasMany('UsersResourcesPermissions', [
-            'foreignKey' => 'resource_id'
-        ]);
         $this->hasOne('Creator', [
             'className' => 'Users',
             'bindingKey' => 'created_by',
@@ -56,6 +68,9 @@ class ResourcesTable extends Table
             'className' => 'Users',
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
+        ]);
+        $this->hasOne('Favorites', [
+            'foreignKey' => 'foreign_id'
         ]);
     }
 
@@ -79,10 +94,6 @@ class ResourcesTable extends Table
         $validator
             ->scalar('username')
             ->allowEmpty('username');
-
-        $validator
-            ->dateTime('expiry_date')
-            ->allowEmpty('expiry_date');
 
         $validator
             ->scalar('uri')
@@ -138,11 +149,11 @@ class ResourcesTable extends Table
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
-            if (!isset($options['user_id'])) {
-                throw new Exception(__('Resource table findIndex should have a user_id set in options if the options contain secret.'));
+            if (!isset($options['Secrets.user_id'])) {
+                throw new Exception(__('Resource table findIndex should have a Secrets.user_id set in options if the options contain secret.'));
             }
             $query->contain('Secrets', function($q) use ($options) {
-                return $q->where(['Secrets.user_id' => $options['user_id']]);
+                return $q->where(['Secrets.user_id' => $options['Secrets.user_id']]);
             });
         }
 
@@ -154,6 +165,35 @@ class ResourcesTable extends Table
         // If contains modifier.
         if (isset($options['contain']['modifier'])) {
             $query->contain('Modifier');
+        }
+
+        // If filtered by favorite.
+        if (isset($options['filter']['is-favorite'])) {
+            if ($options['filter']['is-favorite'] && !isset($options['Favorites.user_id'])) {
+                throw new Exception(__('Resource table findIndex should have a Favorites.user_id set in options if the options filter is-favorite is set to true.'));
+            }
+            // Filter on the favorite resources.
+            if ($options['filter']['is-favorite']) {
+                $query->innerJoinWith('Favorites', function($q) use ($options) {
+                    return $q->where(['Favorites.user_id' => $options['Favorites.user_id']]);
+                });
+            }
+            // Filter out the favorite resources.
+            else {
+                $query->notMatching('Favorites', function($q) use ($options) {
+                    return $q->where(['Favorites.user_id' => $options['Favorites.user_id']]);
+                });
+            }
+        }
+
+        // If contains favorite.
+        if (isset($options['contain']['favorite'])) {
+            if (!isset($options['Favorites.user_id'])) {
+                throw new Exception(__('Resource table findIndex should have a Favorites.user_id set in options if the options contain favorite.'));
+            }
+            $query->contain('Favorites', function($q) use ($options) {
+                return $q->where(['Favorites.user_id' => $options['Favorites.user_id']]);
+            });
         }
 
         // Filter out deleted resources

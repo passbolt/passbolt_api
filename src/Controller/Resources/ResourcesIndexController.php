@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
@@ -28,12 +29,25 @@ class ResourcesIndexController extends AppController
         $this->loadModel('Resources');
 
         // Retrieve and sanity the query options.
-        $whitelist = ['contain' => ['secret', 'creator', 'modifier']];
+        $whitelist = [
+            'contain' => ['creator', 'favorite', 'modifier', 'secret'],
+            'filter' => ['is-favorite']
+        ];
         $options = $this->QueryString->get($whitelist);
 
-        // If the result contains the secrets, include only the current user secret.
+        // If the result should contain the secrets, include only the current user secret.
         if (isset($options['contain']['secret']) && $options['contain']['secret']) {
-            $options['user_id'] = $this->User->id();
+            $options['Secrets.user_id'] = $this->User->id();
+        }
+
+        // Filter the request on favorite.
+        if (isset($options['filter']['is-favorite'])) {
+            $options['Favorites.user_id'] = $this->User->id();
+        }
+
+        // If the result should contain the favorite, include only the current user favorite.
+        if (isset($options['contain']['favorite']) && $options['contain']['favorite']) {
+            $options['Favorites.user_id'] = $this->User->id();
         }
 
         // Retrieve the resources.

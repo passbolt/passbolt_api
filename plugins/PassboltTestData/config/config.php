@@ -25,7 +25,8 @@ return [
                         'PassboltTestData.GroupsData',
                         'PassboltTestData.GpgkeysData',
                         'PassboltTestData.ResourcesData',
-                        'PassboltTestData.SecretsData'
+                        'PassboltTestData.SecretsData',
+                        'PassboltTestData.FavoritesData'
                     ]
                 ],
                 'fixturize' => [
@@ -36,7 +37,8 @@ return [
                         'PassboltTestData.GroupsData',
                         'PassboltTestData.GpgkeysData',
                         'PassboltTestData.ResourcesData',
-                        'PassboltTestData.SecretsData'
+                        'PassboltTestData.SecretsData',
+                        'PassboltTestData.FavoritesData'
                     ]
                 ]
             ],

@@ -21,19 +21,19 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Secrets Model
+ * Favorites Model
  *
- * @method \App\Model\Entity\Secret get($primaryKey, $options = [])
- * @method \App\Model\Entity\Secret newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Secret[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Secret|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Secret patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Secret[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Secret findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\Favorite get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Favorite newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\Favorite[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\Favorite patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Favorite findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class SecretsTable extends Table
+class FavoritesTable extends Table
 {
 
     /**
@@ -46,7 +46,7 @@ class SecretsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('secrets');
+        $this->setTable('favorites');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
@@ -66,9 +66,9 @@ class SecretsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('data')
-            ->requirePresence('data', 'create')
-            ->notEmpty('data');
+            ->scalar('foreign_model')
+            ->requirePresence('foreign_model', 'create')
+            ->notEmpty('foreign_model');
 
         return $validator;
     }

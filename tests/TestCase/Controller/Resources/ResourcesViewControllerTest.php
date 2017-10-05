@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
@@ -19,39 +20,7 @@ use App\Utility\Common;
 
 class ResourcesViewControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.resources', 'app.secrets'];
-
-    protected function _assertResourceAttributes($resource) {
-        $this->assertObjectHasAttribute('id', $resource);
-        $this->assertObjectHasAttribute('name', $resource);
-        $this->assertObjectHasAttribute('username', $resource);
-        $this->assertObjectHasAttribute('uri', $resource);
-        $this->assertObjectHasAttribute('description', $resource);
-        $this->assertObjectHasAttribute('deleted', $resource);
-        $this->assertObjectHasAttribute('created', $resource);
-        $this->assertObjectHasAttribute('modified', $resource);
-        $this->assertObjectHasAttribute('created_by', $resource);
-        $this->assertObjectHasAttribute('modified_by', $resource);
-    }
-
-    protected function _assertSecretAttributes($secret) {
-        $this->assertObjectHasAttribute('id', $secret);
-        $this->assertObjectHasAttribute('user_id', $secret);
-        $this->assertObjectHasAttribute('resource_id', $secret);
-        $this->assertObjectHasAttribute('data', $secret);
-        $this->assertObjectHasAttribute('created', $secret);
-        $this->assertObjectHasAttribute('modified', $secret);
-    }
-
-    protected function _assertUserAttributes($user) {
-        $this->assertObjectHasAttribute('id', $user);
-        $this->assertObjectHasAttribute('role_id', $user);
-        $this->assertObjectHasAttribute('username', $user);
-        $this->assertObjectHasAttribute('active', $user);
-        $this->assertObjectHasAttribute('deleted', $user);
-        $this->assertObjectHasAttribute('created', $user);
-        $this->assertObjectHasAttribute('modified', $user);
-    }
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.resources', 'app.secrets', 'app.favorites'];
 
     public function testViewSuccess()
     {
@@ -62,7 +31,7 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertNotNull($this->_responseJsonBody);
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody);
+        $this->assertResourceAttributes($this->_responseJsonBody);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody);
     }
@@ -77,7 +46,7 @@ class ResourcesViewControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->_assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody);
     }
@@ -90,10 +59,10 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertSuccess();
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody);
+        $this->assertResourceAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->secrets);
-        $this->_assertSecretAttributes($this->_responseJsonBody->secrets[0]);
+        $this->assertSecretAttributes($this->_responseJsonBody->secrets[0]);
     }
 
     public function testViewSuccessApiV1ContainsSecrets()
@@ -105,10 +74,10 @@ class ResourcesViewControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->_assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
         $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->Secret);
-        $this->_assertSecretAttributes($this->_responseJsonBody->Secret[0]);
+        $this->assertSecretAttributes($this->_responseJsonBody->Secret[0]);
     }
 
     public function testViewSuccessContainsCreator()
@@ -119,9 +88,9 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertSuccess();
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody);
+        $this->assertResourceAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('creator', $this->_responseJsonBody);
-        $this->_assertUserAttributes($this->_responseJsonBody->creator);
+        $this->assertUserAttributes($this->_responseJsonBody->creator);
     }
 
     public function testViewSuccessApiV1ContainsCreator()
@@ -133,9 +102,9 @@ class ResourcesViewControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->_assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
         $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody);
-        $this->_assertUserAttributes($this->_responseJsonBody->Creator);
+        $this->assertUserAttributes($this->_responseJsonBody->Creator);
     }
 
     public function testViewSuccessContainsModifier()
@@ -146,9 +115,9 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertSuccess();
 
         // Expected fields.
-        $this->_assertResourceAttributes($this->_responseJsonBody);
+        $this->assertResourceAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
-        $this->_assertUserAttributes($this->_responseJsonBody->modifier);
+        $this->assertUserAttributes($this->_responseJsonBody->modifier);
     }
 
     public function testViewSuccessApiV1ContainsModifier()
@@ -160,9 +129,36 @@ class ResourcesViewControllerTest extends ApplicationTest
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->_assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
         $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
-        $this->_assertUserAttributes($this->_responseJsonBody->Modifier);
+        $this->assertUserAttributes($this->_responseJsonBody->Modifier);
+    }
+
+    public function testViewSuccessContainsFavorite()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?api-version=2&contain[favorite]=1");
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->assertResourceAttributes($this->_responseJsonBody);
+        $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody);
+        $this->assertFavoriteAttributes($this->_responseJsonBody->favorite);
+    }
+
+    public function testViewSuccessApiV1ContainsFavorite()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/resources/$resourceId.json?contain[favorite]=1");
+        $this->assertSuccess();
+
+        // Expected fields.
+        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
+        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
+        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
+        $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
     }
 
     public function testViewErrorNotAuthenticated()

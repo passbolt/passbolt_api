@@ -18,24 +18,15 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Resource Entity
+ * Favorite Entity
  *
  * @property string $id
- * @property string $name
- * @property string $username
- * @property string $uri
- * @property string $description
- * @property bool $deleted
+ * @property string $user_id
+ * @property string $foreign_id
+ * @property string $foreign_model
  * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
- * @property string $created_by
- * @property string $modified_by
- *
- * @property \App\Model\Entity\User $creator
- * @property \App\Model\Entity\User $modifier
- * @property \App\Model\Entity\Secret[] $secrets
  */
-class Resource extends Entity
+class Favorite extends Entity
 {
 
     /**
@@ -48,17 +39,9 @@ class Resource extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => false,
-        'username' => false,
-        'uri' => false,
-        'description' => false,
-        'deleted' => false,
-        'created' => false,
-        'modified' => false,
-        'created_by' => false,
-        'modified_by' => false,
-        'creator' => false,
-        'modifier' => false,
-        'secrets' => false
+        'user_id' => false,
+        'foreign_id' => false,
+        'foreign_model' => false,
+        'created' => false
     ];
 }
