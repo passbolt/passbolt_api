@@ -93,8 +93,24 @@ class ApplicationTest extends IntegrationTestCase
      */
     public function assertObjectHasAttributes($attributesNames, $object)
     {
-        foreach($attributesNames as $attributeName) {
+        foreach ($attributesNames as $attributeName) {
             $this->assertObjectHasAttribute($attributeName, $object);
+        }
+    }
+
+    /**
+     * Asserts that an object has specified attributes.
+     *
+     * @param string $attributesNames
+     * @param object $object
+     */
+    public function assertArrayHasAttributes($attributesNames, $check)
+    {
+        foreach ($attributesNames as $attributeName) {
+            $this->assertTrue(
+                isset($check[$attributeName]),
+                'The following attribute is missing in array: ' . $attributeName
+            );
         }
     }
 

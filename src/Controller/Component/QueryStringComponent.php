@@ -39,7 +39,7 @@ class QueryStringComponent extends Component
     public function initialize(array $config)
     {
         $controller = $this->_registry->getController();
-        $this->_request =& $controller->request;
+        $this->_request = $controller->request;
     }
 
     /**
