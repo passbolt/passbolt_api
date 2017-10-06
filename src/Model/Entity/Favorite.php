@@ -25,6 +25,7 @@ use Cake\ORM\Entity;
  * @property string $foreign_id
  * @property string $foreign_model
  * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\FrozenTime $modified
  */
 class Favorite extends Entity
 {
@@ -42,6 +43,7 @@ class Favorite extends Entity
         'user_id' => false,
         'foreign_id' => false,
         'foreign_model' => false,
-        'created' => false
+        'created' => false,
+        'modified' => false
     ];
 }

@@ -74,6 +74,17 @@ Router::scope('/auth', function (RouteBuilder $routes) {
 });
 
 /**
+ * Favorites prefixed routes
+ */
+Router::prefix('Favorites', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/resource/:foreignId', ['controller' => 'FavoritesAdd', 'action' => 'add'])
+        ->setPass(['foreignId'])
+        ->setMethods(['POST']);
+});
+
+/**
  * Gpgkeys prefixed routes
  */
 Router::prefix('/gpgkeys', function ($routes) {
@@ -130,16 +141,6 @@ Router::prefix('Users', function ($routes) {
 
     $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
-        ->setMethods(['GET']);
-});
-
-/**
- * Roles prefixed routes
- */
-Router::prefix('Roles', function ($routes) {
-    $routes->setExtensions(['json']);
-
-    $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 });
 

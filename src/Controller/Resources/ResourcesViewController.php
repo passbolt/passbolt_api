@@ -53,7 +53,7 @@ class ResourcesViewController extends AppController
         }
 
         // Filter by resource id.
-        $options['id'] = $id;
+        $options['Resources.id'] = $id;
 
         // Retrieve the resource.
         $resource = $this->Resources->findView($options)->first();

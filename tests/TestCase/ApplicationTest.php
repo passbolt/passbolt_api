@@ -181,4 +181,26 @@ class ApplicationTest extends IntegrationTestCase
         $this->_responseJsonBody = $this->_responseJson->body;
     }
 
+    /**
+     * Performs a POST json request using the current request data.
+     *
+     * The response of the dispatched request will be stored as
+     * a property (_responseJson). You can use various assert
+     * methods to check the response.
+     *
+     * @param string|array $url The URL to request.
+     * @param array $data The data for the request.
+     * @return void
+     * @throws Exception
+     */
+    public function postJson($url, $data = [])
+    {
+        $this->post($url, $data);
+        $this->_responseJson = json_decode($this->_getBodyAsString());
+        if (empty($this->_responseJson)) {
+            throw new Exception('The result of the request is not a valid json.');
+        }
+        $this->_responseJsonHeader = $this->_responseJson->header;
+        $this->_responseJsonBody = $this->_responseJson->body;
+    }
 }

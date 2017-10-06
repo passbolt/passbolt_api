@@ -69,7 +69,7 @@ class LegacyApiHelper extends Helper
             if (is_string($value) || is_bool($value) || is_numeric($value) || is_null($value)) {
                 // example: id
                 $result[$name][$property] = $value;
-            } elseif (is_object($value) && get_class($value) === 'Cake\I18n\FrozenTime') {
+            } elseif (is_object($value) && is_a($value, 'Cake\Chronos\ChronosInterface')) {
                 // example: modified
                 $result[$name][$property] = $value->toDateTimeString();
             } elseif (is_object($value) && get_parent_class($value) === 'Cake\ORM\Entity') {
