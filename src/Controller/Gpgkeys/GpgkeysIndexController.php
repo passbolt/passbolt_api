@@ -30,6 +30,6 @@ class GpgkeysIndexController extends AppController
         $whitelist = ['filter' => ['modified-after']];
         $options = $this->QueryString->get($whitelist);
         $gpgkeys = $this->Gpgkeys->find('index', $options);
-        $this->success($gpgkeys);
+        $this->success('The operation was successful.', $gpgkeys);
     }
 }

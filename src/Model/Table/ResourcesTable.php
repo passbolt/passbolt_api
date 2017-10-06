@@ -15,7 +15,6 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -144,8 +143,7 @@ class ResourcesTable extends Table
      */
     public function findIndex(array $options = [])
     {
-        $query = $this->query();
-        $query->select();
+        $query = $this->find('all');
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {

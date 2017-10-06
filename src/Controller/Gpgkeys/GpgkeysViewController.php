@@ -40,6 +40,6 @@ class GpgkeysViewController extends AppController
         if (empty($gpgkeys)) {
             throw new NotFoundException(__('The gpg key does not exist.'));
         }
-        $this->success($gpgkeys);
+        $this->success('The operation was successful.', $gpgkeys);
     }
 }

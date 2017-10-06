@@ -19,6 +19,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use Cake\Validation\Validation;
 
 /**
  * Favorites Model
@@ -176,5 +177,37 @@ class FavoritesTable extends Table
         }
 
         return true;
+    }
+
+    /**
+     * Build the query that fetches data for favorite delete
+     *
+     * @param array $options options
+     * @throws \Exception if the options contain Secrets but user_id is not provided
+     * @return Query
+     */
+    public function findDelete(array $options = [])
+    {
+        $query = $this->find('all');
+
+        if (!isset($options['Favorites.id'])) {
+            throw new \Exception(__('Favorite table findDelete should have an Favorites.id set in options.'));
+        }
+        if (!Validation::uuid($options['Favorites.id'])) {
+            throw new \Exception(__('Favorite table findDelete function Favorites.id option should be a valid uuid.'));
+        }
+        if (!isset($options['Favorites.user_id'])) {
+            throw new \Exception(__('Favorite table findDelete should have an Favorites.user_id set in options.'));
+        }
+        if (!Validation::uuid($options['Favorites.user_id'])) {
+            throw new \Exception(__('Favorite table findDelete function Favorites.user_id option should be a valid uuid.'));
+        }
+
+        $query->where([
+            'Favorites.id' => $options['Favorites.id'],
+            'Favorites.user_id' => $options['Favorites.user_id']
+        ]);
+
+        return $query;
     }
 }

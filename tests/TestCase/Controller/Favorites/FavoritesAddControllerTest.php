@@ -45,6 +45,14 @@ class FavoritesAddControllerTest extends ApplicationTest
         $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
     }
 
+    public function testAddErrorNotValidId()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = 'invalid-id';
+        $this->postJson("/favorites/resource/$resourceId.json");
+        $this->assertError(400, 'The resource id is not valid.');
+    }
+
     public function testAddErrorDeletedResource()
     {
         $this->authenticateAs('dame');

@@ -15,10 +15,10 @@
 namespace App\Test\TestCase\Controller;
 
 use App\Model\Entity\Role;
+use App\Test\TestCase\ApplicationTest;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestCase;
 
-class UsersRegisterControllerTest extends IntegrationTestCase
+class UsersRegisterControllerTest extends ApplicationTest
 {
     public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
 

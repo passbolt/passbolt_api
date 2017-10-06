@@ -239,4 +239,70 @@ class FavoritesTableTest extends TestCase
         );
         $this->assertFalse($this->Favorites->validateFavoriteUnique($favorite, []));
     }
+
+    public function testFindDeleteSuccess() {
+        $favorite = $this->Favorites->findDelete([
+            'Favorites.user_id' => Common::uuid('user.id.dame'),
+            'Favorites.id' => Common::uuid('favorite.id.dame-apache')
+        ])->first();
+        $this->assertNotEmpty($favorite);
+    }
+
+    public function testFindDeleteSuccessEmpty() {
+        $favorite = $this->Favorites->findDelete([
+            'Favorites.user_id' => Common::uuid('user.id.dame'),
+            'Favorites.id' => Common::uuid('favorite.id.dame-bowser')
+        ])->first();
+        $this->assertEmpty($favorite);
+    }
+
+    public function testFindDeleteErrorNoOption()
+    {
+        try {
+            $this->Favorites->findDelete();
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testFindDeleteErrorNoUserIdOption()
+    {
+        try {
+            $this->Favorites->findDelete(['Favorites.id' => Common::uuid()]);
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testFindDeleteErrorUserIdNotValidUuidOption()
+    {
+        try {
+            $this->Favorites->findDelete(['Favorites.id' => Common::uuid(), 'Favorites.user_id' => 'not-valid']);
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testFindDeleteErrorNoFavoriteIdOption()
+    {
+        try {
+            $this->Favorites->findDelete(['Favorites.user_id' => Common::uuid()]);
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testFindDeleteErrorFavoriteIdNotValidUuidOption()
+    {
+        try {
+            $this->Favorites->findDelete(['Favorites.user_id' => Common::uuid(), 'Favorites.id' => 'not-valid']);
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
 }

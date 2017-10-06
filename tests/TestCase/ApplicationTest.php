@@ -184,14 +184,14 @@ class ApplicationTest extends IntegrationTestCase
      *
      * @param string|array $url The URL to request.
      * @return void
-     * @throws Exception
+     * @throws \Exception when the result of the request is not a valid json.
      */
     public function getJson($url)
     {
         $this->get($url);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            throw new Exception('The result of the request is not a valid json.');
+            throw new \Exception('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
@@ -207,14 +207,36 @@ class ApplicationTest extends IntegrationTestCase
      * @param string|array $url The URL to request.
      * @param array $data The data for the request.
      * @return void
-     * @throws Exception
+     * @throws \Exception when the result of the request is not a valid json.
      */
     public function postJson($url, $data = [])
     {
         $this->post($url, $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            throw new Exception('The result of the request is not a valid json.');
+            throw new \Exception('The result of the request is not a valid json.');
+        }
+        $this->_responseJsonHeader = $this->_responseJson->header;
+        $this->_responseJsonBody = $this->_responseJson->body;
+    }
+
+    /**
+     * Performs a DELETE json request using the current request data.
+     *
+     * The response of the dispatched request will be stored as
+     * a property (_responseJson). You can use various assert
+     * methods to check the response.
+     *
+     * @param string|array $url The URL to request.
+     * @return void
+     * @throws \Exception when the result of the request is not a valid json.
+     */
+    public function deleteJson($url)
+    {
+        $this->delete($url);
+        $this->_responseJson = json_decode($this->_getBodyAsString());
+        if (empty($this->_responseJson)) {
+            throw new \Exception('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;

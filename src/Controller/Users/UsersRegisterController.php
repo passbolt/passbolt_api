@@ -100,7 +100,7 @@ class UsersRegisterController extends AppController
 
         // Display thank you page or user
         $this->viewBuilder()->setTemplate('register_thank_you');
-        $this->success($user);
+        $this->success('The operation was successful.', $user);
     }
 
     /**

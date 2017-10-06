@@ -82,6 +82,10 @@ Router::prefix('Favorites', function ($routes) {
     $routes->connect('/resource/:foreignId', ['controller' => 'FavoritesAdd', 'action' => 'add'])
         ->setPass(['foreignId'])
         ->setMethods(['POST']);
+
+    $routes->connect('/:id', ['controller' => 'FavoritesDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });
 
 /**

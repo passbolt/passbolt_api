@@ -60,6 +60,6 @@ class ResourcesViewController extends AppController
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
-        $this->success($resource);
+        $this->success('The operation was successful.', $resource);
     }
 }

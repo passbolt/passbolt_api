@@ -92,17 +92,18 @@ class AppController extends Controller
      * Success renders set the variables used to render the json view
      * All passbolt response contains an header (metadata like status) an a body (data)
      *
+     * @param string $message message in the header section
      * @param array $body data for the body section
      * @return void
      */
-    protected function success($body = null)
+    protected function success($message = null, $body = null)
     {
         $this->set([
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'success',
                 'servertime' => time(),
-                'message' => null,
+                'message' => $message,
                 'url' => Router::url(),
             ],
             'body' => $body,

@@ -60,7 +60,7 @@ class AuthLoginController extends AppController
 
         if ($user) {
             $this->Auth->setUser($user);
-            $this->success($user);
+            $this->success(__('You are successfully logged in.'), $user);
         } else {
             // Login failure, same as GET
             if(!$this->request->is('JSON')) {

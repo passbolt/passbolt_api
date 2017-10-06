@@ -55,7 +55,7 @@ class FavoritesAddController extends AppController
             return;
         }
 
-        $this->success($favorite);
+        $this->success(__('The resource was marked as favorite.'), $favorite);
     }
 
     /**

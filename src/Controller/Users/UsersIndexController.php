@@ -27,6 +27,6 @@ class UsersIndexController extends AppController
     {
         $this->loadModel('Users');
         $users = $this->Users->find('index', ['role' => $this->User->role()]);
-        $this->success($users);
+        $this->success('The operation was successful.', $users);
     }
 }
