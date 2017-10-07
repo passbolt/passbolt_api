@@ -76,10 +76,13 @@ class Migration {
         $remoteTagName = Configure::read('passbolt.version.remote');
         if(is_null($remoteTagName)) {
             $url = 'https://api.github.com/repos/passbolt/passbolt_api/tags';
-            $HttpSocket = new Client();
-            $results = $HttpSocket->get($url);
+            try {
+                $HttpSocket = new Client();
+                $results = $HttpSocket->get($url);
+            } catch (Exception $e) {
+                throw new Exception(__('Could not connect to github repository'));
+            }
             $tags = (json_decode($results->body));
-
             if (!isset($tags[0]) || !property_exists($tags[0], 'name')) {
                 throw new Exception(__('Could not read tag information on github repository'));
             }

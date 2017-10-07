@@ -33,6 +33,13 @@ return [
         ],
         'registration' => [
             'public' => true
+        ],
+        'selenium' => [
+            'active' => true
+        ],
+        'ssl' => [
+            'force' => false,
+
         ]
     ]
 ];

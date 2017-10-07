@@ -108,7 +108,7 @@ class ApplicationTest extends IntegrationTestCase
     {
         foreach ($attributesNames as $attributeName) {
             $this->assertTrue(
-                isset($check[$attributeName]),
+                array_key_exists($attributeName, $check),
                 'The following attribute is missing in array: ' . $attributeName
             );
         }

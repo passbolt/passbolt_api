@@ -19,13 +19,22 @@ use App\Utility\Healthchecks;
 
 class HealthchecksTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.gpgkeys'];
 
-    function testHealthcheckEnvironment()
+    function testHealthcheckApplication()
     {
-        $check = Healthchecks::environment();
-        $attributes = ['phpVersion', 'pcre', 'tmpWritable', 'imgPublicWritable'];
-        $this->assertArrayHasAttributes($attributes, $check['environment']);
+        $check = Healthchecks::application();
+        $attributes = [
+            'schema', 'robotsIndexDisabled', 'sslForce', 'sslFullBaseUrl', 'seleniumDisabled',
+            'registrationClosed', 'jsProd', 'emailNotificationEnabled', 'latestVersion'
+        ];
+        $this->assertArrayHasAttributes($attributes, $check['application']);
+    }
+
+    function testHealthcheckAppUser()
+    {
+        $check = Healthchecks::appUser();
+        $attributes = ['adminCount'];
+        $this->assertArrayHasAttributes($attributes, $check['application']);
     }
 
     function testHealthcheckConfigFiles()
@@ -44,8 +53,33 @@ class HealthchecksTest extends ApplicationTest
 
     function testDatabase()
     {
-        $check = Healthchecks::core();
-        $attributes = ['cache', 'debugDisabled', 'salt', 'fullBaseUrl', 'validFullBaseUrl', 'fullBaseUrlReachable'];
-        $this->assertArrayHasAttributes($attributes, $check['core']);
+        $check = Healthchecks::database();
+        $attributes = ['connect', 'supportedBackend', 'tablesCount', 'defaultContent'];
+        $this->assertArrayHasAttributes($attributes, $check['database']);
+    }
+
+    function testHealthcheckEnvironment()
+    {
+        $check = Healthchecks::environment();
+        $attributes = ['phpVersion', 'pcre', 'tmpWritable', 'imgPublicWritable'];
+        $this->assertArrayHasAttributes($attributes, $check['environment']);
+    }
+
+    function testHealthcheckGpg()
+    {
+        $check = Healthchecks::gpg();
+        $attributes = [
+            'lib', 'gpgKey', 'gpgKeyNotDefault', 'gpgHome', 'gpgHomeWritable', 'gpgKeyPublic', 'gpgKeyPublicReadable',
+            'gpgKeyPrivate', 'gpgKeyPrivateReadable', 'gpgKeyPrivateFingerprint', 'gpgKeyPublicFingerprint',
+            'gpgKeyPublicEmail', 'gpgKeyPrivateInKeyring', 'canEncrypt', 'canDecrypt'
+        ];
+        $this->assertArrayHasAttributes($attributes, $check['gpg']);
+    }
+
+    function testSsl()
+    {
+        $check = Healthchecks::ssl();
+        $attributes = ['peerValid', 'hostValid', 'notSelfSigned'];
+        $this->assertArrayHasAttributes($attributes, $check['ssl']);
     }
 }

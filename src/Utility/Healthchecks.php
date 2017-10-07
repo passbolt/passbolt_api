@@ -14,13 +14,16 @@
  */
 namespace App\Utility;
 
+use App\Model\Entity\Role;
 use Cake\Cache\Cache;
 use Cake\Datasource\ConnectionManager;
 use Cake\Core\Configure;
 use Cake\Http\Client;
+use Cake\Core\Exception\Exception;
 use Cake\Validation\Validation;
 use Cake\ORM\TableRegistry;
-
+use Cake\Database\Exception as DatabaseException;
+use Cake\Database\Exception\MissingConnectionException;
 //App::uses('Migration', 'Lib/Migration');
 
 class Healthchecks
@@ -46,19 +49,70 @@ class Healthchecks
     }
 
     /**
-     * Return core checks:
-     * - phpVersion: php version is superior to 5.2.8
-     * - pcre: unicode support
-     * - tmpWritable: the TMP directory is writable for the current user
+     * Application checks
+     * - latestVersion: true if using latest version
+     * - schema: schema up to date no need to do a migration
+     * - info.remoteVersion
+     * - sslForce: enforcing the use of SSL
+     * - seleniumDisabled: true if selenium API is disabled
+     * - registrationClosed: true if registration is not open
+     * - jsProd: true if using minified/concatenated javascript
      *
+     * @return array $checks
+     * @access private
+     */
+    static public function application()
+    {
+        try {
+            $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
+            $checks['application']['latestVersion'] = Migration::isLatestVersion();
+        } catch (exception $e) {
+            $checks['application']['latestVersion'] = null;
+        }
+        $checks['application']['schema'] = !Migration::needMigration();
+        $checks['application']['robotsIndexDisabled'] = !Configure::read('passbolt.meta.robots');
+        $checks['application']['sslForce'] = Configure::read('passbolt.ssl.force');
+        $checks['application']['sslFullBaseUrl'] = !(strpos(Configure::read('App.fullBaseUrl'), 'https') === false);
+        $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
+        $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
+        $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
+        $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', json_encode(Configure::read('EmailNotification.send'))) === 1);
+
+        $checks = array_merge(Healthchecks::appUser(), $checks);
+        return $checks;
+    }
+
+    /**
+     * Check that users are set in the database
+     * - app.adminCount there is at least an admin in the database
+     *
+     * @access private
      * @return array
      */
-    static public function environment()
+    static public function appUser()
     {
-        $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '5.6.0', '>='));
-        $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
-        $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
-        $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');
+        // no point checking for records if can not connect
+        $checks = Healthchecks::database();
+        $checks['application']['adminCount'] = false;
+        if (!$checks['database']['connect']) {
+            return $checks;
+        }
+
+        // check number of admin user
+        $User = TableRegistry::get('Users');
+        try {
+            $i = $User->find('count', [
+                'conditions' => ['Role.name' => Role::ADMIN],
+                'contain' => ['Role' => [
+                    'fields' => [
+                        'Role.id',
+                        'Role.name'
+                    ]
+                ]]
+            ]);
+            $checks['application']['adminCount'] = ($i > 0);
+        } catch (Exception $e) {
+        }
 
         return $checks;
     }
@@ -76,7 +130,7 @@ class Healthchecks
     {
         $files = ['app', 'passbolt'];
         $checks = [];
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $checks['configFile'][$file] = (file_exists(APP . 'Config' . DS . $file . '.php'));
         }
 
@@ -94,7 +148,7 @@ class Healthchecks
      */
     static public function core()
     {
-        $settings = Cache::getConfig('default');
+        $settings = Cache::getConfig('_cake_core_');
         $checks['core']['cache'] = (!empty($settings));
         $checks['core']['debugDisabled'] = (Configure::read('debug') === 0);
         $checks['core']['salt'] = (Configure::read('Security.salt') !== '__SALT__');
@@ -110,19 +164,19 @@ class Healthchecks
                     'method' => 'GET'
                 ],
                 'ssl' => [
-                    'verify_peer'      => false,
+                    'verify_peer' => false,
                     'verify_peer_name' => false,
                 ],
             ]);
             $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
             $response = @file_get_contents($url, false, $context);
-            if(isset($response)) {
+            if (isset($response)) {
                 $json = json_decode($response);
-                if(isset($json->body)) {
+                if (isset($json->body)) {
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
                 }
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
         }
 
         return $checks;
@@ -138,7 +192,8 @@ class Healthchecks
      *
      * @return array
      */
-    static public function database() {
+    static public function database()
+    {
         // init results to false by default
         $checks = [];
         $cases = ['connect', 'supportedBackend', 'tablesPrefix', 'tablesCount', 'defaultContent'];
@@ -146,30 +201,25 @@ class Healthchecks
             $checks['database'][$case] = false;
         }
 
-        // No point to check anything if config file is not present
-        $config = Healthchecks::configFiles();
-        if(!$config['configFile']['database'])  {
-            return $checks;
-        }
-
         // Check config file content
-        include_once APP . 'Config' . DS . 'database.php';
-        $db = new DATABASE_CONFIG();
-        if($db->default['datasource'] == 'Database/Mysql') {
+        $db = Configure::read('Datasources');
+        if ($db['default']['driver'] == 'Cake\Database\Driver\Mysql') {
             $checks['database']['supportedBackend'] = true;
-        }
-        if($db->default['prefix'] == '') {
-            // Database prefix are not supported
-            // https://github.com/passbolt/passbolt_api/issues/56
-            $checks['database']['tablesPrefix'] = true;
         }
 
         // Check if can connect to database
         try {
-            App::uses('ConnectionManager', 'Model');
-            ConnectionManager::getDataSource('default');
+            $connection = ConnectionManager::get('default');
+            $connection->connect();
             $checks['database']['connect'] = true;
-        } catch (Exception $connectionError) {
+        } catch (MissingConnectionException $connectionError) {
+            $errorMsg = $connectionError->getMessage();
+            if (method_exists($connectionError, 'getAttributes')) {
+                $attributes = $connectionError->getAttributes();
+                if (isset($errorMsg['message'])) {
+                    $checks['database']['info'] .= ' ' . $attributes['message'];
+                }
+            }
             return $checks;
         }
 
@@ -179,21 +229,21 @@ class Healthchecks
             $connection = ConnectionManager::get('default');
             $tables = $connection->execute('show tables;')->fetchAll('assoc');
 
-            if( isset($tables) && sizeof($tables)) {
+            if (isset($tables) && sizeof($tables)) {
                 $checks['database']['tablesCount'] = (sizeof($tables) > 0);
                 $checks['database']['info']['tablesCount'] = sizeof($tables);
             }
-        } catch (Exception $connectionError) {
+        } catch (DatabaseException $connectionError) {
             return $checks;
         }
 
         // Check if some default data is present
         // We only check the number of roles
         try {
-            $Role = TableRegistry::getModel('Role');
+            $Role = TableRegistry::get('Role');
             $i = $Role->find('count');
             $checks['database']['defaultContent'] = ($i > 3);
-        } catch (Exception $e) {
+        } catch (DatabaseException $e) {
             return $checks;
         }
 
@@ -201,35 +251,20 @@ class Healthchecks
     }
 
     /**
-     * Application checks
-     * - latestVersion: true if using latest version
-     * - schema: schema up to date no need to do a migration
-     * - info.remoteVersion
-     * - sslForce: enforcing the use of SSL
-     * - seleniumDisabled: true if selenium API is disabled
-     * - registrationClosed: true if registration is not open
-     * - jsProd: true if using minified/concatenated javascript
+     * Return core checks:
+     * - phpVersion: php version is superior to 5.2.8
+     * - pcre: unicode support
+     * - tmpWritable: the TMP directory is writable for the current user
      *
-     * @return array $checks
-     * @access private
+     * @return array
      */
-    static public function application() {
-        try {
-            $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
-            $checks['application']['latestVersion'] = Migration::isLatestVersion();
-        } catch (exception $e) {
-            $checks['latestVersion'] = null;
-        }
-        $checks['application']['schema'] = !Migration::needMigration();
-        $checks['application']['robotsIndexDisabled'] = !Configure::read('App.meta.robots.index');
-        $checks['application']['sslForce'] = Configure::read('App.ssl.force');
-        $checks['application']['sslFullBaseUrl'] = !(strpos(Configure::read('App.fullBaseUrl'),'https') === false);
-        $checks['application']['seleniumDisabled'] = !Configure::read('App.selenium.active');
-        $checks['application']['registrationClosed'] = !Configure::read('App.registration.public');
-        $checks['application']['jsProd'] = (Configure::read('App.js.build') === 'production');
-        $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', json_encode(Configure::read('EmailNotification.send'))) === 1);
-
-        $checks = array_merge(Healthchecks::appUser(), $checks);
+    static public function environment()
+    {
+        $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '5.6.0', '>='));
+        $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
+        $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
+        $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');
+        $checks['environment']['logWritable'] = is_writable(LOGS);
         return $checks;
     }
 
@@ -239,7 +274,8 @@ class Healthchecks
      * @return array $checks
      * @access private
      */
-    static public function gpg() {
+    static public function gpg()
+    {
         // Check gpg php module is installed and enabled
         $checks['gpg']['lib'] = (class_exists('gnupg'));
 
@@ -270,7 +306,7 @@ class Healthchecks
         $checks['gpg']['gpgKeyPrivateFingerprint'] = false;
         $checks['gpg']['gpgKeyPublicFingerprint'] = false;
         $checks['gpg']['gpgKeyPublicEmail'] = false;
-        if($checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKey']) {
+        if ($checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKey']) {
             $gpg = new Gpg();
             $privateKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
             $privateKeyInfo = $gpg->getKeyInfo($privateKeydata);
@@ -282,8 +318,8 @@ class Healthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
-            App::uses('Gpgkey', 'Model');
-            $checks['gpg']['gpgKeyPublicEmail'] = Gpgkey::uidContainValidEmail($publicKeyInfo['uid']);
+            $Gpgkeys = TableRegistry::get('Gpgkeys');
+            $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmail($publicKeyInfo['uid']);
         }
 
         // Check that the private key is present in the keyring.
@@ -297,6 +333,8 @@ class Healthchecks
         }
 
         // Check that the server can be used for encrypting/decrypting
+        $checks['gpg']['canDecrypt'] = false;
+        $checks['gpg']['canEncrypt'] = false;
         if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
             $_gpg = new gnupg();
             $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
@@ -309,12 +347,8 @@ class Healthchecks
                 $encryptedMessage = $_gpg->encryptsign($messageToEncrypt);
                 if ($encryptedMessage !== false) {
                     $checks['gpg']['canEncrypt'] = true;
-                } else {
-                    $checks['gpg']['canEncrypt'] = false;
                 }
-            }
-            catch ( Exception $e ) {
-                $checks['gpg']['canEncrypt'] = false;
+            } catch (Exception $e) {
             }
 
             // Try to decrypt the message.
@@ -324,69 +358,14 @@ class Healthchecks
 
                 try {
                     $_gpg->decryptverify($encryptedMessage, $decryptedMessage);
-                    if ($decryptedMessage !== $messageToEncrypt) {
-                        $checks['gpg']['canDecrypt'] = false;
-                    } else {
+                    if ($decryptedMessage === $messageToEncrypt) {
                         $checks['gpg']['canDecrypt'] = true;
                     }
-                }
-                catch ( Exception $e ) {
-                    $checks['gpg']['canDecrypt'] = false;
+                } catch (Exception $e) {
                 }
             }
         }
 
-        return $checks;
-    }
-
-    /**
-     * Check that users are set in the database
-     * - app.adminCount there is at least an admin in the database
-     *
-     * @access private
-     * @return array
-     */
-    static public function appUser() {
-        $checks['application']['adminCount'] = false;
-
-        // no point checking for records if can not connect
-        $checks = Healthchecks::database();
-        if (!$checks['database']['connect']) {
-            return $checks;
-        }
-
-        // check number of admin user
-        $User = TableRegistry::get('Users');
-        try {
-            $i = $User->find('count', [
-                'conditions' => ['Role.name' => Role::ADMIN],
-                'contain' => ['Role' => [
-                    'fields' => [
-                        'Role.id',
-                        'Role.name'
-                    ]
-                ]]
-            ]);
-            $checks['application']['adminCount'] = ($i > 0);
-        } catch(Exception $e) {
-        }
-
-        return $checks;
-    }
-
-    /**
-     * Development tools check
-     * - devTools.debugKit debugkit plugin is present
-     * - devTools.phpunit phpunit is installed
-     * - devTools.phpunitVersion phpunit version == 3.7.38
-     *
-     * @return array
-     * @access private
-     */
-    static public function devTools() {
-        $checks['devTools']['phpunit'] = (class_exists('PHPUnit_Runner_Version'));
-        $checks['devTools']['phpunitVersion'] = ($checks['devTools']['phpunit'] && PHPUnit_Runner_Version::id() === '3.7.38');
-        $checks['devTools']['info']['phpunitVersion'] = PHPUnit_Runner_Version::id();
         return $checks;
     }
 
@@ -399,7 +378,8 @@ class Healthchecks
      * @return array
      * @access private
      */
-    static public function ssl() {
+    static public function ssl()
+    {
         $checks['ssl'] = [
             'peerValid' => false,
             'hostValid' => false,
@@ -408,7 +388,7 @@ class Healthchecks
 
         // No point to check anything if Core file is not valid
         $config = Healthchecks::core();
-        if (!$config['core']['fullBaseUrlReachable'])  {
+        if (!$config['core']['fullBaseUrlReachable']) {
             return $checks;
         }
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
@@ -422,7 +402,7 @@ class Healthchecks
             ]);
             $response = $HttpSocket->get($url);
             $checks['ssl']['peerValid'] = $response->isOk();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $checks['ssl']['info'] = $e->getMessage();
             return $checks;
         }
@@ -436,7 +416,7 @@ class Healthchecks
             ]);
             $response = $HttpSocket->get($url);
             $checks['ssl']['hostValid'] = $response->isOk();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $checks['ssl']['info'] = $e->getMessage();
             return $checks;
         }
@@ -450,7 +430,7 @@ class Healthchecks
             ]);
             $response = $HttpSocket->get($url);
             $checks['ssl']['notSelfSigned'] = $response->isOk();
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             return $checks;
         }
 
@@ -468,7 +448,7 @@ class Healthchecks
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST
         );
-        foreach ( $iterator as $name => $fileInfo ) {
+        foreach ($iterator as $name => $fileInfo) {
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {
                 continue;
             }
@@ -479,5 +459,4 @@ class Healthchecks
 
         return true;
     }
-
 }
