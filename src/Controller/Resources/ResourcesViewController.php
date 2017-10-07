@@ -53,13 +53,13 @@ class ResourcesViewController extends AppController
         }
 
         // Filter by resource id.
-        $options['id'] = $id;
+        $options['Resources.id'] = $id;
 
         // Retrieve the resource.
         $resource = $this->Resources->findView($options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
-        $this->success($resource);
+        $this->success('The operation was successful.', $resource);
     }
 }

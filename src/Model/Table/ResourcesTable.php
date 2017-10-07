@@ -15,7 +15,6 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -144,8 +143,7 @@ class ResourcesTable extends Table
      */
     public function findIndex(array $options = [])
     {
-        $query = $this->query();
-        $query->select();
+        $query = $this->find('all');
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
@@ -214,11 +212,11 @@ class ResourcesTable extends Table
     {
         $query = $this->findIndex($options);
 
-        if (!isset($options['id'])) {
+        if (!isset($options['Resources.id'])) {
             throw new Exception(__('Resource table findView should have an id set in options.'));
         }
 
-        $query->where(['Resources.id' => $options['id']]);
+        $query->where(['Resources.id' => $options['Resources.id']]);
 
         return $query;
     }

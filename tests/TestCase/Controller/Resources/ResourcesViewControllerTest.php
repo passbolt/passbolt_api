@@ -20,7 +20,7 @@ use App\Utility\Common;
 
 class ResourcesViewControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.resources', 'app.secrets', 'app.favorites'];
+    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
 
     public function testViewSuccess()
     {

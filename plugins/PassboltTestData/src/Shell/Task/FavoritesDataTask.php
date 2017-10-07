@@ -24,19 +24,19 @@ class FavoritesDataTask extends DataTask
     protected function _getData()
     {
         $favorites[] = [
-            'id' => Common::uuid(),
+            'id' => Common::uuid('favorite.id.ada-apache'),
             'user_id' => Common::uuid('user.id.ada'),
             'foreign_id' => Common::uuid('resource.id.apache'),
             'foreign_model' => 'Resource'
         ];
         $favorites[] = [
-            'id' => Common::uuid(),
+            'id' => Common::uuid('favorite.id.dame-apache'),
             'user_id' => Common::uuid('user.id.dame'),
             'foreign_id' => Common::uuid('resource.id.apache'),
             'foreign_model' => 'Resource'
         ];
         $favorites[] = [
-            'id' => Common::uuid(),
+            'id' => Common::uuid('favorite.id.dame-april'),
             'user_id' => Common::uuid('user.id.dame'),
             'foreign_id' => Common::uuid('resource.id.april'),
             'foreign_model' => 'Resource'

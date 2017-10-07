@@ -12,24 +12,24 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Gpgkeys;
 
-use App\Controller\AppController;
-use Cake\Event\Event;
+use Migrations\AbstractMigration;
 
-class GpgkeysIndexController extends AppController
+class V200AddFavoriteModifiedField extends AbstractMigration
 {
     /**
-     * Gpgkey Index action
+     * Up
      *
      * @return void
      */
-    public function index()
+    public function up()
     {
-        $this->loadModel('Gpgkeys');
-        $whitelist = ['filter' => ['modified-after']];
-        $options = $this->QueryString->get($whitelist);
-        $gpgkeys = $this->Gpgkeys->find('index', $options);
-        $this->success('The operation was successful.', $gpgkeys);
+        $this->table('favorites')
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->save();
     }
 }
