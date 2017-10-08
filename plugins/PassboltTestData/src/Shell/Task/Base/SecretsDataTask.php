@@ -12,9 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Shell\Task;
+namespace PassboltTestData\Shell\Task\Base;;
 
 use App\Utility\Common;
+use PassboltTestData\Lib\DataTask;
 
 class SecretsDataTask extends DataTask
 {
@@ -82,7 +83,7 @@ class SecretsDataTask extends DataTask
     protected function _encrypt($text, $user)
     {
         // Retrieve the user key.
-        $GpgkeyTask = $this->Tasks->load('PassboltTestData.GpgkeysData');
+        $GpgkeyTask = $this->Tasks->load('PassboltTestData.Base/GpgkeysData');
         $GpgkeyTask->params = $this->params;
         $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user->id);
 

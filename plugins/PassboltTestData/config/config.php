@@ -19,26 +19,26 @@ return [
             'default' => [
                 'install' => [
                     'shellTasks' => [
-                        'PassboltTestData.RolesData',
-                        'PassboltTestData.UsersData',
-                        'PassboltTestData.ProfilesData',
-                        'PassboltTestData.GroupsData',
-                        'PassboltTestData.GpgkeysData',
-                        'PassboltTestData.ResourcesData',
-                        'PassboltTestData.SecretsData',
-                        'PassboltTestData.FavoritesData'
+                        'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Base/UsersData',
+                        'PassboltTestData.Base/ProfilesData',
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Base/SecretsData',
+                        'PassboltTestData.Base/FavoritesData'
                     ]
                 ],
                 'fixturize' => [
                     'shellTasks' => [
-                        'PassboltTestData.RolesData',
-                        'PassboltTestData.UsersData',
-                        'PassboltTestData.ProfilesData',
-                        'PassboltTestData.GroupsData',
-                        'PassboltTestData.GpgkeysData',
-                        'PassboltTestData.ResourcesData',
-                        'PassboltTestData.SecretsData',
-                        'PassboltTestData.FavoritesData'
+                        'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Base/UsersData',
+                        'PassboltTestData.Base/ProfilesData',
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Base/SecretsData',
+                        'PassboltTestData.Base/FavoritesData'
                     ]
                 ]
             ],
@@ -46,13 +46,13 @@ return [
                 'install' => [
                     'count' => 300,
                     'shellTasks' => [
-                        'PassboltTestData.RolesData',
-                        'PassboltTestData.LargeUsersData',
+                        'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Large/UsersData',
                     ]
                 ],
                 'fixturize' => [
                     'shellTasks' => [
-                        'PassboltTestData.LargeUsersData',
+                        'PassboltTestData.Large/UsersData',
                     ]
                 ]
             ],
