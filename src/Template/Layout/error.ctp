@@ -19,7 +19,7 @@ use Cake\Core\Configure;
 <head>
     <?= $this->Html->charset() ?>
 
-    <title><?= Configure::read('passbolt.title'); ?> | <?= $this->fetch('title') ?></title>
+    <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
 
     <?= $this->Html->css('main.min.css') ?>

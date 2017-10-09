@@ -103,6 +103,20 @@ Router::prefix('/gpgkeys', function ($routes) {
 });
 
 /**
+ * Healthchecks routes
+ */
+Router::prefix('/healthcheck', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/status', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Resources prefixed routes
  */
 Router::prefix('Resources', function ($routes) {

@@ -93,7 +93,7 @@ module.exports = function(grunt) {
         },{
           // Less
           cwd: path.node_modules_styleguide + 'build/css',
-          src: ['devel.min.css', 'login.min.css', 'main.min.css', 'setup.min.css'],
+          src: ['devel.min.css', 'login.min.css', 'main.min.css', 'check.min.css', 'setup.min.css'],
           dest: path.webroot + 'css',
           expand: true
         }]

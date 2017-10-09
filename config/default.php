@@ -129,8 +129,8 @@ return [
             'serverKey' => [
                 // Server private key location and fingerprint
                 'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
-                'public' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure.key',
-                'private' => APP . 'Config' . DS . 'gpg' . DS . 'unsecure_private.key',
+                'public' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure.key',
+                'private' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure_private.key',
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank
                 'passphrase' => ''

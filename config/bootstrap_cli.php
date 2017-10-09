@@ -39,7 +39,3 @@ Plugin::load('Migrations');
 if (Configure::read('debug') > 0) {
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
-
-$uid = posix_getuid();
-$user = posix_getpwuid($uid);
-define('PROCESS_USER', $user['name']);

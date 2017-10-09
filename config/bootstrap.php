@@ -251,3 +251,10 @@ Plugin::load('EmailQueue');
 if (Configure::read('passbolt.gpg.putenv')) {
     putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
+
+/*
+ * Set process user constant
+ */
+$uid = posix_getuid();
+$user = posix_getpwuid($uid);
+define('PROCESS_USER', $user['name']);

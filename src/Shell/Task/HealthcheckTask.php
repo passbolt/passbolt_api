@@ -334,12 +334,6 @@ class HealthcheckTask extends AppShell
             $checks =  array_merge(Healthchecks::database(), Healthchecks::application());
         }
         $this->title(__('Database'));
-//        $this->assert(
-//            $checks['database']['supportedBackend'],
-//            __('Configured to use a supported database backend'),
-//            __('Configuration file set to use a non-supported backend'),
-//            __('Use Database/Mysql instead.')
-//        );
         $this->assert(
             $checks['database']['connect'],
             __('The application is able to connect to the database'),
@@ -349,19 +343,13 @@ class HealthcheckTask extends AppShell
                 __('Make sure the database exists and is accessible for the given database user.')
             ]
         );
-//        $this->assert(
-//            $checks['database']['tablesPrefix'],
-//            __('Not using a prefix for database tables'),
-//            __('Using a prefix for database tables'),
-//            __('Table prefix are not supported. see. https://github.com/passbolt/passbolt_api/issues/56')
-//        );
         $this->assert(
             $checks['database']['tablesCount'],
             __('{0} tables found', $checks['database']['info']['tablesCount']),
             __('No table found'),
             [
                 __('Run the install script to install the database tables'),
-                'sudo su -s /bin/bash -c "' . APP . 'Console/cake install" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake install" ' . PROCESS_USER
             ]
         );
         $this->assert(
@@ -370,7 +358,7 @@ class HealthcheckTask extends AppShell
             __('No default content found'),
             [
                 __('Run the install script to set the default content such as roles and permission types'),
-                'sudo su -s /bin/bash -c "' . APP . 'Console/cake install" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake install" ' . PROCESS_USER
             ]
         );
         $this->assert(
@@ -379,7 +367,7 @@ class HealthcheckTask extends AppShell
             __('The database schema is not up to date.'),
             [
                 __('Run the migration scripts:'),
-                'sudo su -s /bin/bash -c "' . APP . 'Console/cake Migrations.migration run all" ' . PROCESS_USER,
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake migrations migrate" ' . PROCESS_USER,
                 __('See. https://www.passbolt.com/help/tech/update')
             ]
         );
@@ -399,14 +387,14 @@ class HealthcheckTask extends AppShell
         if (!isset($checks['application']['latestVersion'])) {
             $this->assert(
                 false,
-                __('Could connect to passbolt repository to check versions'),
+                __('Could connect to passbolt repository to check versions.'),
                 __('Could not connect to passbolt repository to check versions. It is not possible check if your version is up to date.'),
-                __('Check the network configuration to allow this script to check for updates')
+                __('Check the network configuration to allow this script to check for updates.')
             );
         } else {
             $this->assert(
                 $checks['application']['latestVersion'],
-                __('Using latest passbolt version ({0})', Configure::read('passbolt.version')),
+                __('Using latest passbolt version ({0}).', Configure::read('passbolt.version')),
                 __('This installation is not up to date. Currently using {0} and it should be {1}.',
                     Configure::read('passbolt.version'), $checks['application']['info']['remoteVersion']),
                 __('See. https://www.passbolt.com/help/tech/update')
@@ -414,27 +402,27 @@ class HealthcheckTask extends AppShell
         }
         $this->assert(
             $checks['application']['sslForce'],
-            __('Passbolt is configured to force SSL use'),
-            __('Passbot is not configured to force SSL use'),
-            __('Set passbolt.ssl.force to true in config/passbolt.php')
+            __('Passbolt is configured to force SSL use.'),
+            __('Passbot is not configured to force SSL use.'),
+            __('Set passbolt.ssl.force to true in config/passbolt.php.')
         );
         $this->assert(
             $checks['application']['sslFullBaseUrl'],
-            __('App.fullBaseUrl is set to HTTPS'),
-            __('App.fullBaseUrl is not set to HTTPS'),
-            __('Check App.fullBaseUrl url scheme in {0}', 'config/app.php')
+            __('App.fullBaseUrl is set to HTTPS.'),
+            __('App.fullBaseUrl is not set to HTTPS.'),
+            __('Check App.fullBaseUrl url scheme in {0}.', 'config/app.php')
         );
         $this->assert(
             $checks['application']['seleniumDisabled'],
             __('Selenium API endpoints are disabled.'),
             __('Selenium API endpoints are active. This setting should be used for testing only.'),
-            __('Set passbolt.selenium.active to false in config/passbolt.php')
+            __('Set passbolt.selenium.active to false in config/passbolt.php.')
         );
         $this->warning(
             $checks['application']['robotsIndexDisabled'],
             __('Search engine robots are told not to index content.'),
             __('Search engine robots are not told not to index content.'),
-            __('Set passbolt.meta.robots to false in config/passbolt.php')
+            __('Set passbolt.meta.robots to false in config/passbolt.php.')
         );
         $this->warning(
             $checks['application']['registrationClosed'],
@@ -442,13 +430,13 @@ class HealthcheckTask extends AppShell
             __('Registration is open to everyone.'),
             [
                 __('Make sure this instance is not publicly available on the internet.'),
-                __('Or set passbolt.registration.public to false in config/app.php')
+                __('Or set passbolt.registration.public to false in config/app.php.')
             ]
         );
         $this->warning(
             $checks['application']['jsProd'],
             __('Serving the compiled version of the javascript app'),
-            __('Using non-compiled Javascript. Passbolt will be slower'),
+            __('Using non-compiled Javascript. Passbolt will be slower.'),
             __('Set passbolt.js.build to production in config/passbolt.php')
         );
         $this->warning(
@@ -471,10 +459,10 @@ class HealthcheckTask extends AppShell
         $this->title(__('GPG Configuration'));
         $this->assert(
             $checks['gpg']['lib'],
-            __('PHP GPG Module is installed and loaded'),
-            __('PHP GPG Module is not installed or loaded'),
+            __('PHP GPG Module is installed and loaded.'),
+            __('PHP GPG Module is not installed or loaded.'),
             __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php'),
-            __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php')
+            __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php.')
         );
         if($checks['gpg']['gpgKey']) {
             $this->assert(
@@ -499,8 +487,8 @@ class HealthcheckTask extends AppShell
         }
         $this->assert(
             $checks['gpg']['gpgHome'],
-            __('The environment variable GNUPGHOME is set to {0}', $checks['gpg']['info']['gpgHome']),
-            __('The environment variable GNUPGHOME is set to {0}, but the directory doesn\'t exist.', $checks['gpg']['info']['gpgHome']),
+            __('The environment variable GNUPGHOME is set to {0}.', $checks['gpg']['info']['gpgHome']),
+            __('The environment variable GNUPGHOME is set to {0}, but the directory does not exist.', $checks['gpg']['info']['gpgHome']),
             [
                 __('Ensure the keyring location exists and is accessible by the webserver user.'),
                 __('you can try:'),

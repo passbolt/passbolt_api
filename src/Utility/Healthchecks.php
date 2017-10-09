@@ -43,7 +43,6 @@ class Healthchecks
         $checks = array_merge(Healthchecks::database(), $checks);
         $checks = array_merge(Healthchecks::gpg(), $checks);
         $checks = array_merge(Healthchecks::application(), $checks);
-        $checks = array_merge(Healthchecks::devTools(), $checks);
 
         return $checks;
     }
@@ -223,7 +222,7 @@ class Healthchecks
         // Check if tables are present
         try {
             $connection = ConnectionManager::get('default');
-            $tables = $connection->execute('show tables;')->fetchAll('assoc');
+            $tables = $connection->execute('show tables')->fetchAll('assoc');
 
             if (isset($tables) && sizeof($tables)) {
                 $checks['database']['tablesCount'] = (sizeof($tables) > 0);
@@ -236,8 +235,8 @@ class Healthchecks
         // Check if some default data is present
         // We only check the number of roles
         try {
-            $Role = TableRegistry::get('Role');
-            $i = $Role->find('all')->count();
+            $Roles = TableRegistry::get('Roles');
+            $i = $Roles->find('all')->count();
             $checks['database']['defaultContent'] = ($i > 3);
         } catch (DatabaseException $e) {
             return $checks;
@@ -367,9 +366,9 @@ class Healthchecks
 
     /**
      * SSL certs check
-     * - devTools.debugKit debugkit plugin is present
-     * - devTools.phpunit phpunit is installed
-     * - devTools.phpunitVersion phpunit version == 3.7.38
+     * - ssl.peerValid
+     * - ssl.hostValid
+     * - ssl.notSelfSigned
      *
      * @return array
      * @access private
