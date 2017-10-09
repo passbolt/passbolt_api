@@ -84,8 +84,9 @@ use Cake\Utility\Security;
 try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
-    Configure::load('passbolt', 'default', false);
-    Configure::load('version', 'default', true); // merge with passbolt config
+    Configure::load('default', 'default', false); // passbolt default config
+    Configure::load('passbolt', 'default', true); // merge with default config
+    Configure::load('version', 'default', true);
 } catch (\Exception $e) {
     // let cli handle issues
     if(!$isCli) {
