@@ -35,23 +35,8 @@ class ResourcesIndexController extends AppController
         ];
         $options = $this->QueryString->get($whitelist);
 
-        // If the result should contain the secrets, include only the current user secret.
-        if (isset($options['contain']['secret']) && $options['contain']['secret']) {
-            $options['Secrets.user_id'] = $this->User->id();
-        }
-
-        // Filter the request on favorite.
-        if (isset($options['filter']['is-favorite'])) {
-            $options['Favorites.user_id'] = $this->User->id();
-        }
-
-        // If the result should contain the favorite, include only the current user favorite.
-        if (isset($options['contain']['favorite']) && $options['contain']['favorite']) {
-            $options['Favorites.user_id'] = $this->User->id();
-        }
-
         // Retrieve the resources.
-        $resources = $this->Resources->findIndex($options);
+        $resources = $this->Resources->findIndex($this->User->id(), $options);
         $this->success('The operation was successful.', $resources);
     }
 }

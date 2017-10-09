@@ -14,14 +14,12 @@
  */
 namespace App\Test\TestCase\Controller;
 
-use App\Utility\Gpg;
-use App\Model\Entity\Role;
 use App\Utility\Common;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Cake\TestSuite\IntegrationTestCase;
-use PassboltTestData\Shell\Task\GpgkeysDataTask;
+use PassboltTestData\Shell\Task\Base\GpgkeysDataTask;
 
 class AuthLoginControllerTest extends IntegrationTestCase
 {

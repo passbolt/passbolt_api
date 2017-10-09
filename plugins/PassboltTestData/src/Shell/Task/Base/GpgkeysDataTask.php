@@ -12,18 +12,19 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Shell\Task;
+namespace PassboltTestData\Shell\Task\Base;
 
 use App\Utility\Common;
 use App\Utility\Gpg;
 use Cake\ORM\TableRegistry;
+use PassboltTestData\Lib\DataTask;
 
 class GpgkeysDataTask extends DataTask
 {
     public $entityName = 'Gpgkeys';
 
-    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'src' .
-        DS . 'Shell' . DS . 'Task' . DS . 'gpg' . DS;
+    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' .
+        DS . 'gpg' . DS;
 
     /**
      * Get path of the key for the given user.

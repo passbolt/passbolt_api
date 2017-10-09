@@ -13,9 +13,10 @@
  * @since         2.0.0
  */
 
-namespace PassboltTestData\Shell\Task;
+namespace PassboltTestData\Shell\Task\Base;;
 
 use App\Utility\Common;
+use PassboltTestData\Lib\DataTask;
 
 class FavoritesDataTask extends DataTask
 {

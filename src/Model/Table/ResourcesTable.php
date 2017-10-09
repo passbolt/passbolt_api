@@ -15,8 +15,10 @@
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Permission;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -55,6 +57,9 @@ class ResourcesTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->hasOne('Permissions', [
+            'foreignKey' => 'aco_foreign_key'
+        ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id'
         ]);
@@ -137,21 +142,23 @@ class ResourcesTable extends Table
     /**
      * Build the query that fetches data for resource index
      *
+     * @param string $userId The user to get the resources for
      * @param array $options options
-     * @throws Exception if the options contain Secrets but user_id is not provided
-     * @return Query
+     * @throws \Exception if the userId parameter is not a valid uuid.
+     * @return \Cake\ORM\Query
      */
-    public function findIndex(array $options = [])
+    public function findIndex($userId, array $options = [])
     {
+        if (!Validation::uuid($userId)) {
+            throw new \Exception(__('The parameter userId should be a valid uuid.'));
+        }
+
         $query = $this->find('all');
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
-            if (!isset($options['Secrets.user_id'])) {
-                throw new Exception(__('Resource table findIndex should have a Secrets.user_id set in options if the options contain secret.'));
-            }
-            $query->contain('Secrets', function($q) use ($options) {
-                return $q->where(['Secrets.user_id' => $options['Secrets.user_id']]);
+            $query->contain('Secrets', function($q) use ($userId) {
+                return $q->where(['Secrets.user_id' => $userId]);
             });
         }
 
@@ -167,32 +174,36 @@ class ResourcesTable extends Table
 
         // If filtered by favorite.
         if (isset($options['filter']['is-favorite'])) {
-            if ($options['filter']['is-favorite'] && !isset($options['Favorites.user_id'])) {
-                throw new Exception(__('Resource table findIndex should have a Favorites.user_id set in options if the options filter is-favorite is set to true.'));
-            }
             // Filter on the favorite resources.
             if ($options['filter']['is-favorite']) {
-                $query->innerJoinWith('Favorites', function($q) use ($options) {
-                    return $q->where(['Favorites.user_id' => $options['Favorites.user_id']]);
+                $query->innerJoinWith('Favorites', function($q) use ($userId) {
+                    return $q->where(['Favorites.user_id' => $userId]);
                 });
             }
             // Filter out the favorite resources.
             else {
-                $query->notMatching('Favorites', function($q) use ($options) {
-                    return $q->where(['Favorites.user_id' => $options['Favorites.user_id']]);
+                $query->notMatching('Favorites', function($q) use ($userId) {
+                    return $q->where(['Favorites.user_id' => $userId]);
                 });
             }
         }
 
         // If contains favorite.
         if (isset($options['contain']['favorite'])) {
-            if (!isset($options['Favorites.user_id'])) {
-                throw new Exception(__('Resource table findIndex should have a Favorites.user_id set in options if the options contain favorite.'));
-            }
-            $query->contain('Favorites', function($q) use ($options) {
-                return $q->where(['Favorites.user_id' => $options['Favorites.user_id']]);
+            $query->contain('Favorites', function($q) use ($userId) {
+                return $q->where(['Favorites.user_id' => $userId]);
             });
         }
+
+        // Filter on resources the user is allowed to access.
+        $query->innerJoinWith('Permissions', function($q) use ($userId) {
+            return $q
+                ->where([
+                    'Permissions.aro_foreign_key' => $userId,
+                    'Permissions.type >=' => Permission::READ,
+                ]);
+            // @TODO Check group permissions
+        });
 
         // Filter out deleted resources
         $query->where(['Resources.deleted' => false]);
@@ -204,19 +215,23 @@ class ResourcesTable extends Table
     /**
      * Build the query that fetches data for resource view
      *
+     * @param string $userId The user to get the resources for
+     * @param string $resourceId The resource to retrieve
      * @param array $options options
-     * @throws Exception if the options contain Secrets but user_id is not provided
+     * @throws \Exception if the resourceId parameter is not a valid uuid.
      * @return Query
      */
-    public function findView(array $options = [])
+    public function findView($userId, $resourceId, array $options = [])
     {
-        $query = $this->findIndex($options);
-
-        if (!isset($options['Resources.id'])) {
-            throw new Exception(__('Resource table findView should have an id set in options.'));
+        if (!Validation::uuid($userId)) {
+            throw new \Exception(__('The parameter userId should be a valid uuid.'));
+        }
+        if (!Validation::uuid($resourceId)) {
+            throw new \Exception(__('The parameter resourceId should be a valid uuid.'));
         }
 
-        $query->where(['Resources.id' => $options['Resources.id']]);
+        $query = $this->findIndex($userId, $options);
+        $query->where(['Resources.id' => $resourceId]);
 
         return $query;
     }

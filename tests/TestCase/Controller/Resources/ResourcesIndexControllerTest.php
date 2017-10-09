@@ -21,7 +21,7 @@ use Cake\Utility\Hash;
 
 class ResourcesIndexControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
+    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 
     public function testIndexSuccess()
     {

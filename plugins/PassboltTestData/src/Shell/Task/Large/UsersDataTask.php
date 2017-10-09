@@ -12,12 +12,13 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Shell\Task;
+namespace PassboltTestData\Shell\Task\Large;
 
 use App\Utility\Common;
 use Cake\Core\Configure;
+use PassboltTestData\Lib\DataTask;
 
-class LargeUsersDataTask extends DataTask
+class UsersDataTask extends DataTask
 {
     public $entityName = 'Users';
     public $fixtureName = 'LargeUsers';

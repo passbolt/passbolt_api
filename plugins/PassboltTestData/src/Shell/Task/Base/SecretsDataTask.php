@@ -12,9 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Shell\Task;
+namespace PassboltTestData\Shell\Task\Base;;
 
 use App\Utility\Common;
+use PassboltTestData\Lib\DataTask;
 
 class SecretsDataTask extends DataTask
 {
@@ -82,7 +83,7 @@ class SecretsDataTask extends DataTask
     protected function _encrypt($text, $user)
     {
         // Retrieve the user key.
-        $GpgkeyTask = $this->Tasks->load('PassboltTestData.GpgkeysData');
+        $GpgkeyTask = $this->Tasks->load('PassboltTestData.Base/GpgkeysData');
         $GpgkeyTask->params = $this->params;
         $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user->id);
 
@@ -105,9 +106,8 @@ class SecretsDataTask extends DataTask
         $this->loadModel('Resources');
 
         $users = $this->Users->find('index', ['role' => Common::uuid('role.id.admin')]);
-        // @todo encrypt only the secret a user is authorized to access.
-        $resources = $this->Resources->findIndex();
         foreach($users as $user) {
+            $resources = $this->Resources->findIndex($user->id);
             foreach($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);
