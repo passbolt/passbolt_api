@@ -16,6 +16,7 @@ namespace App\Utility;
 
 use Cake\Core\Configure;
 use Cake\Http\Client;
+use Migrations\Migrations;
 
 class Migration {
     protected $_remoteTagName;
@@ -23,36 +24,17 @@ class Migration {
     /**
      * Check if the app or plugins need a database migration
      *
-     * @param string $type 'all', 'app' or a supported plugin name
-     * @throws Exception if migration type is not whitelisted
      * @return boolean
      */
-    public static function needMigration($type = 'all') {
-        return true;
-
-//        $allowedMigrations = Configure::read('App.migrations');
-//        if($type == 'all') {
-//            $migrations = $allowedMigrations;
-//        } else {
-//            if(in_array($type, $allowedMigrations)) {
-//                $migrations[] = $type;
-//            } else {
-//                throw new Exception(__('Migration not found or not allowed: ') . $type);
-//            }
-//        }
-//
-//        $migration = new MigrationVersion();
-//        foreach($migrations as $module) {
-//            $mapping = $migration->getMapping($module);
-//            $currentVersion = $migration->getVersion($module);
-//            if ($mapping) {
-//                $lastVersion = max(array_keys($mapping));
-//                if ($lastVersion - $currentVersion != 0) {
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
+    public static function needMigration() {
+        $Migrations = new Migrations();
+        $migrations = $Migrations->status();
+        foreach($migrations as $i => $migration) {
+            if ($migration['status'] === 'down') {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
