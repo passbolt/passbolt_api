@@ -2,6 +2,7 @@
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\ResourcesTable;
+use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -80,5 +81,35 @@ class ResourcesTableTest extends TestCase
     public function testBuildRules()
     {
         $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testFindIndexErrorInvalidUserIdParameter()
+    {
+        try {
+            $this->Resources->findIndex('not-valid');
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testFindViewErrorInvalidUserIdParameter()
+    {
+        try {
+            $this->Resources->findView('not-valid', Common::uuid());
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testFindViewErrorInvalidResourceIdParameter()
+    {
+        try {
+            $this->Resources->findView(Common::uuid(), 'not-valid');
+        } catch (\Exception $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
     }
 }

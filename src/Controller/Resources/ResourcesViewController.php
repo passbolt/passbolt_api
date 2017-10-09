@@ -42,21 +42,8 @@ class ResourcesViewController extends AppController
         $whitelist = ['contain' => ['creator', 'favorite', 'modifier', 'secret']];
         $options = $this->QueryString->get($whitelist);
 
-        // If the result should contain the secrets, include only the current user secret.
-        if (isset($options['contain']['secret']) && $options['contain']['secret']) {
-            $options['Secrets.user_id'] = $this->User->id();
-        }
-
-        // If the result should contain the favorite, include only the current user favorite.
-        if (isset($options['contain']['favorite']) && $options['contain']['favorite']) {
-            $options['Favorites.user_id'] = $this->User->id();
-        }
-
-        // Filter by resource id.
-        $options['Resources.id'] = $id;
-
         // Retrieve the resource.
-        $resource = $this->Resources->findView($options)->first();
+        $resource = $this->Resources->findView($this->User->id(), $id, $options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

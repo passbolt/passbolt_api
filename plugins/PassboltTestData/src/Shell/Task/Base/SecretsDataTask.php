@@ -106,9 +106,8 @@ class SecretsDataTask extends DataTask
         $this->loadModel('Resources');
 
         $users = $this->Users->find('index', ['role' => Common::uuid('role.id.admin')]);
-        // @todo encrypt only the secret a user is authorized to access.
-        $resources = $this->Resources->findIndex();
         foreach($users as $user) {
+            $resources = $this->Resources->findIndex($user->id);
             foreach($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);

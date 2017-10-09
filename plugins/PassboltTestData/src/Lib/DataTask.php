@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace PassboltTestData\Lib;
 
 use Cake\Console\Shell;

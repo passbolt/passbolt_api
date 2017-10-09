@@ -25,6 +25,7 @@ return [
                         'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/GpgkeysData',
                         'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Base/PermissionsData',
                         'PassboltTestData.Base/SecretsData',
                         'PassboltTestData.Base/FavoritesData'
                     ]
@@ -37,6 +38,7 @@ return [
                         'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/GpgkeysData',
                         'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Base/PermissionsData',
                         'PassboltTestData.Base/SecretsData',
                         'PassboltTestData.Base/FavoritesData'
                     ]
