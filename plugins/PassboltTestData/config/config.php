@@ -22,12 +22,13 @@ return [
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Base/ProfilesData',
-                        'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/GroupsUsersData',
                         'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/PermissionsData',
                         'PassboltTestData.Base/SecretsData',
-                        'PassboltTestData.Base/FavoritesData'
                     ]
                 ],
                 'fixturize' => [
@@ -35,12 +36,13 @@ return [
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Base/ProfilesData',
-                        'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/GroupsUsersData',
                         'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/PermissionsData',
                         'PassboltTestData.Base/SecretsData',
-                        'PassboltTestData.Base/FavoritesData'
                     ]
                 ]
             ],
