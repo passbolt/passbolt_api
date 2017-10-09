@@ -12,13 +12,14 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use Cake\Core\Configure;
 ?>
 <!DOCTYPE html>
 <html class="passbolt no-js no-passboltplugin alpha version" lang="en">
 <head>
     <?= $this->Html->charset() ?>
 
-    <title>Passbolt | <?= $this->fetch('title') ?></title>
+    <title><?= Configure::read('passbolt.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
 
     <?= $this->Html->css('main.min.css') ?>

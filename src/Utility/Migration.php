@@ -62,7 +62,7 @@ class Migration {
      */
     public static function isLatestVersion() {
         $remoteVersion = ltrim(Migration::getLatestTagName(), 'v');
-        $localVersion = ltrim(Configure::read('passbolt.version.number'), 'v');
+        $localVersion = ltrim(Configure::read('passbolt.version'), 'v');
         return version_compare($localVersion, $remoteVersion, ">=");
     }
 
@@ -73,7 +73,7 @@ class Migration {
      * @return string tag name such as 'v1.0.1'
      */
     public static function getLatestTagName() {
-        $remoteTagName = Configure::read('passbolt.version.remote');
+        $remoteTagName = Configure::read('passbolt.remote.version');
         if(is_null($remoteTagName)) {
             $url = 'https://api.github.com/repos/passbolt/passbolt_api/tags';
             try {
@@ -87,7 +87,7 @@ class Migration {
                 throw new Exception(__('Could not read tag information on github repository'));
             }
             $remoteTagName = $tags[0]->name;
-            Configure::write('passbolt.version.remote', $remoteTagName);
+            Configure::write('passbolt.remote.version', $remoteTagName);
         }
         return $remoteTagName;
     }

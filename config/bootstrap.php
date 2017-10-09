@@ -13,6 +13,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+$isCli = PHP_SAPI === 'cli';
+
 // You can remove this if you are confident that your PHP version is sufficient.
 if (version_compare(PHP_VERSION, '5.6.0') < 0) {
     trigger_error('Your PHP version must be equal or higher than 5.6.0 to use CakePHP.', E_USER_ERROR);
@@ -85,7 +87,10 @@ try {
     Configure::load('passbolt', 'default', false);
     Configure::load('version', 'default', true); // merge with passbolt config
 } catch (\Exception $e) {
-    exit($e->getMessage() . "\n");
+    // let cli handle issues
+    if(!$isCli) {
+        exit($e->getMessage() . "\n");
+    }
 }
 
 /*
@@ -124,7 +129,6 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
 /*
  * Register application error and exception handlers.
  */
-$isCli = PHP_SAPI === 'cli';
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
 } else {

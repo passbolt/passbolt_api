@@ -20,7 +20,7 @@ $this->Html->css('main.min', ['block' => 'css']);
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
     // Load application.
-    if(Configure::read('App.js.build') === 'production') :
+    if(Configure::read('passbolt.js.build') === 'production') :
         echo $this->html->script('/js/lib/steal/steal.production.js', [
             'config' => Router::url('/js/stealconfig.js'),
             'main' => 'app/passbolt',

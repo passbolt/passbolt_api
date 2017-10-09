@@ -14,23 +14,6 @@
  */
 return [
     'passbolt' => [
-        'auth' => [
-            'tokenExpiry' => '3 days'
-        ],
-        'meta' => [
-            'description' => 'Open source password manager for teams',
-            'robots' => 'noindex, nofollow'
-        ],
-        'gpg' => [
-            'putenv' => true, // replace GNUPGHOME even if it is set
-            'keyring' => '/var/lib/nginx/.gnupg',
-            'serverKey' => [
-                'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
-                'public' => CONFIG . 'gpg' . DS . 'unsecure.key',
-                'private' => CONFIG . 'gpg' . DS . 'unsecure_private.key',
-                'passphrase' => '', // not supported - leave empty
-            ]
-        ],
         'registration' => [
             'public' => true
         ],
@@ -39,7 +22,6 @@ return [
         ],
         'ssl' => [
             'force' => false,
-
         ]
     ]
 ];

@@ -67,10 +67,11 @@ class Healthchecks
             $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
             $checks['application']['latestVersion'] = Migration::isLatestVersion();
         } catch (exception $e) {
+            $checks['application']['info']['remoteVersion'] = 'undefined';
             $checks['application']['latestVersion'] = null;
         }
         $checks['application']['schema'] = !Migration::needMigration();
-        $checks['application']['robotsIndexDisabled'] = !Configure::read('passbolt.meta.robots');
+        $checks['application']['robotsIndexDisabled'] = (strpos(Configure::read('passbolt.meta.robots'), 'noindex') !== false);
         $checks['application']['sslForce'] = Configure::read('passbolt.ssl.force');
         $checks['application']['sslFullBaseUrl'] = !(strpos(Configure::read('App.fullBaseUrl'), 'https') === false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
@@ -101,15 +102,11 @@ class Healthchecks
         // check number of admin user
         $User = TableRegistry::get('Users');
         try {
-            $i = $User->find('count', [
-                'conditions' => ['Role.name' => Role::ADMIN],
-                'contain' => ['Role' => [
-                    'fields' => [
-                        'Role.id',
-                        'Role.name'
-                    ]
-                ]]
-            ]);
+            $i = $User->find('all')
+                ->contain(['Roles'])
+                ->where(['Roles.name' => Role::ADMIN])
+                ->count();
+
             $checks['application']['adminCount'] = ($i > 0);
         } catch (Exception $e) {
         }
@@ -121,7 +118,6 @@ class Healthchecks
      * Return config file checks:
      * - configFiles.core true if file is present
      * - configFiles.app true if file is present
-     * - configFiles.database true if file is present
      * - configFiles.email true if file is present
      *
      * @return array
@@ -131,7 +127,7 @@ class Healthchecks
         $files = ['app', 'passbolt'];
         $checks = [];
         foreach ($files as $file) {
-            $checks['configFile'][$file] = (file_exists(APP . 'Config' . DS . $file . '.php'));
+            $checks['configFile'][$file] = (file_exists(CONFIG . $file . '.php'));
         }
 
         return $checks;
@@ -200,6 +196,7 @@ class Healthchecks
         foreach ($cases as $case) {
             $checks['database'][$case] = false;
         }
+        $checks['database']['info']['tablesCount'] = 0;
 
         // Check config file content
         $db = Configure::read('Datasources');
@@ -224,7 +221,6 @@ class Healthchecks
         }
 
         // Check if tables are present
-        $checks['database']['info']['tablesCount'] = 0;
         try {
             $connection = ConnectionManager::get('default');
             $tables = $connection->execute('show tables;')->fetchAll('assoc');
@@ -241,7 +237,7 @@ class Healthchecks
         // We only check the number of roles
         try {
             $Role = TableRegistry::get('Role');
-            $i = $Role->find('count');
+            $i = $Role->find('all')->count();
             $checks['database']['defaultContent'] = ($i > 3);
         } catch (DatabaseException $e) {
             return $checks;
@@ -336,7 +332,7 @@ class Healthchecks
         $checks['gpg']['canDecrypt'] = false;
         $checks['gpg']['canEncrypt'] = false;
         if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
-            $_gpg = new gnupg();
+            $_gpg = new \gnupg();
             $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
             $_gpg->addsignkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
             $messageToEncrypt = 'test message';
