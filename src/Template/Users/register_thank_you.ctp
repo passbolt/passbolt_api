@@ -23,7 +23,7 @@ $this->assign('pageClass', 'register thank-you');
             <p>
                 <?= __('Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.'); ?>
             </p>
-            <?= $this->element('public/disclaimer-legal'); ?>
+            <?= $this->element('public/disclaimer_legal'); ?>
         </div>
         <div class="col4 push1 last">
             <div class="logo">

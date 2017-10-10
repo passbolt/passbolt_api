@@ -59,7 +59,8 @@ return [
         ],
 
         // Email notification settings
-        'emailNotification' => [
+        // Email delivery settings such as credentials are in app.php
+        'email' => [
             // Allow to disable displaying the armored secret in the email
             // WARNING: make sure you have backups in place if you disable these
             // see. https://www.passbolt.com/help/tech/backup

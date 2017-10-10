@@ -70,6 +70,8 @@ module.exports = function(grunt) {
           // Images
           cwd: path.node_modules_styleguide + 'src/img',
           src: [
+            // Default Avatars
+            'avatar/**',
             // Passbolt logos
             'logo/icon-20_white.png', 'logo/icon-20.png',
             'logo/icon-48_white.png', 'logo/icon-48.png',

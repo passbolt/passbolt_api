@@ -76,7 +76,7 @@ class Healthchecks
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
         $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
-        $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', json_encode(Configure::read('EmailNotification.send'))) === 1);
+        $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', json_encode(Configure::read('passbolt.email.send'))) === 1);
 
         $checks = array_merge(Healthchecks::appUser(), $checks);
         return $checks;

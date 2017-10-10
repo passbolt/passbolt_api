@@ -35,7 +35,7 @@ $formContext = [
                 <?= __('We will send you an email to get you started.'); ?>
 
             </p>
-<?= $this->element('public/disclaimer-legal'); ?>
+<?= $this->element('public/disclaimer_legal'); ?>
         </div>
         <div class="col4 push1 last">
             <div class="logo">

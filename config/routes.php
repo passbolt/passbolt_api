@@ -37,12 +37,12 @@ Router::scope('/', function (RouteBuilder $routes) {
  */
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
+
     $routes->connect('/', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
         ->setMethods(['GET']);
 
     $routes->connect('/home', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
         ->setMethods(['GET']);
-
 });
 
 /**
@@ -159,6 +159,17 @@ Router::prefix('Users', function ($routes) {
 
     $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
+        ->setMethods(['GET']);
+});
+
+/**
+ * Selenium tests routes
+ */
+Router::prefix('/seleniumtests', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/showLastEmail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
+        ->setPass(['username'])
         ->setMethods(['GET']);
 });
 
