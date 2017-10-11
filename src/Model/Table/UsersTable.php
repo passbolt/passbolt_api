@@ -26,14 +26,9 @@ use Cake\Validation\Validator;
  * Users Model
  *
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
- * @property \App\Model\Table\AuthenticationTokensTable|\Cake\ORM\Association\HasMany $AuthenticationTokens
- * @property \App\Model\Table\ControllerLogsTable|\Cake\ORM\Association\HasMany $ControllerLogs
- * @property \App\Model\Table\FavoritesTable|\Cake\ORM\Association\HasMany $Favorites
  * @property \App\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
  * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
- * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
- * @property \App\Model\Table\UsersResourcesPermissionsTable|\Cake\ORM\Association\HasMany $UsersResourcesPermissions
+ * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasOne $Profiles
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
@@ -72,9 +67,6 @@ class UsersTable extends Table
         $this->hasMany('AuthenticationTokens', [
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Favorites', [
-            'foreignKey' => 'user_id'
-        ]);
         $this->hasMany('FileStorage', [
             'foreignKey' => 'user_id'
         ]);
@@ -84,15 +76,6 @@ class UsersTable extends Table
         $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
         ]);
-        $this->hasMany('Secrets', [
-            'foreignKey' => 'user_id'
-        ]);
-        $this->hasMany('UsersResourcesPermissions', [
-            'foreignKey' => 'user_id'
-        ]);
-//        $this->hasMany('GroupsUsers', [
-//            'foreignKey' => 'user_id'
-//        ]);
         $this->belongsToMany('Groups', [
             'foreignKey' => 'user_id',
             'targetForeignKey' => 'group_id',

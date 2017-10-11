@@ -17,10 +17,11 @@ namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;
+use Cake\ORM\TableRegistry;
 
 class FavoritesAddControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.favorites', 'app.permissions'];
 
     public function testAddSuccess()
     {
@@ -53,7 +54,7 @@ class FavoritesAddControllerTest extends ApplicationTest
         $this->assertError(400, 'The resource id is not valid.');
     }
 
-    public function testAddErrorDeletedResource()
+    public function testAddErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.jquery');
@@ -73,6 +74,17 @@ class FavoritesAddControllerTest extends ApplicationTest
 
     public function testAddErrorResourceAccessDenied()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $resourceId = Common::uuid('resource.id.canjs');
+
+        // Check that the resource exists.
+        $Resources = TableRegistry::get('Resources');
+        $resource = $Resources->get($resourceId);
+        $this->assertNotNull($resource);
+
+        // Check that the user cannot access the resource
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.canjs');
+        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $this->assertError('400', '');
     }
 }

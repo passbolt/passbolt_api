@@ -23,6 +23,9 @@ use Cake\Validation\Validator;
 /**
  * Permissions Model
  *
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Groups
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Users
+ *
  * @method \App\Model\Entity\Permission get($primaryKey, $options = [])
  * @method \App\Model\Entity\Permission newEntity($data = null, array $options = [])
  * @method \App\Model\Entity\Permission[] newEntities(array $data, array $options = [])
@@ -49,6 +52,13 @@ class PermissionsTable extends Table
         $this->setTable('permissions');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->hasOne('Groups', [
+            'bindingKey' => 'aro_foreign_key'
+        ]);
+        $this->hasOne('Users', [
+            'bindingKey' => 'aro_foreign_key'
+        ]);
 
         $this->addBehavior('Timestamp');
     }

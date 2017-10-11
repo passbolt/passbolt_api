@@ -17,11 +17,12 @@ namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ResourcesIndexControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 
     public function testIndexSuccess()
     {
@@ -35,6 +36,8 @@ class ResourcesIndexControllerTest extends ApplicationTest
         // Not expected fields.
         $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
     }
 
     public function testIndexApiV1Success()
@@ -218,5 +221,25 @@ class ResourcesIndexControllerTest extends ApplicationTest
     {
         $this->getJson('/resources.json');
         $this->assertAuthenticationError();
+    }
+
+    public function testIndexAndPermissions()
+    {
+        $this->authenticateAs('dame');
+        $this->getJson('/resources.json?api-version=2');
+        $this->assertSuccess();
+        $this->assertGreaterThan(2, count($this->_responseJsonBody));
+
+        // Check that the result doesn\'t contain resources the user doesn't have a permission for.
+        $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $notExpectedResources = [Common::uuid('resource.id.canjs'), Common::uuid('resource.id.docker'), Common::uuid('resource.id.ftp')];
+        // Check that the resources exist individually.
+        $Resources = TableRegistry::get('Resources');
+        foreach ($notExpectedResources as $notExpectedResource) {
+            $resource = $Resources->get($notExpectedResource);
+            $this->assertNotNull($resource);
+        }
+        // Check that the resources are not in the request result.
+        $this->assertEquals(0, count(array_intersect($notExpectedResources, $resourcesIds)));
     }
 }

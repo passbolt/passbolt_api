@@ -26,8 +26,8 @@ return [
                         'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/GroupsUsersData',
                         'PassboltTestData.Base/ResourcesData',
-                        'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/PermissionsData',
+                        'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/SecretsData',
                     ]
                 ],
@@ -40,8 +40,8 @@ return [
                         'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/GroupsUsersData',
                         'PassboltTestData.Base/ResourcesData',
-                        'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/PermissionsData',
+                        'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/SecretsData',
                     ]
                 ]

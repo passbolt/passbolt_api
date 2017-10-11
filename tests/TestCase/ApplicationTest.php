@@ -95,6 +95,44 @@ class ApplicationTest extends IntegrationTestCase
     }
 
     /**
+     * Override the phpunit Assert::assertObjectHasAttribute to assert that an object has a specified attribute.
+     * We override the parent method to take care of \Cake\ORM\Entity objects for which the properties are declared
+     * on the fly and cannot be tested with the php ReflectionObject used by the phpunit
+     * PHPUnit\Framework\Constraint::ObjectHasAttribute class.
+     *
+     * @param string $attributeName
+     * @param object $object
+     * @param string $message
+     */
+    public static function assertObjectHasAttribute($attributeName, $object, $message = '') {
+
+        if (is_a($object, 'Cake\ORM\Entity')) {
+            self::assertTrue($object->has($attributeName));
+        } else {
+            parent::assertObjectHasAttribute($attributeName, $object, $message);
+        }
+    }
+
+    /**
+     * Override the phpunit Assert::assertObjectHasAttribute to assert that an object has a specified attribute.
+     * We override the parent method to take care of \Cake\ORM\Entity objects for which the properties are declared
+     * on the fly and cannot be tested with the php ReflectionObject used by the phpunit
+     * PHPUnit\Framework\Constraint::ObjectHasAttribute class.
+     *
+     * @param string $attributeName
+     * @param object $object
+     * @param string $message
+     */
+    public static function assertObjectNotHasAttribute($attributeName, $object, $message = '') {
+
+        if (is_a($object, 'Cake\ORM\Entity')) {
+            self::assertFalse($object->has($attributeName));
+        } else {
+            parent::assertObjectNotHasAttribute($attributeName, $object, $message);
+        }
+    }
+
+    /**
      * Asserts that an object has specified attributes.
      *
      * @param string $attributesNames

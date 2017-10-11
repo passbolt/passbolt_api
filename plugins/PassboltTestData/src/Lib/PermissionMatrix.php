@@ -26,9 +26,14 @@ class PermissionMatrix {
         'O' => Permission::OWNER,
     ];
 
-    public static function getUsersResourcesPermissions() {
+    public static function getCalculatedUsersResourcesPermissions($orientation = 'resource') {
+        $csvPath = __DIR__ . '/../../data/calculated_users_resources_permissions.csv';
+        return self::loadCsv($csvPath, $orientation);
+    }
+
+    public static function getUsersResourcesPermissions($orientation = 'resource') {
         $csvPath = __DIR__ . '/../../data/users_resources_permissions.csv';
-        return self::loadCsv($csvPath, 'resource');
+        return self::loadCsv($csvPath, $orientation);
     }
 
     public static function getGroupsResourcesPermissions() {

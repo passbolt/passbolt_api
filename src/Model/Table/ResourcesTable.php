@@ -27,6 +27,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Creator
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasMany $Secrets
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Permissions
  *
  * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
  * @method \App\Model\Entity\Resource newEntity($data = null, array $options = [])
@@ -153,7 +154,8 @@ class ResourcesTable extends Table
             throw new \Exception(__('The parameter userId should be a valid uuid.'));
         }
 
-        $query = $this->find('all');
+        $query = $this->find()
+            ->distinct();
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
@@ -196,14 +198,7 @@ class ResourcesTable extends Table
         }
 
         // Filter on resources the user is allowed to access.
-        $query->innerJoinWith('Permissions', function($q) use ($userId) {
-            return $q
-                ->where([
-                    'Permissions.aro_foreign_key' => $userId,
-                    'Permissions.type >=' => Permission::READ,
-                ]);
-            // @TODO Check group permissions
-        });
+        $this->filterQueryByPermissions($query, $userId);
 
         // Filter out deleted resources
         $query->where(['Resources.deleted' => false]);
@@ -211,6 +206,47 @@ class ResourcesTable extends Table
         return $query;
     }
 
+    /**
+     * Filter a Resources query on permissions.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $userId The user to filter by permissions.
+     * @return void
+     */
+    public function filterQueryByPermissions($query, $userId)
+    {
+        // Get the groups ids the user is member of.
+        // @TODO Could be a GroupsTable::findByUser($userId) function
+        $groupsIds = $this->association('Permissions')
+            ->association('Groups')
+            ->find()
+            ->select('Groups.id')
+            ->where(['Groups.deleted' => 0])
+            ->innerJoinWith('Users', function($q) use ($userId) {
+                return $q->where(['Users.id' => $userId]);
+            })->reduce(function($result, $row) {
+                $result[] = $row->id;
+                return $result;
+            }, []);
+
+        // Filter the query.
+        $query->innerJoinWith('Permissions', function($q) use ($userId, $groupsIds) {
+            // Filter on direct user permissions.
+            $q->where([
+                'Permissions.aro_foreign_key' => $userId,
+                'Permissions.type >=' => Permission::READ,
+            ]);
+            // Or filter on inherited groups permissions.
+            if (!empty($groupsIds)) {
+                $q->orWhere([
+                    'Permissions.aro_foreign_key IN' => $groupsIds,
+                    'Permissions.type >=' => Permission::READ,
+                ]);
+            }
+
+            return $q;
+        });
+    }
 
     /**
      * Build the query that fetches data for resource view
@@ -218,8 +254,9 @@ class ResourcesTable extends Table
      * @param string $userId The user to get the resources for
      * @param string $resourceId The resource to retrieve
      * @param array $options options
+     * @throws \Exception if the userId parameter is not a valid uuid.
      * @throws \Exception if the resourceId parameter is not a valid uuid.
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findView($userId, $resourceId, array $options = [])
     {
@@ -234,5 +271,30 @@ class ResourcesTable extends Table
         $query->where(['Resources.id' => $resourceId]);
 
         return $query;
+    }
+
+    /**
+     * Check that a user has access to a resource.
+     *
+     * @param string $userId The user to get check the access for
+     * @param string $resourceId The target resource
+     * @throws \Exception if the userId parameter is not a valid uuid.
+     * @throws \Exception if the resourceId parameter is not a valid uuid.
+     * @return bool
+     */
+    public function hasAccess($userId, $resourceId)
+    {
+        if (!Validation::uuid($userId)) {
+            throw new \Exception(__('The parameter userId should be a valid uuid.'));
+        }
+        if (!Validation::uuid($resourceId)) {
+            throw new \Exception(__('The parameter resourceId should be a valid uuid.'));
+        }
+
+        $query = $this->find();
+        $query->where(['Resources.id' => $resourceId]);
+        $this->filterQueryByPermissions($query, $userId);
+
+        return !is_null($query->first());
     }
 }

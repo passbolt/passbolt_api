@@ -36,7 +36,6 @@ class PermissionsDataTask extends DataTask
         $permissions = [];
         $permissionsMatrix = PermissionMatrix::getUsersResourcesPermissions();
         foreach ($permissionsMatrix as $resourceAlias => $usersExpectedPermissions) {
-            $userResourcePermissions[Common::uuid('resource.id.' . $resourceAlias)] = [];
             foreach ($usersExpectedPermissions as $userAlias => $expectedPermissionType) {
                 if ($expectedPermissionType == 0) {
                     continue;
@@ -63,13 +62,12 @@ class PermissionsDataTask extends DataTask
         $permissions = [];
         $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions();
         foreach ($permissionsMatrix as $resourceAlias => $usersExpectedPermissions) {
-            $userResourcePermissions[Common::uuid('resource.id.' . $resourceAlias)] = [];
             foreach ($usersExpectedPermissions as $groupAlias => $expectedPermissionType) {
                 if ($expectedPermissionType == 0) {
                     continue;
                 }
                 $acoId = Common::uuid('resource.id.' . $resourceAlias);
-                $aroId = Common::uuid('user.id.' . $groupAlias);
+                $aroId = Common::uuid('group.id.' . $groupAlias);
                 $permissions[] = [
                     'id' => Common::uuid("permission.id.$acoId-$aroId"),
                     'aco' => 'Resource',

@@ -15,14 +15,17 @@
 
 namespace App\Model\Table;
 
+use App\Model\Rule\HasResourceAccessRule;
+use App\Model\Rule\NotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
-use Cake\Validation\Validation;
 
 /**
  * Favorites Model
+ *
+ * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\Favorite get($primaryKey, $options = [])
  * @method \App\Model\Entity\Favorite newEntity($data = null, array $options = [])
@@ -52,6 +55,13 @@ class FavoritesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsTo('Resources', [
+            'foreignKey' => 'foreign_id'
+        ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id'
+        ]);
     }
 
     /**
@@ -93,121 +103,48 @@ class FavoritesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->addCreate([$this, 'validateUserExists'], 'userExists', [
+        // Add create rules.
+        $rules->addCreate($rules->existsIn('user_id', 'Users'), 'user_exists');
+        $rules->addCreate(new NotSoftDeletedRule(), 'user_not_soft_deleted', [
+            'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => 'The user does not exist.'
+            'message' => 'The user is soft deleted.'
+        ]);
+        $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
+        $rules->addCreate(new NotSoftDeletedRule(), 'resource_not_soft_deleted', [
+            'table' => 'Resources',
+            'errorField' => 'foreign_id',
+            'message' => 'The resource is soft deleted.'
+        ]);
+        $rules->addCreate($rules->isUnique(['user_id', 'foreign_id'], 'The resource is already marked as favorite.'), 'favorite_unique');
+        $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
+            'errorField' => 'foreign_id',
+            'message' => 'Access denied.',
+            'userField' => 'user_id',
+            'resourceField' => 'foreign_id',
         ]);
 
-        $rules->addCreate([$this, 'validateResourceExists'], 'resourceExists', [
-            'errorField' => 'resource_id',
-            'message' => 'The resource does not exist.'
-        ]);
-
-        $rules->addCreate([$this, 'validateFavoriteUnique'], 'favoriteExists', [
-            'errorField' => 'id',
-            'message' => 'The resource has already been marked as favorite.'
+        // Add delete rules.
+        $rules->addDelete([$this, 'validateIsOwner'], 'is_owner', [
+            'errorField' => 'user_id',
+            'message' => 'The user cannot delete this favorite.'
         ]);
 
         return $rules;
     }
 
     /**
-     * Validate that the user exists and has not been deleted.
+     * Validate that the favorite can be deleted by the user who requests the deletion.
      *
-     * @param \App\Model\Entity\Favorite $entity The entity that will be saved.
-     * @param array $options
-     * @return bool
-     */
-    public function validateUserExists($entity, $options) {
-        $Users = TableRegistry::get('Users');
-        $user = $Users->find('all')
-            ->where([
-                'Users.id' => $entity->user_id,
-                'Users.deleted' => 0
-            ])
-            ->first();
-
-        if (empty($user)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate that the resource exists and has not been deleted.
-     *
-     * @param \App\Model\Entity\Favorite $entity The entity that will be saved.
-     * @param array $options
-     * @return bool
-     */
-    public function validateResourceExists($entity, $options) {
-        $Resources = TableRegistry::get('Resources');
-        $resource = $Resources->find('all')
-            ->where([
-                'Resources.id' => $entity->foreign_id,
-                'Resources.deleted' => 0
-            ])
-            ->first();
-
-        if (empty($resource)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate that the resource is not yet marked as favorite for the user.
-     *
-     * @param \App\Model\Entity\Favorite $entity The entity that will be saved.
-     * @param array $options
-     * @return bool
-     */
-    public function validateFavoriteUnique($entity, $options) {
-        $favorite = $this->find('all')
-            ->where([
-                'Favorites.user_id' => $entity->user_id,
-                'Favorites.foreign_id' => $entity->foreign_id
-            ])
-            ->first();
-
-        if (!empty($favorite)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Build the query that fetches data for favorite delete
-     *
+     * @param \App\Model\Entity\Favorite $entity The entity that will be deleted.
      * @param array $options options
-     * @throws \Exception if the options contain Secrets but user_id is not provided
-     * @return Query
+     * @return bool
      */
-    public function findDelete(array $options = [])
+    public function validateIsOwner($entity, array $options = [])
     {
-        $query = $this->find('all');
-
-        if (!isset($options['Favorites.id'])) {
-            throw new \Exception(__('Favorite table findDelete should have an Favorites.id set in options.'));
+        if ($options['Favorites.user_id'] != $entity->user_id) {
+            return false;
         }
-        if (!Validation::uuid($options['Favorites.id'])) {
-            throw new \Exception(__('Favorite table findDelete function Favorites.id option should be a valid uuid.'));
-        }
-        if (!isset($options['Favorites.user_id'])) {
-            throw new \Exception(__('Favorite table findDelete should have an Favorites.user_id set in options.'));
-        }
-        if (!Validation::uuid($options['Favorites.user_id'])) {
-            throw new \Exception(__('Favorite table findDelete function Favorites.user_id option should be a valid uuid.'));
-        }
-
-        $query->where([
-            'Favorites.id' => $options['Favorites.id'],
-            'Favorites.user_id' => $options['Favorites.user_id']
-        ]);
-
-        return $query;
+        return true;
     }
 }

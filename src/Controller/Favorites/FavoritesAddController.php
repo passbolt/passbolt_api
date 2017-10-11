@@ -51,10 +51,7 @@ class FavoritesAddController extends AppController
         if (!$result) {
             throw new InternalErrorException(__('The resource cannot be marked as favorite.'));
         }
-        if ($this->_handleValidationError($favorite)) {
-            return;
-        }
-
+        $this->_handleValidationError($favorite);
         $this->success(__('The resource was marked as favorite.'), $favorite);
     }
 
@@ -68,14 +65,10 @@ class FavoritesAddController extends AppController
     {
         // If validation fails and request is json return the validation errors
         // Otherwise render the registration form with the errors
-        if ($favorite->getErrors()) {
-            if ($this->request->is('json')) {
-                $this->set('errors', $favorite->getErrors());
-                throw new BadRequestException(__('Could not validate favorite data.'));
-            }
-            return true;
+        $errors = $favorite->getErrors();
+        if (!empty($errors)) {
+            throw new BadRequestException(__('Could not validate favorite data.'));
         }
-        return false;
     }
 
     /**

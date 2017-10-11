@@ -17,10 +17,11 @@ namespace App\Test\TestCase\Controller;
 
 use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;
+use Cake\ORM\TableRegistry;
 
 class ResourcesViewControllerTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 
     public function testViewSuccess()
     {
@@ -189,6 +190,21 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.jquery');
         $this->getJson("/resources/$resourceId.json");
+        $this->assertError(404, 'The resource does not exist.');
+    }
+
+    public function testViewErrorResourceAccessDenied()
+    {
+        $resourceId = Common::uuid('resource.id.canjs');
+
+        // Check that the resource exists.
+        $Resources = TableRegistry::get('Resources');
+        $resource = $Resources->get($resourceId);
+        $this->assertNotNull($resource);
+
+        // Check that the user cannot access the resource
+        $this->authenticateAs('dame');
+        $this->getJson("/resources/$resourceId.json?api-version=2");
         $this->assertError(404, 'The resource does not exist.');
     }
 }

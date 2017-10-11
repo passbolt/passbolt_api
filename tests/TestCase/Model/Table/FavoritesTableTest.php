@@ -38,7 +38,7 @@ class FavoritesTableTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.favorites', 'app.permissions'];
 
     /**
      * setUp method
@@ -64,22 +64,12 @@ class FavoritesTableTest extends TestCase
         parent::tearDown();
     }
 
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testSuccessValidateResourceExists()
+    public function testSaveSuccess()
     {
         $favorite = $this->Favorites->newEntity(
             [
                 'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.apache'),
+                'foreign_id' => Common::uuid('resource.id.bower'),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -91,76 +81,13 @@ class FavoritesTableTest extends TestCase
                 ]
             ]
         );
-        $this->assertTrue($this->Favorites->validateResourceExists($favorite, []));
+        $save = $this->Favorites->save($favorite);
+        $this->assertNotNull($save);
+        $errors = $favorite->getErrors();
+        $this->assertEmpty($errors);
     }
 
-    public function testErrorValidateResourceExistsRandomUuid()
-    {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid(),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $this->assertFalse($this->Favorites->validateResourceExists($favorite, []));
-    }
-
-    public function testErrorValidateResourceExistsDeletedResource()
-    {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.jquery'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $this->assertFalse($this->Favorites->validateResourceExists($favorite, []));
-    }
-
-
-    public function testErrorValidateResourceExistsAccessDenied()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testSuccessValidateUserExists()
-    {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.apache'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $this->assertTrue($this->Favorites->validateUserExists($favorite, []));
-    }
-
-    public function testErrorValidateUserExistsRandomUuid()
+    public function testSaveErrorUserExists()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -177,10 +104,14 @@ class FavoritesTableTest extends TestCase
                 ]
             ]
         );
-        $this->assertFalse($this->Favorites->validateUserExists($favorite, []));
+        $save = $this->Favorites->save($favorite);
+        $this->assertFalse($save);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['user_exists']);
     }
 
-    public function testErrorValidateUserExistsDeletedUser()
+    public function testSaveErrorUserNotSoftDeleted()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -197,15 +128,19 @@ class FavoritesTableTest extends TestCase
                 ]
             ]
         );
-        $this->assertFalse($this->Favorites->validateUserExists($favorite, []));
+        $save = $this->Favorites->save($favorite);
+        $this->assertFalse($save);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['user_not_soft_deleted']);
     }
 
-    public function testSuccessValidateFavoriteUnique()
+    public function testSaveErrorResourceExists()
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.ada'),
-                'foreign_id' => Common::uuid('resource.id.bower'),
+                'user_id' => Common::uuid('user.id.dame'),
+                'foreign_id' => Common::uuid(),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -217,10 +152,38 @@ class FavoritesTableTest extends TestCase
                 ]
             ]
         );
-        $this->assertTrue($this->Favorites->validateFavoriteUnique($favorite, []));
+        $save = $this->Favorites->save($favorite);
+        $this->assertFalse($save);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['resource_exists']);
     }
 
-    public function testErrorValidateFavoriteUnique()
+    public function testSaveErrorResourceNotSoftDeleted()
+    {
+        $favorite = $this->Favorites->newEntity(
+            [
+                'user_id' => Common::uuid('user.id.dame'),
+                'foreign_id' => Common::uuid('resource.id.jquery'),
+                'foreign_model' => 'Resource',
+            ],
+            [
+                'validate' => 'default',
+                'accessibleFields' => [
+                    'user_id' => true,
+                    'foreign_id' => true,
+                    'foreign_model' => true
+                ]
+            ]
+        );
+        $save = $this->Favorites->save($favorite);
+        $this->assertFalse($save);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['resource_not_soft_deleted']);
+    }
+
+    public function testSaveErrorFavoriteUniqueRule()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -237,72 +200,53 @@ class FavoritesTableTest extends TestCase
                 ]
             ]
         );
-        $this->assertFalse($this->Favorites->validateFavoriteUnique($favorite, []));
+        $save = $this->Favorites->save($favorite);
+        $this->assertFalse($save);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['favorite_unique']);
     }
 
-    public function testFindDeleteSuccess() {
-        $favorite = $this->Favorites->findDelete([
-            'Favorites.user_id' => Common::uuid('user.id.dame'),
-            'Favorites.id' => Common::uuid('favorite.id.dame-apache')
-        ])->first();
-        $this->assertNotEmpty($favorite);
-    }
-
-    public function testFindDeleteSuccessEmpty() {
-        $favorite = $this->Favorites->findDelete([
-            'Favorites.user_id' => Common::uuid('user.id.dame'),
-            'Favorites.id' => Common::uuid('favorite.id.dame-bowser')
-        ])->first();
-        $this->assertEmpty($favorite);
-    }
-
-    public function testFindDeleteErrorNoOption()
+    public function testSaveErrorHasResourceAccessRule()
     {
-        try {
-            $this->Favorites->findDelete();
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
+        $favorite = $this->Favorites->newEntity(
+            [
+                'user_id' => Common::uuid('user.id.dame'),
+                'foreign_id' => Common::uuid('resource.id.canjs'),
+                'foreign_model' => 'Resource',
+            ],
+            [
+                'validate' => 'default',
+                'accessibleFields' => [
+                    'user_id' => true,
+                    'foreign_id' => true,
+                    'foreign_model' => true
+                ]
+            ]
+        );
+        $save = $this->Favorites->save($favorite);
+        $this->assertFalse($save);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['has_resource_access']);
     }
 
-    public function testFindDeleteErrorNoUserIdOption()
+    public function testDeleteSuccess()
     {
-        try {
-            $this->Favorites->findDelete(['Favorites.id' => Common::uuid()]);
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
+        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favorite = $this->Favorites->get($favoriteId);
+        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.dame')]);
+        $this->assertTrue($delete);
     }
 
-    public function testFindDeleteErrorUserIdNotValidUuidOption()
+    public function testDeleteErrorIsOwnerRule()
     {
-        try {
-            $this->Favorites->findDelete(['Favorites.id' => Common::uuid(), 'Favorites.user_id' => 'not-valid']);
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
-    }
-
-    public function testFindDeleteErrorNoFavoriteIdOption()
-    {
-        try {
-            $this->Favorites->findDelete(['Favorites.user_id' => Common::uuid()]);
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
-    }
-
-    public function testFindDeleteErrorFavoriteIdNotValidUuidOption()
-    {
-        try {
-            $this->Favorites->findDelete(['Favorites.user_id' => Common::uuid(), 'Favorites.id' => 'not-valid']);
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
+        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favorite = $this->Favorites->get($favoriteId);
+        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.ada')]);
+        $this->assertFalse($delete);
+        $errors = $favorite->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['is_owner']);
     }
 }

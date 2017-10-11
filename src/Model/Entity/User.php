@@ -28,14 +28,9 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  *
  * @property \App\Model\Entity\Role $role
- * @property \App\Model\Entity\AuthenticationToken[] $authentication_tokens
- * @property \App\Model\Entity\Favorite[] $favorites
  * @property \App\Model\Entity\FileStorage[] $file_storage
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
- * @property \App\Model\Entity\Secret[] $secrets
- * @property \App\Model\Entity\UsersResourcesPermission[] $users_resources_permissions
- * @property \App\Model\Entity\Group[] $groups
  */
 class User extends Entity
 {

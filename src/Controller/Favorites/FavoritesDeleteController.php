@@ -16,6 +16,7 @@
 namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
@@ -38,16 +39,32 @@ class FavoritesDeleteController extends AppController
         $this->loadModel('Favorites');
 
         // Retrieve the favorite.
-        $options['Favorites.id'] = $id;
-        $options['Favorites.user_id'] = $this->User->id();
-        $favorite = $this->Favorites->findDelete($options)->first();
-        if (empty($favorite)) {
+        try {
+            $favorite = $this->Favorites->get($id);
+        } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The favorite does not exist.'));
         }
 
         // Delete the favorite.
-        $this->Favorites->delete($favorite);
+        $this->Favorites->delete($favorite, ['Favorites.user_id' => $this->User->id()]);
+        $this->_handleDeleteErrors($favorite);
 
         $this->success(__('The favorite was deleted.'));
+    }
+
+    /**
+     * Manage delete errors
+     * @param \Cake\Datasource\EntityInterface $favorite favorite
+     * @return void
+     */
+    private function _handleDeleteErrors($favorite)
+    {
+        $errors = $favorite->getErrors();
+        if (!empty($errors)) {
+            if (isset($errors['user_id']['is_owner'])) {
+                throw new NotFoundException(__('The favorite does not exist.'));
+            }
+            throw new BadRequestException(__('Could not delete favorite.'));
+        }
     }
 }
