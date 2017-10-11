@@ -63,8 +63,6 @@ class FavoritesAddController extends AppController
      */
     protected function _handleValidationError($favorite)
     {
-        // If validation fails and request is json return the validation errors
-        // Otherwise render the registration form with the errors
         $errors = $favorite->getErrors();
         if (!empty($errors)) {
             throw new BadRequestException(__('Could not validate favorite data.'));

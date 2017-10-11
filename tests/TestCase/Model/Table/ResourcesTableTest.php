@@ -259,4 +259,41 @@ class ResourcesTableTest extends ApplicationTest
         }
         $this->fail('Expect an exception');
     }
+
+    public function testHasAccess()
+    {
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
+            $userId = Common::uuid("user.id.$userAlias");
+            foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
+                $resourceId = Common::uuid("resource.id.$resourceAlias");
+                $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
+                if ($permissionType  == 0) {
+                    $this->assertFalse($hasAccess);
+                } else {
+                    $this->assertTrue($hasAccess);
+                }
+            }
+        }
+    }
+
+    public function testHasAccessErrorInvalidArgumentUserId()
+    {
+        try {
+            $this->Resources->hasAccess('not-valid', Common::uuid());
+        } catch (\InvalidArgumentException $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
+
+    public function testHasAccessErrorInvalidArgumentResourceId()
+    {
+        try {
+            $this->Resources->hasAccess(Common::uuid(), 'not-valid');
+        } catch (\InvalidArgumentException $e) {
+            return $this->assertTrue(true);
+        }
+        $this->fail('Expect an exception');
+    }
 }

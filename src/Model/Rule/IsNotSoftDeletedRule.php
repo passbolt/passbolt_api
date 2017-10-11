@@ -18,7 +18,7 @@ namespace App\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 
-class NotSoftDeletedRule
+class IsNotSoftDeletedRule
 {
     /**
      * Performs the check

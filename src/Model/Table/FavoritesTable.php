@@ -16,7 +16,7 @@
 namespace App\Model\Table;
 
 use App\Model\Rule\HasResourceAccessRule;
-use App\Model\Rule\NotSoftDeletedRule;
+use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -105,29 +105,31 @@ class FavoritesTable extends Table
     {
         // Add create rules.
         $rules->addCreate($rules->existsIn('user_id', 'Users'), 'user_exists');
-        $rules->addCreate(new NotSoftDeletedRule(), 'user_not_soft_deleted', [
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => 'The user is soft deleted.'
+            'message' => __('The user is soft deleted.')
         ]);
         $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
-        $rules->addCreate(new NotSoftDeletedRule(), 'resource_not_soft_deleted', [
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'foreign_id',
-            'message' => 'The resource is soft deleted.'
+            'message' => __('The resource is soft deleted.')
         ]);
-        $rules->addCreate($rules->isUnique(['user_id', 'foreign_id'], 'The resource is already marked as favorite.'), 'favorite_unique');
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
             'errorField' => 'foreign_id',
-            'message' => 'Access denied.',
+            'message' => __('Access denied.'),
             'userField' => 'user_id',
             'resourceField' => 'foreign_id',
         ]);
+        $rules->addCreate($rules->isUnique(['user_id', 'foreign_id'],
+            __('The resource is already marked as favorite.')),
+            'favorite_unique');
 
         // Add delete rules.
         $rules->addDelete([$this, 'validateIsOwner'], 'is_owner', [
             'errorField' => 'user_id',
-            'message' => 'The user cannot delete this favorite.'
+            'message' => __('The user cannot delete this favorite.')
         ]);
 
         return $rules;

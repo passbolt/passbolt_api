@@ -132,7 +132,7 @@ class FavoritesTableTest extends TestCase
         $this->assertFalse($save);
         $errors = $favorite->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['user_id']['user_not_soft_deleted']);
+        $this->assertNotNull($errors['user_id']['user_is_not_soft_deleted']);
     }
 
     public function testSaveErrorResourceExists()
@@ -180,7 +180,7 @@ class FavoritesTableTest extends TestCase
         $this->assertFalse($save);
         $errors = $favorite->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['foreign_id']['resource_not_soft_deleted']);
+        $this->assertNotNull($errors['foreign_id']['resource_is_not_soft_deleted']);
     }
 
     public function testSaveErrorFavoriteUniqueRule()

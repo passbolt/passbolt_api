@@ -230,7 +230,7 @@ class ResourcesIndexControllerTest extends ApplicationTest
         $this->assertSuccess();
         $this->assertGreaterThan(2, count($this->_responseJsonBody));
 
-        // Check that the result doesn\'t contain resources the user doesn't have a permission for.
+        // Check that the result doesn't contain resources the user doesn't have a permission for.
         $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         $notExpectedResources = [Common::uuid('resource.id.canjs'), Common::uuid('resource.id.docker'), Common::uuid('resource.id.ftp')];
         // Check that the resources exist individually.

@@ -278,17 +278,17 @@ class ResourcesTable extends Table
      *
      * @param string $userId The user to get check the access for
      * @param string $resourceId The target resource
-     * @throws \Exception if the userId parameter is not a valid uuid.
-     * @throws \Exception if the resourceId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return bool
      */
     public function hasAccess($userId, $resourceId)
     {
         if (!Validation::uuid($userId)) {
-            throw new \Exception(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
         }
         if (!Validation::uuid($resourceId)) {
-            throw new \Exception(__('The parameter resourceId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The parameter resourceId should be a valid uuid.'));
         }
 
         $query = $this->find();
