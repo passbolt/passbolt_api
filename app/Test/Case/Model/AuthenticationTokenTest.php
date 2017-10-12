@@ -188,4 +188,18 @@ class AuthenticationTokenTest extends CakeTestCase {
 		$this->assertTrue($isNotExpired);
 	}
 
+	public function testPredictableTokenSetting() {
+	    Configure::write('App.selenium.active', true);
+	    Configure::write('App.selenium.token', Common::uuid());
+	    $t1 = Configure::read('App.selenium.token');
+        $user = $this->User->findByUsername('user@passbolt.com');
+
+        $t2 = $this->AuthenticationToken->generate($user['User']['id'])['AuthenticationToken']['token'];
+	    $this->assertEquals($t1, $t2);
+
+        Configure::write('App.selenium.active', false);
+        $t3 = $this->AuthenticationToken->generate($user['User']['id'])['AuthenticationToken']['token'];
+        $this->assertNotEquals($t1, $t3);
+
+    }
 }

@@ -32,6 +32,7 @@ $config = [
 		// true will render your installation insecure
 		'selenium' => [
 			'active' => false,
+            'token' => false
 		],
 		// build | options : development or production.
 		// development will load the non compiled version,

@@ -167,23 +167,33 @@ class AuthenticationToken extends AppModel {
 		return true;
 	}
 
-/**
- * Create a unique token for a given user.
- *
- * @param string $userId uuid of the user
- * @return array result of the save function for token or false if there was an issue
- */
-	static public function generate($userId) {
-		$_this = Common::getModel('AuthenticationToken');
-		do {
-			$token = [
-				'user_id' => $userId,
-				'token' => Common::uuid(),
-			];
-			$unique = $_this->find('count', ['conditions' => ['id' => $token['token']]]);
-		} while ($unique);
+    /**
+     * Create a unique token for a given user.
+     *
+     * @param string $userId uuid of the user
+     * @return array result of the save function for token or false if there was an issue
+     */
+    static public function generate($userId) {
+        // Allow to generate non random token for testing purpose
+        // This allows mocking user authentication token decryption step
+        $tokenUuid = Common::uuid();
+        if (Configure::read('App.selenium.active')) {
+            $t = Configure::read('App.selenium.token');
+            if (Validation::uuid($t)) {
+                $tokenUuid = $t;
+            }
+        }
 
-		// Set the data for validation and save
+        $_this = Common::getModel('AuthenticationToken');
+        do {
+            $token = [
+                'user_id' => $userId,
+                'token' => $tokenUuid,
+            ];
+            $unique = $_this->find('count', ['conditions' => ['id' => $token['token']]]);
+        } while ($unique);
+
+        // Set the data for validation and save
 		$_this->set($token);
 
 		// Validate the token data
