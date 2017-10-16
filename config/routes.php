@@ -103,6 +103,16 @@ Router::prefix('/gpgkeys', function ($routes) {
 });
 
 /**
+ * Groups prefixed routes
+ */
+Router::prefix('Groups', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/', ['controller' => 'GroupsIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Healthchecks routes
  */
 Router::prefix('/healthcheck', function ($routes) {

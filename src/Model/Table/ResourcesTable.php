@@ -145,13 +145,13 @@ class ResourcesTable extends Table
      *
      * @param string $userId The user to get the resources for
      * @param array $options options
-     * @throws \Exception if the userId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
     public function findIndex($userId, array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \Exception(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
         }
 
         $query = $this->find()
@@ -207,7 +207,7 @@ class ResourcesTable extends Table
     }
 
     /**
-     * Filter a Resources query on permissions.
+     * Filter a Resources query by permissions.
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $userId The user to filter by permissions.
@@ -254,17 +254,17 @@ class ResourcesTable extends Table
      * @param string $userId The user to get the resources for
      * @param string $resourceId The resource to retrieve
      * @param array $options options
-     * @throws \Exception if the userId parameter is not a valid uuid.
-     * @throws \Exception if the resourceId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
     public function findView($userId, $resourceId, array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \Exception(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
         }
         if (!Validation::uuid($resourceId)) {
-            throw new \Exception(__('The parameter resourceId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The parameter resourceId should be a valid uuid.'));
         }
 
         $query = $this->findIndex($userId, $options);

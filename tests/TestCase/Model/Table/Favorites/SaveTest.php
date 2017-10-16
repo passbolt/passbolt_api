@@ -13,38 +13,19 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Model\Table;
+namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
+use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 
-/**
- * App\Model\Table\FavoritesTable Test Case
- */
-class FavoritesTableTest extends TestCase
+class SaveTest extends ApplicationTest
 {
-
-    /**
-     * Test subject
-     *
-     * @var \App\Model\Table\FavoritesTable
-     */
     public $Favorites;
 
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.favorites', 'app.permissions'];
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
     public function setUp()
     {
         parent::setUp();
@@ -52,11 +33,6 @@ class FavoritesTableTest extends TestCase
         $this->Favorites = TableRegistry::get('Favorites', $config);
     }
 
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
     public function tearDown()
     {
         unset($this->Favorites);
@@ -64,7 +40,7 @@ class FavoritesTableTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSaveSuccess()
+    public function testSuccess()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -87,7 +63,7 @@ class FavoritesTableTest extends TestCase
         $this->assertEmpty($errors);
     }
 
-    public function testSaveErrorUserExists()
+    public function testErrorUserExists()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -111,7 +87,7 @@ class FavoritesTableTest extends TestCase
         $this->assertNotNull($errors['user_id']['user_exists']);
     }
 
-    public function testSaveErrorUserNotSoftDeleted()
+    public function testErrorUserNotSoftDeleted()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -135,7 +111,7 @@ class FavoritesTableTest extends TestCase
         $this->assertNotNull($errors['user_id']['user_is_not_soft_deleted']);
     }
 
-    public function testSaveErrorResourceExists()
+    public function testErrorResourceExists()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -159,7 +135,7 @@ class FavoritesTableTest extends TestCase
         $this->assertNotNull($errors['foreign_id']['resource_exists']);
     }
 
-    public function testSaveErrorResourceNotSoftDeleted()
+    public function testErrorResourceNotSoftDeleted()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -183,7 +159,7 @@ class FavoritesTableTest extends TestCase
         $this->assertNotNull($errors['foreign_id']['resource_is_not_soft_deleted']);
     }
 
-    public function testSaveErrorFavoriteUniqueRule()
+    public function testErrorFavoriteUniqueRule()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -207,7 +183,7 @@ class FavoritesTableTest extends TestCase
         $this->assertNotNull($errors['user_id']['favorite_unique']);
     }
 
-    public function testSaveErrorHasResourceAccessRule()
+    public function testErrorHasResourceAccessRule()
     {
         $favorite = $this->Favorites->newEntity(
             [
@@ -229,24 +205,5 @@ class FavoritesTableTest extends TestCase
         $errors = $favorite->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['foreign_id']['has_resource_access']);
-    }
-
-    public function testDeleteSuccess()
-    {
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
-        $favorite = $this->Favorites->get($favoriteId);
-        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.dame')]);
-        $this->assertTrue($delete);
-    }
-
-    public function testDeleteErrorIsOwnerRule()
-    {
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
-        $favorite = $this->Favorites->get($favoriteId);
-        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.ada')]);
-        $this->assertFalse($delete);
-        $errors = $favorite->getErrors();
-        $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['user_id']['is_owner']);
     }
 }

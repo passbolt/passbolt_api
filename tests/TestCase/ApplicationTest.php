@@ -15,6 +15,7 @@
 namespace App\Test\TestCase;
 
 use App\Test\Lib\Model\FavoritesModelTrait;
+use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
@@ -24,6 +25,7 @@ use App\Utility\Common;
 class ApplicationTest extends IntegrationTestCase
 {
     use FavoritesModelTrait;
+    use GroupsModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;

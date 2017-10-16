@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Favorites;
 
 use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;

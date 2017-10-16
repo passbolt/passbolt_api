@@ -1,5 +1,5 @@
 <?php
-namespace App\Test\TestCase\Model\Table;
+namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
 use App\Test\TestCase\ApplicationTest;
@@ -7,25 +7,12 @@ use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\PermissionMatrix;
 
-/**
- * App\Model\Table\ResourcesTable Test Case
- */
-class ResourcesTableTest extends ApplicationTest
+class FindIndexTest extends ApplicationTest
 {
-    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
-
-    /**
-     * Test subject
-     *
-     * @var \App\Model\Table\ResourcesTable
-     */
     public $Resources;
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
+
     public function setUp()
     {
         parent::setUp();
@@ -33,49 +20,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->Resources = TableRegistry::get('Resources', $config);
     }
 
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        unset($this->Resources);
-
-        parent::tearDown();
-    }
-
-    /**
-     * Test initialize method
-     *
-     * @return void
-     */
-    public function testInitialize()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test validationDefault method
-     *
-     * @return void
-     */
-    public function testValidationDefault()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testFindIndexSuccess()
+    public function testResultAttributes()
     {
         $userId = Common::uuid('user.id.ada');
         $resources = $this->Resources->findIndex($userId)->all();
@@ -91,7 +36,12 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertObjectNotHasAttribute('favorite', $resource);
     }
 
-    public function testFindIndexSuccessContainsSecrets()
+    public function testExcludeSoftDeletedResources()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testContainSecrets()
     {
         $userId = Common::uuid('user.id.ada');
         $options['contain']['secret'] = true;
@@ -105,7 +55,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertSecretAttributes($resource->secrets[0]);
     }
 
-    public function testFindIndexSuccessContainsCreator()
+    public function testContainCreator()
     {
         $userId = Common::uuid('user.id.ada');
         $options['contain']['creator'] = true;
@@ -118,7 +68,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertUserAttributes($resource->creator);
     }
 
-    public function testFindIndexSuccessContainsModifier()
+    public function testContainModifier()
     {
         $userId = Common::uuid('user.id.ada');
         $options['contain']['modifier'] = true;
@@ -131,7 +81,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertUserAttributes($resource->modifier);
     }
 
-    public function testFindIndexSuccessContainsFavorite()
+    public function testContainFavorite()
     {
         $userId = Common::uuid('user.id.ada');
         $options['contain']['favorite'] = true;
@@ -144,7 +94,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertFavoriteAttributes($resource->favorite);
     }
 
-    public function testFindIndexSuccessFilterOnFavorite()
+    public function testFilterIsFavorite()
     {
         $userId = Common::uuid('user.id.dame');
         $options['filter']['is-favorite'] = true;
@@ -159,7 +109,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
     }
 
-    public function testFindIndexSuccessFilterOutFavorite()
+    public function testFilterIsNotFavorite()
     {
         $userId = Common::uuid('user.id.dame');
         $options['filter']['is-favorite'] = false;
@@ -174,7 +124,7 @@ class ResourcesTableTest extends ApplicationTest
         $this->assertEquals(0, count(array_intersect($expectedResources, $favoriteResourcesIds)));
     }
 
-    public function testFindIndexAndPermissions()
+    public function testPermissions()
     {
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
@@ -197,100 +147,10 @@ class ResourcesTableTest extends ApplicationTest
         }
     }
 
-    public function testFindIndexErrorInvalidUserIdParameter()
+    public function testErrorInvalidUserIdParameter()
     {
         try {
             $this->Resources->findIndex('not-valid');
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
-    }
-
-    public function testFindViewErrorInvalidUserIdParameter()
-    {
-        try {
-            $this->Resources->findView('not-valid', Common::uuid());
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
-    }
-
-    public function testFindViewSuccess()
-    {
-        $userId = Common::uuid('user.id.ada');
-        $resourceId =  Common::uuid('resource.id.apache');
-        $resources = $this->Resources->findView($userId, $resourceId);
-
-        // Expected fields.
-        $resource = $resources->first();
-        $this->assertResourceAttributes($resource);
-        // Not expected fields.
-        $this->assertObjectNotHasAttribute('secrets', $resource);
-        $this->assertObjectNotHasAttribute('creator', $resource);
-        $this->assertObjectNotHasAttribute('modifier', $resource);
-        $this->assertObjectNotHasAttribute('favorite', $resource);
-    }
-
-    public function testFindViewAndPermissions()
-    {
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $userId = Common::uuid("user.id.$userAlias");
-            foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
-                $resourceId = Common::uuid("resource.id.$resourceAlias");
-                $resource = $this->Resources->findView($userId, $resourceId)->first();
-                if ($permissionType  == 0) {
-                    $this->assertNull($resource);
-                } else {
-                    $this->assertNotNull($resource);
-                }
-            }
-        }
-    }
-
-    public function testFindViewErrorInvalidResourceIdParameter()
-    {
-        try {
-            $this->Resources->findView(Common::uuid(), 'not-valid');
-        } catch (\Exception $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
-    }
-
-    public function testHasAccess()
-    {
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $userId = Common::uuid("user.id.$userAlias");
-            foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
-                $resourceId = Common::uuid("resource.id.$resourceAlias");
-                $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
-                if ($permissionType  == 0) {
-                    $this->assertFalse($hasAccess);
-                } else {
-                    $this->assertTrue($hasAccess);
-                }
-            }
-        }
-    }
-
-    public function testHasAccessErrorInvalidArgumentUserId()
-    {
-        try {
-            $this->Resources->hasAccess('not-valid', Common::uuid());
-        } catch (\InvalidArgumentException $e) {
-            return $this->assertTrue(true);
-        }
-        $this->fail('Expect an exception');
-    }
-
-    public function testHasAccessErrorInvalidArgumentResourceId()
-    {
-        try {
-            $this->Resources->hasAccess(Common::uuid(), 'not-valid');
         } catch (\InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }

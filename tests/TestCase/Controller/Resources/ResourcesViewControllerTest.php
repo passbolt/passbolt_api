@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller;
+namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;
@@ -23,7 +23,7 @@ class ResourcesViewControllerTest extends ApplicationTest
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 
-    public function testViewSuccess()
+    public function testSuccess()
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.apache');
@@ -37,7 +37,7 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertObjectNotHasAttribute('secrets', $this->_responseJsonBody);
     }
 
-    public function testViewApiV1Success()
+    public function testApiV1Success()
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.apache');
@@ -52,124 +52,69 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertObjectNotHasAttribute('Secret', $this->_responseJsonBody);
     }
 
-    public function testViewSuccessContainsSecrets()
+    public function testContainSuccess()
     {
-        $this->authenticateAs('dame');
+        $this->authenticateAs('ada');
+        $urlParameter = 'contain[creator]=1&contain[modifier]=1&contain[favorite]=1&contain[secret]=1';
         $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?api-version=2&contain[secret]=1");
+        $this->getJson("/resources/$resourceId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody);
+        // Contain creator.
+        $this->assertObjectHasAttribute('creator', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->creator);
+        // Contain modifier.
+        $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->modifier);
+        // Contain secret.
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->secrets);
         $this->assertSecretAttributes($this->_responseJsonBody->secrets[0]);
-    }
-
-    public function testViewSuccessApiV1ContainsSecrets()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?contain[secret]=1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
-        $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody);
-        $this->assertCount(1, $this->_responseJsonBody->Secret);
-        $this->assertSecretAttributes($this->_responseJsonBody->Secret[0]);
-    }
-
-    public function testViewSuccessContainsCreator()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?api-version=2&contain[creator]=1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertResourceAttributes($this->_responseJsonBody);
-        $this->assertObjectHasAttribute('creator', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->creator);
-    }
-
-    public function testViewSuccessApiV1ContainsCreator()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?contain[creator]=1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
-        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->Creator);
-    }
-
-    public function testViewSuccessContainsModifier()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?api-version=2&contain[modifier]=1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertResourceAttributes($this->_responseJsonBody);
-        $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->modifier);
-    }
-
-    public function testViewSuccessApiV1ContainsModifier()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?contain[modifier]=1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
-        $this->assertResourceAttributes($this->_responseJsonBody->Resource);
-        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
-        $this->assertUserAttributes($this->_responseJsonBody->Modifier);
-    }
-
-    public function testViewSuccessContainsFavorite()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?api-version=2&contain[favorite]=1");
-        $this->assertSuccess();
-
-        // Expected fields.
-        $this->assertResourceAttributes($this->_responseJsonBody);
+        // Contain favorite.
+        $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody);
+        // A resource marked as favorite contains the favorite data.
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody);
         $this->assertFavoriteAttributes($this->_responseJsonBody->favorite);
     }
 
-    public function testViewSuccessApiV1ContainsFavorite()
+    public function testContainApiV1Success()
     {
-        $this->authenticateAs('dame');
+        $this->authenticateAs('ada');
+        $urlParameter = 'contain[creator]=1&contain[modifier]=1&contain[favorite]=1&contain[secret]=1';
         $resourceId = Common::uuid('resource.id.apache');
-        $this->getJson("/resources/$resourceId.json?contain[favorite]=1");
+        $this->getJson("/resources/$resourceId.json?$urlParameter");
         $this->assertSuccess();
 
         // Expected fields.
         $this->assertObjectHasAttribute('Resource', $this->_responseJsonBody);
         $this->assertResourceAttributes($this->_responseJsonBody->Resource);
+        // Contain creator.
+        $this->assertObjectHasAttribute('Creator', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->Creator);
+        // Contain modifier.
+        $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->Modifier);
+        // Contain secret.
+        $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody);
+        $this->assertCount(1, $this->_responseJsonBody->Secret);
+        $this->assertSecretAttributes($this->_responseJsonBody->Secret[0]);
+        // Contain favorite.
+        $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
+        // A resource marked as favorite contains the favorite data.
         $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody);
         $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
     }
 
-    public function testViewErrorNotAuthenticated()
+    public function testErrorNotAuthenticated()
     {
         $resourceId = Common::uuid('resource.id.bower');
         $this->getJson("/resources/$resourceId.json");
         $this->assertAuthenticationError();
     }
 
-    public function testViewErrorNotValidId()
+    public function testErrorNotValidId()
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
@@ -177,7 +122,7 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertError(400, 'The resource id is not valid.');
     }
 
-    public function testViewErrorNotFound()
+    public function testErrorNotFound()
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('not-found');
@@ -185,7 +130,7 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testViewErrorDeletedResource()
+    public function testErrorDeletedResource()
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.jquery');
@@ -193,7 +138,7 @@ class ResourcesViewControllerTest extends ApplicationTest
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testViewErrorResourceAccessDenied()
+    public function testErrorResourceAccessDenied()
     {
         $resourceId = Common::uuid('resource.id.canjs');
 
