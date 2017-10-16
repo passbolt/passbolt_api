@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Model\Table;
 use App\Model\Table\FavoritesTable;
 use App\Test\TestCase\ApplicationTest;
 use App\Utility\Common;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
 class DeleteTest extends ApplicationTest
@@ -46,6 +47,13 @@ class DeleteTest extends ApplicationTest
         $favorite = $this->Favorites->get($favoriteId);
         $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.dame')]);
         $this->assertTrue($delete);
+        // Check the favorite is well deleted in db.
+        try {
+            $this->Favorites->get($favoriteId);
+            $this->assertFalse(true);
+        } catch (RecordNotFoundException $e) {
+            $this->assertTrue(true);
+        }
     }
 
     public function testErrorIsOwnerRule()

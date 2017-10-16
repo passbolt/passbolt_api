@@ -110,6 +110,10 @@ Router::prefix('Groups', function ($routes) {
 
     $routes->connect('/', ['controller' => 'GroupsIndex', 'action' => 'index'])
         ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['controller' => 'GroupsView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
 });
 
 /**

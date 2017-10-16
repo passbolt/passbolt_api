@@ -24,7 +24,7 @@ class GroupsIndexControllerTest extends ApplicationTest
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.permissions'];
 
-    public function testIndexSuccess()
+    public function testSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/groups.json?api-version=2');
@@ -38,7 +38,7 @@ class GroupsIndexControllerTest extends ApplicationTest
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody[0]);
     }
 
-    public function testIndexApiV1Success()
+    public function testApiV1Success()
     {
         $this->authenticateAs('ada');
         $this->getJson('/groups.json');
@@ -53,7 +53,7 @@ class GroupsIndexControllerTest extends ApplicationTest
         $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody[0]);
     }
 
-    public function testIndexContainSuccess()
+    public function testContainSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[user]=1';
@@ -69,7 +69,7 @@ class GroupsIndexControllerTest extends ApplicationTest
         $this->assertUserAttributes($this->_responseJsonBody[0]->users[0]);
     }
 
-    public function testIndexContainApiV1SSuccess()
+    public function testContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[user]=1';
@@ -86,7 +86,7 @@ class GroupsIndexControllerTest extends ApplicationTest
         $this->assertUserAttributes($this->_responseJsonBody[0]->User[0]);
     }
 
-    public function testIndexFilterHasUsersSuccess()
+    public function testFilterHasUsersSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[has-users]=' . Common::uuid('user.id.irene');
@@ -98,7 +98,7 @@ class GroupsIndexControllerTest extends ApplicationTest
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
-    public function testIndexFilterHasManagersSuccess()
+    public function testFilterHasManagersSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[has-managers]=' . Common::uuid('user.id.ping');
@@ -110,7 +110,7 @@ class GroupsIndexControllerTest extends ApplicationTest
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
-    public function testIndexErrorNotAuthenticated()
+    public function testErrorNotAuthenticated()
     {
         $this->getJson('/groups.json');
         $this->assertAuthenticationError();

@@ -30,7 +30,7 @@ class FindViewTest extends ApplicationTest
         $this->Resources = TableRegistry::get('Resources', $config);
     }
 
-    public function testResultAttributes()
+    public function testSuccess()
     {
         $userId = Common::uuid('user.id.ada');
         $resourceId =  Common::uuid('resource.id.apache');
@@ -39,6 +39,7 @@ class FindViewTest extends ApplicationTest
         // Expected fields.
         $resource = $resources->first();
         $this->assertResourceAttributes($resource);
+        $this->assertEquals($resourceId, $resource->id);
         // Not expected fields.
         $this->assertObjectNotHasAttribute('secrets', $resource);
         $this->assertObjectNotHasAttribute('creator', $resource);

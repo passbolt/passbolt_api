@@ -41,7 +41,7 @@ class FindIndexTest extends ApplicationTest
         parent::tearDown();
     }
 
-    public function testResultAttributes()
+    public function testSuccess()
     {
         $groups = $this->Groups->findIndex()->all();
         $this->assertGreaterThan(1, count($groups));
@@ -83,7 +83,7 @@ class FindIndexTest extends ApplicationTest
         $this->assertUserAttributes($group->modifier);
     }
 
-    public function testContainUsers()
+    public function testContainUser()
     {
         $options['contain']['user'] = true;
         $groups = $this->Groups->findIndex($options)->all();

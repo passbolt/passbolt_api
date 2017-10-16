@@ -20,7 +20,7 @@ class FindIndexTest extends ApplicationTest
         $this->Resources = TableRegistry::get('Resources', $config);
     }
 
-    public function testResultAttributes()
+    public function testSuccess()
     {
         $userId = Common::uuid('user.id.ada');
         $resources = $this->Resources->findIndex($userId)->all();

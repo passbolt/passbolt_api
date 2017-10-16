@@ -17,6 +17,7 @@ namespace App\Model\Table;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -174,5 +175,25 @@ class GroupsTable extends Table
         } else {
             $query->where(['Groups.id IN' => $matchingGroupsIds]);
         }
+    }
+
+    /**
+     * Build the query that fetches data for group view
+     *
+     * @param string $groupId The group to retrieve
+     * @param array $options options
+     * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
+     * @return \Cake\ORM\Query
+     */
+    public function findView($groupId, array $options = [])
+    {
+        if (!Validation::uuid($groupId)) {
+            throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
+        }
+
+        $query = $this->findIndex($options);
+        $query->where(['Groups.id' => $groupId]);
+
+        return $query;
     }
 }
