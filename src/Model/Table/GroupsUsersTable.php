@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -41,12 +41,8 @@ class GroupsUsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Groups', [
-            'foreignKey' => 'group_id'
-        ]);
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
-        ]);
+        $this->belongsTo('Groups');
+        $this->belongsTo('Users');
     }
 
     /**
@@ -62,9 +58,7 @@ class GroupsUsersTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->boolean('is_admin')
-            ->requirePresence('is_admin', 'create')
-            ->notEmpty('is_admin');
+            ->boolean('is_admin');
 
         return $validator;
     }
@@ -78,8 +72,24 @@ class GroupsUsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['group_id'], 'Groups'));
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->addCreate($rules->existsIn(['group_id'], 'Groups'), 'group_exists', [
+            'errorField' => 'group_id',
+            'message' => __('The user doesn\'t exist.')
+        ]);
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
+            'table' => 'Groups',
+            'errorField' => 'group_id',
+            'message' => __('The group doesn\'t exist.')
+        ]);
+        $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
+            'errorField' => 'user_id',
+            'message' => __('The user doesn\'t exist.')
+        ]);
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
+            'table' => 'Users',
+            'errorField' => 'user_id',
+            'message' => __('The user doesn\'t exist.')
+        ]);
 
         return $rules;
     }

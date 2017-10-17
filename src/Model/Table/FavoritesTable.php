@@ -39,7 +39,6 @@ use Cake\Validation\Validator;
  */
 class FavoritesTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -127,7 +126,7 @@ class FavoritesTable extends Table
             'favorite_unique');
 
         // Add delete rules.
-        $rules->addDelete([$this, 'validateIsOwner'], 'is_owner', [
+        $rules->addDelete([$this, 'ruleIsOwner'], 'is_owner', [
             'errorField' => 'user_id',
             'message' => __('The user cannot delete this favorite.')
         ]);
@@ -142,7 +141,7 @@ class FavoritesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function validateIsOwner($entity, array $options = [])
+    public function ruleIsOwner($entity, array $options = [])
     {
         if ($options['Favorites.user_id'] != $entity->user_id) {
             return false;

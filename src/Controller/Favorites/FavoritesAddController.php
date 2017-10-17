@@ -48,7 +48,6 @@ class FavoritesAddController extends AppController
 
         // Save the favorite
         $result = $this->Favorites->save($favorite, ['checkRules' => false, 'atomic' => false]);
-        $this->set('favorite', $favorite);
         if (!$result) {
             throw new InternalErrorException(__('The resource cannot be marked as favorite.'));
         }

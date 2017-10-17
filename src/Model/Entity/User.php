@@ -31,6 +31,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\FileStorage[] $file_storage
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
+ * @property \App\Model\Entity\GroupUser[] $groups_users
  */
 class User extends Entity
 {

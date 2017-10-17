@@ -57,4 +57,11 @@ class FavoritesDeleteControllerTest extends ApplicationTest
         $this->deleteJson("/favorites/$favoriteId.json");
         $this->assertError(404, 'The favorite does not exist.');
     }
+
+    public function testDeleteErrorNotAuthenticated()
+    {
+        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
+        $this->assertAuthenticationError();
+    }
 }

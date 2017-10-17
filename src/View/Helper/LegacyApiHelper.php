@@ -74,17 +74,17 @@ class LegacyApiHelper extends Helper
                 $result[$name][$property] = $value->toDateTimeString();
             } elseif (is_object($value) && get_parent_class($value) === 'Cake\ORM\Entity') {
                 // example: gpgkey
-                $name = self::formatModelName($property);
-                $result[$name] = self::formatEntity($value, $name)[$name];
+                $subEntityName = self::formatModelName($property);
+                $result[$subEntityName] = self::formatEntity($value, $subEntityName)[$subEntityName];
             } elseif (is_object($value) && get_class($value) === 'Cake\ORM\Entity') {
                 // example: scafolded model
-                $name = self::formatModelName($property);
-                $result[$name] = self::formatEntity($value, $name)[$name];
+                $subEntityName = self::formatModelName($property);
+                $result[$subEntityName] = self::formatEntity($value, $subEntityName)[$subEntityName];
             } elseif (is_array($value)) {
                 // example: groups_users
-                $name = self::formatModelName($property);
+                $subEntityName = self::formatModelName($property);
                 foreach ($value as $i => $entity2) {
-                    $result[$name][$i] = self::formatEntity($entity2, $name)[$name];
+                    $result[$subEntityName][$i] = self::formatEntity($entity2, $subEntityName)[$subEntityName];
                 }
             }
         }

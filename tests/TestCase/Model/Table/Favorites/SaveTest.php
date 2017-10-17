@@ -61,13 +61,13 @@ class SaveTest extends ApplicationTest
         $this->assertNotNull($save);
         $errors = $favorite->getErrors();
         $this->assertEmpty($errors);
+
         // Check the favorite exists in db.
-        $addedFavorite = $this->Favorites->find('all', [
-            'user_id' => Common::uuid('user.id.dame'),
-            'foreign_id' => Common::uuid('resource.id.bower'),
-            'foreign_model' => 'Resource'
-        ])->first();
+        $addedFavorite = $this->Favorites->get($save->id);
         $this->assertNotNull($addedFavorite);
+        $this->assertEquals(Common::uuid('user.id.dame'), $addedFavorite->user_id);
+        $this->assertEquals(Common::uuid('resource.id.bower'), $addedFavorite->foreign_id);
+        $this->assertEquals('Resource', $addedFavorite->foreign_model);
     }
 
     public function testErrorUserExists()

@@ -153,6 +153,10 @@ return [
         // false will render your installation insecure
         'ssl' => [
             'force' => true,
-        ],
+        ]
+    ],
+    // Override the Cake ExceptionRenderer.
+    'Error' => [
+        'exceptionRenderer' => 'App\Error\AppExceptionRenderer',
     ]
 ];

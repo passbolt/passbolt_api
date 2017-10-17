@@ -14,13 +14,14 @@
  */
 namespace App\Test\TestCase;
 
+use App\Model\Entity\Role;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
-use Cake\TestSuite\IntegrationTestCase;
 use App\Utility\Common;
+use Cake\TestSuite\IntegrationTestCase;
 
 class ApplicationTest extends IntegrationTestCase
 {
@@ -87,13 +88,23 @@ class ApplicationTest extends IntegrationTestCase
     }
 
     /**
-     * Asserts that the json response status code is an error.
+     * Asserts that the json response is relative to an authentication error.
      *
      * @return void
      */
     public function assertAuthenticationError()
     {
         $this->assertError(403, 'You need to login to access this location.');
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @return void
+     */
+    public function assertForbiddenError()
+    {
+        $this->assertError(403, 'Forbidden.');
     }
 
     /**
@@ -167,15 +178,19 @@ class ApplicationTest extends IntegrationTestCase
      * Authenticate as a user.
      *
      * @param string $userFirstName The user first name.
+     * @param string $roleName (optional) The role name, by default guest.
      * @return void
      */
-    public function authenticateAs($userFirstName)
+    public function authenticateAs($userFirstName, $roleName = Role::GUEST)
     {
         $this->session([
             'Auth' => [
                 'User' => [
                     'id' => Common::uuid('user.id.' . $userFirstName),
-                ]
+                    'Role' => [
+                        'name' => $roleName
+                    ]
+                ],
             ]
         ]);
     }

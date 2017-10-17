@@ -87,4 +87,11 @@ class FavoritesAddControllerTest extends ApplicationTest
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertError('400', '');
     }
+
+    public function testAddErrorNotAuthenticated()
+    {
+        $resourceId = Common::uuid('resource.id.bower');
+        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $this->assertAuthenticationError();
+    }
 }

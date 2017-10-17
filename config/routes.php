@@ -114,6 +114,9 @@ Router::prefix('Groups', function ($routes) {
     $routes->connect('/:id', ['controller' => 'GroupsView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
+
+    $routes->connect('/', ['controller' => 'GroupsAdd', 'action' => 'add'])
+        ->setMethods(['POST']);
 });
 
 /**

@@ -15,8 +15,10 @@
 namespace App\Controller;
 
 use Cake\Event\Event;
-use Cake\Utility\Text;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
+use Cake\Utility\Text;
+
 /**
  * Error Handling Controller
  *
@@ -53,7 +55,7 @@ class ErrorController extends AppController
                     'code' => $this->viewVars['code'],
                     'url' => Router::url(),
                 ],
-                'body' => null, // TODO validation errors if any
+                'body' => Hash::get($this->viewVars, 'body', null),
                 '_serialize' => ['header', 'body']
             ]);
 

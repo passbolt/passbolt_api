@@ -28,6 +28,7 @@ use Cake\ORM\Entity;
  * @property string $modified_by
  *
  * @property \App\Model\Entity\User[] $users
+ * @property \App\Model\Entity\GroupUser[] $groups_users
  */
 class Group extends Entity
 {
@@ -42,7 +43,15 @@ class Group extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'id' => false,
+        'name' => false,
+        'deleted' => false,
+        'created' => false,
+        'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
+
+        // Associated entities
+        'groups_users' => false
     ];
 }

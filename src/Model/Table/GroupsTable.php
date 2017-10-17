@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -24,6 +25,7 @@ use Cake\Validation\Validator;
  * Groups Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsToMany $Users
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
  *
  * @method \App\Model\Entity\Group get($primaryKey, $options = [])
@@ -38,7 +40,6 @@ use Cake\Validation\Validator;
  */
 class GroupsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -55,15 +56,16 @@ class GroupsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsToMany('Users', [
-            'foreignKey' => 'group_id',
-            'targetForeignKey' => 'user_id',
-            'joinTable' => 'groups_users'
-        ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
+        ]);
+
+        $this->hasMany('GroupsUsers');
+
+        $this->belongsToMany('Users', [
+            'through' => 'GroupsUsers'
         ]);
     }
 
@@ -81,7 +83,7 @@ class GroupsTable extends Table
 
         $validator
             ->scalar('name')
-            ->allowEmpty('name');
+            ->notEmpty('name', 'create');
 
         $validator
             ->boolean('deleted')
@@ -99,6 +101,43 @@ class GroupsTable extends Table
             ->notEmpty('modified_by');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        // Add create rules.
+        $rules->addCreate($rules->isUnique(['name'],
+            __('The group name provided is already used by another group.')),
+            'group_unique');
+        $rules->addCreate([$this, 'ruleAtLeastOneAdmin'], 'at_least_one_admin', [
+            'errorField' => 'groups_users',
+            'message' => __('A group manager must be provided.')
+        ]);
+
+        return $rules;
+    }
+
+    /**
+     * Validate that the a group can be created only if at least one admin is provided.
+     *
+     * @param \App\Model\Entity\Group $entity The entity that will be created.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleAtLeastOneAdmin($entity, array $options = [])
+    {
+        $adminUsers = [];
+        if (isset($entity->groups_users)){
+            $adminUsers = Hash::extract($entity->groups_users, '{n}[is_admin=true]');
+        }
+        return !empty($adminUsers);
     }
 
     /**
@@ -195,5 +234,22 @@ class GroupsTable extends Table
         $query->where(['Groups.id' => $groupId]);
 
         return $query;
+    }
+
+    /**
+     * Event fired before request data is converted into entities
+     * - On created, set not deleted to false
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        // @todo when saving a new group the validate option is set to default.
+        if (isset($options['validate']) && $options['validate'] === 'default') {
+            $data['deleted'] = false;
+        }
     }
 }
