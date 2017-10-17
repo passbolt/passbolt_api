@@ -14,10 +14,10 @@
  */
 namespace App\Test\TestCase\Utility;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Healthchecks;
 
-class HealthchecksTest extends ApplicationTest
+class HealthchecksTest extends AppIntegrationTestCase
 {
 
     function testHealthcheckApplication()

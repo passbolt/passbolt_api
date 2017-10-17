@@ -15,11 +15,11 @@
 
 namespace App\Test\TestCase\Controller\Favorites;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 
-class FavoritesAddControllerTest extends ApplicationTest
+class FavoritesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.favorites', 'app.permissions'];
 

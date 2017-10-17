@@ -15,11 +15,11 @@
 
 namespace App\Test\TestCase\Controller\Resources;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Common;
 use Cake\Utility\Hash;
 
-class ResourcesIndexControllerTest extends ApplicationTest
+class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 

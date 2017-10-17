@@ -12,7 +12,7 @@
  * @since         3.3.0
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace App\Test\TestCase;
+namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
 use App\Test\Lib\Model\FavoritesModelTrait;
@@ -20,16 +20,21 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
+use App\Test\Lib\Utility\ArrayTrait;
+use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\Common;
 use Cake\TestSuite\IntegrationTestCase;
 
-class ApplicationTest extends IntegrationTestCase
+class AppIntegrationTestCase extends IntegrationTestCase
 {
     use FavoritesModelTrait;
     use GroupsModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
+
+    use ArrayTrait;
+    use ObjectTrait;
 
     /**
      * The response for the most recent json request.
@@ -105,73 +110,6 @@ class ApplicationTest extends IntegrationTestCase
     public function assertForbiddenError()
     {
         $this->assertError(403, 'Forbidden.');
-    }
-
-    /**
-     * Override the phpunit Assert::assertObjectHasAttribute to assert that an object has a specified attribute.
-     * We override the parent method to take care of \Cake\ORM\Entity objects for which the properties are declared
-     * on the fly and cannot be tested with the php ReflectionObject used by the phpunit
-     * PHPUnit\Framework\Constraint::ObjectHasAttribute class.
-     *
-     * @param string $attributeName
-     * @param object $object
-     * @param string $message
-     */
-    public static function assertObjectHasAttribute($attributeName, $object, $message = '') {
-
-        if (is_a($object, 'Cake\ORM\Entity')) {
-            self::assertTrue($object->has($attributeName));
-        } else {
-            parent::assertObjectHasAttribute($attributeName, $object, $message);
-        }
-    }
-
-    /**
-     * Override the phpunit Assert::assertObjectHasAttribute to assert that an object has a specified attribute.
-     * We override the parent method to take care of \Cake\ORM\Entity objects for which the properties are declared
-     * on the fly and cannot be tested with the php ReflectionObject used by the phpunit
-     * PHPUnit\Framework\Constraint::ObjectHasAttribute class.
-     *
-     * @param string $attributeName
-     * @param object $object
-     * @param string $message
-     */
-    public static function assertObjectNotHasAttribute($attributeName, $object, $message = '') {
-
-        if (is_a($object, 'Cake\ORM\Entity')) {
-            self::assertFalse($object->has($attributeName));
-        } else {
-            parent::assertObjectNotHasAttribute($attributeName, $object, $message);
-        }
-    }
-
-    /**
-     * Asserts that an object has specified attributes.
-     *
-     * @param string $attributesNames
-     * @param object $object
-     */
-    public function assertObjectHasAttributes($attributesNames, $object)
-    {
-        foreach ($attributesNames as $attributeName) {
-            $this->assertObjectHasAttribute($attributeName, $object);
-        }
-    }
-
-    /**
-     * Asserts that an object has specified attributes.
-     *
-     * @param string $attributesNames
-     * @param object $check
-     */
-    public function assertArrayHasAttributes($attributesNames, $check)
-    {
-        foreach ($attributesNames as $attributeName) {
-            $this->assertTrue(
-                array_key_exists($attributeName, $check),
-                'The following attribute is missing in array: ' . $attributeName
-            );
-        }
     }
 
     /**

@@ -14,11 +14,11 @@
  */
 namespace App\Test\TestCase\Controller\Gpgkeys;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
 use Cake\I18n\Time;
 
-class GpgkeysIndexControllerTest extends ApplicationTest
+class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.roles', 'app.gpgkeys'];
 

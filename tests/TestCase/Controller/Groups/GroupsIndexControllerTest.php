@@ -15,12 +15,12 @@
 
 namespace App\Test\TestCase\Controller\Groups;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
-class GroupsIndexControllerTest extends ApplicationTest
+class GroupsIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.permissions'];
 

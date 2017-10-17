@@ -15,11 +15,11 @@
 
 namespace App\Test\TestCase\Controller\Favorites;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 
-class FavoritesDeleteControllerTest extends ApplicationTest
+class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
 

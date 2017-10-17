@@ -2,12 +2,12 @@
 namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\PermissionMatrix;
 
-class FindViewTest extends ApplicationTest
+class FindViewTest extends AppTestCase
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 

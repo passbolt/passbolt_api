@@ -17,12 +17,12 @@ namespace App\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Role;
 use App\Model\Table\GroupsTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
-class GroupsAddControllerTest extends ApplicationTest
+class GroupsAddControllerTest extends AppIntegrationTestCase
 {
     public $Groups;
 

@@ -16,12 +16,12 @@
 namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
-class SaveTest extends ApplicationTest
+class SaveTest extends AppTestCase
 {
     public $Groups;
 

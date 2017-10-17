@@ -2,12 +2,12 @@
 namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\PermissionMatrix;
 
-class HasAccessTest extends ApplicationTest
+class HasAccessTest extends AppTestCase
 {
     public $Resources;
 

@@ -16,11 +16,11 @@
 namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 
-class SaveTest extends ApplicationTest
+class SaveTest extends AppTestCase
 {
     public $Favorites;
 

@@ -16,12 +16,12 @@
 namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\FavoritesTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
-class DeleteTest extends ApplicationTest
+class DeleteTest extends AppTestCase
 {
     public $Favorites;
 

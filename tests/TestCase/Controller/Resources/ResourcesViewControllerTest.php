@@ -15,11 +15,11 @@
 
 namespace App\Test\TestCase\Controller\Resources;
 
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 
-class ResourcesViewControllerTest extends ApplicationTest
+class ResourcesViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 

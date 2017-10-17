@@ -2,11 +2,11 @@
 namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
-use App\Test\TestCase\ApplicationTest;
+use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
 
-class FindViewTest extends ApplicationTest
+class FindViewTest extends AppTestCase
 {
     public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
 
