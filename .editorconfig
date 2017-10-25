@@ -13,6 +13,14 @@ trim_trailing_whitespace = true
 [*.bat]
 end_of_line = crlf
 
+[*.js]
+indent_style = space
+indent_size = 2
+
+[*.json]
+indent_style = space
+indent_size = 2
+
 [*.yml]
 indent_style = space
 indent_size = 2

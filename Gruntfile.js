@@ -24,6 +24,7 @@ module.exports = function(grunt) {
    */
   var path = {
     node_modules: 'node_modules/',
+    node_modules_appjs: 'node_modules/passbolt-appjs/',
     node_modules_styleguide: 'node_modules/passbolt-styleguide/',
     webroot: 'webroot/',
     img: 'webroot/img/',
@@ -40,11 +41,15 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
+  grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   /**
    * Register project specific grunt tasks
    */
+  grunt.registerTask('appjs-update', 'copy:appjs');
+  grunt.registerTask('appjs-watch', ['browserSync:passbolt', 'watch:node-modules-appjs']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
 
   /**
@@ -52,21 +57,44 @@ module.exports = function(grunt) {
    */
   grunt.initConfig({
     pkg: pkg,
+
+    browserSync: {
+      passbolt: {
+        bsFiles: {
+          src: path.js + 'app/**/*'
+        },
+        options: {
+          localOnly: true,
+          watchTask: true,
+          host: 'passbolt.dev',
+          browser: 'google chrome'
+        }
+      }
+    },
+
     copy: {
-      styleguide : {
+      appjs: {
+        files: [{
+          cwd: path.node_modules_appjs + 'dist',
+          src: ['steal.production.js', 'bundles/passbolt.js'],
+          dest: path.js + 'app',
+          expand: true
+        }]
+      },
+      styleguide: {
         files: [{
           // Fonts
           cwd: path.node_modules_styleguide + 'src/fonts',
           src: '*',
           dest: path.webroot + 'fonts',
           expand: true
-        },{
+        }, {
           // Images for webroots (favicons, etc.)
           cwd: path.node_modules_styleguide + 'src/img/webroot',
           src: '*',
           dest: path.webroot,
           expand: true
-        },{
+        }, {
           // Images
           cwd: path.node_modules_styleguide + 'src/img',
           src: [
@@ -92,13 +120,20 @@ module.exports = function(grunt) {
           ],
           dest: path.webroot + 'img',
           expand: true
-        },{
+        }, {
           // Less
           cwd: path.node_modules_styleguide + 'build/css',
           src: ['devel.min.css', 'login.min.css', 'main.min.css', 'check.min.css', 'setup.min.css'],
           dest: path.webroot + 'css',
           expand: true
         }]
+      }
+    },
+
+    watch: {
+      'node-modules-appjs': {
+        files: [path.node_modules_appjs + 'dist/**/*'],
+        tasks: ['appjs-update']
       }
     }
    });

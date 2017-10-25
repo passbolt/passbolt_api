@@ -12,27 +12,27 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Core\Configure;
-use Cake\Routing\Router;
-$this->assign('title', Configure::read('passbolt.meta.description'));
+
+$this->assign('title', $title);
 $this->Html->css('main.min', ['block' => 'css']);
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
-    // Load application.
-    if(Configure::read('passbolt.js.build') === 'production') :
-        echo $this->html->script('/js/lib/steal/steal.production.js', [
-            'config' => Router::url('/js/stealconfig.js'),
-            'main' => 'app/passbolt',
-            'env' => 'production'
-        ]);
-    else:
-        echo $this->html->script('/js/lib/steal/steal.js', [
-            'config' => Router::url('/js/stealconfig.js'),
-            'main' => 'app/passbolt',
+    // Load the javascript application.
+    echo $this->html->script('/js/app/steal.production.js');
+
+    // If debug, connect to browserSync service.
+    // @see Grunt task appjs-watch
+    if($jsBuildMode === 'development') :
+        echo $this->html->script('http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.13', [
+            'async' => 'async',
+            'id' => '__bs_script__'
         ]);
     endif;
 $this->end();
 ?>
+<script type="application/javascript">
+    var cakephpConfig = <?php echo json_encode($cakephpConfig); ?>;
+</script>
 <?php echo $this->element('Loader/splash'); ?>
 <div id="js_app_controller"></div>
