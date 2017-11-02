@@ -89,6 +89,21 @@ Router::prefix('Favorites', function ($routes) {
 });
 
 /**
+ * Comments prefixed routes
+ */
+Router::prefix('Comments', function ($routes) {
+	$routes->setExtensions(['json']);
+
+	$routes->connect('/:model/:id', ['controller' => 'CommentsView', 'action' => 'view'])
+		->setPass(['model', 'id'])
+		->setMethods(['GET']);
+
+	$routes->connect('/resource/:foreignId', ['controller' => 'CommentsAdd', 'action' => 'add'])
+	       ->setPass(['foreignId'])
+	       ->setMethods(['POST']);
+});
+
+/**
  * Gpgkeys prefixed routes
  */
 Router::prefix('/gpgkeys', function ($routes) {
