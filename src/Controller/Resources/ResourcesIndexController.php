@@ -30,7 +30,7 @@ class ResourcesIndexController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['creator', 'favorite', 'modifier', 'secret'],
+            'contain' => ['creator', 'favorite', 'modifier', 'permission', 'secret'],
             'filter' => ['is-favorite']
         ];
         $options = $this->QueryString->get($whitelist);

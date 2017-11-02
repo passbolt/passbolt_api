@@ -57,7 +57,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[modifier]=1&contain[favorite]=1&contain[secret]=1';
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
@@ -69,6 +69,9 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Contain modifier.
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->modifier);
+        // Contain permission.
+        $this->assertObjectHasAttribute('permission', $this->_responseJsonBody[0]);
+        $this->assertPermissionAttributes($this->_responseJsonBody[0]->permission);
         // Contain secret.
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody[0]);
         $this->assertCount(1, $this->_responseJsonBody[0]->secrets);
@@ -87,7 +90,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testContainApiV1Success()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[modifier]=1&contain[favorite]=1&contain[secret]=1';
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
         $this->getJson("/resources.json?$urlParameter");
         $this->assertSuccess();
 
@@ -100,6 +103,9 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Contain modifier.
         $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
+        // Contain permission.
+        $this->assertObjectHasAttribute('Permission', $this->_responseJsonBody[0]);
+        $this->assertPermissionAttributes($this->_responseJsonBody[0]->Permission);
         // Contain secret.
         $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody[0]);
         $this->assertCount(1, $this->_responseJsonBody[0]->Secret);

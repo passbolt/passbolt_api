@@ -70,9 +70,9 @@ class FindViewTest extends AppTestCase
                 $resourceId = Common::uuid("resource.id.$resourceAlias");
                 $resource = $this->Resources->findView($userId, $resourceId)->first();
                 if ($permissionType  == 0) {
-                    $this->assertNull($resource);
+                    $this->assertNull($resource, "the user $userAlias should not have access to $resourceAlias");
                 } else {
-                    $this->assertNotNull($resource);
+                    $this->assertNotNull($resource, "the user $userAlias should have access to $resourceAlias");
                 }
             }
         }

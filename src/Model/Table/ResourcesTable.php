@@ -16,6 +16,7 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Permission;
+use Cake\Collection\CollectionInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -154,8 +155,7 @@ class ResourcesTable extends Table
             throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
         }
 
-        $query = $this->find()
-            ->distinct();
+        $query = $this->find();
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
@@ -197,55 +197,37 @@ class ResourcesTable extends Table
             });
         }
 
-        // Filter on resources the user is allowed to access.
-        $this->filterQueryByPermissions($query, $userId);
+        /*
+         * Filter on resources the user is allowed to access.
+         *
+         * If the contain permission option is given, prefer to use the \Cake\ORM\Query::matching
+         * function instead of the \Cake\ORM\Query::innerJoinWith function. The permission will be
+         * retrieved within a unique sql request and the permission will be available in the
+         * property _matchingData. Format the query result to populate the permission property
+         * as a contain would do.
+         */
+        if (isset($options['contain']['permission'])) {
+            // Filter on resources the user is allowed to access.
+            $query->matching('Permissions');
+            $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
+
+            // Format the query result to populate the permission property as a contain would do.
+            $query->formatResults(function (CollectionInterface $results) {
+                return $results->map(function ($row) {
+                    $row['permission'] = $row['_matchingData']['Permissions'];
+                    unset($row['_matchingData']['Permissions']);
+                    return $row;
+                });
+            });
+        } else {
+            $query->innerJoinWith('Permissions');
+            $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
+        }
 
         // Filter out deleted resources
         $query->where(['Resources.deleted' => false]);
 
         return $query;
-    }
-
-    /**
-     * Filter a Resources query by permissions.
-     *
-     * @param \Cake\ORM\Query $query The query to augment.
-     * @param string $userId The user to filter by permissions.
-     * @return void
-     */
-    public function filterQueryByPermissions($query, $userId)
-    {
-        // Get the groups ids the user is member of.
-        // @TODO Could be a GroupsTable::findByUser($userId) function
-        $groupsIds = $this->association('Permissions')
-            ->association('Groups')
-            ->find()
-            ->select('Groups.id')
-            ->where(['Groups.deleted' => 0])
-            ->innerJoinWith('Users', function($q) use ($userId) {
-                return $q->where(['Users.id' => $userId]);
-            })->reduce(function($result, $row) {
-                $result[] = $row->id;
-                return $result;
-            }, []);
-
-        // Filter the query.
-        $query->innerJoinWith('Permissions', function($q) use ($userId, $groupsIds) {
-            // Filter on direct user permissions.
-            $q->where([
-                'Permissions.aro_foreign_key' => $userId,
-                'Permissions.type >=' => Permission::READ,
-            ]);
-            // Or filter on inherited groups permissions.
-            if (!empty($groupsIds)) {
-                $q->orWhere([
-                    'Permissions.aro_foreign_key IN' => $groupsIds,
-                    'Permissions.type >=' => Permission::READ,
-                ]);
-            }
-
-            return $q;
-        });
     }
 
     /**
@@ -278,11 +260,12 @@ class ResourcesTable extends Table
      *
      * @param string $userId The user to get check the access for
      * @param string $resourceId The target resource
+     * @param integer $permissionType The minimum permission type
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return bool
      */
-    public function hasAccess($userId, $resourceId)
+    public function hasAccess($userId, $resourceId, $permissionType = Permission::READ)
     {
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
@@ -290,11 +273,80 @@ class ResourcesTable extends Table
         if (!Validation::uuid($resourceId)) {
             throw new \InvalidArgumentException(__('The parameter resourceId should be a valid uuid.'));
         }
+        if (!$this->association('Permissions')->isValidPermissionType($permissionType)) {
+            throw new \InvalidArgumentException(__('The parameter permissionType should be a permission type.'));
+        }
 
         $query = $this->find();
         $query->where(['Resources.id' => $resourceId]);
-        $this->filterQueryByPermissions($query, $userId);
+        $query->innerJoinWith('Permissions');
+        $this->_filterQueryByPermissionsType($query, $userId, $permissionType);
 
         return !is_null($query->first());
+    }
+
+    /**
+     * Augment any Resources queries joined with Permissions to ensure the query returns only the
+     * resources a user has access.
+     *
+     * A user has access to a resource if one the following conditions is respected :
+     * - A permission is defined directly for the user and for a given resource.
+     * - A permission is defined for a group the user is member of and for a given resource.
+     *
+     * This function can be used on any queries joined with Permissions as following
+     * > $query->innerJoinWith('Permissions') or $query->matching('Permissions')
+     * > _filterQueryByPermissionsType($query, $userId);
+     *
+     * @param \Cake\ORM\Query $query The query to filter.
+     * @param string $userId The user to check the permissions for.
+     * @param integer $permissionType The minimum permission type.
+     * @return void
+     */
+    private function _filterQueryByPermissionsType($query, $userId, $permissionType = Permission::READ) {
+        // Retrieve the groups ids the user is member of.
+        $groupsIds = $this->_findGroupsByUserId($userId)
+            ->extract('id')
+            ->toArray();
+
+        // In a subquery retrieve the highest permission.
+        $permissionSubquery = $this->association('Permissions')
+            ->find()
+            ->select('Permissions.id')
+            ->where([
+                'Permissions.aco_foreign_key = Resources.id',
+                'Permissions.aro_foreign_key' => $userId,
+                'Permissions.type >=' => $permissionType,
+            ]);
+
+        if (!empty($groupsIds)) {
+            $permissionSubquery->orWhere([
+                'Permissions.aco_foreign_key = Resources.id',
+                'Permissions.aro_foreign_key IN' => $groupsIds,
+                'Permissions.type >=' => $permissionType,
+            ]);
+        }
+        $permissionSubquery->order(['Permissions.type' => 'DESC'])
+            ->limit(1);
+
+        // Filter the Resources query by permissions.
+        $query->where(['Permissions.id' => $permissionSubquery]);
+    }
+
+    /**
+     * Retrieve the groups a user is member of.
+     *
+     * @param string $userId The user to retrieve the group for.
+     * @return \Cake\ORM\Query
+     */
+    private function _findGroupsByUserId($userId)
+    {
+        return $this->association('Permissions')
+            ->association('Groups')
+            ->find()
+            ->innerJoinWith('Users')
+            ->where([
+                'Groups.deleted' => 0,
+                'Users.id' => $userId
+            ]);
     }
 }

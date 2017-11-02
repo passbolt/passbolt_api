@@ -134,6 +134,17 @@ Router::prefix('/healthcheck', function ($routes) {
 });
 
 /**
+ * Permissions prefixed routes
+ */
+Router::prefix('Permissions', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/resource/:acoForeignKey', ['controller' => 'PermissionsView', 'action' => 'viewAcoPermissions'])
+        ->setPass(['acoForeignKey'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Resources prefixed routes
  */
 Router::prefix('Resources', function ($routes) {

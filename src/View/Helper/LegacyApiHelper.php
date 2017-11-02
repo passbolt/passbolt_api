@@ -72,14 +72,18 @@ class LegacyApiHelper extends Helper
             } elseif (is_object($value) && is_a($value, 'Cake\Chronos\ChronosInterface')) {
                 // example: modified
                 $result[$name][$property] = $value->toDateTimeString();
-            } elseif (is_object($value) && get_parent_class($value) === 'Cake\ORM\Entity') {
+            } elseif (is_object($value) &&
+                (get_parent_class($value) === 'Cake\ORM\Entity'
+                    || get_class($value) === 'Cake\ORM\Entity')) {
                 // example: gpgkey
                 $subEntityName = self::formatModelName($property);
-                $result[$subEntityName] = self::formatEntity($value, $subEntityName)[$subEntityName];
-            } elseif (is_object($value) && get_class($value) === 'Cake\ORM\Entity') {
-                // example: scafolded model
-                $subEntityName = self::formatModelName($property);
-                $result[$subEntityName] = self::formatEntity($value, $subEntityName)[$subEntityName];
+                $formattedEntity = self::formatEntity($value, $subEntityName);
+                $result[$subEntityName] = $formattedEntity[$subEntityName];
+                unset($formattedEntity[$subEntityName]);
+                if (!empty($formattedEntity)) {
+                    $result[$subEntityName] = array_merge($result[$subEntityName], $formattedEntity);
+                }
+
             } elseif (is_array($value)) {
                 // example: groups_users
                 $subEntityName = self::formatModelName($property);

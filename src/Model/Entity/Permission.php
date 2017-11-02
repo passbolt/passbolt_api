@@ -55,6 +55,10 @@ class Permission extends Entity
         'aro_foreign_key' => false,
         'type' => false,
         'created' => false,
-        'modified' => false
+        'modified' => false,
+
+        // Associated entities
+        'group' => false,
+        'user' => false
     ];
 }
