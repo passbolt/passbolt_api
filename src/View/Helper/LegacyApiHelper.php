@@ -80,6 +80,8 @@ class LegacyApiHelper extends Helper
                 // example: scafolded model
                 $subEntityName = self::formatModelName($property);
                 $result[$subEntityName] = self::formatEntity($value, $subEntityName)[$subEntityName];
+            } elseif($property == 'children' && is_array($value)) {
+	            $result[$property] = self::formatResultSet($value);
             } elseif (is_array($value)) {
                 // example: groups_users
                 $subEntityName = self::formatModelName($property);

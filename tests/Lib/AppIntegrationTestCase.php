@@ -15,6 +15,7 @@
 namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
+use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -27,7 +28,8 @@ use Cake\TestSuite\IntegrationTestCase;
 
 class AppIntegrationTestCase extends IntegrationTestCase
 {
-    use FavoritesModelTrait;
+	use CommentsModelTrait;
+	use FavoritesModelTrait;
     use GroupsModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;

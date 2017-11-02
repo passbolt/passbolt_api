@@ -37,15 +37,15 @@ class V200MigrateUUID extends AbstractMigration
 
         $this->table('comments')
             ->changeColumn('id', 'char', ['limit' => 36])
-            ->changeColumn('parent_id', 'char', ['limit' => 36])
-            ->changeColumn('foreign_id', 'char', ['limit' => 36])
+            ->changeColumn('parent_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->changeColumn('foreign_id', 'char', ['limit' => 36, 'default' => null])
             ->changeColumn('created_by', 'char', ['limit' => 36])
             ->changeColumn('modified_by', 'char', ['limit' => 36])
             ->save();
 
         $this->table('favorites')
             ->changeColumn('id', 'char', ['limit' => 36])
-            ->changeColumn('user_id', 'char', ['limit' => 36])
+            ->changeColumn('user_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
             ->changeColumn('foreign_id', 'char', ['limit' => 36])
             ->save();
 
@@ -62,8 +62,8 @@ class V200MigrateUUID extends AbstractMigration
 
         $this->table('groups_users')
             ->changeColumn('id', 'char', ['limit' => 36])
-            ->changeColumn('group_id', 'char', ['limit' => 36])
-            ->changeColumn('user_id', 'char', ['limit' => 36])
+            ->changeColumn('group_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->changeColumn('user_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
             ->save();
 
         $this->table('permissions')

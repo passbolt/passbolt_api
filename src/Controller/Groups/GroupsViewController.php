@@ -49,6 +49,7 @@ class GroupsViewController extends AppController
         if (empty($group)) {
             throw new NotFoundException(__('The group does not exist.'));
         }
+
         $this->success('The operation was successful.', $group);
     }
 }

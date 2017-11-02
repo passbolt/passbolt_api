@@ -59,7 +59,14 @@ abstract class DataTask extends Shell
         // Insert the data in the db.
         $data = $this->_getData();
         foreach ($data as $row) {
-            $this->saveEntity($row);
+	        try {
+		        $this->saveEntity($row);
+	        }
+	        catch (Exception $e) {
+		        $this->err(sprintf('Data "%s" from "%s" could not be inserted', $row[array_keys($row)[0]]['id'], $this->entityName));
+		        $this->err(print_r($row, true));
+		        $this->warn($e->getMessage());
+	        }
         }
         $this->out('Data for entity "' . $this->entityName . '" inserted (' . count($data) . ')');
     }

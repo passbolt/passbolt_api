@@ -14,6 +14,7 @@
  */
 namespace App\Test\Lib;
 
+use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -25,7 +26,8 @@ use Cake\TestSuite\TestCase;
 
 class AppTestCase extends TestCase
 {
-    use FavoritesModelTrait;
+	use CommentsModelTrait;
+	use FavoritesModelTrait;
     use GroupsModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
