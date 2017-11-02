@@ -39,8 +39,8 @@ class V200MigrateUUID extends AbstractMigration
             ->changeColumn('id', 'char', ['limit' => 36])
             ->changeColumn('parent_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
             ->changeColumn('foreign_id', 'char', ['limit' => 36, 'default' => null])
-            ->changeColumn('created_by', 'char', ['limit' => 36])
-            ->changeColumn('modified_by', 'char', ['limit' => 36])
+            ->changeColumn('created_by', 'char', ['default' => null, 'limit' => 36, 'null' => true])
+            ->changeColumn('modified_by', 'char', ['default' => null, 'limit' => 36, 'null' => true])
             ->save();
 
         $this->table('favorites')

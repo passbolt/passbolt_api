@@ -20,7 +20,7 @@ use App\Utility\Common;
 
 class CommentsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.groups', 'app.permissions', 'app.resources', 'app.comments'];
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.permissions', 'app.resources', 'app.comments'];
 
     public function testSuccess()
     {

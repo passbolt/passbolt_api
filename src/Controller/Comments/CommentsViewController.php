@@ -48,8 +48,6 @@ class CommentsViewController extends AppController
             throw new InvalidArgumentException(__('Invalid id'));
         }
 
-        // Check
-
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => ['creator', 'modifier']

@@ -91,7 +91,7 @@ abstract class DataTask extends Shell
             throw new Exception('Unable to save the entity data');
         }
 
-        if (!$this->_Entity->save($entity, ['checkRules' => false, 'atomic' => false])) {
+	    if (!$this->_Entity->save($entity, ['checkRules' => false, 'atomic' => false])) {
             $errors = $entity->getErrors();
             $this->out('Unable to save the entity');
             $this->out(json_encode($errors));

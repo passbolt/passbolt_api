@@ -27,6 +27,7 @@ class CommentsDataTask extends DataTask
 	    $comments[] = [
 		    'id' => Common::uuid('comment.id.apache-1'),
 		    'parent_id' => null,
+		    'user_id' => Common::uuid('user.id.irene'),
 		    'foreign_id' => Common::uuid('resource.id.apache'),
 		    'foreign_model' => 'Resource',
 		    'content' => 'this is a short comment',
@@ -38,6 +39,7 @@ class CommentsDataTask extends DataTask
 	    $comments[] = [
 		    'id' => Common::uuid('comment.id.apache-2'),
 		    'parent_id' => Common::uuid('comment.id.apache-1'),
+		    'user_id' => Common::uuid('user.id.irene'),
 		    'foreign_id' => Common::uuid('resource.id.apache'),
 		    'foreign_model' => 'Resource',
 		    'content' => 'this is a reply to the short comment',

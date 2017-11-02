@@ -94,7 +94,8 @@ class ResourcesTable extends Table
         $validator
             ->scalar('name')
             ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->notEmpty('name')
+	        ->utf8Extended('name');
 
         $validator
             ->scalar('username')
@@ -102,11 +103,13 @@ class ResourcesTable extends Table
 
         $validator
             ->scalar('uri')
-            ->allowEmpty('uri');
+            ->allowEmpty('uri')
+	        ->utf8Extended('uri');
 
         $validator
             ->scalar('description')
-            ->allowEmpty('description');
+            ->allowEmpty('description')
+	        ->utf8Extended('description');
 
         $validator
             ->boolean('deleted')

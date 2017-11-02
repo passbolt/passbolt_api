@@ -21,6 +21,7 @@ use Cake\ORM\Entity;
  *
  * @property string $id
  * @property string $parent_id
+ * @property string $user_id
  * @property string $foreign_id
  * @property string $foreign_model
  * @property string $content
@@ -28,10 +29,6 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
- *
- * @property \App\Model\Entity\ParentComment $parent_comment
- * @property \App\Model\Entity\Foreign $foreign
- * @property \App\Model\Entity\ChildComment[] $child_comments
  */
 class Comment extends Entity
 {
@@ -46,6 +43,7 @@ class Comment extends Entity
      * @var array
      */
     protected $_accessible = [
+        'user_id' => false,
         'parent_id' => false,
         'foreign_id' => false,
         'foreign_model' => false,
@@ -54,8 +52,5 @@ class Comment extends Entity
         'modified' => false,
         'created_by' => false,
         'modified_by' => false,
-        'parent_comment' => false,
-        'foreign' => false,
-        'child_comments' => false
     ];
 }

@@ -1,0 +1,219 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+
+namespace App\Test\TestCase\Model\Table\Comments;
+
+use App\Model\Table\CommentsTable;
+use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FormatValidationTrait;
+use App\Utility\Common;
+use Cake\ORM\TableRegistry;
+
+class SaveTest extends AppTestCase
+{
+    use FormatValidationTrait;
+
+    public $Comments;
+
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.comments', 'app.permissions'];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $config = TableRegistry::exists('Comments') ? [] : ['className' => CommentsTable::class];
+        $this->Comments = TableRegistry::get('Comments', $config);
+    }
+
+    public function tearDown()
+    {
+        unset($this->Comments);
+
+        parent::tearDown();
+    }
+
+    public static function getEntityDefaultOptions()
+    {
+        $entityOptions = [
+            'validate' => 'default',
+            'accessibleFields' => [
+                'user_id' => true,
+                'parent_id' => true,
+                'foreign_id' => true,
+                'foreign_model' => true,
+                'content' => true,
+            ]
+        ];
+
+        return $entityOptions;
+    }
+
+    /* ************************************************************** */
+    /* FORMAT VALIDATION TESTS */
+    /* ************************************************************** */
+
+    public function testValidationUserId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Comments, 'user_id', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationParentId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'allowEmpty' => self::getAllowEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Comments, 'parent_id', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationForeignModel()
+    {
+        $testCases = [
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'inList' => self::getInListTestCases(CommentsTable::ALLOWED_FOREIGN_MODELS),
+        ];
+        $this->assertFieldFormatValidation($this->Comments, 'foreign_model', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationForeignId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Comments, 'foreign_id', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationContent()
+    {
+        $testCases = [
+            'scalar' => self::getScalarTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8Extended' => self::getUtf8ExtendedTestCases(50),
+            'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
+        ];
+        $this->assertFieldFormatValidation($this->Comments, 'content', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    /* ************************************************************** */
+    /* LOGIC VALIDATION TESTS */
+    /* ************************************************************** */
+
+    public function testErrorUserDoesNotExist()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => Common::uuid()]), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['user_id']['user_exists']);
+    }
+
+    public function testErrorUserNotSoftDeleted()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => Common::uuid('user.id.sofia')]), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['user_id']['user_is_soft_deleted']);
+    }
+
+    public function testErrorResourceDoesNotExist()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => Common::uuid()]), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['foreign_id']['resource_exists']);
+    }
+
+    public function testErrorResourceIsSoftDeleted()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => Common::uuid('resource.id.jquery')]), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['foreign_id']['resource_is_soft_deleted']);
+    }
+
+    public function testErrorParentIdDoesNotExist()
+    {
+        $comment = $this->Comments->newEntity(
+            self::getDummyComment([
+                'foreign_id' => Common::uuid('resource.id.apache'),
+                'parent_id' => Common::uuid('comment.id.doesnotexist')
+            ]),
+            self::getEntityDefaultOptions()
+        );
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['parent_id']['has_valid_parent_id']);
+    }
+
+    public function testErrorParentIdParentHasDifferentForeignId()
+    {
+        $comment = $this->Comments->newEntity(
+            self::getDummyComment([
+                'foreign_id' => Common::uuid('resource.id.bower'),
+                'parent_id' => Common::uuid('comment.id.apache-1')
+            ]),
+            self::getEntityDefaultOptions()
+        );
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['parent_id']['has_valid_parent_id']);
+    }
+
+    public function testErrorHasResourceAccessRule()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => Common::uuid('user.id.dame'), 'foreign_id' => Common::uuid('resource.id.canjs')]), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['foreign_id']['has_resource_access']);
+    }
+
+    public function testSuccess()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertNotNull($save);
+        $errors = $comment->getErrors();
+        $this->assertEmpty($errors);
+
+        // Check the favorite exists in db.
+        $addedComment = $this->Comments->get($save->id);
+        $this->assertNotNull($addedComment);
+        $this->assertEquals(Common::uuid('user.id.ada'), $addedComment->user_id);
+        $this->assertEquals(Common::uuid('resource.id.bower'), $addedComment->foreign_id);
+        $this->assertEquals('Resource', $addedComment->foreign_model);
+        $this->assertNull($addedComment->parent_id);
+    }
+}

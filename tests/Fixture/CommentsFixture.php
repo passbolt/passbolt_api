@@ -31,6 +31,7 @@ class CommentsFixture extends TestFixture
             'content' => 'this is a reply to the short comment',
             'created' => '2012-11-25 13:39:26',
             'modified' => '2012-11-25 13:39:26',
+            'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
             'created_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
             'modified_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498'
         ],
@@ -42,6 +43,7 @@ class CommentsFixture extends TestFixture
             'content' => 'this is a short comment',
             'created' => '2012-11-25 13:39:25',
             'modified' => '2012-11-25 13:39:25',
+            'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
             'created_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
             'modified_by' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498'
         ],

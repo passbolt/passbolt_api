@@ -15,6 +15,9 @@
 
 namespace App\Model\Table;
 
+use App\Model\Rule\HasResourceAccessRule;
+use App\Model\Rule\HasValidParentRule;
+use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -64,9 +67,12 @@ class CommentsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Resource', [
-            'className' => 'Resource',
+        $this->belongsTo('Resources', [
             'foreignKey' => 'foreign_id'
+        ]);
+
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id'
         ]);
 
         $this->hasOne('Creator', [
@@ -94,7 +100,15 @@ class CommentsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('foreign_model')
+            ->uuid('user_id')
+            ->notEmpty('user_id')
+            ->requirePresence('user_id');
+
+        $validator
+            ->uuid('parent_id')
+            ->allowEmpty('parent_id');
+
+        $validator
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS)
             ->requirePresence('foreign_model', 'create')
             ->notEmpty('foreign_model');
@@ -107,7 +121,9 @@ class CommentsTable extends Table
         $validator
             ->scalar('content')
             ->requirePresence('content', 'create')
-            ->notEmpty('content');
+            ->notEmpty('content')
+            ->utf8Extended('content')
+            ->lengthBetween('content', [1, 255]);
 
         return $validator;
     }
@@ -121,6 +137,31 @@ class CommentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
+            'table' => 'Resources',
+            'errorField' => 'foreign_id',
+            'message' => __('The resource is soft deleted.')
+        ]);
+        $rules->addCreate($rules->existsIn('user_id', 'Users'), 'user_exists');
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_soft_deleted', [
+            'table' => 'Users',
+            'errorField' => 'user_id',
+            'message' => __('The user is soft deleted.')
+        ]);
+        $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
+            'errorField' => 'foreign_id',
+            'message' => __('Access denied.'),
+            'userField' => 'user_id',
+            'resourceField' => 'foreign_id',
+        ]);
+        $rules->addCreate(new HasValidParentRule(), 'has_valid_parent_id', [
+            'table' => 'Comments',
+            'errorField' => 'parent_id',
+            'message' => __('The parent comment is invalid.'),
+            'resourceField' => 'foreign_id',
+        ]);
+
         return $rules;
     }
 
@@ -136,7 +177,6 @@ class CommentsTable extends Table
      */
     public function findViewForeignComments($userId, $foreignModelName, $foreignId, array $options = [])
     {
-        $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
             throw new \InvalidArgumentException(__('The foreign model provided is not supported'));

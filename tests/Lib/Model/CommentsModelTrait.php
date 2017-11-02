@@ -15,15 +15,39 @@
 
 namespace App\Test\Lib\Model;
 
-Trait CommentsModelTrait {
-	/**
-	 * Asserts that an object has all the attributes a comment should have.
-	 *
-	 * @param object $comment
-	 */
-	protected function assertCommentAttributes($comment)
-	{
-		$attributes = ['id', 'parent_id', 'foreign_id', 'foreign_model', 'content', 'created', 'modified', 'created_by', 'modified_by'];
-		$this->assertObjectHasAttributes($attributes, $comment);
-	}
+use App\Utility\Common;
+
+trait CommentsModelTrait
+{
+
+    /**
+     * Get a dummy comment with test data.
+     * The comment returned passes a default validation.
+     * @param array $data Custom data that will be merged with the default dummy comment.
+     * @return array Comment data
+     */
+    public static function getDummyComment($data = [])
+    {
+        $entityContent = [
+            'user_id' => Common::uuid('user.id.ada'),
+            'foreign_id' => Common::uuid('resource.id.bower'),
+            'foreign_model' => 'Resource',
+            'content' => 'this is a test comment',
+            'parent_id' => null,
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
+    /**
+     * Asserts that an object has all the attributes a comment should have.
+     *
+     * @param object $comment
+     */
+    protected function assertCommentAttributes($comment)
+    {
+        $attributes = ['id', 'parent_id', 'foreign_id', 'foreign_model', 'content', 'created', 'modified', 'created_by', 'modified_by'];
+        $this->assertObjectHasAttributes($attributes, $comment);
+    }
 }
