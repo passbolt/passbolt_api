@@ -41,6 +41,8 @@ class UsersViewController extends AppController
         }
         // Retrieve the user
         $this->loadModel('Users');
+
+        // @TODO user findView instead
         $user = $this->Users->find('view', ['id' => $id, 'role' => $this->User->role() ])->first();
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist.'));

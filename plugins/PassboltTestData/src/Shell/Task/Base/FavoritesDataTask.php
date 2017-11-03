@@ -12,8 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-
-namespace PassboltTestData\Shell\Task\Base;;
+namespace PassboltTestData\Shell\Task\Base;
 
 use App\Utility\Common;
 use PassboltTestData\Lib\DataTask;

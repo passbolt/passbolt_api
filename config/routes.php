@@ -30,6 +30,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->redirect('login', '/auth/login');
     $routes->redirect('users/login', '/auth/login');
     $routes->redirect('logout', '/auth/logout');
+    $routes->redirect('recover', '/users/recover');
 });
 
 /**
@@ -171,6 +172,14 @@ Router::prefix('Users', function ($routes) {
         ->setMethods(['GET']);
 
     $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerPost'])
+        ->setPass(['id'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/recover', ['controller' => 'UsersRecover', 'action' => 'recoverGet'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/recover', ['controller' => 'UsersRecover', 'action' => 'recoverPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
 

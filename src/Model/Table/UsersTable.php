@@ -128,6 +128,23 @@ class UsersTable extends Table
     }
 
     /**
+     * Register validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationRecover(Validator $validator)
+    {
+        $validator
+            ->requirePresence('username', 'create', __('A username is required.'))
+            ->notEmpty('username', __('A username is required.'))
+            ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
+            ->email('username', true, __('The username should be a valid email address.'));
+
+        return $validator;
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -229,7 +246,26 @@ class UsersTable extends Table
 
         // Use default index option (active:true, deleted:false) and contains
         $query = $this->findIndex($query, $options);
+
         return $query->where(['Gpgkeys.fingerprint' => $options['fingerprint']]);
+    }
+
+    /**
+     * Build the query that fetches data for user recovery
+     *
+     * @param string $username email of user to retrieve
+     * @param array $options options
+     * @return \Cake\ORM\Query
+     */
+    public function findRecover($username, array $options = [])
+    {
+        // show active first and do not count deleted ones
+        $query = $this->find()
+            ->where(['Users.username' => $username, 'Users.deleted' => false])
+            ->contain(['Roles', 'Profiles']) // @TODO Avatar for recovery email
+            ->order(['Users.active' => 'DESC']);
+
+        return $query;
     }
 
     /**

@@ -14,7 +14,7 @@
  */
 use Cake\Routing\Router;
 ?>
-<h3>Welcome <?php echo $user->first_name; ?>,</h3>
+<h3>Welcome <?php echo $user->profile->first_name; ?>,</h3>
 <br/>
 <?= __('You just opened an account on passbolt at {0}',
     '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>');?>.

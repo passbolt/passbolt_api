@@ -13,8 +13,8 @@
  * @since         2.0.0
  */
 ?><span style="font-weight:bold;"><?= $user->profile->first_name; ?> <?php $user->profile->last_name; ?>
-     (<a href="mailto:<?= $user->username; ?>" style="color:#888;text-decoration: underline;">
+    (<a href="mailto:<?= $user->username; ?>" style="color:#888;text-decoration: underline;">
         <?= $user->username; ?></a>)
 </span>,<br>
-<span style=""><?= __('You have just created your account on passbolt!'); ?></span><br>
+<span style=""><?= __('You have initiated an account recovery!'); ?></span><br>
 <span style="color:#888888"><?= $user->created->i18nFormat(); ?></span><br>

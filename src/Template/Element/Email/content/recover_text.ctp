@@ -12,9 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-?><span style="font-weight:bold;"><?= $user->profile->first_name; ?> <?php $user->profile->last_name; ?>
-     (<a href="mailto:<?= $user->username; ?>" style="color:#888;text-decoration: underline;">
-        <?= $user->username; ?></a>)
-</span>,<br>
-<span style=""><?= __('You have just created your account on passbolt!'); ?></span><br>
-<span style="color:#888888"><?= $user->created->i18nFormat(); ?></span><br>
+use Cake\Routing\Router;
+?>
+<h3><?= __('Welcome back {0}', $user->profile->first_name); ?>,</h3><br/>
+<?= __('You have just requested to recover your {0}passbolt{1} account on this device.',
+    '<a href="' . Router::url('/',true) . '">', '</a>'); ?>
+<?= __('Click on the link below to proceed.'); ?>
+

@@ -16,10 +16,8 @@ namespace App\Controller\Events;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Log\Log;
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use EmailQueue\EmailQueue;
 
 class EmailsListener implements EventListenerInterface
@@ -29,6 +27,8 @@ class EmailsListener implements EventListenerInterface
     {
         return [
             'UsersRegisterController.registerPost.success' => 'sendRegisterEmail',
+            'UserRecoverController.registerPost.success' => 'sendRegisterEmail',
+            'UserRecoverController.recoverPost.success' => 'sendRecoverEmail'
         ];
     }
 
@@ -42,12 +42,10 @@ class EmailsListener implements EventListenerInterface
      */
     public function sendRegisterEmail(Event $event, $user = null, $token = null)
     {
-        // Notification toggle check
+        // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
         }
-
-        // Check all needed data are passed from event trigger
         if (!isset($user)) {
             throw new InternalErrorException('User should not be empty when sending registration emails');
         }
@@ -55,23 +53,39 @@ class EmailsListener implements EventListenerInterface
             throw new InternalErrorException('Authentication token should not be empty when sending registration emails');
         }
 
-        // Subject and templates
+        // Send notification
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'user_register';
+        $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
+        $this->_send($user->username, $subject, $data, $template);
+    }
+
+    /**
+     * Send recover Email
+     *
+     * @param Event $event
+     * @param null $user
+     * @param null $token
+     * @return void
+     */
+    public function sendRecoverEmail(Event $event, $user = null, $token = null)
+    {
+        // Notification toggle and baseline check
+        if (!Configure::read('passbolt.email.send.user.recover')) {
+            return;
+        }
+        if (!isset($user)) {
+            throw new InternalErrorException('User should not be empty when sending recovery emails');
+        }
+        if (!isset($token)) {
+            throw new InternalErrorException('Authentication token should not be empty when sending recovery emails');
+        }
 
         // Send notification.
-        $this->_send(
-            $user->username,
-            $subject,
-            [
-                'body' => [
-                    'user' => $user,
-                    'token' => $token
-                ],
-                'title' => $subject
-            ],
-            $template
-        );
+        $subject = __("Your account recovery, {0}!", $user->profile->first_name);
+        $template = 'user_recover';
+        $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
+        $this->_send($user->username, $subject, $data, $template);
     }
 
     /**
