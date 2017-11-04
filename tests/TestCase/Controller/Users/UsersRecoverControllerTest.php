@@ -18,6 +18,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
 
     public function testRecoverGetRedirect()
     {
