@@ -15,8 +15,11 @@
 namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
+use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
@@ -27,13 +30,17 @@ use Cake\TestSuite\IntegrationTestCase;
 
 class AppIntegrationTestCase extends IntegrationTestCase
 {
-    use ArrayTrait;
-    use FavoritesModelTrait;
+	use CommentsModelTrait;
+	use FavoritesModelTrait;
     use GroupsModelTrait;
-    use ObjectTrait;
+    use PermissionsModelTrait;
+    use ProfilesModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
+
+    use ArrayTrait;
+    use ObjectTrait;
 
     /**
      * The response for the most recent json request.
@@ -108,7 +115,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
      */
     public function assertForbiddenError()
     {
-        $this->assertError(403, 'Forbidden');
+        $this->assertError(403, 'Forbidden.');
     }
 
     /**

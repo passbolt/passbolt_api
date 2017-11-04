@@ -12,7 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-
 namespace App\Test\Lib\Utility;
 
 trait ArrayTrait

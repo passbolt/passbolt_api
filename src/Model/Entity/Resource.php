@@ -56,6 +56,8 @@ class Resource extends Entity
         'modified' => false,
         'created_by' => false,
         'modified_by' => false,
+
+        // Associated entities
         'creator' => false,
         'modifier' => false,
         'secrets' => false

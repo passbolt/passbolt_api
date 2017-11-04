@@ -15,16 +15,17 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
+use App\Model\Entity\Permission;
 use Cake\ORM\Table;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
  * Permissions Model
  *
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Groups
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Users
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\Permission get($primaryKey, $options = [])
  * @method \App\Model\Entity\Permission newEntity($data = null, array $options = [])
@@ -53,11 +54,14 @@ class PermissionsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->hasOne('Groups', [
-            'bindingKey' => 'aro_foreign_key'
+        $this->belongsTo('Groups', [
+            'foreignKey' => 'aro_foreign_key'
         ]);
-        $this->hasOne('Users', [
-            'bindingKey' => 'aro_foreign_key'
+        $this->belongsTo('Resources', [
+            'foreignKey' => 'aco_foreign_key'
+        ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'aro_foreign_key'
         ]);
 
         $this->addBehavior('Timestamp');
@@ -100,5 +104,59 @@ class PermissionsTable extends Table
             ->notEmpty('type');
 
         return $validator;
+    }
+
+    /**
+     * Custom validation rule to validate permission type
+     *
+     * @param integer $value permission type
+     * @return bool
+     */
+    public function isValidPermissionType($value)
+    {
+        $permissionTypes = [
+            Permission::READ,
+            Permission::UPDATE,
+            Permission::OWNER
+        ];
+        return is_int($value) && in_array($value, $permissionTypes);
+    }
+
+    /**
+     * Build the query that fetches data for aco permissions view
+     *
+     * @param string $acoForeignKey The aco instance id to retrieve to get the permissions for
+     * @param array $options options
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
+     * @return \Cake\ORM\Query
+     */
+    public function findViewAcoPermissions($acoForeignKey, $options = [])
+    {
+        if (!Validation::uuid($acoForeignKey)) {
+            throw new \InvalidArgumentException(__('The parameter acoForeignKey should be a valid uuid.'));
+        }
+
+        $query = $this->find()
+            ->where(['Permissions.aco_foreign_key' => $acoForeignKey]);
+
+        // If contains group.
+        if (isset($options['contain']['group'])) {
+            $query->contain('Groups');
+        }
+
+        // If contains user.
+        if (isset($options['contain']['user'])) {
+            $query->contain('Users');
+        }
+
+        // If contains user profile.
+        if (isset($options['contain']['user.profile'])) {
+            $query->contain('Users.Profiles');
+            // @TODO when Avatars model is implemented.
+            // ->contain('Users.Profiles.Avatars');
+        }
+
+        return $query;
     }
 }

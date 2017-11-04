@@ -14,16 +14,15 @@
  */
 namespace App\Test\Lib\Model;
 
-trait GroupsModelTrait
-{
+Trait PermissionsModelTrait {
     /**
-     * Asserts that an object has all the attributes a group should have.
+     * Asserts that an object has all the attributes a permission should have.
      *
-     * @param object $group
+     * @param object $permission
      */
-    protected function assertGroupAttributes($group)
+    protected function assertPermissionAttributes($permission)
     {
-        $attributes = ['id', 'name', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
-        $this->assertObjectHasAttributes($attributes, $group);
+        $attributes = ['id', 'aro', 'aro_foreign_key', 'aco', 'aco_foreign_key', 'type', 'created', 'modified'];
+        $this->assertObjectHasAttributes($attributes, $permission);
     }
 }

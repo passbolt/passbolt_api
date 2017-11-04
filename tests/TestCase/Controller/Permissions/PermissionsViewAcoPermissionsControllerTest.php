@@ -1,0 +1,163 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+
+namespace App\Test\TestCase\Controller\Permissions;
+
+use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\Common;
+use Cake\ORM\TableRegistry;
+
+class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
+{
+    public $fixtures = ['app.groups', 'app.groups_users', 'app.permissions', 'app.profiles', 'app.resources', 'app.users'];
+
+    public function testSuccess()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/permissions/resource/$resourceId.json?api-version=2");
+        $this->assertSuccess();
+        $this->assertNotNull($this->_responseJsonBody);
+
+        // Expected fields.
+        $this->assertPermissionAttributes($this->_responseJsonBody[0]);
+        // Not expected fields.
+        $this->assertObjectNotHasAttribute('user', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('group', $this->_responseJsonBody[0]);
+    }
+
+    public function testApiV1Success()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.apache');
+        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->assertSuccess();
+        $this->assertNotNull($this->_responseJsonBody);
+
+        // Expected fields.
+        $this->assertObjectHasAttribute('Permission', $this->_responseJsonBody[0]);
+        $this->assertPermissionAttributes($this->_responseJsonBody[0]->Permission);
+        // Not expected fields.
+        $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('Group', $this->_responseJsonBody[0]);
+    }
+
+    public function testContainSuccess()
+    {
+        $this->authenticateAs('ada');
+        $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
+        $resourceId = Common::uuid('resource.id.cakephp');
+        $this->getJson("/permissions/resource/$resourceId.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+
+        // Search a user permission.
+        $key = array_search('User', array_column($this->_responseJsonBody, 'aro'));
+        $permission = $this->_responseJsonBody[$key];
+        $this->assertPermissionAttributes($permission);
+        // Contain user.
+        $this->assertObjectHasAttribute('user', $permission);
+        $this->assertUserAttributes($permission->user);
+        // Contain user profile.
+        $this->assertObjectHasAttribute('profile', $permission->user);
+        $this->assertProfileAttributes($permission->user->profile);
+
+        // Search a group permission.
+        $key = array_search('Group', array_column($this->_responseJsonBody, 'aro'));
+        $permission = $this->_responseJsonBody[$key];
+        $this->assertPermissionAttributes($permission);
+        // Contain group.
+        $this->assertObjectHasAttribute('group', $permission);
+        $this->assertGroupAttributes($permission->group);
+
+        // @TODO test contain avatar
+        $this->markTestIncomplete();
+    }
+
+    public function testContainApiV1Success()
+    {
+        $this->authenticateAs('ada');
+        $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
+        $resourceId = Common::uuid('resource.id.cakephp');
+        $this->getJson("/permissions/resource/$resourceId.json?$urlParameter");
+        $this->assertSuccess();
+
+        // Search a user permission.
+        $permission = array_reduce($this->_responseJsonBody, function($carry, $item) {
+            if (isset($item->User)) $carry = $item;
+            return $carry;
+        }, null);
+        $this->assertObjectHasAttribute('Permission', $permission);
+        $this->assertPermissionAttributes($permission->Permission);
+
+        // Contain user.
+        $this->assertObjectHasAttribute('User', $permission);
+        $this->assertUserAttributes($permission->User);
+        // Contain user profile.
+        $this->assertObjectHasAttribute('Profile', $permission->User);
+        $this->assertProfileAttributes($permission->User->Profile);
+
+        // Search a group permission.
+        $permission = array_reduce($this->_responseJsonBody, function($carry, $item) {
+            if (isset($item->Group)) $carry = $item;
+            return $carry;
+        }, null);
+        $this->assertObjectHasAttribute('Permission', $permission);
+        $this->assertPermissionAttributes($permission->Permission);
+        // Contain group.
+        $this->assertObjectHasAttribute('Group', $permission);
+        $this->assertGroupAttributes($permission->Group);
+
+        // @TODO test contain avatar
+        $this->markTestIncomplete();
+    }
+
+    public function testErrorNotAuthenticated()
+    {
+        $resourceId = Common::uuid('resource.id.bower');
+        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->assertAuthenticationError();
+    }
+
+    public function testErrorNotValidId()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = 'invalid-id';
+        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->assertError(400, 'The id is not valid for model Resource');
+    }
+
+    public function testErrorSoftDeletedResource()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = Common::uuid('resource.id.jquery');
+        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->assertError(404, 'The resource does not exist.');
+    }
+
+    public function testErrorResourceAccessDenied()
+    {
+        $resourceId = Common::uuid('resource.id.canjs');
+
+        // Check that the resource exists.
+        $Resources = TableRegistry::get('Resources');
+        $resource = $Resources->get($resourceId);
+        $this->assertNotNull($resource);
+
+        // Check that the user cannot access the resource
+        $this->authenticateAs('dame');
+        $this->getJson("/permissions/resource/$resourceId.json?api-version=2");
+        $this->assertError(404, 'The resource does not exist.');
+    }
+}

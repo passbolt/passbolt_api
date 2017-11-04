@@ -19,6 +19,7 @@ use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\Common;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
@@ -106,6 +107,30 @@ class FindIndexTest extends AppTestCase
         $this->assertResourceAttributes($resource);
         $this->assertObjectHasAttribute('favorite', $resource);
         $this->assertFavoriteAttributes($resource->favorite);
+    }
+
+    public function testContainPermission()
+    {
+        $findIndexOptions['contain']['permission'] = true;
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
+            // Find all the resources for the current user.
+            $userId = Common::uuid("user.id.$userAlias");
+            $resources = $this->Resources->findIndex($userId, $findIndexOptions)->all();
+
+            // Check expected permissions are there.
+            foreach($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
+                $resourceId = Common::uuid("resource.id.$resourceAlias");
+                $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0];
+                if ($expectedPermissionType == 0) {
+                    $this->assertEmpty($resource, "$userAlias should not have a permission [$expectedPermissionType] for $resourceAlias");
+                } else {
+                    $this->assertNotEmpty($resource, "$userAlias should have a permission [$expectedPermissionType] for $resourceAlias");
+                    $this->assertPermissionAttributes($resource->permission);
+                    $this->assertEquals($expectedPermissionType, $resource->permission->type, "$userAlias should have a permission [$expectedPermissionType] for $resourceAlias");
+                }
+            }
+        }
     }
 
     public function testFilterIsFavorite()

@@ -14,16 +14,15 @@
  */
 namespace App\Test\Lib\Model;
 
-trait GroupsModelTrait
-{
+Trait ProfilesModelTrait {
     /**
-     * Asserts that an object has all the attributes a group should have.
+     * Asserts that an object has all the attributes a profile should have.
      *
-     * @param object $group
+     * @param object $user
      */
-    protected function assertGroupAttributes($group)
+    protected function assertProfileAttributes($user)
     {
-        $attributes = ['id', 'name', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
-        $this->assertObjectHasAttributes($attributes, $group);
+        $attributes = ['id', 'user_id', 'first_name', 'last_name', 'created', 'modified'];
+        $this->assertObjectHasAttributes($attributes, $user);
     }
 }

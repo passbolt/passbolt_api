@@ -55,7 +55,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[modifier]=1&contain[favorite]=1&contain[secret]=1';
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
         $resourceId = Common::uuid('resource.id.apache');
         $this->getJson("/resources/$resourceId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
@@ -68,6 +68,9 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         // Contain modifier.
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->modifier);
+        // Contain permission.
+        $this->assertObjectHasAttribute('permission', $this->_responseJsonBody);
+        $this->assertPermissionAttributes($this->_responseJsonBody->permission);
         // Contain secret.
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->secrets);
@@ -82,7 +85,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testContainApiV1Success()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[modifier]=1&contain[favorite]=1&contain[secret]=1';
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
         $resourceId = Common::uuid('resource.id.apache');
         $this->getJson("/resources/$resourceId.json?$urlParameter");
         $this->assertSuccess();
@@ -96,6 +99,9 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         // Contain modifier.
         $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->Modifier);
+        // Contain permission.
+        $this->assertObjectHasAttribute('Permission', $this->_responseJsonBody);
+        $this->assertPermissionAttributes($this->_responseJsonBody->Permission);
         // Contain secret.
         $this->assertObjectHasAttribute('Secret', $this->_responseJsonBody);
         $this->assertCount(1, $this->_responseJsonBody->Secret);
@@ -130,7 +136,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorDeletedResource()
+    public function testErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
         $resourceId = Common::uuid('resource.id.jquery');

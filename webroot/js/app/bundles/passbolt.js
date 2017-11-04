@@ -26639,9 +26639,11 @@ define('app/model/permission', [
             var uri = 'permissions';
             if (typeof params.aco != 'undefined' && typeof params.aco_foreign_key != 'undefined') {
                 uri += '/' + params.aco.toLowerCase() + '/' + params.aco_foreign_key;
+                delete params.aco;
+                delete params.aco_foreign_key;
             }
             return mad.net.Ajax.request({
-                url: APP_URL + uri,
+                url: APP_URL + uri + '.json',
                 type: 'GET',
                 params: params,
                 success: success,
@@ -26650,7 +26652,7 @@ define('app/model/permission', [
         },
         findOne: function findOne(params, success, error) {
             return mad.net.Ajax.request({
-                url: APP_URL + 'permissions/{id}',
+                url: APP_URL + 'permissions/{id}.json',
                 type: 'GET',
                 params: params,
                 success: success,
@@ -26708,35 +26710,11 @@ define('app/model/permission', [
                 def.resolveWith(this, [passbolt.model.User.models(data)]);
                 return def;
             });
-        },
-        isAllowedTo: function isAllowedTo(objs, requestedPermission) {
-            var permission = null;
-            var returnValue = null;
-            if (!(objs instanceof can.Model.List)) {
-                objs = new can.List([objs]);
-            }
-            objs.each(function (obj, i) {
-                if (returnValue == false) {
-                    return;
-                }
-                switch (obj.constructor.shortName) {
-                case 'Resource':
-                    if (typeof obj.UserResourcePermission != 'undefined') {
-                        permission = obj.UserResourcePermission;
-                    } else if (typeof obj.GroupResourcePermission != 'undefined') {
-                        permission = obj.GroupResourcePermission;
-                    }
-                    break;
-                }
-                if (permission.permission_type >= requestedPermission) {
-                    returnValue = true;
-                } else {
-                    returnValue = false;
-                }
-            });
-            return returnValue != null ? returnValue : false;
         }
     }, {
+        isAllowedTo: function isAllowedTo(permissionType) {
+            return this.type >= permissionType;
+        },
         isDirect: function isDirect(acoInstance) {
             var permAcoModel = can.getObject('passbolt.model.' + this.aco);
             if (acoInstance instanceof permAcoModel && acoInstance.id === this.aco_foreign_key) {
@@ -26859,27 +26837,24 @@ define('app/component/password_workspace_menu', [
             mad.bus.trigger('request_resource_sharing', resource);
         },
         '{selectedRs} add': function selectedRsAdd(el, ev, resource) {
-            if (this.options.selectedRs.length == 0) {
-                this.setState('ready');
-            } else if (this.options.selectedRs.length == 1) {
+            if (this.options.selectedRs.length == 1) {
                 this.setState('selection');
-            } else {
-                this.setState('multiSelection');
+            } else if (this.options.selectedRs.length == 0) {
+                this.setState('ready');
             }
         },
         '{selectedRs} remove': function selectedRsRemove(el, ev, resource) {
-            if (this.options.selectedRs.length == 0) {
-                this.setState('ready');
-            } else if (this.options.selectedRs.length == 1) {
+            if (this.options.selectedRs.length == 1) {
                 this.setState('selection');
-            } else {
-                this.setState('multiSelection');
+            } else if (this.options.selectedRs.length == 0) {
+                this.setState('ready');
             }
         },
         stateSelection: function stateSelection(go) {
             if (go) {
-                var updatable = passbolt.model.Permission.isAllowedTo(this.options.selectedRs[0], passbolt.UPDATE);
-                var administrable = passbolt.model.Permission.isAllowedTo(this.options.selectedRs[0], passbolt.ADMIN);
+                var permission = this.options.selectedRs[0].Permission;
+                var updatable = permission.isAllowedTo(passbolt.UPDATE);
+                var administrable = permission.isAllowedTo(passbolt.ADMIN);
                 this.options.secretCopyButton.setValue(this.options.selectedRs[0]).setState('ready');
                 this.options.editButton.setValue(this.options.selectedRs[0]).setState(updatable ? 'ready' : 'disabled');
                 this.options.shareButton.setValue(this.options.selectedRs).setState(administrable ? 'ready' : 'disabled');
@@ -26891,20 +26866,6 @@ define('app/component/password_workspace_menu', [
                 this.options.shareButton.setValue(null).setState('disabled');
                 this.options.moreButton.setValue(null).setState('disabled');
                 this.options.moreButton.setItemState('js_wk_menu_delete_action', 'disabled');
-            }
-        },
-        stateMultiSelection: function stateMultiSelection(go) {
-            if (go) {
-                var canUpdate = passbolt.model.Permission.isAllowedTo(this.options.selectedRs, passbolt.UPDATE);
-                var canAdmin = passbolt.model.Permission.isAllowedTo(this.options.selectedRs, passbolt.ADMIN);
-                this.options.secretCopyButton.setValue(null).setState('disabled');
-                this.options.editButton.setState('disabled');
-                this.options.shareButton.setValue(this.options.selectedRs).setState(canAdmin ? 'ready' : 'disabled');
-                this.options.moreButton.setState('disabled');
-            } else {
-                this.options.secretCopyButton.setValue(null).setState('disabled');
-                this.options.editButton.setValue(null).setState('disabled');
-                this.options.shareButton.setValue(null).setState('disabled');
             }
         }
     });
@@ -30288,6 +30249,7 @@ define('app/model/resource', [
             Favorite: 'passbolt.model.Favorite.model',
             Creator: 'passbolt.model.User.model',
             Modifier: 'passbolt.model.User.model',
+            Permission: 'passbolt.model.Permission.model',
             UserResourcePermission: 'passbolt.model.UserResourcePermission.model',
             GroupResourcePermission: 'passbolt.model.GroupResourcePermission.model'
         },
@@ -30787,7 +30749,7 @@ define('app/component/password_browser', [
                 }
             });
             contextualMenu.start();
-            var canRead = passbolt.model.Permission.isAllowedTo(item, passbolt.READ), canUpdate = passbolt.model.Permission.isAllowedTo(item, passbolt.UPDATE), canAdmin = passbolt.model.Permission.isAllowedTo(item, passbolt.ADMIN);
+            var canRead = item.Permission.isAllowedTo(passbolt.READ), canUpdate = item.Permission.isAllowedTo(passbolt.UPDATE), canAdmin = item.Permission.isAllowedTo(passbolt.ADMIN);
             var action = new mad.model.Action({
                 id: 'js_password_browser_menu_copy_username',
                 label: 'Copy username',
@@ -30946,8 +30908,11 @@ define('app/component/password_browser', [
                 var findOptions = {
                     silentLoading: false,
                     contain: {
+                        creator: 1,
+                        favorite: 1,
+                        modifier: 1,
                         secret: 1,
-                        favorite: 1
+                        permission: 1
                     },
                     filter: filter.getRules(['keywords']),
                     order: filter.getOrders()
@@ -31464,7 +31429,7 @@ define('app/component/permissions', [
             this.setViewData('canAdmin', this._isAdmin());
         },
         _isAdmin: function _isAdmin() {
-            return passbolt.model.Permission.isAllowedTo(this.options.acoInstance, passbolt.ADMIN);
+            return this.options.acoInstance.Permission.isAllowedTo(passbolt.ADMIN);
         },
         afterStart: function afterStart() {
             var self = this;
@@ -31507,26 +31472,20 @@ define('app/component/permissions', [
                     acoLabel: {
                         key: 'aco_foreign_key',
                         func: function func(aco_foreign_key, map, obj) {
-                            switch (obj.aro) {
-                            case 'Group':
-                                return obj['Group'].name;
-                                break;
-                            case 'User':
-                                return obj['User']['Profile'].first_name + ' ' + obj['User']['Profile'].last_name;
-                                break;
+                            if (obj.aro == 'User') {
+                                return obj.User.Profile.first_name + ' ' + obj.User.Profile.last_name;
+                            } else if (obj.aro == 'Group') {
+                                return obj.Group.name;
                             }
                         }
                     },
                     acoDetails: {
                         key: 'aco_foreign_key',
                         func: function func(aco_foreign_key, map, obj) {
-                            switch (obj.aro) {
-                            case 'Group':
+                            if (obj.aro == 'User') {
+                                return obj.User.username;
+                            } else if (obj.aro == 'Group') {
                                 return __('group');
-                                break;
-                            case 'User':
-                                return obj['User'].username;
-                                break;
                             }
                         }
                     }
@@ -31578,7 +31537,12 @@ define('app/component/permissions', [
             this.setState('loading');
             return passbolt.model.Permission.findAll({
                 aco: this.options.acoInstance.constructor.shortName,
-                aco_foreign_key: this.options.acoInstance.id
+                aco_foreign_key: this.options.acoInstance.id,
+                contain: {
+                    group: 1,
+                    user: 1,
+                    'user.profile': 1
+                }
             }, function (permissions, response, request) {
                 for (var i = 0; i < permissions.length; i++) {
                     self.loadPermission(permissions[i]);
@@ -32598,7 +32562,7 @@ define('app/component/sidebar_section/description', [
         beforeRender: function beforeRender() {
             this._super();
             this.setViewData('resource', this.options.resource);
-            this.setViewData('editable', passbolt.model.Permission.isAllowedTo(this.options.resource, passbolt.UPDATE));
+            this.setViewData('editable', this.options.resource.Permission.isAllowedTo(passbolt.UPDATE));
         },
         afterStart: function afterStart() {
             var self = this;
@@ -32767,12 +32731,6 @@ define('app/component/sidebar_section/permissions', [
                 itemTemplate: _permission_list_item2.default,
                 map: new mad.Map({
                     id: 'id',
-                    isDirect: {
-                        key: 'aro_foreign_key',
-                        func: function func(aro_foreign_key, map, obj) {
-                            return obj.isDirect(self.options.acoInstance);
-                        }
-                    },
                     aroLabel: {
                         key: 'aro',
                         func: function func(aro, map, obj) {
@@ -32784,12 +32742,11 @@ define('app/component/sidebar_section/permissions', [
                         func: function func(user, map, obj) {
                             if (obj.aro == 'User') {
                                 return obj.User.Profile.avatarPath('small');
-                            } else {
+                            } else if (obj.aro == 'Group') {
                                 return 'img/avatar/group_default.png';
                             }
                         }
                     },
-                    permType: 'PermissionType.serial',
                     permLabel: {
                         key: 'type',
                         func: function func(type, map, obj) {
@@ -32799,26 +32756,20 @@ define('app/component/sidebar_section/permissions', [
                     acoLabel: {
                         key: 'aco_foreign_key',
                         func: function func(aco_foreign_key, map, obj) {
-                            switch (obj.aro) {
-                            case 'Group':
-                                return obj['Group'].name;
-                                break;
-                            case 'User':
-                                return obj['User']['Profile'].first_name + ' ' + obj['User']['Profile'].last_name;
-                                break;
+                            if (obj.aro == 'User') {
+                                return obj.User.Profile.first_name + ' ' + obj.User.Profile.last_name;
+                            } else if (obj.aro == 'Group') {
+                                return obj.Group.name;
                             }
                         }
                     },
                     acoDetails: {
                         key: 'aco_foreign_key',
                         func: function func(aco_foreign_key, map, obj) {
-                            switch (obj.aro) {
-                            case 'Group':
+                            if (obj.aro == 'User') {
+                                return obj.User.username;
+                            } else if (obj.aro == 'Group') {
                                 return __('group');
-                                break;
-                            case 'User':
-                                return obj['User'].username;
-                                break;
                             }
                         }
                     }
@@ -32830,7 +32781,7 @@ define('app/component/sidebar_section/permissions', [
         },
         beforeRender: function beforeRender() {
             this._super();
-            this.setViewData('administrable', passbolt.model.Permission.isAllowedTo(this.options.acoInstance, passbolt.ADMIN));
+            this.setViewData('administrable', this.options.acoInstance.Permission.isAllowedTo(passbolt.ADMIN));
         },
         loadPermissions: function loadPermissions() {
             var self = this, aco_name = this.options.acoInstance.constructor.shortName, aco_foreign_key = this.options.acoInstance.id;
@@ -32838,7 +32789,12 @@ define('app/component/sidebar_section/permissions', [
             this.permissionsList.reset();
             return passbolt.model.Permission.findAll({
                 aco: aco_name,
-                aco_foreign_key: aco_foreign_key
+                aco_foreign_key: aco_foreign_key,
+                contain: {
+                    group: 1,
+                    user: 1,
+                    'user.profile': 1
+                }
             }, function (permissions, response, request) {
                 self.permissionsList.load(permissions);
                 self.setState('ready');
@@ -32996,12 +32952,6 @@ define('app/component/resource_sidebar', [
             descriptionController.start();
             var permissionsComponent = new passbolt.component.sidebarSection.Permissions($('#js_rs_details_permissions', this.element), { acoInstance: this.options.selectedItem });
             permissionsComponent.start();
-            var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
-                resource: this.options.selectedItem,
-                foreignModel: 'Resource',
-                foreignId: this.options.selectedItem.id
-            });
-            commentsController.start();
         },
         ' password_clicked': function password_clicked(el, ev) {
             var secret = this.options.selectedItem.Secret[0].data;
@@ -36967,7 +36917,6 @@ define('app/component/app', [
                 self.profileDropDownCtl = new passbolt.component.ProfileDropdown($('#js_app_profile_dropdown'), { user: user });
                 self.profileDropDownCtl.start();
             });
-            var notifCtl = new passbolt.component.Notification($('#js_app_notificator'), {});
             var loadingBarCtl = new passbolt.component.LoadingBar($('#js_app_loading_bar'), { state: 'ready' });
             loadingBarCtl.start();
             this.initSessionTimeoutCheckLoop();
