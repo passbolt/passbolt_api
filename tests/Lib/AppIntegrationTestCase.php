@@ -109,7 +109,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
      */
     public function assertForbiddenError()
     {
-        $this->assertError(403, 'Forbidden.');
+        $this->assertError(403, 'Forbidden');
     }
 
     /**
