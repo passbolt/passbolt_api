@@ -1,4 +1,17 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace App\Model\Table;
 
 use Cake\ORM\Query;
@@ -122,7 +135,7 @@ class GpgkeysTable extends Table
      * Custom validation rule to validate fingerprint
      *
      * @param string $value fingerprint
-     * @param array $context
+     * @param array $context not in use
      * @return bool
      */
     public function isValidFingerprint($value, array $context = null)
@@ -134,14 +147,16 @@ class GpgkeysTable extends Table
      * Check for valid email inside GPG key UID
      *
      * @param string $value gpg key uid
-     * @param array $context
+     * @param array $context not in use
      * @return bool
      */
-    public function uidContainValidEmail($value, array $context = null) {
+    public function uidContainValidEmail($value, array $context = null)
+    {
         preg_match('/<(\S+@\S+)>$/', $value, $matches);
         if (isset($matches[1])) {
             return Validation::email($matches[1]);
         }
+
         return false;
     }
 
@@ -157,9 +172,10 @@ class GpgkeysTable extends Table
     {
         $query->where(['deleted' => false]);
         if (isset($options['filter']['modified-after'])) {
-           $modified = date('Y-m-d H:i:s', $options['filter']['modified-after']);
-           $query->where(['modified >' => $modified]);
+            $modified = date('Y-m-d H:i:s', $options['filter']['modified-after']);
+            $query->where(['modified >' => $modified]);
         }
+
         return $query;
     }
 
@@ -184,5 +200,4 @@ class GpgkeysTable extends Table
 
         return $query;
     }
-
 }

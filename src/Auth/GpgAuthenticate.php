@@ -82,6 +82,7 @@ class GpgAuthenticate extends BaseAuthenticate
             $msg = 'There is no user associated with this key. ' . $this->_debug;
             $this->__error($msg);
             $this->_response = $this->_response->withHeader('X-GPGAuth-Debug', $msg);
+
             return false;
         }
 
@@ -100,6 +101,7 @@ class GpgAuthenticate extends BaseAuthenticate
             } catch (Exception $e) {
                 return $this->__error('Decryption failed');
             }
+
             return false;
         }
 
@@ -115,11 +117,13 @@ class GpgAuthenticate extends BaseAuthenticate
             // set encryption and signature keys
             try {
                 $this->__setUserKey($this->_data['keyid'], $user);
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 return $this->__error($e->getMessage());
             }
             $this->_gpg->addsignkey(
-                $this->_config['serverKey']['fingerprint'], $this->_config['serverKey']['passphrase']);
+                $this->_config['serverKey']['fingerprint'],
+                $this->_config['serverKey']['passphrase']
+            );
 
             // generate the authentication token
             $authenticationToken = $AuthenticationToken->generate($user->id);
@@ -132,6 +136,7 @@ class GpgAuthenticate extends BaseAuthenticate
             $msg = $this->_gpg->encryptsign($token);
             $msg = quotemeta(urlencode($msg));
             $this->_response = $this->_response->withHeader('X-GPGAuth-User-Auth-Token', $msg);
+
             return false;
         }
 
@@ -177,6 +182,7 @@ class GpgAuthenticate extends BaseAuthenticate
         if ($request->is('json')) {
             throw new ForbiddenException(__('You need to login to access this location.'));
         }
+
         return parent::unauthenticated($request, $response);
     }
 
@@ -243,6 +249,7 @@ class GpgAuthenticate extends BaseAuthenticate
         // First we check if we can get the user with the key fingerprint
         if (!isset($this->_data['keyid'])) {
             $this->__debug('No key id set.');
+
             return false;
         }
         $keyid = strtoupper($this->_data['keyid']);
@@ -251,6 +258,7 @@ class GpgAuthenticate extends BaseAuthenticate
         $Gpgkeys = TableRegistry::get('Gpgkeys');
         if (!$Gpgkeys->isValidFingerprint($keyid)) {
             $this->__debug('Invalid fingerprint.');
+
             return false;
         }
 
@@ -259,6 +267,7 @@ class GpgAuthenticate extends BaseAuthenticate
         $user = $Users->find('auth', ['fingerprint' => $keyid])->first();
         if (empty($user)) {
             $this->__debug('User not found.');
+
             return false;
         }
 
@@ -289,6 +298,7 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         $this->__debug($msg);
         $this->_response = $this->_response->withHeader('X-GPGAuth-Error', 'true');
+
         return false;
     }
 
@@ -318,6 +328,7 @@ class GpgAuthenticate extends BaseAuthenticate
         if ($length != 36) {
             return $this->__error($errorMsg . 'wrong token data length');
         }
+
         return true;
     }
 
@@ -332,6 +343,7 @@ class GpgAuthenticate extends BaseAuthenticate
         } else {
             $this->_data = null;
         }
+
         return $this->_data;
     }
 
@@ -339,5 +351,4 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         return $this->_response;
     }
-
 }

@@ -81,7 +81,6 @@ class UsersRecoverController extends AppController
             // Create an event to build email with token
             $event = new Event($event, $this, ['user' => $user, 'token' => $token]);
             $this->getEventManager()->dispatch($event);
-
         } catch (BadRequestException $e) {
             if ($this->request->is('json')) {
                 // If JSON is expected let the ErrorController handle it
@@ -116,13 +115,15 @@ class UsersRecoverController extends AppController
      * @throws BadRequestException if the username is not provided
      * @throws BadRequestException if the username is not valid
      */
-    protected function _assertValidation() {
+    protected function _assertValidation()
+    {
         $data = $this->request->getData();
         if (!isset($data['username']) || empty($data['username'])) {
             throw new BadRequestException(__('Please provide a valid email address.'));
         }
         $user = $this->Users->newEntity(
-            $data, ['validate' => 'recover', 'accessibleFields' => ['username' => true]]
+            $data,
+            ['validate' => 'recover', 'accessibleFields' => ['username' => true]]
         );
         if ($user->getErrors()) {
             throw new BadRequestException(__('Please provide a valid email address.'));
@@ -137,18 +138,19 @@ class UsersRecoverController extends AppController
      * @throws BadRequestException if the user does not exist or has been deleted
      * @return mixed
      */
-    protected function _assertRules() {
+    protected function _assertRules()
+    {
         $data = $this->request->getData();
         $user = $this->Users->findRecover($data['username'])->first();
 
         if (empty($user)) {
             $msg = __('This user does not exist or has been deleted.') . ' ';
-           if (Configure::read('passbolt.registration.public')) {
-               $msg .= __('Please register and complete the setup first.');
-           } else {
-               $msg .= __( 'Please contact your administrator.');
-           }
-           throw new BadRequestException($msg);
+            if (Configure::read('passbolt.registration.public')) {
+                $msg .= __('Please register and complete the setup first.');
+            } else {
+                $msg .= __('Please contact your administrator.');
+            }
+            throw new BadRequestException($msg);
         }
 
         return $user;

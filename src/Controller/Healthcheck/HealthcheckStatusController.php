@@ -28,6 +28,7 @@ class HealthcheckStatusController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow(['status']);
+
         return parent::beforeFilter($event);
     }
 

@@ -22,14 +22,16 @@ use Cake\Console\Shell;
  * Add your application-wide methods in the class below, your shells
  * will inherit them.
  */
-class AppShell extends Shell {
+class AppShell extends Shell
+{
 
     /**
      * Display a banner
      *
      * @return void
      */
-    protected function _welcome() {
+    protected function _welcome()
+    {
         $this->out();
     }
 
@@ -37,7 +39,8 @@ class AppShell extends Shell {
      * Some of the passbolt commands shouldn't be executed as root.
      * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
      */
-    public function rootNotAllowed() {
+    public function rootNotAllowed()
+    {
         if (PROCESS_USER === 'root') {
             $this->out('');
             $this->out('<error>Passbolt commands cannot be executed as root.</error>');

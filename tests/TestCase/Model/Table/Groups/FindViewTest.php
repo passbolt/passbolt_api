@@ -21,7 +21,7 @@ class FindViewTest extends AppTestCase
 
     public function testSuccess()
     {
-        $groupId =  Common::uuid('group.id.freelancer');
+        $groupId = Common::uuid('group.id.freelancer');
         $groups = $this->Groups->findView($groupId);
 
         // Expected fields.

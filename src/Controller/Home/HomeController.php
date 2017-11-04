@@ -47,7 +47,8 @@ class HomeController extends AppController
      * Build the cakephpConfig to inject in the view.
      * @return array
      */
-    private function _buildConfigToInject() {
+    private function _buildConfigToInject()
+    {
         // Retrieve the roles (user and admin).
         $this->loadModel('Roles');
         $roles = $this->Roles->find()

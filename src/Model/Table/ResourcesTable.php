@@ -159,7 +159,7 @@ class ResourcesTable extends Table
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
-            $query->contain('Secrets', function($q) use ($userId) {
+            $query->contain('Secrets', function ($q) use ($userId) {
                 return $q->where(['Secrets.user_id' => $userId]);
             });
         }
@@ -178,13 +178,12 @@ class ResourcesTable extends Table
         if (isset($options['filter']['is-favorite'])) {
             // Filter on the favorite resources.
             if ($options['filter']['is-favorite']) {
-                $query->innerJoinWith('Favorites', function($q) use ($userId) {
+                $query->innerJoinWith('Favorites', function ($q) use ($userId) {
                     return $q->where(['Favorites.user_id' => $userId]);
                 });
-            }
-            // Filter out the favorite resources.
-            else {
-                $query->notMatching('Favorites', function($q) use ($userId) {
+            } else {
+                // Filter out the favorite resources.
+                $query->notMatching('Favorites', function ($q) use ($userId) {
                     return $q->where(['Favorites.user_id' => $userId]);
                 });
             }
@@ -192,7 +191,7 @@ class ResourcesTable extends Table
 
         // If contains favorite.
         if (isset($options['contain']['favorite'])) {
-            $query->contain('Favorites', function($q) use ($userId) {
+            $query->contain('Favorites', function ($q) use ($userId) {
                 return $q->where(['Favorites.user_id' => $userId]);
             });
         }
@@ -222,15 +221,16 @@ class ResourcesTable extends Table
             ->find()
             ->select('Groups.id')
             ->where(['Groups.deleted' => 0])
-            ->innerJoinWith('Users', function($q) use ($userId) {
+            ->innerJoinWith('Users', function ($q) use ($userId) {
                 return $q->where(['Users.id' => $userId]);
-            })->reduce(function($result, $row) {
+            })->reduce(function ($result, $row) {
                 $result[] = $row->id;
+
                 return $result;
             }, []);
 
         // Filter the query.
-        $query->innerJoinWith('Permissions', function($q) use ($userId, $groupsIds) {
+        $query->innerJoinWith('Permissions', function ($q) use ($userId, $groupsIds) {
             // Filter on direct user permissions.
             $q->where([
                 'Permissions.aro_foreign_key' => $userId,

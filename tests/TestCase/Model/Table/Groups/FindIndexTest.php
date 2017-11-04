@@ -104,7 +104,7 @@ class FindIndexTest extends AppTestCase
             Common::uuid('user.id.nancy'),
         ];
         // Retrieve the users from the group we want to test.
-        $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId .']')[0];
+        $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
         $usersIds = Hash::extract($group->users, '{n}.id');
         // Check that all the expected users are there.
         $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));

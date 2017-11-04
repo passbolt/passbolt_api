@@ -63,7 +63,7 @@ class AuthLoginController extends AppController
             $this->success(__('You are successfully logged in.'), $user);
         } else {
             // Login failure, same as GET
-            if(!$this->request->is('JSON')) {
+            if (!$this->request->is('JSON')) {
                 $this->set('userAgent', $this->User->agent());
                 $this->viewBuilder()
                     ->setLayout('login')

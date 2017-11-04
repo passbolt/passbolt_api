@@ -87,11 +87,12 @@ class GroupsAddController extends AppController
     protected function _formatRequestData($data = [])
     {
         $output['name'] = Hash::get($data, 'Group.name');
-        $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function($result, $row) {
+        $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
             $result[] = [
                 'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
-                'is_admin' => (boolean) Hash::get($row, 'GroupUser.is_admin', false)
+                'is_admin' => (boolean)Hash::get($row, 'GroupUser.is_admin', false)
             ];
+
             return $result;
         }, []);
 
@@ -130,6 +131,7 @@ class GroupsAddController extends AppController
             // Only the values of the error are returned, not the rules names.
             $output['Group']['name'] = array_values($errors['name']);
         }
+
         return $output;
     }
 }

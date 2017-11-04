@@ -15,7 +15,8 @@
 
 namespace App\Test\Lib\Model;
 
-Trait UsersModelTrait {
+trait UsersModelTrait
+{
     /**
      * Asserts that an object has all the attributes a user should have.
      *

@@ -128,6 +128,7 @@ class AuthenticationTokensTable extends Table
         if (!$this->save($token, ['checkRules' => false, 'atomic' => false])) {
             throw new InternalErrorException(__('The authentication token could not be saved.'));
         }
+
         return $token;
     }
 
@@ -176,7 +177,8 @@ class AuthenticationTokensTable extends Table
      *
      * @param $tokenId
      */
-    public function setInactive($tokenId) {
+    public function setInactive($tokenId)
+    {
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
             ->first();

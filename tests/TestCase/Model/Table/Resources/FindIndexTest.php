@@ -115,8 +115,9 @@ class FindIndexTest extends AppTestCase
         $resources = $this->Resources->findIndex($userId, $options)->all();
 
         // Check that the result contain only the expected favorite resources.
-        $favoriteResourcesIds = $resources->reduce(function($result, $row) {
+        $favoriteResourcesIds = $resources->reduce(function ($result, $row) {
             $result[] = $row->id;
+
             return $result;
         }, []);
         $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
@@ -130,8 +131,9 @@ class FindIndexTest extends AppTestCase
         $resources = $this->Resources->findIndex($userId, $options)->all();
 
         // Check that the result contain only the expected favorite resources.
-        $favoriteResourcesIds = $resources->reduce(function($result, $row) {
+        $favoriteResourcesIds = $resources->reduce(function ($result, $row) {
             $result[] = $row->id;
+
             return $result;
         }, []);
         $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
@@ -142,17 +144,21 @@ class FindIndexTest extends AppTestCase
     {
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $expectedResourcesIds = array_reduce(array_keys($usersExpectedPermissions), function($result, $key) use($usersExpectedPermissions) {
-                if ($usersExpectedPermissions[$key] == 0) return $result;
+            $expectedResourcesIds = array_reduce(array_keys($usersExpectedPermissions), function ($result, $key) use ($usersExpectedPermissions) {
+                if ($usersExpectedPermissions[$key] == 0) {
+                    return $result;
+                }
                 $result[] = Common::uuid("resource.id.$key");
+
                 return $result;
             }, []);
 
             // Find all the resources for the current user.
             $userId = Common::uuid("user.id.$userAlias");
             $resources = $this->Resources->findIndex($userId)->all();
-            $resourcesIds = $resources->reduce(function($result, $row) {
+            $resourcesIds = $resources->reduce(function ($result, $row) {
                 $result[] = $row->id;
+
                 return $result;
             }, []);
 

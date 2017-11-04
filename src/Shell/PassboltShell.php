@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 namespace App\Shell;
+
 use App\Shell\AppShell;
 
 class PassboltShell extends AppShell
@@ -37,7 +38,8 @@ class PassboltShell extends AppShell
      *
      * @return void
      */
-    protected function _welcome() {
+    protected function _welcome()
+    {
         $this->out();
         $this->out('     ____                  __          ____  ');
         $this->out('    / __ \____  _____ ____/ /_  ____  / / /_ ');
@@ -67,7 +69,7 @@ class PassboltShell extends AppShell
             'help' => __d('cake_console', 'Check the configuration of the passbolt installation and associated environment.'),
             'parser' => $this->Healthcheck->getOptionParser(),
         ]);
+
         return $parser;
     }
-
 }

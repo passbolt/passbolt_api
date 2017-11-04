@@ -15,8 +15,8 @@
 namespace App\Test\TestCase\Controller\Gpgkeys;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\ORM\TableRegistry;
 use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
 
 class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 {
@@ -36,7 +36,8 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(20, count($this->_responseJsonBody));
     }
 
-    public function testGpgKeysIndexModifiedAfterSuccess() {
+    public function testGpgKeysIndexModifiedAfterSuccess()
+    {
         $Gpgkeys = TableRegistry::get('Gpgkeys');
 
         // Find a key at a given time and modify it

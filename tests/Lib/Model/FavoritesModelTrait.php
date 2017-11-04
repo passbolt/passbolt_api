@@ -15,7 +15,8 @@
 
 namespace App\Test\Lib\Model;
 
-Trait FavoritesModelTrait {
+trait FavoritesModelTrait
+{
     /**
      * Asserts that an object has all the attributes a favorite should have.
      *

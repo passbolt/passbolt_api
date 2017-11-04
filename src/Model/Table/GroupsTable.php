@@ -113,9 +113,13 @@ class GroupsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         // Add create rules.
-        $rules->addCreate($rules->isUnique(['name'],
-            __('The group name provided is already used by another group.')),
-            'group_unique');
+        $rules->addCreate(
+            $rules->isUnique(
+                ['name'],
+                __('The group name provided is already used by another group.')
+            ),
+            'group_unique'
+        );
         $rules->addCreate([$this, 'ruleAtLeastOneAdmin'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
             'message' => __('A group manager must be provided.')
@@ -134,9 +138,10 @@ class GroupsTable extends Table
     public function ruleAtLeastOneAdmin($entity, array $options = [])
     {
         $adminUsers = [];
-        if (isset($entity->groups_users)){
+        if (isset($entity->groups_users)) {
             $adminUsers = Hash::extract($entity->groups_users, '{n}[is_admin=true]');
         }
+
         return !empty($adminUsers);
     }
 

@@ -15,7 +15,8 @@
 
 namespace App\Test\Lib\Model;
 
-Trait SecretsModelTrait {
+trait SecretsModelTrait
+{
     /**
      * Asserts that an object has all the attributes a secret should have.
      *

@@ -75,7 +75,8 @@ class FavoritesAddController extends AppController
      * @param string $foreignId The identifier of the instance to mark as favorite.
      * @return \Cake\Datasource\EntityInterface $favorite favorite entity
      */
-    protected function _buildAndValidateFavorite($foreignId = null) {
+    protected function _buildAndValidateFavorite($foreignId = null)
+    {
         // Build entity and perform basic check.
         $favorite = $this->Favorites->newEntity(
             [

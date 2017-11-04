@@ -37,6 +37,7 @@ class EmailController extends AppController
         } else {
             throw new NotFoundException();
         };
+
         return parent::beforeFilter($event);
     }
 
@@ -48,7 +49,8 @@ class EmailController extends AppController
      * @throws HttpException
      * @return void
      */
-    public function showLastEmail($username) {
+    public function showLastEmail($username)
+    {
         // If username is not an email, throw an error
         if (!Validation::email($username)) {
             throw new HttpException(__('Username not correct'));

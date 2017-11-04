@@ -81,7 +81,7 @@ class FavoritesTable extends Table
             ->notEmpty('user_id');
 
         $validator
-            ->inList('foreign_model', array('Resource'))
+            ->inList('foreign_model', ['Resource'])
             ->requirePresence('foreign_model', 'create')
             ->notEmpty('foreign_model');
 
@@ -121,9 +121,13 @@ class FavoritesTable extends Table
             'userField' => 'user_id',
             'resourceField' => 'foreign_id',
         ]);
-        $rules->addCreate($rules->isUnique(['user_id', 'foreign_id'],
-            __('The resource is already marked as favorite.')),
-            'favorite_unique');
+        $rules->addCreate(
+            $rules->isUnique(
+                ['user_id', 'foreign_id'],
+                __('The resource is already marked as favorite.')
+            ),
+            'favorite_unique'
+        );
 
         // Add delete rules.
         $rules->addDelete([$this, 'ruleIsOwner'], 'is_owner', [
@@ -146,6 +150,7 @@ class FavoritesTable extends Table
         if ($options['Favorites.user_id'] != $entity->user_id) {
             return false;
         }
+
         return true;
     }
 }

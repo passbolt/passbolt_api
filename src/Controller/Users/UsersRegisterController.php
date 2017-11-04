@@ -117,8 +117,10 @@ class UsersRegisterController extends AppController
                 $this->set('errors', $user->getErrors());
                 throw new BadRequestException(__('Could not validate user data.'));
             }
+
             return true;
         }
+
         return false;
     }
 

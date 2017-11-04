@@ -47,13 +47,15 @@ class QueryStringComponent extends Component
      * @param $allowedQueryItems
      * @return array
      */
-    public function get($allowedQueryItems) {
+    public function get($allowedQueryItems)
+    {
         $query = $this->_request->getQueryParams();
         $query = self::rewriteLegacyItems($query);
         $query = self::extractQueryItems($query);
         $query = self::unsetUnwantedQueryItems($query, $allowedQueryItems);
         $query = self::normalizeQueryItems($query);
         self::validateQueryItems($query, $allowedQueryItems);
+
         return $query;
     }
 
@@ -63,7 +65,8 @@ class QueryStringComponent extends Component
      *
      * @param $query
      */
-    static function rewriteLegacyItems($query) {
+    static function rewriteLegacyItems($query)
+    {
         if (isset($query['modified_after'])) {
             $query['filter']['modified-after'] = $query['modified_after'];
             unset($query['modified_after']);
@@ -72,15 +75,17 @@ class QueryStringComponent extends Component
             $query['filter']['keywords'] = $query['keywords'];
             unset($query['keywords']);
         }
+
         return $query;
     }
 
     /**
      * Additional normalization and array tranformations
      */
-    static function normalizeQueryItems($query) {
+    static function normalizeQueryItems($query)
+    {
         // order should always be an array even when one value is provided
-        if(isset($query['order']) && !is_array($query['order'])) {
+        if (isset($query['order']) && !is_array($query['order'])) {
             $query['order'] = [$query['order']];
         }
         // filters with is-* means we are expecting a boolean
@@ -98,6 +103,7 @@ class QueryStringComponent extends Component
                 $query['contain'][$containName] = self::normalizeBoolean($contain);
             }
         }
+
         return $query;
     }
 
@@ -106,13 +112,14 @@ class QueryStringComponent extends Component
      *
      * @return array $query the sanitized query
      */
-    static function unsetUnwantedQueryItems($query, $allowedQueryItems) {
+    static function unsetUnwantedQueryItems($query, $allowedQueryItems)
+    {
         foreach ($query as $key => $items) {
-            if(!isset($allowedQueryItems[$key])) {
+            if (!isset($allowedQueryItems[$key])) {
                 unset($query[$key]);
             } else {
-                if(is_array($items)) {
-                    foreach($items as $subkey => $subItem) {
+                if (is_array($items)) {
+                    foreach ($items as $subkey => $subItem) {
                         if (is_string($subkey) && !in_array($subkey, $allowedQueryItems[$key])) {
                             unset($query[$key][$subkey]);
                         }
@@ -120,6 +127,7 @@ class QueryStringComponent extends Component
                 }
             }
         }
+
         return $query;
     }
 
@@ -130,20 +138,22 @@ class QueryStringComponent extends Component
      *
      * @return array $query the sanitized query
      */
-    static function extractQueryItems($query) {
+    static function extractQueryItems($query)
+    {
         foreach ($query as $key => $items) {
-            if(is_array($items)) {
-                foreach($items as $subKey => $subItems) {
-                    if(substr($subKey, -1) === 's') {
+            if (is_array($items)) {
+                foreach ($items as $subKey => $subItems) {
+                    if (substr($subKey, -1) === 's') {
                         $query[$key][$subKey] = explode(',', $query[$key][$subKey]);
                     }
                 }
-            } else if(is_string($items)) {
-                if(strpos($items, ',')) {
+            } elseif (is_string($items)) {
+                if (strpos($items, ',')) {
                     $query[$key] = explode(',', $query[$key]);
                 }
             }
         }
+
         return $query;
     }
 
@@ -155,8 +165,9 @@ class QueryStringComponent extends Component
      * @throws BadRequestException if a validation error occurs
      * @return bool true if validate
      */
-    static function validateQueryItems($query, $allowedQueryItems) {
-        foreach($query as $key => $parameters) {
+    static function validateQueryItems($query, $allowedQueryItems)
+    {
+        foreach ($query as $key => $parameters) {
             switch ($key) {
                 case 'filter':
                     try {
@@ -181,6 +192,7 @@ class QueryStringComponent extends Component
                     break;
             }
         }
+
         return true;
     }
 
@@ -193,21 +205,22 @@ class QueryStringComponent extends Component
      * @throws Exception if one of the has-managers or has-users values is not a valid uuid
      * @return true if valid
      */
-    static function validateFilters ($filters = null) {
+    static function validateFilters($filters = null)
+    {
         if (isset($filters)) {
             foreach ($filters as $filter => $values) {
                 switch ($filter) {
                     case 'has-managers':
                     case 'has-users':
-                        foreach($values as $i => $userId) {
-                            if(!Validation::uuid($userId)) {
+                        foreach ($values as $i => $userId) {
+                            if (!Validation::uuid($userId)) {
                                 throw new Exception(__('"{0}" is not a valid user id for filter {1}.', $userId, $filter));
                             }
                         }
                         break;
                     case 'is-shared-with-group':
                         $groupId = $values;
-                        if(!Validation::uuid($groupId)) {
+                        if (!Validation::uuid($groupId)) {
                             throw new Exception(__('"{0}" is not a valid group id for filter {1}.', $groupId, $filter));
                         }
                         break;
@@ -227,6 +240,7 @@ class QueryStringComponent extends Component
                 }
             }
         }
+
         return true;
     }
 
@@ -238,18 +252,20 @@ class QueryStringComponent extends Component
      * @throws Exception if the group name does not validate
      * @return bool true if valid
      */
-    static function validateOrders($orders = null, $allowedQueryItems = null) {
+    static function validateOrders($orders = null, $allowedQueryItems = null)
+    {
         if (isset($orders)) {
             foreach ($orders as $i => $orderName) {
                 if (!self::isOrder($orderName)) {
                     throw new Exception(__('"{0}" is not a valid order.', $orderName));
                 }
                 $order = explode(' ', $orderName); // remove ASC DESC if any
-                if(!in_array($order[0], $allowedQueryItems['order'])) {
+                if (!in_array($order[0], $allowedQueryItems['order'])) {
                     throw new Exception(__('"{0}" is not a valid order.', $orderName));
                 }
             }
         }
+
         return true;
     }
 
@@ -260,7 +276,8 @@ class QueryStringComponent extends Component
      * @throws Exception if the contain value is not 0 or 1
      * @return bool true if valid
      */
-    static function validateContain($contain = null) {
+    static function validateContain($contain = null)
+    {
         if (isset($contain)) {
             foreach ($contain as $item => $value) {
                 if (!is_bool($value)) {
@@ -268,6 +285,7 @@ class QueryStringComponent extends Component
                 }
             }
         }
+
         return true;
     }
 
@@ -279,8 +297,9 @@ class QueryStringComponent extends Component
      * @param string $str the string to normalize
      * @return boolean|string if original string is not bool
      */
-    public static function normalizeBoolean($str) {
-        if((strtolower($str) === 'true' || $str === '1')) {
+    public static function normalizeBoolean($str)
+    {
+        if ((strtolower($str) === 'true' || $str === '1')) {
             return true;
         } elseif ((strtolower($str) === 'false' || $str === '0')) {
             return false;
@@ -295,8 +314,9 @@ class QueryStringComponent extends Component
      * @param string $timestamp unixtimestamp
      * @return bool true if unix timestamp
      */
-    public static function isTimestamp($timestamp) {
-        return ((string) (int) $timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
+    public static function isTimestamp($timestamp)
+    {
+        return ((string)(int)$timestamp === $timestamp) && ($timestamp <= PHP_INT_MAX) && ($timestamp >= ~PHP_INT_MAX);
     }
 
     /**
@@ -305,8 +325,10 @@ class QueryStringComponent extends Component
      * @param string $orderName
      * @return bool true if unix timestamp
      */
-    public static function isOrder($orderName) {
+    public static function isOrder($orderName)
+    {
         $orderRegex = '/^[a-zA-Z]+(\.){1}([a-z_]+){1}(( ){1}(ASC|DESC){1}){0,1}$/';
+
         return (preg_match($orderRegex, $orderName) !== 1);
     }
 }

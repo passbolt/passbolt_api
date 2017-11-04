@@ -84,6 +84,7 @@ class UserComponent extends Component
                 $this->_userAgent['Browser']['version'] = 'invalid';
             }
         }
+
         return $this->_userAgent;
     }
 }

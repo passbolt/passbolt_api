@@ -179,7 +179,6 @@ class SaveTest extends AppTestCase
         $this->assertNotNull($errors['groups_users'][1]['user_id']['user_exists']);
     }
 
-
     public function testErrorHasManyGroupsUsersRuleUserIsNotSoftDeleted()
     {
         $groupName = 'UnitTest Group';

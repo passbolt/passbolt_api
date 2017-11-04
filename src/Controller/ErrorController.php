@@ -66,6 +66,5 @@ class ErrorController extends AppController
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');
-
     }
 }

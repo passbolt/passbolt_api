@@ -25,12 +25,11 @@ use Cake\TestSuite\TestCase;
 
 class AppTestCase extends TestCase
 {
+    use ArrayTrait;
     use FavoritesModelTrait;
     use GroupsModelTrait;
+    use ObjectTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
-
-    use ArrayTrait;
-    use ObjectTrait;
 }

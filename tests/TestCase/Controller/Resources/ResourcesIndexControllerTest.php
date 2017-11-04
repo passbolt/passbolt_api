@@ -77,7 +77,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody[0]);
         // A resource marked as favorite contains the favorite data.
         $favoriteResourceId = Common::uuid('resource.id.apache');
-        $favoriteResource = current(array_filter($this->_responseJsonBody, function($resource) use ($favoriteResourceId) {
+        $favoriteResource = current(array_filter($this->_responseJsonBody, function ($resource) use ($favoriteResourceId) {
             return $resource->id == $favoriteResourceId;
         }));
         $this->assertObjectHasAttribute('favorite', $favoriteResource);
@@ -108,7 +108,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody[0]);
         // A resource marked as favorite contains the favorite data.
         $favoriteResourceId = Common::uuid('resource.id.apache');
-        $favoriteResource = current(array_filter($this->_responseJsonBody, function($resource) use ($favoriteResourceId) {
+        $favoriteResource = current(array_filter($this->_responseJsonBody, function ($resource) use ($favoriteResourceId) {
             return $resource->Resource->id == $favoriteResourceId;
         }));
         $this->assertObjectHasAttribute('Favorite', $favoriteResource);

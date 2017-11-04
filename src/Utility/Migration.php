@@ -18,22 +18,25 @@ use Cake\Core\Configure;
 use Cake\Http\Client;
 use Migrations\Migrations;
 
-class Migration {
+class Migration
+{
     protected $_remoteTagName;
 
     /**
      * Check if the app or plugins need a database migration
      *
-     * @return boolean
+     * @return bool
      */
-    public static function needMigration() {
+    public static function needMigration()
+    {
         $Migrations = new Migrations();
         $migrations = $Migrations->status();
-        foreach($migrations as $i => $migration) {
+        foreach ($migrations as $i => $migration) {
             if ($migration['status'] === 'down') {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -42,9 +45,11 @@ class Migration {
      *
      * @return bool true if installed version is the latest
      */
-    public static function isLatestVersion() {
+    public static function isLatestVersion()
+    {
         $remoteVersion = ltrim(Migration::getLatestTagName(), 'v');
         $localVersion = ltrim(Configure::read('passbolt.version'), 'v');
+
         return version_compare($localVersion, $remoteVersion, ">=");
     }
 
@@ -54,9 +59,10 @@ class Migration {
      * @throws Exception if the github repository is not reachable
      * @return string tag name such as 'v1.0.1'
      */
-    public static function getLatestTagName() {
+    public static function getLatestTagName()
+    {
         $remoteTagName = Configure::read('passbolt.remote.version');
-        if(is_null($remoteTagName)) {
+        if (is_null($remoteTagName)) {
             $url = 'https://api.github.com/repos/passbolt/passbolt_api/tags';
             try {
                 $HttpSocket = new Client();
@@ -71,6 +77,7 @@ class Migration {
             $remoteTagName = $tags[0]->name;
             Configure::write('passbolt.remote.version', $remoteTagName);
         }
+
         return $remoteTagName;
     }
 }

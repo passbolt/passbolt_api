@@ -15,7 +15,8 @@
 
 namespace App\Test\Lib\Model;
 
-Trait ResourcesModelTrait {
+trait ResourcesModelTrait
+{
     /**
      * Asserts that an object has all the attributes a resource should have.
      *

@@ -32,7 +32,8 @@ class AuthVerifyControllerTest extends IntegrationTestCase
     /**
      * Test error 500 if config is invalid
      */
-    public function testVerifyBadConfig() {
+    public function testVerifyBadConfig()
+    {
         Configure::write('passbolt.gpg.serverKey.public', 'wrong');
         $this->get('/auth/verify.json');
         $this->assertResponseFailure();
@@ -44,7 +45,8 @@ class AuthVerifyControllerTest extends IntegrationTestCase
     /**
      * Test that the passbolt instance public keys is available in the address provided in the headers
      */
-    public function testGetServerPublicKey() {
+    public function testGetServerPublicKey()
+    {
         // get the server public key
         $this->get('/auth/login');
         $verifyUrl = $this->_response->getHeader('X-GPGAuth-Pubkey-URL')[0];

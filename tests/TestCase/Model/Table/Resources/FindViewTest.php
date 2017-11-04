@@ -47,7 +47,7 @@ class FindViewTest extends AppTestCase
     public function testSuccess()
     {
         $userId = Common::uuid('user.id.ada');
-        $resourceId =  Common::uuid('resource.id.apache');
+        $resourceId = Common::uuid('resource.id.apache');
         $resources = $this->Resources->findView($userId, $resourceId);
 
         // Expected fields.
@@ -69,7 +69,7 @@ class FindViewTest extends AppTestCase
             foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
                 $resourceId = Common::uuid("resource.id.$resourceAlias");
                 $resource = $this->Resources->findView($userId, $resourceId)->first();
-                if ($permissionType  == 0) {
+                if ($permissionType == 0) {
                     $this->assertNull($resource);
                 } else {
                     $this->assertNotNull($resource);

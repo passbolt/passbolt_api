@@ -16,15 +16,14 @@ namespace App\Utility;
 
 use App\Model\Entity\Role;
 use Cake\Cache\Cache;
-use Cake\Datasource\ConnectionManager;
 use Cake\Core\Configure;
-use Cake\Http\Client;
 use Cake\Core\Exception\Exception;
-use Cake\Validation\Validation;
-use Cake\ORM\TableRegistry;
 use Cake\Database\Exception as DatabaseException;
 use Cake\Database\Exception\MissingConnectionException;
-//App::uses('Migration', 'Lib/Migration');
+use Cake\Datasource\ConnectionManager;
+use Cake\Http\Client;
+use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 
 class Healthchecks
 {
@@ -33,7 +32,7 @@ class Healthchecks
      *
      * @return array
      */
-    static public function all()
+    public static function all()
     {
         $checks = [];
         $checks = array_merge(Healthchecks::environment(), $checks);
@@ -60,7 +59,7 @@ class Healthchecks
      * @return array $checks
      * @access private
      */
-    static public function application()
+    public static function application()
     {
         try {
             $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
@@ -79,6 +78,7 @@ class Healthchecks
         $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', json_encode(Configure::read('passbolt.email.send'))) === 1);
 
         $checks = array_merge(Healthchecks::appUser(), $checks);
+
         return $checks;
     }
 
@@ -89,7 +89,7 @@ class Healthchecks
      * @access private
      * @return array
      */
-    static public function appUser()
+    public static function appUser()
     {
         // no point checking for records if can not connect
         $checks = Healthchecks::database();
@@ -121,7 +121,7 @@ class Healthchecks
      *
      * @return array
      */
-    static public function configFiles()
+    public static function configFiles()
     {
         $files = ['app', 'passbolt'];
         $checks = [];
@@ -141,7 +141,7 @@ class Healthchecks
      *
      * @return array
      */
-    static public function core()
+    public static function core()
     {
         $settings = Cache::getConfig('_cake_core_');
         $checks['core']['cache'] = (!empty($settings));
@@ -187,7 +187,7 @@ class Healthchecks
      *
      * @return array
      */
-    static public function database()
+    public static function database()
     {
         // init results to false by default
         $checks = [];
@@ -216,6 +216,7 @@ class Healthchecks
                     $checks['database']['info'] .= ' ' . $attributes['message'];
                 }
             }
+
             return $checks;
         }
 
@@ -224,9 +225,9 @@ class Healthchecks
             $connection = ConnectionManager::get('default');
             $tables = $connection->execute('show tables')->fetchAll('assoc');
 
-            if (isset($tables) && sizeof($tables)) {
-                $checks['database']['tablesCount'] = (sizeof($tables) > 0);
-                $checks['database']['info']['tablesCount'] = sizeof($tables);
+            if (isset($tables) && count($tables)) {
+                $checks['database']['tablesCount'] = (count($tables) > 0);
+                $checks['database']['info']['tablesCount'] = count($tables);
             }
         } catch (DatabaseException $connectionError) {
             return $checks;
@@ -253,13 +254,14 @@ class Healthchecks
      *
      * @return array
      */
-    static public function environment()
+    public static function environment()
     {
         $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '5.6.0', '>='));
         $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
         $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');
         $checks['environment']['logWritable'] = is_writable(LOGS);
+
         return $checks;
     }
 
@@ -269,7 +271,7 @@ class Healthchecks
      * @return array $checks
      * @access private
      */
-    static public function gpg()
+    public static function gpg()
     {
         // Check gpg php module is installed and enabled
         $checks['gpg']['lib'] = (class_exists('gnupg'));
@@ -373,7 +375,7 @@ class Healthchecks
      * @return array
      * @access private
      */
-    static public function ssl()
+    public static function ssl()
     {
         $checks['ssl'] = [
             'peerValid' => false,
@@ -399,6 +401,7 @@ class Healthchecks
             $checks['ssl']['peerValid'] = $response->isOk();
         } catch (Exception $e) {
             $checks['ssl']['info'] = $e->getMessage();
+
             return $checks;
         }
 
@@ -413,6 +416,7 @@ class Healthchecks
             $checks['ssl']['hostValid'] = $response->isOk();
         } catch (Exception $e) {
             $checks['ssl']['info'] = $e->getMessage();
+
             return $checks;
         }
 
@@ -435,13 +439,14 @@ class Healthchecks
     /**
      * Check that a directory and its content are writable
      *
-     * @param $path
-     * @return boolean
+     * @param string $path the directory path
+     * @return bool
      */
-    static private function _checkRecursiveDirectoryWritable($path)
+    private static function _checkRecursiveDirectoryWritable($path)
     {
         $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST
+            new \RecursiveDirectoryIterator($path),
+            \RecursiveIteratorIterator::SELF_FIRST
         );
         foreach ($iterator as $name => $fileInfo) {
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {

@@ -107,7 +107,6 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->markTestIncomplete();
     }
 
-
     public function testAddRuleValidationErrorHasManyGroupsUsersRuleUserExists()
     {
         $this->authenticateAs('admin', Role::ADMIN);

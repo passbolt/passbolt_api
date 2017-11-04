@@ -97,7 +97,8 @@ class EmailsListener implements EventListenerInterface
      * @param $template
      * @return void
      */
-    protected function _send($to, $subject, $data, $template) {
+    protected function _send($to, $subject, $data, $template)
+    {
         $options = [
             'template' => $template,
             'subject' => $subject,

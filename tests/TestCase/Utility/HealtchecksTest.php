@@ -20,7 +20,7 @@ use App\Utility\Healthchecks;
 class HealthchecksTest extends AppIntegrationTestCase
 {
 
-    function testHealthcheckApplication()
+    public function testHealthcheckApplication()
     {
         $check = Healthchecks::application();
         $attributes = [
@@ -30,42 +30,42 @@ class HealthchecksTest extends AppIntegrationTestCase
         $this->assertArrayHasAttributes($attributes, $check['application']);
     }
 
-    function testHealthcheckAppUser()
+    public function testHealthcheckAppUser()
     {
         $check = Healthchecks::appUser();
         $attributes = ['adminCount'];
         $this->assertArrayHasAttributes($attributes, $check['application']);
     }
 
-    function testHealthcheckConfigFiles()
+    public function testHealthcheckConfigFiles()
     {
         $check = Healthchecks::configFiles();
         $attributes = ['app', 'passbolt'];
         $this->assertArrayHasAttributes($attributes, $check['configFile']);
     }
 
-    function testHealthcheckCore()
+    public function testHealthcheckCore()
     {
         $check = Healthchecks::core();
         $attributes = ['cache', 'debugDisabled', 'salt', 'fullBaseUrl', 'validFullBaseUrl', 'fullBaseUrlReachable'];
         $this->assertArrayHasAttributes($attributes, $check['core']);
     }
 
-    function testDatabase()
+    public function testDatabase()
     {
         $check = Healthchecks::database();
         $attributes = ['connect', 'supportedBackend', 'tablesCount', 'defaultContent'];
         $this->assertArrayHasAttributes($attributes, $check['database']);
     }
 
-    function testHealthcheckEnvironment()
+    public function testHealthcheckEnvironment()
     {
         $check = Healthchecks::environment();
         $attributes = ['phpVersion', 'pcre', 'tmpWritable', 'imgPublicWritable'];
         $this->assertArrayHasAttributes($attributes, $check['environment']);
     }
 
-    function testHealthcheckGpg()
+    public function testHealthcheckGpg()
     {
         $check = Healthchecks::gpg();
         $attributes = [
@@ -76,7 +76,7 @@ class HealthchecksTest extends AppIntegrationTestCase
         $this->assertArrayHasAttributes($attributes, $check['gpg']);
     }
 
-    function testSsl()
+    public function testSsl()
     {
         $check = Healthchecks::ssl();
         $attributes = ['peerValid', 'hostValid', 'notSelfSigned'];

@@ -32,6 +32,7 @@ class HealthcheckIndexController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow(['index']);
+
         return parent::beforeFilter($event);
     }
 
@@ -42,7 +43,8 @@ class HealthcheckIndexController extends AppController
      *
      * @return void
      */
-    public function index() {
+    public function index()
+    {
         // Allow access only in debug mode or if logged in as admin
         if (Configure::read('debug') == 0) {
             if ($this->User->role() != Role::ADMIN) {
@@ -63,8 +65,10 @@ class HealthcheckIndexController extends AppController
      * @access private
      * @return bool
      */
-    private function __webChecks() {
+    private function __webChecks()
+    {
         $checks['ssl']['is'] = $this->request->is('ssl');
+
         return $checks;
     }
 }

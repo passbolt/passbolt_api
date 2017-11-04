@@ -75,7 +75,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         }
     }
 
-
     public function testRecoverPostSuccess()
     {
         foreach ($this->successes as $case => $data) {

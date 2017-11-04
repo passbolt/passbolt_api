@@ -17,8 +17,8 @@ namespace App\Test\TestCase\Controller\Auth;
 use App\Utility\Common;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\Validation\Validation;
 use Cake\TestSuite\IntegrationTestCase;
+use Cake\Validation\Validation;
 use PassboltTestData\Shell\Task\Base\GpgkeysDataTask;
 
 class AuthLoginControllerTest extends IntegrationTestCase
@@ -45,7 +45,8 @@ class AuthLoginControllerTest extends IntegrationTestCase
      * Test error 500 if the GnuPG fingerprint config for the server is missing.
      * It can happen if a sysop overrides the GnuPG config for the server post installation.
      */
-    public function testLoginServerKeyFingerprintMissing() {
+    public function testLoginServerKeyFingerprintMissing()
+    {
         Configure::delete('passbolt.gpg.serverKey.fingerprint');
         $this->post('/auth/login');
         $this->assertResponseFailure();
@@ -60,7 +61,8 @@ class AuthLoginControllerTest extends IntegrationTestCase
      * Test error 500 if the GnuPG fingerprint config for the server is invalid.
      * It can happen if a sysop changed the server key fingerprint without loading this key in the gpg keyring post installation.
      */
-    public function testLoginBadServerKeyFingerprint() {
+    public function testLoginBadServerKeyFingerprint()
+    {
         $fingerprint = '0000000000000000000000000000000000000000';
         Configure::write('passbolt.gpg.serverKey.fingerprint', $fingerprint);
         $this->post('/auth/login');
@@ -75,20 +77,22 @@ class AuthLoginControllerTest extends IntegrationTestCase
     /**
      * Check that GPGAuth headers are set everywhere
      */
-    public function testGetHeaders() {
+    public function testGetHeaders()
+    {
         $this->get('/auth/login');
         $this->assertHeader('X-GPGAuth-Version', '1.3.0');
-        $this->assertHeader('X-GPGAuth-Verify-URL','/auth/verify');
-        $this->assertHeader('X-GPGAuth-Pubkey-URL','/auth/verify.json');
-        $this->assertHeader('X-GPGAuth-Login-URL','/auth/login');
-        $this->assertHeader('X-GPGAuth-Logout-URL','/auth/logout');
+        $this->assertHeader('X-GPGAuth-Verify-URL', '/auth/verify');
+        $this->assertHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json');
+        $this->assertHeader('X-GPGAuth-Login-URL', '/auth/login');
+        $this->assertHeader('X-GPGAuth-Logout-URL', '/auth/logout');
     }
 
     /**
      * Check that GPGAuth headers are set everywhere
      */
-    public function testGetHeadersPost() {
-        $this->post('/auth/login',[
+    public function testGetHeadersPost()
+    {
+        $this->post('/auth/login', [
             'data' => [
                 'gpg_auth' => [
                     'keyid' => 'testid'
@@ -101,9 +105,10 @@ class AuthLoginControllerTest extends IntegrationTestCase
     /**
      * Test authentication with wrong user key fingerprint
      */
-    public function testAllStagesFingerprint() {
+    public function testAllStagesFingerprint()
+    {
         $this->_gpgSetup(); // add ada's keys
-        $fix = array(
+        $fix = [
             '' => false, // wrong empty
             'XXX' => false, // wrong format
             '333788B5464B797FDF10A98F2FE96B47C7FF421B' => false, // wrong does not exist
@@ -113,7 +118,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
             "333788B5464B797FDF10A98F2FE96'47C7FF41AZ" => false, // wrong format
             strtoupper($this->keyid) => true, // right format uppercase ada public
             strtolower($this->keyid) => true, // right format lowercase
-        );
+        ];
 
         foreach ($fix as $keyid => $expectSuccess) {
             $this->post('/auth/login', [
@@ -145,11 +150,12 @@ class AuthLoginControllerTest extends IntegrationTestCase
     /**
      * Stage 0. Verify server key
      */
-    public function testStage0MessageFormat() {
+    public function testStage0MessageFormat()
+    {
         $this->_gpgSetup();
         $uuid = Common::uuid();
 
-        $fix = array(
+        $fix = [
             //'' => false, // empty
             'XXX' => false, // wrong format
             'gpgauthv1.2.0,32|' . $uuid . '|gpgauthv1.3.0' => false, // wrong delimiter
@@ -161,7 +167,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
             'gpgauthv1.3.0|0|' . $uuid . $uuid . '|gpgauthv1.3.0' => false, // wrong length 4
             'gpgauthv1.3.0|32|' . $uuid . '|gpgauthv1.3.0|x' => false, // wrong format
             'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0' => true // right
-        );
+        ];
 
         $this->_gpg->addencryptkey($this->keyid);
         $this->_gpg->addsignkey($this->keyid);
@@ -191,18 +197,20 @@ class AuthLoginControllerTest extends IntegrationTestCase
                 );
             } else {
                 $this->assertTrue(isset($headers['X-GPGAuth-Verify-Response']), 'The verify response header should be set for ' . $token);
-                $this->assertEquals($headers['X-GPGAuth-Verify-Response'], $token,
+                $this->assertEquals(
+                    $headers['X-GPGAuth-Verify-Response'],
+                    $token,
                     'The verify response header should match the original token. It is ' . $headers['X-GPGAuth-Verify-Response'] . ' instead of ' . $token
                 );
             }
         }
     }
 
-
     /**
      * Stage 1. Authenticate user
      */
-    public function testStage1UserToken() {
+    public function testStage1UserToken()
+    {
         $this->_gpgSetup();
         $this->post('/auth/login', [
             'data' => [
@@ -233,7 +241,8 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertEquals(
             strtoupper($info[0]['fingerprint']),
             strtoupper(Configure::read('passbolt.gpg.serverKey.fingerprint')),
-            'Server signature is not matching known fingerprint');
+            'Server signature is not matching known fingerprint'
+        );
 
         // Decrypt and check if the token is in the right format
         $info = explode('|', $plaintext);
@@ -272,7 +281,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertEquals($headers['X-GPGAuth-Progress'], 'complete', 'The progress indicator should be set to complete');
 
         // Authentication token should be disabled at that stage
-        $isValid = $AuthToken->isValid($uuid,Common::uuid('user.id.ada'));
+        $isValid = $AuthToken->isValid($uuid, Common::uuid('user.id.ada'));
         $this->assertFalse($isValid, 'There should not be a valid auth token');
     }
 
@@ -282,8 +291,8 @@ class AuthLoginControllerTest extends IntegrationTestCase
      * Setup GPG and import the keys to be used in the tests
      * @param string $name ada by default
      */
-    protected function _gpgSetup() {
-
+    protected function _gpgSetup()
+    {
         // Make sure the keys are in the keyring
         // if needed we add them for later use in the tests
         $this->_gpg = new \gnupg();
@@ -295,12 +304,14 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->_gpg->import(GpgkeysDataTask::$testKeysPath . 'ada_private_nopassphrase.key');
     }
 
-    protected function getHeaders() {
+    protected function getHeaders()
+    {
         $headers = $this->_response->getHeaders();
         $final = [];
         foreach ($headers as $key => $header) {
             $final[$key] = $header[0];
         }
+
         return $final;
     }
 }

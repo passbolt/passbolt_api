@@ -49,7 +49,7 @@ class HasAccessTest extends AppTestCase
             foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
                 $resourceId = Common::uuid("resource.id.$resourceAlias");
                 $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
-                if ($permissionType  == 0) {
+                if ($permissionType == 0) {
                     $this->assertFalse($hasAccess);
                 } else {
                     $this->assertTrue($hasAccess);

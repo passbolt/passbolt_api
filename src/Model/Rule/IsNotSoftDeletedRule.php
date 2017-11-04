@@ -37,6 +37,7 @@ class IsNotSoftDeletedRule
             $Table = TableRegistry::get($options['table']);
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
+
             return $lookupEntity->deleted !== true;
         } catch (\Exception $e) {
         }

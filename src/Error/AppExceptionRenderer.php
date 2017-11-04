@@ -31,6 +31,7 @@ class AppExceptionRenderer extends ExceptionRenderer
         if (method_exists($this->error, 'getBody')) {
             $this->controller->set(['body' => $this->error->getBody()]);
         }
+
         return parent::render();
     }
 }

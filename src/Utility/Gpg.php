@@ -34,7 +34,8 @@ use \OpenPGP as OpenPGP;
  *  So for all encryption and decryption operations, we will prefer Php Gnupg.
  *
  */
-class Gpg {
+class Gpg
+{
 
     /**
      * Encryption key.
@@ -76,7 +77,8 @@ class Gpg {
      *
      * @throws Exception
      */
-    public function __construct() {
+    public function __construct()
+    {
         if (!extension_loaded('gnupg')) {
             throw new Exception('PHP Gnupg library is not installed.');
         }
@@ -91,7 +93,8 @@ class Gpg {
      * @return bool
      * @throws Exception
      */
-    public function setEncryptKey($armoredKey) {
+    public function setEncryptKey($armoredKey)
+    {
         // Get the key info.
         $this->encryptKeyInfo = $this->getKeyInfo($armoredKey);
 
@@ -111,7 +114,8 @@ class Gpg {
      * @return bool
      * @throws Exception
      */
-    public function setDecryptKey($armoredKey) {
+    public function setDecryptKey($armoredKey)
+    {
         // Get the key info.
         $this->decryptKeyInfo = $this->getKeyInfo($armoredKey);
 
@@ -131,7 +135,8 @@ class Gpg {
      * @return bool
      * @throws Exception
      */
-    public function setSignKey($armoredKey) {
+    public function setSignKey($armoredKey)
+    {
         // Get the key info.
         $this->signKeyInfo = $this->getKeyInfo($armoredKey);
 
@@ -151,7 +156,8 @@ class Gpg {
      * @return mixed
      * @throws Exception
      */
-    public function getKeyMarker($armoredKey) {
+    public function getKeyMarker($armoredKey)
+    {
         $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armoredKey, $values);
         if (!$isMarker || !isset($values[2])) {
             throw new Exception('No marker found in the key.');
@@ -169,7 +175,8 @@ class Gpg {
      * @param string $armoredKey ASCII armored key data
      * @return bool true if valid, false otherwise
      */
-    public function isValidKey($armoredKey) {
+    public function isValidKey($armoredKey)
+    {
         // First, we try to get the marker of the key.
         try {
             $marker = $this->getKeyMarker($armoredKey);
@@ -209,7 +216,8 @@ class Gpg {
      * @return array as described above
      * @throws Exception
      */
-    public function getKeyInfo($armoredKey) {
+    public function getKeyInfo($armoredKey)
+    {
         if ($this->isValidKey($armoredKey) === false) {
             throw new Exception('Invalid key.');
         }
@@ -274,7 +282,8 @@ class Gpg {
      * @param string $fingerprint key fingerpint
      * @return mixed
      */
-    public function getKeyInfoFromKeyring($fingerprint) {
+    public function getKeyInfoFromKeyring($fingerprint)
+    {
         // Return info read from the keyring.
         return $this->_gpg->keyinfo($fingerprint);
     }
@@ -286,7 +295,8 @@ class Gpg {
      * @return string fingerprint of the key
      * @throws Exception
      */
-    public function importKeyIntoKeyring($armoredKey) {
+    public function importKeyIntoKeyring($armoredKey)
+    {
         $import = $this->_gpg->import($armoredKey);
         if (!is_array($import)) {
             throw new Exception('Could not import the key.');
@@ -302,7 +312,8 @@ class Gpg {
      * @throws Exception
      * @return void
      */
-    public function removeKeyFromKeyring($fingerprint) {
+    public function removeKeyFromKeyring($fingerprint)
+    {
         $deleting = $this->_gpg->deletekey($fingerprint, true);
         if (!$deleting) {
             throw new Exception('Could not delete the key.');
@@ -317,7 +328,8 @@ class Gpg {
      * @return mixed encrypted text
      * @throws Exception
      */
-    public function encrypt($text, $sign = false) {
+    public function encrypt($text, $sign = false)
+    {
         // If no private key is set, throw exception.
         if (empty($this->encryptKeyInfo)) {
             throw new Exception('No public key was added');
@@ -353,11 +365,12 @@ class Gpg {
      *  Warning : keys with passphrase is not currently supported. Leave this argument empty for now.
      *  This is a php gnupg limitation.
      * @param bool $verifySignature should signature be verified
-     * @param array &$signatureInfo signature data (optional)
+     * @param array $signatureInfo signature data (optional)
      * @return mixed decrypted text if success, false if couldn't decrypt.
      * @throws Exception
      */
-    public function decrypt($text, $passphrase = '', $verifySignature = false, &$signatureInfo = []) {
+    public function decrypt($text, $passphrase = '', $verifySignature = false, &$signatureInfo = [])
+    {
         $decrypted = false;
 
         // If no private key is set, throw exception.

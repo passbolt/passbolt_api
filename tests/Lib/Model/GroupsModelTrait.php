@@ -15,7 +15,8 @@
 
 namespace App\Test\Lib\Model;
 
-Trait GroupsModelTrait {
+trait GroupsModelTrait
+{
     /**
      * Asserts that an object has all the attributes a group should have.
      *

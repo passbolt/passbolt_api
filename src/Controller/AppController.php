@@ -21,6 +21,7 @@ use Cake\Controller\Controller;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Text;
 use Cake\Routing\Router;
+
 /**
  * Application Controller
  *
@@ -47,7 +48,6 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->RequestHandler->setConfig('json', ['json_decode', true]);
-
 
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
@@ -131,12 +131,12 @@ class AppController extends Controller
     protected function renderLegacyJson()
     {
         // render a legacy JSON view by default
-        if($this->request->is('json')) {
+        if ($this->request->is('json')) {
             $apiVersion = $this->request->getQuery('api-version');
             if (!isset($apiVersion) || $apiVersion === 'v1') {
                 $this->viewBuilder()->setClassName('LegacyJson');
             }
-        } else if (!Configure::read('debug')) {
+        } elseif (!Configure::read('debug')) {
             $template = $this->viewBuilder()->getTemplate();
             if (!isset($template)) {
                 throw new NotFoundException(__('Page not found.'));
