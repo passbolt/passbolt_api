@@ -33,6 +33,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\User $creator
  * @property \App\Model\Entity\User $modifier
+ * @property \App\Model\Entity\Permission[] $permission
  * @property \App\Model\Entity\Secret[] $secrets
  */
 class Resource extends Entity
@@ -60,6 +61,7 @@ class Resource extends Entity
         // Associated entities
         'creator' => false,
         'modifier' => false,
+        'permission' => false,
         'secrets' => false
     ];
 }

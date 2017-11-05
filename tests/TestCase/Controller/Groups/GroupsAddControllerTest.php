@@ -28,107 +28,136 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
 
-    public function setUp()
-    {
+    public function setUp() {
         parent::setUp();
         $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
         $this->Groups = TableRegistry::get('Groups', $config);
     }
 
-    public function testAddApiV1Success()
-    {
-        $this->authenticateAs('admin', Role::ADMIN);
-        $groupName = 'UnitTest Group';
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $postData = [
-            'Group' => [
-                'name' => $groupName,
-            ],
+    protected function _getDummyPostData($data = []) {
+        $defaultData = [
+            'Group' => ['name' => 'New group name'],
             'GroupUsers' => [
-                [
-                    'GroupUser' => [
-                        'user_id' => $userAId,
-                        'is_admin' => 1,
-                    ],
-                ],
-                [
-                    'GroupUser' => [
-                        'user_id' => $userBId,
-                    ],
-                ],
+                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
+                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
             ],
         ];
-        $this->postJson("/groups.json", $postData);
-        $this->assertSuccess();
+        $data = array_merge($defaultData, $data);
 
-        // Check that the groups and its sub-models are saved as expected.
-        $group = $this->Groups->find()
-            ->contain('GroupsUsers')
-            ->contain('GroupsUsers.Users')
-            ->where(['id' => $this->_responseJsonBody->Group->id])
-            ->first();
-        $this->assertEquals($groupName, $group->name);
-        $this->assertCount(2, $group->groups_users);
-        $groupUserA = Hash::extract($group->groups_users, "{n}[user_id=$userAId][is_admin=true]");
-        $this->assertNotEmpty($groupUserA);
-        $groupUserB = Hash::extract($group->groups_users, "{n}[user_id=$userBId]");
-        $this->assertNotEmpty($groupUserB);
+        return $data;
     }
 
-    public function testAddRuleValidationErrorGroupUnique()
-    {
-        $this->authenticateAs('admin', Role::ADMIN);
-        $groupName = 'Freelancer';
-        $postData = [
-            'Group' => [
-                'name' => $groupName,
+    public function testSuccess() {
+        $success = [
+            'chinese' => [
+                'Group' => ['name' => '私人團體'],
+                'GroupUsers' => [
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                ],
+            ],
+            'slavic' => [
+                'Group' => ['name' => 'Частная группа'],
+                'GroupUsers' => [
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty'), 'is_admin' => 1]],
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.carol')]]
+                ],
+            ],
+            'french' => [
+                'Group' => ['name' => 'Groupe privé'],
+                'GroupUsers' => [
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                ],
+            ],
+            'funny' => [
+                'Group' => ['name' => '😃'],
+                'GroupUsers' => [
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
+                    ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                ],
             ]
         ];
-        $this->postJson("/groups.json", $postData);
-        $this->assertError(400, 'Could not validate group data.');
-        $this->assertNotEmpty($this->_responseJsonBody->Group->name);
-        $this->assertContains('The group name provided is already used by another group.', $this->_responseJsonBody->Group->name);
+
+        foreach ($success as $case => $data) {
+            $this->authenticateAs('admin', Role::ADMIN);
+            $this->postJson('/groups.json', $data);
+            $this->assertResponseSuccess();
+
+            // Check that the groups and its sub-models are saved as expected.
+            $group = $this->Groups->find()
+                ->contain('GroupsUsers')
+                ->contain('GroupsUsers.Users')
+                ->where(['id' => $this->_responseJsonBody->Group->id])
+                ->first();
+            $this->assertEquals($data['Group']['name'], $group->name);
+            $this->assertEquals(false,  $group->deleted);
+            $this->assertCount(count($data['GroupUsers']), $group->groups_users);
+            foreach ($data['GroupUsers'] as $dataGroupUser) {
+                $groupUser = Hash::extract($group->groups_users, "{n}[user_id={$dataGroupUser['GroupUser']['user_id']}]");
+                $this->assertNotEmpty($groupUser);
+                $isAdmin = Hash::get((array) $dataGroupUser, 'GroupUser.is_admin', false);
+                $this->assertEquals($isAdmin, $groupUser[0]->is_admin);
+            }
+        }
     }
 
-    public function testAddRuleValidationErrorAtLeastOneAdmin()
+    public function testValidationErrors()
     {
-        $this->authenticateAs('admin', Role::ADMIN);
-        $groupName = 'UnitTest Group';
-        $postData = [
-            'Group' => [
-                'name' => $groupName,
-            ]
+        $responseCode = 400;
+        $responseMessage = 'Could not validate group data';
+        $errors = [
+            'group name is missing' => [
+                'errorField' => 'Group.name._empty',
+                'errorMessage' => 'This field cannot be left empty',
+                'data' => $this->_getDummyPostData(['Group' => []])
+            ],
+            'group name already exist' => [
+                'errorField' => 'Group.name.group_unique',
+                'errorMessage' => 'The group name provided is already used by another group.',
+                'data' => $this->_getDummyPostData(['Group' => ['name' => 'Freelancer']])
+            ],
+            'group name invalid' => [
+                'errorField' => 'Group.name.utf8Extended',
+                'errorMessage' => 'The provided value is invalid',
+                'data' => $this->_getDummyPostData(['Group' => ['name' => 1234]])
+            ],
+            'at least one group manager' => [
+                'errorField' => 'GroupUsers.at_least_one_admin',
+                'errorMessage' => 'A group manager must be provided.',
+                'data' => $this->_getDummyPostData(['GroupUsers' => [
+                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada')]]
+                ]])
+            ],
+            'nos users provided' => [
+                'errorField' => 'GroupUsers.at_least_one_admin',
+                'errorMessage' => 'A group manager must be provided.',
+                'data' => ['Group' => ['name' => 'New group name']]
+            ],
+            'group user id not valid' => [
+                'errorField' => 'GroupUsers.0.GroupUser.user_id.uuid',
+                'errorMessage' => 'The provided value is invalid',
+                'data' => $this->_getDummyPostData(['GroupUsers' => [
+                    0 => ['GroupUser' => ['user_id' => 'invalid-id']]
+                ]])
+            ],
+            'group user soft deleted' => [
+                'errorField' => 'GroupUsers.0.GroupUser.user_id.user_is_not_soft_deleted',
+                'errorMessage' => 'The user does not exist.',
+                'data' => $this->_getDummyPostData(['GroupUsers' => [
+                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.sofia'), 'is_admin' => true]]
+                ]])
+            ],
         ];
-        $this->postJson("/groups.json", $postData);
-        $this->assertError(400, 'Could not validate group data.');
-        $this->assertEmpty($this->_responseJsonBody);
-        // @TODO For now the App JS checks that there is an admin provided. The API doesn't return any feedbacks on that error.
-        $this->markTestIncomplete();
-    }
 
-    public function testAddRuleValidationErrorHasManyGroupsUsersRuleUserExists()
-    {
-        $this->authenticateAs('admin', Role::ADMIN);
-        $groupName = 'UnitTest Group';
-        $postData = [
-            'Group' => [
-                'name' => $groupName,
-            ],
-            'GroupUsers' => [
-                [
-                    'GroupUser' => [
-                        'user_id' => UuidFactory::uuid(),
-                        'is_admin' => 1,
-                    ],
-                ],
-            ],
-        ];
-        $this->postJson("/groups.json", $postData);
-        $this->assertError(400, 'Could not validate group data.');
-        $this->assertEmpty($this->_responseJsonBody);
-        // @TODO For now the App JS checks that there is an admin provided. The API doesn't return any feedbacks on that error.
-        $this->markTestIncomplete();
+        foreach ($errors as $caseLabel => $case) {
+            $this->authenticateAs('admin', Role::ADMIN);
+            $this->postJson('/groups.json', $case['data']);
+            $this->assertError($responseCode, $responseMessage);
+            $arr = json_decode(json_encode($this->_responseJsonBody), true);
+            $this->assertEquals($case['errorMessage'], Hash::get($arr, $case['errorField']));
+        }
     }
 
     public function testAddErrorNotAdmin()

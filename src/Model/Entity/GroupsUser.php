@@ -28,7 +28,11 @@ class GroupsUser extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'id' => false,
+        'group_id' => false,
+        'user_id' => false,
+        'is_admin' => false,
+        'created' => false,
+        'created_by' => false,
     ];
 }

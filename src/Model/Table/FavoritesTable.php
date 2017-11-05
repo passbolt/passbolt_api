@@ -39,6 +39,14 @@ use Cake\Validation\Validator;
  */
 class FavoritesTable extends Table
 {
+
+    /**
+     * List of allowed foreign models on which Favorites can be plugged.
+     */
+    const ALLOWED_FOREIGN_MODELS = [
+        'Resource',
+    ];
+
     /**
      * Initialize method
      *
@@ -81,7 +89,7 @@ class FavoritesTable extends Table
             ->notEmpty('user_id');
 
         $validator
-            ->inList('foreign_model', ['Resource'])
+            ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS)
             ->requirePresence('foreign_model', 'create')
             ->notEmpty('foreign_model');
 

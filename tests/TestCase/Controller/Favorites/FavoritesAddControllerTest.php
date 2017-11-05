@@ -54,13 +54,20 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The resource id is not valid.');
     }
 
+    public function testAddErrorDoesNotExistResource()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = UuidFactory::uuid();
+        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $this->assertError(404, 'The resource does not exist.');
+    }
+
     public function testAddErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError('400', '');
-        $this->markTestIncomplete('The message should be explicit');
+        $this->assertError('404', 'The resource does not exist.');
     }
 
     public function testAddErrorDoesntExistResource()
@@ -68,8 +75,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid();
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError('400', '');
-        $this->markTestIncomplete('The message should be explicit');
+        $this->assertError('404', 'The resource does not exist.');
     }
 
     public function testAddErrorResourceAccessDenied()
@@ -85,7 +91,15 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.canjs');
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError('400', '');
+        $this->assertError(404, 'The resource does not exist.');
+    }
+
+    public function testAddErrorAlreadyMarkedAsFavorite()
+    {
+        $this->authenticateAs('dame');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $this->assertError(400, 'This record is already marked as favorite.');
     }
 
     public function testAddErrorNotAuthenticated()

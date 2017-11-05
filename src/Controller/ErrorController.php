@@ -63,6 +63,12 @@ class ErrorController extends AppController
             $apiVersion = $this->request->getQuery('api-version');
             if (!isset($apiVersion) || $apiVersion === 'v1') {
                 $this->viewBuilder()->setClassName('LegacyJson');
+            } else {
+                // If the body is a validationException, use the exception errors as body.
+                $body = Hash::get($this->viewVars, 'body', null);
+                if (is_object($body) && get_class($body) === 'App\Error\Exception\ValidationRuleException') {
+                    $this->set('body', $body->getErrors());
+                }
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');

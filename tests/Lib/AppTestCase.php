@@ -17,6 +17,7 @@ namespace App\Test\Lib;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -31,6 +32,7 @@ class AppTestCase extends TestCase
     use CommentsModelTrait;
     use FavoritesModelTrait;
     use GroupsModelTrait;
+    use GroupsUsersModelTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
     use ResourcesModelTrait;

@@ -14,8 +14,30 @@
  */
 namespace App\Test\Lib\Model;
 
-trait FavoritesModelTrait
+use App\Utility\UuidFactory;
+
+Trait FavoritesModelTrait
 {
+
+    /**
+     * Get a dummy favorite with test data.
+     * The comment returned passes a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array Comment data
+     */
+    public static function getDummyFavorite($data = [])
+    {
+        $entityContent = [
+            'user_id' => UuidFactory::uuid('user.id.dame'),
+            'foreign_id' => UuidFactory::uuid('resource.id.bower'),
+            'foreign_model' => 'Resource',
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
     /**
      * Asserts that an object has all the attributes a favorite should have.
      *

@@ -28,8 +28,8 @@ class AppExceptionRenderer extends ExceptionRenderer
      */
     public function render()
     {
-        if (method_exists($this->error, 'getBody')) {
-            $this->controller->set(['body' => $this->error->getBody()]);
+        if (get_class($this->error) === 'App\Error\Exception\ValidationRuleException') {
+            $this->controller->set(['body' => $this->error]);
         }
 
         return parent::render();

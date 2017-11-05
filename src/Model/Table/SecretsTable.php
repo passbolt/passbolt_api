@@ -15,13 +15,17 @@
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query;
+use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Utility\Gpg;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
  * Secrets Model
+ *
+ * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\Secret get($primaryKey, $options = [])
  * @method \App\Model\Entity\Secret newEntity($data = null, array $options = [])
@@ -50,6 +54,9 @@ class SecretsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->belongsTo('Resources');
+        $this->belongsTo('Users');
+
         $this->addBehavior('Timestamp');
     }
 
@@ -66,11 +73,53 @@ class SecretsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('data')
-            ->requirePresence('data', 'create')
-            ->notEmpty('data');
+            ->uuid('resource_id')
+            ->requirePresence('resource_id', 'create')
+            ->notEmpty('resource_id');
+
+        $validator
+            ->uuid('user_id')
+            ->requirePresence('user_id', 'create')
+            ->notEmpty('user_id');
+
+        $validator
+            ->ascii('data', __('The message provided is not in the right format'))
+            ->add('data', 'isValidGpgMessage', [
+                'rule' => [$this, 'isValidGpgMessage'],
+                'message' => __('The message provided is not in the right format')
+            ])
+            ->requirePresence('data', 'create', __('The secret must be provided'))
+            ->notEmpty('data', __('The secret must be provided'));
 
         return $validator;
+    }
+
+    /**
+     * Create resource validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSaveResource(Validator $validator)
+    {
+        $validator = $this->validationDefault($validator);
+
+        // The resource_id is added by cake after the resource is created.
+        $validator->remove('resource_id');
+
+        return $validator;
+    }
+
+    /**
+     * Check true if field is a valid gpg message.
+     *
+     * @param string $check Value to check
+     * @param array $context A key value list of data containing the validation context.
+     * @return bool Success
+     */
+    public function isValidGpgMessage($check, array $context) {
+        $gpg = new Gpg();
+        return $gpg->isValidMessage($check);
     }
 
     /**
@@ -82,6 +131,29 @@ class SecretsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->addCreate($rules->isUnique(['user_id', 'resource_id'],
+            __('A secret already exists for the given user and resource.')),
+            'secret_unique'
+        );
+        $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
+            'errorField' => 'user_id',
+            'message' => __('The user does not exist.')
+        ]);
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
+            'table' => 'Users',
+            'errorField' => 'user_id',
+            'message' => __('The user does not exist.')
+        ]);
+        $rules->addCreate($rules->existsIn(['resource_id'], 'Resources'), 'resource_exists', [
+            'errorField' => 'resource_id',
+            'message' => __('The resource does not exist.')
+        ]);
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
+            'table' => 'Resources',
+            'errorField' => 'resource_id',
+            'message' => __('The resource does not exist.')
+        ]);
+
         return $rules;
     }
 }

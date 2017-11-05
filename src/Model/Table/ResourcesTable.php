@@ -59,24 +59,24 @@ class ResourcesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasOne('Permissions', [
-            'foreignKey' => 'aco_foreign_key'
-        ]);
-        $this->hasMany('Secrets', [
-            'foreignKey' => 'resource_id'
-        ]);
         $this->hasOne('Creator', [
             'className' => 'Users',
             'bindingKey' => 'created_by',
             'foreignKey' => 'id'
+        ]);
+        $this->hasOne('Favorites', [
+            'foreignKey' => 'foreign_id'
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
         ]);
-        $this->hasOne('Favorites', [
-            'foreignKey' => 'foreign_id'
+        $this->hasOne('Permissions', [
+            'foreignKey' => 'aco_foreign_key'
+        ]);
+        $this->hasMany('Secrets', [
+            'foreignKey' => 'resource_id'
         ]);
     }
 
@@ -94,23 +94,28 @@ class ResourcesTable extends Table
 
         $validator
             ->scalar('name')
+            ->utf8Extended('name')
+            ->lengthBetween('name', [3, 64])
             ->requirePresence('name', 'create')
-            ->notEmpty('name')
-            ->utf8Extended('name');
+            ->notEmpty('name');
 
         $validator
             ->scalar('username')
+            ->utf8Extended('username')
+            ->lengthBetween('username', [3, 64])
             ->allowEmpty('username');
 
         $validator
             ->scalar('uri')
-            ->allowEmpty('uri')
-            ->utf8Extended('uri');
+            ->utf8('uri')
+            ->lengthBetween('uri', [3, 255])
+            ->allowEmpty('uri');
 
         $validator
             ->scalar('description')
-            ->allowEmpty('description')
-            ->utf8Extended('description');
+            ->utf8Extended('description')
+            ->lengthBetween('description', [3, 10000])
+            ->allowEmpty('description');
 
         $validator
             ->boolean('deleted')
@@ -127,6 +132,16 @@ class ResourcesTable extends Table
             ->requirePresence('modified_by', 'create')
             ->notEmpty('modified_by');
 
+        // Associated fields
+        $validator
+            ->requirePresence('permission', 'create', __('The permission of the creator must be provided.'))
+            ->notEmpty('permission');
+
+        $validator
+            ->requirePresence('secrets', 'create', __('The secret of the creator must be provided.'))
+            ->notEmpty('secrets', __('The secret of the creator must be provided.'))
+            ->count(1);
+
         return $validator;
     }
 
@@ -139,9 +154,40 @@ class ResourcesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['username']));
+        $rules->addCreate([$this, 'ruleCreatorPermissionProvided'], 'creator_permission_provided', [
+            'errorField' => 'permission',
+            'message' => __('The permission of the creator must be provided.')
+        ]);
+        $rules->addCreate([$this, 'ruleCreatorSecretProvided'], 'creator_secret_provided', [
+            'errorField' => 'secrets',
+            'message' => __('The secret of the creator must be provided.')
+        ]);
 
         return $rules;
+    }
+
+    /**
+     * Validate that the a resource can be created only if the permission of the creator is provided.
+     *
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleCreatorPermissionProvided($entity, array $options = [])
+    {
+        return $entity->permission->aro_foreign_key == $entity->created_by;
+    }
+
+    /**
+     * Validate that the a resource can be created only if the secret of the creator is provided.
+     *
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleCreatorSecretProvided($entity, array $options = [])
+    {
+        return $entity->secrets[0]->user_id == $entity->created_by;
     }
 
     /**
@@ -352,5 +398,21 @@ class ResourcesTable extends Table
                 'Groups.deleted' => 0,
                 'Users.id' => $userId
             ]);
+    }
+
+    /**
+     * Event fired before request data is converted into entities
+     * - On create, set not deleted to false
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (isset($options['validate']) && $options['validate'] === 'default') {
+            $data['deleted'] = false;
+        }
     }
 }

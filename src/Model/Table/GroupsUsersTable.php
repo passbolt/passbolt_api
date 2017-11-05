@@ -67,11 +67,38 @@ class GroupsUsersTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->scalar('id')
+            ->uuid('id')
             ->allowEmpty('id', 'create');
 
         $validator
-            ->boolean('is_admin');
+            ->uuid('group_id')
+            ->requirePresence('group_id', 'create')
+            ->notEmpty('group_id');
+
+        $validator
+            ->uuid('user_id')
+            ->requirePresence('user_id', 'create')
+            ->notEmpty('user_id');
+
+        $validator
+            ->boolean('is_admin')
+            ->allowEmpty('is_admin', 'create');
+
+        return $validator;
+    }
+
+    /**
+     * Create group validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSaveGroup(Validator $validator)
+    {
+        $validator = $this->validationDefault($validator);
+
+        // The group_id is added by cake after the group is created.
+        $validator->remove('group_id');
 
         return $validator;
     }
@@ -85,23 +112,27 @@ class GroupsUsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->addCreate($rules->isUnique(['group_id', 'user_id']), 'group_user_unique', [
+            'errorField' => 'group_id',
+            'message' => __('The user is already member of this group.')
+        ]);
         $rules->addCreate($rules->existsIn(['group_id'], 'Groups'), 'group_exists', [
             'errorField' => 'group_id',
-            'message' => __('The user doesn\'t exist.')
+            'message' => __('The user does not exist.')
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
             'errorField' => 'group_id',
-            'message' => __('The group doesn\'t exist.')
+            'message' => __('The group does not exist.')
         ]);
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',
-            'message' => __('The user doesn\'t exist.')
+            'message' => __('The user does not exist.')
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user doesn\'t exist.')
+            'message' => __('The user does not exist.')
         ]);
 
         return $rules;
