@@ -15,9 +15,22 @@
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
+use Cake\Event\Event;
 
 class AuthLogoutController extends AppController
 {
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->Auth->allow('logoutGet');
+
+        return parent::beforeFilter($event);
+    }
 
     /**
      * User Index action

@@ -1,17 +1,4 @@
 <?php
-/**
- * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
- *
- * Licensed under GNU Affero General Public License version 3 of the or any later version.
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
- * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
- * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
- */
 namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
@@ -54,220 +41,229 @@ class UsersFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '0da907bd-5c57-5acc-ba39-c6ebe091f613',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'jean@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => '1e73e104-d53e-579d-a0c4-e9aeaca76c56',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'lynne@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => '1ebc0060-9274-5451-aa12-ad0f31bc29dd',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'edith@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:34:11',
-            'modified' => '2017-10-09 12:35:11'
-        ],
-        [
-            'id' => '32d29702-85e2-539d-98ac-6abfa7aadf01',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'kathleen@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => '5302c3cb-5d33-53b1-82cd-57df36e13acc',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'ursula@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => '54c6278e-f824-5fda-91ff-3e946b18d994',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'dame@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 10:36:11',
-            'modified' => '2017-10-09 11:36:11'
-        ],
-        [
-            'id' => '610b4c1c-3c08-5451-a163-5b2adba8a5cd',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'sofia@passbolt.com',
-            'active' => true,
-            'deleted' => true,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => '620c8b78-6e75-5fe4-89da-efe1e282a4fd',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'user@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:11',
-            'modified' => '2017-10-09 12:36:11'
-        ],
-        [
-            'id' => '620de627-8f07-5427-9149-e2c43219c5aa',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'grace@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:11',
-            'modified' => '2017-10-09 12:36:11'
-        ],
-        [
-            'id' => '640ebc06-5ec1-5322-a1ae-6120ed2f3a74',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'carol@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-07 12:36:11',
-            'modified' => '2017-10-08 12:36:11'
-        ],
-        [
-            'id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-            'role_id' => '6f02b8d2-e24c-51fe-a452-5a027c26dbef',
-            'username' => 'anonymous@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:11',
-            'modified' => '2017-10-09 12:36:11'
-        ],
-        [
-            'id' => '887422c0-bef6-59a7-bbda-84c253ee0848',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
+            'id' => '1c137bd7-2838-3c3d-a021-d2986d9126f5',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
             'username' => 'frances@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-10-09 12:36:11',
-            'modified' => '2017-10-09 12:36:11'
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
         ],
         [
-            'id' => '8d038399-ecac-55b4-8ad3-b7f0650de2a2',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'orna@passbolt.com',
+            'id' => '1df25f7c-acf6-30fd-abb0-39e6a7462328',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'sofia@passbolt.com',
+            'active' => true,
+            'deleted' => true,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'kathleen@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
         ],
         [
-            'id' => '8d04cf98-716b-5f6d-9fe8-c130f8992646',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'hedy@passbolt.com',
+            'id' => '22e38bf3-6505-34c9-a6aa-55a906f18476',
+            'role_id' => '857760a6-4f9d-3f1b-a292-95b630bcf03f',
+            'username' => 'root@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
         ],
         [
-            'id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'irene@passbolt.com',
+            'id' => '25cb8c02-0973-3c2f-a0f1-41e6f5e06d05',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'carol@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
+            'created' => '2017-11-01 18:17:04',
+            'modified' => '2017-11-02 18:17:04'
         ],
         [
-            'id' => '92f42805-bc0f-58fd-9de6-aab13ed0c28d',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'ruth@passbolt.com',
-            'active' => false,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'wang@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'thelma@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'role_id' => '0d51c3a8-5e67-5e3d-882f-e1868966d817',
-            'username' => 'admin@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:11',
-            'modified' => '2017-10-09 12:36:11'
-        ],
-        [
-            'id' => 'e1ebc592-b90d-5e22-9f40-50e52911673b',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'marlyn@passbolt.com',
-            'active' => true,
-            'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
-        ],
-        [
-            'id' => 'e7fa0375-61df-5dbc-9e42-e0d363bd0ecf',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
+            'id' => '27102e91-6880-3312-a4c5-db00c228820e',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
             'username' => 'nancy@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
         ],
         [
-            'id' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'username' => 'betty@passbolt.com',
+            'id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+            'role_id' => '23d941d5-3676-3443-afdb-aaf2456f3b49',
+            'username' => 'admin@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-09-25 12:36:11',
-            'modified' => '2017-10-02 12:36:11'
+            'created' => '2015-11-03 18:17:04',
+            'modified' => '2016-11-03 18:17:04'
         ],
         [
-            'id' => 'f7e9754a-2f64-5cdd-8ba2-178b33383505',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
+            'id' => '47ad29dc-f0c7-3b9e-aae2-9e657397b60b',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'wang@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => '51925e16-17a8-38f8-a923-6b1f75337d2a',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'ruth@passbolt.com',
+            'active' => false,
+            'deleted' => true,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => '5f924faf-8090-30b0-aed6-aa82c5e580a0',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'hedy@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => '7c7afd29-1b98-3c3e-ae55-adedc333fb4b',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'jean@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => '8a53f107-7ffc-3047-ad08-75effc419d21',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'ursula@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => '917c2b89-d573-3c7c-ac4f-51f519d0164f',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'marlyn@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'irene@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'be77c78c-b767-3290-ae92-d5e5c590fcf9',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
             'username' => 'ping@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-10-09 12:36:12',
-            'modified' => '2017-10-09 12:36:12'
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
         ],
         [
-            'id' => 'f848277c-5398-58f8-a82a-72397af2d450',
-            'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
+            'id' => 'bfb648f5-9f37-343b-a616-7f3704d13d84',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'thelma@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
+            'role_id' => '49aad81e-4f70-3380-a92e-12292597409f',
+            'username' => 'anonymous@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'c6855b6d-6cec-3f2f-ade5-398a8c4a7c03',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'grace@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'c996e4e9-e4c9-310a-a263-178b45b61b3c',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'edith@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:15:04',
+            'modified' => '2017-11-03 18:16:04'
+        ],
+        [
+            'id' => 'cd49eb9e-73a2-3433-a018-6ed993d421e8',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
             'username' => 'ada@passbolt.com',
             'active' => true,
             'deleted' => false,
-            'created' => '2017-08-09 12:36:11',
-            'modified' => '2017-09-09 12:36:11'
+            'created' => '2017-09-03 18:17:04',
+            'modified' => '2017-10-03 18:17:04'
+        ],
+        [
+            'id' => 'dc8d196f-f7e9-3531-a9de-b15a3b48b11b',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'betty@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-10-20 18:17:04',
+            'modified' => '2017-10-27 18:17:04'
+        ],
+        [
+            'id' => 'debaf643-1874-3466-abdd-ae64ed4e2ced',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'orna@passbolt.com',
+            'active' => false,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'f0c51a43-35e3-321d-af6f-4fc48a460cb3',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'user@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'lynne@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 18:17:04',
+            'modified' => '2017-11-03 18:17:04'
+        ],
+        [
+            'id' => 'fe8848fe-97f2-373b-a984-6a3eeb2dd028',
+            'role_id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'username' => 'dame@passbolt.com',
+            'active' => true,
+            'deleted' => false,
+            'created' => '2017-11-03 16:17:04',
+            'modified' => '2017-11-03 17:17:04'
         ],
     ];
 }

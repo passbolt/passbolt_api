@@ -37,7 +37,7 @@ class FixturizeShell extends Shell
                 $fixtureName = $this->_getFixtureName($task);
                 $Model = $this->loadModel($task->entityName);
                 $tableName = $Model->getTable();
-                $this->dispatchShell("bake fixture $fixtureName -r -s -n 10000 --table $tableName -f");
+                $this->dispatchShell("bake fixture $fixtureName -r -n 10000 --table $tableName -f");
             }
         }
     }

@@ -1,17 +1,4 @@
 <?php
-/**
- * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
- *
- * Licensed under GNU Affero General Public License version 3 of the or any later version.
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
- * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
- * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
- */
 namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
@@ -53,30 +40,30 @@ class RolesFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '0d51c3a8-5e67-5e3d-882f-e1868966d817',
+            'id' => '23d941d5-3676-3443-afdb-aaf2456f3b49',
             'name' => 'admin',
             'description' => 'Organization administrator',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25'
         ],
         [
-            'id' => '6f02b8d2-e24c-51fe-a452-5a027c26dbef',
+            'id' => '49aad81e-4f70-3380-a92e-12292597409f',
             'name' => 'guest',
             'description' => 'Non logged in user',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25'
         ],
         [
-            'id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
-            'name' => 'user',
-            'description' => 'Logged in user',
+            'id' => '857760a6-4f9d-3f1b-a292-95b630bcf03f',
+            'name' => 'root',
+            'description' => 'Super Administrator',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25'
         ],
         [
-            'id' => 'eeda6af2-38dc-5e34-b86d-7687878bc38a',
-            'name' => 'root',
-            'description' => 'Super Administrator',
+            'id' => 'd1acbfc1-78d8-3e25-ad8b-7ab1eb0332dc',
+            'name' => 'user',
+            'description' => 'Logged in user',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25'
         ],

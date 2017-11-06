@@ -1,17 +1,4 @@
 <?php
-/**
- * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
- *
- * Licensed under GNU Affero General Public License version 3 of the or any later version.
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
- * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
- * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
- */
 namespace App\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
@@ -57,207 +44,207 @@ class GroupsUsersFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '03e26ff8-81d2-5b7f-87e4-99bbc40e1f95',
-            'group_id' => '428ed4cd-81b1-56af-aa7f-a7cbdbe227e4',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'id' => '2a2ee556-c1de-3b32-a4b8-af05ec11b02d',
+            'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+            'user_id' => 'bfb648f5-9f37-343b-a616-7f3704d13d84',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '15b5e2c6-164a-50e9-a46f-2b4a9ab9345a',
-            'group_id' => 'c9c8fd8e-a0fa-53f0-967b-42edca3d91e4',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'id' => '2f5c221d-fd31-334e-a0aa-7bebbded624b',
+            'group_id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+            'user_id' => '201b442c-d6ca-3ee6-a443-ce669ca0ec6e',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '15f486f6-4f5a-53f7-82ca-974e0be74e95',
-            'group_id' => '4ff007f6-80ec-5bf7-8f0a-46a17178db6f',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
-        ],
-        [
-            'id' => '2510a118-c838-5470-a0dd-aff268d4a2b6',
-            'group_id' => '516c2db6-0aed-52d8-854f-b3f3499995e7',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
-        ],
-        [
-            'id' => '2e450a49-1639-5971-bf82-b945b310cc1d',
-            'group_id' => 'de5fcb71-6db2-5fe5-8803-7d3eb4d6ad9c',
-            'user_id' => '5302c3cb-5d33-53b1-82cd-57df36e13acc',
+            'id' => '526a9ce9-f6a9-37f1-aa83-4e3352ad7e1b',
+            'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+            'user_id' => 'bfb648f5-9f37-343b-a616-7f3704d13d84',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '38804173-18aa-5ec1-99b9-354496374816',
-            'group_id' => '469edf9d-ca1e-5003-91d6-3a46755d5a50',
-            'user_id' => '887422c0-bef6-59a7-bbda-84c253ee0848',
+            'id' => '5279f96d-4b58-3269-af03-4d9dadfd98ac',
+            'group_id' => 'd6b15a4e-4fdf-3026-ac49-5a8de3fc49a0',
+            'user_id' => '5f924faf-8090-30b0-aed6-aa82c5e580a0',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:17'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '38839a7d-1e33-590e-a675-e24894819cd8',
-            'group_id' => 'b8b17d77-51e5-5c99-a0b6-86cf5757a781',
-            'user_id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
+            'id' => '53611eaf-8f63-363a-a750-55c0f4e59b03',
+            'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+            'user_id' => '47ad29dc-f0c7-3b9e-aae2-9e657397b60b',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '6025a745-34a1-513f-9ecb-205448e10b9b',
-            'group_id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
-            'user_id' => '0da907bd-5c57-5acc-ba39-c6ebe091f613',
+            'id' => '58f75ce3-d146-32a5-a8a4-bfa52247448a',
+            'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+            'user_id' => 'be77c78c-b767-3290-ae92-d5e5c590fcf9',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '6b8bc98f-a456-56a5-8492-db2faaebe2a2',
-            'group_id' => 'fc299a60-3ed9-5e54-8ba7-3de125660ae2',
-            'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
+            'id' => '5be1d673-98ed-35d7-a99b-9270f4793db1',
+            'group_id' => '5a1e3498-35a0-32dc-ac2e-80dbd85c9017',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:17'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '6c3a4077-966c-5f08-9ac6-325da1321eb2',
-            'group_id' => '4cdc85b3-f442-5511-b28d-cbd109100189',
-            'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
+            'id' => '64846ede-14ec-3da2-ada9-5e758d71572f',
+            'group_id' => '53074209-fd29-3c8e-abaf-e017497f43cf',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:17'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '6ccbafad-8590-55bb-b2ce-02746fffcf28',
-            'group_id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
-            'user_id' => '1e73e104-d53e-579d-a0c4-e9aeaca76c56',
+            'id' => '655d0e82-8833-3c93-a037-3563093e72f2',
+            'group_id' => 'e6d598a1-e050-3237-a4d6-2ba75d65dc3b',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => '6cf22149-beb4-371c-aab2-2ac1012187b8',
+            'group_id' => '563a4b8f-e7ac-31ff-a3e8-f1b6d3ff222a',
+            'user_id' => 'c6855b6d-6cec-3f2f-ade5-398a8c4a7c03',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => '860fcc8f-dad6-5a90-ad86-45253c58e642',
-            'group_id' => '36563004-3f25-50c0-b22e-6554c3ccc4e7',
-            'user_id' => '8d04cf98-716b-5f6d-9fe8-c130f8992646',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:17'
-        ],
-        [
-            'id' => '8e42567e-6e6e-54bc-b17b-0f5afde5b01c',
-            'group_id' => '3feba74f-47da-5146-9d8f-76c7266c60ea',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
-        ],
-        [
-            'id' => '97091e37-dba3-5256-a13b-7549d30db452',
-            'group_id' => 'de5fcb71-6db2-5fe5-8803-7d3eb4d6ad9c',
-            'user_id' => 'f7e9754a-2f64-5cdd-8ba2-178b33383505',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
-        ],
-        [
-            'id' => '99fabba9-e069-59e6-a3b6-775436322b21',
-            'group_id' => 'a89b771e-62ab-5434-b2fa-950827439ac7',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
-        ],
-        [
-            'id' => '9c937007-8d53-532d-b02f-80f100139990',
-            'group_id' => 'faa73142-fb5e-5891-8b9f-4a00b3836fad',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
-        ],
-        [
-            'id' => 'a588e9c4-c35c-53f5-9cb1-77a01afd482e',
-            'group_id' => 'de5fcb71-6db2-5fe5-8803-7d3eb4d6ad9c',
-            'user_id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
-        ],
-        [
-            'id' => 'a6753204-eef8-5a57-9a80-019e393626b1',
-            'group_id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
-            'user_id' => '32d29702-85e2-539d-98ac-6abfa7aadf01',
+            'id' => '6da4726b-2cc0-3add-a3cd-c0831538a47d',
+            'group_id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+            'user_id' => '917c2b89-d573-3c7c-ac4f-51f519d0164f',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'a932a3ce-82bc-59b6-ac4e-bf325435e534',
-            'group_id' => '469edf9d-ca1e-5003-91d6-3a46755d5a50',
-            'user_id' => '620de627-8f07-5427-9149-e2c43219c5aa',
+            'id' => '733788e6-16c4-3557-aa51-19d5aaf49957',
+            'group_id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
+            'user_id' => '8a53f107-7ffc-3047-ad08-75effc419d21',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:17'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'ad80b164-c30f-53e0-aac1-3040fa2f136d',
-            'group_id' => 'f16c507f-9105-502e-aa8a-ba24c36dbdcf',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'id' => '794d9e13-3558-3f6a-aae9-bdc3eacce779',
+            'group_id' => '14153251-abcb-3c00-a2d1-b4fdb1423d26',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'afb94ff6-4bf2-5de3-a944-0074f1d57289',
-            'group_id' => 'b8b17d77-51e5-5c99-a0b6-86cf5757a781',
-            'user_id' => '5302c3cb-5d33-53b1-82cd-57df36e13acc',
+            'id' => '84da353b-c07a-3aef-a9c1-3185be7e767a',
+            'group_id' => '563a4b8f-e7ac-31ff-a3e8-f1b6d3ff222a',
+            'user_id' => '1c137bd7-2838-3c3d-a021-d2986d9126f5',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'b2e0831f-dd63-54e2-ac50-4af24eaf5e74',
-            'group_id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
-            'user_id' => 'e7fa0375-61df-5dbc-9e42-e0d363bd0ecf',
+            'id' => '89b8ad5a-ad44-37f9-a9c1-3d4ded305389',
+            'group_id' => 'fea0c76e-046c-33ab-ab27-809ce35c0cdb',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => '8dd9a71c-343d-35e7-aa3f-881442c7ea61',
+            'group_id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+            'user_id' => '7c7afd29-1b98-3c3e-ae55-adedc333fb4b',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => '96819396-6c95-3b42-ae24-fbfce90891df',
+            'group_id' => '5deebe9f-8e83-354c-a035-4e79353a0957',
+            'user_id' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'a69f0ef6-1f5c-3570-a51e-90ac5fb08e69',
+            'group_id' => '012568d6-9300-385b-a22a-e27d191764eb',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'b3d64136-0f00-3a69-abe6-bbc2295e96e4',
+            'group_id' => '24537609-6db5-31bb-af0d-f7f0494dd184',
+            'user_id' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'c73dd987-b246-3590-a591-690ee120d7eb',
+            'group_id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+            'user_id' => 'fd5afe41-1c02-3e14-a706-fe6dac8503b3',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'cb8ff959-ff48-3152-a940-2648eac445f8',
+            'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+            'user_id' => '8a53f107-7ffc-3047-ad08-75effc419d21',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'cbdda793-8d58-3c7f-a694-b2f54a4f3042',
+            'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+            'user_id' => 'be77c78c-b767-3290-ae92-d5e5c590fcf9',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'cc6170c6-ff68-3be6-ac7f-9ccfb5a59775',
+            'group_id' => 'ecc19da3-69b8-3c0d-a03a-2b29bfb7a610',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'd47908dd-c690-3f45-ab9b-7140a0e6a24f',
+            'group_id' => '640d1f30-0197-3276-a87e-a1ef389ee5fb',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'db5918aa-4bd6-38bc-a491-4db9bbca219c',
+            'group_id' => '981777cc-aa3a-3b5b-ac1d-86e281c37982',
+            'user_id' => 'abfd50cb-ff86-36c4-a8c8-af176b201123',
+            'is_admin' => true,
+            'created' => '2016-01-29 13:39:25'
+        ],
+        [
+            'id' => 'e62156ea-9bdd-37fe-a47c-ce9c57fb9d7c',
+            'group_id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
+            'user_id' => '47ad29dc-f0c7-3b9e-aae2-9e657397b60b',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'b49abe97-b291-5a9e-b80f-e16313c8d6a9',
-            'group_id' => 'b8b17d77-51e5-5c99-a0b6-86cf5757a781',
-            'user_id' => 'f7e9754a-2f64-5cdd-8ba2-178b33383505',
+            'id' => 'ececde02-c246-3cb7-ae41-9754940ccd35',
+            'group_id' => 'da776e4a-73b7-3a58-a047-f31614bd15bb',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'c8f4bc84-2ea2-5509-8d6a-6b7378b7fffa',
-            'group_id' => '5fe7a6af-d97e-54f1-a4fc-b4b8bdb6e2ac',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'id' => 'f5b8289b-c41b-3dc0-adcd-fbafc747d63f',
+            'group_id' => '73c705f1-919d-3916-a5b7-990b3a517d14',
+            'user_id' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
             'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
+            'created' => '2016-01-29 13:39:25'
         ],
         [
-            'id' => 'd100fc5d-6685-50aa-897b-87ac816e28c8',
-            'group_id' => 'b7cbce9f-6a20-545b-b20a-fcf4092307df',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:19'
-        ],
-        [
-            'id' => 'e137ab7f-025d-5f4f-98e0-e14769948905',
-            'group_id' => 'de5fcb71-6db2-5fe5-8803-7d3eb4d6ad9c',
-            'user_id' => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08',
+            'id' => 'fe98a06d-be34-359c-a7a0-097c5119e894',
+            'group_id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+            'user_id' => '27102e91-6880-3312-a4c5-db00c228820e',
             'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
-        ],
-        [
-            'id' => 'eeccd1ac-c99c-594b-8d13-b38f819a5871',
-            'group_id' => 'eabe3a36-9bfb-5eba-b1aa-56eff5530006',
-            'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
-            'is_admin' => true,
-            'created' => '2017-10-09 12:36:17'
-        ],
-        [
-            'id' => 'fa3fa0b2-cdf4-5c9a-8edf-2892dc35e27a',
-            'group_id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
-            'user_id' => 'e1ebc592-b90d-5e22-9f40-50e52911673b',
-            'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
-        ],
-        [
-            'id' => 'fcc26e60-1a64-50f5-b7f0-9a8c9ea69208',
-            'group_id' => 'b8b17d77-51e5-5c99-a0b6-86cf5757a781',
-            'user_id' => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08',
-            'is_admin' => false,
-            'created' => '2017-10-09 12:36:18'
+            'created' => '2016-01-29 13:39:25'
         ],
     ];
 }
