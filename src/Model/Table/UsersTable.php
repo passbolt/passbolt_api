@@ -184,7 +184,7 @@ class UsersTable extends Table
             'Profiles',
             //'Profiles.Avatar',
             'Gpgkeys',
-//            'GroupsUsers'
+            //'GroupsUsers'
         ]);
 
         // Filter out guests, inactive and deleted users
@@ -208,21 +208,18 @@ class UsersTable extends Table
     /**
      * Find view
      *
-     * @param Query $query a query instance
-     * @param array $options options
+     * @param string $userId uuid
+     * @param string $roleName role name
      * @throws Exception if no id is specified
      * @return Query
      */
-    public function findView(Query $query, array $options)
+    public function findView($userId, $roleName)
     {
-        // Options must contain an id
-        if (!isset($options['id'])) {
-            throw new Exception(__('User table findView should have an id set in options.'));
-        }
         // Same rule than index apply
         // with a specific id requested
-        $query = $this->findIndex($query, $options);
-        $query->where(['Users.id' => $options['id']]);
+        $query = $this->find();
+        $query = $this->findIndex($query, ['role' => $roleName]);
+        $query->where(['Users.id' => $userId]);
 
         return $query;
     }

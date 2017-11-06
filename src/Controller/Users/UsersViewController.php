@@ -36,14 +36,13 @@ class UsersViewController extends AppController
             if ($id === 'me') {
                 $id = $this->User->id(); // me returns the currently logged-in user
             } else {
-                throw new BadRequestException(__('The user id is not valid.'));
+                throw new BadRequestException(__('The user id should be a uuid or "me".'));
             }
         }
+
         // Retrieve the user
         $this->loadModel('Users');
-
-        // @TODO user findView instead
-        $user = $this->Users->find('view', ['id' => $id, 'role' => $this->User->role() ])->first();
+        $user = $this->Users->findView($id, $this->User->role())->first();
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist.'));
         }

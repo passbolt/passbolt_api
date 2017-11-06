@@ -18,7 +18,7 @@ class GroupsFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'uuid', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
-        'name' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
+        'name' => ['type' => 'string', 'length' => 255, 'null' => true, 'default' => null, 'collate' => 'utf8mb4_unicode_ci', 'comment' => '', 'precision' => null, 'fixed' => null],
         'deleted' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '0', 'comment' => '', 'precision' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => false, 'default' => null, 'comment' => '', 'precision' => null],
@@ -29,7 +29,7 @@ class GroupsFixture extends TestFixture
         ],
         '_options' => [
             'engine' => 'InnoDB',
-            'collation' => 'utf8_unicode_ci'
+            'collation' => 'utf8mb4_unicode_ci'
         ],
     ];
     // @codingStandardsIgnoreEnd
@@ -41,175 +41,175 @@ class GroupsFixture extends TestFixture
      */
     public $records = [
         [
-            'id' => '012568d6-9300-385b-a22a-e27d191764eb',
-            'name' => 'Sales',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '0241e630-b161-3a3d-a6f7-f6d8e3cea3c8',
-            'name' => 'IT support',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '14153251-abcb-3c00-a2d1-b4fdb1423d26',
-            'name' => 'Management',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '1ec15696-e564-3e60-ad76-d73415b73afd',
-            'name' => 'Human resource',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '24537609-6db5-31bb-af0d-f7f0494dd184',
-            'name' => 'Creative',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '53074209-fd29-3c8e-abaf-e017497f43cf',
-            'name' => 'Operations',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '563a4b8f-e7ac-31ff-a3e8-f1b6d3ff222a',
-            'name' => 'Accounting',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '5a1e3498-35a0-32dc-ac2e-80dbd85c9017',
-            'name' => 'Leadership team',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '5deebe9f-8e83-354c-a035-4e79353a0957',
-            'name' => 'Developer',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '640d1f30-0197-3276-a87e-a1ef389ee5fb',
-            'name' => 'Quality assurance',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '73c705f1-919d-3916-a5b7-990b3a517d14',
-            'name' => 'Traffic',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => '73dba62a-d402-3cbf-a036-d07b5dac5255',
-            'name' => 'deleted',
-            'deleted' => true,
-            'created' => '2016-02-02 18:59:05',
-            'modified' => '2016-02-02 18:59:05',
-            'created_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1',
-            'modified_by' => 'c3b37726-7483-37fd-a185-a3f6b9ed0df1'
-        ],
-        [
-            'id' => '7fb692ab-2631-35bb-ab34-7f69b2e7f0a2',
+            'id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
             'name' => 'Freelancer',
             'deleted' => false,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
         [
-            'id' => '981777cc-aa3a-3b5b-ac1d-86e281c37982',
-            'name' => 'Ergonom',
-            'deleted' => false,
-            'created' => '2016-01-29 13:39:25',
-            'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
-        ],
-        [
-            'id' => 'd6b15a4e-4fdf-3026-ac49-5a8de3fc49a0',
+            'id' => '36563004-3f25-50c0-b22e-6554c3ccc4e7',
             'name' => 'Board',
             'deleted' => false,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
         [
-            'id' => 'da776e4a-73b7-3a58-a047-f31614bd15bb',
+            'id' => '3feba74f-47da-5146-9d8f-76c7266c60ea',
+            'name' => 'Management',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => '428ed4cd-81b1-56af-aa7f-a7cbdbe227e4',
             'name' => 'Marketing',
             'deleted' => false,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
         [
-            'id' => 'e6d598a1-e050-3237-a4d6-2ba75d65dc3b',
-            'name' => 'Resource planning',
+            'id' => '469edf9d-ca1e-5003-91d6-3a46755d5a50',
+            'name' => 'Accounting',
             'deleted' => false,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
         [
-            'id' => 'ecc19da3-69b8-3c0d-a03a-2b29bfb7a610',
+            'id' => '4cdc85b3-f442-5511-b28d-cbd109100189',
+            'name' => 'Creative',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => '4ff007f6-80ec-5bf7-8f0a-46a17178db6f',
             'name' => 'Procurement',
             'deleted' => false,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
         [
-            'id' => 'fea0c76e-046c-33ab-ab27-809ce35c0cdb',
+            'id' => '516c2db6-0aed-52d8-854f-b3f3499995e7',
+            'name' => 'Leadership team',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => '5fe7a6af-d97e-54f1-a4fc-b4b8bdb6e2ac',
+            'name' => 'Traffic',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'a237ddd3-658f-57b8-a408-19a5cfbd51f3',
+            'name' => 'deleted',
+            'deleted' => true,
+            'created' => '2016-02-02 18:59:05',
+            'modified' => '2016-02-02 18:59:05',
+            'created_by' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
+            'modified_by' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53'
+        ],
+        [
+            'id' => 'a89b771e-62ab-5434-b2fa-950827439ac7',
+            'name' => 'Quality assurance',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'b7cbce9f-6a20-545b-b20a-fcf4092307df',
+            'name' => 'Resource planning',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'b8b17d77-51e5-5c99-a0b6-86cf5757a781',
+            'name' => 'IT support',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'c9c8fd8e-a0fa-53f0-967b-42edca3d91e4',
             'name' => 'Network',
             'deleted' => false,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5',
-            'modified_by' => '2e18717e-e2b4-3c55-a6b2-586b0f17dba5'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'de5fcb71-6db2-5fe5-8803-7d3eb4d6ad9c',
+            'name' => 'Human resource',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'eabe3a36-9bfb-5eba-b1aa-56eff5530006',
+            'name' => 'Ergonom',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'f16c507f-9105-502e-aa8a-ba24c36dbdcf',
+            'name' => 'Operations',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'faa73142-fb5e-5891-8b9f-4a00b3836fad',
+            'name' => 'Sales',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
+        ],
+        [
+            'id' => 'fc299a60-3ed9-5e54-8ba7-3de125660ae2',
+            'name' => 'Developer',
+            'deleted' => false,
+            'created' => '2016-01-29 13:39:25',
+            'modified' => '2016-01-29 13:39:25',
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
     ];
 }
