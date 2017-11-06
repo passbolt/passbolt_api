@@ -189,6 +189,13 @@ class Healthchecks
      */
     public static function database()
     {
+        // Do not use default connection when test are running
+        // Otherwise tables may be dropped
+        $connectionName = 'default';
+        if (Configure::read('passbolt.test.isRunning')) {
+            $connectionName = 'test';
+        }
+
         // init results to false by default
         $checks = [];
         $cases = ['connect', 'supportedBackend', 'tablesPrefix', 'tablesCount', 'defaultContent'];
@@ -205,7 +212,7 @@ class Healthchecks
 
         // Check if can connect to database
         try {
-            $connection = ConnectionManager::get('default');
+            $connection = ConnectionManager::get($connectionName);
             $connection->connect();
             $checks['database']['connect'] = true;
         } catch (MissingConnectionException $connectionError) {
@@ -222,7 +229,7 @@ class Healthchecks
 
         // Check if tables are present
         try {
-            $connection = ConnectionManager::get('default');
+            $connection = ConnectionManager::get($connectionName);
             $tables = $connection->execute('show tables')->fetchAll('assoc');
 
             if (isset($tables) && count($tables)) {

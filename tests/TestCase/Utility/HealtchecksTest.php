@@ -16,9 +16,14 @@ namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Healthchecks;
+use Cake\Core\Configure;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
+    public function setUp()
+    {
+        Configure::write('passbolt.test.isRunning', true);
+    }
 
     public function testHealthcheckApplication()
     {

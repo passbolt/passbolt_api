@@ -29,6 +29,10 @@ class Migration
      */
     public static function needMigration()
     {
+        // don't show migrations when running tests
+        if (Configure::read('passbolt.test.isRunning')) {
+            return false;
+        }
         $Migrations = new Migrations();
         $migrations = $Migrations->status();
         foreach ($migrations as $i => $migration) {
