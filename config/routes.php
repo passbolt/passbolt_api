@@ -220,6 +220,15 @@ Router::prefix('Users', function ($routes) {
 Router::prefix('/seleniumtests', function ($routes) {
     $routes->setExtensions(['json']);
 
+    $routes->connect('/error404', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error404'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/error403', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error404'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/error500', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error500'])
+        ->setMethods(['GET']);
+
     $routes->connect('/showLastEmail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
         ->setPass(['username'])
         ->setMethods(['GET']);
