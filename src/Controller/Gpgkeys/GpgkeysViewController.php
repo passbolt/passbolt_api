@@ -32,7 +32,7 @@ class GpgkeysViewController extends AppController
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
-            throw new BadRequestException(__('The gpg key id is not valid.'));
+            throw new BadRequestException(__('The gpg key id should be a uuid.'));
         }
         // Retrieve the user
         $this->loadModel('Gpgkeys');

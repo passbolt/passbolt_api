@@ -22,13 +22,6 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles'];
 
-    public function testUsersViewErrorNotAuthenticated()
-    {
-        $uuid = Common::uuid('user.id.ada');
-        $this->getJson('/users/' . $uuid . '.json');
-        $this->assertAuthenticationError();
-    }
-
     public function testUsersViewGetSuccess()
     {
         $this->authenticateAs('ada');

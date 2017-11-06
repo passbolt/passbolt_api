@@ -72,7 +72,7 @@ class GpgkeysDataTask extends DataTask
             $keyRaw = $this->_getUserKey($user->id);
             $info = $Gpg->getKeyInfo($keyRaw);
             $keys[] = [
-                'id' => Common::uuid(),
+                'id' => Common::uuid('gpgkey.id.' . $user->id),
                 'user_id' => $user->id,
                 'armored_key' => $keyRaw,
                 'bits' => $info['bits'],
