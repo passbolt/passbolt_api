@@ -21,6 +21,7 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Test\Lib\Model\RolesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
@@ -36,6 +37,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
     use PermissionsModelTrait;
     use ProfilesModelTrait;
     use ResourcesModelTrait;
+    use RolesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
 

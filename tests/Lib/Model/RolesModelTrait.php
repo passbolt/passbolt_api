@@ -12,21 +12,18 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Roles;
+namespace App\Test\Lib\Model;
 
-use App\Controller\AppController;
-
-class RolesIndexController extends AppController
+trait RolesModelTrait
 {
     /**
-     * Roles Index action
+     * Asserts that an object has all the attributes a role should have.
      *
-     * @return void
+     * @param object $roles
      */
-    public function index()
+    protected function assertRoleAttributes($resource)
     {
-        $this->loadModel('Roles');
-        $roles = $this->Roles->find('all');
-        $this->success('The operation was successful.', $roles);
+        $attributes = ['id', 'name', 'description', 'created', 'modified'];
+        $this->assertObjectHasAttributes($attributes, $resource);
     }
 }
