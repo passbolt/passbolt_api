@@ -42,7 +42,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/home', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
+    $routes->connect('/home', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
         ->setMethods(['GET']);
 });
 

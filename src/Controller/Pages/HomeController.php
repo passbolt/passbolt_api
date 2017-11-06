@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Home;
+namespace App\Controller\Pages;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
@@ -25,7 +25,7 @@ class HomeController extends AppController
      *
      * @return void
      */
-    public function index()
+    public function view()
     {
         $this->viewBuilder()
             ->setLayout('default')
