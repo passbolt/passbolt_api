@@ -24,12 +24,6 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 
     public function testUsersViewErrorNotAuthenticated()
     {
-
-        echo "\n";
-        echo Common::uuid('user.id.ada');        echo "\n";
-
-        echo Common::uuid('role.id.user');
-        return;
         $uuid = Common::uuid('user.id.ada');
         $this->getJson('/users/' . $uuid . '.json');
         $this->assertAuthenticationError();
@@ -41,42 +35,69 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $uuid = Common::uuid('user.id.ada');
         $this->getJson('/users/' . $uuid . '.json?api-version=2');
         $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertUserAttributes($this->_responseJsonBody[0]);
+        $this->assertNotNull($this->_responseJsonBody);
 
-        // gpgkey
-        $this->assertObjectHasAttribute('gpgkey', $this->_responseJsonBody[0]);
-        $this->assertGpgkeyAttributes($this->_responseJsonBody->gpgkey);
-        // profile
-        $this->assertObjectHasAttribute('profile', $this->_responseJsonBody[0]);
+        $this->assertUserAttributes($this->_responseJsonBody);
+        $this->assertObjectHasAttribute('profile', $this->_responseJsonBody);
         $this->assertProfileAttributes($this->_responseJsonBody->profile);
-        // role
-        $this->assertObjectHasAttribute('role', $this->_responseJsonBody[0]);
+        $this->assertObjectHasAttribute('gpgkey', $this->_responseJsonBody);
+        $this->assertGpgkeyAttributes($this->_responseJsonBody->gpgkey);
+        $this->assertObjectHasAttribute('role', $this->_responseJsonBody);
         $this->assertRoleAttributes($this->_responseJsonBody->role);
+
+        // @todo group users
+        // @todo avatar
     }
 
     public function testUsersViewGetApiV1Success()
     {
-
-        return;
         $this->authenticateAs('ada');
-        $uuid = Common::uuid('users.id.ada');
-        echo $uuid;return;
+        $uuid = Common::uuid('user.id.ada');
         $this->getJson('/users/' . $uuid . '.json');
         $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody->User);
+        $this->assertNotNull($this->_responseJsonBody);
 
-        // gpgkey
-        $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody[0]);
-        $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
-        // profile
-        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody[0]);
+        $this->assertObjectHasAttribute('User', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->User);
+        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody);
         $this->assertProfileAttributes($this->_responseJsonBody->Profile);
-        // role
-        $this->assertObjectHasAttribute('Role', $this->_responseJsonBody[0]);
+        $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody);
+        $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
+        $this->assertObjectHasAttribute('Role', $this->_responseJsonBody);
         $this->assertRoleAttributes($this->_responseJsonBody->Role);
+
+        // @todo group users
+        // @todo avatar
     }
 
+    public function testUsersViewGetMeSuccess()
+    {
+        $this->authenticateAs('ada');
+        $uuid = Common::uuid('user.id.ada');
+        $this->getJson('/users/me.json');
+        $this->assertSuccess();
+        $this->assertNotNull($this->_responseJsonBody);
+
+        $this->assertObjectHasAttribute('User', $this->_responseJsonBody);
+        $this->assertUserAttributes($this->_responseJsonBody->User);
+        $this->assertEquals($this->_responseJsonBody->User->id, $uuid);
+    }
+
+    public function testUsersViewNotLoggedInError() {
+        $this->getJson('/users/me.json');
+        $this->assertAuthenticationError();
+    }
+
+    public function testUsersViewInvalidIdError() {
+        $this->authenticateAs('ada');
+        $this->getJson('/users/notuuid.json');
+        $this->assertError(400, 'The user id should be a uuid or "me".');
+    }
+
+    public function testUsersViewUserDoesNotExistError() {
+        $this->authenticateAs('ada');
+        $uuid = Common::uuid('user.id.notauser');
+        $this->getJson('/users/' . $uuid . '.json');
+        $this->assertError(404, 'The user does not exist.');
+    }
 }

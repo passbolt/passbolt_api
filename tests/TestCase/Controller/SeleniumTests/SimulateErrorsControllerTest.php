@@ -16,6 +16,7 @@
 namespace App\Test\TestCase\Controller\SeleniumTests;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\Configure;
 
 class SimulateErrorsControllerTest extends AppIntegrationTestCase
 {
@@ -39,4 +40,10 @@ class SimulateErrorsControllerTest extends AppIntegrationTestCase
         $this->assertError(500);
     }
 
+    public function testSimulateErrorNotAllowed()
+    {
+        Configure::write('passbolt.selenium.active', false);
+        $this->getJson('/seleniumtests/error404.json');
+        $this->assertError(403);
+    }
 }
