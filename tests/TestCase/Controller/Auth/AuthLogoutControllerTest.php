@@ -32,9 +32,19 @@ class AuthLogoutControllerTest extends IntegrationTestCase
             ]
         ]);
 
-        $this->get('/auth/logout.json');
-        $this->assertResponseOk();
-        $response = ($this->_getBodyAsString();
-        $this->assertTextContains('logint', $response->header->status);
+        $this->get('/auth/logout');
+        $this->assertRedirect('/auth/login');
+    }
+
+    public function testCheckLogoutNotLoggedIn()
+    {
+        $this->get('/auth/logout');
+        $this->assertRedirect('/auth/login');
+    }
+
+    public function testCheckLogoutRedirect()
+    {
+        $this->get('/logout');
+        $this->assertRedirect('/auth/logout');
     }
 }
