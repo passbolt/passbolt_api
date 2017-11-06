@@ -14,16 +14,19 @@
  */
 namespace App\Test\Lib\Model;
 
-trait RolesModelTrait
+trait GpgkeysModelTrait
 {
     /**
-     * Asserts that an object has all the attributes a role should have.
+     * Asserts that an object has all the attributes a gpgkey should have.
      *
-     * @param object $roles
+     * @param object $gpgkey
      */
-    protected function assertRoleAttributes($roles)
+    protected function assertGpgkeyAttributes($gpgkey)
     {
-        $attributes = ['id', 'name', 'description', 'created', 'modified'];
-        $this->assertObjectHasAttributes($attributes, $roles);
+        $attributes = [
+            'id', 'user_id', 'armored_key', 'bits', 'uid', 'key_id',
+            'fingerprint', 'type', 'expires', 'key_created', 'deleted', 'created', 'modified'
+        ];
+        $this->assertObjectHasAttributes($attributes, $gpgkey);
     }
 }

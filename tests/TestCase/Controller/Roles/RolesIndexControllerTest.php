@@ -40,7 +40,7 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
         $this->assertRoleAttributes($this->_responseJsonBody[0]->Role);
     }
 
-    public function testIndexErrorNotAuthenticated()
+    public function testRolesIndexErrorNotAuthenticated()
     {
         $this->getJson('/roles.json');
         $this->assertAuthenticationError();

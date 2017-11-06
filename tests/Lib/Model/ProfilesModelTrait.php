@@ -18,11 +18,11 @@ Trait ProfilesModelTrait {
     /**
      * Asserts that an object has all the attributes a profile should have.
      *
-     * @param object $user
+     * @param object $profile
      */
-    protected function assertProfileAttributes($user)
+    protected function assertProfileAttributes($profile)
     {
         $attributes = ['id', 'user_id', 'first_name', 'last_name', 'created', 'modified'];
-        $this->assertObjectHasAttributes($attributes, $user);
+        $this->assertObjectHasAttributes($attributes, $profile);
     }
 }

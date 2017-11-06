@@ -17,6 +17,7 @@ namespace App\Test\Lib;
 use App\Model\Entity\Role;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
+use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -34,6 +35,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
 	use CommentsModelTrait;
 	use FavoritesModelTrait;
     use GroupsModelTrait;
+    use GpgkeysModelTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
     use ResourcesModelTrait;
