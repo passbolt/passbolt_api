@@ -16,10 +16,11 @@
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\Common;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles'];
+    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.groups_users'];
 
     public function testUsersIndexGetSuccess()
     {
@@ -38,6 +39,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         // role
         $this->assertObjectHasAttribute('role', $this->_responseJsonBody[0]);
         $this->assertRoleAttributes($this->_responseJsonBody[0]->role);
+
+        // @todo v2 groups_users check
     }
 
     public function testUsersIndexGetApiV1Success()
@@ -46,18 +49,206 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/users.json');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertObjectHasAttribute('User', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->User);
+        $foundAda = $foundThelma = false;
 
-        // gpgkey
-        $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody[0]);
-        $this->assertGpgkeyAttributes($this->_responseJsonBody[0]->Gpgkey);
-        // profile
-        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody[0]);
-        $this->assertProfileAttributes($this->_responseJsonBody[0]->Profile);
-        // role
-        $this->assertObjectHasAttribute('Role', $this->_responseJsonBody[0]);
-        $this->assertRoleAttributes($this->_responseJsonBody[0]->Role);
+        foreach ($this->_responseJsonBody as $user) {
+            if ($user->User->id === Common::uuid('user.id.ada')) {
+                $foundAda = true;
+                $this->assertObjectHasAttribute('User', $user);
+                $this->assertUserAttributes($user->User);
+
+                // Gpgkey
+                $this->assertObjectHasAttribute('Gpgkey', $user);
+                $this->assertGpgkeyAttributes($user->Gpgkey);
+                // Profile
+                $this->assertObjectHasAttribute('Profile', $user);
+                $this->assertProfileAttributes($user->Profile);
+                // Role
+                $this->assertObjectHasAttribute('Role', $user);
+                $this->assertRoleAttributes($user->Role);
+
+                // GroupUser
+                $this->assertObjectHasAttribute('GroupUser', $user);
+                $this->assertEquals(count($user->GroupUser), 0, 'Add should not belong to any group');
+
+            } else if($user->User->id === Common::uuid('user.id.thelma')) {
+                $foundThelma = true;
+                // GroupUser
+                $this->assertObjectHasAttribute('GroupUser', $user);
+                $this->assertGreaterThan(1, count($user->GroupUser));
+                $this->assertGroupUserAttributes($user->GroupUser[0]);
+            }
+            if ($foundAda && $foundThelma) {
+                break;
+            }
+        }
+        $this->assertTrue($foundThelma && $foundAda);
+    }
+
+    public function testUsersIndexOrderByUsername()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?order=User.username');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+
+        $this->getJson('/users.json?order[]=User.username DESC');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.wang'));
+    }
+
+    public function testUsersIndexOrderByFirstName()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?order[]=Profile.first_name');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+
+        $this->getJson('/users.json?order=Profile.first_name DESC');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.wang'));
+    }
+
+    public function testUsersIndexOrderByLastName()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?order=Profile.last_name');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.frances'));
+
+        $this->getJson('/users.json?order[]=Profile.last_name DESC');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.wang'));
+    }
+
+    public function testUsersIndexOrderByCreated()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?order[]=User.created');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+
+        $this->getJson('/users.json?order[]=User.created DESC&order[]=User.username ASC');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.admin'));
+    }
+
+    public function testUsersIndexOrderByModified()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?order[]=User.modified');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+
+        $this->getJson('/users.json?order[]=User.modified DESC&order[]=User.username ASC');
+        $this->assertSuccess();
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.admin'));
+    }
+
+    public function testUsersIndexOrderByError()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?order[]=Users.modified');
+        $this->assertResponseError(400);
+        $this->getJson('/users.json?order[]=User.modified RAND');
+        $this->assertResponseError(400);
+        $this->getJson('/users.json?order[]=');
+        $this->assertResponseError(400);
+    }
+
+    public function testUsersIndexFilterByGroupsSuccess()
+    {
+        $this->authenticateAs('ada');
+        $freelancersId = Common::uuid('group.id.freelancer');
+        $this->getJson('/users.json?filter[has-groups]=' . $freelancersId);
+        $this->assertSuccess();
+        $freelancers = ['jean', 'kathleen', 'lynne', 'marlyn', 'nancy'];
+        $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
+    }
+
+    public function testUsersIndexFilterByMultipleGroupsSuccess()
+    {
+        $this->authenticateAs('ada');
+        $hr = Common::uuid('group.id.human_resource');
+        $it = Common::uuid('group.id.it_support');
+        $this->getJson('/users.json?filter[has-groups]=' . $it . ',' . $hr);
+        $this->assertSuccess();
+        $freelancers = ['ping', 'thelma', 'ursula', 'wang'];
+        $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
+
+        $this->getJson('/users.json?filter[has-groups][]=' . $it . '&filter[has-groups][]=' . $hr);
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
+    }
+
+    public function testUsersIndexFilterByInvalidGroupsError()
+    {
+        $this->authenticateAs('ada');
+        $hr = Common::uuid('group.id.human_resource');
+        $no = Common::uuid('group.id.nobueno');
+
+        // Invalid format trigger BadRequest
+        $this->getJson('/users.json?filter[has-groups]');
+        $this->assertError(400);
+        $this->getJson('/users.json?filter[has-groups]=');
+        $this->assertError(400);
+        $this->getJson('/users.json?filter[has-groups]=nope');
+        $this->assertError(400);
+        $this->getJson('/users.json?filter[has-groups]=' . $hr . ',nope');
+        $this->assertError(400);
+
+        // non existing group triggers empty results set
+        $this->getJson('/users.json?filter[has-groups]=' . $no);$this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 0);
+    }
+
+    public function testUsersIndexFilterBySearchSuccess()
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?filter[search]=ovela');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 1);
+        $this->assertEquals($this->_responseJsonBody[0]->Profile->last_name, 'Lovelace');
+
+        $this->getJson('/users.json?filter[search]=wang@passbolt');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 1);
+        $this->assertEquals($this->_responseJsonBody[0]->Profile->last_name, 'Xiaoyun');
+
+        // Deleted user should not be shown
+        $this->getJson('/users.json?filter[search]=sofia');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 0);
+    }
+
+    public function testUsersIndexFilterByInvalidSearchError()
+    {
+        $this->authenticateAs('ada');
+        // too short
+        $this->getJson('/users.json?filter[search]=a');
+        $this->assertError('400');
+        // too long
+        $lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+        $this->getJson('/users.json?filter[search]=' . $lorem);
+        $this->assertError('400');
+        // not utf8
+        $emo = '🔥🔥🔥';
+        $this->getJson('/users.json?filter[search]=' . $emo);
+        $this->assertError('400');
+    }
+
+    public function testUsersIndexFilterActiveAsAdminSuccess() {
+        $this->authenticateAs('admin');
+        $this->getJson('/users.json?filter[is-active]=0');
+        $this->assertEquals($this->_responseJsonBody[0]->Profile->first_name, 'Ruth');
+        $this->assertSuccess();
+    }
+
+    public function testUsersIndexFilterActiveNonAdmin() {
+        $this->authenticateAs('ada');
+        $this->getJson('/users.json?filter[is-active]=0');
+        $this->assertNotEquals(count($this->_responseJsonBody), 1);
+        $this->assertSuccess();
     }
 
     public function testUsersIndexErrorNotAuthenticated()

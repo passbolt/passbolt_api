@@ -17,10 +17,14 @@ namespace App\Model\Table;
 use App\Model\Entity\Role;
 use App\Model\Table\RolesTable;
 use Aura\Intl\Exception;
+use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 /**
  * Users Model
@@ -28,7 +32,8 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
  * @property \App\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
  * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
- * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasOne $Profiles
+ * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
+ * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
@@ -75,6 +80,9 @@ class UsersTable extends Table
         ]);
         $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('GroupsUsers', [
+            'foreignKey' => 'user_id'
         ]);
         $this->belongsToMany('Groups', [
             'through' => 'GroupsUsers'
@@ -166,41 +174,62 @@ class UsersTable extends Table
     /**
      * Build the query that fetches data for user index
      *
-     * @param Query $query a query instance
-     * @param array $options options
+     * @param string $role name
+     * @param array $options filters
      * @throws Exception if no role is specified
      * @return Query
      */
-    public function findIndex(Query $query, array $options)
+    public function findIndex($role, $options = null)
     {
+        $query = $this->find();
+
         // Options must contain a role
-        if (!isset($options['role'])) {
+        if (!isset($role)) {
             throw new Exception(__('User table findIndex should have a role set in options.'));
         }
 
         // Default associated data
         $query->contain([
-            'Roles',
             'Profiles',
-            //'Profiles.Avatar',
             'Gpgkeys',
-            //'GroupsUsers'
+            'Roles',
+            'GroupsUsers'
+            // @todo profile.avatar
         ]);
 
-        // Filter out guests, inactive and deleted users
-        $where = [
+        // Filter out guests and deleted users
+        $query->where([
             'Users.deleted' => false,
-            'Users.active' => true,
             'Roles.name <>' => Role::GUEST
-        ];
+        ]);
 
-        // if user is admin, we allow seing inactive users via the 'is-active' filter
-        if ($options['role'] === Role::ADMIN) {
-            if (isset($options['filter']['is-active'])) {
-                $where['active'] = ($options['filter']['is-active'] ? true : false);
-            }
+        // If user is admin, we allow seeing inactive users via the 'is-active' filter
+        if ($role === Role::ADMIN && isset($options['filter']['is-active'])) {
+            $query->where(['Users.active' => $options['filter']['is-active']]);
+        } else {
+            // otherwise we only show active users
+            $query->where(['Users.active' => true]);
         }
-        $query->where($where);
+
+        // If searching for a name or username
+        if (isset($options['filter']['search']) && count($options['filter']['search'])) {
+            $search = '%' . $options['filter']['search'][0] . '%';
+            $query->where(['OR' => [
+                ['Users.username LIKE' => $search],
+                ['Profiles.first_name LIKE' => $search],
+                ['Profiles.last_name LIKE' => $search]
+            ]]);
+        }
+
+        // If searching by group id
+        if (isset($options['filter']['has-groups']) && count($options['filter']['has-groups'])) {
+            $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-groups']);
+        }
+
+        // Ordering options
+        if(isset($options['order'])) {
+            $query->order($options['order']);
+        }
 
         return $query;
     }
@@ -217,8 +246,7 @@ class UsersTable extends Table
     {
         // Same rule than index apply
         // with a specific id requested
-        $query = $this->find();
-        $query = $this->findIndex($query, ['role' => $roleName]);
+        $query = $this->findIndex($roleName);
         $query->where(['Users.id' => $userId]);
 
         return $query;
@@ -238,13 +266,13 @@ class UsersTable extends Table
         if (!isset($options['fingerprint'])) {
             throw new Exception(__('User table findAuth should have a fingerprint id set in options.'));
         }
+
         // auth query is always done as guest
-        $options['role'] = Role::GUEST;
-
         // Use default index option (active:true, deleted:false) and contains
-        $query = $this->findIndex($query, $options);
+        $query = $this->findIndex(Role::GUEST)
+            ->where(['Gpgkeys.fingerprint' => $options['fingerprint']]);
 
-        return $query->where(['Gpgkeys.fingerprint' => $options['fingerprint']]);
+        return $query;
     }
 
     /**
@@ -288,4 +316,51 @@ class UsersTable extends Table
             $data['role_id'] = $role->id;
         }
     }
+
+    /**
+     * Filter a Groups query by groups users.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param array<string> $groupsIds The users to filter the query on.
+     * @param bool $areManager (optional) Should the users be managers ? Default false.
+     * @return $query
+     */
+    private function _filterQueryByGroupsUsers($query, array $groupsIds, $areManager = false)
+    {
+        // If there is only one group use a left join
+        if (count($groupsIds) == 1) {
+            $query->leftJoinWith('GroupsUsers');
+            $query->where(['GroupsUsers.group_id' => $groupsIds[0]]);
+
+            return $query;
+        }
+
+        // Otherwise use a subquery to
+        // find all the users that are members of all the listed groups
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $subQuery = $GroupsUsers->find()
+            ->select([
+                'GroupsUsers.user_id',
+                'count' => $query->func()->count('GroupsUsers.user_id')
+            ])
+            ->where([
+                'GroupsUsers.group_id IN' => $groupsIds
+            ])
+            ->group('GroupsUsers.user_id')
+            ->having(['count' => count($groupsIds)]);
+
+        // Execute the sub query and extract the user ids.
+        $matchingUserIds = Hash::extract($subQuery->toArray(), '{n}.user_id');
+
+        // Filter the query.
+        if (empty($matchingUserIds)) {
+            // if no user match all groups it should return nobody
+            // @TODO find more elegant way?
+            $query->where(['true' => false]);
+        } else {
+            $query->where(['Users.id IN' => $matchingUserIds]);
+        }
+        return $query;
+    }
+
 }

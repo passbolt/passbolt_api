@@ -15,9 +15,26 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Controller\Component\QueryStringComponent;
+use App\Model\Entity\Role;
+use Cake\Event\Event;
 
 class UsersIndexController extends AppController
 {
+
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+//        $this->Auth->allow('index');
+
+        return parent::beforeFilter($event);
+    }
+
     /**
      * User Index action
      *
@@ -26,7 +43,20 @@ class UsersIndexController extends AppController
     public function index()
     {
         $this->loadModel('Users');
-        $users = $this->Users->find('index', ['role' => $this->User->role()]);
+
+        $whitelist = [
+            'filter' => ['search', 'has-groups'],
+            'order' => [
+                'User.username', 'User.created', 'User.modified',
+                'Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'
+            ]
+        ];
+        if ($this->User->role() === Role::ADMIN) {
+            $whitelist['filter'][] = 'is-active';
+        }
+        $options = $this->QueryString->get($whitelist);
+        $users = $this->Users->findIndex($this->User->role(), $options);
+
         $this->success('The operation was successful.', $users);
     }
 }

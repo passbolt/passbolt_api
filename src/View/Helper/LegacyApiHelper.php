@@ -73,8 +73,7 @@ class LegacyApiHelper extends Helper
                 // example: modified
                 $result[$name][$property] = $value->toDateTimeString();
             } elseif (is_object($value) &&
-                (get_parent_class($value) === 'Cake\ORM\Entity'
-                    || get_class($value) === 'Cake\ORM\Entity')) {
+                (get_parent_class($value) === 'Cake\ORM\Entity' || get_class($value) === 'Cake\ORM\Entity')) {
                 // example: gpgkey, scafolded model
                 $subEntityName = self::formatModelName($property);
                 $formattedEntity = self::formatEntity($value, $subEntityName);
@@ -88,8 +87,13 @@ class LegacyApiHelper extends Helper
             } elseif (is_array($value)) {
                 // example: groups_users
                 $subEntityName = self::formatModelName($property);
-                foreach ($value as $i => $entity2) {
-                    $result[$subEntityName][$i] = self::formatEntity($entity2, $subEntityName)[$subEntityName];
+                if (count($value) === 0) {
+                    // if array is empty mark it as such
+                    $result[$subEntityName] = [];
+                } else {
+                    foreach ($value as $i => $entity2) {
+                        $result[$subEntityName][$i] = self::formatEntity($entity2, $subEntityName)[$subEntityName];
+                    }
                 }
             }
         }

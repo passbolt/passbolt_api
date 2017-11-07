@@ -24,7 +24,6 @@ use Cake\Validation\Validator;
  * Gpgkeys Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
- * @property \App\Model\Table\KeysTable|\Cake\ORM\Association\BelongsTo $Keys
  *
  * @method \App\Model\Entity\Gpgkey get($primaryKey, $options = [])
  * @method \App\Model\Entity\Gpgkey newEntity($data = null, array $options = [])

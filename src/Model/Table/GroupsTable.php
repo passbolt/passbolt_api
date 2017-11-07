@@ -167,12 +167,12 @@ class GroupsTable extends Table
 
         // Filter on groups that have specified users.
         if (isset($options['filter']['has-users']) && is_array($options['filter']['has-users'])) {
-            $this->_filterQueryByGroupsUsers($query, $options['filter']['has-users']);
+            $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-users']);
         }
 
         // Filter on groups that have specified managers.
         if (isset($options['filter']['has-managers']) && is_array($options['filter']['has-managers'])) {
-            $this->_filterQueryByGroupsUsers($query, $options['filter']['has-managers'], true);
+            $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-managers'], true);
         }
 
         // Filter out deleted groups
@@ -187,10 +187,18 @@ class GroupsTable extends Table
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array<string> $usersIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be managers ? Default false.
-     * @return void
+     * @return $query
      */
     private function _filterQueryByGroupsUsers($query, array $usersIds, $areManager = false)
     {
+        // If there is only one user use a left join
+        if (count($usersIds) == 1) {
+            $query->leftJoinWith('GroupsUsers');
+            $query->where(['GroupsUsers.user_id' => $usersIds[0]]);
+
+            return $query;
+        }
+
         // Find all the groups that have the given users.
         $GroupsUsers = TableRegistry::get('GroupsUsers');
         $subQuery = $GroupsUsers->find()
@@ -219,6 +227,8 @@ class GroupsTable extends Table
         } else {
             $query->where(['Groups.id IN' => $matchingGroupsIds]);
         }
+
+        return $query;
     }
 
     /**

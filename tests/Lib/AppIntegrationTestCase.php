@@ -19,6 +19,7 @@ use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -35,6 +36,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
 	use CommentsModelTrait;
 	use FavoritesModelTrait;
     use GroupsModelTrait;
+    use GroupsUsersModelTrait;
     use GpgkeysModelTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
@@ -129,8 +131,11 @@ class AppIntegrationTestCase extends IntegrationTestCase
      * @param string $roleName (optional) The role name, by default guest.
      * @return void
      */
-    public function authenticateAs($userFirstName, $roleName = Role::GUEST)
+    public function authenticateAs($userFirstName, $roleName = Role::USER)
     {
+        if ($userFirstName === 'admin') {
+            $roleName = Role::ADMIN;
+        }
         $this->session([
             'Auth' => [
                 'User' => [
