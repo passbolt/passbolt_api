@@ -94,8 +94,11 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Search a user permission.
-        $permission = array_reduce($this->_responseJsonBody, function($carry, $item) {
-            if (isset($item->User)) $carry = $item;
+        $permission = array_reduce($this->_responseJsonBody, function ($carry, $item) {
+            if (isset($item->User)) {
+                $carry = $item;
+            }
+
             return $carry;
         }, null);
         $this->assertObjectHasAttribute('Permission', $permission);
@@ -109,8 +112,11 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertProfileAttributes($permission->User->Profile);
 
         // Search a group permission.
-        $permission = array_reduce($this->_responseJsonBody, function($carry, $item) {
-            if (isset($item->Group)) $carry = $item;
+        $permission = array_reduce($this->_responseJsonBody, function ($carry, $item) {
+            if (isset($item->Group)) {
+                $carry = $item;
+            }
+
             return $carry;
         }, null);
         $this->assertObjectHasAttribute('Permission', $permission);

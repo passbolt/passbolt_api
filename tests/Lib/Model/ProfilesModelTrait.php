@@ -14,7 +14,8 @@
  */
 namespace App\Test\Lib\Model;
 
-Trait ProfilesModelTrait {
+trait ProfilesModelTrait
+{
     /**
      * Asserts that an object has all the attributes a profile should have.
      *

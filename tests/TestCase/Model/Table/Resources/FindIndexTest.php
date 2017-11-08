@@ -119,7 +119,7 @@ class FindIndexTest extends AppTestCase
             $resources = $this->Resources->findIndex($userId, $findIndexOptions)->all();
 
             // Check expected permissions are there.
-            foreach($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
+            foreach ($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
                 $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
                 $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0];
                 if ($expectedPermissionType == 0) {

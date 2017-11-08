@@ -169,6 +169,7 @@ class AuthenticationTokensTable extends Table
 
             return false;
         }
+
         return true;
     }
 

@@ -27,11 +27,11 @@ class HomeControllerTest extends AppIntegrationTestCase
         $this->assertRedirect('/auth/login?redirect=%2Fhome');
     }
 
-    public function testHomeSuccess() {
+    public function testHomeSuccess()
+    {
         $this->authenticateAs('ada');
         $this->get('/home');
         $this->assertResponseOk();
         $this->assertResponseContains('loading');
     }
-
 }

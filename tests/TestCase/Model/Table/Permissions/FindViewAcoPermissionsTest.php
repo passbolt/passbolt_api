@@ -74,7 +74,8 @@ class FindViewAcoPermissionsTest extends AppTestCase
         $this->markTestIncomplete();
     }
 
-    public function testPermissions() {
+    public function testPermissions()
+    {
         $resources = $this->Permissions->association('Resources')->find()->all();
         foreach ($resources as $resource) {
             // Retrieve the expected users & groups permissions for the resource.

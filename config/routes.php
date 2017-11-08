@@ -244,6 +244,11 @@ Router::prefix('/seleniumtests', function ($routes) {
     $routes->connect('/error500', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error500'])
         ->setMethods(['GET']);
 
+    $routes->connect('/showlastemail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
+        ->setPass(['username'])
+        ->setMethods(['GET']);
+
+    // legacy
     $routes->connect('/showLastEmail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
         ->setPass(['username'])
         ->setMethods(['GET']);

@@ -76,18 +76,21 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertEquals($this->_responseJsonBody->User->id, $uuid);
     }
 
-    public function testUsersViewNotLoggedInError() {
+    public function testUsersViewNotLoggedInError()
+    {
         $this->getJson('/users/me.json');
         $this->assertAuthenticationError();
     }
 
-    public function testUsersViewInvalidIdError() {
+    public function testUsersViewInvalidIdError()
+    {
         $this->authenticateAs('ada');
         $this->getJson('/users/notuuid.json');
         $this->assertError(400, 'The user id should be a uuid or "me".');
     }
 
-    public function testUsersViewUserDoesNotExistError() {
+    public function testUsersViewUserDoesNotExistError()
+    {
         $this->authenticateAs('ada');
         $uuid = UuidFactory::uuid('user.id.notauser');
         $this->getJson('/users/' . $uuid . '.json');

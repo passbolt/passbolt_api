@@ -14,7 +14,8 @@
  */
 namespace App\Test\Lib\Model;
 
-Trait PermissionsModelTrait {
+trait PermissionsModelTrait
+{
     /**
      * Asserts that an object has all the attributes a permission should have.
      *

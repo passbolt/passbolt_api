@@ -30,7 +30,7 @@ trait ObjectTrait
     public static function assertObjectHasAttribute($attributeName, $object, $message = '')
     {
         if (is_a($object, 'Cake\ORM\Entity')) {
-	        $objectProperties = $object->toArray();
+            $objectProperties = $object->toArray();
             self::assertTrue(array_key_exists($attributeName, $objectProperties));
         } else {
             parent::assertObjectHasAttribute($attributeName, $object, $message);
@@ -50,7 +50,7 @@ trait ObjectTrait
     public static function assertObjectNotHasAttribute($attributeName, $object, $message = '')
     {
         if (is_a($object, 'Cake\ORM\Entity')) {
-	        $objectProperties = $object->toArray();
+            $objectProperties = $object->toArray();
             self::assertFalse(array_key_exists($attributeName, $objectProperties));
         } else {
             parent::assertObjectNotHasAttribute($attributeName, $object, $message);

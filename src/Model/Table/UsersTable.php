@@ -227,7 +227,7 @@ class UsersTable extends Table
         }
 
         // Ordering options
-        if(isset($options['order'])) {
+        if (isset($options['order'])) {
             $query->order($options['order']);
         }
 
@@ -380,7 +380,7 @@ class UsersTable extends Table
         } else {
             $query->where(['Users.id IN' => $matchingUserIds]);
         }
+
         return $query;
     }
-
 }

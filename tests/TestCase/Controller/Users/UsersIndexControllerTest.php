@@ -70,8 +70,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
                 // GroupUser
                 $this->assertObjectHasAttribute('GroupUser', $user);
                 $this->assertEquals(count($user->GroupUser), 0, 'Add should not belong to any group');
-
-            } else if($user->User->id === UuidFactory::uuid('user.id.thelma')) {
+            } elseif ($user->User->id === UuidFactory::uuid('user.id.thelma')) {
                 $foundThelma = true;
                 // GroupUser
                 $this->assertObjectHasAttribute('GroupUser', $user);
@@ -198,7 +197,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertError(400);
 
         // non existing group triggers empty results set
-        $this->getJson('/users.json?filter[has-groups]=' . $no);$this->assertSuccess();
+        $this->getJson('/users.json?filter[has-groups]=' . $no);
+        $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 0);
     }
 
@@ -237,14 +237,16 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertError('400');
     }
 
-    public function testUsersIndexFilterActiveAsAdminSuccess() {
+    public function testUsersIndexFilterActiveAsAdminSuccess()
+    {
         $this->authenticateAs('admin');
         $this->getJson('/users.json?filter[is-active]=0');
         $this->assertEquals($this->_responseJsonBody[0]->Profile->first_name, 'Ruth');
         $this->assertSuccess();
     }
 
-    public function testUsersIndexFilterActiveNonAdmin() {
+    public function testUsersIndexFilterActiveNonAdmin()
+    {
         $this->authenticateAs('ada');
         $this->getJson('/users.json?filter[is-active]=0');
         $this->assertNotEquals(count($this->_responseJsonBody), 1);

@@ -22,7 +22,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.authentication_tokens'];
     public $AuthenticationTokens;
-    
+
     public function setUp()
     {
         $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
@@ -60,7 +60,6 @@ class SetupStartControllerTest extends AppIntegrationTestCase
             $this->get($url);
             $this->assertResponseCode(400, 'Setup start should fail with 400 on case: ' . $case);
         }
-
     }
 
     public function testSetupStartBadRequestErrorExpiredToken()

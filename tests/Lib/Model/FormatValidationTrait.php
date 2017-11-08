@@ -102,8 +102,7 @@ trait FormatValidationTrait
 
                 if ($expectedResult == true) {
                     $this->assertEquals(true, (bool)$save, __("The test for {0}:{1} = {2} is expected to save data", $fieldName, $testCaseName, $testCaseData));
-                }
-                else {
+                } else {
                     $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", $fieldName, $testCaseName, $testCaseData));
                     $errors = $entity->getErrors();
                     $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));

@@ -63,7 +63,8 @@ class UserAgentsTable extends Table
      *
      * @return string
      */
-    public function browserName($ua = null) {
+    public function browserName($ua = null)
+    {
         if ($ua == null) {
             $ua = Purifier::clean(env('HTTP_USER_AGENT'), 'nohtml');
         }
@@ -74,7 +75,7 @@ class UserAgentsTable extends Table
         } catch (NoResultFoundException $e) {
             $browserName = 'undefined';
         }
+
         return $browserName;
     }
-
 }

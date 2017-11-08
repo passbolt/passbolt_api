@@ -33,8 +33,8 @@ use Cake\TestSuite\IntegrationTestCase;
 
 class AppIntegrationTestCase extends IntegrationTestCase
 {
-	use CommentsModelTrait;
-	use FavoritesModelTrait;
+    use CommentsModelTrait;
+    use FavoritesModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
     use GpgkeysModelTrait;

@@ -96,7 +96,7 @@ class ResourcesTable extends Table
             ->scalar('name')
             ->requirePresence('name', 'create')
             ->notEmpty('name')
-	        ->utf8Extended('name');
+            ->utf8Extended('name');
 
         $validator
             ->scalar('username')
@@ -105,12 +105,12 @@ class ResourcesTable extends Table
         $validator
             ->scalar('uri')
             ->allowEmpty('uri')
-	        ->utf8Extended('uri');
+            ->utf8Extended('uri');
 
         $validator
             ->scalar('description')
             ->allowEmpty('description')
-	        ->utf8Extended('description');
+            ->utf8Extended('description');
 
         $validator
             ->boolean('deleted')
@@ -162,7 +162,7 @@ class ResourcesTable extends Table
 
         // If contains Secrets.
         if (isset($options['contain']['secret'])) {
-            $query->contain('Secrets', function($q) use ($userId) {
+            $query->contain('Secrets', function ($q) use ($userId) {
                 return $q->where(['Secrets.user_id' => $userId]);
             });
         }
@@ -181,13 +181,12 @@ class ResourcesTable extends Table
         if (isset($options['filter']['is-favorite'])) {
             // Filter on the favorite resources.
             if ($options['filter']['is-favorite']) {
-                $query->innerJoinWith('Favorites', function($q) use ($userId) {
+                $query->innerJoinWith('Favorites', function ($q) use ($userId) {
                     return $q->where(['Favorites.user_id' => $userId]);
                 });
-            }
-            // Filter out the favorite resources.
+            } // Filter out the favorite resources.
             else {
-                $query->notMatching('Favorites', function($q) use ($userId) {
+                $query->notMatching('Favorites', function ($q) use ($userId) {
                     return $q->where(['Favorites.user_id' => $userId]);
                 });
             }
@@ -195,7 +194,7 @@ class ResourcesTable extends Table
 
         // If contains favorite.
         if (isset($options['contain']['favorite'])) {
-            $query->contain('Favorites', function($q) use ($userId) {
+            $query->contain('Favorites', function ($q) use ($userId) {
                 return $q->where(['Favorites.user_id' => $userId]);
             });
         }
@@ -219,6 +218,7 @@ class ResourcesTable extends Table
                 return $results->map(function ($row) {
                     $row['permission'] = $row['_matchingData']['Permissions'];
                     unset($row['_matchingData']['Permissions']);
+
                     return $row;
                 });
             });
@@ -263,7 +263,7 @@ class ResourcesTable extends Table
      *
      * @param string $userId The user to get check the access for
      * @param string $resourceId The target resource
-     * @param integer $permissionType The minimum permission type
+     * @param int $permissionType The minimum permission type
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return bool
@@ -302,10 +302,11 @@ class ResourcesTable extends Table
      *
      * @param \Cake\ORM\Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
-     * @param integer $permissionType The minimum permission type.
+     * @param int $permissionType The minimum permission type.
      * @return void
      */
-    private function _filterQueryByPermissionsType($query, $userId, $permissionType = Permission::READ) {
+    private function _filterQueryByPermissionsType($query, $userId, $permissionType = Permission::READ)
+    {
         // Retrieve the groups ids the user is member of.
         $groupsIds = $this->_findGroupsByUserId($userId)
             ->extract('id')

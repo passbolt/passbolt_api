@@ -82,8 +82,8 @@ class LegacyApiHelper extends Helper
                 if (!empty($formattedEntity)) {
                     $result[$subEntityName] = array_merge($result[$subEntityName], $formattedEntity);
                 }
-            } elseif($property == 'children' && is_array($value)) {
-              $result[$property] = self::formatResultSet($value);
+            } elseif ($property == 'children' && is_array($value)) {
+                $result[$property] = self::formatResultSet($value);
             } elseif (is_array($value)) {
                 // example: groups_users
                 $subEntityName = self::formatModelName($property);

@@ -21,9 +21,11 @@ class Purifier
      * @param $html
      * @return string
      */
-    static public function clean($html) {
+    public static function clean($html)
+    {
         $config = \HTMLPurifier_Config::createDefault();
         $purifier = new \HTMLPurifier($config);
+
         return $purifier->purify($html);
     }
 }

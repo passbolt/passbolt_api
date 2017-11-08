@@ -109,7 +109,7 @@ class PermissionsTable extends Table
     /**
      * Custom validation rule to validate permission type
      *
-     * @param integer $value permission type
+     * @param int $value permission type
      * @return bool
      */
     public function isValidPermissionType($value)
@@ -119,6 +119,7 @@ class PermissionsTable extends Table
             Permission::UPDATE,
             Permission::OWNER
         ];
+
         return is_int($value) && in_array($value, $permissionTypes);
     }
 

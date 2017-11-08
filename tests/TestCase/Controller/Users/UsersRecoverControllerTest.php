@@ -99,5 +99,15 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             $this->postJson('/users/recover.json', $data['form-data']);
             $this->assertSuccess();
         }
+
+        // check emails
+        // setup
+        $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
+        $this->assertResponseOk();
+        $this->assertResponseContains('You just opened an account');
+        // recovery
+        $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
+        $this->assertResponseOk();
+        $this->assertResponseContains('You have initiated an account recovery!');
     }
 }

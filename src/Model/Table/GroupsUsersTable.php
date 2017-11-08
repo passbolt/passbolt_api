@@ -106,5 +106,4 @@ class GroupsUsersTable extends Table
 
         return $rules;
     }
-
 }
