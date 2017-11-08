@@ -47,7 +47,7 @@ class AppController extends Controller
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
-        $this->RequestHandler->setConfig('json', ['json_decode', true]);
+        $this->RequestHandler->setConfig('inputTypeMap.json', ['json_decode', true]);
 
         $this->loadComponent('User');
         $this->loadComponent('QueryString');

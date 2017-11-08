@@ -77,7 +77,7 @@ class UsersRegisterController extends AppController
             ->setTemplate('register');
 
         $user = $this->_buildAndValidateUser();
-        if ($this->_handleValidationError($user)) {
+        if ($this->_assertValidationError($user)) {
             return;
         }
 
@@ -88,7 +88,7 @@ class UsersRegisterController extends AppController
             $this->_saveUser($user);
             $token = $this->AuthenticationTokens->generate($user->id);
         });
-        if ($this->_handleValidationError($user)) {
+        if ($this->_assertValidationError($user)) {
             return;
         }
 
@@ -108,7 +108,7 @@ class UsersRegisterController extends AppController
      * @param \Cake\Datasource\EntityInterface $user user
      * @return bool
      */
-    protected function _handleValidationError($user)
+    protected function _assertValidationError($user)
     {
         // If validation fails and request is json return the validation errors
         // Otherwise render the registration form with the errors

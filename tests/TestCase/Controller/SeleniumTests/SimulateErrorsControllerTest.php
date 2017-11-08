@@ -30,8 +30,14 @@ class SimulateErrorsControllerTest extends AppIntegrationTestCase
 
     public function testSimulateError403()
     {
-        $this->getJson('/seleniumtests/error404.json');
-        $this->assertError(404);
+        $this->getJson('/seleniumtests/error403.json');
+        $this->assertError(403);
+    }
+
+    public function testSimulateError400()
+    {
+        $this->getJson('/seleniumtests/error400.json');
+        $this->assertError(400);
     }
 
     public function testSimulateError500()

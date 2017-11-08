@@ -302,15 +302,27 @@ class UsersTable extends Table
     public function findSetupStart($userId)
     {
         // show active first and do not count deleted ones
-        $query = $this->find()
+        $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
                 'Users.active' => false    // forbid users that have completed the setup to retry
-            ]);
+            ])
+            ->first();
 
-        return $query;
+        return $user;
+    }
+
+    /**
+     * Build the query that fetches data for user setup complete step
+     *
+     * @param string $userId uuid
+     * @return \Cake\ORM\Query
+     */
+    public function findSetupEnd($userId)
+    {
+        return $this->findSetupStart($userId);
     }
 
     /**

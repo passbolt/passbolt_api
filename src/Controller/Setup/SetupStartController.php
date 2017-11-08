@@ -45,8 +45,6 @@ class SetupStartController extends AppController
      */
     public function start($userId, $tokenId)
     {
-
-        $this->loadModel('UserAgents');
         // Check request sanity
         if (!isset($userId)) {
             throw new BadRequestException(__('The user id is missing.'));
@@ -69,9 +67,10 @@ class SetupStartController extends AppController
 
         // Retrieve the user.
         $this->loadModel('Users');
-        $user = $this->Users->findSetupStart($userId)->first();
+        $user = $this->Users->findSetupStart($userId);
         if (empty($user)) {
-            throw new BadRequestException(__('The user does not exist or has been deleted.'));
+            // @TODO more precise error message
+            throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
         }
         $this->set('user', $user);
 

@@ -218,6 +218,8 @@ Router::prefix('Users', function ($routes) {
  * Setup routes
  */
 Router::prefix('/setup', function ($routes) {
+    $routes->setExtensions(['json']);
+
     // legacy route
     $routes->connect('/install/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
@@ -227,6 +229,10 @@ Router::prefix('/setup', function ($routes) {
     $routes->connect('/start/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);
+
+    $routes->connect('/complete/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
+        ->setPass(['userId'])
+        ->setMethods(['PUT', 'POST']);
 });
 
 /**

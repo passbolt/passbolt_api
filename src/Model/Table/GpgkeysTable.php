@@ -14,11 +14,16 @@
  */
 namespace App\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
+use App\Model\Entity\Gpgkey;
+use App\Utility\Gpg;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use JsonSchema\Exception\ValidationException;
 
 /**
  * Gpgkeys Model
@@ -198,5 +203,48 @@ class GpgkeysTable extends Table
         $query->where(['id' => $options['id']]);
 
         return $query;
+    }
+
+    /**
+     * Build a Gpgkey entity from the armored key
+     *
+     * @param string $armoredKey ascii armored key
+     * @param string $userId uuid of the user using the key
+     * @throws ValidationRuleException if the key info can not be parsed
+     * @return object Gpgkey entity
+     */
+    public function buildEntityFromArmoredKey($armoredKey, $userId)
+    {
+        try {
+            $gpg = new Gpg();
+            $info = $gpg->getKeyInfo($armoredKey);
+        } catch (Exception $e) {
+            return new ValidationException(__('Could not create Gpgkey from armored key.'));
+        }
+
+        $data = [
+            'user_id' => $userId,
+            'fingerprint' => $info['fingerprint'],
+            'bits' => $info['bits'],
+            'type' => $info['type'],
+            'key_id' => $info['key_id'],
+            'uid' => $info['uid'],
+            'armored_key' => $armoredKey,
+            'deleted' => false
+        ];
+        if (!empty($info['expires'])) {
+            $data['expires'] = new FrozenTime($info['expires']);
+        }
+        if (!empty($info['key_created'])) {
+            $data['key_created'] = new FrozenTime($info['expires']);
+        }
+        $gpgkey = $this->newEntity($data, ['accessibleFields' => ['*' => true]]);
+
+        // No need to check rules if basic validation fails
+        if ($gpgkey->getErrors()) {
+            return $gpgkey;
+        }
+        $this->checkRules($gpgkey);
+        return $gpgkey;
     }
 }

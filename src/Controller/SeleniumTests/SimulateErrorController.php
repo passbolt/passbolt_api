@@ -17,6 +17,7 @@ namespace App\Controller\SeleniumTests;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
@@ -34,6 +35,7 @@ class SimulateErrorController extends AppController
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $this->Auth->allow('error404');
             $this->Auth->allow('error403');
+            $this->Auth->allow('error400');
             $this->Auth->allow('error500');
         } else {
             throw new ForbiddenException();
@@ -53,13 +55,23 @@ class SimulateErrorController extends AppController
     }
 
     /**
-     * Simulate error 404
+     * Simulate error 403
      *
      * @throws ForbiddenException
      */
     public function error403()
     {
         throw new ForbiddenException();
+    }
+
+    /**
+     * Simulate error 400
+     *
+     * @throws BadRequestException
+     */
+    public function error400()
+    {
+        throw new BadRequestException();
     }
 
     /**

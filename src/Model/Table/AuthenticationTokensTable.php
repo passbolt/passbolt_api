@@ -187,4 +187,18 @@ class AuthenticationTokensTable extends Table
         $token->active = false;
         $this->save($token);
     }
+
+    /**
+     * Get a token entity using the token id
+     * (e.g. get using token->token, not token->id )
+     *
+     * @param $tokenId
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function findByToken($tokenId) {
+        $token = $this->find('all')
+            ->where(['token' => $tokenId, 'active' => true ])
+            ->first();
+        return $token;
+    }
 }
