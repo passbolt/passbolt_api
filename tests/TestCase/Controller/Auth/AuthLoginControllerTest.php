@@ -14,7 +14,7 @@
  */
 namespace App\Test\TestCase\Controller\Auth;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestCase;
@@ -153,7 +153,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
     public function testStage0MessageFormat()
     {
         $this->_gpgSetup();
-        $uuid = Common::uuid();
+        $uuid = UuidFactory::uuid();
 
         $fix = [
             //'' => false, // empty
@@ -255,7 +255,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
 
         // Check if there is a valid AuthToken in store
         $AuthToken = TableRegistry::get('AuthenticationTokens');
-        $isValid = $AuthToken->isValid($uuid, Common::uuid('user.id.ada'));
+        $isValid = $AuthToken->isValid($uuid, UuidFactory::uuid('user.id.ada'));
         $this->assertTrue($isValid, 'There should a valid auth token');
 
         // Send it back!
@@ -281,7 +281,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertEquals($headers['X-GPGAuth-Progress'], 'complete', 'The progress indicator should be set to complete');
 
         // Authentication token should be disabled at that stage
-        $isValid = $AuthToken->isValid($uuid, Common::uuid('user.id.ada'));
+        $isValid = $AuthToken->isValid($uuid, UuidFactory::uuid('user.id.ada'));
         $this->assertFalse($isValid, 'There should not be a valid auth token');
     }
 

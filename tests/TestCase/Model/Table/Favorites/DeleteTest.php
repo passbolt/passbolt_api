@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table;
 
 use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -43,9 +43,9 @@ class DeleteTest extends AppTestCase
 
     public function testSuccess()
     {
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $favorite = $this->Favorites->get($favoriteId);
-        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.dame')]);
+        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => UuidFactory::uuid('user.id.dame')]);
         $this->assertTrue($delete);
         // Check the favorite is well deleted in db.
         try {
@@ -58,9 +58,9 @@ class DeleteTest extends AppTestCase
 
     public function testErrorIsOwnerRule()
     {
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $favorite = $this->Favorites->get($favoriteId);
-        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => Common::uuid('user.id.ada')]);
+        $delete = $this->Favorites->delete($favorite, ['Favorites.user_id' => UuidFactory::uuid('user.id.ada')]);
         $this->assertFalse($delete);
         $errors = $favorite->getErrors();
         $this->assertNotEmpty($errors);

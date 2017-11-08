@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
@@ -37,7 +37,7 @@ class FindIndexTest extends AppTestCase
 
     public function testSuccess()
     {
-        $userId = Common::uuid('user.id.ada');
+        $userId = UuidFactory::uuid('user.id.ada');
         $resources = $this->Resources->findIndex($userId)->all();
         $this->assertGreaterThan(1, count($resources));
 
@@ -58,7 +58,7 @@ class FindIndexTest extends AppTestCase
 
     public function testContainSecrets()
     {
-        $userId = Common::uuid('user.id.ada');
+        $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['secret'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
         $resource = $resources->first();
@@ -72,7 +72,7 @@ class FindIndexTest extends AppTestCase
 
     public function testContainCreator()
     {
-        $userId = Common::uuid('user.id.ada');
+        $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['creator'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
         $resource = $resources->first();
@@ -85,7 +85,7 @@ class FindIndexTest extends AppTestCase
 
     public function testContainModifier()
     {
-        $userId = Common::uuid('user.id.ada');
+        $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['modifier'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
         $resource = $resources->first();
@@ -98,7 +98,7 @@ class FindIndexTest extends AppTestCase
 
     public function testContainFavorite()
     {
-        $userId = Common::uuid('user.id.ada');
+        $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['favorite'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
         $resource = $resources->first();
@@ -115,12 +115,12 @@ class FindIndexTest extends AppTestCase
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
             // Find all the resources for the current user.
-            $userId = Common::uuid("user.id.$userAlias");
+            $userId = UuidFactory::uuid("user.id.$userAlias");
             $resources = $this->Resources->findIndex($userId, $findIndexOptions)->all();
 
             // Check expected permissions are there.
             foreach($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
-                $resourceId = Common::uuid("resource.id.$resourceAlias");
+                $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
                 $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0];
                 if ($expectedPermissionType == 0) {
                     $this->assertEmpty($resource, "$userAlias should not have a permission [$expectedPermissionType] for $resourceAlias");
@@ -135,7 +135,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsFavorite()
     {
-        $userId = Common::uuid('user.id.dame');
+        $userId = UuidFactory::uuid('user.id.dame');
         $options['filter']['is-favorite'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
 
@@ -145,13 +145,13 @@ class FindIndexTest extends AppTestCase
 
             return $result;
         }, []);
-        $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
+        $expectedResources = [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.april')];
         $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
     }
 
     public function testFilterIsNotFavorite()
     {
-        $userId = Common::uuid('user.id.dame');
+        $userId = UuidFactory::uuid('user.id.dame');
         $options['filter']['is-favorite'] = false;
         $resources = $this->Resources->findIndex($userId, $options)->all();
 
@@ -161,7 +161,7 @@ class FindIndexTest extends AppTestCase
 
             return $result;
         }, []);
-        $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
+        $expectedResources = [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.april')];
         $this->assertEquals(0, count(array_intersect($expectedResources, $favoriteResourcesIds)));
     }
 
@@ -173,13 +173,13 @@ class FindIndexTest extends AppTestCase
                 if ($usersExpectedPermissions[$key] == 0) {
                     return $result;
                 }
-                $result[] = Common::uuid("resource.id.$key");
+                $result[] = UuidFactory::uuid("resource.id.$key");
 
                 return $result;
             }, []);
 
             // Find all the resources for the current user.
-            $userId = Common::uuid("user.id.$userAlias");
+            $userId = UuidFactory::uuid("user.id.$userAlias");
             $resources = $this->Resources->findIndex($userId)->all();
             $resourcesIds = $resources->reduce(function ($result, $row) {
                 $result[] = $row->id;

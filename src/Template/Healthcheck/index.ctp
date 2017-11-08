@@ -58,7 +58,7 @@ $healtcheck = new HealthcheckHtmlHelper();
             <!-- if the javascript does not load this message will be shown -->
             <div id="url-rewriting-warning" class="message error">
                 <?php echo __('URL rewriting is not properly configured on your server.'); ?>
-                <a target="_blank" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
+                <a target="_blank" rel="noopener" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
             </div>
             <?php
             if ($body['ssl']):
@@ -92,7 +92,7 @@ sudo su -s /bin/bash -c "./bin/cake passbolt healthcheck" www-data
             <h3>Something wrong?</h3>
             <p>Hang in there! You can find more information on how to install and update passbolt
                 in the official online help.</p>
-            <a href="https://www.passbolt.com/help/" target="_blank" class="button primary big">
+            <a href="https://www.passbolt.com/help/" target="_blank" rel="noopener" class="button primary big">
                 <i class="fa fa-fw fa-life-saver"></i>
                 Help
             </a>

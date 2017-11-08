@@ -29,7 +29,8 @@
         "singpolyma/openpgp-php": "^0.3.0",
         "thadafinser/user-agent-parser": "^2.0",
         "donatj/phpuseragentparser": "^0.7.0",
-        "lorenzo/cakephp-email-queue": "^3.1"
+        "lorenzo/cakephp-email-queue": "^3.1",
+        "ezyang/htmlpurifier": "dev-master"
     },
     "require-dev": {
         "psy/psysh": "@stable",

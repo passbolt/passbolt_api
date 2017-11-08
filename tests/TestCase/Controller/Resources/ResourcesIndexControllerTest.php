@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
@@ -79,7 +79,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Contain favorite.
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody[0]);
         // A resource marked as favorite contains the favorite data.
-        $favoriteResourceId = Common::uuid('resource.id.apache');
+        $favoriteResourceId = UuidFactory::uuid('resource.id.apache');
         $favoriteResource = current(array_filter($this->_responseJsonBody, function ($resource) use ($favoriteResourceId) {
             return $resource->id == $favoriteResourceId;
         }));
@@ -113,7 +113,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Contain favorite.
         $this->assertObjectHasAttribute('Favorite', $this->_responseJsonBody[0]);
         // A resource marked as favorite contains the favorite data.
-        $favoriteResourceId = Common::uuid('resource.id.apache');
+        $favoriteResourceId = UuidFactory::uuid('resource.id.apache');
         $favoriteResource = current(array_filter($this->_responseJsonBody, function ($resource) use ($favoriteResourceId) {
             return $resource->Resource->id == $favoriteResourceId;
         }));
@@ -131,7 +131,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
         // Check that the result contain only the expected favorite resources.
         $favoriteResourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedResources = [Common::uuid('resource.id.apache'), Common::uuid('resource.id.april')];
+        $expectedResources = [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.april')];
         $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
 
         // Expected fields.

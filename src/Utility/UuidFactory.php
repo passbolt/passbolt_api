@@ -18,7 +18,7 @@ use Aura\Intl\Exception;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
 
-class Common
+class UuidFactory
 {
 
     /**
@@ -49,18 +49,5 @@ class Common
 
             return $uuid5->toString();
         }
-    }
-
-    /**
-     * Multibyte string safe ucfirst function
-     *
-     * @param string $string string to convert
-     * @return string
-     */
-    public static function ucfirst($string)
-    {
-        $string = mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1);
-
-        return $string;
     }
 }

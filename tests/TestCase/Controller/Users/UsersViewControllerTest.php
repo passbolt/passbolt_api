@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Controller\Users;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 
 class UsersViewControllerTest extends AppIntegrationTestCase
@@ -25,7 +25,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     public function testUsersViewGetSuccess()
     {
         $this->authenticateAs('ada');
-        $uuid = Common::uuid('user.id.ada');
+        $uuid = UuidFactory::uuid('user.id.ada');
         $this->getJson('/users/' . $uuid . '.json?api-version=2');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -45,7 +45,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     public function testUsersViewGetApiV1Success()
     {
         $this->authenticateAs('ada');
-        $uuid = Common::uuid('user.id.ada');
+        $uuid = UuidFactory::uuid('user.id.ada');
         $this->getJson('/users/' . $uuid . '.json');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -66,7 +66,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     public function testUsersViewGetMeSuccess()
     {
         $this->authenticateAs('ada');
-        $uuid = Common::uuid('user.id.ada');
+        $uuid = UuidFactory::uuid('user.id.ada');
         $this->getJson('/users/me.json');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -89,7 +89,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 
     public function testUsersViewUserDoesNotExistError() {
         $this->authenticateAs('ada');
-        $uuid = Common::uuid('user.id.notauser');
+        $uuid = UuidFactory::uuid('user.id.notauser');
         $this->getJson('/users/' . $uuid . '.json');
         $this->assertError(404, 'The user does not exist.');
     }

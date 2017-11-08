@@ -19,7 +19,7 @@ $browser = strtolower($userAgent['Browser']['name']);
     <div class="plugin-check-wrapper">
         <div class="plugin-check <?= $browser ?> error">
             <p class="message">
-                <?php echo __('An add-on is required to use passbolt.'); ?>
+                <?php echo __('An add-on is required to use passbolt.'); ?><br>
                 <a href="https://www.passbolt.com/download/<?= $browser ?>">
                     <?php echo __('Download it here'); ?>
                 </a>.

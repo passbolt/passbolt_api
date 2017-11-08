@@ -18,7 +18,7 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Role;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Utility\Hash;
@@ -58,8 +58,8 @@ class GroupsAddController extends AppController
     protected function _buildAndValidateGroupEntity()
     {
         $data = $this->_formatRequestData($this->request->getData());
-        $data['created_by'] = Common::uuid('user.id.admin');
-        $data['modified_by'] = Common::uuid('user.id.admin');
+        $data['created_by'] = UuidFactory::uuid('user.id.admin');
+        $data['modified_by'] = UuidFactory::uuid('user.id.admin');
 
         // Build entity and perform basic check
         $group = $this->Groups->newEntity($data, [

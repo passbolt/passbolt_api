@@ -18,7 +18,7 @@ namespace App\Test\TestCase\Controller\Groups;
 use App\Model\Entity\Role;
 use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -39,8 +39,8 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin', Role::ADMIN);
         $groupName = 'UnitTest Group';
-        $userAId = Common::uuid('user.id.ada');
-        $userBId = Common::uuid('user.id.betty');
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
         $postData = [
             'Group' => [
                 'name' => $groupName,
@@ -118,7 +118,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             'GroupUsers' => [
                 [
                     'GroupUser' => [
-                        'user_id' => Common::uuid(),
+                        'user_id' => UuidFactory::uuid(),
                         'is_admin' => 1,
                     ],
                 ],

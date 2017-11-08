@@ -14,7 +14,7 @@
  */
 namespace App\Model\Table;
 
-use App\Utility\Common;
+use App\Utility\PassboltText;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -123,10 +123,10 @@ class ProfilesTable extends Table
     public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
     {
         if (isset($data['first_name'])) {
-            $data['first_name'] = Common::ucfirst($data['first_name']);
+            $data['first_name'] = PassboltText::ucfirst($data['first_name']);
         }
         if (isset($data['last_name'])) {
-            $data['last_name'] = Common::ucfirst($data['last_name']);
+            $data['last_name'] = PassboltText::ucfirst($data['last_name']);
         }
     }
 }

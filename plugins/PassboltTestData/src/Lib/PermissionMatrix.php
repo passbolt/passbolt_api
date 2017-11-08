@@ -16,7 +16,7 @@
 namespace PassboltTestData\Lib;
 
 use App\Model\Entity\Permission;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 
 class PermissionMatrix {
 
@@ -54,8 +54,8 @@ class PermissionMatrix {
      * ]
      *
      * The aliases can be used to retrieve the resources and users uuids
-     * > Common::uuid("resource.id.$resourceAlias")
-     * > Common::uuid("user.id.$userAlias"')
+     * > UuidFactory::uuid("resource.id.$resourceAlias")
+     * > UuidFactory::uuid("user.id.$userAlias"')
      *
      * Return example:
      * [
@@ -97,7 +97,7 @@ class PermissionMatrix {
     public static function getUsersResourcePermissions($resourceId) {
         $matrix = self::getUsersResourcesPermissions();
         $resourceAlias = array_reduce(array_keys($matrix), function($carry, $item) use ($resourceId) {
-            if ($resourceId == Common::uuid("resource.id.$item")) $carry = $item;
+            if ($resourceId == UuidFactory::uuid("resource.id.$item")) $carry = $item;
             return $carry;
         }, null);
 
@@ -127,7 +127,7 @@ class PermissionMatrix {
     public static function getGroupsResourcePermissions($resourceId) {
         $matrix = self::getGroupsResourcesPermissions();
         $resourceAlias = array_reduce(array_keys($matrix), function($carry, $item) use ($resourceId) {
-            if ($resourceId == Common::uuid("resource.id.$item")) $carry = $item;
+            if ($resourceId == UuidFactory::uuid("resource.id.$item")) $carry = $item;
             return $carry;
         }, null);
 

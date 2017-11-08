@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
 class GroupsDataTask extends DataTask
@@ -24,175 +24,175 @@ class GroupsDataTask extends DataTask
     protected function _getData()
     {
         $groups[] = [
-            'id' => Common::uuid('group.id.accounting'),
+            'id' => UuidFactory::uuid('group.id.accounting'),
             'name' => 'Accounting',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.board'),
+            'id' => UuidFactory::uuid('group.id.board'),
             'name' => 'Board',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.creative'),
+            'id' => UuidFactory::uuid('group.id.creative'),
             'name' => 'Creative',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.developer'),
+            'id' => UuidFactory::uuid('group.id.developer'),
             'name' => 'Developer',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.ergonom'),
+            'id' => UuidFactory::uuid('group.id.ergonom'),
             'name' => 'Ergonom',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.freelancer'),
+            'id' => UuidFactory::uuid('group.id.freelancer'),
             'name' => 'Freelancer',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.human_resource'),
+            'id' => UuidFactory::uuid('group.id.human_resource'),
             'name' => 'Human resource',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.it_support'),
+            'id' => UuidFactory::uuid('group.id.it_support'),
             'name' => 'IT support',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.leadership_team'),
+            'id' => UuidFactory::uuid('group.id.leadership_team'),
             'name' => 'Leadership team',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.management'),
+            'id' => UuidFactory::uuid('group.id.management'),
             'name' => 'Management',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.marketing'),
+            'id' => UuidFactory::uuid('group.id.marketing'),
             'name' => 'Marketing',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.network'),
+            'id' => UuidFactory::uuid('group.id.network'),
             'name' => 'Network',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.operations'),
+            'id' => UuidFactory::uuid('group.id.operations'),
             'name' => 'Operations',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.procurement'),
+            'id' => UuidFactory::uuid('group.id.procurement'),
             'name' => 'Procurement',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.quality_assurance'),
+            'id' => UuidFactory::uuid('group.id.quality_assurance'),
             'name' => 'Quality assurance',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.resource_planning'),
+            'id' => UuidFactory::uuid('group.id.resource_planning'),
             'name' => 'Resource planning',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.sales'),
+            'id' => UuidFactory::uuid('group.id.sales'),
             'name' => 'Sales',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.traffic'),
+            'id' => UuidFactory::uuid('group.id.traffic'),
             'name' => 'Traffic',
             'deleted' => 0,
             'created' => '2016-01-29 13:39:25',
             'modified' => '2016-01-29 13:39:25',
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $groups[] = [
-            'id' => Common::uuid('group.id.deleted'),
+            'id' => UuidFactory::uuid('group.id.deleted'),
             'name' => 'deleted',
             'deleted' => 1,
             'created' => '2016-02-02 18:59:05',
             'modified' => '2016-02-02 18:59:05',
-            'created_by' => Common::uuid('user.id.anonymous'),
-            'modified_by' => Common::uuid('user.id.anonymous')
+            'created_by' => UuidFactory::uuid('user.id.anonymous'),
+            'modified_by' => UuidFactory::uuid('user.id.anonymous')
         ];
 
         return $groups;

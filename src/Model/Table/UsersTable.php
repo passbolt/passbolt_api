@@ -294,6 +294,26 @@ class UsersTable extends Table
     }
 
     /**
+     * Build the query that fetches data for user setup start
+     *
+     * @param string $userId uuid
+     * @return \Cake\ORM\Query
+     */
+    public function findSetupStart($userId)
+    {
+        // show active first and do not count deleted ones
+        $query = $this->find()
+            ->contain(['Roles', 'Profiles', 'Roles'])
+            ->where([
+                'Users.id' => $userId,
+                'Users.deleted' => false, // forbid deleted users to start setup
+                'Users.active' => false    // forbid users that have completed the setup to retry
+            ]);
+
+        return $query;
+    }
+
+    /**
      * Event fired before request data is converted into entities
      * Set user to inactive and not deleted on register
      *

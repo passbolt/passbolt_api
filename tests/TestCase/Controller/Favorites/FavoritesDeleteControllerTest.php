@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Favorites;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
@@ -26,7 +26,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     public function testDeleteSuccess()
     {
         $this->authenticateAs('dame');
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
         $this->assertSuccess();
         $Favorites = TableRegistry::get('Favorites');
@@ -45,7 +45,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     public function testDeleteErrorFavoritesNotFound()
     {
         $this->authenticateAs('dame');
-        $favoriteId = Common::uuid();
+        $favoriteId = UuidFactory::uuid();
         $this->deleteJson("/favorites/$favoriteId.json");
         $this->assertError(404, 'The favorite does not exist.');
     }
@@ -53,14 +53,14 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
     public function testDeleteErrorFavoritesOfSomeoneElse()
     {
         $this->authenticateAs('ada');
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json");
         $this->assertError(404, 'The favorite does not exist.');
     }
 
     public function testDeleteErrorNotAuthenticated()
     {
-        $favoriteId = Common::uuid('favorite.id.dame-apache');
+        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
         $this->assertAuthenticationError();
     }

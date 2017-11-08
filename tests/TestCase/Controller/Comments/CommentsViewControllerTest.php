@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Comments;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 
 class CommentsViewControllerTest extends AppIntegrationTestCase
 {
@@ -24,7 +24,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public function testSuccess()
     {
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $this->getJson("/comments/resource/$resourceId.json?api-version=2");
         $this->assertSuccess();
@@ -43,7 +43,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public function testApiV1Success()
     {
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $this->getJson("/comments/resource/$resourceId.json");
         $this->assertSuccess();
@@ -63,7 +63,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public function testContainSuccess()
     {
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[creator]=1';
         $this->getJson("/comments/resource/$resourceId.json?$urlParameter&api-version=2");
@@ -80,7 +80,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public function testContainApiV1Success()
     {
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[creator]=1';
         $this->getJson("/comments/resource/$resourceId.json?$urlParameter");
@@ -100,14 +100,14 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         // jquery is soft deleted. Hence, not reachable.
-        $resourceId = Common::uuid('Resource.id.jquery');
+        $resourceId = UuidFactory::uuid('Resource.id.jquery');
         $this->getJson("/comments/resource/$resourceId.json");
         $this->assertError('404', 'Could not find comments for the requested model');
     }
 
     public function testErrorWrongModelNameParameter()
     {
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $this->getJson("/comments/WrongModelName/$resourceId.json");
         $this->assertError('500', 'Invalid model name');
@@ -122,7 +122,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public function testErrorNotAuthenticated()
     {
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/comments/resource/$resourceId.json");
         $this->assertAuthenticationError();
     }

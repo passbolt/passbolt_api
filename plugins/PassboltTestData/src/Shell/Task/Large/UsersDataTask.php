@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Large;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use PassboltTestData\Lib\DataTask;
 
@@ -26,32 +26,32 @@ class UsersDataTask extends DataTask
     protected function _getData()
     {
         $users[] = [
-            'id' => Common::uuid('user.id.admin'),
+            'id' => UuidFactory::uuid('user.id.admin'),
             'username' => 'admin@passbolt.com',
-            'role_id' => Common::uuid('role.id.admin'),
+            'role_id' => UuidFactory::uuid('role.id.admin'),
             'active' => 1,
             'deleted' => 0,
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $users[] = [
-            'id' => Common::uuid('user.id.anonymous'),
+            'id' => UuidFactory::uuid('user.id.anonymous'),
             'username' => 'anonymous@passbolt.com',
-            'role_id' => Common::uuid('role.id.anonymous'),
+            'role_id' => UuidFactory::uuid('role.id.anonymous'),
             'active' => 1,
             'deleted' => 0,
-            'created_by' => Common::uuid('user.id.admin'),
-            'modified_by' => Common::uuid('user.id.admin')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         for ($i = 0; $i < Configure::read('PassboltTestData.scenarios.large.install.count'); $i++) {
             $users[] = [
-                'id' => Common::uuid('user.id.user_' . $i),
+                'id' => UuidFactory::uuid('user.id.user_' . $i),
                 'username' => 'user_' . $i . '@passbolt.com',
-                'role_id' => Common::uuid('role.id.user'),
+                'role_id' => UuidFactory::uuid('role.id.user'),
                 'active' => 1,
                 'deleted' => 0,
-                'created_by' => Common::uuid('user.id.admin'),
-                'modified_by' => Common::uuid('user.id.admin')
+                'created_by' => UuidFactory::uuid('user.id.admin'),
+                'modified_by' => UuidFactory::uuid('user.id.admin')
             ];
         }
 

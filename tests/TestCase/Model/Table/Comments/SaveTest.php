@@ -18,7 +18,7 @@ namespace App\Test\TestCase\Model\Table\Comments;
 use App\Model\Table\CommentsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
@@ -120,7 +120,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorUserDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => Common::uuid()]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -130,7 +130,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorUserNotSoftDeleted()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => Common::uuid('user.id.sofia')]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid('user.id.sofia')]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -140,7 +140,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorResourceDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => Common::uuid()]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -150,7 +150,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorResourceIsSoftDeleted()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => Common::uuid('resource.id.jquery')]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => UuidFactory::uuid('resource.id.jquery')]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -162,8 +162,8 @@ class SaveTest extends AppTestCase
     {
         $comment = $this->Comments->newEntity(
             self::getDummyComment([
-                'foreign_id' => Common::uuid('resource.id.apache'),
-                'parent_id' => Common::uuid('comment.id.doesnotexist')
+                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
+                'parent_id' => UuidFactory::uuid('comment.id.doesnotexist')
             ]),
             self::getEntityDefaultOptions()
         );
@@ -178,8 +178,8 @@ class SaveTest extends AppTestCase
     {
         $comment = $this->Comments->newEntity(
             self::getDummyComment([
-                'foreign_id' => Common::uuid('resource.id.bower'),
-                'parent_id' => Common::uuid('comment.id.apache-1')
+                'foreign_id' => UuidFactory::uuid('resource.id.bower'),
+                'parent_id' => UuidFactory::uuid('comment.id.apache-1')
             ]),
             self::getEntityDefaultOptions()
         );
@@ -192,7 +192,7 @@ class SaveTest extends AppTestCase
 
     public function testErrorHasResourceAccessRule()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => Common::uuid('user.id.dame'), 'foreign_id' => Common::uuid('resource.id.canjs')]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid('user.id.dame'), 'foreign_id' => UuidFactory::uuid('resource.id.canjs')]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
@@ -211,8 +211,8 @@ class SaveTest extends AppTestCase
         // Check the favorite exists in db.
         $addedComment = $this->Comments->get($save->id);
         $this->assertNotNull($addedComment);
-        $this->assertEquals(Common::uuid('user.id.ada'), $addedComment->user_id);
-        $this->assertEquals(Common::uuid('resource.id.bower'), $addedComment->foreign_id);
+        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $addedComment->user_id);
+        $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedComment->foreign_id);
         $this->assertEquals('Resource', $addedComment->foreign_model);
         $this->assertNull($addedComment->parent_id);
     }

@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\PermissionMatrix;
 
@@ -46,8 +46,8 @@ class FindViewTest extends AppTestCase
 
     public function testSuccess()
     {
-        $userId = Common::uuid('user.id.ada');
-        $resourceId =  Common::uuid('resource.id.apache');
+        $userId = UuidFactory::uuid('user.id.ada');
+        $resourceId =  UuidFactory::uuid('resource.id.apache');
         $resources = $this->Resources->findView($userId, $resourceId);
 
         // Expected fields.
@@ -65,9 +65,9 @@ class FindViewTest extends AppTestCase
     {
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $userId = Common::uuid("user.id.$userAlias");
+            $userId = UuidFactory::uuid("user.id.$userAlias");
             foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
-                $resourceId = Common::uuid("resource.id.$resourceAlias");
+                $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
                 $resource = $this->Resources->findView($userId, $resourceId)->first();
                 if ($permissionType == 0) {
                     $this->assertNull($resource);
@@ -81,7 +81,7 @@ class FindViewTest extends AppTestCase
     public function testErrorInvalidUserIdParameter()
     {
         try {
-            $this->Resources->findView('not-valid', Common::uuid());
+            $this->Resources->findView('not-valid', UuidFactory::uuid());
         } catch (\Exception $e) {
             return $this->assertTrue(true);
         }
@@ -91,7 +91,7 @@ class FindViewTest extends AppTestCase
     public function testErrorInvalidResourceIdParameter()
     {
         try {
-            $this->Resources->findView(Common::uuid(), 'not-valid');
+            $this->Resources->findView(UuidFactory::uuid(), 'not-valid');
         } catch (\Exception $e) {
             return $this->assertTrue(true);
         }

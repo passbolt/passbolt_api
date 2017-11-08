@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Favorites;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FavoritesAddControllerTest extends AppIntegrationTestCase
@@ -26,7 +26,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     public function testAddSuccess()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertSuccess();
 
@@ -37,7 +37,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     public function testAddSuccessApiV1()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->postJson("/favorites/resource/$resourceId.json");
         $this->assertSuccess();
 
@@ -57,7 +57,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     public function testAddErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.jquery');
+        $resourceId = UuidFactory::uuid('resource.id.jquery');
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertError('400', '');
         $this->markTestIncomplete('The message should be explicit');
@@ -66,7 +66,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     public function testAddErrorDoesntExistResource()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid();
+        $resourceId = UuidFactory::uuid();
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertError('400', '');
         $this->markTestIncomplete('The message should be explicit');
@@ -74,7 +74,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
 
     public function testAddErrorResourceAccessDenied()
     {
-        $resourceId = Common::uuid('resource.id.canjs');
+        $resourceId = UuidFactory::uuid('resource.id.canjs');
 
         // Check that the resource exists.
         $Resources = TableRegistry::get('Resources');
@@ -83,14 +83,14 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
 
         // Check that the user cannot access the resource
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.canjs');
+        $resourceId = UuidFactory::uuid('resource.id.canjs');
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertError('400', '');
     }
 
     public function testAddErrorNotAuthenticated()
     {
-        $resourceId = Common::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertAuthenticationError();
     }

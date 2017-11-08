@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
 class SecretsDataTask extends DataTask
@@ -23,11 +23,11 @@ class SecretsDataTask extends DataTask
 
     protected function _getFixedPasswords() {
         return [
-            Common::uuid('resource.id.apache') => '_upjvh-p@wAHP18D}OmY05M',
-            Common::uuid('resource.id.april') => 'z"(-1s]3&Itdno:vPt',
-            Common::uuid('resource.id.bower') => 'CL]m]x(o{sA#QW',
-            Common::uuid('resource.id.centos') => 'this_23-04',
-            Common::uuid('resource.id.enlightenment') => 'azertyuiop',
+            UuidFactory::uuid('resource.id.apache') => '_upjvh-p@wAHP18D}OmY05M',
+            UuidFactory::uuid('resource.id.april') => 'z"(-1s]3&Itdno:vPt',
+            UuidFactory::uuid('resource.id.bower') => 'CL]m]x(o{sA#QW',
+            UuidFactory::uuid('resource.id.centos') => 'this_23-04',
+            UuidFactory::uuid('resource.id.enlightenment') => 'azertyuiop',
         ];
     }
 
@@ -105,14 +105,14 @@ class SecretsDataTask extends DataTask
         $this->loadModel('Users');
         $this->loadModel('Resources');
 
-        $users = $this->Users->find('index', ['role' => Common::uuid('role.id.admin')]);
+        $users = $this->Users->find('index', ['role' => UuidFactory::uuid('role.id.admin')]);
         foreach($users as $user) {
             $resources = $this->Resources->findIndex($user->id);
             foreach($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);
                 $secrets[] = [
-                    'id' => Common::uuid(),
+                    'id' => UuidFactory::uuid(),
                     'user_id' => $user->id,
                     'resource_id' => $resource->id,
                     'data' => $armoredPassword,

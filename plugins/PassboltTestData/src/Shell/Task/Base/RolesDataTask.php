@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
 class RolesDataTask extends DataTask
@@ -24,28 +24,28 @@ class RolesDataTask extends DataTask
     protected function _getData()
     {
         $roles[] = [
-            'id' => Common::uuid('role.id.anonymous'),
+            'id' => UuidFactory::uuid('role.id.anonymous'),
             'name' => 'guest',
             'description' => 'Non logged in user',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25'
         ];
         $roles[] = [
-            'id' => Common::uuid('role.id.user'),
+            'id' => UuidFactory::uuid('role.id.user'),
             'name' => 'user',
             'description' => 'Logged in user',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25',
         ];
         $roles[] = [
-            'id' => Common::uuid('role.id.admin'),
+            'id' => UuidFactory::uuid('role.id.admin'),
             'name' => 'admin',
             'description' => 'Organization administrator',
             'created' => '2012-07-04 13:39:25',
             'modified' => '2012-07-04 13:39:25',
         ];
         $roles[] = [
-            'id' => Common::uuid('role.id.root'),
+            'id' => UuidFactory::uuid('role.id.root'),
             'name' => 'root',
             'description' => 'Super Administrator',
             'created' => '2012-07-04 13:39:25',

@@ -19,7 +19,7 @@ use App\Model\Entity\Role;
 use App\Model\Table\CommentsTable;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -46,7 +46,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
                 'content' => $commentContent,
             ],
         ];
-        $resourceId = Common::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertSuccess();
 
@@ -64,10 +64,10 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $postData = [
             'Comment' => [
                 'content' => $commentContent,
-                'parent_id' => Common::uuid('comment.id.apache-1')
+                'parent_id' => UuidFactory::uuid('comment.id.apache-1')
             ],
         ];
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertSuccess();
 
@@ -94,7 +94,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada', Role::USER);
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
-        $resourceId = Common::uuid('resource.id.notexist');
+        $resourceId = UuidFactory::uuid('resource.id.notexist');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertError(404, 'The resource does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
@@ -103,7 +103,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
     public function testAddRuleValidationResourceIsSoftDeleted()
     {
         // Soft delete resource "cakephp".
-        $resourceId = Common::uuid('resource.id.cakephp');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $resource = $this->Resources->find()
             ->where(['id' => $resourceId])
             ->first();
@@ -124,7 +124,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada', Role::USER);
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
-        $resourceId = Common::uuid('resource.id.chai');
+        $resourceId = UuidFactory::uuid('resource.id.chai');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertError(404, 'The resource does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
@@ -137,10 +137,10 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $postData = [
             'Comment' => [
                 'content' => $commentContent,
-                'parent_id' => Common::uuid('comment.id.doesNotExist')
+                'parent_id' => UuidFactory::uuid('comment.id.doesNotExist')
             ],
         ];
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertError(400, 'Could not validate comment data.');
         $this->assertEmpty($this->_responseJsonBody);
@@ -154,7 +154,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
                 'content' => '',
             ],
         ];
-        $resourceId = Common::uuid('resource.id.cakephp');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertError(400, 'Could not validate comment data.');
         $this->assertEmpty($this->_responseJsonBody);
@@ -164,7 +164,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada', Role::USER);
         $createdDate = '2012-01-01 00:00:00';
-        $createdBy = Common::uuid('user.id.betty');
+        $createdBy = UuidFactory::uuid('user.id.betty');
         $commentContent = 'this is a test';
         $postData = [
             'Comment' => [
@@ -176,7 +176,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
                 'modified' => $createdDate
             ],
         ];
-        $resourceId = Common::uuid('resource.id.cakephp');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertSuccess();
 
@@ -195,7 +195,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
     public function testAddErrorNotAuthenticated()
     {
         $postData = [];
-        $resourceId = Common::uuid('resource.id.cakephp');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertAuthenticationError();
     }

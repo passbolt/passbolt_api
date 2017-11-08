@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\PermissionMatrix;
 
@@ -45,9 +45,9 @@ class HasAccessTest extends AppTestCase
     {
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
-            $userId = Common::uuid("user.id.$userAlias");
+            $userId = UuidFactory::uuid("user.id.$userAlias");
             foreach ($usersExpectedPermissions as $resourceAlias => $permissionType) {
-                $resourceId = Common::uuid("resource.id.$resourceAlias");
+                $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
                 $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
                 if ($permissionType == 0) {
                     $this->assertFalse($hasAccess);
@@ -61,7 +61,7 @@ class HasAccessTest extends AppTestCase
     public function testErrorInvalidArgumentUserId()
     {
         try {
-            $this->Resources->hasAccess('not-valid', Common::uuid());
+            $this->Resources->hasAccess('not-valid', UuidFactory::uuid());
         } catch (\InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
@@ -71,7 +71,7 @@ class HasAccessTest extends AppTestCase
     public function testErrorInvalidArgumentResourceId()
     {
         try {
-            $this->Resources->hasAccess(Common::uuid(), 'not-valid');
+            $this->Resources->hasAccess(UuidFactory::uuid(), 'not-valid');
         } catch (\InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }

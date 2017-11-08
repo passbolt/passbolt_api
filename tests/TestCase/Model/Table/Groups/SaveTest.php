@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -44,8 +44,8 @@ class SaveTest extends AppTestCase
     public function testSuccess()
     {
         $groupName = 'UnitTest Group';
-        $userAId = Common::uuid('user.id.ada');
-        $userBId = Common::uuid('user.id.betty');
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
         $group = $this->Groups->newEntity(
             [
                 'name' => $groupName,
@@ -53,8 +53,8 @@ class SaveTest extends AppTestCase
                     ['user_id' => $userAId, 'is_admin' => true],
                     ['user_id' => $userBId]
                 ],
-                'created_by' => Common::uuid('user.id.admin'),
-                'modified_by' => Common::uuid('user.id.admin'),
+                'created_by' => UuidFactory::uuid('user.id.admin'),
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ],
             [
                 'validate' => 'default',
@@ -86,8 +86,8 @@ class SaveTest extends AppTestCase
     public function testErrorRuleGroupUnique()
     {
         $groupName = 'Freelancer';
-        $userAId = Common::uuid('user.id.ada');
-        $userBId = Common::uuid('user.id.betty');
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
         $group = $this->Groups->newEntity(
             [
                 'name' => $groupName,
@@ -95,8 +95,8 @@ class SaveTest extends AppTestCase
                     ['user_id' => $userAId, 'is_admin' => true],
                     ['user_id' => $userBId]
                 ],
-                'created_by' => Common::uuid('user.id.admin'),
-                'modified_by' => Common::uuid('user.id.admin'),
+                'created_by' => UuidFactory::uuid('user.id.admin'),
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ],
             [
                 'validate' => 'default',
@@ -118,8 +118,8 @@ class SaveTest extends AppTestCase
     public function testErrorRuleAtLeastOneAdmin()
     {
         $groupName = 'UnitTest Group';
-        $userAId = Common::uuid('user.id.ada');
-        $userBId = Common::uuid('user.id.betty');
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
         $group = $this->Groups->newEntity(
             [
                 'name' => $groupName,
@@ -127,8 +127,8 @@ class SaveTest extends AppTestCase
                     ['user_id' => $userAId],
                     ['user_id' => $userBId]
                 ],
-                'created_by' => Common::uuid('user.id.admin'),
-                'modified_by' => Common::uuid('user.id.admin'),
+                'created_by' => UuidFactory::uuid('user.id.admin'),
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ],
             [
                 'validate' => 'default',
@@ -150,8 +150,8 @@ class SaveTest extends AppTestCase
     public function testErrorHasManyGroupsUsersRuleUserExists()
     {
         $groupName = 'UnitTest Group';
-        $userAId = Common::uuid('user.id.ada');
-        $userBId = Common::uuid();
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid();
         $group = $this->Groups->newEntity(
             [
                 'name' => $groupName,
@@ -159,8 +159,8 @@ class SaveTest extends AppTestCase
                     ['user_id' => $userAId, 'is_admin' => true],
                     ['user_id' => $userBId]
                 ],
-                'created_by' => Common::uuid('user.id.admin'),
-                'modified_by' => Common::uuid('user.id.admin'),
+                'created_by' => UuidFactory::uuid('user.id.admin'),
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ],
             [
                 'validate' => 'default',
@@ -182,8 +182,8 @@ class SaveTest extends AppTestCase
     public function testErrorHasManyGroupsUsersRuleUserIsNotSoftDeleted()
     {
         $groupName = 'UnitTest Group';
-        $userAId = Common::uuid('user.id.ada');
-        $userBId = Common::uuid('user.id.sofia');
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.sofia');
         $group = $this->Groups->newEntity(
             [
                 'name' => $groupName,
@@ -191,8 +191,8 @@ class SaveTest extends AppTestCase
                     ['user_id' => $userAId, 'is_admin' => true],
                     ['user_id' => $userBId]
                 ],
-                'created_by' => Common::uuid('user.id.admin'),
-                'modified_by' => Common::uuid('user.id.admin'),
+                'created_by' => UuidFactory::uuid('user.id.admin'),
+                'modified_by' => UuidFactory::uuid('user.id.admin'),
             ],
             [
                 'validate' => 'default',

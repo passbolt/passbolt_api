@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
@@ -47,7 +47,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
 
     public function testContainUser()
     {
-        $resourceId = Common::uuid('resource.id.debian');
+        $resourceId = UuidFactory::uuid('resource.id.debian');
         $options['contain']['user'] = true;
         $permissions = $this->Permissions->findViewAcoPermissions($resourceId, $options)->all();
 
@@ -59,7 +59,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
 
     public function testContainUserProfile()
     {
-        $resourceId = Common::uuid('resource.id.debian');
+        $resourceId = UuidFactory::uuid('resource.id.debian');
         $options['contain']['user.profile'] = true;
         $permissions = $this->Permissions->findViewAcoPermissions($resourceId, $options)->all();
 
@@ -88,7 +88,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
 
             // Check the users permissions.
             foreach ($expectedUsersResourcesPermissions as $userAlias => $permissionType) {
-                $userId = Common::uuid("user.id.$userAlias");
+                $userId = UuidFactory::uuid("user.id.$userAlias");
                 $extractedPermissions = Hash::extract($permissions->toArray(), "{n}[aco=Resource][aco_foreign_key=$resource->id][aro=User][aro_foreign_key=$userId]");
                 if ($permissionType == 0) {
                     $this->assertEmpty($extractedPermissions, "No permission should be defined for the user [$userAlias] and the resource [$resource->id]");
@@ -101,7 +101,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
 
             // Check the groups permissions.
             foreach ($expectedGroupsResourcesPermissions as $groupAlias => $permissionType) {
-                $groupId = Common::uuid("group.id.$groupAlias");
+                $groupId = UuidFactory::uuid("group.id.$groupAlias");
                 $extractedPermissions = Hash::extract($permissions->toArray(), "{n}[aco=Resource][aco_foreign_key=$resource->id][aro=Group][aro_foreign_key=$groupId]");
                 if ($permissionType == 0) {
                     $this->assertEmpty($extractedPermissions, "No permission should be defined for the group [$userAlias] and the resource [$resource->id]");

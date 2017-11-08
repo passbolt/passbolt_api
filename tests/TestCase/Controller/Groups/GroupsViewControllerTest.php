@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 
 class GroupsViewControllerTest extends AppIntegrationTestCase
 {
@@ -25,7 +25,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testSuccess()
     {
         $this->authenticateAs('ada');
-        $groupId = Common::uuid('group.id.freelancer');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -40,7 +40,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testApiV1Success()
     {
         $this->authenticateAs('ada');
-        $groupId = Common::uuid('group.id.freelancer');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -57,7 +57,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[user]=1';
-        $groupId = Common::uuid('group.id.freelancer');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -74,7 +74,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[user]=1';
-        $groupId = Common::uuid('group.id.freelancer');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?$urlParameter");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -105,7 +105,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testErrorNotFound()
     {
         $this->authenticateAs('ada');
-        $groupId = Common::uuid('not-found');
+        $groupId = UuidFactory::uuid('not-found');
         $this->getJson("/groups/$groupId.json");
         $this->assertError(404, 'The group does not exist.');
     }
@@ -113,7 +113,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testErrorDeletedGroup()
     {
         $this->authenticateAs('ada');
-        $groupId = Common::uuid('group.id.deleted');
+        $groupId = UuidFactory::uuid('group.id.deleted');
         $this->getJson("/groups/$groupId.json");
         $this->assertError(404, 'The group does not exist.');
     }

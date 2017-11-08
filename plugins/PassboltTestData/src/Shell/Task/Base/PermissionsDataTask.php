@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 use PassboltTestData\Lib\PermissionMatrix;
 
@@ -39,17 +39,17 @@ class PermissionsDataTask extends DataTask
                 if ($expectedPermissionType == 0) {
                     continue;
                 }
-                $acoId = Common::uuid('resource.id.' . $resourceAlias);
-                $aroId = Common::uuid('user.id.' . $userAlias);
+                $acoId = UuidFactory::uuid('resource.id.' . $resourceAlias);
+                $aroId = UuidFactory::uuid('user.id.' . $userAlias);
                 $permissions[] = [
-                    'id' => Common::uuid("permission.id.$acoId-$aroId"),
+                    'id' => UuidFactory::uuid("permission.id.$acoId-$aroId"),
                     'aco' => 'Resource',
                     'aco_foreign_key' => $acoId,
                     'aro' => 'User',
                     'aro_foreign_key' => $aroId,
                     'type' => $expectedPermissionType,
-                    'created_by' => Common::uuid('user.id.admin'),
-                    'modified_by' => Common::uuid('user.id.admin')
+                    'created_by' => UuidFactory::uuid('user.id.admin'),
+                    'modified_by' => UuidFactory::uuid('user.id.admin')
                 ];
             }
         }
@@ -65,17 +65,17 @@ class PermissionsDataTask extends DataTask
                 if ($expectedPermissionType == 0) {
                     continue;
                 }
-                $acoId = Common::uuid('resource.id.' . $resourceAlias);
-                $aroId = Common::uuid('group.id.' . $groupAlias);
+                $acoId = UuidFactory::uuid('resource.id.' . $resourceAlias);
+                $aroId = UuidFactory::uuid('group.id.' . $groupAlias);
                 $permissions[] = [
-                    'id' => Common::uuid("permission.id.$acoId-$aroId"),
+                    'id' => UuidFactory::uuid("permission.id.$acoId-$aroId"),
                     'aco' => 'Resource',
                     'aco_foreign_key' => $acoId,
                     'aro' => 'Group',
                     'aro_foreign_key' => $aroId,
                     'type' => $expectedPermissionType,
-                    'created_by' => Common::uuid('user.id.admin'),
-                    'modified_by' => Common::uuid('user.id.admin')
+                    'created_by' => UuidFactory::uuid('user.id.admin'),
+                    'modified_by' => UuidFactory::uuid('user.id.admin')
                 ];
             }
         }

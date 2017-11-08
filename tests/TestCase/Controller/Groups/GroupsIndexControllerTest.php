@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -89,24 +89,24 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     public function testFilterHasUsersSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-users]=' . Common::uuid('user.id.irene');
+        $urlParameter = 'filter[has-users]=' . UuidFactory::uuid('user.id.irene');
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertCount(3, $this->_responseJsonBody);
         $groupsIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedGroupsIds = [Common::uuid('group.id.creative'), Common::uuid('group.id.developer'), Common::uuid('group.id.ergonom')];
+        $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
     public function testFilterHasManagersSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-managers]=' . Common::uuid('user.id.ping');
+        $urlParameter = 'filter[has-managers]=' . UuidFactory::uuid('user.id.ping');
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertCount(2, $this->_responseJsonBody);
         $groupsIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedGroupsIds = [Common::uuid('group.id.human_resource'), Common::uuid('group.id.it_support')];
+        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource'), UuidFactory::uuid('group.id.it_support')];
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 

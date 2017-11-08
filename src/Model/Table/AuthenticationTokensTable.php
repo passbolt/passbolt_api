@@ -14,7 +14,7 @@
  */
 namespace App\Model\Table;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -122,7 +122,7 @@ class AuthenticationTokensTable extends Table
     {
         $token = $this->newEntity([
             'user_id' => $userId,
-            'token' => Common::uuid(),
+            'token' => UuidFactory::uuid(),
             'active' => true
         ]);
         if (!$this->save($token, ['checkRules' => false, 'atomic' => false])) {
@@ -161,6 +161,7 @@ class AuthenticationTokensTable extends Table
 
         // Is it expired?
         $valid = $token->created->wasWithinLast(Configure::read('passbolt.auth.tokenExpiry'));
+
         if (!$valid) {
             // update the token to inactive
             $token->active = false;
@@ -168,7 +169,6 @@ class AuthenticationTokensTable extends Table
 
             return false;
         }
-
         return true;
     }
 

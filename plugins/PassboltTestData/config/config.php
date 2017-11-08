@@ -19,6 +19,7 @@ return [
             'default' => [
                 'install' => [
                     'shellTasks' => [
+                        'PassboltTestData.Base/AuthenticationTokensData',
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Base/ProfilesData',
@@ -34,6 +35,7 @@ return [
                 ],
                 'fixturize' => [
                     'shellTasks' => [
+                        'PassboltTestData.Base/AuthenticationTokensData',
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Base/ProfilesData',

@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
@@ -44,8 +44,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.bower'),
+                'user_id' => UuidFactory::uuid('user.id.dame'),
+                'foreign_id' => UuidFactory::uuid('resource.id.bower'),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -65,8 +65,8 @@ class SaveTest extends AppTestCase
         // Check the favorite exists in db.
         $addedFavorite = $this->Favorites->get($save->id);
         $this->assertNotNull($addedFavorite);
-        $this->assertEquals(Common::uuid('user.id.dame'), $addedFavorite->user_id);
-        $this->assertEquals(Common::uuid('resource.id.bower'), $addedFavorite->foreign_id);
+        $this->assertEquals(UuidFactory::uuid('user.id.dame'), $addedFavorite->user_id);
+        $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedFavorite->foreign_id);
         $this->assertEquals('Resource', $addedFavorite->foreign_model);
     }
 
@@ -74,8 +74,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid(),
-                'foreign_id' => Common::uuid('resource.id.apache'),
+                'user_id' => UuidFactory::uuid(),
+                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -98,8 +98,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.sofia'),
-                'foreign_id' => Common::uuid('resource.id.apache'),
+                'user_id' => UuidFactory::uuid('user.id.sofia'),
+                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -122,8 +122,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid(),
+                'user_id' => UuidFactory::uuid('user.id.dame'),
+                'foreign_id' => UuidFactory::uuid(),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -146,8 +146,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.jquery'),
+                'user_id' => UuidFactory::uuid('user.id.dame'),
+                'foreign_id' => UuidFactory::uuid('resource.id.jquery'),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -170,8 +170,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.apache'),
+                'user_id' => UuidFactory::uuid('user.id.dame'),
+                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
                 'foreign_model' => 'Resource',
             ],
             [
@@ -194,8 +194,8 @@ class SaveTest extends AppTestCase
     {
         $favorite = $this->Favorites->newEntity(
             [
-                'user_id' => Common::uuid('user.id.dame'),
-                'foreign_id' => Common::uuid('resource.id.canjs'),
+                'user_id' => UuidFactory::uuid('user.id.dame'),
+                'foreign_id' => UuidFactory::uuid('resource.id.canjs'),
                 'foreign_model' => 'Resource',
             ],
             [

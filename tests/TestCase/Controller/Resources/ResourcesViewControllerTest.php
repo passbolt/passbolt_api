@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class ResourcesViewControllerTest extends AppIntegrationTestCase
@@ -26,7 +26,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testSuccess()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/resources/$resourceId.json?api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -40,7 +40,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testApiV1Success()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/resources/$resourceId.json");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -56,7 +56,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/resources/$resourceId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
@@ -86,7 +86,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/resources/$resourceId.json?$urlParameter");
         $this->assertSuccess();
 
@@ -115,7 +115,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
 
     public function testErrorNotAuthenticated()
     {
-        $resourceId = Common::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->getJson("/resources/$resourceId.json");
         $this->assertAuthenticationError();
     }
@@ -131,7 +131,7 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testErrorNotFound()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('not-found');
+        $resourceId = UuidFactory::uuid('not-found');
         $this->getJson("/resources/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
@@ -139,14 +139,14 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
     public function testErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.jquery');
+        $resourceId = UuidFactory::uuid('resource.id.jquery');
         $this->getJson("/resources/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testErrorResourceAccessDenied()
     {
-        $resourceId = Common::uuid('resource.id.canjs');
+        $resourceId = UuidFactory::uuid('resource.id.canjs');
 
         // Check that the resource exists.
         $Resources = TableRegistry::get('Resources');

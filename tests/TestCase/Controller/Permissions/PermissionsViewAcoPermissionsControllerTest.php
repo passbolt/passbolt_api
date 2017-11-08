@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Permissions;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
@@ -26,7 +26,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     public function testSuccess()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/permissions/resource/$resourceId.json?api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -41,7 +41,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     public function testApiV1Success()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -58,7 +58,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
-        $resourceId = Common::uuid('resource.id.cakephp');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->getJson("/permissions/resource/$resourceId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
@@ -89,7 +89,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
-        $resourceId = Common::uuid('resource.id.cakephp');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->getJson("/permissions/resource/$resourceId.json?$urlParameter");
         $this->assertSuccess();
 
@@ -125,7 +125,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 
     public function testErrorNotAuthenticated()
     {
-        $resourceId = Common::uuid('resource.id.bower');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertAuthenticationError();
     }
@@ -141,14 +141,14 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     public function testErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
-        $resourceId = Common::uuid('resource.id.jquery');
+        $resourceId = UuidFactory::uuid('resource.id.jquery');
         $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testErrorResourceAccessDenied()
     {
-        $resourceId = Common::uuid('resource.id.canjs');
+        $resourceId = UuidFactory::uuid('resource.id.canjs');
 
         // Check that the resource exists.
         $Resources = TableRegistry::get('Resources');

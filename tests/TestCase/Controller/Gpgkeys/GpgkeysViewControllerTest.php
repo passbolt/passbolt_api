@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Controller\Gpgkeys;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 
 class GpgkeysViewControllerTest extends AppIntegrationTestCase
@@ -24,7 +24,7 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
 
     public function testGpgkeysViewErrorNotAuthenticated()
     {
-        $uuid = Common::uuid();
+        $uuid = UuidFactory::uuid();
         $this->getJson('/gpgkeys/' . $uuid . '.json');
         $this->assertAuthenticationError();
     }
@@ -32,8 +32,8 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
     public function testGpgkeysViewGetSuccess()
     {
         $this->authenticateAs('ada');
-        $userId = Common::uuid('user.id.ada');
-        $uuid = Common::uuid('gpgkey.id.' . $userId);
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uuid = UuidFactory::uuid('gpgkey.id.' . $userId);
         $this->getJson('/gpgkeys/' . $uuid . '.json?api-version=2');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -43,8 +43,8 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
     public function testGpgkeysViewGetApiV1Success()
     {
         $this->authenticateAs('ada');
-        $userId = Common::uuid('user.id.ada');
-        $uuid = Common::uuid('gpgkey.id.' . $userId);
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uuid = UuidFactory::uuid('gpgkey.id.' . $userId);
         $this->getJson('/gpgkeys/' . $uuid . '.json');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -61,7 +61,7 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
 
     public function testGpgkeysViewGpgkeyDoesNotExistError() {
         $this->authenticateAs('ada');
-        $uuid = Common::uuid('gpgkey.id.notagpgkey');
+        $uuid = UuidFactory::uuid('gpgkey.id.notagpgkey');
         $this->getJson('/gpgkeys/' . $uuid . '.json');
         $this->assertError(404, 'The gpg key does not exist.');
     }

@@ -15,7 +15,7 @@
 
 namespace PassboltTestData\Shell\Task\Base;;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
 class CommentsDataTask extends DataTask
@@ -25,28 +25,28 @@ class CommentsDataTask extends DataTask
     protected function _getData()
     {
 	    $comments[] = [
-		    'id' => Common::uuid('comment.id.apache-1'),
+		    'id' => UuidFactory::uuid('comment.id.apache-1'),
 		    'parent_id' => null,
-		    'user_id' => Common::uuid('user.id.irene'),
-		    'foreign_id' => Common::uuid('resource.id.apache'),
+		    'user_id' => UuidFactory::uuid('user.id.irene'),
+		    'foreign_id' => UuidFactory::uuid('resource.id.apache'),
 		    'foreign_model' => 'Resource',
 		    'content' => 'this is a short comment',
 		    'created' => '2012-11-25 13:39:25',
 		    'modified' => '2012-11-25 13:39:25',
-		    'created_by' => Common::uuid('user.id.irene'),
-		    'modified_by' => Common::uuid('user.id.irene'),
+		    'created_by' => UuidFactory::uuid('user.id.irene'),
+		    'modified_by' => UuidFactory::uuid('user.id.irene'),
 	    ];
 	    $comments[] = [
-		    'id' => Common::uuid('comment.id.apache-2'),
-		    'parent_id' => Common::uuid('comment.id.apache-1'),
-		    'user_id' => Common::uuid('user.id.irene'),
-		    'foreign_id' => Common::uuid('resource.id.apache'),
+		    'id' => UuidFactory::uuid('comment.id.apache-2'),
+		    'parent_id' => UuidFactory::uuid('comment.id.apache-1'),
+		    'user_id' => UuidFactory::uuid('user.id.irene'),
+		    'foreign_id' => UuidFactory::uuid('resource.id.apache'),
 		    'foreign_model' => 'Resource',
 		    'content' => 'this is a reply to the short comment',
 		    'created' => '2012-11-25 13:39:26',
 		    'modified' => '2012-11-25 13:39:26',
-		    'created_by' => Common::uuid('user.id.irene'),
-		    'modified_by' => Common::uuid('user.id.irene'),
+		    'created_by' => UuidFactory::uuid('user.id.irene'),
+		    'modified_by' => UuidFactory::uuid('user.id.irene'),
 	    ];
         return $comments;
     }

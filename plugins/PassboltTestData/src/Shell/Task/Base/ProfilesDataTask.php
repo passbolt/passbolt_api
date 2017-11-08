@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
 class ProfilesDataTask extends DataTask
@@ -24,8 +24,8 @@ class ProfilesDataTask extends DataTask
     protected function _getData()
     {
         $profiles[] = [
-            'id' => Common::uuid('profile.id.admin'),
-            'user_id' => Common::uuid('user.id.admin'),
+            'id' => UuidFactory::uuid('profile.id.admin'),
+            'user_id' => UuidFactory::uuid('user.id.admin'),
             'gender' => 'm',
             'date_of_birth' => '1970-01-01',
             'title' => 'Mr',
@@ -33,8 +33,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'User'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.anonymous'),
-            'user_id' => Common::uuid('user.id.anonymous'),
+            'id' => UuidFactory::uuid('profile.id.anonymous'),
+            'user_id' => UuidFactory::uuid('user.id.anonymous'),
             'gender' => 'm',
             'date_of_birth' => '1980-12-10',
             'title' => 'Mr',
@@ -42,8 +42,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'User'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.user'),
-            'user_id' => Common::uuid('user.id.user'),
+            'id' => UuidFactory::uuid('profile.id.user'),
+            'user_id' => UuidFactory::uuid('user.id.user'),
             'gender' => 'm',
             'date_of_birth' => '1980-12-12',
             'title' => 'Mr',
@@ -51,8 +51,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'User'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.ada'),
-            'user_id' => Common::uuid('user.id.ada'),
+            'id' => UuidFactory::uuid('profile.id.ada'),
+            'user_id' => UuidFactory::uuid('user.id.ada'),
             'gender' => 'f',
             'date_of_birth' => '1815-12-10',
             'title' => 'Ms',
@@ -60,8 +60,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Lovelace'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.betty'),
-            'user_id' => Common::uuid('user.id.betty'),
+            'id' => UuidFactory::uuid('profile.id.betty'),
+            'user_id' => UuidFactory::uuid('user.id.betty'),
             'gender' => 'f',
             'date_of_birth' => '1917-03-07',
             'title' => 'Ms',
@@ -69,8 +69,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Holberton'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.carol'),
-            'user_id' => Common::uuid('user.id.carol'),
+            'id' => UuidFactory::uuid('profile.id.carol'),
+            'user_id' => UuidFactory::uuid('user.id.carol'),
             'gender' => 'f',
             'date_of_birth' => '1955-01-01',
             'title' => 'Ms',
@@ -78,8 +78,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Shaw'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.dame'),
-            'user_id' => Common::uuid('user.id.dame'),
+            'id' => UuidFactory::uuid('profile.id.dame'),
+            'user_id' => UuidFactory::uuid('user.id.dame'),
             'gender' => 'f',
             'date_of_birth' => '1933-09-16',
             'title' => 'Ms',
@@ -87,8 +87,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Shirley'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.edith'),
-            'user_id' => Common::uuid('user.id.edith'),
+            'id' => UuidFactory::uuid('profile.id.edith'),
+            'user_id' => UuidFactory::uuid('user.id.edith'),
             'gender' => 'f',
             'date_of_birth' => '1983-10-29',
             'title' => 'Ms',
@@ -96,8 +96,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Clarke'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.frances'),
-            'user_id' => Common::uuid('user.id.frances'),
+            'id' => UuidFactory::uuid('profile.id.frances'),
+            'user_id' => UuidFactory::uuid('user.id.frances'),
             'gender' => 'f',
             'date_of_birth' => '1932-08-04',
             'title' => 'Ms',
@@ -105,8 +105,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Allen'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.grace'),
-            'user_id' => Common::uuid('user.id.grace'),
+            'id' => UuidFactory::uuid('profile.id.grace'),
+            'user_id' => UuidFactory::uuid('user.id.grace'),
             'gender' => 'f',
             'date_of_birth' => '1906-12-09',
             'title' => 'Ms',
@@ -114,8 +114,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Hopper'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.hedy'),
-            'user_id' => Common::uuid('user.id.hedy'),
+            'id' => UuidFactory::uuid('profile.id.hedy'),
+            'user_id' => UuidFactory::uuid('user.id.hedy'),
             'gender' => 'f',
             'date_of_birth' => '1980-12-14',
             'title' => 'Ms',
@@ -123,8 +123,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Lamarr'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.irene'),
-            'user_id' => Common::uuid('user.id.irene'),
+            'id' => UuidFactory::uuid('profile.id.irene'),
+            'user_id' => UuidFactory::uuid('user.id.irene'),
             'gender' => 'f',
             'date_of_birth' => '1980-12-14',
             'title' => 'Ms',
@@ -132,8 +132,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Greif'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.jean'),
-            'user_id' => Common::uuid('user.id.jean'),
+            'id' => UuidFactory::uuid('profile.id.jean'),
+            'user_id' => UuidFactory::uuid('user.id.jean'),
             'gender' => 'f',
             'date_of_birth' => '1924-12-27',
             'title' => 'Ms',
@@ -141,8 +141,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Bartik'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.kathleen'),
-            'user_id' => Common::uuid('user.id.kathleen'),
+            'id' => UuidFactory::uuid('profile.id.kathleen'),
+            'user_id' => UuidFactory::uuid('user.id.kathleen'),
             'gender' => 'f',
             'date_of_birth' => '1921-02-12',
             'title' => 'Ms',
@@ -150,8 +150,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Antonelli'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.lynne'),
-            'user_id' => Common::uuid('user.id.lynne'),
+            'id' => UuidFactory::uuid('profile.id.lynne'),
+            'user_id' => UuidFactory::uuid('user.id.lynne'),
             'gender' => 'f',
             'date_of_birth' => '1961-06-30',
             'title' => 'Ms',
@@ -159,8 +159,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Jolitz'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.marlyn'),
-            'user_id' => Common::uuid('user.id.marlyn'),
+            'id' => UuidFactory::uuid('profile.id.marlyn'),
+            'user_id' => UuidFactory::uuid('user.id.marlyn'),
             'gender' => 'f',
             'date_of_birth' => '1922-01-01',
             'title' => 'Ms',
@@ -168,8 +168,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Wescoff'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.nancy'),
-            'user_id' => Common::uuid('user.id.nancy'),
+            'id' => UuidFactory::uuid('profile.id.nancy'),
+            'user_id' => UuidFactory::uuid('user.id.nancy'),
             'gender' => 'f',
             'date_of_birth' => '1986-07-14',
             'title' => 'Ms',
@@ -177,8 +177,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Leveson'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.orna'),
-            'user_id' => Common::uuid('user.id.orna'),
+            'id' => UuidFactory::uuid('profile.id.orna'),
+            'user_id' => UuidFactory::uuid('user.id.orna'),
             'gender' => 'f',
             'date_of_birth' => '1949-12-19',
             'title' => 'Ms',
@@ -186,8 +186,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Berry'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.ping'),
-            'user_id' => Common::uuid('user.id.ping'),
+            'id' => UuidFactory::uuid('profile.id.ping'),
+            'user_id' => UuidFactory::uuid('user.id.ping'),
             'gender' => 'f',
             'date_of_birth' => '1958-12-01',
             'title' => 'Ms',
@@ -195,8 +195,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Fu'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.ruth'),
-            'user_id' => Common::uuid('user.id.ruth'),
+            'id' => UuidFactory::uuid('profile.id.ruth'),
+            'user_id' => UuidFactory::uuid('user.id.ruth'),
             'gender' => 'f',
             'date_of_birth' => '1924-01-01',
             'title' => 'Ms',
@@ -204,8 +204,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Teitelbaum'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.sofia'),
-            'user_id' => Common::uuid('user.id.sofia'),
+            'id' => UuidFactory::uuid('profile.id.sofia'),
+            'user_id' => UuidFactory::uuid('user.id.sofia'),
             'gender' => 'f',
             'date_of_birth' => '1850-02-10',
             'title' => 'Ms',
@@ -213,8 +213,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Kovalevskaya'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.thelma'),
-            'user_id' => Common::uuid('user.id.thelma'),
+            'id' => UuidFactory::uuid('profile.id.thelma'),
+            'user_id' => UuidFactory::uuid('user.id.thelma'),
             'gender' => 'f',
             'date_of_birth' => '1924-02-21',
             'title' => 'Ms',
@@ -222,8 +222,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Estrin'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.ursula'),
-            'user_id' => Common::uuid('user.id.ursula'),
+            'id' => UuidFactory::uuid('profile.id.ursula'),
+            'user_id' => UuidFactory::uuid('user.id.ursula'),
             'gender' => 'f',
             'date_of_birth' => '1924-02-21',
             'title' => 'Ms',
@@ -231,8 +231,8 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Martin'
         ];
         $profiles[] = [
-            'id' => Common::uuid('profile.id.wang'),
-            'user_id' => Common::uuid('user.id.wang'),
+            'id' => UuidFactory::uuid('profile.id.wang'),
+            'user_id' => UuidFactory::uuid('user.id.wang'),
             'gender' => 'f',
             'date_of_birth' => '1966-01-01',
             'title' => 'Ms',

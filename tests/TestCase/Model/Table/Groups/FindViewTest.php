@@ -3,7 +3,7 @@ namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FindViewTest extends AppTestCase
@@ -21,7 +21,7 @@ class FindViewTest extends AppTestCase
 
     public function testSuccess()
     {
-        $groupId = Common::uuid('group.id.freelancer');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
         $groups = $this->Groups->findView($groupId);
 
         // Expected fields.

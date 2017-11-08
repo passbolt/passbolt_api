@@ -14,7 +14,7 @@
  */
 namespace App\Test\TestCase\Controller\Auth;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestCase;
 
 class AuthLogoutControllerTest extends IntegrationTestCase
@@ -26,7 +26,7 @@ class AuthLogoutControllerTest extends IntegrationTestCase
         $this->session([
             'Auth' => [
                 'User' => [
-                    'id' => Common::uuid('users.id.ada'),
+                    'id' => UuidFactory::uuid('users.id.ada'),
                     'username' => 'ada@passbolt.com',
                 ]
             ]

@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
 class GroupsUsersDataTask extends DataTask
@@ -104,12 +104,12 @@ class GroupsUsersDataTask extends DataTask
             // managers
             foreach ($settings['managers'] as $managerAlias) {
                 $groupsUsers[] = [
-                    'id' => Common::uuid("group_user.id.$groupAlias-$managerAlias"),
-                    'group_id' => Common::uuid("group.id.$groupAlias"),
-                    'user_id' => Common::uuid("user.id.$managerAlias"),
+                    'id' => UuidFactory::uuid("group_user.id.$groupAlias-$managerAlias"),
+                    'group_id' => UuidFactory::uuid("group.id.$groupAlias"),
+                    'user_id' => UuidFactory::uuid("user.id.$managerAlias"),
                     'is_admin' => 1,
-                    'created_by' => Common::uuid('user.id.admin'),
-                    'modified_by' => Common::uuid('user.id.admin')
+                    'created_by' => UuidFactory::uuid('user.id.admin'),
+                    'modified_by' => UuidFactory::uuid('user.id.admin')
                 ];
             }
             // members
@@ -118,12 +118,12 @@ class GroupsUsersDataTask extends DataTask
                     continue;
                 }
                 $groupsUsers[] = [
-                    'id' => Common::uuid("group_user.id.$groupAlias-$userAlias"),
-                    'group_id' => Common::uuid("group.id.$groupAlias"),
-                    'user_id' => Common::uuid("user.id.$userAlias"),
+                    'id' => UuidFactory::uuid("group_user.id.$groupAlias-$userAlias"),
+                    'group_id' => UuidFactory::uuid("group.id.$groupAlias"),
+                    'user_id' => UuidFactory::uuid("user.id.$userAlias"),
                     'is_admin' => 0,
-                    'created_by' => Common::uuid('user.id.admin'),
-                    'modified_by' => Common::uuid('user.id.admin')
+                    'created_by' => UuidFactory::uuid('user.id.admin'),
+                    'modified_by' => UuidFactory::uuid('user.id.admin')
                 ];
             }
         }

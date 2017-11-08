@@ -39,7 +39,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 Router::scope('/', function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['prefix' => 'Home', 'controller' => 'Home', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
         ->setMethods(['GET']);
 
     $routes->connect('/home', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view'])
@@ -211,6 +211,21 @@ Router::prefix('Users', function ($routes) {
 
     $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
+        ->setMethods(['GET']);
+});
+
+/**
+ * Setup routes
+ */
+Router::prefix('/setup', function ($routes) {
+    // legacy route
+    $routes->connect('/install/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
+        ->setPass(['userId', 'tokenId'])
+        ->setMethods(['GET']);
+
+    // new route
+    $routes->connect('/start/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
+        ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);
 });
 

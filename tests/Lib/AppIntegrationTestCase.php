@@ -28,7 +28,7 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\ObjectTrait;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestCase;
 
 class AppIntegrationTestCase extends IntegrationTestCase
@@ -139,7 +139,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
         $this->session([
             'Auth' => [
                 'User' => [
-                    'id' => Common::uuid('user.id.' . $userFirstName),
+                    'id' => UuidFactory::uuid('user.id.' . $userFirstName),
                     'Role' => [
                         'name' => $roleName
                     ]

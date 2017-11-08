@@ -14,7 +14,7 @@
  */
 
 use Migrations\AbstractMigration;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 
 class V162InitialMigration extends AbstractMigration
 {
@@ -926,28 +926,28 @@ class V162InitialMigration extends AbstractMigration
 
         $rolesData = [
             [
-                'id' => Common::uuid(),
+                'id' => UuidFactory::uuid(),
                 'name' => 'admin',
                 'description' => 'Organization administrator',
                 'created' => '2012-07-04 13:39:25',
                 'modified' => '2012-07-04 13:39:25',
             ],
             [
-                'id' => Common::uuid(),
+                'id' => UuidFactory::uuid(),
                 'name' => 'guest',
                 'description' => 'Non logged in user',
                 'created' => '2012-07-04 13:39:25',
                 'modified' => '2012-07-04 13:39:25',
             ],
             [
-                'id' => Common::uuid(),
+                'id' => UuidFactory::uuid(),
                 'name' => 'user',
                 'description' => 'Logged in user',
                 'created' => '2012-07-04 13:39:25',
                 'modified' => '2012-07-04 13:39:25',
             ],
             [
-                'id' => Common::uuid(),
+                'id' => UuidFactory::uuid(),
                 'name' => 'root',
                 'description' => 'Super Administrator',
                 'created' => '2012-07-04 13:39:25',

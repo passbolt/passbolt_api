@@ -12,7 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Routing\Router;
 $this->assign('title',	__('Recover a user account'));
 $this->Html->css('login.min', ['block' => 'css']);
 $this->assign('pageClass', 'recover');

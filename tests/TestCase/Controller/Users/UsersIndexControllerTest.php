@@ -16,7 +16,7 @@
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
@@ -52,7 +52,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $foundAda = $foundThelma = false;
 
         foreach ($this->_responseJsonBody as $user) {
-            if ($user->User->id === Common::uuid('user.id.ada')) {
+            if ($user->User->id === UuidFactory::uuid('user.id.ada')) {
                 $foundAda = true;
                 $this->assertObjectHasAttribute('User', $user);
                 $this->assertUserAttributes($user->User);
@@ -71,7 +71,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
                 $this->assertObjectHasAttribute('GroupUser', $user);
                 $this->assertEquals(count($user->GroupUser), 0, 'Add should not belong to any group');
 
-            } else if($user->User->id === Common::uuid('user.id.thelma')) {
+            } else if($user->User->id === UuidFactory::uuid('user.id.thelma')) {
                 $foundThelma = true;
                 // GroupUser
                 $this->assertObjectHasAttribute('GroupUser', $user);
@@ -90,11 +90,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?order=User.username');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
 
         $this->getJson('/users.json?order[]=User.username DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.wang'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.wang'));
     }
 
     public function testUsersIndexOrderByFirstName()
@@ -102,11 +102,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?order[]=Profile.first_name');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
 
         $this->getJson('/users.json?order=Profile.first_name DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.wang'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.wang'));
     }
 
     public function testUsersIndexOrderByLastName()
@@ -114,11 +114,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?order=Profile.last_name');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.frances'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.frances'));
 
         $this->getJson('/users.json?order[]=Profile.last_name DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.wang'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.wang'));
     }
 
     public function testUsersIndexOrderByCreated()
@@ -126,11 +126,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?order[]=User.created');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
 
         $this->getJson('/users.json?order[]=User.created DESC&order[]=User.username ASC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.admin'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.admin'));
     }
 
     public function testUsersIndexOrderByModified()
@@ -138,11 +138,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?order[]=User.modified');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.ada'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
 
         $this->getJson('/users.json?order[]=User.modified DESC&order[]=User.username ASC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, Common::uuid('user.id.admin'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.admin'));
     }
 
     public function testUsersIndexOrderByError()
@@ -159,7 +159,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexFilterByGroupsSuccess()
     {
         $this->authenticateAs('ada');
-        $freelancersId = Common::uuid('group.id.freelancer');
+        $freelancersId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson('/users.json?filter[has-groups]=' . $freelancersId);
         $this->assertSuccess();
         $freelancers = ['jean', 'kathleen', 'lynne', 'marlyn', 'nancy'];
@@ -169,8 +169,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexFilterByMultipleGroupsSuccess()
     {
         $this->authenticateAs('ada');
-        $hr = Common::uuid('group.id.human_resource');
-        $it = Common::uuid('group.id.it_support');
+        $hr = UuidFactory::uuid('group.id.human_resource');
+        $it = UuidFactory::uuid('group.id.it_support');
         $this->getJson('/users.json?filter[has-groups]=' . $it . ',' . $hr);
         $this->assertSuccess();
         $freelancers = ['ping', 'thelma', 'ursula', 'wang'];
@@ -184,8 +184,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexFilterByInvalidGroupsError()
     {
         $this->authenticateAs('ada');
-        $hr = Common::uuid('group.id.human_resource');
-        $no = Common::uuid('group.id.nobueno');
+        $hr = UuidFactory::uuid('group.id.human_resource');
+        $no = UuidFactory::uuid('group.id.nobueno');
 
         // Invalid format trigger BadRequest
         $this->getJson('/users.json?filter[has-groups]');

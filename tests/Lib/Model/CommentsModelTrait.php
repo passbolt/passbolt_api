@@ -15,7 +15,7 @@
 
 namespace App\Test\Lib\Model;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 
 trait CommentsModelTrait
 {
@@ -29,8 +29,8 @@ trait CommentsModelTrait
     public static function getDummyComment($data = [])
     {
         $entityContent = [
-            'user_id' => Common::uuid('user.id.ada'),
-            'foreign_id' => Common::uuid('resource.id.bower'),
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'foreign_id' => UuidFactory::uuid('resource.id.bower'),
             'foreign_model' => 'Resource',
             'content' => 'this is a test comment',
             'parent_id' => null,

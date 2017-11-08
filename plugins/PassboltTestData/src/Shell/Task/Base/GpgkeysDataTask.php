@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use App\Utility\Gpg;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\DataTask;
@@ -72,7 +72,7 @@ class GpgkeysDataTask extends DataTask
             $keyRaw = $this->_getUserKey($user->id);
             $info = $Gpg->getKeyInfo($keyRaw);
             $keys[] = [
-                'id' => Common::uuid('gpgkey.id.' . $user->id),
+                'id' => UuidFactory::uuid('gpgkey.id.' . $user->id),
                 'user_id' => $user->id,
                 'armored_key' => $keyRaw,
                 'bits' => $info['bits'],

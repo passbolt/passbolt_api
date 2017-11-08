@@ -17,7 +17,7 @@ namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\Common;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -57,7 +57,7 @@ class FindIndexTest extends AppTestCase
     public function testExcludeSoftDeletedGroups()
     {
         // Check the deleted groups exist.
-        $deletedGroups = [Common::uuid('group.id.deleted')];
+        $deletedGroups = [UuidFactory::uuid('group.id.deleted')];
         foreach ($deletedGroups as $deletedGroup) {
             $group = $this->Groups->get($deletedGroup);
             $this->assertNotNull($group);
@@ -95,13 +95,13 @@ class FindIndexTest extends AppTestCase
         $this->assertUserAttributes($group->users[0]);
 
         // Check that the groups contain only the expected users.
-        $groupId = Common::uuid('group.id.freelancer');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
         $groupUsers = [
-            Common::uuid('user.id.jean'),
-            Common::uuid('user.id.kathleen'),
-            Common::uuid('user.id.lynne'),
-            Common::uuid('user.id.marlyn'),
-            Common::uuid('user.id.nancy'),
+            UuidFactory::uuid('user.id.jean'),
+            UuidFactory::uuid('user.id.kathleen'),
+            UuidFactory::uuid('user.id.lynne'),
+            UuidFactory::uuid('user.id.marlyn'),
+            UuidFactory::uuid('user.id.nancy'),
         ];
         // Retrieve the users from the group we want to test.
         $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
@@ -112,8 +112,8 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsers()
     {
-        $expectedGroupsIds = [Common::uuid('group.id.creative'), Common::uuid('group.id.developer'), Common::uuid('group.id.ergonom')];
-        $options['filter']['has-users'] = [Common::uuid('user.id.irene')];
+        $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];
+        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.irene')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(3, $groups);
@@ -123,7 +123,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsersNoResult()
     {
-        $options['filter']['has-users'] = [Common::uuid('user.id.ada')];
+        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.ada')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
@@ -131,8 +131,8 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsersMultipleUsers()
     {
-        $expectedGroupsIds = [Common::uuid('group.id.freelancer')];
-        $options['filter']['has-users'] = [Common::uuid('user.id.jean'), Common::uuid('user.id.nancy')];
+        $expectedGroupsIds = [UuidFactory::uuid('group.id.freelancer')];
+        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.jean'), UuidFactory::uuid('user.id.nancy')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(1, $groups);
@@ -142,7 +142,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasUsersMultipleUsersNoResult()
     {
-        $options['filter']['has-users'] = [Common::uuid('user.id.frances'), Common::uuid('user.id.hedy')];
+        $options['filter']['has-users'] = [UuidFactory::uuid('user.id.frances'), UuidFactory::uuid('user.id.hedy')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
@@ -150,7 +150,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagersNoResult()
     {
-        $options['filter']['has-managers'] = [Common::uuid('user.id.ad')];
+        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ad')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
@@ -158,8 +158,8 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagers()
     {
-        $expectedGroupsIds = [Common::uuid('group.id.human_resource'), Common::uuid('group.id.it_support')];
-        $options['filter']['has-managers'] = [Common::uuid('user.id.ping')];
+        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource'), UuidFactory::uuid('group.id.it_support')];
+        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ping')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(2, $groups);
@@ -169,8 +169,8 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagersMultipleManagers()
     {
-        $expectedGroupsIds = [Common::uuid('group.id.human_resource')];
-        $options['filter']['has-managers'] = [Common::uuid('user.id.ping'), Common::uuid('user.id.thelma')];
+        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource')];
+        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ping'), UuidFactory::uuid('user.id.thelma')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(1, $groups);
@@ -180,7 +180,7 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterHasManagersMultipleManagersNoResult()
     {
-        $options['filter']['has-managers'] = [Common::uuid('user.id.ping'), Common::uuid('user.id.admin')];
+        $options['filter']['has-managers'] = [UuidFactory::uuid('user.id.ping'), UuidFactory::uuid('user.id.admin')];
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
