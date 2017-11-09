@@ -14,7 +14,8 @@
  */
 namespace App\Utility;
 
-use \Exception as Exception;
+//use \Exception as Exception;
+use Cake\Core\Exception\Exception;
 use \OpenPGP as OpenPGP;
 
 /**

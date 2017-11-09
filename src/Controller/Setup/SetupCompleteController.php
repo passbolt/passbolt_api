@@ -20,6 +20,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use JsonSchema\Exception\ValidationException;
 
 class SetupCompleteController extends AppController
 {
@@ -92,7 +93,8 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if the authentication token is not a uuid
      * @return entity Token entity
      */
-    protected function _getAndAssertToken($userId) {
+    protected function _getAndAssertToken($userId)
+    {
         $data = $this->request->getData();
         if (!isset($data['AuthenticationToken']) || !isset($data['AuthenticationToken']['token'])) {
             throw new BadRequestException(__('An authentication token must be provided.'));
@@ -105,6 +107,7 @@ class SetupCompleteController extends AppController
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
         $token = $this->AuthenticationTokens->findByToken($tokenId);
+
         return $token;
     }
 
@@ -116,15 +119,17 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if the user was deleted, is already active or does not exist
      * @return bool if user id is valid
      */
-    protected function _getAndAssertUser($userId) {
+    protected function _getAndAssertUser($userId)
+    {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
         }
         $user = $this->Users->findSetupStart($userId);
         if (empty($user)) {
             // @TODO more precise error message
-            throw new NotFoundException(__('The user does not exist or is already active or has been deleted.'));
+            throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
         }
+
         return $user;
     }
 
@@ -136,7 +141,8 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if the user was deleted, is already active or does not exist
      * @return object Gpgkey entity
      */
-    protected function _getAndAssertGpgkey($userId) {
+    protected function _getAndAssertGpgkey($userId)
+    {
         $data = $this->request->getData();
         $armoredKey = null;
 
@@ -150,9 +156,16 @@ class SetupCompleteController extends AppController
         if (empty($armoredKey)) {
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
+        if (!is_string($armoredKey)) {
+            throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
+        }
 
         $this->loadModel('Gpgkeys');
-        $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        try {
+            $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        } catch (ValidationException $e) {
+            throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
+        }
 
         return $gpgkey;
     }

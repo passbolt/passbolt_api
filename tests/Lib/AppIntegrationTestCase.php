@@ -85,9 +85,10 @@ class AppIntegrationTestCase extends IntegrationTestCase
      *
      * @param null $code (optional) Expected response code
      * @param string $message (optional) Expected response message.
+     * @param string $errorMessage (optional) Test case error message to be displayed
      * @return void
      */
-    public function assertError($code = null, $message = '')
+    public function assertError($code = null, $message = '', $errorMessage = null)
     {
         $this->assertEquals('error', $this->_responseJsonHeader->status, 'The request should be an error');
 
@@ -100,7 +101,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
 
         // If message given.
         if (!empty($message)) {
-            $this->assertRegExp("/$message/", $this->_responseJsonHeader->message);
+            $this->assertRegExp("/$message/", $this->_responseJsonHeader->message, $errorMessage);
         }
     }
 

@@ -24,6 +24,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use JsonSchema\Exception\ValidationException;
+use Cake\Core\Exception\Exception;
 
 /**
  * Gpgkeys Model
@@ -219,7 +220,7 @@ class GpgkeysTable extends Table
             $gpg = new Gpg();
             $info = $gpg->getKeyInfo($armoredKey);
         } catch (Exception $e) {
-            return new ValidationException(__('Could not create Gpgkey from armored key.'));
+            throw new ValidationException(__('Could not create Gpgkey from armored key.'));
         }
 
         $data = [
@@ -245,6 +246,7 @@ class GpgkeysTable extends Table
             return $gpgkey;
         }
         $this->checkRules($gpgkey);
+
         return $gpgkey;
     }
 }

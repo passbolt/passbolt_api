@@ -195,10 +195,12 @@ class AuthenticationTokensTable extends Table
      * @param $tokenId
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function findByToken($tokenId) {
+    public function findByToken($tokenId)
+    {
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
             ->first();
+
         return $token;
     }
 }

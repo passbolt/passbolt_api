@@ -212,6 +212,11 @@ Router::prefix('Users', function ($routes) {
     $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
+
+    // @depracted v1 /setup/complete route backward compatibility
+    $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
+        ->setPass(['userId'])
+        ->setMethods(['PUT', 'POST']);
 });
 
 /**
@@ -233,6 +238,7 @@ Router::prefix('/setup', function ($routes) {
     $routes->connect('/complete/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
+
 });
 
 /**
@@ -241,10 +247,13 @@ Router::prefix('/setup', function ($routes) {
 Router::prefix('/seleniumtests', function ($routes) {
     $routes->setExtensions(['json']);
 
+    $routes->connect('/error400', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error400'])
+        ->setMethods(['GET']);
+
     $routes->connect('/error404', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error404'])
         ->setMethods(['GET']);
 
-    $routes->connect('/error403', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error404'])
+    $routes->connect('/error403', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error403'])
         ->setMethods(['GET']);
 
     $routes->connect('/error500', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error500'])
