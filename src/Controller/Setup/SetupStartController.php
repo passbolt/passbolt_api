@@ -30,6 +30,7 @@ class SetupStartController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow('start');
+        $this->loadModel('AuthenticationTokens');
 
         return parent::beforeFilter($event);
     }
@@ -37,13 +38,48 @@ class SetupStartController extends AppController
     /**
      * Setup start
      *
-     * @throws BadRequestException if the user or token id are missing or not uuids
+     * @throws BadRequestException if the user id is missing or not a uuid
+     * @throws BadRequestException if the token is missing or not a uuid
      * @throws BadRequestException if the authentication token is expired or not valid for this user
+     * @throws BadRequestException if the user does not exist or is already active
+     *
      * @param string $userId uuid of the user
      * @param string $tokenId uuid of the token
      * @return void
      */
     public function start($userId, $tokenId)
+    {
+        // Check user id and token id are valid
+        $this->_assertRequestSanity($userId, $tokenId);
+
+        // Retrieve the user.
+        $this->loadModel('Users');
+        $user = $this->Users->findSetup($userId);
+        if (empty($user)) {
+            // @TODO more precise error message
+            throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
+        }
+        $this->set('user', $user);
+
+        // Parse the user agent
+        $this->loadModel('UserAgents');
+        $browserName = $this->UserAgents->browserName();
+        $this->set('browserName', strtolower($browserName));
+
+        $this->viewBuilder()
+            ->setTemplatePath('/Setup')
+            ->setLayout('default')
+            ->setTemplate('start');
+    }
+
+    /**
+     * Assert that the setup start request is valid
+     *
+     * @throws BadRequestException if the user id is missing or not a uuid
+     * @throws BadRequestException if the token is missing or not a uuid
+     * @throws BadRequestException if the authentication token is expired or not valid for this user
+     */
+    protected function _assertRequestSanity($userId, $tokenId)
     {
         // Check request sanity
         if (!isset($userId)) {
@@ -60,28 +96,8 @@ class SetupStartController extends AppController
         }
 
         // Check that the token exists
-        $this->loadModel('AuthenticationTokens');
         if (!$this->AuthenticationTokens->isValid($tokenId, $userId)) {
             throw new BadRequestException(__('The authentication token is not valid or expired.'));
         }
-
-        // Retrieve the user.
-        $this->loadModel('Users');
-        $user = $this->Users->findSetupStart($userId);
-        if (empty($user)) {
-            // @TODO more precise error message
-            throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
-        }
-        $this->set('user', $user);
-
-        // Parse the user agent
-        $this->loadModel('UserAgents');
-        $browserName = $this->UserAgents->browserName();
-        $this->set('browserName', strtolower($browserName));
-
-        $this->viewBuilder()
-            ->setTemplatePath('/Setup')
-            ->setLayout('default')
-            ->setTemplate('start');
     }
 }

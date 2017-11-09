@@ -213,7 +213,7 @@ Router::prefix('Users', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    // @depracted v1 /setup/complete route backward compatibility
+    // @TODO remove deprated legacy v1 backward compatibility routes
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
@@ -225,17 +225,33 @@ Router::prefix('Users', function ($routes) {
 Router::prefix('/setup', function ($routes) {
     $routes->setExtensions(['json']);
 
-    // legacy route
-    $routes->connect('/install/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
-        ->setPass(['userId', 'tokenId'])
-        ->setMethods(['GET']);
-
-    // new route
+    // new routes
     $routes->connect('/start/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);
 
     $routes->connect('/complete/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
+        ->setPass(['userId'])
+        ->setMethods(['PUT', 'POST']);
+
+    $routes->connect('/recover/start/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'RecoverStart', 'action' => 'start'])
+        ->setPass(['userId', 'tokenId'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/recover/complete/:userId', ['prefix' => 'Setup', 'controller' => 'RecoverComplete', 'action' => 'complete'])
+        ->setPass(['userId'])
+        ->setMethods(['PUT', 'POST']);
+
+    // @TODO remove deprated legacy v1 backward compatibility routes
+    $routes->connect('/install/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
+        ->setPass(['userId', 'tokenId'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/recover/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'RecoverStart', 'action' => 'start'])
+        ->setPass(['userId', 'tokenId'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/completeRecovery/:userId', ['prefix' => 'Setup', 'controller' => 'RecoverComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
 
@@ -263,7 +279,7 @@ Router::prefix('/seleniumtests', function ($routes) {
         ->setPass(['username'])
         ->setMethods(['GET']);
 
-    // legacy
+    // @TODO remove deprated legacy v1 backward compatibility routes
     $routes->connect('/showLastEmail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
         ->setPass(['username'])
         ->setMethods(['GET']);

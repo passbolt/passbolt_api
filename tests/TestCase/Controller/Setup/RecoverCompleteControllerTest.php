@@ -19,7 +19,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
 use Ramsey\Uuid\Uuid;
 
-class SetupCompleteControllerTest extends AppIntegrationTestCase
+class RecoverCompleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.authentication_tokens'];
     public $AuthenticationTokens;
@@ -32,11 +32,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
-    public function testSetupCompleteSuccess()
+    public function testRecoverCompleteSuccess()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
         $data = [
             'AuthenticationToken' => [
                 'token' => $t->token
@@ -47,27 +47,17 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson($url, $data);
         $this->assertSuccess();
+
         // Check that token is now inactive
-        $t2 = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
+        $t2 = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
         $this->assertFalse($t2->active);
-        // Check that ruth is active
-        $ruth = $this->Users->get(UuidFactory::uuid('user.id.ruth'));
-        $this->assertTrue($ruth->active);
-        // Check that ruth has a gpg key
-        $key = $this->Gpgkeys->find()
-            ->where(['user_id' => UuidFactory::uuid('user.id.ruth')])
-            ->order('created')
-            ->first();
-        $this->assertTrue(!empty($key));
     }
 
-    public function testSetupCompleteApiV1Success()
+    public function testRecoverCompleteApiV1Success()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.ruth')])
-            ->first();
-        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
         $data = [
             'AuthenticationToken' => [
                 'token' => $t->token
@@ -80,25 +70,25 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
     }
 
-    public function testSetupCompleteInvalidUserIdError()
+    public function testRecoverCompleteInvalidUserIdError()
     {
-        $url = '/setup/complete/nope.json';
+        $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
         $this->assertError(400, 'The user id is not valid.');
     }
 
-    public function testSetupCompleteInvalidUserTokenError()
+    public function testRecoverCompleteInvalidUserTokenError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
         $data = [];
         $this->postJson($url, $data);
         $this->assertError(400, 'The user does not exist');
     }
 
-    public function testSetupCompleteInvalidAuthenticationTokenError()
+    public function testRecoverCompleteInvalidAuthenticationTokenError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
 
         $fails = [
             'empty array' => [
@@ -139,12 +129,12 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testSetupCompleteInvalidGpgkeyError()
+    public function testRecoverCompleteInvalidGpgkeyError()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
-        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
 
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
+        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
         $fails = [
             'empty array' => [
@@ -184,17 +174,17 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, $case['message'], 'Issue with case: ' . $caseName);
     }
 
-    public function testSetupCompleteDeletedUserError()
+    public function testRecoverCompleteDeletedUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.sophia') . '.json';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sophia') . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist');
     }
 
-    public function testSetupCompleteAlreadyActiveUserError()
+    public function testRecoverCompleteInactiveUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
+        $this->assertError(400, 'The user does not exist');
     }
 }

@@ -276,7 +276,7 @@ class UsersTable extends Table
     }
 
     /**
-     * Build the query that fetches data for user recovery
+     * Build the query that fetches data for user recovery form
      *
      * @param string $username email of user to retrieve
      * @param array $options options
@@ -297,9 +297,9 @@ class UsersTable extends Table
      * Build the query that fetches data for user setup start
      *
      * @param string $userId uuid
-     * @return \Cake\ORM\Query
+     * @return object $user entity
      */
-    public function findSetupStart($userId)
+    public function findSetup($userId)
     {
         // show active first and do not count deleted ones
         $user = $this->find()
@@ -307,7 +307,7 @@ class UsersTable extends Table
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => false    // forbid users that have completed the setup to retry
+                'Users.active' => false   // forbid users that have completed the setup to retry
             ])
             ->first();
 
@@ -315,14 +315,24 @@ class UsersTable extends Table
     }
 
     /**
-     * Build the query that fetches data for user setup complete step
+     * Build the query that checks data for user setup start/completion
      *
      * @param string $userId uuid
-     * @return \Cake\ORM\Query
+     * @return object $user entity
      */
-    public function findSetupEnd($userId)
+    public function findSetupRecover($userId)
     {
-        return $this->findSetupStart($userId);
+        // show active first and do not count deleted ones
+        $user = $this->find()
+            ->contain(['Roles', 'Profiles', 'Roles'])
+            ->where([
+                'Users.id' => $userId,
+                'Users.deleted' => false, // forbid deleted users to start setup
+                'Users.active' => true    // forbid users that have not completed the setup to recover
+            ])
+            ->first();
+
+        return $user;
     }
 
     /**

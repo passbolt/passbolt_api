@@ -207,6 +207,23 @@ class GpgkeysTable extends Table
     }
 
     /**
+     * Get a gpg key for matching fingerprint and user id
+     *
+     * @param $fingerprint
+     * @param $userId
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function getByFingerPrintAndUserId($fingerprint, $userId)
+    {
+        return $this->find()
+            ->where([
+                'user_id' => $userId,
+                'fingerprint' => strtoupper($fingerprint)
+            ])
+            ->first();
+    }
+
+    /**
      * Build a Gpgkey entity from the armored key
      *
      * @param string $armoredKey ascii armored key

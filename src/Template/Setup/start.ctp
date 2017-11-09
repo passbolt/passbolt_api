@@ -12,6 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+if (!isset($setupCase)) {
+    $setupCase = 'install';
+}
 $this->assign('title',	__('Install'));
 $this->assign('page_classes', 'setup install start');
 $this->Html->css('setup.min', ['block' => 'css']);
@@ -23,7 +26,6 @@ if ($browserName == 'firefox' || $browserName == 'chrome') {
     $pluginCheckTemplate = 'public/Setup/unsupported';
 }
 ?>
-
 <input type="hidden" id="js_setup_user_username" value="<?php echo $user->username; ?>"/>
 <input type="hidden" id="js_setup_user_first_name" value="<?php echo $user->profile->first_name; ?>"/>
 <input type="hidden" id="js_setup_user_last_name" value="<?php echo $user->profile->last_name; ?>"/>
@@ -45,7 +47,11 @@ if ($browserName == 'firefox' || $browserName == 'chrome') {
         </div>
     </div>
     <div class="col2_3">
+<?php if($setupCase === 'install'): ?>
         <h2 id="js_step_title"><?php echo __('Welcome to passbolt! Let\'s take 5 min to setup your system.') ?></h2>
+<?php else: ?>
+        <h2 id="js_step_title"><?php echo __('Account recovery: let\'s take 5 min to reconfigure your plugin!') ?></h2>
+<?php endif;?>
     </div>
 </div>
 

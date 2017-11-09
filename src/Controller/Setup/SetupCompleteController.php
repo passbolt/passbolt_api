@@ -42,12 +42,18 @@ class SetupCompleteController extends AppController
     }
 
     /**
-     * Setup start
+     * Setup completion
+     * Save the user gpg public key and set the account to active
      *
-     * @throws BadRequestException if the user or token id are missing or not uuids
-     * @throws BadRequestException if the authentication token is expired or not valid for this user
+     * @throws BadRequestException if the user id is not a valid uuid
+     * @throws BadRequestException if the user was deleted, is already active or does not exist
+     * @throws BadRequestException if no authentication token was provided
+     * @throws BadRequestException if the authentication token is not a uuid
+     * @throws BadRequestException if the authentication token is expired or invalid
+     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
+     * @throws InternalErrorException if something went wrong when updating the data
+     *
      * @param string $userId uuid of the user
-     * @param string $tokenId uuid of the token
      * @return void
      */
     public function complete($userId)
@@ -56,13 +62,6 @@ class SetupCompleteController extends AppController
         $user = $this->_getAndAssertUser($userId);
         $token = $this->_getAndAssertToken($userId);
         $gpgkey = $this->_getAndAssertGpgkey($userId);
-
-        // Either validation or checkRules error triggers this exception
-        // User can still retry the full setup with the auth token
-        if ($gpgkey->getErrors()) {
-            $this->set('errors', $gpgkey->getErrors());
-            throw new BadRequestException(__('The OpenPGP key data is not valid.'));
-        }
 
         // Deactivate the authentication token
         $token->active = false;
@@ -91,6 +90,7 @@ class SetupCompleteController extends AppController
      * @param string $userId the user uuid the token belongs to
      * @throws BadRequestException if no authentication token was provided
      * @throws BadRequestException if the authentication token is not a uuid
+     * @throws BadRequestException if the authentication token is expired or invalid
      * @return entity Token entity
      */
     protected function _getAndAssertToken($userId)
@@ -124,7 +124,7 @@ class SetupCompleteController extends AppController
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
         }
-        $user = $this->Users->findSetupStart($userId);
+        $user = $this->Users->findSetup($userId);
         if (empty($user)) {
             // @TODO more precise error message
             throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
@@ -137,8 +137,7 @@ class SetupCompleteController extends AppController
      * Return the gpg key entity for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @throws BadRequestException if the user id is not a valid uuid
-     * @throws BadRequestException if the user was deleted, is already active or does not exist
+     * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
      * @return object Gpgkey entity
      */
     protected function _getAndAssertGpgkey($userId)
@@ -165,6 +164,13 @@ class SetupCompleteController extends AppController
             $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
         } catch (ValidationException $e) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
+        }
+
+        // Either validation or checkRules error triggers this exception
+        // User can still retry the full setup with the auth token
+        if ($gpgkey->getErrors()) {
+            $this->set('errors', $gpgkey->getErrors());
+            throw new BadRequestException(__('The OpenPGP key data is not valid.'));
         }
 
         return $gpgkey;
