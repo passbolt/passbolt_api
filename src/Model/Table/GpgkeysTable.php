@@ -84,27 +84,44 @@ class GpgkeysTable extends Table
             ->notEmpty('armored_key');
 
         $validator
-            ->integer('bits')
-            ->allowEmpty('bits');
+            ->integer('bits', 'The key bits should be an integer.')
+            ->requirePresence('bits', 'create')
+            ->notEmpty('bits');
 
         $validator
             ->scalar('uid')
-            ->requirePresence('uid', 'create')
-            ->notEmpty('uid');
+            ->allowEmpty('uid');
+//            ->add('uid', ['custom' => [
+//                'rule' => [$this, 'isValidUid'],
+//                'message' => __('The key uid should be a valid OpenPGP user id packet.')
+//            ]])
 
         $validator
             ->scalar('key_id')
             ->requirePresence('key_id', 'create')
-            ->notEmpty('key_id');
+            ->notEmpty('key_id')
+            ->add('key_id', ['custom' => [
+                'rule' => [$this, 'isValidKeyId'],
+                'message' => __('The key id should be a string of 8 hexadecimal characters.')
+            ]]);
 
         $validator
             ->scalar('fingerprint')
             ->requirePresence('fingerprint', 'create')
-            ->notEmpty('fingerprint');
+            ->notEmpty('fingerprint')
+            ->add('fingerprint', ['custom' => [
+                'rule' => [$this, 'isValidFingerprint'],
+                'message' => __('The key id should be a string of 40 hexadecimal characters.')
+            ]]);
 
         $validator
             ->scalar('type')
-            ->allowEmpty('type');
+            ->requirePresence('type', 'create')
+            ->notEmpty('type')
+            ->add('type', ['custom' => [
+                'rule' => [$this, 'isValidKeyType'],
+                'message' => __('The key type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.')
+            ]]);
 
         $validator
             ->dateTime('expires')
@@ -112,12 +129,18 @@ class GpgkeysTable extends Table
 
         $validator
             ->dateTime('key_created')
-            ->allowEmpty('key_created');
+            ->requirePresence('key_created', 'create')
+            ->notEmpty('key_created');
 
         $validator
             ->boolean('deleted')
             ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
+
+        $validator
+            ->uuid('user_id', __('The user id should be a valid uuid.'))
+            ->requirePresence('user_id', 'create')
+            ->notEmpty('user_id');
 
         return $validator;
     }
@@ -137,6 +160,26 @@ class GpgkeysTable extends Table
     }
 
     /**
+     * Custom validation rule to validate uid
+     *
+     * @param string $value uid
+     * @param array $context not in use
+     * @return bool
+     */
+//    public function isValidUid($value, array $context = null)
+//    {
+//        if (empty($value) || !is_scalar($value)) {
+//            return false;
+//        }
+//        try {
+//            $userIdPacket = new \OpenPGP_UserIDPacket($value);
+//            return ($value == sprintf('%s', $userIdPacket));
+//        } catch (Exception $e) {
+//            return false;
+//        }
+//    }
+
+    /**
      * Custom validation rule to validate fingerprint
      *
      * @param string $value fingerprint
@@ -146,6 +189,38 @@ class GpgkeysTable extends Table
     public function isValidFingerprint($value, array $context = null)
     {
         return (preg_match('/^[A-F0-9]{40}$/', $value) === 1);
+    }
+
+    /**
+     * Custom validation rule to validate key id
+     *
+     * @param string $value fingerprint
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isValidKeyId($value, array $context = null)
+    {
+        return (preg_match('/^[A-F0-9]{8}$/', $value) === 1);
+    }
+
+    /**
+     * Custom validation rule to validate key type
+     *
+     * @param string $value fingerprint
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isValidKeyType($value, array $context = null)
+    {
+        if (empty($value) || !is_scalar($value)) {
+            return false;
+        }
+        foreach (\OpenPGP_PublicKeyPacket::$algorithms as $i => $algorithm) {
+            if ($value === $algorithm) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
