@@ -93,28 +93,24 @@ class ResourcesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('name')
-            ->utf8Extended('name')
-            ->lengthBetween('name', [3, 64])
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->lengthBetween('name', [3, 64], __('The name length should be between {0} and {1} characters.', 3, 64))
+            ->requirePresence('name', 'create', __('A name is required.'))
+            ->notEmpty('name', __('The name cannot be empty.'));
 
         $validator
-            ->scalar('username')
-            ->utf8Extended('username')
-            ->lengthBetween('username', [3, 64])
+            ->utf8Extended('username', __('The username is not a valid utf8 string.'))
+            ->lengthBetween('username', [3, 64], __('The username length should be between {0} and {1} characters.', 3, 64))
             ->allowEmpty('username');
 
         $validator
-            ->scalar('uri')
-            ->utf8('uri')
-            ->lengthBetween('uri', [3, 255])
+            ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
+            ->lengthBetween('uri', [3, 255], __('The uri length should be between {0} and {1} characters.', 3, 255))
             ->allowEmpty('uri');
 
         $validator
-            ->scalar('description')
-            ->utf8Extended('description')
-            ->lengthBetween('description', [3, 10000])
+            ->utf8Extended('description', __('The description is not a valid utf8 string.'))
+            ->lengthBetween('description', [3, 10000], __('The description length should be between {0} and {1} characters.', 3, 10000))
             ->allowEmpty('description');
 
         $validator
@@ -134,13 +130,13 @@ class ResourcesTable extends Table
 
         // Associated fields
         $validator
-            ->requirePresence('permission', 'create', __('The permission of the creator must be provided.'))
-            ->notEmpty('permission');
+            ->requirePresence('permission', 'create', __('A permission is required.'))
+            ->notEmpty('permission', __('The permission cannot be empty.'));
 
         $validator
-            ->requirePresence('secrets', 'create', __('The secret of the creator must be provided.'))
-            ->notEmpty('secrets', __('The secret of the creator must be provided.'))
-            ->count(1);
+            ->requirePresence('secrets', 'create', __('A secret is required.'))
+            ->notEmpty('secrets', __('The secret cannot be empty.'))
+            ->count(1, __('Only the secret of the owner must be provided.'));
 
         return $validator;
     }
@@ -154,38 +150,38 @@ class ResourcesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->addCreate([$this, 'ruleCreatorPermissionProvided'], 'creator_permission_provided', [
+        $rules->addCreate([$this, 'ruleOwnerPermissionProvided'], 'owner_permission_provided', [
             'errorField' => 'permission',
-            'message' => __('The permission of the creator must be provided.')
+            'message' => __('Only the permission of the owner must be provided.')
         ]);
-        $rules->addCreate([$this, 'ruleCreatorSecretProvided'], 'creator_secret_provided', [
+        $rules->addCreate([$this, 'ruleOwnerSecretProvided'], 'owner_secret_provided', [
             'errorField' => 'secrets',
-            'message' => __('The secret of the creator must be provided.')
+            'message' => __('Only the secret of the owner must be provided.')
         ]);
 
         return $rules;
     }
 
     /**
-     * Validate that the a resource can be created only if the permission of the creator is provided.
+     * Validate that the a resource can be created only if the permission of the owner is provided.
      *
      * @param \App\Model\Entity\Resource $entity The entity that will be created.
      * @param array $options options
      * @return bool
      */
-    public function ruleCreatorPermissionProvided($entity, array $options = [])
+    public function ruleOwnerPermissionProvided($entity, array $options = [])
     {
         return $entity->permission->aro_foreign_key == $entity->created_by;
     }
 
     /**
-     * Validate that the a resource can be created only if the secret of the creator is provided.
+     * Validate that the a resource can be created only if the secret of the owner is provided.
      *
      * @param \App\Model\Entity\Resource $entity The entity that will be created.
      * @param array $options options
      * @return bool
      */
-    public function ruleCreatorSecretProvided($entity, array $options = [])
+    public function ruleOwnerSecretProvided($entity, array $options = [])
     {
         return $entity->secrets[0]->user_id == $entity->created_by;
     }

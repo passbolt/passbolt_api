@@ -202,7 +202,7 @@ class SaveTest extends AppTestCase
         $this->assertEquals($data['secrets'][0]['data'], $resource->secrets[0]->data);
     }
 
-    public function testErrorRuleCreatorPermissionProvided()
+    public function testErrorRuleOwnerPermissionProvided()
     {
         $data = self::getDummyResource();
         $data['permission']['aro_foreign_key'] = UuidFactory::uuid('user.id.betty');
@@ -212,10 +212,10 @@ class SaveTest extends AppTestCase
         $this->assertFalse($save, 'The resource save operation should fail.');
         $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['permission']['creator_permission_provided']);
+        $this->assertNotNull($errors['permission']['owner_permission_provided']);
     }
 
-    public function testErrorRuleCreatorSecretProvided()
+    public function testErrorRuleOwnerSecretProvided()
     {
         $data = self::getDummyResource();
         $data['secrets'][0]['user_id'] = UuidFactory::uuid('user.id.betty');
@@ -225,6 +225,6 @@ class SaveTest extends AppTestCase
         $this->assertFalse($save, 'The resource save operation should fail.');
         $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['secrets']['creator_secret_provided']);
+        $this->assertNotNull($errors['secrets']['owner_secret_provided']);
     }
 }

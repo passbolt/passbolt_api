@@ -118,7 +118,7 @@ class GroupsUsersTable extends Table
         ]);
         $rules->addCreate($rules->existsIn(['group_id'], 'Groups'), 'group_exists', [
             'errorField' => 'group_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The group does not exist.')
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',

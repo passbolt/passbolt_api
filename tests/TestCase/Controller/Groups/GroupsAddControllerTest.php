@@ -110,17 +110,17 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $errors = [
             'group name is missing' => [
                 'errorField' => 'Group.name._empty',
-                'errorMessage' => 'This field cannot be left empty',
+                'errorMessage' => 'The name cannot be empty.',
                 'data' => $this->_getDummyPostData(['Group' => []])
             ],
             'group name already exist' => [
                 'errorField' => 'Group.name.group_unique',
-                'errorMessage' => 'The group name provided is already used by another group.',
+                'errorMessage' => 'The name provided is already used by another group.',
                 'data' => $this->_getDummyPostData(['Group' => ['name' => 'Freelancer']])
             ],
             'group name invalid' => [
                 'errorField' => 'Group.name.utf8Extended',
-                'errorMessage' => 'The provided value is invalid',
+                'errorMessage' => 'The name is not a valid utf8 string.',
                 'data' => $this->_getDummyPostData(['Group' => ['name' => 1234]])
             ],
             'at least one group manager' => [

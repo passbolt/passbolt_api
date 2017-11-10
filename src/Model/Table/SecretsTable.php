@@ -83,13 +83,13 @@ class SecretsTable extends Table
             ->notEmpty('user_id');
 
         $validator
-            ->ascii('data', __('The message provided is not in the right format'))
+            ->ascii('data', __('The message is not a valid armored gpg message.'))
             ->add('data', 'isValidGpgMessage', [
                 'rule' => [$this, 'isValidGpgMessage'],
-                'message' => __('The message provided is not in the right format')
+                'message' => __('The message is not a valid armored gpg message.')
             ])
-            ->requirePresence('data', 'create', __('The secret must be provided'))
-            ->notEmpty('data', __('The secret must be provided'));
+            ->requirePresence('data', 'create', __('A message is required.'))
+            ->notEmpty('data', __('The message cannot be empty.'));
 
         return $validator;
     }

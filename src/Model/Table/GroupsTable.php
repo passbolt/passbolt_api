@@ -82,10 +82,10 @@ class GroupsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->utf8Extended('name')
-            ->lengthBetween('name', [0, 255])
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
+            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->lengthBetween('name', [0, 255], __('The name length should be maximum {0} characters.', 255))
+            ->requirePresence('name', 'create', __('A name is required.'))
+            ->notEmpty('name', __('The name cannot be empty.'));
 
         $validator
             ->boolean('deleted')
@@ -118,7 +118,7 @@ class GroupsTable extends Table
         $rules->addCreate(
             $rules->isUnique(
                 ['name'],
-                __('The group name provided is already used by another group.')
+                __('The name provided is already used by another group.')
             ),
             'group_unique'
         );
