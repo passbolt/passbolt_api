@@ -97,10 +97,6 @@ class GpgkeysTable extends Table
         $validator
             ->utf8('uid')
             ->allowEmpty('uid');
-//            ->add('uid', ['custom' => [
-//                'rule' => [$this, 'isValidUid'],
-//                'message' => __('The key uid should be a valid OpenPGP user id packet.')
-//            ]])
 
         $validator
             ->scalar('key_id')
@@ -169,29 +165,10 @@ class GpgkeysTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->isUnique(['fingerprint']));
 
         return $rules;
     }
-
-/**
- * Custom validation rule to validate uid
- *
- * @param string $value uid
- * @param array $context not in use
- * @return bool
- */
-//    public function isValidUid($value, array $context = null)
-//    {
-//        if (empty($value) || !is_scalar($value)) {
-//            return false;
-//        }
-//        try {
-//            $userIdPacket = new \OpenPGP_UserIDPacket($value);
-//            return ($value == sprintf('%s', $userIdPacket));
-//        } catch (Exception $e) {
-//            return false;
-//        }
-//    }
 
     /**
      * Custom validation rule to validate fingerprint
@@ -402,12 +379,6 @@ class GpgkeysTable extends Table
             $data['expires'] = new FrozenTime($info['expires']);
         }
         $gpgkey = $this->newEntity($data, ['accessibleFields' => ['*' => true]]);
-
-        // No need to check rules if basic validation fails
-        if ($gpgkey->getErrors()) {
-            return $gpgkey;
-        }
-        $this->checkRules($gpgkey);
 
         return $gpgkey;
     }

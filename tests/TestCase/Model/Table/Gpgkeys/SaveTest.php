@@ -16,6 +16,7 @@
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
 use App\Test\Lib\AppTestCase;
+use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Date;
 use Cake\I18n\Time;
@@ -221,7 +222,7 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationisParsableArmoredPublicKey()
     {
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
-         $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKey($armoredKey));
+        $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKey($armoredKey));
 
         $armoredKeySplit = str_split($armoredKey, 300);
         $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeySplit[0]));
@@ -230,5 +231,17 @@ class SaveTest extends AppTestCase
         $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeyCorrupt));
 
         //@TODO expired key
+    }
+
+    public function testGpgkeysRulesUniqueFingerprint()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
+
+        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
+        $this->Gpgkeys->save($k);
+        $error = $k->getErrors();
+        $this->assertNotEmpty($error);
+        $this->assertNotEmpty($error['fingerprint']['_isUnique']);
     }
 }

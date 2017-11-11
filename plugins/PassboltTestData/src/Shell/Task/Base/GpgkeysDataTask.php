@@ -67,25 +67,29 @@ class GpgkeysDataTask extends DataTask
         $users = $Users->find('all');
         $Gpg = new Gpg();
         $keys = [];
+        // users to skip, like if they have not completed the setup for example
+        $skip = [UuidFactory::uuid('user.id.ruth')];
 
-        foreach($users as $user) {
-            $keyRaw = $this->_getUserKey($user->id);
-            $info = $Gpg->getPublicKeyInfo($keyRaw);
-            $keys[] = [
-                'id' => UuidFactory::uuid('gpgkey.id.' . $user->id),
-                'user_id' => $user->id,
-                'armored_key' => $keyRaw,
-                'bits' => $info['bits'],
-                'uid' => $info['uid'],
-                'key_id' => $info['key_id'],
-                'fingerprint' => $info['fingerprint'],
-                'type' => $info['type'],
-                'expires' => !empty($info['expires']) ? date('Y-m-d H:i:s', $info['expires']) : null,
-                'key_created' => date('Y-m-d H:i:s', $info['key_created']),
-                'deleted' => false,
-                'created' => date('Y-m-d H:i:s'),
-                'modified' => date('Y-m-d H:i:s')
-            ];
+        foreach ($users as $user) {
+            if (!in_array($user->id, $skip)) {
+                $keyRaw = $this->_getUserKey($user->id);
+                $info = $Gpg->getPublicKeyInfo($keyRaw);
+                $keys[] = [
+                    'id' => UuidFactory::uuid('gpgkey.id.' . $user->id),
+                    'user_id' => $user->id,
+                    'armored_key' => $keyRaw,
+                    'bits' => $info['bits'],
+                    'uid' => $info['uid'],
+                    'key_id' => $info['key_id'],
+                    'fingerprint' => $info['fingerprint'],
+                    'type' => $info['type'],
+                    'expires' => !empty($info['expires']) ? date('Y-m-d H:i:s', $info['expires']) : null,
+                    'key_created' => date('Y-m-d H:i:s', $info['key_created']),
+                    'deleted' => false,
+                    'created' => date('Y-m-d H:i:s'),
+                    'modified' => date('Y-m-d H:i:s')
+                ];
+            }
         }
         return $keys;
     }

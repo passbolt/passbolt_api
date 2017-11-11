@@ -63,6 +63,13 @@ class SetupCompleteController extends AppController
         $token = $this->_getAndAssertToken($userId);
         $gpgkey = $this->_getAndAssertGpgkey($userId);
 
+        // Check business rules before saving
+        $this->Gpgkeys->checkRules($gpgkey);
+        if ($gpgkey->getErrors()) {
+            $this->set('errors', $gpgkey->getErrors());
+            throw new BadRequestException(__('The OpenPGP key data is not valid.'));
+        }
+
         // Deactivate the authentication token
         $token->active = false;
         if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
@@ -137,6 +144,7 @@ class SetupCompleteController extends AppController
      * Return the gpg key entity for matching the requesting id
      *
      * @param string $userId the user uuid
+     * @param bool $checkRule if business rules should be checked on top of basic validation
      * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
      * @return object Gpgkey entity
      */
@@ -164,13 +172,6 @@ class SetupCompleteController extends AppController
             $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
         } catch (ValidationException $e) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
-        }
-
-        // Either validation or checkRules error triggers this exception
-        // User can still retry the full setup with the auth token
-        if ($gpgkey->getErrors()) {
-            $this->set('errors', $gpgkey->getErrors());
-            throw new BadRequestException(__('The OpenPGP key data is not valid.'));
         }
 
         return $gpgkey;
