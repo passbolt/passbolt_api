@@ -14,8 +14,33 @@
  */
 namespace App\Test\Lib\Model;
 
-trait PermissionsModelTrait
+use App\Model\Entity\Permission;
+use App\Utility\UuidFactory;
+
+Trait PermissionsModelTrait
 {
+
+    /**
+     * Get a dummy permission with test data.
+     * The comment returned passes a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array Comment data
+     */
+    public static function getDummyPermission($data = [])
+    {
+        $entityContent = [
+            'aco' => 'Resource',
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.april'),
+            'aro' => 'User',
+            'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
+            'type' => Permission::OWNER,
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
     /**
      * Asserts that an object has all the attributes a permission should have.
      *

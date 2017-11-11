@@ -69,6 +69,15 @@ class GroupsAddController extends AppController
                 'created_by' => true,
                 'modified_by' => true,
                 'groups_users' => true
+            ],
+            'associated' => [
+                'GroupsUsers' => [
+                    'validate' => 'saveGroup',
+                    'accessibleFields' => [
+                        'user_id' => true,
+                        'is_admin' => true
+                    ]
+                ],
             ]
         ]);
 
@@ -87,14 +96,15 @@ class GroupsAddController extends AppController
     protected function _formatRequestData($data = [])
     {
         $output['name'] = Hash::get($data, 'Group.name');
-        $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
-            $result[] = [
-                'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
-                'is_admin' => (boolean)Hash::get($row, 'GroupUser.is_admin', false)
-            ];
-
-            return $result;
-        }, []);
+        if (isset($data['GroupUsers'])) {
+            $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function($result, $row) {
+                $result[] = [
+                    'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
+                    'is_admin' => (boolean) Hash::get($row, 'GroupUser.is_admin', false)
+                ];
+                return $result;
+            }, []);
+        }
 
         return $output;
     }
@@ -109,29 +119,8 @@ class GroupsAddController extends AppController
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            $output = $this->_formatErrorData($errors);
-            throw new ValidationRuleException(__('Could not validate group data.'), $output);
+            // @TODO white list errors (maybe we don't want some business rule to be communicated : soft deleted by instance, has access)
+            throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
         }
-    }
-
-    /**
-     * Format errors data
-     *
-     * @param array $errors
-     * @return array
-     */
-    protected function _formatErrorData($errors = [])
-    {
-        // @TODO white list errors (maybe we don't want some business rule to be communicated : soft deleted by instance, has access)
-        // @TODO reformat for API v1, find an elegant way to do it.
-        // Looking at the error handler in the App JS, only the group name is treated.
-        // @see PASSBOLT_API_REPO::app/webroot/js/app/component/group_edit.js:493
-        $output = [];
-        if (isset($errors['name']) && isset($errors)) {
-            // Only the values of the error are returned, not the rules names.
-            $output['Group']['name'] = array_values($errors['name']);
-        }
-
-        return $output;
     }
 }

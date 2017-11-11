@@ -17,6 +17,7 @@ namespace App\Utility;
 //use \Exception as Exception;
 use Cake\Core\Exception\Exception;
 use \OpenPGP as OpenPGP;
+use \OpenPGP_Message as OpenPGP_Message;
 
 /**
  * Gpg wrapper utility
@@ -151,17 +152,17 @@ class Gpg
     }
 
     /**
-     * Get the key marker.
+     * Get the gpg marker.
      *
-     * @param string $armoredKey ASCII armored key data
+     * @param string $armored ASCII armored gpg data
      * @return mixed
      * @throws Exception
      */
-    public function getKeyMarker($armoredKey)
+    public function getGpgMarker($armored)
     {
-        $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armoredKey, $values);
+        $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armored, $values);
         if (!$isMarker || !isset($values[2])) {
-            throw new Exception('No marker found in the key.');
+            throw new Exception('No marker found.');
         }
 
         return $values[2];
@@ -178,9 +179,9 @@ class Gpg
      */
     public function isValidKey($armoredKey)
     {
-        // First, we try to get the marker of the key.
+        // First, we try to get the marker of the gpg message.
         try {
-            $marker = $this->getKeyMarker($armoredKey);
+            $marker = $this->getGpgMarker($armoredKey);
         } catch (Exception $e) {
             // If we can't extract the marker, we consider it's not a valid key.
             return false;
@@ -195,6 +196,34 @@ class Gpg
 
         // All tests pass, return true.
         return true;
+    }
+
+    /**
+     * Check if a message is valid.
+     *
+     * To do this, we try to unarmor the message. If the operation is successful, then we consider that
+     * the message is a valid one.
+     *
+     * @param string $armoredMessage ASCII armored message data
+     * @return bool true if valid, false otherwise
+     */
+    public function isValidMessage($armored) {
+        // First, we try to get the marker of the message.
+        try {
+            $marker = $this->getGpgMarker($armored);
+        } catch (Exception $e) {
+            // If we can't extract the marker, we consider it's not a valid gpg message.
+            return false;
+        }
+
+        // Try to unarmor the key.
+        $unarmored = OpenPGP::unarmor($armored, $marker);
+        // If we don't manage to unarmor the message, we consider it's not a valid one.
+        if ($unarmored != false) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -226,7 +255,7 @@ class Gpg
         // Unarmor the key.
         $keyUnarmored = OpenPGP::unarmor(
             $armoredKey,
-            $this->getKeyMarker($armoredKey)
+            $this->getGpgMarker($armoredKey)
         );
 
         // Get the message.

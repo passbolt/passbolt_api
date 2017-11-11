@@ -172,6 +172,9 @@ Router::prefix('Resources', function ($routes) {
     $routes->connect('/:id', ['controller' => 'ResourcesView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
+
+    $routes->connect('/', ['controller' => 'ResourcesAdd', 'action' => 'add'])
+        ->setMethods(['POST']);
 });
 
 /**

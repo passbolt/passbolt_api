@@ -59,24 +59,24 @@ class ResourcesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasOne('Permissions', [
-            'foreignKey' => 'aco_foreign_key'
-        ]);
-        $this->hasMany('Secrets', [
-            'foreignKey' => 'resource_id'
-        ]);
         $this->hasOne('Creator', [
             'className' => 'Users',
             'bindingKey' => 'created_by',
             'foreignKey' => 'id'
+        ]);
+        $this->hasOne('Favorites', [
+            'foreignKey' => 'foreign_id'
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
         ]);
-        $this->hasOne('Favorites', [
-            'foreignKey' => 'foreign_id'
+        $this->hasOne('Permissions', [
+            'foreignKey' => 'aco_foreign_key'
+        ]);
+        $this->hasMany('Secrets', [
+            'foreignKey' => 'resource_id'
         ]);
     }
 
@@ -93,24 +93,25 @@ class ResourcesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('name')
-            ->requirePresence('name', 'create')
-            ->notEmpty('name')
-            ->utf8Extended('name');
+            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->lengthBetween('name', [3, 64], __('The name length should be between {0} and {1} characters.', 3, 64))
+            ->requirePresence('name', 'create', __('A name is required.'))
+            ->notEmpty('name', __('The name cannot be empty.'));
 
         $validator
-            ->scalar('username')
+            ->utf8Extended('username', __('The username is not a valid utf8 string.'))
+            ->lengthBetween('username', [3, 64], __('The username length should be between {0} and {1} characters.', 3, 64))
             ->allowEmpty('username');
 
         $validator
-            ->scalar('uri')
-            ->allowEmpty('uri')
-            ->utf8Extended('uri');
+            ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
+            ->lengthBetween('uri', [3, 255], __('The uri length should be between {0} and {1} characters.', 3, 255))
+            ->allowEmpty('uri');
 
         $validator
-            ->scalar('description')
-            ->allowEmpty('description')
-            ->utf8Extended('description');
+            ->utf8Extended('description', __('The description is not a valid utf8 string.'))
+            ->lengthBetween('description', [3, 10000], __('The description length should be between {0} and {1} characters.', 3, 10000))
+            ->allowEmpty('description');
 
         $validator
             ->boolean('deleted')
@@ -127,6 +128,16 @@ class ResourcesTable extends Table
             ->requirePresence('modified_by', 'create')
             ->notEmpty('modified_by');
 
+        // Associated fields
+        $validator
+            ->requirePresence('permission', 'create', __('A permission is required.'))
+            ->notEmpty('permission', __('The permission cannot be empty.'));
+
+        $validator
+            ->requirePresence('secrets', 'create', __('A secret is required.'))
+            ->notEmpty('secrets', __('The secret cannot be empty.'))
+            ->count(1, __('Only the secret of the owner must be provided.'));
+
         return $validator;
     }
 
@@ -139,9 +150,40 @@ class ResourcesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->isUnique(['username']));
+        $rules->addCreate([$this, 'ruleOwnerPermissionProvided'], 'owner_permission_provided', [
+            'errorField' => 'permission',
+            'message' => __('Only the permission of the owner must be provided.')
+        ]);
+        $rules->addCreate([$this, 'ruleOwnerSecretProvided'], 'owner_secret_provided', [
+            'errorField' => 'secrets',
+            'message' => __('Only the secret of the owner must be provided.')
+        ]);
 
         return $rules;
+    }
+
+    /**
+     * Validate that the a resource can be created only if the permission of the owner is provided.
+     *
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleOwnerPermissionProvided($entity, array $options = [])
+    {
+        return $entity->permission->aro_foreign_key == $entity->created_by;
+    }
+
+    /**
+     * Validate that the a resource can be created only if the secret of the owner is provided.
+     *
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleOwnerSecretProvided($entity, array $options = [])
+    {
+        return $entity->secrets[0]->user_id == $entity->created_by;
     }
 
     /**
@@ -352,5 +394,21 @@ class ResourcesTable extends Table
                 'Groups.deleted' => 0,
                 'Users.id' => $userId
             ]);
+    }
+
+    /**
+     * Event fired before request data is converted into entities
+     * - On create, set not deleted to false
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (isset($options['validate']) && $options['validate'] === 'default') {
+            $data['deleted'] = false;
+        }
     }
 }

@@ -17,12 +17,15 @@ namespace App\Test\TestCase\Model\Table\Groups;
 
 use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SaveTest extends AppTestCase
 {
+    use FormatValidationTrait;
+
     public $Groups;
 
     public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
@@ -41,32 +44,54 @@ class SaveTest extends AppTestCase
         parent::tearDown();
     }
 
+    protected function getEntityDefaultOptions()
+    {
+        return [
+            'validate' => 'default',
+            'accessibleFields' => [
+                'name' => true,
+                'created_by' => true,
+                'modified_by' => true,
+                'groups_users' => true
+            ],
+            'associated' => [
+                'GroupsUsers' => [
+                    'validate' => 'saveGroup',
+                    'accessibleFields' => [
+                        'user_id' => true,
+                        'is_admin' => true
+                    ]
+                ],
+            ]
+        ];
+    }
+
+    /* ************************************************************** */
+    /* FORMAT VALIDATION TESTS */
+    /* ************************************************************** */
+
+    public function testValidationName()
+    {
+        $testCases = [
+            'utf8Extended' => self::getUtf8ExtendedTestCases(255),
+            'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Groups, 'name', self::getDummyGroup(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    /* ************************************************************** */
+    /* LOGIC VALIDATION TESTS */
+    /* ************************************************************** */
+
     public function testSuccess()
     {
-        $groupName = 'UnitTest Group';
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $group = $this->Groups->newEntity(
-            [
-                'name' => $groupName,
-                'groups_users' => [
-                    ['user_id' => $userAId, 'is_admin' => true],
-                    ['user_id' => $userBId]
-                ],
-                'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin'),
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'name' => true,
-                    'created_by' => true,
-                    'modified_by' => true,
-                    'groups_users' => true
-                ]
-            ]
-        );
-        $save = $this->Groups->save($group);
+        $data = self::getDummyGroup();
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Groups->newEntity($data, $options);
+        $save = $this->Groups->save($entity);
+        $this->assertEmpty($entity->getErrors(), 'Errors occurred while saving the entity: ' . json_encode($entity->getErrors()));
         $this->assertNotFalse($save, 'The group save operation failed.');
 
         // Check that the groups and its sub-models are saved as expected.
@@ -75,8 +100,11 @@ class SaveTest extends AppTestCase
             ->contain('GroupsUsers.Users')
             ->where(['id' => $save->id])
             ->first();
-        $this->assertEquals($groupName, $group->name);
+        $this->assertEquals($data['name'], $group->name);
+        $this->assertEquals(false, $group->deleted);
         $this->assertCount(2, $group->groups_users);
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
         $groupUserA = Hash::extract($group->groups_users, "{n}[user_id=$userAId][is_admin=true]");
         $this->assertNotEmpty($groupUserA);
         $groupUserB = Hash::extract($group->groups_users, "{n}[user_id=$userBId]");
@@ -85,129 +113,30 @@ class SaveTest extends AppTestCase
 
     public function testErrorRuleGroupUnique()
     {
-        $groupName = 'Freelancer';
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $group = $this->Groups->newEntity(
-            [
-                'name' => $groupName,
-                'groups_users' => [
-                    ['user_id' => $userAId, 'is_admin' => true],
-                    ['user_id' => $userBId]
-                ],
-                'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin'),
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'name' => true,
-                    'created_by' => true,
-                    'modified_by' => true,
-                    'groups_users' => true
-                ]
-            ]
-        );
-        $save = $this->Groups->save($group);
+        $data = self::getDummyGroup();
+        $data['name'] = 'Freelancer';
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Groups->newEntity($data, $options);
+        $save = $this->Groups->save($entity);
         $this->assertFalse($save);
-        $errors = $group->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['name']['group_unique']);
     }
 
     public function testErrorRuleAtLeastOneAdmin()
     {
-        $groupName = 'UnitTest Group';
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $group = $this->Groups->newEntity(
-            [
-                'name' => $groupName,
-                'groups_users' => [
-                    ['user_id' => $userAId],
-                    ['user_id' => $userBId]
-                ],
-                'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin'),
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'name' => true,
-                    'created_by' => true,
-                    'modified_by' => true,
-                    'groups_users' => true
-                ]
-            ]
-        );
-        $save = $this->Groups->save($group);
+        $data = self::getDummyGroup();
+        $data['groups_users'] = [
+            ['user_id' => UuidFactory::uuid('user.id.ada')],
+            ['user_id' => UuidFactory::uuid('user.id.betty')]
+        ];
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Groups->newEntity($data, $options);
+        $save = $this->Groups->save($entity);
         $this->assertFalse($save);
-        $errors = $group->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['groups_users']['at_least_one_admin']);
-    }
-
-    public function testErrorHasManyGroupsUsersRuleUserExists()
-    {
-        $groupName = 'UnitTest Group';
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid();
-        $group = $this->Groups->newEntity(
-            [
-                'name' => $groupName,
-                'groups_users' => [
-                    ['user_id' => $userAId, 'is_admin' => true],
-                    ['user_id' => $userBId]
-                ],
-                'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin'),
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'name' => true,
-                    'created_by' => true,
-                    'modified_by' => true,
-                    'groups_users' => true
-                ]
-            ]
-        );
-        $save = $this->Groups->save($group);
-        $this->assertFalse($save);
-        $errors = $group->getErrors();
-        $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['groups_users'][1]['user_id']['user_exists']);
-    }
-
-    public function testErrorHasManyGroupsUsersRuleUserIsNotSoftDeleted()
-    {
-        $groupName = 'UnitTest Group';
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.sofia');
-        $group = $this->Groups->newEntity(
-            [
-                'name' => $groupName,
-                'groups_users' => [
-                    ['user_id' => $userAId, 'is_admin' => true],
-                    ['user_id' => $userBId]
-                ],
-                'created_by' => UuidFactory::uuid('user.id.admin'),
-                'modified_by' => UuidFactory::uuid('user.id.admin'),
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'name' => true,
-                    'created_by' => true,
-                    'modified_by' => true,
-                    'groups_users' => true
-                ]
-            ]
-        );
-        $save = $this->Groups->save($group);
-        $this->assertFalse($save);
-        $errors = $group->getErrors();
-        $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['groups_users'][1]['user_id']['user_is_not_soft_deleted']);
     }
 }

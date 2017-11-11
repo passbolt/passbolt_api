@@ -119,4 +119,52 @@ class LegacyApiHelper extends Helper
 
         return $results;
     }
+
+    /**
+     * Format a result set to an array
+     *
+     * @param array $errors Errors
+     * @return array new result set
+     */
+    public static function formatErrors($errors, $table)
+    {
+        $results = [];
+        foreach ($errors as $property => $propertyErrors) {
+            // If the property is an integer, it means the function is treating the validation errors
+            // of an association with a multiple cardinality.
+            // Example: Groups.groups_users[]
+            if (is_int($property)) {
+                $results[$property] = self::formatErrors($propertyErrors, $table);
+                continue;
+            }
+
+            // If the property is an association, retrieve the table.
+            // Example: Groups.groups_users
+            $association = $table->association(Inflector::camelize($property));
+
+            // In the case the property is not an association.
+            // Example: Groups.name
+            if (is_null($association)) {
+                $className = substr($table->getEntityClass(), strrpos($table->getEntityClass(), '\\') + 1);
+                $resultKey = self::formatModelName(Inflector::underscore($className));
+                $results[$resultKey][$property] = $propertyErrors;
+            }
+            // In case the association is a HasMany.
+            // Example: Groups.groups_users
+            elseif (get_class($association) === 'Cake\ORM\Association\HasMany') {
+                $associationName = self::formatModelName($property);
+                $associationTable = $association->getTarget();
+                $result = self::formatErrors($propertyErrors, $associationTable);
+                $resultKey = Inflector::pluralize($associationName);
+                $results[$resultKey] = [];
+                if (isset($result[$associationName])) {
+                    $results[$resultKey] = $result[$associationName];
+                    unset($result[$associationName]);
+                }
+                $results[$resultKey] = $results[$resultKey] + $result;
+            }
+        }
+
+        return $results;
+    }
 }

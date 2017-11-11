@@ -53,11 +53,11 @@ trait FormatValidationTrait
     private function _adjustEntityData($entityData)
     {
         foreach ($entityData as $fieldName => $value) {
-            if ($value == self::$FIELD_NOT_SCALAR) {
+            if ($value === self::$FIELD_NOT_SCALAR) {
                 $entityData[$fieldName] = ['array'];
-            } elseif ($value == self::$FIELD_EMPTY) {
+            } elseif ($value === self::$FIELD_EMPTY) {
                 $entityData[$fieldName] = '';
-            } elseif ($value == self::$FIELD_NOT_PROVIDED) {
+            } elseif ($value === self::$FIELD_NOT_PROVIDED) {
                 unset($entityData[$fieldName]);
             }
         }
@@ -197,6 +197,29 @@ trait FormatValidationTrait
     }
 
     /**
+     * Test cases for boolean validation rule.
+     * @return array
+     */
+    public static function getBooleanTestCases()
+    {
+        $test = [
+            'rule_name' => 'boolean',
+            'test_cases' => [
+                true => true,
+                false => true,
+                1 => true,
+                0 => true,
+                '1' => true,
+                '0' => true,
+                'abcd' => false,
+                125 => false,
+            ],
+        ];
+
+        return $test;
+    }
+
+    /**
      * Test cases for inList validation rule.
      * @param array $list
      *
@@ -217,12 +240,12 @@ trait FormatValidationTrait
     }
 
     /**
-     * Test cases for utf8Extended validation rule.
+     * Test cases for utf8 validation rule.
      * @param int $length
      *
      * @return array
      */
-    public static function getUtf8ExtendedTestCases($length = 255)
+    public static function getUtf8TestCases($length = 255)
     {
         $test = [
             'rule_name' => '_required',
@@ -233,11 +256,25 @@ trait FormatValidationTrait
                 self::getStringMask('alphaChinese', $length) => true,
                 self::getStringMask('alphaArabic', $length) => true,
                 self::getStringMask('alphaRussian', $length) => true,
-                self::getStringMask('alphaEmojis', $length) => true,
                 self::getStringMask('special', $length) => true,
                 self::getStringMask('html', $length) => true,
             ],
         ];
+
+        return $test;
+    }
+
+    /**
+     * Test cases for utf8Extended validation rule.
+     * @param int $length
+     *
+     * @return array
+     */
+    public static function getUtf8ExtendedTestCases($length = 255)
+    {
+
+        $test = self::getUtf8TestCases($length);
+        $test['test_cases'][self::getStringMask('alphaEmojis', $length)] = true;
 
         return $test;
     }
@@ -261,7 +298,7 @@ trait FormatValidationTrait
         ];
 
         if ($min > 1) {
-            $test['test_cases'][self::getMask('alphaASCII', $min - 1)] = false;
+            $test['test_cases'][self::getStringMask('alphaASCII', $min - 1)] = false;
         }
 
         return $test;

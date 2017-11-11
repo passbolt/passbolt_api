@@ -82,8 +82,10 @@ class GroupsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('name')
-            ->notEmpty('name', 'create');
+            ->utf8Extended('name', __('The name is not a valid utf8 string.'))
+            ->lengthBetween('name', [0, 255], __('The name length should be maximum {0} characters.', 255))
+            ->requirePresence('name', 'create', __('A name is required.'))
+            ->notEmpty('name', __('The name cannot be empty.'));
 
         $validator
             ->boolean('deleted')
@@ -91,12 +93,12 @@ class GroupsTable extends Table
             ->notEmpty('deleted');
 
         $validator
-            ->scalar('created_by')
+            ->uuid('created_by')
             ->requirePresence('created_by', 'create')
             ->notEmpty('created_by');
 
         $validator
-            ->scalar('modified_by')
+            ->uuid('modified_by')
             ->requirePresence('modified_by', 'create')
             ->notEmpty('modified_by');
 
@@ -116,7 +118,7 @@ class GroupsTable extends Table
         $rules->addCreate(
             $rules->isUnique(
                 ['name'],
-                __('The group name provided is already used by another group.')
+                __('The name provided is already used by another group.')
             ),
             'group_unique'
         );
@@ -221,8 +223,8 @@ class GroupsTable extends Table
             $subQuery->where(['GroupsUsers.is_admin' => true]);
         }
 
-        // Execute the sub query and extract the groups ids.
-        $matchingGroupsIds = Hash::extract($subQuery->toArray(), '{n}.group_id');
+        $matchingGroupsIds = $subQuery->extract('group_id')
+            ->toArray();
 
         // Filter the query.
         if (empty($matchingGroupsIds)) {
@@ -249,8 +251,8 @@ class GroupsTable extends Table
             throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
         }
 
-        $query = $this->findIndex($options);
-        $query->where(['Groups.id' => $groupId]);
+        $query = $this->findIndex($options)
+            ->where(['Groups.id' => $groupId]);
 
         return $query;
     }
@@ -266,7 +268,6 @@ class GroupsTable extends Table
      */
     public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
     {
-        // @todo when saving a new group the validate option is set to default.
         if (isset($options['validate']) && $options['validate'] === 'default') {
             $data['deleted'] = false;
         }

@@ -14,8 +14,30 @@
  */
 namespace App\Test\Lib\Model;
 
-trait GroupsUsersModelTrait
-{
+use App\Utility\UuidFactory;
+
+Trait GroupsUsersModelTrait {
+
+    /**
+     * Get a dummy group user with test data.
+     * The comment returned passes a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array Comment data
+     */
+    public static function getDummyGroupUser($data = [])
+    {
+        $entityContent = [
+            'group_id' => UuidFactory::uuid('group.id.board'),
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'is_admin' => true,
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
     /**
      * Asserts that an object has all the attributes a group should have.
      *

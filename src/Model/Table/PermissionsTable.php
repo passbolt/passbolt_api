@@ -16,7 +16,10 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Permission;
+use App\Model\Rule\IsNotSoftDeletedRule;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
@@ -39,6 +42,30 @@ use Cake\Validation\Validator;
  */
 class PermissionsTable extends Table
 {
+
+    /**
+     * List of allowed aco models on which Permissions can be plugged.
+     */
+    const ALLOWED_ACOS = [
+        'Resource'
+    ];
+
+    /**
+     * List of allowed aro models on which Permissions can be plugged.
+     */
+    const ALLOWED_AROS = [
+        'Group',
+        'User',
+    ];
+
+    /**
+     * List of allowed permission types.
+     */
+    const ALLOWED_TYPES = [
+        Permission::READ,
+        Permission::UPDATE,
+        Permission::OWNER,
+    ];
 
     /**
      * Initialize method
@@ -80,28 +107,45 @@ class PermissionsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('aco')
+            ->inList('aco', self::ALLOWED_ACOS)
             ->requirePresence('aco', 'create')
             ->notEmpty('aco');
 
         $validator
-            ->scalar('aco_foreign_key')
+            ->uuid('aco_foreign_key')
             ->requirePresence('aco_foreign_key', 'create')
             ->notEmpty('aco_foreign_key');
 
         $validator
-            ->scalar('aro')
+            ->inList('aro', self::ALLOWED_AROS)
             ->requirePresence('aro', 'create')
             ->notEmpty('aro');
 
         $validator
-            ->scalar('aro_foreign_key')
-            ->allowEmpty('aro_foreign_key');
+            ->uuid('aro_foreign_key')
+            ->requirePresence('aro_foreign_key', 'create')
+            ->notEmpty('aro_foreign_key');
 
         $validator
-            ->integer('type')
+            ->inList('type', self::ALLOWED_TYPES)
             ->requirePresence('type', 'create')
             ->notEmpty('type');
+
+        return $validator;
+    }
+
+    /**
+     * Create resource validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSaveResource(Validator $validator)
+    {
+        $validator = $this->validationDefault($validator);
+
+        // The resource_id is added by cake after the resource is created.
+        $validator->remove('aco_foreign_key');
 
         return $validator;
     }
@@ -121,6 +165,82 @@ class PermissionsTable extends Table
         ];
 
         return is_int($value) && in_array($value, $permissionTypes);
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        $rules->addCreate($rules->isUnique(['aco_foreign_key', 'aro_foreign_key'],
+            __('A permission already exists for the given aco and aro.')),
+            'permission_unique'
+        );
+        $rules->addCreate([$this, 'acoExistsRule'], 'aco_exists', [
+            'errorField' => 'aco_foreign_key',
+            'message' => __('The aco does not exist.')
+        ]);
+        $rules->addCreate([$this, 'aroExistsRule'], 'aro_exists', [
+            'errorField' => 'aro_foreign_key',
+            'message' => __('The aro does not exist.')
+        ]);
+
+        return $rules;
+    }
+
+    /**
+     * Checks that the aco exists
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The entity to test
+     * @param array $options The additional options for this rule
+     * @return bool
+     */
+    public function acoExistsRule($entity, $options)
+    {
+        $rules = new RulesChecker($options);
+        if ($entity->aco == 'Resource') {
+            $rule = $rules->existsIn('aco_foreign_key', 'Resources');
+            $existIn = $rule($entity, $options);
+            $rule = new IsNotSoftDeletedRule();
+            $isNotSoftDeleted = $rule($entity, [
+                'table' => 'Resources',
+                'errorField' => 'aco_foreign_key',
+            ]);
+
+            return $existIn && $isNotSoftDeleted;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks that the aro exists
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The entity to test
+     * @param array $options The additional options for this rule
+     * @return bool
+     */
+    public function aroExistsRule($entity, $options)
+    {
+        $rules = new RulesChecker($options);
+        $aro = Inflector::pluralize($entity->aro);
+        if (in_array($aro, ['Users', 'Groups'])) {
+            $existRule = $rules->existsIn('aro_foreign_key', $aro);
+            $existIn = $existRule($entity, $options);
+            $isNotSoftDeletedRule = new IsNotSoftDeletedRule();
+            $isNotSoftDeleted = $isNotSoftDeletedRule($entity, [
+                'table' => $aro,
+                'errorField' => 'aro_foreign_key',
+            ]);
+
+            return $existIn && $isNotSoftDeleted;
+        }
+
+        return false;
     }
 
     /**

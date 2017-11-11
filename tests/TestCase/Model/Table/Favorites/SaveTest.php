@@ -17,11 +17,14 @@ namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
+    use FormatValidationTrait;
+
     public $Favorites;
 
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.favorites', 'app.permissions'];
@@ -40,176 +43,149 @@ class SaveTest extends AppTestCase
         parent::tearDown();
     }
 
+    protected function getEntityDefaultOptions()
+    {
+        return [
+            'validate' => 'default',
+            'accessibleFields' => [
+                'user_id' => true,
+                'foreign_id' => true,
+                'foreign_model' => true
+            ]
+        ];
+    }
+
+    /* ************************************************************** */
+    /* FORMAT VALIDATION TESTS */
+    /* ************************************************************** */
+
+    public function testValidationUserId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Favorites, 'user_id', self::getDummyFavorite(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationForeignId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Favorites, 'foreign_id', self::getDummyFavorite(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationForeignModel()
+    {
+        $testCases = [
+            'inList' => self::getInListTestCases(FavoritesTable::ALLOWED_FOREIGN_MODELS),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Favorites, 'foreign_model', self::getDummyFavorite(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    /* ************************************************************** */
+    /* LOGIC VALIDATION TESTS */
+    /* ************************************************************** */
+
     public function testSuccess()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid('user.id.dame'),
-                'foreign_id' => UuidFactory::uuid('resource.id.bower'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
-        $this->assertNotNull($save);
-        $errors = $favorite->getErrors();
-        $this->assertEmpty($errors);
+        $data = self::getDummyFavorite();
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
+        $this->assertEmpty($entity->getErrors(), 'Errors occurred while saving the entity: ' . json_encode($entity->getErrors()));
+        $this->assertNotFalse($save, 'The favorite save operation failed.');
 
-        // Check the favorite exists in db.
-        $addedFavorite = $this->Favorites->get($save->id);
-        $this->assertNotNull($addedFavorite);
-        $this->assertEquals(UuidFactory::uuid('user.id.dame'), $addedFavorite->user_id);
-        $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedFavorite->foreign_id);
-        $this->assertEquals('Resource', $addedFavorite->foreign_model);
+        // Check that the favorite is saved as expected.
+        $favorite = $this->Favorites->get($save->id);
+        $this->assertNotNull($favorite);
+        $this->assertEquals($data['user_id'], $favorite->user_id);
+        $this->assertEquals($data['foreign_id'], $favorite->foreign_id);
+        $this->assertEquals('Resource', $favorite->foreign_model);
     }
 
     public function testErrorUserExists()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid(),
-                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
+        $data = self::getDummyFavorite();
+        $data['user_id'] = UuidFactory::uuid();
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
         $this->assertFalse($save);
-        $errors = $favorite->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['user_id']['user_exists']);
     }
 
     public function testErrorUserNotSoftDeleted()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid('user.id.sofia'),
-                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
+        $data = self::getDummyFavorite();
+        $data['user_id'] = UuidFactory::uuid('user.id.sofia');
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
         $this->assertFalse($save);
-        $errors = $favorite->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['user_id']['user_is_not_soft_deleted']);
     }
 
     public function testErrorResourceExists()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid('user.id.dame'),
-                'foreign_id' => UuidFactory::uuid(),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
+        $data = self::getDummyFavorite();
+        $data['foreign_id'] = UuidFactory::uuid();
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
         $this->assertFalse($save);
-        $errors = $favorite->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['foreign_id']['resource_exists']);
     }
 
     public function testErrorResourceNotSoftDeleted()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid('user.id.dame'),
-                'foreign_id' => UuidFactory::uuid('resource.id.jquery'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
+        $data = self::getDummyFavorite();
+        $data['foreign_id'] = UuidFactory::uuid('resource.id.jquery');
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
         $this->assertFalse($save);
-        $errors = $favorite->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['foreign_id']['resource_is_not_soft_deleted']);
     }
 
     public function testErrorFavoriteUniqueRule()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid('user.id.dame'),
-                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
+        $data = self::getDummyFavorite();
+        $data['user_id'] = UuidFactory::uuid('user.id.dame');
+        $data['foreign_id'] = UuidFactory::uuid('resource.id.apache');
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
         $this->assertFalse($save);
-        $errors = $favorite->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['user_id']['favorite_unique']);
     }
 
     public function testErrorHasResourceAccessRule()
     {
-        $favorite = $this->Favorites->newEntity(
-            [
-                'user_id' => UuidFactory::uuid('user.id.dame'),
-                'foreign_id' => UuidFactory::uuid('resource.id.canjs'),
-                'foreign_model' => 'Resource',
-            ],
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'user_id' => true,
-                    'foreign_id' => true,
-                    'foreign_model' => true
-                ]
-            ]
-        );
-        $save = $this->Favorites->save($favorite);
+        $data = self::getDummyFavorite();
+        $data['user_id'] = UuidFactory::uuid('user.id.dame');
+        $data['foreign_id'] = UuidFactory::uuid('resource.id.canjs');
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Favorites->newEntity($data, $options);
+        $save = $this->Favorites->save($entity);
         $this->assertFalse($save);
-        $errors = $favorite->getErrors();
+        $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['foreign_id']['has_resource_access']);
     }

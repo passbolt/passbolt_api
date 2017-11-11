@@ -104,7 +104,7 @@ class UsersTable extends Table
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmpty('username', __('A username is required.'))
-            ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
+            ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
             ->email('username', true, __('The username should be a valid email address.'));
 
         $validator
