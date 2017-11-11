@@ -34,7 +34,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteSuccess()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
         $data = [
@@ -48,7 +48,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->postJson($url, $data);
         $this->assertSuccess();
         // Check that token is now inactive
-        $t2 = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
+        $t2 = $this->AuthenticationTokens->get($t->id);
         $this->assertFalse($t2->active);
         // Check that ruth is active
         $ruth = $this->Users->get(UuidFactory::uuid('user.id.ruth'));
@@ -63,9 +63,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteApiV1Success()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.ruth')])
-            ->first();
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
         $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
         $data = [
@@ -141,7 +139,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteInvalidGpgkeyError()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
         $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
 
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');

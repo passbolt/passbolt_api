@@ -117,8 +117,10 @@ class SecretsTable extends Table
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function isValidGpgMessage($check, array $context) {
+    public function isValidGpgMessage($check, array $context)
+    {
         $gpg = new Gpg();
+
         return $gpg->isValidMessage($check);
     }
 
@@ -131,8 +133,11 @@ class SecretsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->addCreate($rules->isUnique(['user_id', 'resource_id'],
-            __('A secret already exists for the given user and resource.')),
+        $rules->addCreate(
+            $rules->isUnique(
+                ['user_id', 'resource_id'],
+                __('A secret already exists for the given user and resource.')
+            ),
             'secret_unique'
         );
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [

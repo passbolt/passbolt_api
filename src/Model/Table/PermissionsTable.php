@@ -176,8 +176,11 @@ class PermissionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->addCreate($rules->isUnique(['aco_foreign_key', 'aro_foreign_key'],
-            __('A permission already exists for the given aco and aro.')),
+        $rules->addCreate(
+            $rules->isUnique(
+                ['aco_foreign_key', 'aro_foreign_key'],
+                __('A permission already exists for the given aco and aro.')
+            ),
             'permission_unique'
         );
         $rules->addCreate([$this, 'acoExistsRule'], 'aco_exists', [

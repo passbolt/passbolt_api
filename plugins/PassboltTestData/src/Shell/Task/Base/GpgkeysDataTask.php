@@ -70,7 +70,7 @@ class GpgkeysDataTask extends DataTask
 
         foreach($users as $user) {
             $keyRaw = $this->_getUserKey($user->id);
-            $info = $Gpg->getKeyInfo($keyRaw);
+            $info = $Gpg->getPublicKeyInfo($keyRaw);
             $keys[] = [
                 'id' => UuidFactory::uuid('gpgkey.id.' . $user->id),
                 'user_id' => $user->id,

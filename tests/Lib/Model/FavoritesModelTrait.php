@@ -16,7 +16,7 @@ namespace App\Test\Lib\Model;
 
 use App\Utility\UuidFactory;
 
-Trait FavoritesModelTrait
+trait FavoritesModelTrait
 {
 
     /**

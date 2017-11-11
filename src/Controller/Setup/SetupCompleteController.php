@@ -155,11 +155,11 @@ class SetupCompleteController extends AppController
         if (empty($armoredKey)) {
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
-        if (!is_string($armoredKey)) {
-            throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
-        }
 
         $this->loadModel('Gpgkeys');
+        if (!$this->Gpgkeys->isParsableArmoredPublicKey($armoredKey)) {
+            throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
+        }
         try {
             $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
         } catch (ValidationException $e) {

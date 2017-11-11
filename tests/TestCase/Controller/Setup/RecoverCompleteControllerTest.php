@@ -34,7 +34,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteSuccess()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
         $data = [
@@ -49,13 +49,13 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // Check that token is now inactive
-        $t2 = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $t2 = $this->AuthenticationTokens->get($t->id);
         $this->assertFalse($t2->active);
     }
 
     public function testRecoverCompleteApiV1Success()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
         $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
         $data = [
@@ -131,7 +131,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteInvalidGpgkeyError()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
 
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');

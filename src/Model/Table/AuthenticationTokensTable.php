@@ -146,6 +146,7 @@ class AuthenticationTokensTable extends Table
      */
     public function isValid($tokenId, $userId)
     {
+
         // Are ids valid uuid?
         if (!Validation::uuid($tokenId) || !Validation::uuid($userId)) {
             return false;

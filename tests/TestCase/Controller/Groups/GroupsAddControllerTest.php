@@ -28,13 +28,15 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
         $this->Groups = TableRegistry::get('Groups', $config);
     }
 
-    protected function _getDummyPostData($data = []) {
+    protected function _getDummyPostData($data = [])
+    {
         $defaultData = [
             'Group' => ['name' => 'New group name'],
             'GroupUsers' => [
@@ -47,7 +49,8 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         return $data;
     }
 
-    public function testSuccess() {
+    public function testSuccess()
+    {
         $success = [
             'chinese' => [
                 'Group' => ['name' => '私人團體'],
@@ -92,12 +95,12 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
                 ->where(['id' => $this->_responseJsonBody->Group->id])
                 ->first();
             $this->assertEquals($data['Group']['name'], $group->name);
-            $this->assertEquals(false,  $group->deleted);
+            $this->assertEquals(false, $group->deleted);
             $this->assertCount(count($data['GroupUsers']), $group->groups_users);
             foreach ($data['GroupUsers'] as $dataGroupUser) {
                 $groupUser = Hash::extract($group->groups_users, "{n}[user_id={$dataGroupUser['GroupUser']['user_id']}]");
                 $this->assertNotEmpty($groupUser);
-                $isAdmin = Hash::get((array) $dataGroupUser, 'GroupUser.is_admin', false);
+                $isAdmin = Hash::get((array)$dataGroupUser, 'GroupUser.is_admin', false);
                 $this->assertEquals($isAdmin, $groupUser[0]->is_admin);
             }
         }

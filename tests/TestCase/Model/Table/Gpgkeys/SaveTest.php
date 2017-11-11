@@ -196,7 +196,7 @@ class SaveTest extends AppTestCase
             'not a date' => '12',
             'future' => FrozenTime::createFromDate('2030'),
             'more than half a day' => Time::now()->modify('+13 hours'),
-            'tomorrow as time' => Time::tomorrow(),
+            'tomorrow as time' => Time::now()->modify('+24 hours'),
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
@@ -216,5 +216,19 @@ class SaveTest extends AppTestCase
                 'Gpgkey created date should validate for case ' . $case
             );
         }
+    }
+
+    public function testGpgkeysValidationisParsableArmoredPublicKey()
+    {
+        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
+         $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKey($armoredKey));
+
+        $armoredKeySplit = str_split($armoredKey, 300);
+        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeySplit[0]));
+
+        $armoredKeyCorrupt = str_replace('F', '0', $armoredKey);
+        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeyCorrupt));
+
+        //@TODO expired key
     }
 }

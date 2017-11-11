@@ -65,9 +65,8 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartBadRequestErrorExpiredToken()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.expired')])
-            ->first();
+
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('token.id.expired'));
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was expired');
@@ -112,9 +111,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartSuccess()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.ada')])
-            ->first();
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
         $url = '/setup/recover/start/' . UuidFactory::uuid('user.id.ada') . '/' . $t->token;
 
         $this->get($url);

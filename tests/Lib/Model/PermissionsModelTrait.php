@@ -17,7 +17,7 @@ namespace App\Test\Lib\Model;
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
 
-Trait PermissionsModelTrait
+trait PermissionsModelTrait
 {
 
     /**

@@ -148,8 +148,7 @@ class LegacyApiHelper extends Helper
                 $className = substr($table->getEntityClass(), strrpos($table->getEntityClass(), '\\') + 1);
                 $resultKey = self::formatModelName(Inflector::underscore($className));
                 $results[$resultKey][$property] = $propertyErrors;
-            }
-            // In case the association is a HasMany.
+            } // In case the association is a HasMany.
             // Example: Groups.groups_users
             elseif (get_class($association) === 'Cake\ORM\Association\HasMany') {
                 $associationName = self::formatModelName($property);

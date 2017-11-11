@@ -24,7 +24,8 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
 
-    protected function _getDummyPostData($data = []) {
+    protected function _getDummyPostData($data = [])
+    {
         $defaultData = [
             'Resource' => [
                 'name' => 'new resource name',

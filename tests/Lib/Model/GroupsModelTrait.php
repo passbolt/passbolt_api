@@ -16,7 +16,7 @@ namespace App\Test\Lib\Model;
 
 use App\Utility\UuidFactory;
 
-Trait GroupsModelTrait
+trait GroupsModelTrait
 {
 
     /**
@@ -41,7 +41,6 @@ Trait GroupsModelTrait
 
         return $entityContent;
     }
-
 
     /**
      * Asserts that an object has all the attributes a group should have.

@@ -29,7 +29,7 @@ use JsonSchema\Exception\ValidationException;
 use Cake\Core\Exception\Exception;
 
 /**
- * Gpgkeys Model
+ * Model to store and validate OpenPGP public keys
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
@@ -83,7 +83,11 @@ class GpgkeysTable extends Table
         $validator
             ->scalar('armored_key')
             ->requirePresence('armored_key', 'create')
-            ->notEmpty('armored_key');
+            ->notEmpty('armored_key')
+            ->add('armored_key', ['custom' => [
+                'rule' => [$this, 'isParsableArmoredPublicKey'],
+                'message' => __('The key should be a valid OpenPGPG ASCII armored key.')
+            ]]);
 
         $validator
             ->integer('bits', 'The key bits should be an integer.')
@@ -211,6 +215,23 @@ class GpgkeysTable extends Table
     public function isValidKeyId($value, array $context = null)
     {
         return (preg_match('/^[A-F0-9]{8}$/', $value) === 1);
+    }
+
+    /**
+     * Custom validation rule to validate key id
+     *
+     * @param string $value fingerprint
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isParsableArmoredPublicKey($value, array $context = null)
+    {
+        if (!is_scalar($value) || !is_string($value)) {
+            return false;
+        }
+        $gpg = new Gpg();
+
+        return $gpg->isParsableArmoredPublicKey($value);
     }
 
     /**
@@ -360,7 +381,7 @@ class GpgkeysTable extends Table
     {
         try {
             $gpg = new Gpg();
-            $info = $gpg->getKeyInfo($armoredKey);
+            $info = $gpg->getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {
             throw new ValidationException(__('Could not create Gpgkey from armored key.'));
         }

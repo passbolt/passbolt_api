@@ -16,7 +16,8 @@ namespace App\Test\Lib\Model;
 
 use App\Utility\UuidFactory;
 
-Trait GroupsUsersModelTrait {
+trait GroupsUsersModelTrait
+{
 
     /**
      * Get a dummy group user with test data.

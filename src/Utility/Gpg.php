@@ -98,7 +98,7 @@ class Gpg
     public function setEncryptKey($armoredKey)
     {
         // Get the key info.
-        $this->encryptKeyInfo = $this->getKeyInfo($armoredKey);
+        $this->encryptKeyInfo = $this->getPublicKeyInfo($armoredKey);
 
         // Import key inside the keyring.
         $this->importKeyIntoKeyring($armoredKey);
@@ -169,7 +169,7 @@ class Gpg
     }
 
     /**
-     * Check if a key is valid.
+     * Check if an ASCII armored public key is parsable
      *
      * To do this, we try to unarmor the key. If the operation is successful, then we consider that
      * the key is a valid one.
@@ -177,7 +177,7 @@ class Gpg
      * @param string $armoredKey ASCII armored key data
      * @return bool true if valid, false otherwise
      */
-    public function isValidKey($armoredKey)
+    public function isParsableArmoredPublicKey($armoredKey)
     {
         // First, we try to get the marker of the gpg message.
         try {
@@ -187,11 +187,26 @@ class Gpg
             return false;
         }
 
+        // Do not accept secret keys or message as valid marker
+        if ($marker !== 'PGP PUBLIC KEY BLOCK') {
+            return false;
+        }
+
         // Try to unarmor the key.
         $keyUnarmored = OpenPGP::unarmor($armoredKey, $marker);
         // If we don't manage to unarmor the key, we consider it's not a valid one.
         if ($keyUnarmored == false) {
             return false;
+        }
+
+        // Try to parse the key
+        $publicKey = @(\OpenPGP_PublicKeyPacket::parse($keyUnarmored));
+        if (empty($publicKey)) {
+            return false;
+        } else {
+            if (empty($publicKey->fingerprint) || empty($publicKey->key)) {
+                return false;
+            }
         }
 
         // All tests pass, return true.
@@ -204,10 +219,11 @@ class Gpg
      * To do this, we try to unarmor the message. If the operation is successful, then we consider that
      * the message is a valid one.
      *
-     * @param string $armoredMessage ASCII armored message data
+     * @param string $armored ASCII armored message data
      * @return bool true if valid, false otherwise
      */
-    public function isValidMessage($armored) {
+    public function isValidMessage($armored)
+    {
         // First, we try to get the marker of the message.
         try {
             $marker = $this->getGpgMarker($armored);
@@ -215,7 +231,10 @@ class Gpg
             // If we can't extract the marker, we consider it's not a valid gpg message.
             return false;
         }
-
+        // Do not accept keys as valid marker
+        if ($marker != 'PGP MESSAGE') {
+            return false;
+        }
         // Try to unarmor the key.
         $unarmored = OpenPGP::unarmor($armored, $marker);
         // If we don't manage to unarmor the message, we consider it's not a valid one.
@@ -227,7 +246,23 @@ class Gpg
     }
 
     /**
-     * Get key information.
+     * Get public key information.
+     *
+     * @param string $armoredKey the ASCII armored key block
+     * @return array as described above
+     * @throws Exception if the armored key is not parsable as public key
+     */
+    public function getPublicKeyInfo($armoredKey)
+    {
+        if ($this->isParsableArmoredPublicKey($armoredKey) === false) {
+            throw new Exception('The public key could not be parsed.');
+        }
+
+        return $this->getKeyInfo($armoredKey);
+    }
+
+    /**
+     * Get key information
      *
      * Extract the information from the key and return them in an array
      * Information returned :
@@ -244,14 +279,9 @@ class Gpg
      *
      * @param string $armoredKey the ASCII armored key block
      * @return array as described above
-     * @throws Exception
      */
     public function getKeyInfo($armoredKey)
     {
-        if ($this->isValidKey($armoredKey) === false) {
-            throw new Exception('Invalid key.');
-        }
-
         // Unarmor the key.
         $keyUnarmored = OpenPGP::unarmor(
             $armoredKey,

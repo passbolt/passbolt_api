@@ -91,9 +91,8 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 
     public function testSetupStartBadRequestErrorAlreadyActiveUser()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.ada')])
-            ->first();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $t = $this->AuthenticationTokens->generate($userId);
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ada') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has already completed setup.');
@@ -101,9 +100,8 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 
     public function testSetupStartBadRequestErrorDeletedUser()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.sophia')])
-            ->first();
+        $userId = UuidFactory::uuid('user.id.sophia');
+        $t = $this->AuthenticationTokens->generate($userId);
         $url = '/setup/install/' . UuidFactory::uuid('user.id.sophia') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');
@@ -111,10 +109,9 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 
     public function testSetupStartSuccess()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.ruth')])
-            ->first();
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
+        $userId = UuidFactory::uuid('user.id.ruth');
+        $t = $this->AuthenticationTokens->generate($userId);
+        $url = '/setup/install/' . $userId  . '/' . $t->token;
 
         $this->get($url);
         $this->assertResponseOk();

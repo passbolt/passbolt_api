@@ -318,7 +318,7 @@ class Healthchecks
                 $checks['gpg']['gpgKeyPrivateFingerprint'] = true;
             }
             $publicKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));
-            $publicKeyInfo = $gpg->getKeyInfo($publicKeydata);
+            $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeydata);
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
