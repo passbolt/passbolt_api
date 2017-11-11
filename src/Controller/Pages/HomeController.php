@@ -65,7 +65,7 @@ class HomeController extends AppController
                     "number" => Configure::read('App.version.number'),
                     "name" => Configure::read('App.version.name')
                 ],
-                "url" => Router::fullBaseUrl() . '/',
+                "url" => Router::url('/', true),
                 "debug" => Configure::read('debug'),
                 "server_timezone" => date_default_timezone_get()
             ],

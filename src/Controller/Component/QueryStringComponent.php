@@ -453,7 +453,7 @@ class QueryStringComponent extends Component
     }
 
     /**
-     * ['order' => [' User.first_name ASC', 'User.last_name DESC']]
+     * ['order' => ['User.first_name ASC', 'User.last_name DESC']]
      * becomes
      * ['order' => ['Users.first_name' => 'ASC', 'Users.last_name' => 'DESC']]
      */

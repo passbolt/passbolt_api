@@ -195,6 +195,10 @@ class GroupsTable extends Table
         if (count($usersIds) == 1) {
             $query->leftJoinWith('GroupsUsers');
             $query->where(['GroupsUsers.user_id' => $usersIds[0]]);
+            // If we want to retrieve only managers.
+            if ($areManager) {
+                $query->where(['GroupsUsers.is_admin' => true]);
+            }
 
             return $query;
         }

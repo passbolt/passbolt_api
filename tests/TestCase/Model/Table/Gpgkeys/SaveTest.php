@@ -15,17 +15,17 @@
 
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
-use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class SaveTest extends AppTestCase
 {
     public $Gpgkeys;
 
-    public $fixtures = ['app.groups', 'app.users', 'app.groups_users', 'app.gpgkeys'];
+    public $fixtures = ['app.users', 'app.gpgkeys'];
 
     public function setUp()
     {
@@ -159,6 +159,61 @@ class SaveTest extends AppTestCase
             $this->assertTrue(
                 $this->Gpgkeys->uidContainValidEmail($value),
                 'Uid email validation should work for case ' . $case
+            );
+        }
+    }
+
+    public function testGpgkeysValidationExpires()
+    {
+        $fails = [
+            'not a date' => '12',
+            'yesterday' => FrozenTime::yesterday(),
+            'now' => FrozenTime::now()
+        ];
+        foreach ($fails as $case => $value) {
+            $this->assertFalse(
+                $this->Gpgkeys->isInFuture($value),
+                'Gpgkey expires date should not validate for case ' . $case
+            );
+        }
+
+        $successes = [
+            'tomorrow' => FrozenTime::tomorrow(),
+            'tomorrow as time' => Date::tomorrow(),
+            'way later' => FrozenTime::createFromDate('2030')
+        ];
+        foreach ($successes as $case => $value) {
+            $this->assertTrue(
+                $this->Gpgkeys->isInFuture($value),
+                'Gpgkey expires date should validate for case ' . $case
+            );
+        }
+    }
+
+    public function testGpgkeysValidationIsInFuturePast()
+    {
+        $fails = [
+            'not a date' => '12',
+            'future' => FrozenTime::createFromDate('2030'),
+            'more than half a day' => Time::now()->modify('+13 hours'),
+            'tomorrow as time' => Time::tomorrow(),
+        ];
+        foreach ($fails as $case => $value) {
+            $this->assertFalse(
+                $this->Gpgkeys->isInFuturePast($value),
+                'Gpgkey created date should not validate for case ' . $case
+            );
+        }
+
+        $successes = [
+            'yesterday' => FrozenTime::yesterday(),
+            'now' => FrozenTime::now(),
+            'almost half a day' => Time::now()->modify('+11 hours'),
+        ];
+        foreach ($successes as $case => $value) {
+            $this->assertTrue(
+                $this->Gpgkeys->isInFuturePast($value),
+                'Gpgkey created date should validate for case ' . $case
             );
         }
     }

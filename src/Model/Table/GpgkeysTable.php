@@ -15,9 +15,11 @@
 namespace App\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
-use App\Model\Entity\Gpgkey;
 use App\Utility\Gpg;
 use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\Time;
+use DateTimeInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -89,7 +91,7 @@ class GpgkeysTable extends Table
             ->notEmpty('bits');
 
         $validator
-            ->scalar('uid')
+            ->utf8('uid')
             ->allowEmpty('uid');
 //            ->add('uid', ['custom' => [
 //                'rule' => [$this, 'isValidUid'],
@@ -125,12 +127,20 @@ class GpgkeysTable extends Table
 
         $validator
             ->dateTime('expires')
-            ->allowEmpty('expires');
+            ->allowEmpty('expires')
+            ->add('expires', ['custom' => [
+                'rule' => [$this, 'isInFuture'],
+                'message' => __('The key should not already be expired.')
+            ]]);
 
         $validator
             ->dateTime('key_created')
             ->requirePresence('key_created', 'create')
-            ->notEmpty('key_created');
+            ->notEmpty('key_created')
+            ->add('key_created', ['custom' => [
+                'rule' => [$this, 'isInFuturePast'],
+                'message' => __('The key creation date should be set in the past.')
+            ]]);
 
         $validator
             ->boolean('deleted')
@@ -159,13 +169,13 @@ class GpgkeysTable extends Table
         return $rules;
     }
 
-    /**
-     * Custom validation rule to validate uid
-     *
-     * @param string $value uid
-     * @param array $context not in use
-     * @return bool
-     */
+/**
+ * Custom validation rule to validate uid
+ *
+ * @param string $value uid
+ * @param array $context not in use
+ * @return bool
+ */
 //    public function isValidUid($value, array $context = null)
 //    {
 //        if (empty($value) || !is_scalar($value)) {
@@ -204,6 +214,45 @@ class GpgkeysTable extends Table
     }
 
     /**
+     * Check if a key date is set in the past... tomorrow!
+     *
+     * In a ideal world we should check if a key date is set in the past from 'now'
+     * where now is the time of reference of the server. But in practice we
+     * allow a next day margin because users had the issue of having keys generated
+     * by systems that were ahead of server time. Refs. PASSBOLT-1505.
+     *
+     * @param Date $value Cake Datetime
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isInFuturePast($value, array $context = null)
+    {
+        if (empty($value) || !($value instanceof DateTimeInterface)) {
+            return false;
+        }
+        $nowWithMargin = Time::now()->modify('+12 hours');
+
+        return $value->lt($nowWithMargin);
+    }
+
+    /**
+     * Check if a key date is set in the future
+     * Used to check key expiry date
+     *
+     * @param Date $value Cake Datetime
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isInFuture($value, array $context = null)
+    {
+        if (empty($value) || !($value instanceof DateTimeInterface)) {
+            return false;
+        }
+
+        return $value->gt(FrozenTime::now());
+    }
+
+    /**
      * Custom validation rule to validate key type
      *
      * @param string $value fingerprint
@@ -220,6 +269,7 @@ class GpgkeysTable extends Table
                 return true;
             }
         }
+
         return false;
     }
 
@@ -323,13 +373,12 @@ class GpgkeysTable extends Table
             'key_id' => $info['key_id'],
             'uid' => $info['uid'],
             'armored_key' => $armoredKey,
-            'deleted' => false
+            'deleted' => false,
+            'key_created' => new FrozenTime($info['key_created']),
+            'expires' => null
         ];
         if (!empty($info['expires'])) {
             $data['expires'] = new FrozenTime($info['expires']);
-        }
-        if (!empty($info['key_created'])) {
-            $data['key_created'] = new FrozenTime($info['expires']);
         }
         $gpgkey = $this->newEntity($data, ['accessibleFields' => ['*' => true]]);
 
