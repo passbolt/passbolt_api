@@ -84,7 +84,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($success as $case => $data) {
-            $this->authenticateAs('admin', Role::ADMIN);
+            $this->authenticateAs('admin');
             $this->postJson('/groups.json', $data);
             $this->assertResponseSuccess();
 
@@ -155,7 +155,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($errors as $caseLabel => $case) {
-            $this->authenticateAs('admin', Role::ADMIN);
+            $this->authenticateAs('admin');
             $this->postJson('/groups.json', $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);

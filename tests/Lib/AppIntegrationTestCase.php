@@ -129,24 +129,25 @@ class AppIntegrationTestCase extends IntegrationTestCase
      * Authenticate as a user.
      *
      * @param string $userFirstName The user first name.
-     * @param string $roleName (optional) The role name, by default guest.
      * @return void
      */
-    public function authenticateAs($userFirstName, $roleName = Role::USER)
+    public function authenticateAs($userFirstName)
     {
-        if ($userFirstName === 'admin') {
-            $roleName = Role::ADMIN;
-        }
-        $this->session([
-            'Auth' => [
-                'User' => [
-                    'id' => UuidFactory::uuid('user.id.' . $userFirstName),
-                    'role' => [
-                        'name' => $roleName
-                    ]
-                ],
+        $data = [
+            'id' => UuidFactory::uuid('user.id.' . $userFirstName),
+            'username' => $userFirstName . '@passbolt.com',
+            'profile' => [
+                'first_name' => $userFirstName,
+                'last_name' => 'testing',
+            ],
+            'role' => [
+                'name' => Role::USER
             ]
-        ]);
+        ];
+        if ($userFirstName === 'admin') {
+            $data['role']['name'] = Role::ADMIN;
+        }
+        $this->session(['Auth' => ['User' => $data]]);
     }
 
     /**

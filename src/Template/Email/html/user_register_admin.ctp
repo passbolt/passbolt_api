@@ -15,21 +15,22 @@
     use Cake\Routing\Router;
 
     $user = $body['user'];
+    $admin = $body['admin'];
     $token = $body['token'];
 
-    $text = $this->element('email/content/register_avatar_text', ['user' => $user]);
+    $text = $this->element('email/content/register_admin_avatar_text', ['user' => $user, 'admin' => $admin]);
 
+    // @TODO avatar this should be the admin avatar
     echo $this->element('email/module/avatar',[
         'url' => Router::url('/img/avatar' . DS . 'user.png', true),
         'text' => $text
     ]);
 
     echo $this->element('email/module/text', [
-        'text' => $this->element('email/content/register_text', ['user' => $user])
+        'text' => $this->element('email/content/register_admin_text', ['user' => $user, 'admin' => $admin])
     ]);
 
     echo $this->element('email/module/button', [
         'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token']),
         'text' => __('get started')
     ]);
-?>

@@ -39,7 +39,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 
     public function testUserAddNotAdminError()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $data = [
             'username' => 'notallowed@passbolt.com',
             'profile' => [
@@ -74,7 +74,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                     'last_name' => 'Jerman Blažič'
                 ],
             ],
-            'not role' => [
+            'no role' => [
                 'username' => 'aurore@passbolt.com',
                 'profile' => [
                     'first_name' => 'Aurore',
@@ -112,7 +112,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 
     public function testUserAddCannotModifyNotAccessibleFields()
     {
-        $this->authenticateAs('admin', Role::ADMIN);
+        $this->authenticateAs('admin');
         $date = '1983-04-01 23:34:45';
         $userId = UuidFactory::uuid('user.id.aurore');
 
@@ -139,5 +139,23 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertTrue($user->created->gt(FrozenTime::create($date)));
+    }
+
+    public function testUserAddSuccessEmail()
+    {
+        $this->authenticateAs('admin');
+        $data = [
+            'username' => 'aurore@passbolt.com',
+            'profile' => [
+                'first_name' => 'Aurore',
+                'last_name' => 'Avarguès-Weber'
+            ]
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertResponseSuccess();
+
+        $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
+        $this->assertResponseOk();
+        $this->assertResponseContains('created an account for you');
     }
 }

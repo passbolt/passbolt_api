@@ -39,7 +39,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testAddApiV1Success()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = [
             'Comment' => [
@@ -59,7 +59,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testAddApiV1WithParentIdSuccess()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test with parent_id';
         $postData = [
             'Comment' => [
@@ -80,7 +80,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testErrorInvalidResourceId()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = [];
         $resourceId = 'testBadUuid';
@@ -91,7 +91,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testAddRuleValidationResourceDoesNotExist()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
         $resourceId = UuidFactory::uuid('resource.id.notexist');
@@ -111,7 +111,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->Resources->save($resource);
 
         // Now authenticate as Ada and try to access the soft deleted resource.
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
         $this->postJson("/comments/resource/$resourceId.json", $postData);
@@ -121,7 +121,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testAddRuleValidationResourceAccessDenied()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
         $resourceId = UuidFactory::uuid('resource.id.chai');
@@ -132,7 +132,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testAddErrorValidationParentIdDoesNotExist()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $commentContent = 'this is a test with parent_id';
         $postData = [
             'Comment' => [
@@ -148,7 +148,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testAddErrorValidationContentNotProvided()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $postData = [
             'Comment' => [
                 'content' => '',
@@ -162,7 +162,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public function testCannotModifyNotAccessibleFields()
     {
-        $this->authenticateAs('ada', Role::USER);
+        $this->authenticateAs('ada');
         $createdDate = '2012-01-01 00:00:00';
         $createdBy = UuidFactory::uuid('user.id.betty');
         $commentContent = 'this is a test';

@@ -119,12 +119,23 @@ class UsersRegisterController extends AppController
         }
 
         // Create an event to build email with token
+        $this->_notifyUser($user, $token);
+
+        return $user;
+    }
+
+    /**
+     * Notify the user
+     *
+     * @param object $user User entity
+     * @param object $token Token entity
+     */
+    protected function _notifyUser($user, $token)
+    {
         $event = new Event('UsersRegisterController.registerPost.success', $this, [
             'user' => $user, 'token' => $token
         ]);
         $this->getEventManager()->dispatch($event);
-
-        return $user;
     }
 
     /**

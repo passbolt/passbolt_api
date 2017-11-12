@@ -194,7 +194,7 @@ class UsersTable extends Table
             'Gpgkeys',
             'Roles',
             'GroupsUsers'
-            // @todo profile.avatar
+            // @todo avatar as part of profile.avatar
         ]);
 
         // Filter out guests and deleted users
@@ -441,5 +441,19 @@ class UsersTable extends Table
                 'currentUserRole' => $roleName
             ]
         );
+    }
+
+    public function getForEmail($userId)
+    {
+        $user = $this->find()
+            ->where(['Users.id' => $userId])
+            ->contain([
+                'Profiles',
+                'Roles',
+                //'Avatar' // TODO avatar
+            ])
+            ->first();
+
+        return $user;
     }
 }

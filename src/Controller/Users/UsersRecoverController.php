@@ -71,11 +71,11 @@ class UsersRecoverController extends AppController
             $token = $this->AuthenticationTokens->generate($user->id);
 
             if ($user->active) {
-                $event = 'UserRecoverController.recoverPost.success';
+                $event = 'UsersRecoverController.recoverPost.success';
             } else {
                 // The user has not completed the setup, restart setup
                 // Fixes https://github.com/passbolt/passbolt_api/issues/73
-                $event = 'UserRecoverController.registerPost.success';
+                $event = 'UsersRecoverController.registerPost.success';
             }
 
             // Create an event to build email with token

@@ -26,9 +26,11 @@ class EmailsListener implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'UsersRegisterController.registerPost.success' => 'sendRegisterEmail',
-            'UserRecoverController.registerPost.success' => 'sendRegisterEmail',
-            'UserRecoverController.recoverPost.success' => 'sendRecoverEmail'
+            'UsersRegisterController.registerPost.success' => 'sendSelfRegisteredEmail',
+            'UsersRecoverController.registerPost.success' => 'sendSelfRegisteredEmail',
+            'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
+            'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
+
         ];
     }
 
@@ -40,7 +42,7 @@ class EmailsListener implements EventListenerInterface
      * @param null $token
      * @return void
      */
-    public function sendRegisterEmail(Event $event, $user = null, $token = null)
+    public function sendSelfRegisteredEmail(Event $event, $user = null, $token = null)
     {
         // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.create')) {
@@ -55,8 +57,39 @@ class EmailsListener implements EventListenerInterface
 
         // Send notification
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
-        $template = 'user_register';
+        $template = 'user_register_self';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
+        $this->_send($user->username, $subject, $data, $template);
+    }
+
+    /**
+     * Send Register Email
+     *
+     * @param Event $event
+     * @param null $user
+     * @param null $token
+     * @return void
+     */
+    public function sendAdminRegisteredEmail(Event $event, $user = null, $token = null, $admin = null)
+    {
+        // Notification toggle and baseline check
+        if (!Configure::read('passbolt.email.send.user.create')) {
+            return;
+        }
+        if (!isset($user)) {
+            throw new InternalErrorException('User should not be empty when sending registration emails');
+        }
+        if (!isset($token)) {
+            throw new InternalErrorException('Authentication token should not be empty when sending registration emails');
+        }
+        if (!isset($admin)) {
+            throw new InternalErrorException('Administrator info not be empty when sending registration emails');
+        }
+
+        // Send notification
+        $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
+        $template = 'user_register_admin';
+        $data = ['body' => ['user' => $user, 'token' => $token, 'admin' => $admin], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
     }
 

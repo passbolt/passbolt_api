@@ -160,7 +160,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
                                                     <table align="Left" border="0" cellpadding="0" cellspacing="0" width="160" class="flexibleContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                         <tr>
                                                             <td align="Left" valign="top" class="imageContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;padding-bottom: 0px;">
-                                                                <img src="<?php echo Router::url('/',true);?>/img/logo/logo.png" width="160" class="flexibleImage" style="max-width: 160px;border: 0;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;height: auto;">
+                                                                <img src="<?php echo Router::url('/img/logo/logo.png',true);?>" width="160" class="flexibleImage" style="max-width: 160px;border: 0;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;height: auto;">
                                                             </td>
                                                         </tr>
                                                     </table>

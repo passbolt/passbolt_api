@@ -16,12 +16,8 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
 
 class UsersAddController extends UsersRegisterController
 {
@@ -52,5 +48,20 @@ class UsersAddController extends UsersRegisterController
         $user = $this->_registerUser();
         $this->set('user', $user);
         $this->success(__('The user was successfully added. This user now need to complete the setup.'));
+    }
+
+    /**
+     * Notify the user
+     *
+     * @param object $user User entity
+     * @param object $token Token entity
+     */
+    protected function _notifyUser($user, $token)
+    {
+        $admin = $this->Users->getForEmail($this->User->id());
+        $event = new Event('UsersAddController.addPost.success', $this, [
+            'user' => $user, 'token' => $token, 'admin' => $admin
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }
