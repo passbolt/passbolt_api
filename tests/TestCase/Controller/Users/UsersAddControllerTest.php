@@ -20,34 +20,61 @@ use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
-class UsersRegisterControllerTest extends AppIntegrationTestCase
+class UsersAddControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.email_queue'];
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.email_queue', 'app.authentication_tokens'];
 
-    public function testUserRegisterGetSuccess()
+    public function testUserAddNotLoggedInError()
     {
-        $this->get('/users/register');
-        $this->assertResponseOk();
+        $data = [
+            'username' => 'notallowed@passbolt.com',
+            'profile' => [
+                'first_name' => 'not',
+                'last_name' => 'allowed'
+            ]
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertAuthenticationError();
     }
 
-    public function testUserRegisterPostSuccess()
+    public function testUserAddNotAdminError()
     {
+        $this->authenticateAs('ada', Role::USER);
+        $data = [
+            'username' => 'notallowed@passbolt.com',
+            'profile' => [
+                'first_name' => 'not',
+                'last_name' => 'allowed'
+            ]
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertError('403', 'Only administrators can add new users.');
+    }
+
+    public function testUserAddSuccess()
+    {
+        $this->authenticateAs('admin');
+        $roles = TableRegistry::get('Roles');
+        $adminRoleId = $roles->getIdByName(Role::ADMIN);
+        $userRoleId = $roles->getIdByName(Role::USER);
         $success = [
-            'chinese_name' => [
+            'admin role' => [
                 'username' => 'ping.fu@passbolt.com',
+                'role_id' => $adminRoleId,
                 'profile' => [
                     'first_name' => '傅',
                     'last_name' => '苹'
                 ],
             ],
-            'slavic_name' => [
+            'user role' => [
                 'username' => 'borka@passbolt.com',
+                'role_id' => $userRoleId,
                 'profile' => [
                     'first_name' => 'Borka',
                     'last_name' => 'Jerman Blažič'
                 ],
             ],
-            'french_name' => [
+            'not role' => [
                 'username' => 'aurore@passbolt.com',
                 'profile' => [
                     'first_name' => 'Aurore',
@@ -57,7 +84,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($success as $case => $data) {
-            $this->post('/users/register', $data);
+            $this->postJson('/users.json', $data);
             $this->assertResponseSuccess();
 
             // Check user was saved
@@ -76,64 +103,16 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             // Check role exist
             $roles = TableRegistry::get('Roles');
             $role = $roles->get($user->get('role_id'));
-            $this->assertEquals(Role::USER, $role->name);
+            if (!isset($data['role_id'])) {
+                $data['role_id'] = $userRoleId;
+            }
+            $this->assertEquals($role->id, $data['role_id']);
         }
     }
 
-    public function testUserRegisterPostFailValidation()
+    public function testUserAddCannotModifyNotAccessibleFields()
     {
-        $fails = [
-            'username is missing' => [
-                'username' => '',
-                'profile' => [
-                    'first_name' => 'valid_first_name',
-                    'last_name' => 'valid_last_name'
-                ]
-            ],
-            'username is not an email' => [
-                'username' => 'invalid@passbolt',
-                'profile' => [
-                    'first_name' => 'valid_first_name',
-                    'last_name' => 'valid_last_name'
-                ]
-            ],
-            'profile is missing' => [
-                'username' => 'valid@passbolt.com',
-            ],
-            'last name is missing' => [
-                'username' => 'valid@passbolt.com',
-                'profile' => [
-                    'first_name' => 'valid_first_name'
-                ]
-            ],
-            'first name is missing' => [
-                'username' => 'valid@passbolt.com',
-                'profile' => [
-                    'last_name' => 'valid_last_name'
-                ]
-            ],
-            'first name is not a utf8 string' => [
-                'username' => 'valid@passbolt.com',
-                'profile' => [
-                    'first_name' => '🙈🙉🙊',
-                    'last_name' => 'valid_last_name'
-                ]
-            ],
-        ];
-        foreach ($fails as $case => $data) {
-            $this->post('/users/register.json', $data);
-            $result = json_decode($this->_getBodyAsString());
-            $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
-            $this->assertResponseError();
-        }
-    }
-
-    public function testUserRegisterCannotModifyNotAccessibleFields()
-    {
-        // Not allowed to edit: id, active, deleted, created, modified, role_id
-        $roles = TableRegistry::get('Roles');
-        $adminRoleId = $roles->getIdByName(Role::ADMIN);
-        $userRoleId = $roles->getIdByName(Role::USER);
+        $this->authenticateAs('admin', Role::ADMIN);
         $date = '1983-04-01 23:34:45';
         $userId = UuidFactory::uuid('user.id.aurore');
 
@@ -144,14 +123,13 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             'created' => $date,
             'modified' => $date,
             'username' => 'aurore@passbolt.com',
-            'role_id' => $adminRoleId,
             'profile' => [
                 'first_name' => 'Aurore',
                 'last_name' => 'Avarguès-Weber'
             ]
         ];
 
-        $this->post('/users/register', $data);
+        $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
 
         $users = TableRegistry::get('Users');
@@ -160,7 +138,6 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($user->id, $userId);
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
-        $this->assertEquals($user->role_id, $userRoleId);
         $this->assertTrue($user->created->gt(FrozenTime::create($date)));
     }
 }

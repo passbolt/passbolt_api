@@ -21,7 +21,7 @@ class AppExceptionRenderer extends ExceptionRenderer
 {
     /**
      * Renders the response for the exception.
-     * If the exception contains a body attribute, set it as controller view variable.
+     * If the exception contains an error attribute, set it as controller view variable.
      *
      * @see App\Controller\ErrorController
      * @return \Cake\Http\Response The response to be sent.

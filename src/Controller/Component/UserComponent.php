@@ -47,7 +47,7 @@ class UserComponent extends Component
      */
     public function role()
     {
-        $role = $this->Auth->user('Role.name');
+        $role = $this->Auth->user('role.name');
         if (!isset($role)) {
             return Role::GUEST;
         }

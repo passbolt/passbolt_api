@@ -196,6 +196,9 @@ Router::prefix('Users', function ($routes) {
     $routes->connect('/', ['controller' => 'UsersIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
+    $routes->connect('/', ['controller' => 'UsersAdd', 'action' => 'addPost'])
+        ->setMethods(['POST']);
+
     $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerGet'])
         ->setPass(['id'])
         ->setMethods(['GET']);

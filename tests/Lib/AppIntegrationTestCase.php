@@ -141,7 +141,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
             'Auth' => [
                 'User' => [
                     'id' => UuidFactory::uuid('user.id.' . $userFirstName),
-                    'Role' => [
+                    'role' => [
                         'name' => $roleName
                     ]
                 ],

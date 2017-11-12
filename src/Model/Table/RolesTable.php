@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -99,5 +100,17 @@ class RolesTable extends Table
         $rules->add($rules->isUnique(['name']));
 
         return $rules;
+    }
+
+    public function getIdByName($roleName)
+    {
+        $role = $this->find('all')
+            ->where(['name' => $roleName])
+            ->first();
+        if (empty($role)) {
+            throw new NotFoundException(__('This role does not exist: {0}', $roleName));
+        }
+
+        return $role->id;
     }
 }

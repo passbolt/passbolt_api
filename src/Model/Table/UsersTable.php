@@ -352,10 +352,11 @@ class UsersTable extends Table
             $data['deleted'] = false;
 
             // Set role to Role::USER by default
-            $role = $this->Roles->find('all')
-                ->where(['name' => Role::USER])
-                ->first();
-            $data['role_id'] = $role->id;
+            if (isset($data['role_id']) && $options['currentUserRole'] === Role::ADMIN) {
+                // let it be
+            } else {
+                $data['role_id'] = $this->Roles->getIdByName(Role::USER);
+            }
         }
     }
 
@@ -404,5 +405,41 @@ class UsersTable extends Table
         }
 
         return $query;
+    }
+
+    /**
+     * Return a user entity
+     *
+     * @param $data
+     * @param $roleName
+     * @return \App\Model\Entity\User
+     */
+    public function buildEntity($data, $roleName)
+    {
+        $accessibleFields = [
+            'username' => true,
+            'profile' => true,
+            'active' => true, // reset in beforeMarshal
+            'deleted' => true, // idem
+            'role_id' => true, // idem
+        ];
+
+        return $this->newEntity(
+            $data,
+            [
+                'validate' => 'register',
+                'accessibleFields' => $accessibleFields,
+                'associated' => [
+                    'Profiles' => [
+                        'validate' => 'register',
+                        'accessibleFields' => [
+                            'first_name' => true,
+                            'last_name' => true
+                        ]
+                    ]
+                ],
+                'currentUserRole' => $roleName
+            ]
+        );
     }
 }

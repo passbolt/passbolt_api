@@ -15,11 +15,15 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use App\Error\Exception\ValidationRuleException;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
+use JsonSchema\Exception\ValidationException;
 
 class UsersRegisterController extends AppController
 {
@@ -52,6 +56,10 @@ class UsersRegisterController extends AppController
      */
     public function registerGet()
     {
+        // Do not allow logged in user to register
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to register.'));
+        }
         $this->viewBuilder()
             ->setTemplatePath('/Users')
             ->setLayout('login')
@@ -69,6 +77,11 @@ class UsersRegisterController extends AppController
      */
     public function registerPost()
     {
+        // Do not allow logged in user to register
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to register.'));
+        }
+
         // By default users see the register form again
         // if something goes wrong they can try again
         $this->viewBuilder()
@@ -76,9 +89,22 @@ class UsersRegisterController extends AppController
             ->setLayout('login')
             ->setTemplate('register');
 
+        $user = $this->_registerUser();
+        if ($user !== false) {
+            // Display thank you page or user
+            $this->viewBuilder()->setTemplate('register_thank_you');
+            $this->success('The operation was successful.', $user);
+        }
+    }
+
+    /**
+     * @return mixed user or false if could not register the user
+     */
+    protected function _registerUser()
+    {
         $user = $this->_buildAndValidateUser();
         if ($this->_assertValidationError($user)) {
-            return;
+            return false;
         }
 
         // Save user and create authentication token in one transaction
@@ -89,7 +115,7 @@ class UsersRegisterController extends AppController
             $token = $this->AuthenticationTokens->generate($user->id);
         });
         if ($this->_assertValidationError($user)) {
-            return;
+            return false;
         }
 
         // Create an event to build email with token
@@ -98,9 +124,7 @@ class UsersRegisterController extends AppController
         ]);
         $this->getEventManager()->dispatch($event);
 
-        // Display thank you page or user
-        $this->viewBuilder()->setTemplate('register_thank_you');
-        $this->success('The operation was successful.', $user);
+        return $user;
     }
 
     /**
@@ -114,8 +138,11 @@ class UsersRegisterController extends AppController
         // Otherwise render the registration form with the errors
         if ($user->getErrors()) {
             if ($this->request->is('json')) {
-                $this->set('errors', $user->getErrors());
-                throw new BadRequestException(__('Could not validate user data.'));
+                throw new ValidationRuleException(
+                    __('Could not validate user data.'),
+                    $user->getErrors(),
+                    $this->Users
+                );
             }
 
             return true;
@@ -132,28 +159,7 @@ class UsersRegisterController extends AppController
     protected function _buildAndValidateUser()
     {
         // Build entity and perform basic check
-        $user = $this->Users->newEntity(
-            $this->request->getData(),
-            [
-                'validate' => 'register',
-                'accessibleFields' => [
-                    'username' => true,
-                    'profile' => true,
-                    'active' => true, // reset in beforeMarshal
-                    'deleted' => true, // idem
-                    'role_id' => true, // idem
-                ],
-                'associated' => [
-                    'Profiles' => [
-                        'validate' => 'register',
-                        'accessibleFields' => [
-                            'first_name' => true,
-                            'last_name' => true
-                        ]
-                    ]
-                ]
-            ]
-        );
+        $user = $this->Users->buildEntity($this->request->getData(), $this->User->role());
         $this->set('user', $user);
 
         // No need to check rules if basic validation fails
