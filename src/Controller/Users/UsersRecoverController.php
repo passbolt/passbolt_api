@@ -117,7 +117,7 @@ class UsersRecoverController extends AppController
      */
     protected function _assertValidation()
     {
-        $data = $this->request->getData();
+        $data = $this->_formatRequestData();
         if (!isset($data['username']) || empty($data['username'])) {
             throw new BadRequestException(__('Please provide a valid email address.'));
         }
@@ -140,7 +140,7 @@ class UsersRecoverController extends AppController
      */
     protected function _assertRules()
     {
-        $data = $this->request->getData();
+        $data = $this->_formatRequestData();
         $user = $this->Users->findRecover($data['username'])->first();
 
         if (empty($user)) {
@@ -155,4 +155,23 @@ class UsersRecoverController extends AppController
 
         return $user;
     }
+
+    /**
+     * Format request data formatted for API v1 to API v2 format
+     * Example:
+     * - API v1: ['User' => ['username' => 'ada@passbolt.com']]
+     * - API v2: ['username' => 'ada@passbolt.com']
+     *
+     * @return null|array $data
+     */
+    protected function _formatRequestData()
+    {
+        $data = $this->request->getData();
+
+        if (isset($data['User'])) {
+            return $data['User'];
+        }
+        return $data;
+    }
+
 }

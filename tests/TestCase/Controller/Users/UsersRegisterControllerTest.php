@@ -80,6 +80,26 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function testUserRegisterPostApiV1Success()
+    {
+        $success = [
+            'legacy format' => [
+                'User' => [
+                    'username' => 'anna@passbolt.com'
+                ],
+                'Profile' => [
+                    'first_name' => 'Anna',
+                    'last_name' => 'Fisher'
+                ],
+            ]
+        ];
+
+        foreach ($success as $case => $data) {
+            $this->post('/users/register', $data);
+            $this->assertResponseSuccess();
+        }
+    }
+
     public function testUserRegisterPostFailValidation()
     {
         $fails = [
@@ -117,6 +137,13 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                 'profile' => [
                     'first_name' => '🙈🙉🙊',
                     'last_name' => 'valid_last_name'
+                ]
+            ],
+            'email already in use' => [
+                'username' => 'ada@passbolt.com',
+                'profile' => [
+                    'first_name' => 'ada',
+                    'last_name' => 'lovelace'
                 ]
             ],
         ];

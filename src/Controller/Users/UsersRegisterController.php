@@ -170,7 +170,8 @@ class UsersRegisterController extends AppController
     protected function _buildAndValidateUser()
     {
         // Build entity and perform basic check
-        $user = $this->Users->buildEntity($this->request->getData(), $this->User->role());
+        $data = $this->_formatRequestData();
+        $user = $this->Users->buildEntity($data, $this->User->role());
         $this->set('user', $user);
 
         // No need to check rules if basic validation fails
@@ -180,6 +181,33 @@ class UsersRegisterController extends AppController
         $this->Users->checkRules($user);
 
         return $user;
+    }
+
+    /**
+     * Format request data formatted for API v1 to API v2 format
+     * Example:
+     * - API v1: ['User' => ['username' => 'ada@passbolt.com'], 'Profile' => ['first_name' => 'ada' ...]]
+     * - API v2: ['username' => 'ada@passbolt.com', 'profile' => ['first_name' => 'ada' ...]]
+     *
+     * @return null|array $data
+     */
+    protected function _formatRequestData()
+    {
+        $data = $this->request->getData();
+
+        if (isset($data['User'])) {
+            $result = null;
+            if (!empty($data)) {
+                foreach ($data['User'] as $property => $value) {
+                    $result[$property] = $value;
+                }
+                foreach ($data['Profile'] as $property => $value) {
+                    $result['profile'][$property] = $value;
+                }
+            }
+            return $result;
+        }
+        return $data;
     }
 
     /**

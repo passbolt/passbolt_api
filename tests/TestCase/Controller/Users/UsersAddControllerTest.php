@@ -158,4 +158,40 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
         $this->assertResponseContains('created an account for you');
     }
+
+    public function testUserAddRequestDataApiV1Success()
+    {
+        $this->authenticateAs('admin');
+        $data = [
+            'User' => [
+                'username' => 'aurore@passbolt.com',
+            ],
+            'Profile' => [
+                'first_name' => 'Aurore',
+                'last_name' => 'Avarguès-Weber'
+            ]
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertResponseSuccess();
+
+        $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
+        $this->assertResponseOk();
+        $this->assertResponseContains('created an account for you');
+    }
+
+    public function testUserAddRequestDataApiV1Error()
+    {
+        $this->authenticateAs('admin');
+        $data = [
+            'User' => [
+                'username' => 'ada@passbolt.com',
+            ],
+            'Profile' => [
+                'first_name' => 'ada',
+                'last_name' => 'lovelace'
+            ]
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertError(400, 'Could not validate user data.');
+    }
 }

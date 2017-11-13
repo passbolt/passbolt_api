@@ -38,10 +38,10 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
         $data = [
-            'AuthenticationToken' => [
+            'authenticationtoken' => [
                 'token' => $t->token
             ],
-            'Gpgkey' => [
+            'gpgkey' => [
                 'armored_key' => $armoredKey
             ]
         ];

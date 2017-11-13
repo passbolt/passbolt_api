@@ -46,6 +46,9 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         'can recover a user that has not completed setup' => [
             'form-data' => ['username' => 'ruth@passbolt.com'],
         ],
+        'legacy form data' => [
+            'form-data' => ['User' => ['username' => 'ruth@passbolt.com']],
+        ],
     ];
 
     public function testRecoverGetRedirect()

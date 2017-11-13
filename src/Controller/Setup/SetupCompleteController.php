@@ -24,6 +24,8 @@ use JsonSchema\Exception\ValidationException;
 
 class SetupCompleteController extends AppController
 {
+    private $_data; // formated request data
+
     /**
      * Before filter
      *
@@ -102,11 +104,11 @@ class SetupCompleteController extends AppController
      */
     protected function _getAndAssertToken($userId)
     {
-        $data = $this->request->getData();
-        if (!isset($data['AuthenticationToken']) || !isset($data['AuthenticationToken']['token'])) {
+        $data = $this->_formatRequestData();
+        if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
             throw new BadRequestException(__('An authentication token must be provided.'));
         }
-        $tokenId = $data['AuthenticationToken']['token'];
+        $tokenId = $data['authenticationtoken']['token'];
         if (!Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The authentication token should be a valid uuid.'));
         }
@@ -150,16 +152,9 @@ class SetupCompleteController extends AppController
      */
     protected function _getAndAssertGpgkey($userId)
     {
-        $data = $this->request->getData();
-        $armoredKey = null;
+        $data = $this->_formatRequestData();
+        $armoredKey = $data['gpgkey']['armored_key'];
 
-        if (isset($data['Gpgkey']['armored_key'])) {
-            $armoredKey = $data['Gpgkey']['armored_key'];
-        }
-        if (isset($data['Gpgkey']['key'])) {
-            // legacy name v1 backward compatibility support
-            $armoredKey = $data['Gpgkey']['key'];
-        }
         if (empty($armoredKey)) {
             throw new BadRequestException(__('An OpenPGP key must be provided.'));
         }
@@ -175,5 +170,37 @@ class SetupCompleteController extends AppController
         }
 
         return $gpgkey;
+    }
+
+    /**
+     * Format request data formatted for API v1 to API v2 format
+     * Example:
+     * - API v1: ['Gpgkey' => ['key' => '...'], 'AuthenticationToken' => [...]]
+     * - API v2: ['gpgkey' => ['armored_key' => '...']', 'authenticationtoken' => [...]]
+     *
+     * @return null|array $data
+     */
+    protected function _formatRequestData()
+    {
+        if (!isset($this->_data))
+        {
+            $data = $this->request->getData();
+            if (isset($data['Gpgkey']) || isset($data['AuthenticationToken'])) {
+                if (isset($data['Gpgkey']['armored_key'])) {
+                    $this->_data['gpgkey']['armored_key'] = $data['Gpgkey']['armored_key'];
+                }
+                if (isset($data['Gpgkey']['key'])) {
+                    // legacy name v1 backward compatibility support
+                    $this->_data['gpgkey']['armored_key'] = $data['Gpgkey']['key'];
+                }
+                if (isset($data['AuthenticationToken'])) {
+                    $this->_data['authenticationtoken'] = $data['AuthenticationToken'];
+                }
+            } else {
+                $this->_data = $data;
+            }
+        }
+
+        return $this->_data;
     }
 }
