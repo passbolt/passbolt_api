@@ -43,11 +43,12 @@ class FixturizeShell extends Shell
     }
 
     /**
-     * Manage the available sub-commands along with their arguments and help
+     * Gets the option parser instance and configures it.
      *
-     * @see http://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * By overriding this method you can configure the ConsoleOptionParser before returning it.
      *
      * @return \Cake\Console\ConsoleOptionParser
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
     public function getOptionParser()
     {

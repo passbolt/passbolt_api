@@ -39,7 +39,7 @@ class AppShell extends Shell
      * Some of the passbolt commands shouldn't be executed as root.
      * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
      */
-    public function rootNotAllowed()
+    public function assertNotRoot()
     {
         if (PROCESS_USER === 'root') {
             $this->out('');
@@ -51,5 +51,18 @@ class AppShell extends Shell
             $this->out('');
             exit(1);
         }
+    }
+
+    /**
+     * Finish the shell script with an error exit
+     *
+     * @param $messages
+     */
+    public function errorExit($messages) {
+        foreach($messages as $message) {
+            $this->out($message);
+        }
+        $this->out('<error>Installation failed.</error>');
+        exit(1);
     }
 }

@@ -204,12 +204,6 @@ class Healthchecks
         }
         $checks['database']['info']['tablesCount'] = 0;
 
-        // Check config file content
-        $db = Configure::read('Datasources');
-        if ($db['default']['driver'] == 'Cake\Database\Driver\Mysql') {
-            $checks['database']['supportedBackend'] = true;
-        }
-
         // Check if can connect to database
         try {
             $connection = ConnectionManager::get($connectionName);
@@ -225,6 +219,12 @@ class Healthchecks
             }
 
             return $checks;
+        }
+
+        // Check driver
+        $config = $connection->config();
+        if ($config['driver'] === 'Cake\Database\Driver\Mysql') {
+            $checks['database']['supportedBackend'] = true;
         }
 
         // Check if tables are present

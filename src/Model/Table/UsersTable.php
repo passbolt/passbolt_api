@@ -113,6 +113,11 @@ class UsersTable extends Table
             ->notEmpty('active');
 
         $validator
+            ->uuid('role_id')
+            ->requirePresence('role_id', 'create')
+            ->notEmpty('role_id');
+
+        $validator
             ->boolean('deleted')
             ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
@@ -165,7 +170,7 @@ class UsersTable extends Table
             'message' => __('This username is already in use.')
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('This is not a valid role')
+            'message' => __('This is not a valid role.')
         ]);
 
         return $rules;
@@ -386,9 +391,7 @@ class UsersTable extends Table
                 'GroupsUsers.user_id',
                 'count' => $query->func()->count('GroupsUsers.user_id')
             ])
-            ->where([
-                'GroupsUsers.group_id IN' => $groupsIds
-            ])
+            ->where(['GroupsUsers.group_id IN' => $groupsIds])
             ->group('GroupsUsers.user_id')
             ->having(['count' => count($groupsIds)]);
 
@@ -410,25 +413,23 @@ class UsersTable extends Table
     /**
      * Return a user entity
      *
-     * @param $data
-     * @param $roleName
+     * @param array $data the request data
+     * @param string $roleName the role of the user building the entity
      * @return \App\Model\Entity\User
      */
     public function buildEntity($data, $roleName)
     {
-        $accessibleFields = [
-            'username' => true,
-            'profile' => true,
-            'active' => true, // reset in beforeMarshal
-            'deleted' => true, // idem
-            'role_id' => true, // idem
-        ];
-
         return $this->newEntity(
             $data,
             [
                 'validate' => 'register',
-                'accessibleFields' => $accessibleFields,
+                'accessibleFields' => [
+                    'username' => true,
+                    'profile' => true,
+                    'active' => true, // reset in beforeMarshal
+                    'deleted' => true, // idem
+                    'role_id' => true, // idem if current user is not admin
+                ],
                 'associated' => [
                     'Profiles' => [
                         'validate' => 'register',
@@ -443,7 +444,13 @@ class UsersTable extends Table
         );
     }
 
-    public function getForEmail($userId)
+    /**
+     * Get a user info for an email notification context
+     *
+     * @param $userId
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function getForEmailContext($userId)
     {
         $user = $this->find()
             ->where(['Users.id' => $userId])

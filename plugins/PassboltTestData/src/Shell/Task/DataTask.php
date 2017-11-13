@@ -12,32 +12,34 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Shell;
+namespace PassboltTestData\Shell\Task;
 
 use Cake\Console\Shell;
 use Cake\Core\Configure;
 
 /**
- * Installer shell command.
+ * Data Installer shell command.
  */
-class InstallerShell extends Shell
+class DataTask extends Shell
 {
-
     /**
-     * Manage the available sub-commands along with their arguments and help
+     * Gets the option parser instance and configures it.
      *
-     * @see http://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
+     * By overriding this method you can configure the ConsoleOptionParser before returning it.
      *
      * @return \Cake\Console\ConsoleOptionParser
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->addArgument('scenario', [
-            'help' => 'The scenario to play.',
-            'required' => true,
-            'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
-        ])->setDescription(__('Populate the database with dummy data test.'));
+        $parser
+            ->setDescription(__('Populate the database with dummy data test.'))
+            ->addArgument('scenario', [
+                'help' => 'The scenario to play.',
+                'required' => true,
+                'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
+            ]);
         return $parser;
     }
 
@@ -62,6 +64,7 @@ class InstallerShell extends Shell
                 $task->afterExecute();
             }
         }
+
         return true;
     }
 

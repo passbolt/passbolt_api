@@ -58,7 +58,7 @@ class UsersAddController extends UsersRegisterController
      */
     protected function _notifyUser($user, $token)
     {
-        $admin = $this->Users->getForEmail($this->User->id());
+        $admin = $this->Users->getForEmailContext($this->User->id());
         $event = new Event('UsersAddController.addPost.success', $this, [
             'user' => $user, 'token' => $token, 'admin' => $admin
         ]);

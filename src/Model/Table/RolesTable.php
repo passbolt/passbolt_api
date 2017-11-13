@@ -102,15 +102,20 @@ class RolesTable extends Table
         return $rules;
     }
 
+    /**
+     * Get a role id by providing its name
+     *
+     * @param string $roleName such as "admin" or "user"
+     * @return mixed|null
+     */
     public function getIdByName($roleName)
     {
         $role = $this->find('all')
             ->where(['name' => $roleName])
             ->first();
         if (empty($role)) {
-            throw new NotFoundException(__('This role does not exist: {0}', $roleName));
+            return null;
         }
-
         return $role->id;
     }
 }

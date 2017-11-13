@@ -18,19 +18,15 @@ use App\Shell\AppShell;
 
 class PassboltShell extends AppShell
 {
-    // Found in src/Shell/Task/SoundTask.php
-    public $tasks = ['Healthcheck'];
-
     /**
-     * Control what get displayed / what to hide
-     *
-     * @var array
+     * @var array of linked tasks
      */
-    protected $_displayOptions = [
-        'hide-pass' => false,
-        'hide-warning' => false,
-        'hide-help' => false,
-        'hide-title' => false
+    public $tasks = [
+        'Healthcheck',
+        'Install',
+        'RegisterUser',
+        'PassboltTestData.Data',
+        'PassboltTestData.fixturize'
     ];
 
     /**
@@ -61,13 +57,29 @@ class PassboltShell extends AppShell
         $this->_io->styles('fail', ['text' => 'red', 'blink' => false]);
         $this->_io->styles('success', ['text' => 'green', 'blink' => false]);
 
-        $this->rootNotAllowed();
+        $this->assertNotRoot();
 
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
+
         $parser->addSubcommand('healthcheck', [
             'help' => __d('cake_console', 'Check the configuration of the passbolt installation and associated environment.'),
             'parser' => $this->Healthcheck->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('install', [
+            'help' => __d('cake_console', 'Installation shell for the passbolt application.'),
+            'parser' => $this->Install->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('register_user', [
+            'help' => __d('cake_console', 'Installation shell for the passbolt application.'),
+            'parser' => $this->RegisterUser->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('data', [
+            'help' => __d('cake_console', 'Installation shell for the passbolt application.'),
+            'parser' => $this->Data->getOptionParser(),
         ]);
 
         return $parser;
