@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Collection\CollectionInterface;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -454,6 +455,67 @@ class ResourcesTable extends Table
                 'Groups.deleted' => 0,
                 'Users.id' => $userId
             ]);
+    }
+
+    /**
+     * Soft delete a resource.
+     *
+     * @param string $userId The user who perform the delete.
+     * @param EntityInterface $resource The resource to delete.
+     * @return EntityInterface
+     */
+    public function softDelete($userId, EntityInterface $resource)
+    {
+        /* The softDelete will perform an update to the entity to soft delete it.
+           However as this update cannot be considered as a classic data update, the integrity check won't be done
+           using buildRules, but here in the softDelete function. */
+
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
+        }
+        if ($resource->deleted) {
+            return $resource->setError('deleted', [
+                'is_not_soft_deleted' => __('The resource cannot be soft deleted.')
+            ]);
+        }
+        if (!$this->hasAccess($userId, $resource->id, Permission::UPDATE)) {
+            return $resource->setError('id', [
+                'has_access' => __('The user cannot delete this resource.')
+            ]);
+        }
+
+        // Patch the entity.
+        $data = [
+            'deleted' => true,
+            'modified_by' => $userId
+        ];
+        $patchOptions = [
+            'accessibleFields' => [
+                'deleted' => true,
+                'modified' => true,
+                'modified_by' => true
+            ]
+        ];
+        $this->patchEntity($resource, $data, $patchOptions);
+        if ($resource->getErrors()) {
+            return $resource;
+        }
+
+        // Soft delete the resource.
+        $this->save($resource, ['checkRules' => false]);
+        if ($resource->getErrors()) {
+            return $resource;
+        }
+
+        // Remove all the associated permissions.
+        $this->association('Permissions')
+            ->deleteAll(['Permissions.aco_foreign_key' => $resource->id]);
+
+        // Remove all the associated favorites.
+        $this->association('Favorites')
+            ->deleteAll(['Favorites.foreign_id' => $resource->id]);
+
+        return $resource;
     }
 
     /**
