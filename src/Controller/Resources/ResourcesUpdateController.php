@@ -26,7 +26,7 @@ use Cake\Validation\Validation;
 class ResourcesUpdateController extends AppController
 {
     /**
-     * Resource Add action
+     * Resource Update action
      *
      * @param string $id The identifier of the resource to update.
      * @throws NotFoundException If the resource does not exist.
@@ -44,9 +44,9 @@ class ResourcesUpdateController extends AppController
 
         $this->loadModel('Resources');
 
-        // Retrieve the resource to update.
+        // Retrieve the resource to update and all its secrets.
         try {
-            $resource = $this->Resources->get($id);
+            $resource = $this->Resources->get($id, ['contain' => ['Secrets']]);
         }
         catch(RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
@@ -82,13 +82,8 @@ class ResourcesUpdateController extends AppController
 
         // Retrieve the existing secrets ids and use to ensure that cakephp will update the existing secretes.
         if (!empty($data['secrets'])) {
-            $secrets = $this->Resources->association('Secrets')
-                ->find()
-                ->where(['Secrets.resource_id' => $resource->id])
-                ->toArray();
-
             foreach($data['secrets'] as $key => $dataSecret) {
-                $arr = Hash::extract($secrets, "{n}[user_id={$dataSecret['user_id']}].id");
+                $arr = Hash::extract($resource->secrets, "{n}[user_id={$dataSecret['user_id']}].id");
                 $data['secrets'][$key]['id'] = reset($arr);
             }
         }
