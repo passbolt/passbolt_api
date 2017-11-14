@@ -116,6 +116,7 @@ class RolesTable extends Table
         if (empty($role)) {
             return null;
         }
+
         return $role->id;
     }
 }

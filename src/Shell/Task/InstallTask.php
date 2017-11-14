@@ -29,7 +29,8 @@ class InstallTask extends AppShell
      * @return \Cake\Console\ConsoleOptionParser
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
-    public function getOptionParser() {
+    public function getOptionParser()
+    {
         $parser = parent::getOptionParser();
         $parser
             ->setDescription(__('Installation shell for the passbolt application.'))
@@ -96,12 +97,16 @@ class InstallTask extends AppShell
         $this->assertNotRoot();
 
         // Assert that the required healtcheck are passing
-        $this->out(__('Running baseline checks, please wait'));
+        $this->out(__('Running baseline checks, please wait...'));
         $this->assertBaselineHealthchecks();
         $this->assertDatabaseChecks();
         $this->out(__('Checks OK'));
 
-        // TODO clean data?
+        $this->out();
+        $this->out(__('Cleaning up existing tables if any'));
+        $this->hr();
+        $this->dispatchShell('passbolt drop_tables');
+
         $this->out();
         $this->out(__('Installing data model and baseline data'));
         $this->hr();
@@ -138,7 +143,8 @@ class InstallTask extends AppShell
     /**
      * Database checks
      */
-    public function assertDatabaseChecks() {
+    public function assertDatabaseChecks()
+    {
         // Database checks
         $checks = Healthchecks::database();
         if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
@@ -160,7 +166,8 @@ class InstallTask extends AppShell
     /**
      * Installation healthchecks
      */
-    public function assertBaselineHealthchecks() {
+    public function assertBaselineHealthchecks()
+    {
         try {
             // Make sure the baseline config files are present
             $checks = Healthchecks::configFiles();
@@ -211,8 +218,7 @@ class InstallTask extends AppShell
             if (!$checks['gpg']['gpgKeyPublicEmail']) {
                 throw new Exception('The server public key should have an email id.');
             }
-
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->errorExit([
                 $e->getMessage(),
                 __('Please run ./app/Console/cake passbolt healthcheck for more information and help.')
@@ -228,7 +234,8 @@ class InstallTask extends AppShell
      * @param string $lastName admin last name
      * @return void
      */
-    protected function _registerAdmin($username = null, $firstName = null, $lastName = null) {
+    protected function _registerAdmin($username = null, $firstName = null, $lastName = null)
+    {
         $cmd = 'passbolt register_user -r admin';
         if ($this->interactive) {
             $cmd .= ' -i';
@@ -248,5 +255,4 @@ class InstallTask extends AppShell
         }
         $this->dispatchShell($cmd);
     }
-
 }

@@ -58,8 +58,9 @@ class AppShell extends Shell
      *
      * @param $messages
      */
-    public function errorExit($messages) {
-        foreach($messages as $message) {
+    public function errorExit($messages)
+    {
+        foreach ($messages as $message) {
             $this->out($message);
         }
         $this->out('<error>Installation failed.</error>');

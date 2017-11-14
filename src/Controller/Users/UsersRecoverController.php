@@ -171,7 +171,7 @@ class UsersRecoverController extends AppController
         if (isset($data['User'])) {
             return $data['User'];
         }
+
         return $data;
     }
-
 }

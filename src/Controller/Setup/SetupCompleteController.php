@@ -182,8 +182,7 @@ class SetupCompleteController extends AppController
      */
     protected function _formatRequestData()
     {
-        if (!isset($this->_data))
-        {
+        if (!isset($this->_data)) {
             $data = $this->request->getData();
             if (isset($data['Gpgkey']) || isset($data['AuthenticationToken'])) {
                 if (isset($data['Gpgkey']['armored_key'])) {

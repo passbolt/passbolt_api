@@ -205,8 +205,10 @@ class UsersRegisterController extends AppController
                     $result['profile'][$property] = $value;
                 }
             }
+
             return $result;
         }
+
         return $data;
     }
 

@@ -24,6 +24,7 @@ class PassboltShell extends AppShell
     public $tasks = [
         'Healthcheck',
         'Install',
+        'DropTables',
         'RegisterUser',
         'PassboltTestData.Data',
         'PassboltTestData.fixturize'
@@ -61,6 +62,11 @@ class PassboltShell extends AppShell
 
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
+
+        $parser->addSubcommand('drop_tables', [
+            'help' => __d('cake_console', 'Drop all the tables. Dangerous but useful for a full reinstall.'),
+            'parser' => $this->DropTables->getOptionParser(),
+        ]);
 
         $parser->addSubcommand('healthcheck', [
             'help' => __d('cake_console', 'Check the configuration of the passbolt installation and associated environment.'),

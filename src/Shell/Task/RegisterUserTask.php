@@ -16,6 +16,10 @@ namespace App\Shell\Task;
 
 use App\Model\Entity\Role;
 use Cake\Console\Shell;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
+use Cake\Routing\Router;
+use App\Controller\Events\EmailsListener;
 
 class RegisterUserTask extends Shell
 {
@@ -32,6 +36,7 @@ class RegisterUserTask extends Shell
         parent::initialize();
         $this->loadModel('Users');
         $this->loadModel('Roles');
+        $this->loadModel('AuthenticationTokens');
     }
 
     /**
@@ -42,7 +47,8 @@ class RegisterUserTask extends Shell
      * @return \Cake\Console\ConsoleOptionParser
      * @link https://book.cakephp.org/3.0/en/console-and-shells.html#configuring-options-and-generating-help
      */
-    public function getOptionParser() {
+    public function getOptionParser()
+    {
         $parser = parent::getOptionParser();
         $parser
             ->setDescription(__('Register a new user'))
@@ -84,7 +90,7 @@ class RegisterUserTask extends Shell
     {
         $result = false;
         $attempt = 0;
-        if($this->param('interactive')) {
+        if ($this->param('interactive')) {
             $maxAttempt = $this->param('interactive-loop');
         } else {
             $maxAttempt = 1;
@@ -96,11 +102,15 @@ class RegisterUserTask extends Shell
             $attempt++;
         }
 
-        if(!$result) {
+        if (!$result) {
             $this->out('<error>' . __('User registration failed.') . '</error>');
             exit(1);
         }
+
+        $token = $this->AuthenticationTokens->generate($user->id);
+        $this->_notifyUser($user, $token);
         $this->out('<success>' . __('User saved successfully.') . '</success>');
+
         return true;
     }
 
@@ -117,7 +127,8 @@ class RegisterUserTask extends Shell
                     $this->_displayValidationError($error);
                     break;
                 } else {
-                    $this->out('- ' . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message);
+                    $message = '- ' . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message;
+                    $this->out($message);
                 }
             }
         }
@@ -150,7 +161,7 @@ class RegisterUserTask extends Shell
             $roleName = $this->in(__('Role name, user or admin (user)'));
         }
         $roleId = $this->Roles->getIdByName($roleName);
-        if(empty($roleId)) {
+        if (empty($roleId)) {
             $this->out('<warning>' . __('Role not found, using default user role.') . '</warning>');
         }
         $userData = [
@@ -161,6 +172,7 @@ class RegisterUserTask extends Shell
                 'last_name' => $lastname
             ]
         ];
+
         return $userData;
     }
 
@@ -180,13 +192,44 @@ class RegisterUserTask extends Shell
         if (!empty($errors)) {
             $this->out(__('Validation failed for the following user data:'));
             $this->_displayValidationError($errors);
+
             return false;
         }
         $saved = $this->Users->save($user, ['checkrules' => false]);
         if (!$saved) {
             $this->out(__('Something went wrong when trying to save the user, please try again later.'));
+
             return false;
         }
+
         return true;
+    }
+
+    /**
+     * Notify the user by trigerring a registerPost event
+     *
+     * @param $user
+     * @param $token
+     */
+    protected function _notifyUser($user, $token)
+    {
+        $event = new Event('UsersRegisterController.registerPost.success', $this, [
+            'user' => $user, 'token' => $token
+        ]);
+
+        $eventManager = new EventManager();
+        $emails = new EmailsListener();
+        $eventManager->on($emails);
+        $eventManager->dispatch($event);
+
+        // Display a message in console for convenience
+        $this->out(
+            '<success>' .
+            __(
+                "To start registration follow the link in provided in your mailbox or here: \n{0}",
+                Router::url('/setup/install/' . $user->id . '/' . $token->token, true)
+            )
+            . '</success>'
+        );
     }
 }
