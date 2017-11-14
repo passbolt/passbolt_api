@@ -221,6 +221,9 @@ class QueryStringComponent extends Component
                     case 'search':
                         self::validateFilterSearch($values);
                         break;
+                    case 'has-access':
+                        self::validateFilterResource($values, $filter);
+                        break;
                     case 'has-managers':
                     case 'has-users':
                         self::validateFilterUsers($values, $filter);
@@ -343,6 +346,33 @@ class QueryStringComponent extends Component
                 throw new Exception(__('"{0}" is not a valid group filter.', $i));
             }
             self::validateFilterGroup($groupId, $filtername);
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate a filter that is a single resource id
+     * Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
+     * No Bueno: 'no'
+     *
+     * @param $values
+     * @param $filtername
+     * @throw Exception if the filter is not valid
+     * @return bool
+     */
+    public static function validateFilterResource($values, $filtername)
+    {
+        foreach ($values as $i => $resourceId) {
+            if (!is_int($i)) {
+                throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $i, $filtername));
+            }
+            if (!is_scalar($resourceId) || empty($resourceId)) {
+                throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $i));
+            }
+            if (!Validation::uuid($resourceId)) {
+                throw new Exception(__('"{0}" is not a valid resource id for filter {1}.', $resourceId, $filtername));
+            }
         }
 
         return true;

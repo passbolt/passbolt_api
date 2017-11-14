@@ -237,6 +237,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertError('400');
     }
 
+    public function testUsersIndexFilterByHasAccessSuccess()
+    {
+        $this->markTestIncomplete();
+    }
+
     public function testUsersIndexFilterActiveAsAdminSuccess()
     {
         $this->authenticateAs('admin');
