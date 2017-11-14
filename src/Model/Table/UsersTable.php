@@ -417,6 +417,14 @@ class UsersTable extends Table
 
     /**
      * Filter a Users query by resource access.
+     * Only the users who have a permission (Read/Update/Owner) to access a resource should be returned by the query.
+     *
+     * By instance :
+     * $query = $Users->find()->where('Users.username LIKE' => '%@passbolt.com');
+     * _filterQueryByResourceAccess($query, 'RESOURCE_UUID');
+     *
+     * Should filter all the users with a passbolt username who have a permission to access the resource identified by
+     * RESOURCE_UUID.
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource the users must have access.
@@ -430,6 +438,8 @@ class UsersTable extends Table
             ->contain('Users')
             ->contain('Groups')
             ->contain('Groups.GroupsUsers')
+            /* Aggregate the id of the users who have a direct permission to access to a resource or are member of a
+               group which have such a permission */
             ->reduce(function($carry, $item) {
                 if ($item->aro == 'User') {
                     $carry[] = $item->aro_foreign_key;
