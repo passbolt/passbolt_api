@@ -36,7 +36,8 @@ class InstallTask extends AppShell
             ->setDescription(__('Installation shell for the passbolt application.'))
             ->addOption('quick', [
                 'help' => 'Use a database dump if any to speed things up.',
-                'default' => 'false',
+                'boolean' => true,
+                'default' => false
             ])
             ->addOption('cache', [
                 'help' => 'Create a database dump to enable cache option use later on',
@@ -96,78 +97,189 @@ class InstallTask extends AppShell
         // This command needs to be executed with the same user as the webserver.
         $this->assertNotRoot();
 
-        // Assert that the required healtcheck are passing
-        $this->out(__('Running baseline checks, please wait...'));
-        $this->assertBaselineHealthchecks();
-        $this->assertDatabaseChecks();
-        $this->out(__('Checks OK'));
-
-        $this->out();
-        $this->out(__('Cleaning up existing tables if any'));
-        $this->hr();
-        $this->dispatchShell('passbolt drop_tables');
-
-        $this->out();
-        $this->out(__('Installing data model and baseline data'));
-        $this->hr();
-        $this->dispatchShell('migrations migrate');
-
-        // Insert additional data
-        $data = $this->param('data');
-        if (isset($data)) {
-            $this->out();
-            $this->out(__('Installing additional data'));
-            $this->hr();
-            $this->dispatchShell('passbolt data ' . $this->param('data'));
+        // Quick mode - exit on success
+        if ($this->_quickInstall()) {
+            return true;
         }
 
-        // Create first admin user
-        if ($this->param('no-admin') === false) {
-            $username = $this->param('admin-username');
-            $firstname = $this->param('admin-first-name');
-            $lastname = $this->param('admin-last-name');
+        // Normal mode
+        $this->_healthchecks();
+        $this->_schemaCleanup();
+        $this->_schema();
+        $this->_dataImport();
+        $this->_keyringInit();
+        $this->_userRegistration();
 
-            $this->out();
-            $this->out(__('Registering the admin user'));
-            $this->hr();
-            $this->_registerAdmin($username, $firstname, $lastname);
-        }
+        // Quick mode - backup for next time
+        $this->_quickBackup();
 
+        // Winning!
         $this->out('');
-        $this->out('<success>' . __('Passbolt installation success! Enjoy! ☮') . '</success>');
+        $this->_success(__('Passbolt installation success! Enjoy! ☮'));
         $this->out('');
 
         return true;
     }
 
     /**
-     * Database checks
+     * Add any global additional options for about to be dispatched tasks
+     *
+     * @param $cmd
+     * @return string
      */
-    public function assertDatabaseChecks()
+    protected function _formatCmd($cmd)
     {
-        // Database checks
-        $checks = Healthchecks::database();
-        if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
-            $this->errorExit([
-                __('There are some issues with the database configuration.'),
-                __('Please run ./app/Console/cake passbolt healthcheck for more information and help.')
-            ]);
+        $quiet = $this->param('quiet');
+        if (isset($quiet) && $quiet == 1) {
+            $cmd .= ' -q';
         }
-        if ($checks['database']['tablesCount']) {
-            if (!$this->param('force')) {
-                $this->errorExit([
-                    __('Some tables are already present in the database, a new installation would override existing data.'),
-                    __('Please use --force to proceed anyway.')
-                ]);
+
+        return $cmd;
+    }
+
+    /**
+     * Handle the user registration
+     * Dispatch the task to register_user with admin option
+     *
+     * @return bool operatio result
+     */
+    protected function _userRegistration()
+    {
+        if ($this->param('no-admin') === false) {
+            $username = $this->param('admin-username');
+            $firstName = $this->param('admin-first-name');
+            $lastName = $this->param('admin-last-name');
+
+            $this->out();
+            $this->out(__('Registering the admin user'));
+            $this->hr();
+
+            $cmd = 'passbolt register_user -r admin';
+            if ($this->interactive) {
+                $cmd .= ' -i';
             }
+            if (!is_null($username)) {
+                $cmd .= ' -u ' . $username;
+            }
+            if (!is_null($firstName)) {
+                $cmd .= ' -f ' . $firstName;
+            }
+            if (!is_null($lastName)) {
+                $cmd .= ' -l ' . $lastName;
+            }
+            $cmd = $this->_formatCmd($cmd);
+            $this->dispatchShell($cmd);
+        }
+
+        return true;
+    }
+
+    /**
+     * Handle import of data if parameter is set
+     * Dispatch to plugin PassboltTestData.data task
+     *
+     * @return bool status
+     */
+    protected function _dataImport()
+    {
+        $data = $this->param('data');
+        if (isset($data)) {
+            $this->out();
+            $this->out(__('Installing additional data'));
+            $this->hr();
+            $cmd = $this->_formatCmd('passbolt data' . $data);
+            $this->dispatchShell($cmd);
+        }
+
+        return true;
+    }
+
+    /**
+     * Try to perform a quick install steps
+     * Dispatch to mysql_import job
+     * @return bool
+     */
+    protected function _quickInstall()
+    {
+        // No healthcheck
+        // No admin user install
+        // etc.
+        // Import sql backup
+        if ($this->param('quick')) {
+            $this->_keyringInit();
+            $cmd = $this->_formatCmd('passbolt mysql_import');
+            $code = $this->dispatchShell($cmd);
+            if ($code === 0) {
+                $this->_success(__('Passbolt installation success! Enjoy! ☮'));
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Prepare a backup for next quick install
+     */
+    protected function _quickBackup()
+    {
+        if ($this->param('quick')) {
+            $this->out();
+            $this->out(__('Backup data for next quick reinstall.'));
+            $this->hr();
+            $this->_keyringInit();
+            $cmd = $this->_formatCmd('passbolt mysql_export --clear-previous');
+            $this->dispatchShell($cmd);
         }
     }
 
     /**
-     * Installation healthchecks
+     * Dispatch drop_tables task
      */
-    public function assertBaselineHealthchecks()
+    protected function _schemaCleanup()
     {
+        $this->out();
+        $this->out(__('Cleaning up existing tables if any.'));
+        $this->hr();
+        $cmd = $this->_formatCmd('passbolt drop_tables');
+        $this->dispatchShell($cmd);
+    }
+
+    /**
+     * Run the migrations
+     */
+    protected function _schema()
+    {
+        $this->out();
+        $this->out(__('Install the schema and default data.'));
+        $this->hr();
+        $cmd = $this->_formatCmd('migrations migrate');
+        $this->dispatchShell($cmd);
+    }
+
+    /**
+     * Import the server key in the keyring
+     * Dispatch to keyring init task
+     */
+    protected function _keyringInit()
+    {
+        $this->out();
+        $this->out(__('Import the server private key in the keyring'));
+        $this->hr();
+        $cmd = $this->_formatCmd('passbolt keyring_init');
+        $this->dispatchShell($cmd);
+    }
+
+    /**
+     * Installation healthchecks
+     *
+     * @return bool status
+     */
+    public function _healthchecks()
+    {
+        $this->out();
+        $this->out(__('Running baseline checks, please wait...'));
         try {
             // Make sure the baseline config files are present
             $checks = Healthchecks::configFiles();
@@ -219,40 +331,25 @@ class InstallTask extends AppShell
                 throw new Exception('The server public key should have an email id.');
             }
         } catch (Exception $e) {
-            $this->errorExit([
+            $this->_error([
                 $e->getMessage(),
                 __('Please run ./app/Console/cake passbolt healthcheck for more information and help.')
             ]);
         }
-    }
 
-    /**
-     * Register the admin user
-     *
-     * @param string $username admin email
-     * @param string $firstName admin first name
-     * @param string $lastName admin last name
-     * @return void
-     */
-    protected function _registerAdmin($username = null, $firstName = null, $lastName = null)
-    {
-        $cmd = 'passbolt register_user -r admin';
-        if ($this->interactive) {
-            $cmd .= ' -i';
+        // Database checks
+        $checks = Healthchecks::database();
+        if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
+            $this->_error(__('There are some issues with the database configuration.'), false);
+            $this->_error(__('Please run ./app/Console/cake passbolt healthcheck for more information and help.'));
         }
-        if (!is_null($username)) {
-            $cmd .= ' -u ' . $username;
+        if ($checks['database']['tablesCount']) {
+            if (!$this->param('force')) {
+                $this->_error(__('Some tables are already present in the database, a new installation would override existing data.'), false);
+                $this->_error(__('Please use --force to proceed anyway.'));
+            }
         }
-        if (!is_null($firstName)) {
-            $cmd .= ' -f ' . $firstName;
-        }
-        if (!is_null($lastName)) {
-            $cmd .= ' -l ' . $lastName;
-        }
-        $quiet = $this->param('quiet');
-        if (isset($quiet) && $quiet == 1) {
-            $cmd .= ' -q';
-        }
-        $this->dispatchShell($cmd);
+
+        $this->_success(__('Critical healthchecks are OK'));
     }
 }

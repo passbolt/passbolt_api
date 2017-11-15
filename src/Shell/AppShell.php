@@ -43,7 +43,7 @@ class AppShell extends Shell
     {
         if (PROCESS_USER === 'root') {
             $this->out('');
-            $this->out('<error>Passbolt commands cannot be executed as root.</error>');
+            $this->_error('Passbolt commands cannot be executed as root.', false);
             $this->out('');
             $this->out('The command should be executed with the same user as your web server. By instance:');
             $this->out('su -s /bin/bash -c "' . APP . 'Console/cake COMMAND" HTTP_USER');
@@ -54,16 +54,26 @@ class AppShell extends Shell
     }
 
     /**
-     * Finish the shell script with an error exit
+     * Display an error message
      *
-     * @param $messages
+     * @param string $msg message
+     * @param bool exit true if exit is required
      */
-    public function errorExit($messages)
+    protected function _error($msg, $exit = true)
     {
-        foreach ($messages as $message) {
-            $this->out($message);
+        $this->out('<error>' . $msg . '</error>');
+        if ($exit) {
+            exit(1); // exit with error status
         }
-        $this->out('<error>Installation failed.</error>');
-        exit(1);
+    }
+
+    /**
+     * Display a success message
+     *
+     * @param string $msg message
+     */
+    protected function _success($msg)
+    {
+        $this->out('<success>' . $msg . '</success>');
     }
 }

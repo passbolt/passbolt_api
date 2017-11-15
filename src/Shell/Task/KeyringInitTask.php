@@ -15,11 +15,12 @@
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
-use Cake\Datasource\ConnectionManager;
+use App\Utility\Gpg;
+use Cake\Core\Configure;
+use Cake\Core\Exception\Exception;
 
-class DropTablesTask extends AppShell
+class KeyringInitTask extends AppShell
 {
-
     /**
      * Gets the option parser instance and configures it.
      *
@@ -31,32 +32,39 @@ class DropTablesTask extends AppShell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser
-            ->setDescription(__('Drop all the tables. Dangerous but useful for a full reinstall.'))
-            ->addOption('datasource', [
-                'short' => 'd',
-                'default' => 'default',
-                'help' => __('Datasource name')
-            ]);
+        $parser->setDescription(__('Installation shell for the passbolt application.'));
 
         return $parser;
     }
 
     /**
-     * Main drop tables task
+     * Main
      *
      * @return bool
      */
     public function main()
     {
-        $datasource = $this->param('datasource');
-        $connection = ConnectionManager::get($datasource);
-        $tables = $connection->execute('show tables');
-        $tables = $tables->fetchAll();
-        foreach ($tables as $table) {
-            $this->out(__('Dropping table ' . $table[0]));
-            $connection->query('drop table '. $table[0]);
+        try {
+            $filePath = Configure::read('passbolt.gpg.serverKey.private');
+            if (!file_exists($filePath)) {
+                throw new Exception(__('The file does not exist: {0}', $filePath));
+            }
+            $armoredKey = file_get_contents($filePath);
+            if ($armoredKey === false) {
+                throw new Exception(__('Could not read the file: {0}', $filePath));
+            }
+            // Import the private key in the GPG keyring
+            $gpg = new Gpg();
+
+            $this->out('Importing ' . $filePath);
+            $gpg->importKeyIntoKeyring($armoredKey);
+        } catch (Exception $e) {
+            $this->_error($e->getMessage(), false);
+            $this->_error('The server OpenPGP key could not be imported into the GnuPG keyring.');
         }
-        $this->_success(__('{0} tables dropped', count($tables)));
+
+        $this->_success('Keyring init OK');
+
+        return true;
     }
 }

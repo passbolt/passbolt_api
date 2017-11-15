@@ -22,12 +22,15 @@ class PassboltShell extends AppShell
      * @var array of linked tasks
      */
     public $tasks = [
+        'DropTables',
         'Healthcheck',
         'Install',
-        'DropTables',
-        'RegisterUser',
+        'KeyringInit',
+        'MysqlExport',
+        'MysqlImport',
         'PassboltTestData.Data',
-        'PassboltTestData.fixturize'
+        'PassboltTestData.fixturize',
+        'RegisterUser',
     ];
 
     /**
@@ -63,6 +66,11 @@ class PassboltShell extends AppShell
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
 
+        $parser->addSubcommand('data', [
+            'help' => __d('cake_console', 'Populate database with predefined data set.'),
+            'parser' => $this->Data->getOptionParser(),
+        ]);
+
         $parser->addSubcommand('drop_tables', [
             'help' => __d('cake_console', 'Drop all the tables. Dangerous but useful for a full reinstall.'),
             'parser' => $this->DropTables->getOptionParser(),
@@ -78,14 +86,24 @@ class PassboltShell extends AppShell
             'parser' => $this->Install->getOptionParser(),
         ]);
 
-        $parser->addSubcommand('register_user', [
-            'help' => __d('cake_console', 'Installation shell for the passbolt application.'),
-            'parser' => $this->RegisterUser->getOptionParser(),
+        $parser->addSubcommand('keyring_init', [
+            'help' => __d('cake_console', 'Init the GnuPG keyring.'),
+            'parser' => $this->KeyringInit->getOptionParser(),
         ]);
 
-        $parser->addSubcommand('data', [
-            'help' => __d('cake_console', 'Installation shell for the passbolt application.'),
-            'parser' => $this->Data->getOptionParser(),
+        $parser->addSubcommand('mysql_export', [
+            'help' => __d('cake_console', 'Utility to export mysql database backups.'),
+            'parser' => $this->MysqlExport->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('mysql_import', [
+            'help' => __d('cake_console', 'Utility to import mysql database backups.'),
+            'parser' => $this->MysqlImport->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('register_user', [
+            'help' => __d('cake_console', 'Register a new user.'),
+            'parser' => $this->RegisterUser->getOptionParser(),
         ]);
 
         return $parser;

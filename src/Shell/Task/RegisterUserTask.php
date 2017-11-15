@@ -15,13 +15,13 @@
 namespace App\Shell\Task;
 
 use App\Model\Entity\Role;
-use Cake\Console\Shell;
+use App\Shell\AppShell;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Routing\Router;
 use App\Controller\Events\EmailsListener;
 
-class RegisterUserTask extends Shell
+class RegisterUserTask extends AppShell
 {
     /**
      * Initializes the Shell
@@ -51,7 +51,7 @@ class RegisterUserTask extends Shell
     {
         $parser = parent::getOptionParser();
         $parser
-            ->setDescription(__('Register a new user'))
+            ->setDescription(__('Register a new user.'))
             ->addOption('interactive', [
                 'short' => 'i',
                 'boolean' => true,
@@ -103,13 +103,12 @@ class RegisterUserTask extends Shell
         }
 
         if (!$result) {
-            $this->out('<error>' . __('User registration failed.') . '</error>');
-            exit(1);
+            $this->_error(__('User registration failed.'));
         }
 
         $token = $this->AuthenticationTokens->generate($user->id);
+        $this->_success(__('User saved successfully.'));
         $this->_notifyUser($user, $token);
-        $this->out('<success>' . __('User saved successfully.') . '</success>');
 
         return true;
     }
@@ -223,13 +222,11 @@ class RegisterUserTask extends Shell
         $eventManager->dispatch($event);
 
         // Display a message in console for convenience
-        $this->out(
-            '<success>' .
+        $this->_success(
             __(
                 "To start registration follow the link in provided in your mailbox or here: \n{0}",
                 Router::url('/setup/install/' . $user->id . '/' . $token->token, true)
             )
-            . '</success>'
         );
     }
 }

@@ -65,6 +65,7 @@ class DataTask extends Shell
             }
         }
 
+        $this->out('<success>' . __('Data inserted successfully') . '</success>');
         return true;
     }
 
