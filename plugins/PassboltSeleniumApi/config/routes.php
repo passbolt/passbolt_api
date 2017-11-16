@@ -23,6 +23,15 @@ Router::plugin('PassboltSeleniumApi', ['path' => '/seleniumtests'], function ($r
     $routes->connect('/resetInstance', ['controller' => 'ResetInstance', 'action' => 'resetInstance'])
         ->setMethods(['GET']);
 
+    $routes->connect('/config', ['controller' => 'Config', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/setExtraConfig', ['controller' => 'Config', 'action' => 'setExtraConfig'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/resetExtraConfig', ['controller' => 'Config', 'action' => 'resetExtraConfig'])
+        ->setMethods(['GET']);
+
     $routes->connect('/error400', ['controller' => 'SimulateError', 'action' => 'error400'])
         ->setMethods(['GET']);
 

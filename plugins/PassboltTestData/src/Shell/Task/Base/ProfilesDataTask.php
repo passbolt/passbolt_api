@@ -239,6 +239,7 @@ class ProfilesDataTask extends DataTask
             'first_name' => 'Wang',
             'last_name' => 'Xiaoyun'
         ];
+
         return $profiles;
     }
 }

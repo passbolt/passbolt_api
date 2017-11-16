@@ -57,7 +57,7 @@ class ResetInstanceController extends AppController
         $job->params['quiet'] = 'true';
         $job->params['no-admin'] = 'true';
         $result = $job->main();
-        if($result === false) {
+        if ($result === false) {
             throw new InternalErrorException(__('Something went wrong. Check the server logs.'));
         }
         $this->viewBuilder()

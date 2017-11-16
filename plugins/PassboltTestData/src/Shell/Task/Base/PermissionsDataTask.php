@@ -27,6 +27,7 @@ class PermissionsDataTask extends DataTask
         $permissions = [];
         $permissions = array_merge($permissions, $this->getUsersResourcesPermissions());
         $permissions = array_merge($permissions, $this->getGroupsResourcesPermissions());
+
         return $permissions;
     }
 
@@ -53,6 +54,7 @@ class PermissionsDataTask extends DataTask
                 ];
             }
         }
+
         return $permissions;
     }
 
@@ -79,6 +81,7 @@ class PermissionsDataTask extends DataTask
                 ];
             }
         }
+
         return $permissions;
     }
 }

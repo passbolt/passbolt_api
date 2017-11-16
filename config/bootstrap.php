@@ -249,7 +249,7 @@ Plugin::load('EmailQueue');
  * Only try to load selenium helper in development mode
  */
 if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
-    Plugin::load('PassboltSeleniumApi', ['routes' => true]);
+    Plugin::load('PassboltSeleniumApi', ['routes' => true, 'bootstrap' => true]);
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
 

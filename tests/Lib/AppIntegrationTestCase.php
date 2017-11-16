@@ -189,6 +189,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
         $this->post($url, $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
+            pr($this->_getBodyAsString());
             throw new \Exception('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;

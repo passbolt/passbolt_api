@@ -21,7 +21,8 @@ class SecretsDataTask extends DataTask
 {
     public $entityName = 'Secrets';
 
-    protected function _getFixedPasswords() {
+    protected function _getFixedPasswords()
+    {
         return [
             UuidFactory::uuid('resource.id.apache') => '_upjvh-p@wAHP18D}OmY05M',
             UuidFactory::uuid('resource.id.april') => 'z"(-1s]3&Itdno:vPt',
@@ -31,7 +32,8 @@ class SecretsDataTask extends DataTask
         ];
     }
 
-    protected function _getDummyPasswords() {
+    protected function _getDummyPasswords()
+    {
         return [
             'testpassword',
             '123456',
@@ -56,7 +58,8 @@ class SecretsDataTask extends DataTask
             'kevisthebest'];
     }
 
-    protected function _getPassword($resourceId) {
+    protected function _getPassword($resourceId)
+    {
         static $passwords = [];
 
         // The resource password has already been determined.
@@ -68,8 +71,7 @@ class SecretsDataTask extends DataTask
         $fixedPasswords = $this->_getFixedPasswords();
         if (isset($fixedPasswords[$resourceId])) {
             $password = $fixedPasswords[$resourceId];
-        }
-        // Else randomly pick up one.
+        } // Else randomly pick up one.
         else {
             $dummyPasswords = $this->_getDummyPasswords();
             $password = $dummyPasswords[array_rand($dummyPasswords)];
@@ -77,6 +79,7 @@ class SecretsDataTask extends DataTask
 
         // Store the resource/password association for the next use.
         $passwords[$resourceId] = $password;
+
         return $password;
     }
 
@@ -95,7 +98,7 @@ class SecretsDataTask extends DataTask
         exec($command, $output);
 
         // Return the armored message.
-        return  implode("\n", $output);
+        return implode("\n", $output);
     }
 
     protected function _getData()
@@ -106,9 +109,9 @@ class SecretsDataTask extends DataTask
         $this->loadModel('Resources');
 
         $users = $this->Users->find('index', ['role' => UuidFactory::uuid('role.id.admin')]);
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $resources = $this->Resources->findIndex($user->id);
-            foreach($resources as $resource) {
+            foreach ($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);
                 $secrets[] = [

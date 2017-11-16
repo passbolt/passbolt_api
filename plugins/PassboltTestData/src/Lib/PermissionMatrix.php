@@ -18,7 +18,8 @@ namespace PassboltTestData\Lib;
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
 
-class PermissionMatrix {
+class PermissionMatrix
+{
 
     private static $mapPermissionTypes = [
         '' => 0,
@@ -72,9 +73,11 @@ class PermissionMatrix {
      * @see
      * @return array
      */
-    public static function getCalculatedUsersResourcesPermissions($orientation = 'resource') {
+    public static function getCalculatedUsersResourcesPermissions($orientation = 'resource')
+    {
         $csvPath = __DIR__ . '/../../data/calculated_users_resources_permissions.csv';
         $return = self::_loadCsv($csvPath, $orientation);
+
         return $return;
     }
 
@@ -84,8 +87,10 @@ class PermissionMatrix {
      * @param string $orientation
      * @return array
      */
-    public static function getUsersResourcesPermissions($orientation = 'resource') {
+    public static function getUsersResourcesPermissions($orientation = 'resource')
+    {
         $csvPath = __DIR__ . '/../../data/users_resources_permissions.csv';
+
         return self::_loadCsv($csvPath, $orientation);
     }
 
@@ -94,10 +99,14 @@ class PermissionMatrix {
      * @param $resourceId
      * @return null
      */
-    public static function getUsersResourcePermissions($resourceId) {
+    public static function getUsersResourcePermissions($resourceId)
+    {
         $matrix = self::getUsersResourcesPermissions();
-        $resourceAlias = array_reduce(array_keys($matrix), function($carry, $item) use ($resourceId) {
-            if ($resourceId == UuidFactory::uuid("resource.id.$item")) $carry = $item;
+        $resourceAlias = array_reduce(array_keys($matrix), function ($carry, $item) use ($resourceId) {
+            if ($resourceId == UuidFactory::uuid("resource.id.$item")) {
+                $carry = $item;
+            }
+
             return $carry;
         }, null);
 
@@ -114,8 +123,10 @@ class PermissionMatrix {
      * @param string $orientation
      * @return array
      */
-    public static function getGroupsResourcesPermissions($orientation = 'resource') {
+    public static function getGroupsResourcesPermissions($orientation = 'resource')
+    {
         $csvPath = __DIR__ . '/../../data/groups_resources_permissions.csv';
+
         return self::_loadCsv($csvPath, $orientation);
     }
 
@@ -124,10 +135,14 @@ class PermissionMatrix {
      * @param $resourceId
      * @return null
      */
-    public static function getGroupsResourcePermissions($resourceId) {
+    public static function getGroupsResourcePermissions($resourceId)
+    {
         $matrix = self::getGroupsResourcesPermissions();
-        $resourceAlias = array_reduce(array_keys($matrix), function($carry, $item) use ($resourceId) {
-            if ($resourceId == UuidFactory::uuid("resource.id.$item")) $carry = $item;
+        $resourceAlias = array_reduce(array_keys($matrix), function ($carry, $item) use ($resourceId) {
+            if ($resourceId == UuidFactory::uuid("resource.id.$item")) {
+                $carry = $item;
+            }
+
             return $carry;
         }, null);
 
@@ -145,30 +160,30 @@ class PermissionMatrix {
      * @return array
      */
     private static function _loadCsv($file, $orientation = 'resource')
-	{
-		$matrix = array();
-		$csv = array_map('str_getcsv', file($file));
+    {
+        $matrix = [];
+        $csv = array_map('str_getcsv', file($file));
 
-		// Extract the csv header
-		$header = array_shift($csv);
-		$header = array_slice($header, 1);
+        // Extract the csv header
+        $header = array_shift($csv);
+        $header = array_slice($header, 1);
 
-		// Build the matrix.
+        // Build the matrix.
         foreach ($csv as $key => $value) {
             $row = array_slice($value, 1);
-            $row = array_map(function($p) {
+            $row = array_map(function ($p) {
                 return self::$mapPermissionTypes[$p];
             }, $row);
 
             if ($orientation == 'resource') {
                 $matrix[$value[0]] = array_combine($header, $row);
-            } else if ($orientation == 'user') {
+            } elseif ($orientation == 'user') {
                 foreach ($header as $i => $column) {
                     $matrix[$column][$value[0]] = $row[$i];
                 }
             }
         }
 
-		return $matrix;
-	}
+        return $matrix;
+    }
 }

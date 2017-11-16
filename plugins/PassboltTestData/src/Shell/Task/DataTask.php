@@ -40,6 +40,7 @@ class DataTask extends Shell
                 'required' => true,
                 'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
             ]);
+
         return $parser;
     }
 
@@ -66,6 +67,7 @@ class DataTask extends Shell
         }
 
         $this->out('<success>' . __('Data inserted successfully') . '</success>');
+
         return true;
     }
 
@@ -77,6 +79,7 @@ class DataTask extends Shell
     {
         $scenarios = Configure::read('PassboltTestData.scenarios');
         $scenario = $scenarios[$this->args[0]];
+
         return $scenario['install']['shellTasks'];
     }
 }

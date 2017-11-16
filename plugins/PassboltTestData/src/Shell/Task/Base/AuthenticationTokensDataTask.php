@@ -63,6 +63,7 @@ class AuthenticationTokensDataTask extends DataTask
             'token' => UuidFactory::uuid(),
             'active' => 1,
         ];
+
         return $tokens;
     }
 }

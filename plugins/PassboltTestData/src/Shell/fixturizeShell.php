@@ -58,6 +58,7 @@ class FixturizeShell extends Shell
             'required' => true,
             'choices' =>  array_keys(Configure::read('PassboltTestData.scenarios')),
         ])->setDescription(__('Fixturize a dummy scenario.'));
+
         return $parser;
     }
 
@@ -70,6 +71,7 @@ class FixturizeShell extends Shell
         if (isset($shellTask->fixtureName)) {
             return $shellTask->fixtureName;
         }
+
         return $shellTask->entityName;
     }
 }

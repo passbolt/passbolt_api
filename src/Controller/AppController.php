@@ -109,9 +109,15 @@ class AppController extends Controller
             'body' => $body,
             '_serialize' => ['header', 'body']
         ]);
-        $this->renderLegacyJson();
+        $this->setViewBuilderOptions();
     }
 
+    /**
+     * Render an error response
+     *
+     * @param null $message
+     * @param null $body
+     */
     protected function error($message = null, $body = null)
     {
         $this->set([
@@ -125,10 +131,14 @@ class AppController extends Controller
             'body' => $body,
             '_serialize' => ['header', 'body']
         ]);
-        $this->renderLegacyJson();
+        $this->setViewBuilderOptions();
     }
 
-    protected function renderLegacyJson()
+    /**
+     * Render a response in legacy json format if required
+     *
+     */
+    protected function setViewBuilderOptions()
     {
         // render a legacy JSON view by default
         if ($this->request->is('json')) {
@@ -137,6 +147,13 @@ class AppController extends Controller
                 $this->viewBuilder()->setClassName('LegacyJson');
             }
         } elseif (!Configure::read('debug')) {
+            // Render a page not found if there is not template for the endpoint
+            // and the request is specifically not json format
+            // examples:
+            // - POST /users/register.json will be a json response
+            // - POST /users/register will be a user registration form in html
+            // - POST /users/edit.json will be a json response
+            // - POST /users/edit does not exist as html for so will trigger 404
             $template = $this->viewBuilder()->getTemplate();
             if (!isset($template)) {
                 throw new NotFoundException(__('Page not found.'));
