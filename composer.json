@@ -55,10 +55,13 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "npm install --production",
-            "./node_modules/.bin/grunt appjs-update",
-            "./node_modules/.bin/grunt styleguide-update",
             "App\\Console\\Installer::postInstall"
+        ],
+        "install-dev": [
+          "@composer install --dev",
+          "npm install",
+          "./node_modules/.bin/grunt appjs-update",
+          "./node_modules/.bin/grunt styleguide-update"
         ],
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
