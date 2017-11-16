@@ -244,8 +244,10 @@ class Healthchecks
         // We only check the number of roles
         try {
             $Roles = TableRegistry::get('Roles');
-            $i = $Roles->find('all')->count();
-            $checks['database']['defaultContent'] = ($i > 3);
+            if (!empty($Roles)) {
+                $i = $Roles->find('all')->count();
+                $checks['database']['defaultContent'] = ($i > 3);
+            }
         } catch (DatabaseException $e) {
             return $checks;
         }

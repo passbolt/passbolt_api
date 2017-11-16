@@ -61,8 +61,6 @@ class PassboltShell extends AppShell
         $this->_io->styles('fail', ['text' => 'red', 'blink' => false]);
         $this->_io->styles('success', ['text' => 'green', 'blink' => false]);
 
-        $this->assertNotRoot();
-
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
 

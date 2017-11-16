@@ -58,5 +58,7 @@ class DropTablesTask extends AppShell
             $connection->query('drop table '. $table[0]);
         }
         $this->_success(__('{0} tables dropped', count($tables)));
+
+        return true;
     }
 }

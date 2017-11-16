@@ -12,10 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\SeleniumTests;
+namespace PassboltSeleniumApi\Controller;
 
 use App\Controller\AppController;
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
@@ -32,14 +31,10 @@ class SimulateErrorController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
-            $this->Auth->allow('error404');
-            $this->Auth->allow('error403');
-            $this->Auth->allow('error400');
-            $this->Auth->allow('error500');
-        } else {
-            throw new ForbiddenException();
-        };
+        $this->Auth->allow('error404');
+        $this->Auth->allow('error403');
+        $this->Auth->allow('error400');
+        $this->Auth->allow('error500');
 
         return parent::beforeFilter($event);
     }

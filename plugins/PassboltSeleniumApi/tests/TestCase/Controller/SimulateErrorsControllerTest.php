@@ -46,10 +46,12 @@ class SimulateErrorsControllerTest extends AppIntegrationTestCase
         $this->assertError(500);
     }
 
-    public function testSimulateErrorNotAllowed()
+    public function testSimulateErrorNotFound()
     {
+        // Check selenium api endpoints are marked as not found when
+        // selenium is marked as inactive in the config
         Configure::write('passbolt.selenium.active', false);
         $this->getJson('/seleniumtests/error404.json');
-        $this->assertError(403);
+        $this->assertError(404);
     }
 }

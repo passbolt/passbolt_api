@@ -44,6 +44,11 @@ class KeyringInitTask extends AppShell
      */
     public function main()
     {
+        // Root user is not allowed to execute this command.
+        if (!$this->assertNotRoot()) {
+            return false;
+        }
+
         try {
             $filePath = Configure::read('passbolt.gpg.serverKey.private');
             if (!file_exists($filePath)) {
@@ -59,8 +64,10 @@ class KeyringInitTask extends AppShell
             $this->out('Importing ' . $filePath);
             $gpg->importKeyIntoKeyring($armoredKey);
         } catch (Exception $e) {
-            $this->_error($e->getMessage(), false);
+            $this->_error($e->getMessage());
             $this->_error('The server OpenPGP key could not be imported into the GnuPG keyring.');
+
+            return false;
         }
 
         $this->_success('Keyring init OK');

@@ -75,14 +75,24 @@ class MysqlExportTask extends AppShell
         $config = $connection->config();
         if ($config['driver'] !== 'Cake\Database\Driver\Mysql') {
             $this->_error('Sorry only mySQL is supported at the moment');
+
+            return false;
         }
 
         // Define location and dump the table and data
         $dir = $this->_getDir();
+        if (empty($dir)) {
+            return false;
+        }
         $file = $this->_getFile($dir);
+        if (empty($file)) {
+            return false;
+        }
         $status = $this->_mysqlDump($config, $dir, $file);
         if (!$status) {
             $this->_error('Something went wrong!');
+
+            return false;
         }
 
         if ($this->param('clear-previous')) {
@@ -149,6 +159,8 @@ class MysqlExportTask extends AppShell
             $force = $this->param('force');
             if (!$force) {
                 $this->_error(__('The backup file already exist: ' . $dir . $file));
+
+                return null;
             }
         }
 
@@ -158,7 +170,7 @@ class MysqlExportTask extends AppShell
     /**
      * Get the directory where to import the backup from
      *
-     * @return string
+     * @return string or null if not exist
      */
     protected function _getDir()
     {
@@ -168,6 +180,8 @@ class MysqlExportTask extends AppShell
         }
         if (!file_exists($dir)) {
             $this->_error(__('Could not access the backup directory: ' . $dir));
+
+            return null;
         };
 
         return $dir;

@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\SeleniumTests;
+namespace PassboltSeleniumApi\Controller;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;

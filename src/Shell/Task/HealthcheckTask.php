@@ -112,6 +112,11 @@ class HealthcheckTask extends AppShell
      */
     public function main()
     {
+        // Root user is not allowed to execute this command.
+        if (!$this->assertNotRoot()) {
+            return false;
+        }
+
         $results = [];
 
         // display options

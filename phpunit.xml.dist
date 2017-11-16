@@ -15,6 +15,7 @@
     <testsuites>
         <testsuite name="App Test Suite">
             <directory>./tests/TestCase</directory>
+            <directory>./plugins/PassboltSeleniumApi/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
@@ -34,7 +35,7 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./src/</directory>
-            <directory suffix=".php">./plugins/*/src/</directory>
+            <!-- <directory suffix=".php">./plugins/*/src/</directory> -->
         </whitelist>
     </filter>
 </phpunit>

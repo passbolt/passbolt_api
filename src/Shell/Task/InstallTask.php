@@ -95,7 +95,9 @@ class InstallTask extends AppShell
     {
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        $this->assertNotRoot();
+        if (!$this->assertNotRoot()) {
+            return false;
+        }
 
         // Quick mode - exit on success
         if ($this->_quickInstall()) {
@@ -103,15 +105,29 @@ class InstallTask extends AppShell
         }
 
         // Normal mode
-        $this->_healthchecks();
-        $this->_schemaCleanup();
-        $this->_schema();
-        $this->_dataImport();
-        $this->_keyringInit();
-        $this->_userRegistration();
+        if (!$this->_healthchecks()) {
+            return false;
+        }
+        if (!$this->_schemaCleanup()) {
+            return false;
+        }
+        if (!$this->_schema()) {
+            return false;
+        }
+        if (!$this->_dataImport()) {
+            return false;
+        }
+        if (!$this->_keyringInit()) {
+            return false;
+        }
+        if (!$this->_userRegistration()) {
+            return false;
+        }
 
         // Quick mode - backup for next time
-        $this->_quickBackup();
+        if (!$this->_quickBackup()) {
+            return false;
+        }
 
         // Winning!
         $this->out('');
@@ -168,7 +184,8 @@ class InstallTask extends AppShell
                 $cmd .= ' -l ' . $lastName;
             }
             $cmd = $this->_formatCmd($cmd);
-            $this->dispatchShell($cmd);
+
+            return ($this->dispatchShell($cmd) === 0);
         }
 
         return true;
@@ -187,7 +204,7 @@ class InstallTask extends AppShell
             $this->out();
             $this->out(__('Installing additional data'));
             $this->hr();
-            $cmd = $this->_formatCmd('passbolt data' . $data);
+            $cmd = $this->_formatCmd('passbolt data ' . $data);
             $this->dispatchShell($cmd);
         }
 
@@ -230,8 +247,11 @@ class InstallTask extends AppShell
             $this->hr();
             $this->_keyringInit();
             $cmd = $this->_formatCmd('passbolt mysql_export --clear-previous');
-            $this->dispatchShell($cmd);
+
+            return ($this->dispatchShell($cmd) === 0);
         }
+
+        return true;
     }
 
     /**
@@ -243,7 +263,8 @@ class InstallTask extends AppShell
         $this->out(__('Cleaning up existing tables if any.'));
         $this->hr();
         $cmd = $this->_formatCmd('passbolt drop_tables');
-        $this->dispatchShell($cmd);
+
+        return ($this->dispatchShell($cmd) === 0);
     }
 
     /**
@@ -255,7 +276,8 @@ class InstallTask extends AppShell
         $this->out(__('Install the schema and default data.'));
         $this->hr();
         $cmd = $this->_formatCmd('migrations migrate');
-        $this->dispatchShell($cmd);
+
+        return ($this->dispatchShell($cmd) === 0);
     }
 
     /**
@@ -268,7 +290,8 @@ class InstallTask extends AppShell
         $this->out(__('Import the server private key in the keyring'));
         $this->hr();
         $cmd = $this->_formatCmd('passbolt keyring_init');
-        $this->dispatchShell($cmd);
+
+        return ($this->dispatchShell($cmd) === 0);
     }
 
     /**
@@ -331,25 +354,31 @@ class InstallTask extends AppShell
                 throw new Exception('The server public key should have an email id.');
             }
         } catch (Exception $e) {
-            $this->_error([
-                $e->getMessage(),
-                __('Please run ./app/Console/cake passbolt healthcheck for more information and help.')
-            ]);
+            $this->_error($e->getMessage());
+            $this->_error(__('Please run ./app/Console/cake passbolt healthcheck for more information and help.'));
+
+            return false;
         }
 
         // Database checks
         $checks = Healthchecks::database();
         if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
-            $this->_error(__('There are some issues with the database configuration.'), false);
+            $this->_error(__('There are some issues with the database configuration.'));
             $this->_error(__('Please run ./app/Console/cake passbolt healthcheck for more information and help.'));
+
+            return false;
         }
         if ($checks['database']['tablesCount']) {
             if (!$this->param('force')) {
-                $this->_error(__('Some tables are already present in the database, a new installation would override existing data.'), false);
+                $this->_error(__('Some tables are already present in the database, a new installation would override existing data.'));
                 $this->_error(__('Please use --force to proceed anyway.'));
+
+                return false;
             }
         }
 
         $this->_success(__('Critical healthchecks are OK'));
+
+        return true;
     }
 }

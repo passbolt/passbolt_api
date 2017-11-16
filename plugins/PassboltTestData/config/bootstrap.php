@@ -12,7 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-
 use Cake\Core\Configure;
 
 // Load the plugin configuration.

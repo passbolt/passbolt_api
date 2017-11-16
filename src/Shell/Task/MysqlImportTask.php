@@ -59,6 +59,9 @@ class MysqlImportTask extends AppShell
     {
         // Get the file and directory name and read from it
         $dir = $this->_getDir();
+        if (empty($dir)) {
+            return false;
+        }
         $file = $this->_getFile($dir);
         if (empty($file)) {
             return false;
@@ -72,7 +75,9 @@ class MysqlImportTask extends AppShell
             $connection = ConnectionManager::get($datasource);
             $connection->query($sql);
         } catch (Exception $e) {
-            $this->_error('Error: Something went wrong when importing the SQL file', true);
+            $this->_error('Error: Something went wrong when importing the SQL file');
+
+            return false;
         }
 
         $this->_success('Success: SQL file imported');
@@ -90,6 +95,8 @@ class MysqlImportTask extends AppShell
         $this->param('dir');
         if (isset($dir) && !file_exists($dir)) {
             $this->_error('Error: the directory does not exist' . $dir);
+
+            return null;
         } else {
             $dir = CACHE . 'database' . DS;
         }
@@ -108,10 +115,12 @@ class MysqlImportTask extends AppShell
         $file = $this->param('file');
         if (isset($file) && !file_exists($file)) {
             $this->_error('Error: could not find the SQL file ' . $dir . $file);
+
+            return null;
         } else {
             $files = array_diff(scandir($dir, SCANDIR_SORT_DESCENDING), ['..', '.']);
             if (!isset($files[0])) {
-                $this->_error('Error: no existing backup found in ' . $dir, false);
+                $this->_error('Error: no existing backup found in ' . $dir);
 
                 return null;
             }

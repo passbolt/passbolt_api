@@ -49,8 +49,11 @@ class AppShell extends Shell
             $this->out('su -s /bin/bash -c "' . APP . 'Console/cake COMMAND" HTTP_USER');
             $this->out('where HTTP_USER match your web server user: www-data, nginx, http');
             $this->out('');
-            exit(1);
+
+            return false;
         }
+
+        return true;
     }
 
     /**
@@ -59,12 +62,9 @@ class AppShell extends Shell
      * @param string $msg message
      * @param bool exit true if exit is required
      */
-    protected function _error($msg, $exit = true)
+    protected function _error($msg)
     {
         $this->out('<error>' . $msg . '</error>');
-        if ($exit) {
-            exit(1); // exit with error status
-        }
     }
 
     /**

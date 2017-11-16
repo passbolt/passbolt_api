@@ -264,34 +264,6 @@ Router::prefix('/setup', function ($routes) {
 });
 
 /**
- * Selenium tests routes
- */
-Router::prefix('/seleniumtests', function ($routes) {
-    $routes->setExtensions(['json']);
-
-    $routes->connect('/error400', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error400'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/error404', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error404'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/error403', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error403'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/error500', ['prefix' => 'SeleniumTests', 'controller' => 'SimulateError', 'action' => 'error500'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/showlastemail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
-        ->setPass(['username'])
-        ->setMethods(['GET']);
-
-    // @TODO remove deprated legacy v1 backward compatibility routes
-    $routes->connect('/showLastEmail/:username', ['prefix' => 'SeleniumTests', 'controller' => 'Email', 'action' => 'showLastEmail'])
-        ->setPass(['username'])
-        ->setMethods(['GET']);
-});
-
-/**
  * Load all plugin routes. See the Plugin documentation on
  * how to customize the loading of plugin routes.
  */

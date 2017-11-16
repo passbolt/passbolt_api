@@ -88,6 +88,11 @@ class RegisterUserTask extends AppShell
      */
     public function main()
     {
+        // Root user is not allowed to execute this command.
+        if (!$this->assertNotRoot()) {
+            return false;
+        }
+
         $result = false;
         $attempt = 0;
         if ($this->param('interactive')) {
@@ -104,6 +109,8 @@ class RegisterUserTask extends AppShell
 
         if (!$result) {
             $this->_error(__('User registration failed.'));
+
+            return false;
         }
 
         $token = $this->AuthenticationTokens->generate($user->id);
