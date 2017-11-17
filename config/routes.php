@@ -179,6 +179,10 @@ Router::prefix('Resources', function ($routes) {
     $routes->connect('/:id', ['controller' => 'ResourcesUpdate', 'action' => 'update'])
         ->setPass(['id'])
         ->setMethods(['PUT']);
+
+    $routes->connect('/:id', ['controller' => 'ResourcesDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });
 
 /**
