@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.email_queue', 'app.authentication_tokens'];
+    public $fixtures = ['app.users', 'app.gpgkeys', 'app.groups_users', 'app.roles', 'app.profiles', 'app.email_queue', 'app.authentication_tokens'];
 
     public function testUserAddNotLoggedInError()
     {
