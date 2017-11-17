@@ -98,6 +98,17 @@ class ProfilesTable extends Table
     }
 
     /**
+     * Update validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdate(Validator $validator)
+    {
+        return $this->validationDefault($validator);
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *

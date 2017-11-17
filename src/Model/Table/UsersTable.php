@@ -141,6 +141,17 @@ class UsersTable extends Table
     }
 
     /**
+     * Update validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdate(Validator $validator)
+    {
+        return $this->validationDefault($validator);
+    }
+
+    /**
      * Register validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -351,15 +362,13 @@ class UsersTable extends Table
      */
     public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
     {
+        // Do not allow the user to set these flags during registration
         if (isset($options['validate']) && $options['validate'] === 'register') {
-            // Do not allow the user to set these flags
             $data['active'] = false;
             $data['deleted'] = false;
 
-            // Set role to Role::USER by default
-            if (isset($data['role_id']) && $options['currentUserRole'] === Role::ADMIN) {
-                // let it be
-            } else {
+            // Only admin can set the user role on registration
+            if (!isset($data['role_id']) || $options['currentUserRole'] !== Role::ADMIN) {
                 $data['role_id'] = $this->Roles->getIdByName(Role::USER);
             }
         }
@@ -442,6 +451,53 @@ class UsersTable extends Table
                 'currentUserRole' => $roleName
             ]
         );
+    }
+
+    /**
+     * Edit a given entity with the prodived data according to the permission of the current user role
+     * Only allow editing the first_name and last_name
+     * Also allow editing the role_id but only if admin
+     * Other changes such as active or username are not permitted
+     *
+     * @param $user
+     * @param $data
+     * @param $roleName
+     * @return object the patched user entity
+     */
+    public function editEntity($user, $data, $roleName)
+    {
+        $accessibleUserFields = [
+            'active' => false,
+            'deleted' => false,
+            'created' => false,
+            'username' => false,
+            'role_id' => false,
+            'profile' => true,
+            'gpgkey' => false
+        ];
+        // only admins can set roles
+        if ($roleName === Role::ADMIN) {
+            $accessibleUserFields['role_id'] = true;
+        }
+
+        $accessibleProfileFields = [
+            'user_id' => false,
+            'created' => false,
+            'first_name' => true,
+            'last_name' => true
+        ];
+
+        return $this->patchEntity($user, $data, [
+                'validate' => 'update',
+                'accessibleFields' => $accessibleUserFields,
+                'associated' => [
+                    'Profiles' => [
+                        'validate' => 'update',
+                        'accessibleFields' => $accessibleProfileFields
+                    ]
+                ],
+                'currentUserRole' => $roleName
+            ]);
     }
 
     /**

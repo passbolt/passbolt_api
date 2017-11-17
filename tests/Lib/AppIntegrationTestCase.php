@@ -120,9 +120,19 @@ class AppIntegrationTestCase extends IntegrationTestCase
      *
      * @return void
      */
-    public function assertForbiddenError()
+    public function assertForbiddenError($msg = 'Forbidden')
     {
-        $this->assertError(403, 'Forbidden');
+        $this->assertError(403, $msg);
+    }
+
+    /**
+     * Asserts that the json response is relative to a forbidden error.
+     *
+     * @return void
+     */
+    public function assertBadRequestError($msg = 'Bad Request')
+    {
+        $this->assertError(400, $msg);
     }
 
     /**

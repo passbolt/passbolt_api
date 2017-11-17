@@ -219,6 +219,10 @@ Router::prefix('Users', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['GET']);
 
+    $routes->connect('/:id', ['controller' => 'UsersEdit', 'action' => 'editPost'])
+        ->setPass(['id'])
+        ->setMethods(['PUT', 'POST']);
+
     // @TODO remove deprated legacy v1 backward compatibility routes
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
