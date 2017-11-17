@@ -61,9 +61,10 @@ class GroupsTable extends Table
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
         ]);
-
         $this->hasMany('GroupsUsers');
-
+        $this->hasMany('Permissions', [
+            'foreignKey' => 'aro_foreign_key'
+        ]);
         $this->belongsToMany('Users', [
             'through' => 'GroupsUsers'
         ]);
@@ -177,6 +178,11 @@ class GroupsTable extends Table
             $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-managers'], true);
         }
 
+        // Filter on groups that do not have a direct permission for a resource
+        if (isset($options['filter']['has-not-permission']) && count($options['filter']['has-not-permission'])) {
+            $query = $this->_filterQueryByHasNotPermission($query, $options['filter']['has-not-permission'][0]);
+        }
+
         // Filter out deleted groups
         $query->where(['Groups.deleted' => false]);
 
@@ -271,5 +277,32 @@ class GroupsTable extends Table
         if (isset($options['validate']) && $options['validate'] === 'default') {
             $data['deleted'] = false;
         }
+    }
+
+    /**
+     * Filter a Groups query by groups that don't have permission for a resource.
+     *
+     * By instance :
+     * $query = $Users->find();
+     * $Users->_filterQueryByHasNotPermission($query, 'ada');
+     *
+     * Should filter all the users that do not have a permission for apache.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $resourceId The resource to search potential groups for.
+     * @return \Cake\ORM\Query $query
+     */
+    public function _filterQueryByHasNotPermission($query, $resourceId)
+    {
+        $permissionQuery = $this->association('Permissions')
+            ->find()
+            ->select(['Permissions.aro_foreign_key'])
+            ->where([
+                'Permissions.aro' => 'Group',
+                'Permissions.aco_foreign_key' => $resourceId
+            ]);
+
+        // Filter on the groups that do not have yet a permission.
+        return $query->where(['Groups.id NOT IN' => $permissionQuery]);
     }
 }

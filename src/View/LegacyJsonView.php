@@ -51,7 +51,8 @@ class LegacyJsonView extends View
             if (get_parent_class($body) === 'Cake\ORM\Entity') {
                 $name = LegacyApiHelper::getEntityName($body);
                 $body = LegacyApiHelper::formatEntity($body, $name);
-            } elseif (get_class($body) === 'Cake\ORM\Query') {
+            } elseif ($body instanceof \Cake\ORM\Query
+                || $body instanceof \Cake\Collection\Collection) {
                 $body = LegacyApiHelper::formatResultSet($body);
             } elseif (get_class($body) === 'App\Error\Exception\ValidationRuleException') {
                 $errors = $body->getErrors();
