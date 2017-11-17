@@ -82,10 +82,10 @@ W3AI8+rWjK8MGH2T88hCYI/6
                 'description' => 'Nouvelle description de resource privée'
             ]]),
             'emoticon' => $this->_getDummyPostData(['Resource' => [
-                'name' => '???????',
+                'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
-                'description' => '?????????????'
+                'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}"
             ]]),
         ];
 

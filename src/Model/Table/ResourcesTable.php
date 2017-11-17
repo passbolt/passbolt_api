@@ -16,9 +16,14 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Role;
+use App\Model\Rule\HasResourceAccessRule;
+use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Collection\CollectionInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
@@ -135,8 +140,8 @@ class ResourcesTable extends Table
 
         $validator
             ->requirePresence('secrets', 'create', __('A secret is required.'))
-            ->notEmpty('secrets', __('The secret cannot be empty.'))
-            ->count(1, __('Only the secret of the owner must be provided.'));
+            ->notEmpty('secrets', __('The secret cannot be empty.'), 'create')
+            ->count(1, __('Only the secret of the owner is required.'));
 
         return $validator;
     }
@@ -150,13 +155,32 @@ class ResourcesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // Create rules.
         $rules->addCreate([$this, 'ruleOwnerPermissionProvided'], 'owner_permission_provided', [
             'errorField' => 'permission',
-            'message' => __('Only the permission of the owner must be provided.')
+            'message' => __('The permission of the owner is required.')
         ]);
         $rules->addCreate([$this, 'ruleOwnerSecretProvided'], 'owner_secret_provided', [
             'errorField' => 'secrets',
-            'message' => __('Only the secret of the owner must be provided.')
+            'message' => __('The secret of the owner is required.')
+        ]);
+
+        // Update rules.
+        $rules->addUpdate([$this, 'ruleSecretsProvided'], 'secrets_provided', [
+            'errorField' => 'secrets',
+            'message' => __('The secrets of all the users having access to the resource are required.')
+        ]);
+        $rules->addUpdate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
+            'table' => 'Resources',
+            'errorField' => 'id',
+            'message' => __('The resource cannot be soft deleted.')
+        ]);
+        $rules->addUpdate(new HasResourceAccessRule(), 'has_resource_access', [
+            'errorField' => 'id',
+            'message' => __('Access denied.'),
+            'userField' => 'modified_by',
+            'resourceField' => 'id',
+            'permissionType' => Permission::UPDATE
         ]);
 
         return $rules;
@@ -184,6 +208,38 @@ class ResourcesTable extends Table
     public function ruleOwnerSecretProvided($entity, array $options = [])
     {
         return $entity->secrets[0]->user_id == $entity->created_by;
+    }
+
+    /**
+     * Validate that the secrets of all the allowed users are provided if the secret changed.
+     *
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleSecretsProvided($entity, array $options = [])
+    {
+        // Secrets are not required to update a resource.
+        if (!isset($entity->secrets) || empty($entity->secrets)) {
+            return true;
+        }
+
+        // Retrieve the users who are allowed to access the resource.
+        $Users = TableRegistry::get('Users');
+        $usersFindOptions['filter']['has-access'] = [$entity->id];
+        $allowedUsersIds = $Users->findIndex(Role::USER, $usersFindOptions)
+            ->extract('id')
+            ->toArray();
+
+        // Extract the users for whom the secrets will be updated.
+        $secretsUsersIds = Hash::extract($entity->secrets, '{n}.user_id');
+
+        // If the lists are not the same, it means the list of secrets provided are not good.
+        if (!empty(array_diff($allowedUsersIds, $secretsUsersIds))) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

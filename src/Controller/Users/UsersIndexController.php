@@ -45,7 +45,7 @@ class UsersIndexController extends AppController
         $this->loadModel('Users');
 
         $whitelist = [
-            'filter' => ['search', 'has-groups'],
+            'filter' => ['search', 'has-groups', 'has-access'],
             'order' => [
                 'User.username', 'User.created', 'User.modified',
                 'Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'

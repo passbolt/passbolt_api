@@ -87,6 +87,9 @@ class UsersTable extends Table
         $this->belongsToMany('Groups', [
             'through' => 'GroupsUsers'
         ]);
+        $this->hasMany('Permissions', [
+            'foreignKey' => 'aro_foreign_key'
+        ]);
     }
 
     /**
@@ -242,6 +245,11 @@ class UsersTable extends Table
             $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-groups']);
         }
 
+        // If searching by resource access
+        if (isset($options['filter']['has-access']) && count($options['filter']['has-access'])) {
+            $query = $this->_filterQueryByResourceAccess($query, $options['filter']['has-access'][0]);
+        }
+
         // Ordering options
         if (isset($options['order'])) {
             $query->order($options['order']);
@@ -380,7 +388,7 @@ class UsersTable extends Table
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array<string> $groupsIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be managers ? Default false.
-     * @return $query
+     * @return \Cake\ORM\Query $query
      */
     private function _filterQueryByGroupsUsers($query, array $groupsIds, $areManager = false)
     {
@@ -416,6 +424,46 @@ class UsersTable extends Table
             $query->where(['Users.id IN' => $matchingUserIds]);
         }
 
+        return $query;
+    }
+
+    /**
+     * Filter a Users query by resource access.
+     * Only the users who have a permission (Read/Update/Owner) to access a resource should be returned by the query.
+     *
+     * By instance :
+     * $query = $Users->find()->where('Users.username LIKE' => '%@passbolt.com');
+     * _filterQueryByResourceAccess($query, 'RESOURCE_UUID');
+     *
+     * Should filter all the users with a passbolt username who have a permission to access the resource identified by
+     * RESOURCE_UUID.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $resourceId The resource the users must have access.
+     * @return \Cake\ORM\Query $query
+     */
+    private function _filterQueryByResourceAccess($query, $resourceId)
+    {
+        $usersIds = $this->association('Permissions')
+            ->find()
+            ->where(['Permissions.aco_foreign_key' => $resourceId])
+            ->contain('Users')
+            ->contain('Groups')
+            ->contain('Groups.GroupsUsers')
+            /* Aggregate the id of the users who have a direct permission to access to a resource or are member of a
+               group which have such a permission */
+            ->reduce(function($carry, $item) {
+                if ($item->aro == 'User') {
+                    $carry[] = $item->aro_foreign_key;
+                } else if ($item->aro == 'Group') {
+                    $groupUsersIds = Hash::extract($item->group->groups_users, '{n}.user_id');
+                    $carry = array_merge($carry, $groupUsersIds);
+                }
+                return $carry;
+            }, []);
+
+        $usersIds = array_unique($usersIds);
+        $query->where(['Users.id IN' => $usersIds]);
         return $query;
     }
 

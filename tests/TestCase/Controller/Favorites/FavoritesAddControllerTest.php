@@ -46,6 +46,11 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertFavoriteAttributes($this->_responseJsonBody->Favorite);
     }
 
+    public function testAddCannotModifyNotAccessibleFields()
+    {
+        $this->markTestIncomplete();
+    }
+
     public function testAddErrorNotValidId()
     {
         $this->authenticateAs('dame');
@@ -66,14 +71,6 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError('404', 'The resource does not exist.');
-    }
-
-    public function testAddErrorDoesntExistResource()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid();
         $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertError('404', 'The resource does not exist.');
     }
