@@ -41,51 +41,51 @@ class AuthenticationTokensFixture extends TestFixture
     public $records = [
         [
             'id' => '245fd3af-974f-5995-b912-d55b8b0515cf',
-            'token' => 'a5c3cc45-0fc7-4575-a2ff-ee9786a27ae0',
+            'token' => '6bfa08a9-e929-4bf2-9396-543af7f07f42',
             'user_id' => 'f848277c-5398-58f8-a82a-72397af2d450',
             'active' => true,
-            'created' => '2017-11-14 09:58:17',
-            'modified' => '2017-11-14 09:58:17'
+            'created' => '2017-11-17 12:36:59',
+            'modified' => '2017-11-17 12:36:59'
         ],
         [
             'id' => '47732566-3dfd-56bf-b83a-2a2e43524e3e',
-            'token' => '869a3563-2794-447b-8ed2-9f2cc39f4402',
+            'token' => 'bf7f3926-0aae-40be-a4d2-efd97326768b',
             'user_id' => '92f42805-bc0f-58fd-9de6-aab13ed0c28d',
             'active' => true,
-            'created' => '2017-11-04 09:58:17',
-            'modified' => '2017-11-04 09:58:17'
+            'created' => '2017-11-07 12:36:59',
+            'modified' => '2017-11-07 12:36:59'
         ],
         [
             'id' => '654340be-c1f6-5c8f-9025-85e425a58316',
-            'token' => '410aca00-8eb5-4947-9af4-066e67f160dc',
+            'token' => '89bfe753-be88-4bfc-ae51-eda2cdb8f7ff',
             'user_id' => '92f42805-bc0f-58fd-9de6-aab13ed0c28d',
             'active' => true,
-            'created' => '2017-11-14 09:58:17',
-            'modified' => '2017-11-14 09:58:17'
+            'created' => '2017-11-17 12:36:59',
+            'modified' => '2017-11-17 12:36:59'
         ],
         [
             'id' => '7c57af41-ade1-52d3-8f03-83ca4b0d7176',
-            'token' => '3a4b4169-adf4-4aa8-8937-013e05dcf8a3',
+            'token' => '52c3abed-a2bf-4311-8605-7f7b34c22c42',
             'user_id' => '92f42805-bc0f-58fd-9de6-aab13ed0c28d',
             'active' => false,
-            'created' => '2017-11-14 09:58:17',
-            'modified' => '2017-11-14 09:58:17'
+            'created' => '2017-11-17 12:36:59',
+            'modified' => '2017-11-17 12:36:59'
         ],
         [
             'id' => '8b36c205-3497-5790-929a-90f118b5bdd1',
-            'token' => '9cdfaf87-40b8-4186-9a66-a60ce692943c',
+            'token' => 'f1d6139b-b516-4b73-a848-381372241199',
             'user_id' => '1fc3ca40-3603-5879-8141-089ed7000f41',
             'active' => true,
-            'created' => '2017-11-14 09:58:17',
-            'modified' => '2017-11-14 09:58:17'
+            'created' => '2017-11-17 12:36:59',
+            'modified' => '2017-11-17 12:36:59'
         ],
         [
             'id' => '958d1484-8910-5a5a-8efc-65b967147e70',
-            'token' => 'c37066d3-7cb5-4c7e-9f13-711159971a9f',
+            'token' => '08176353-fd4c-435c-a0e1-044073792508',
             'user_id' => '92f42805-bc0f-58fd-9de6-aab13ed0c28d',
             'active' => false,
-            'created' => '2017-11-04 09:58:17',
-            'modified' => '2017-11-04 09:58:17'
+            'created' => '2017-11-07 12:36:59',
+            'modified' => '2017-11-07 12:36:59'
         ],
     ];
 }

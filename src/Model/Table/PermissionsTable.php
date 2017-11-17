@@ -258,7 +258,7 @@ class PermissionsTable extends Table
     public function findViewAcoPermissions($acoForeignKey, $options = [])
     {
         if (!Validation::uuid($acoForeignKey)) {
-            throw new \InvalidArgumentException(__('The parameter acoForeignKey should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The parameter acoForeignKey is not a valid uuid.'));
         }
 
         $query = $this->find()
