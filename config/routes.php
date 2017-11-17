@@ -196,6 +196,17 @@ Router::prefix('Roles', function ($routes) {
 });
 
 /**
+ * Share prefixed routes
+ */
+Router::prefix('Share', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/search-users/resource/:acoForeignKey', ['controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
+        ->setPass(['acoForeignKey'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Users prefixed routes
  */
 Router::prefix('Users', function ($routes) {

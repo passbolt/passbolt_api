@@ -20,12 +20,13 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {
     public $Groups;
 
-    public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
+    public $fixtures = ['app.groups', 'app.users', 'app.groups_users', 'app.permissions'];
 
     public function setUp()
     {
@@ -184,5 +185,27 @@ class FindIndexTest extends AppTestCase
         $groups = $this->Groups->findIndex($options)->all();
 
         $this->assertCount(0, $groups);
+    }
+
+    public function testFilterHasNotPermission()
+    {
+        $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('resource');
+        foreach ($permissionsMatrix as $resourceAlias => $resourcesExpectedPermissions) {
+            // Extract expected groups.
+            $expectedGroupsIds = [];
+            foreach($resourcesExpectedPermissions as $groupAlias => $permissionType) {
+                if (!$permissionType) {
+                    $expectedGroupsIds[] = UuidFactory::uuid("group.id.$groupAlias");
+                }
+            }
+
+            // Find all the groups who have access to the resource.
+            $findIndexOptions['filter']['has-not-permission'] = [UuidFactory::uuid("resource.id.$resourceAlias")];
+            $groups = $this->Groups->findIndex($findIndexOptions)->all();
+            $groupsIds = Hash::extract($groups->toArray(), '{n}.id');
+
+            $this->assertEmpty(array_diff($expectedGroupsIds, $groupsIds), "The filter hasNotPermission does not return expected groups for the resource $resourceAlias");
+            $this->assertEmpty(array_diff($groupsIds, $expectedGroupsIds), "The filter hasNotPermission does not return expected groups for the resource $resourceAlias");
+        }
     }
 }
