@@ -46,8 +46,9 @@ class UsersAddController extends UsersRegisterController
             throw new ForbiddenException(__('Only administrators can add new users.'));
         }
         $user = $this->_registerUser();
-        $this->set('user', $user);
-        $this->success(__('The user was successfully added. This user now need to complete the setup.'));
+        $user = $this->Users->findView($user->id, Role::ADMIN);
+        $msg = __('The user was successfully added. This user now need to complete the setup.');
+        $this->success($msg, $user);
     }
 
     /**
