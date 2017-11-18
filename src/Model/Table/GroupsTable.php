@@ -183,6 +183,11 @@ class GroupsTable extends Table
             $query = $this->_filterQueryByHasNotPermission($query, $options['filter']['has-not-permission'][0]);
         }
 
+        // If searching for a name
+        if (isset($options['filter']['search']) && count($options['filter']['search'])) {
+            $query = $this->_filterQueryBySearch($query, $options['filter']['search'][0]);
+        }
+
         // Filter out deleted groups
         $query->where(['Groups.deleted' => false]);
 
@@ -304,5 +309,25 @@ class GroupsTable extends Table
 
         // Filter on the groups that do not have yet a permission.
         return $query->where(['Groups.id NOT IN' => $permissionQuery]);
+    }
+
+    /**
+     * Filter a Groups query by search.
+     * Search on the name field.
+     *
+     * By instance :
+     * $query = $Groups->find();
+     * $Groups->_filterQueryBySearch($query, 'creative');
+     *
+     * Should filter all the groups with a name containing creative.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $search The string to search.
+     * @return \Cake\ORM\Query $query
+     */
+    public function _filterQueryBySearch($query, $search)
+    {
+        $search = '%' . $search . '%';
+        return $query->where(['Groups.name LIKE' => $search]);
     }
 }
