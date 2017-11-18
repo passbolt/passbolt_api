@@ -63,6 +63,30 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertFalse(array_search($groupBId, $arosIds));
     }
 
+    public function testShareSearchArosSuccess_SearchUserWang()
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $filterParams = 'filter[search]=wang@passbolt';
+        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams&api-version=2");
+        $aros = $this->_responseJsonBody;
+        $this->assertNotEmpty($aros);
+        $this->assertCount(1, $aros);
+        $this->assertEquals(UuidFactory::uuid('user.id.wang'), $aros[0]->id);
+    }
+
+    public function testShareSearchArosSuccess_SearchGroupCreative()
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $filterParams = 'filter[search]=Creative';
+        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams&api-version=2");
+        $aros = $this->_responseJsonBody;
+        $this->assertNotEmpty($aros);
+        $this->assertCount(1, $aros);
+        $this->assertEquals(UuidFactory::uuid('group.id.creative'), $aros[0]->id);
+    }
+
     public function testShareSearchArosApiV1Success()
     {
         $this->authenticateAs('ada');

@@ -208,4 +208,13 @@ class FindIndexTest extends AppTestCase
             $this->assertEmpty(array_diff($groupsIds, $expectedGroupsIds), "The filter hasNotPermission does not return expected groups for the resource $resourceAlias");
         }
     }
+
+    public function testFilterSearch()
+    {
+        $findIndexOptions['filter']['search'] = ['Creative'];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all();
+        $this->assertCount(1, $groups);
+        $group = $groups->first();
+        $this->assertEquals(UuidFactory::uuid('group.id.creative'), $group->id);
+    }
 }
