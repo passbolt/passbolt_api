@@ -72,7 +72,10 @@ class ShareSearchController extends AppController
         $options['filter']['has-not-permission'] = [$resourceId];
 
         // Retrieve the groups.
-        $groups = $this->Groups->findIndex($options);
+        $groupsOptions = array_merge($options, [
+            'contain' => ['user_count' => true]
+        ]);
+        $groups = $this->Groups->findIndex($groupsOptions);
 
         // Retrieve the users.
         $users = $this->Users->findIndex(Role::USER, $options);

@@ -111,6 +111,19 @@ class FindIndexTest extends AppTestCase
         $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
     }
 
+    public function testContainUserCount()
+    {
+        $options['contain']['user_count'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+
+        foreach($groups as $group) {
+            $this->assertNotEmpty($group->user_count);
+            $expectedCount = $this->Groups->association('GroupsUsers')->find()
+                ->where(['GroupsUsers.group_id' => $group->id])->count();
+            $this->assertEquals($expectedCount, $group->user_count);
+        }
+    }
+
     public function testFilterHasUsers()
     {
         $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];

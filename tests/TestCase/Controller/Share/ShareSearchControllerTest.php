@@ -57,6 +57,8 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $groupC = $aros[array_search($groupCId, $arosIds)];
         $this->assertNotEmpty($groupC);
         $this->assertGroupAttributes($groupC);
+        // Contain user count field.
+        $this->assertNotEmpty($groupC->user_count);
 
         // Should not find the group board
         $groupBId = UuidFactory::uuid('group.id.board');
@@ -102,6 +104,8 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         // Extract and check a group.
         $groups = Hash::extract($aros, "{n}.Group");
         $this->assertGroupAttributes($groups[0]);
+        // Contain user count field.
+        $this->assertNotEmpty($groups[0]->user_count);
     }
 
     public function testShareSearchAros_ErrorNotValidResourceId()

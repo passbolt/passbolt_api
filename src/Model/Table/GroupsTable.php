@@ -168,6 +168,11 @@ class GroupsTable extends Table
             $query->contain('Users');
         }
 
+        // If contains user_count.
+        if (isset($options['contain']['user_count'])) {
+            $this->_containUserCount($query);
+        }
+
         // Filter on groups that have specified users.
         if (isset($options['filter']['has-users']) && is_array($options['filter']['has-users'])) {
             $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-users']);
@@ -195,12 +200,30 @@ class GroupsTable extends Table
     }
 
     /**
+     * Count the members of the groups and add the value to the field user_count.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @return \Cake\ORM\Query
+     */
+    private function _containUserCount($query)
+    {
+        // Count the members of the groups in a subquery.
+        $subQuery = $this->association('GroupsUsers')->find();
+        $subQuery->select(['count' => $subQuery->func()->count('*')])
+            ->where(['GroupsUsers.group_id = Groups.id']);
+
+        // Add the user_count field to the Groups query.
+        $query->select(['user_count' => $subQuery])
+            ->enableAutoFields();
+    }
+
+    /**
      * Filter a Groups query by groups users.
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array<string> $usersIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be managers ? Default false.
-     * @return $query
+     * @return \Cake\ORM\Query
      */
     private function _filterQueryByGroupsUsers($query, array $usersIds, $areManager = false)
     {
