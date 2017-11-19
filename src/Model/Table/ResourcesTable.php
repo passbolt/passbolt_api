@@ -253,7 +253,7 @@ class ResourcesTable extends Table
         if (isset($options['contain']['permission'])) {
             // Filter on resources the user is allowed to access.
             $query->matching('Permissions');
-            $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
+            $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
 
             // Format the query result to populate the permission property as a contain would do.
             $query->formatResults(function (CollectionInterface $results) {
@@ -266,7 +266,7 @@ class ResourcesTable extends Table
             });
         } else {
             $query->innerJoinWith('Permissions');
-            $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
+            $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
         }
 
         // Filter out deleted resources
@@ -325,7 +325,7 @@ class ResourcesTable extends Table
         $query = $this->find();
         $query->where(['Resources.id' => $resourceId]);
         $query->innerJoinWith('Permissions');
-        $this->_filterQueryByPermissionsType($query, $userId, $permissionType);
+        $query = $this->_filterQueryByPermissionsType($query, $userId, $permissionType);
 
         return !is_null($query->first());
     }
@@ -345,7 +345,7 @@ class ResourcesTable extends Table
      * @param \Cake\ORM\Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
      * @param int $permissionType The minimum permission type.
-     * @return void
+     * @return \Cake\ORM\Query
      */
     private function _filterQueryByPermissionsType($query, $userId, $permissionType = Permission::READ)
     {
@@ -357,25 +357,29 @@ class ResourcesTable extends Table
         // In a subquery retrieve the highest permission.
         $permissionSubquery = $this->association('Permissions')
             ->find()
-            ->select('Permissions.id')
-            ->where([
-                'Permissions.aco_foreign_key = Resources.id',
-                'Permissions.aro_foreign_key' => $userId,
-                'Permissions.type >=' => $permissionType,
-            ]);
+            ->select('Permissions.id');
+
+        $where = [
+            'Permissions.aco_foreign_key = Resources.id',
+            'Permissions.aro_foreign_key' => $userId,
+            'Permissions.type >=' => $permissionType,
+        ];
 
         if (!empty($groupsIds)) {
-            $permissionSubquery->orWhere([
+            $where = [
+                'OR' => [ $where, [
                 'Permissions.aco_foreign_key = Resources.id',
                 'Permissions.aro_foreign_key IN' => $groupsIds,
                 'Permissions.type >=' => $permissionType,
-            ]);
+            ]]];
         }
+        $permissionSubquery->where($where);
         $permissionSubquery->order(['Permissions.type' => 'DESC'])
             ->limit(1);
 
         // Filter the Resources query by permissions.
         $query->where(['Permissions.id' => $permissionSubquery]);
+        return $query;
     }
 
     /**
@@ -410,5 +414,27 @@ class ResourcesTable extends Table
         if (isset($options['validate']) && $options['validate'] === 'default') {
             $data['deleted'] = false;
         }
+    }
+
+    /**
+     *
+     */
+    public function findSharedResourcesUserIsSoleOwner($userId)
+    {
+        // The resources id the user is owner of
+        $query = $this->Permissions->find();
+        $resourceIds = $query
+            ->select('aco_foreign_key')
+            ->where([
+                'aro_foreign_key' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
+                'aro' => 'User',
+                'aco' => 'Resource',
+                'type' => Permission::OWNER
+            ])
+            ->all()
+            ->toArray();
+
+        // get the number of users for the resources the user owns
+
     }
 }
