@@ -25,9 +25,9 @@ class ResourcesViewController extends AppController
     /**
      * Resource View action
      *
+     * @param string $id uuid Identifier of the resource
      * @throws BadRequestException if the resource id is not a uuid
      * @throws NotFoundException if the resource does not exist
-     * @param string $id uuid Identifier of the resource
      * @return void
      */
     public function view($id)

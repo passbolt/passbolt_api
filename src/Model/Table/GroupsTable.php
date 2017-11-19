@@ -61,9 +61,10 @@ class GroupsTable extends Table
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
         ]);
-
         $this->hasMany('GroupsUsers');
-
+        $this->hasMany('Permissions', [
+            'foreignKey' => 'aro_foreign_key'
+        ]);
         $this->belongsToMany('Users', [
             'through' => 'GroupsUsers'
         ]);
@@ -167,6 +168,11 @@ class GroupsTable extends Table
             $query->contain('Users');
         }
 
+        // If contains user_count.
+        if (isset($options['contain']['user_count'])) {
+            $this->_containUserCount($query);
+        }
+
         // Filter on groups that have specified users.
         if (isset($options['filter']['has-users']) && is_array($options['filter']['has-users'])) {
             $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-users']);
@@ -177,10 +183,38 @@ class GroupsTable extends Table
             $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-managers'], true);
         }
 
+        // Filter on groups that do not have a direct permission for a resource
+        if (isset($options['filter']['has-not-permission']) && count($options['filter']['has-not-permission'])) {
+            $query = $this->_filterQueryByHasNotPermission($query, $options['filter']['has-not-permission'][0]);
+        }
+
+        // If searching for a name
+        if (isset($options['filter']['search']) && count($options['filter']['search'])) {
+            $query = $this->_filterQueryBySearch($query, $options['filter']['search'][0]);
+        }
+
         // Filter out deleted groups
         $query->where(['Groups.deleted' => false]);
 
         return $query;
+    }
+
+    /**
+     * Count the members of the groups and add the value to the field user_count.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @return \Cake\ORM\Query
+     */
+    private function _containUserCount($query)
+    {
+        // Count the members of the groups in a subquery.
+        $subQuery = $this->association('GroupsUsers')->find();
+        $subQuery->select(['count' => $subQuery->func()->count('*')])
+            ->where(['GroupsUsers.group_id = Groups.id']);
+
+        // Add the user_count field to the Groups query.
+        $query->select(['user_count' => $subQuery])
+            ->enableAutoFields();
     }
 
     /**
@@ -189,7 +223,7 @@ class GroupsTable extends Table
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array<string> $usersIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be managers ? Default false.
-     * @return $query
+     * @return \Cake\ORM\Query
      */
     private function _filterQueryByGroupsUsers($query, array $usersIds, $areManager = false)
     {
@@ -271,5 +305,52 @@ class GroupsTable extends Table
         if (isset($options['validate']) && $options['validate'] === 'default') {
             $data['deleted'] = false;
         }
+    }
+
+    /**
+     * Filter a Groups query by groups that don't have permission for a resource.
+     *
+     * By instance :
+     * $query = $Users->find();
+     * $Users->_filterQueryByHasNotPermission($query, 'ada');
+     *
+     * Should filter all the users that do not have a permission for apache.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $resourceId The resource to search potential groups for.
+     * @return \Cake\ORM\Query $query
+     */
+    public function _filterQueryByHasNotPermission($query, $resourceId)
+    {
+        $permissionQuery = $this->association('Permissions')
+            ->find()
+            ->select(['Permissions.aro_foreign_key'])
+            ->where([
+                'Permissions.aro' => 'Group',
+                'Permissions.aco_foreign_key' => $resourceId
+            ]);
+
+        // Filter on the groups that do not have yet a permission.
+        return $query->where(['Groups.id NOT IN' => $permissionQuery]);
+    }
+
+    /**
+     * Filter a Groups query by search.
+     * Search on the name field.
+     *
+     * By instance :
+     * $query = $Groups->find();
+     * $Groups->_filterQueryBySearch($query, 'creative');
+     *
+     * Should filter all the groups with a name containing creative.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $search The string to search.
+     * @return \Cake\ORM\Query $query
+     */
+    public function _filterQueryBySearch($query, $search)
+    {
+        $search = '%' . $search . '%';
+        return $query->where(['Groups.name LIKE' => $search]);
     }
 }

@@ -15,8 +15,10 @@
 
 namespace App\Model\Rule;
 
+use App\Model\Entity\Permission;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class HasResourceAccessRule
 {
@@ -35,7 +37,8 @@ class HasResourceAccessRule
         $resourceId = $entity->get($options['resourceField']);
         $userId = $entity->get($options['userField']);
         $Resources = TableRegistry::get('Resources');
+        $permissionType = Hash::get($options, 'permissionType', Permission::READ);
 
-        return $Resources->hasAccess($userId, $resourceId);
+        return $Resources->hasAccess($userId, $resourceId, $permissionType);
     }
 }

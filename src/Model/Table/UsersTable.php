@@ -87,6 +87,9 @@ class UsersTable extends Table
         $this->belongsToMany('Groups', [
             'through' => 'GroupsUsers'
         ]);
+        $this->hasMany('Permissions', [
+            'foreignKey' => 'aro_foreign_key'
+        ]);
     }
 
     /**
@@ -229,17 +232,22 @@ class UsersTable extends Table
 
         // If searching for a name or username
         if (isset($options['filter']['search']) && count($options['filter']['search'])) {
-            $search = '%' . $options['filter']['search'][0] . '%';
-            $query->where(['OR' => [
-                ['Users.username LIKE' => $search],
-                ['Profiles.first_name LIKE' => $search],
-                ['Profiles.last_name LIKE' => $search]
-            ]]);
+            $query = $this->_filterQueryBySearch($query, $options['filter']['search'][0]);
         }
 
         // If searching by group id
         if (isset($options['filter']['has-groups']) && count($options['filter']['has-groups'])) {
             $query = $this->_filterQueryByGroupsUsers($query, $options['filter']['has-groups']);
+        }
+
+        // If searching by resource access
+        if (isset($options['filter']['has-access']) && count($options['filter']['has-access'])) {
+            $query = $this->_filterQueryByResourceAccess($query, $options['filter']['has-access'][0]);
+        }
+
+        // If searching by resource the user do not have a direct permission for
+        if (isset($options['filter']['has-not-permission']) && count($options['filter']['has-not-permission'])) {
+            $query = $this->_filterQueryByHasNotPermission($query, $options['filter']['has-not-permission'][0]);
         }
 
         // Ordering options
@@ -380,7 +388,7 @@ class UsersTable extends Table
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array<string> $groupsIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be managers ? Default false.
-     * @return $query
+     * @return \Cake\ORM\Query $query
      */
     private function _filterQueryByGroupsUsers($query, array $groupsIds, $areManager = false)
     {
@@ -392,8 +400,7 @@ class UsersTable extends Table
             return $query;
         }
 
-        // Otherwise use a subquery to
-        // find all the users that are members of all the listed groups
+        // Otherwise use a subquery to find all the users that are members of all the listed groups
         $GroupsUsers = TableRegistry::get('GroupsUsers');
         $subQuery = $GroupsUsers->find()
             ->select([
@@ -417,6 +424,106 @@ class UsersTable extends Table
         }
 
         return $query;
+    }
+
+    /**
+     * Filter a Users query by resource access.
+     * Only the users who have a permission (Read/Update/Owner) to access a resource should be returned by the query.
+     *
+     * By instance :
+     * $query = $Users->find()->where('Users.username LIKE' => '%@passbolt.com');
+     * _filterQueryByResourceAccess($query, 'RESOURCE_UUID');
+     *
+     * Should filter all the users with a passbolt username who have a permission to access the resource identified by
+     * RESOURCE_UUID.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $resourceId The resource the users must have access.
+     * @return \Cake\ORM\Query $query
+     */
+    private function _filterQueryByResourceAccess($query, $resourceId)
+    {
+        /* The query requires a join with Permissions not constraint with the default condition added by the HasMany
+           relationship : Users.id = Permissions.aro_foreign_key.
+           The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
+           To do so, add an extra join. */
+        $query->join([
+            'table' => $this->association('Permissions')->getTable(),
+            'alias' => 'PermissionsFilterAccess',
+            'type' => 'INNER',
+            'conditions' => ['PermissionsFilterAccess.aco_foreign_key' => $resourceId],
+        ]);
+
+        // Subquery to retrieve the groups the user is member of.
+        $groupsSubquery = $this->association('Groups')
+            ->find()->innerJoinWith('GroupsUsers')
+            ->select('Groups.id')
+            ->where([
+                'Groups.deleted' => false,
+                'GroupsUsers.user_id = Users.id'
+            ]);
+
+        /* Filter the query. Use distinct to avoid duplicate, it can happen if a user is member of two groups which
+           have a permission for the same resource */
+        return $query->distinct()
+            // Filter on the users who have a direct permissions.
+            ->where(['PermissionsFilterAccess.aro_foreign_key = Users.id'])
+            // Or on users who are members of a group which have permissions.
+            ->orWhere(['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery]);
+    }
+
+    /**
+     * Filter a Users query by search.
+     * Search on the following fields :
+     * - Users.username
+     * - Users.Profile.first_name
+     * - Users.Profile.last_name
+     *
+     * By instance :
+     * $query = $Users->find();
+     * $Users->_filterQueryBySearch($query, 'ada');
+     *
+     * Should filter all the users with a username or a name containing ada.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $search The string to search.
+     * @return \Cake\ORM\Query $query
+     */
+    public function _filterQueryBySearch($query, $search)
+    {
+        $search = '%' . $search . '%';
+        return $query->where(['OR' => [
+            ['Users.username LIKE' => $search],
+            ['Profiles.first_name LIKE' => $search],
+            ['Profiles.last_name LIKE' => $search]
+        ]]);
+    }
+
+    /**
+     * Filter a Users query by users that don't have permission for a resource.
+     *
+     * By instance :
+     * $query = $Users->find();
+     * $Users->_filterQueryByHasNotPermission($query, 'ada');
+     *
+     * Should filter all the users that do not have a permission for apache.
+     *
+     * @param \Cake\ORM\Query $query The query to augment.
+     * @param string $resourceId The resource to search potential users for.
+     * @return \Cake\ORM\Query $query
+     */
+    public function _filterQueryByHasNotPermission($query, $resourceId)
+    {
+        $permissionQuery = $this->association('Permissions')
+            ->find()
+            ->select(['Permissions.aro_foreign_key'])
+            ->where([
+                'Permissions.aro' => 'User',
+                'Permissions.aco_foreign_key' => $resourceId
+            ]);
+
+        // Filter on the users who do not have yet a permission.
+        return $query->where(['Users.id NOT IN' => $permissionQuery]);
     }
 
     /**

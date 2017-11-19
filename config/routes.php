@@ -175,6 +175,14 @@ Router::prefix('Resources', function ($routes) {
 
     $routes->connect('/', ['controller' => 'ResourcesAdd', 'action' => 'add'])
         ->setMethods(['POST']);
+
+    $routes->connect('/:id', ['controller' => 'ResourcesUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT']);
+
+    $routes->connect('/:id', ['controller' => 'ResourcesDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });
 
 /**
@@ -184,6 +192,17 @@ Router::prefix('Roles', function ($routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
+
+/**
+ * Share prefixed routes
+ */
+Router::prefix('Share', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/search-users/resource/:acoForeignKey', ['controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
+        ->setPass(['acoForeignKey'])
         ->setMethods(['GET']);
 });
 

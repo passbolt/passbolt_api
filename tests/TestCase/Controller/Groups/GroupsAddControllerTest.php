@@ -163,6 +163,11 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function testAddCannotModifyNotAccessibleFields()
+    {
+        $this->markTestIncomplete();
+    }
+
     public function testAddErrorNotAdmin()
     {
         $this->authenticateAs('dame');
