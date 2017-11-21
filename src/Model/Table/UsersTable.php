@@ -15,16 +15,17 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Role;
-use App\Model\Table\RolesTable;
+use App\Model\Rule\IsNotUniqueGroupOwnerRule;
+use App\Model\Rule\IsNotSharedResourceUniqueOwnerRule;
 use Aura\Intl\Exception;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Validation\Validator;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validator;
 
 /**
  * Users Model
@@ -32,6 +33,7 @@ use Cake\Utility\Hash;
  * @property \App\Model\Table\RolesTable|\Cake\ORM\Association\BelongsTo $Roles
  * @property \App\Model\Table\FileStorageTable|\Cake\ORM\Association\HasMany $FileStorage
  * @property \App\Model\Table\GpgkeysTable|\Cake\ORM\Association\HasMany $Gpgkeys
+ * @property \App\Model\Table\PermissionsTable|\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
  * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
@@ -180,11 +182,22 @@ class UsersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // Add rule
         $rules->add($rules->isUnique(['username']), 'uniqueUsername', [
             'message' => __('This username is already in use.')
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
             'message' => __('This is not a valid role.')
+        ]);
+
+        // Delete rules
+        $rules->addDelete(new IsNotUniqueGroupOwnerRule(), 'notUniqueGroupOwner', [
+            'errorField' => 'id',
+            'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
+        ]);
+        $rules->addDelete(new IsNotSharedResourceUniqueOwnerRule(), 'notSharedResourceUniqueOwner', [
+            'errorField' => 'id',
+            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
         ]);
 
         return $rules;
@@ -268,12 +281,24 @@ class UsersTable extends Table
      */
     public function findView($userId, $roleName)
     {
-        // Same rule than index apply
-        // with a specific id requested
-        $query = $this->findIndex($roleName);
-        $query->where(['Users.id' => $userId]);
+        // Same rule than index apply with a specific id requested
+        return $this->findIndex($roleName)->where(['Users.id' => $userId]);
+    }
 
-        return $query;
+    /**
+     * Find delete
+     *
+     * @param string $userId uuid
+     * @param string $roleName role name
+     * @throws Exception if no id is specified
+     * @return Query
+     */
+    public function findDelete($userId, $roleName)
+    {
+        // Same rule than view but with inactive users also shown
+        $options['filter']['is-active'] = true;
+
+        return $this->findIndex($roleName, $options)->where(['Users.id' => $userId]);
     }
 
     /**
@@ -401,8 +426,7 @@ class UsersTable extends Table
         }
 
         // Otherwise use a subquery to find all the users that are members of all the listed groups
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
-        $subQuery = $GroupsUsers->find()
+        $subQuery = $this->GroupsUsers->find()
             ->select([
                 'GroupsUsers.user_id',
                 'count' => $query->func()->count('GroupsUsers.user_id')
@@ -417,7 +441,6 @@ class UsersTable extends Table
         // Filter the query.
         if (empty($matchingUserIds)) {
             // if no user match all groups it should return nobody
-            // @TODO find more elegant way?
             $query->where(['true' => false]);
         } else {
             $query->where(['Users.id IN' => $matchingUserIds]);
@@ -443,10 +466,10 @@ class UsersTable extends Table
      */
     private function _filterQueryByResourceAccess($query, $resourceId)
     {
-        /* The query requires a join with Permissions not constraint with the default condition added by the HasMany
-           relationship : Users.id = Permissions.aro_foreign_key.
-           The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
-           To do so, add an extra join. */
+        // The query requires a join with Permissions not constraint with the default condition added by the HasMany
+        // relationship : Users.id = Permissions.aro_foreign_key.
+        // The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
+        // To do so, add an extra join.
         $query->join([
             'table' => $this->association('Permissions')->getTable(),
             'alias' => 'PermissionsFilterAccess',
@@ -455,21 +478,25 @@ class UsersTable extends Table
         ]);
 
         // Subquery to retrieve the groups the user is member of.
-        $groupsSubquery = $this->association('Groups')
-            ->find()->innerJoinWith('GroupsUsers')
+        $groupsSubquery = $this->Groups->find()
+            ->innerJoinWith('GroupsUsers')
             ->select('Groups.id')
             ->where([
                 'Groups.deleted' => false,
                 'GroupsUsers.user_id = Users.id'
             ]);
 
-        /* Filter the query. Use distinct to avoid duplicate, it can happen if a user is member of two groups which
-           have a permission for the same resource */
+        // Use distinct to avoid duplicate as it can happen that a user is member of two groups which
+        // both have a permission for the same resource
         return $query->distinct()
             // Filter on the users who have a direct permissions.
-            ->where(['PermissionsFilterAccess.aro_foreign_key = Users.id'])
             // Or on users who are members of a group which have permissions.
-            ->orWhere(['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery]);
+            ->where(
+                ['OR' => [
+                    ['PermissionsFilterAccess.aro_foreign_key = Users.id'],
+                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery]
+                ]]
+            );
     }
 
     /**
@@ -492,6 +519,7 @@ class UsersTable extends Table
     public function _filterQueryBySearch($query, $search)
     {
         $search = '%' . $search . '%';
+
         return $query->where(['OR' => [
             ['Users.username LIKE' => $search],
             ['Profiles.first_name LIKE' => $search],
@@ -514,8 +542,7 @@ class UsersTable extends Table
      */
     public function _filterQueryByHasNotPermission($query, $resourceId)
     {
-        $permissionQuery = $this->association('Permissions')
-            ->find()
+        $permissionQuery = $this->Permissions->find()
             ->select(['Permissions.aro_foreign_key'])
             ->where([
                 'Permissions.aro' => 'User',
@@ -625,5 +652,52 @@ class UsersTable extends Table
             ->first();
 
         return $user;
+    }
+
+    /**
+     * Soft delete a user and their associated items
+     * Mark user as deleted = true
+     * Mark all the user resources only associated with this user as deleted = true
+     * Delete all UserGroups association entries
+     * Delete all Permissions
+     *
+     * @param EntityInterface $user entity
+     * @return bool status
+     */
+    public function softDelete($user, $options)
+    {
+        // Check the delete rules like a normal operation
+        if (!isset($options['checkRules'])) {
+            $options['checkRules'] = true;
+        }
+        if ($options['checkRules']) {
+            if (!$this->checkRules($user, RulesChecker::DELETE)) {
+                return false;
+            }
+        }
+
+        // find all the resources that belongs to the user and mark them as deleted
+        // Note: all resources that cannot be deleted should have been
+        // transferred to other people already (ref. checkRules)
+        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id);
+        if (!empty($resourceIds)) {
+            $Resources = TableRegistry::get('Resources');
+            $Resources->updateAll(['deleted' => true], [
+                'id IN' => $resourceIds
+            ]);
+        }
+
+        // Delete all group memberships
+        // Delete all permissions
+        $this->GroupsUsers->deleteAll(['user_id' => $user->id]);
+        $this->Permissions->deleteAll(['aro_foreign_key' => $user->id]);
+
+        // Mark user as deleted
+        $user->deleted = true;
+        if (!$this->save($user, ['checkRules' => false])) {
+            throw new InternalErrorException(__('Could not delete the user {0}', $user->id));
+        }
+
+        return true;
     }
 }

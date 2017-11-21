@@ -44,7 +44,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
         // If secrets provided update them all.
         if (isset($resource->secrets)) {
-            foreach($resource->secrets as $secret) {
+            foreach ($resource->secrets as $secret) {
                 // Encrypt the secret for the user.
                 $gpgKey = $this->Resources->association('Creator')->association('Gpgkeys')
                     ->find()->where(['user_id' => $secret->user_id])->first();
@@ -147,7 +147,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         // Check the secrets are updated in database
         $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
         $this->assertEquals(count($data['secrets']), count($resource->secrets));
-        foreach($resource->secrets as $secret) {
+        foreach ($resource->secrets as $secret) {
             $dataSecret = Hash::extract($data['secrets'], "{n}[user_id={$secret->user_id}]");
             $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
             $this->assertEquals($resourceId, $secret->resource_id);
@@ -169,7 +169,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         // Check the secrets are updated in database
         $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
         $this->assertEquals(count($data['secrets']), count($resource->secrets));
-        foreach($resource->secrets as $secret) {
+        foreach ($resource->secrets as $secret) {
             $dataSecret = Hash::extract($data['secrets'], "{n}[user_id={$secret->user_id}]");
             $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
             $this->assertEquals($resourceId, $secret->resource_id);
@@ -224,7 +224,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         // Check the secrets are updated in database
         $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
         $this->assertEquals(count($data['Secret']), count($resource->secrets));
-        foreach($resource->secrets as $secret) {
+        foreach ($resource->secrets as $secret) {
             $dataSecret = Hash::extract($data['Secret'], "{n}[user_id={$secret->user_id}]");
             $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
             $this->assertEquals($resourceId, $secret->resource_id);

@@ -70,7 +70,7 @@ class ValidationRuleException extends Exception
     /**
      * Get the table
      *
-     * @return array
+     * @return \Cake\ORM\Table
      */
     public function getTable()
     {

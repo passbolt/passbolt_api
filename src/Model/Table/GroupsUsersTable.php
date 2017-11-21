@@ -17,6 +17,7 @@ namespace App\Model\Table;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**
@@ -136,5 +137,46 @@ class GroupsUsersTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * Get the list of group id where the user is the sole manager
+     * Useful because we do not want to have a group without manager by deleting a user
+     *
+     * @param string $userId user uuid
+     * @return array
+     */
+    public function findGroupsWhereUserIsSoleManager($userId)
+    {
+        // SELECT group_id AS `group_id`, (COUNT(is_admin)) AS `count_admin`
+        // FROM groups_users GroupsUsers
+        // WHERE (is_admin= = :c0 AND group_id in(
+        //      SELECT GroupsUsers.group_id AS `GroupsUsers__group_id`
+        //      FROM groups_users GroupsUsers
+        //      WHERE (user_id = :c1 AND is_admin = :c2))
+        // ) GROUP BY group_id
+        // HAVING count_admin= :c3
+
+        $subquery = $this->find();
+        $subquery->select(['group_id'])
+            ->where([
+                'user_id' => $userId,
+                'is_admin' => true
+            ]);
+
+        $query = $this->find();
+        $query
+            ->select([
+                'group_id' => 'group_id',
+                'count_admin' => $query->func()->count('is_admin')
+            ])
+            ->where(['is_admin' => 1, 'group_id IN' => $subquery])
+            ->group('group_id')
+            ->having(['count_admin' => 1]);
+
+        $result = $query->all()->toArray();
+        $result = Hash::extract($result, '{n}.group_id');
+
+        return $result;
     }
 }

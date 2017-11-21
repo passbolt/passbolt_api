@@ -49,7 +49,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         return $data;
     }
 
-    public function testSuccess()
+    public function testGroupsAddSuccess()
     {
         $success = [
             'chinese' => [
@@ -106,7 +106,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testValidationErrors()
+    public function testGroupsAddValidationErrors()
     {
         $responseCode = 400;
         $responseMessage = 'Could not validate group data';
@@ -163,12 +163,12 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testAddCannotModifyNotAccessibleFields()
+    public function testGroupsAddCannotModifyNotAccessibleFields()
     {
         $this->markTestIncomplete();
     }
 
-    public function testAddErrorNotAdmin()
+    public function testGroupsAddErrorNotAdmin()
     {
         $this->authenticateAs('dame');
         $postData = [];
@@ -176,7 +176,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError();
     }
 
-    public function testAddErrorNotAuthenticated()
+    public function testGroupsAddErrorNotAuthenticated()
     {
         $postData = [];
         $this->postJson("/groups.json", $postData);

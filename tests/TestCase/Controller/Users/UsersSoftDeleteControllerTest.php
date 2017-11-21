@@ -1,0 +1,68 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+namespace App\Test\TestCase\Controller\Users;
+
+use App\Model\Entity\Role;
+use App\Test\Lib\AppIntegrationTestCase;
+
+class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
+{
+    public $fixtures = ['app.users', 'app.gpgkeys', 'app.groups_users', 'app.roles', 'app.profiles', 'app.email_queue', 'app.authentication_tokens'];
+
+    public function testUsersSoftDeleteDryRunSuccess()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteSuccess()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteNotLoggedInError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteNotAdminError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteInvalidUserError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteUserDoesNotExistError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteCannotDeleteSelfError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteSoleGroupOwnerError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+
+    public function testUsersSoftDeleteSoleResourceOwnerError()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
+}

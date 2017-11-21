@@ -59,7 +59,7 @@ class UpdateTest extends AppTestCase
 
         // If secrets provided update them all.
         if (isset($resource->secrets)) {
-            foreach($resource->secrets as $secret) {
+            foreach ($resource->secrets as $secret) {
                 // Encrypt the secret for the user.
                 $gpgKey = $this->Resources->association('Creator')->association('Gpgkeys')
                     ->find()->where(['user_id' => $secret->user_id])->first();
@@ -152,7 +152,7 @@ class UpdateTest extends AppTestCase
         $this->assertNotEmpty($resource->secrets);
         $this->assertEquals(count($data['secrets']), count($resource->secrets));
         $this->assertSecretAttributes($resource->secrets[0]);
-        foreach($resource->secrets as $secret) {
+        foreach ($resource->secrets as $secret) {
             $dataSecret = Hash::extract($data['secrets'], "{n}[user_id={$secret->user_id}]");
             $this->assertCount(1, $dataSecret, "No secret found for the user {$secret->user_id}");
             $this->assertEquals($resourceId, $secret->resource_id);

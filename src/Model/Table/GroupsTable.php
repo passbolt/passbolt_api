@@ -285,10 +285,21 @@ class GroupsTable extends Table
             throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
         }
 
-        $query = $this->findIndex($options)
+        return $this->findIndex($options)
             ->where(['Groups.id' => $groupId]);
+    }
 
-        return $query;
+    /**
+     * Get a list of groups matching a given list of group ids
+     *
+     * @param array $groupsIds array of groups uuids
+     * @return \Cake\ORM\Query
+     */
+    public function findAllByIds($groupsIds)
+    {
+        return $this->findIndex()
+            ->where(['Groups.id IN' => $groupsIds])
+            ->all();
     }
 
     /**
@@ -351,6 +362,7 @@ class GroupsTable extends Table
     public function _filterQueryBySearch($query, $search)
     {
         $search = '%' . $search . '%';
+
         return $query->where(['Groups.name LIKE' => $search]);
     }
 }

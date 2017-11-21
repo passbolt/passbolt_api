@@ -129,6 +129,15 @@ class LegacyApiHelper extends Helper
     public static function formatErrors($errors, $table)
     {
         $results = [];
+
+        // If the error data is a result set / the result of a find
+        // Render normally
+        if ($errors instanceof \Cake\ORM\ResultSet) {
+            $results[$table->table()] = LegacyApiHelper::formatResultSet($errors);
+
+            return $results;
+        }
+
         foreach ($errors as $property => $propertyErrors) {
             // If the property is an integer, it means the function is treating the validation errors
             // of an association with a multiple cardinality.
@@ -148,9 +157,12 @@ class LegacyApiHelper extends Helper
                 $className = substr($table->getEntityClass(), strrpos($table->getEntityClass(), '\\') + 1);
                 $resultKey = self::formatModelName(Inflector::underscore($className));
                 $results[$resultKey][$property] = $propertyErrors;
-            } // In case the association is a HasMany.
+                continue;
+            }
+
+            // In case the association is a HasMany.
             // Example: Groups.groups_users
-            elseif (get_class($association) === 'Cake\ORM\Association\HasMany') {
+            if (get_class($association) === 'Cake\ORM\Association\HasMany') {
                 $associationName = self::formatModelName($property);
                 $associationTable = $association->getTarget();
                 $result = self::formatErrors($propertyErrors, $associationTable);

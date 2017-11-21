@@ -19,6 +19,7 @@ use App\Model\Entity\Permission;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
@@ -282,5 +283,128 @@ class PermissionsTable extends Table
         }
 
         return $query;
+    }
+
+    /**
+     * Returns an array of resources the given user is the owner of
+     * and that are shared with somebody else. Useful to know which resources
+     * need to be transferred when deleting the user
+     *
+     * @param string $userId uuid of the user
+     * @return array $results the uuids of the resources
+     */
+    public function findSharedResourcesUserIsSoleOwner($userId)
+    {
+        $results = [];
+
+        // Show the user counts by permissions for all the resources
+        // the given user is the owner of.
+        //
+        // SELECT permissions.aco_foreign_key AS resource_id,
+        //    permissions.type, count(permissions.id) AS user_count
+        // FROM permissions
+        // WHERE permissions.aco_foreign_key IN (
+        //    SELECT permissions.aco_foreign_key
+        //    FROM permissions
+        //    WHERE permissions.type = Permission::OWNER
+        //    AND permissions.aro_foreign_key = :userId
+        // )
+        // GROUP BY permissions.aco_foreign_key, permissions.type
+        // ORDER BY permissions.aco_foreign_key, permissions.type;
+        //
+        // +--------------------------------------+--------+------------+
+        // | resource_id                          | type   | user_count |
+        // +--------------------------------------+--------+------------+
+        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | READ   |          2 |
+        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | WRITE  |          1 |
+        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | OWNER  |          1 |
+        // | ...                                  |  ...   |        ... |
+        // +--------------------------------------+--------+------------+
+
+        // Find all the resources the user is owner of
+        $subquery = $this->find()
+            ->select(['aco_foreign_key'])
+            ->where(['type' => Permission::OWNER, 'aro_foreign_key' => $userId]);
+
+        // Find the user count by permissions for these
+        $query = $this->find();
+        $resources = $query
+            ->select([
+                'aco_foreign_key' => 'aco_foreign_key',
+                'type' => 'type',
+                'user_count' => $query->func()->count('id')
+            ])
+            ->where(['aco_foreign_key IN' => $subquery])
+            ->group(['aco_foreign_key', 'type'])
+            ->order(['aco_foreign_key', 'type'])
+            ->all()
+            ->toArray();
+
+        // No resources, no problem
+        if (empty($resources) || count($resources) === 0) {
+            return $results;
+        }
+
+        // Hash around the results to look like
+        // [
+        //      [8378fa3d-b9f4-5428-90a4-ab5478c1a5bb] => [
+        //          [1] => 2
+        //          [7] => 2
+        //          [15] => 1
+        //      ],
+        //      ...
+        // ]
+        $resources = Hash::combine($resources, '{n}.type', '{n}.user_count', '{n}.aco_foreign_key');
+
+        foreach ($resources as $resourceId => $rights) {
+            // If there is more than one Owner we're good
+            if ($rights[Permission::OWNER] === 1) {
+                // If there is one owner and 0 READ/WRITE users we're good
+                $someRead = (isset($rights[Permission::READ]) && count($rights[Permission::READ]));
+                $someUpdate = (isset($rights[Permission::UPDATE]) && count($rights[Permission::UPDATE]));
+                if ($someRead || $someUpdate) {
+                    // Mark the cases like above as no bueno.
+                    $results[] = $resourceId;
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Returns the list of resources ids that the user has access
+     * and that are not shared with anybody
+     *
+     * Note: this does not check for ownership right. In theory it should not be possible to have
+     * a resource with only a user permission set to anything else than OWNER,
+     * but since we might as well delete these, we do cast a wider net.
+     *
+     */
+    public function findResourcesOnlyUserCanAccess($userId)
+    {
+        // SELECT aco_foreign_key, count(aro_foreign_key) as count_users
+        // FROM permissions
+        // GROUP by aco_foreign_key
+        // HAVING aro_foreign_key=:userId
+        // AND count_users=1;
+
+        $query = $this->find();
+        $resources = $query
+            ->select([
+                'aco_foreign_key' => 'aco_foreign_key',
+                'aro_foreign_key' => 'aro_foreign_key',
+                'user_count' => $query->func()->count('id')
+            ])
+            ->group(['aco_foreign_key'])
+            ->having(['aro_foreign_key' => $userId, 'user_count' => 1])
+            ->all()
+            ->toArray();
+
+        if (!empty($resources)) {
+            $resources = Hash::extract($resources, '{n}.aco_foreign_key');
+        }
+
+        return $resources;
     }
 }

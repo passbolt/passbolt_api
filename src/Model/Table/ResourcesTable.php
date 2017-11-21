@@ -358,6 +358,22 @@ class ResourcesTable extends Table
     }
 
     /**
+     * Get a list of resources with a given list of ids
+     *
+     * @param string $userId uuid
+     * @param array $resourceIds array of resource uuids
+     * @return \Cake\ORM\Query
+     */
+    public function findAllByIds($userId, $resourceIds)
+    {
+        $query = $this->findIndex($userId)
+            ->where(['Resources.id IN' => $resourceIds])
+            ->all();
+
+        return $query;
+    }
+
+    /**
      * Check that a user has access to a resource.
      *
      * @param string $userId The user to get check the access for
@@ -428,7 +444,7 @@ class ResourcesTable extends Table
                 'Permissions.aco_foreign_key = Resources.id',
                 'Permissions.aro_foreign_key IN' => $groupsIds,
                 'Permissions.type >=' => $permissionType,
-            ]]];
+                ]]];
         }
         $permissionSubquery->where($where);
         $permissionSubquery->order(['Permissions.type' => 'DESC'])
@@ -436,6 +452,7 @@ class ResourcesTable extends Table
 
         // Filter the Resources query by permissions.
         $query->where(['Permissions.id' => $permissionSubquery]);
+
         return $query;
     }
 
@@ -532,27 +549,5 @@ class ResourcesTable extends Table
         if (isset($options['validate']) && $options['validate'] === 'default') {
             $data['deleted'] = false;
         }
-    }
-
-    /**
-     *
-     */
-    public function findSharedResourcesUserIsSoleOwner($userId)
-    {
-        // The resources id the user is owner of
-        $query = $this->Permissions->find();
-        $resourceIds = $query
-            ->select('aco_foreign_key')
-            ->where([
-                'aro_foreign_key' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
-                'aro' => 'User',
-                'aco' => 'Resource',
-                'type' => Permission::OWNER
-            ])
-            ->all()
-            ->toArray();
-
-        // get the number of users for the resources the user owns
-
     }
 }

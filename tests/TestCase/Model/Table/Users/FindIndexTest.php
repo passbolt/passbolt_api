@@ -42,7 +42,7 @@ class FindIndexTest extends AppTestCase
         foreach ($permissionsMatrix as $resourceAlias => $resourcesExpectedPermissions) {
             // Extract expected users.
             $expectedUsersIds = [];
-            foreach($resourcesExpectedPermissions as $userAlias => $permissionType) {
+            foreach ($resourcesExpectedPermissions as $userAlias => $permissionType) {
                 if ($permissionType) {
                     $expectedUsersIds[] = UuidFactory::uuid("user.id.$userAlias");
                 }
@@ -58,7 +58,7 @@ class FindIndexTest extends AppTestCase
         }
     }
 
-	/**
+    /**
      * @throws \Aura\Intl\Exception
      */
     public function testFilterHasNotPermission()
@@ -67,7 +67,7 @@ class FindIndexTest extends AppTestCase
         foreach ($permissionsMatrix as $resourceAlias => $resourcesExpectedPermissions) {
             // Extract expected users.
             $expectedUsersIds = [];
-            foreach($resourcesExpectedPermissions as $userAlias => $permissionType) {
+            foreach ($resourcesExpectedPermissions as $userAlias => $permissionType) {
                 if (!$permissionType) {
                     $expectedUsersIds[] = UuidFactory::uuid("user.id.$userAlias");
                 }

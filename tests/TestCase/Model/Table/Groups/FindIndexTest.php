@@ -116,7 +116,7 @@ class FindIndexTest extends AppTestCase
         $options['contain']['user_count'] = true;
         $groups = $this->Groups->findIndex($options)->all();
 
-        foreach($groups as $group) {
+        foreach ($groups as $group) {
             $this->assertNotEmpty($group->user_count);
             $expectedCount = $this->Groups->association('GroupsUsers')->find()
                 ->where(['GroupsUsers.group_id' => $group->id])->count();
@@ -206,7 +206,7 @@ class FindIndexTest extends AppTestCase
         foreach ($permissionsMatrix as $resourceAlias => $resourcesExpectedPermissions) {
             // Extract expected groups.
             $expectedGroupsIds = [];
-            foreach($resourcesExpectedPermissions as $groupAlias => $permissionType) {
+            foreach ($resourcesExpectedPermissions as $groupAlias => $permissionType) {
                 if (!$permissionType) {
                     $expectedGroupsIds[] = UuidFactory::uuid("group.id.$groupAlias");
                 }

@@ -242,6 +242,14 @@ Router::prefix('Users', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['PUT', 'POST']);
 
+    $routes->connect('/:id/dry-run', ['controller' => 'UsersDelete', 'action' => 'dryrun'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/:id', ['controller' => 'UsersDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
+
     // @TODO remove deprated legacy v1 backward compatibility routes
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])

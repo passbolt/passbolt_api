@@ -48,8 +48,7 @@ class ResourcesDeleteController extends AppController
         // Retrieve the resource to delete.
         try {
             $resource = $this->Resources->get($id);
-        }
-        catch(RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
@@ -76,8 +75,7 @@ class ResourcesDeleteController extends AppController
 
         if (isset($errors['deleted']['is_not_soft_deleted'])) {
             throw new NotFoundException(__('The resource does not exist.'));
-        }
-        else if (isset($errors['id']['has_access'])) {
+        } elseif (isset($errors['id']['has_access'])) {
             // If the user has a read access return a 403, otherwise return a 404 to avoid data leak.
             if ($this->Resources->hasAccess($this->User->id(), $resource->id)) {
                 throw new ForbiddenException(__('You do not have the permission to delete this resource.'));

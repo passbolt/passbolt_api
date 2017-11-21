@@ -45,33 +45,28 @@ class LegacyJsonView extends View
         $jsonOptions = self::getJsonOptions();
         $body = $this->viewVars['body'];
 
-        // format body object
-        if (isset($body) && is_object($body)) {
-            // ignore anything that is not a result set or entity
-            if (get_parent_class($body) === 'Cake\ORM\Entity') {
-                $name = LegacyApiHelper::getEntityName($body);
-                $body = LegacyApiHelper::formatEntity($body, $name);
-            } elseif ($body instanceof \Cake\ORM\Query
-                || $body instanceof \Cake\Collection\Collection) {
-                $body = LegacyApiHelper::formatResultSet($body);
-            } elseif (get_class($body) === 'App\Error\Exception\ValidationRuleException') {
-                $errors = $body->getErrors();
-                if (!empty($errors)) {
-                    $table = $body->getTable();
-                    $body = LegacyApiHelper::formatErrors($errors, $table);
+        if (isset($body)) {
+            if (isset($this->viewVars['error'])) {
+                $error = $this->viewVars['error'];
+                $table = $error->getTable();
+                $body = LegacyApiHelper::formatErrors($body, $table);
+            } else {
+                // What kind of body are we dealing with
+                $isEntity = (get_parent_class($body) === 'Cake\ORM\Entity');
+                $isQuery = ($body instanceof \Cake\ORM\Query);
+                $isCollection = ($body instanceof \Cake\Collection\Collection);
+
+                // Format based on the expected format for each types
+                if ($isEntity) {
+                    $name = LegacyApiHelper::getEntityName($body);
+                    $body = LegacyApiHelper::formatEntity($body, $name);
+                } elseif ($isQuery || $isCollection) {
+                    $body = LegacyApiHelper::formatResultSet($body);
                 }
             }
         }
 
-        // if no view is selected, encode and return
-//        if (!isset($view)) {
-            return json_encode(['header' => $this->viewVars['header'], 'body' => $body], $jsonOptions);
-//        } else {
-//            $this->viewVars['body'] = $body;
-//            $this->viewVars['_jsonOptions'] = $jsonOptions;
-//
-//            return parent::render($view, $layout);
-//        }
+        return json_encode(['header' => $this->viewVars['header'], 'body' => $body], $jsonOptions);
     }
 
     /**

@@ -47,8 +47,7 @@ class ResourcesUpdateController extends AppController
         // Retrieve the resource to update and all its secrets.
         try {
             $resource = $this->Resources->get($id, ['contain' => ['Secrets']]);
-        }
-        catch(RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
@@ -82,7 +81,7 @@ class ResourcesUpdateController extends AppController
 
         // Retrieve the existing secrets ids and use to ensure that cakephp will update the existing secretes.
         if (!empty($data['secrets'])) {
-            foreach($data['secrets'] as $key => $dataSecret) {
+            foreach ($data['secrets'] as $key => $dataSecret) {
                 $arr = Hash::extract($resource->secrets, "{n}[user_id={$dataSecret['user_id']}].id");
                 $data['secrets'][$key]['id'] = reset($arr);
             }

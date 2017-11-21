@@ -18,7 +18,7 @@ namespace App\Test\TestCase\Model\Table\Gpgkeys;
 use App\Test\Lib\AppTestCase;
 use Cake\ORM\TableRegistry;
 
-class BuildFromArmoredKey extends AppTestCase
+class BuildFromArmoredKeyTest extends AppTestCase
 {
     public $Gpgkeys;
 
@@ -39,5 +39,6 @@ class BuildFromArmoredKey extends AppTestCase
     public function testbuildEntityFromArmoredKeySuccess()
     {
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
+        $this->markTestIncomplete();
     }
 }

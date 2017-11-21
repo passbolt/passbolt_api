@@ -45,17 +45,25 @@ class ErrorController extends AppController
     public function beforeRender(Event $event)
     {
         if ($this->request->is('json')) {
+            // If the body is a that exposes the getErrors functionality
+            // for example ValidationRulesException
+            $error = Hash::get($this->viewVars, 'body', null);
+            if (method_exists($error, 'getErrors')) {
+                $body = $error->getErrors();
+            } else {
+                $body = $error;
+            }
+
             $this->set([
                 'header' => [
                     'id' => Text::uuid(),
                     'status' => 'error',
-//                    'title' => 'app_' . $prefix . '_' . $action . '_error',
                     'servertime' => time(),
                     'message' => $this->viewVars['message'],
                     'code' => $this->viewVars['code'],
                     'url' => Router::url(),
                 ],
-                'body' => Hash::get($this->viewVars, 'body', null),
+                'body' => $body,
                 '_serialize' => ['header', 'body']
             ]);
 
@@ -63,12 +71,9 @@ class ErrorController extends AppController
             $apiVersion = $this->request->getQuery('api-version');
             if (!isset($apiVersion) || $apiVersion === 'v1') {
                 $this->viewBuilder()->setClassName('LegacyJson');
-            } else {
-                // If the body is a validationException, use the exception errors as body.
-                $body = Hash::get($this->viewVars, 'body', null);
-                if (is_object($body) && get_class($body) === 'App\Error\Exception\ValidationRuleException') {
-                    $this->set('body', $body->getErrors());
-                }
+                // pass additional error info like table
+                // useful to format error associations names
+                $this->set('error', $error);
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');

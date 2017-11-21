@@ -48,8 +48,7 @@ class ShareSearchController extends AppController
         // Retrieve the resource to search the aros for.
         try {
             $resource = $this->Resources->get($resourceId);
-        }
-        catch(RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
         // The resource is not soft deleted.
@@ -97,13 +96,14 @@ class ShareSearchController extends AppController
      */
     private function _formatResult($aros)
     {
-        $sortIterator = $aros->sortBy(function($item) {
-            if ($item instanceOf Group) {
+        $sortIterator = $aros->sortBy(function ($item) {
+            if ($item instanceof Group) {
                 return strtolower($item->name);
-            } else if ($item instanceOf User) {
+            } elseif ($item instanceof User) {
                 return strtolower($item->username);
             }
         }, SORT_ASC, SORT_STRING);
+
         return $sortIterator->compile(false);
     }
 }
