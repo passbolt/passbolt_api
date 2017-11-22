@@ -14,12 +14,12 @@
  */
 namespace App\Shell\Task;
 
+use App\Controller\Events\EmailsListener;
 use App\Model\Entity\Role;
 use App\Shell\AppShell;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Routing\Router;
-use App\Controller\Events\EmailsListener;
 
 class RegisterUserTask extends AppShell
 {
@@ -124,6 +124,7 @@ class RegisterUserTask extends AppShell
      * Display the entity validation errors
      *
      * @param array $errors validation errors
+     * @return void
      */
     protected function _displayValidationError($errors)
     {
@@ -214,8 +215,9 @@ class RegisterUserTask extends AppShell
     /**
      * Notify the user by trigerring a registerPost event
      *
-     * @param $user
-     * @param $token
+     * @param object $user Entity User
+     * @param object $token Entity AuthenticationToken
+     * @return void
      */
     protected function _notifyUser($user, $token)
     {

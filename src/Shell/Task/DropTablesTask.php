@@ -55,7 +55,7 @@ class DropTablesTask extends AppShell
         $tables = $tables->fetchAll();
         foreach ($tables as $table) {
             $this->out(__('Dropping table ' . $table[0]));
-            $connection->query('drop table '. $table[0]);
+            $connection->query('drop table ' . $table[0]);
         }
         $this->_success(__('{0} tables dropped', count($tables)));
 

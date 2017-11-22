@@ -14,8 +14,8 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
-use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class RecoverStartControllerTest extends AppIntegrationTestCase
@@ -65,7 +65,6 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartBadRequestErrorExpiredToken()
     {
-
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('token.id.expired'));
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
         $this->get($url);

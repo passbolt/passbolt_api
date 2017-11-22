@@ -43,6 +43,7 @@ class SimulateErrorController extends AppController
      * Simulate error 404
      *
      * @throws NotFoundException
+     * @return void
      */
     public function error404()
     {
@@ -53,6 +54,7 @@ class SimulateErrorController extends AppController
      * Simulate error 403
      *
      * @throws ForbiddenException
+     * @return void
      */
     public function error403()
     {
@@ -63,6 +65,7 @@ class SimulateErrorController extends AppController
      * Simulate error 400
      *
      * @throws BadRequestException
+     * @return void
      */
     public function error400()
     {
@@ -73,6 +76,7 @@ class SimulateErrorController extends AppController
      * Simulate error 500
      *
      * @throws InternalErrorException
+     * @return void
      */
     public function error500()
     {

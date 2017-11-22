@@ -23,6 +23,11 @@ class UsersDataTask extends DataTask
     public $entityName = 'Users';
     public $fixtureName = 'LargeUsers';
 
+    /**
+     * Get user data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $users[] = [
@@ -43,7 +48,8 @@ class UsersDataTask extends DataTask
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
-        for ($i = 0; $i < Configure::read('PassboltTestData.scenarios.large.install.count'); $i++) {
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count');
+        for ($i = 0; $i < $max; $i++) {
             $users[] = [
                 'id' => UuidFactory::uuid('user.id.user_' . $i),
                 'username' => 'user_' . $i . '@passbolt.com',

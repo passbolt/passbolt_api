@@ -21,6 +21,11 @@ class SecretsDataTask extends DataTask
 {
     public $entityName = 'Secrets';
 
+    /**
+     * Get a set of fixed passwords
+     *
+     * @return array
+     */
     protected function _getFixedPasswords()
     {
         return [
@@ -32,6 +37,11 @@ class SecretsDataTask extends DataTask
         ];
     }
 
+    /**
+     * Get dummy weak passwords
+     *
+     * @return array
+     */
     protected function _getDummyPasswords()
     {
         return [
@@ -58,6 +68,12 @@ class SecretsDataTask extends DataTask
             'kevisthebest'];
     }
 
+    /**
+     * Get password for a given resource
+     *
+     * @param string $resourceId uuid
+     * @return array
+     */
     protected function _getPassword($resourceId)
     {
         static $passwords = [];
@@ -71,8 +87,8 @@ class SecretsDataTask extends DataTask
         $fixedPasswords = $this->_getFixedPasswords();
         if (isset($fixedPasswords[$resourceId])) {
             $password = $fixedPasswords[$resourceId];
-        } // Else randomly pick up one.
-        else {
+        } else {
+            // Else randomly pick up one.
             $dummyPasswords = $this->_getDummyPasswords();
             $password = $dummyPasswords[array_rand($dummyPasswords)];
         }
@@ -83,6 +99,13 @@ class SecretsDataTask extends DataTask
         return $password;
     }
 
+    /**
+     * Encrypt passwords
+     *
+     * @param string $text password
+     * @param \Cake\ORM\Entity $user User
+     * @return array
+     */
     protected function _encrypt($text, $user)
     {
         // Retrieve the user key.
@@ -101,6 +124,11 @@ class SecretsDataTask extends DataTask
         return implode("\n", $output);
     }
 
+    /**
+     * Get encrypted secrets
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $secrets = [];

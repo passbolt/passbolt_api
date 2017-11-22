@@ -26,9 +26,10 @@ class FavoritesDeleteController extends AppController
     /**
      * Unmark a resource as favorite.
      *
-     * @param string îd The identifier of favorite to delete.
+     * @param string $id The identifier of favorite to delete.
      * @throws BadRequestException
      * @throws NotFoundException
+     * @return void
      */
     public function delete($id = null)
     {
@@ -54,6 +55,7 @@ class FavoritesDeleteController extends AppController
 
     /**
      * Manage delete errors
+     *
      * @param \Cake\Datasource\EntityInterface $favorite favorite
      * @return void
      */

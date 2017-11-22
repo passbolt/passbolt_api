@@ -89,6 +89,7 @@ trait FormatValidationTrait
      *       [....]
      *     ]
      *   ]
+     * @return void
      */
     public function assertFieldFormatValidation($entityTable, $fieldName, $entityData, $entityOptions, $testCases)
     {
@@ -117,6 +118,7 @@ trait FormatValidationTrait
 
     /**
      * Test cases for uuid validation rule.
+     *
      * @return array
      */
     public static function getUuidTestCases()
@@ -134,6 +136,7 @@ trait FormatValidationTrait
 
     /**
      * Test cases for allowEmpty validation rule.
+     *
      * @return array
      */
     public static function getAllowEmptyTestCases()
@@ -150,6 +153,7 @@ trait FormatValidationTrait
 
     /**
      * Test cases for notEmpty validation rule.
+     *
      * @return array
      */
     public static function getNotEmptyTestCases()
@@ -166,6 +170,7 @@ trait FormatValidationTrait
 
     /**
      * Test cases for requirePresence validation rule.
+     *
      * @return array
      */
     public static function getRequirePresenceTestCases()
@@ -182,6 +187,7 @@ trait FormatValidationTrait
 
     /**
      * Test cases for scalar validation rule.
+     *
      * @return array
      */
     public static function getScalarTestCases()
@@ -198,6 +204,7 @@ trait FormatValidationTrait
 
     /**
      * Test cases for boolean validation rule.
+     *
      * @return array
      */
     public static function getBooleanTestCases()
@@ -221,8 +228,8 @@ trait FormatValidationTrait
 
     /**
      * Test cases for inList validation rule.
-     * @param array $list
      *
+     * @param array $list test cases
      * @return array
      */
     public static function getInListTestCases($list = [])
@@ -241,8 +248,8 @@ trait FormatValidationTrait
 
     /**
      * Test cases for utf8 validation rule.
-     * @param int $length
      *
+     * @param int $length default 255
      * @return array
      */
     public static function getUtf8TestCases($length = 255)
@@ -266,13 +273,12 @@ trait FormatValidationTrait
 
     /**
      * Test cases for utf8Extended validation rule.
-     * @param int $length
      *
+     * @param int $length default 255
      * @return array
      */
     public static function getUtf8ExtendedTestCases($length = 255)
     {
-
         $test = self::getUtf8TestCases($length);
         $test['test_cases'][self::getStringMask('alphaEmojis', $length)] = true;
 
@@ -281,9 +287,9 @@ trait FormatValidationTrait
 
     /**
      * Test cases for lengthBetween validation rule.
-     * @param $min
-     * @param $max
      *
+     * @param int $min minimum
+     * @param int $max maximum
      * @return array
      */
     public static function getLengthBetweenTestCases($min, $max)

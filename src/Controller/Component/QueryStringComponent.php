@@ -15,10 +15,10 @@
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\Core\Exception\Exception;
+use Cake\Network\Exception\BadRequestException;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Core\Exception\Exception;
 
 /**
  * Query String Component
@@ -45,7 +45,7 @@ class QueryStringComponent extends Component
 
     /**
      * Get query Items
-     * @param $allowedQueryItems
+     * @param array $allowedQueryItems whitelist
      * @return array
      */
     public function get($allowedQueryItems)
@@ -65,9 +65,10 @@ class QueryStringComponent extends Component
      * Allow rewriting legacy parameters to support new format
      * While keep backward compatibility in API
      *
-     * @param $query
+     * @param array $query original query string items
+     * @return array modified query
      */
-    static function rewriteLegacyItems($query)
+    public static function rewriteLegacyItems($query)
     {
         if (isset($query['modified_after'])) {
             $query['filter']['modified-after'] = $query['modified_after'];
@@ -83,8 +84,11 @@ class QueryStringComponent extends Component
 
     /**
      * Additional normalization and array tranformations
+     *
+     * @param array $query original query string items
+     * @return array modified query
      */
-    static function normalizeQueryItems($query)
+    public static function normalizeQueryItems($query)
     {
         // order should always be an array even when one value is provided
         if (isset($query['order']) && !is_array($query['order'])) {
@@ -118,9 +122,11 @@ class QueryStringComponent extends Component
     /**
      * Extract array string items
      *
+     * @param array $query original query string items
+     * @param array $allowedQueryItems whitelist
      * @return array $query the sanitized query
      */
-    static function unsetUnwantedQueryItems($query, $allowedQueryItems)
+    public static function unsetUnwantedQueryItems($query, $allowedQueryItems)
     {
         foreach ($query as $key => $items) {
             if (!isset($allowedQueryItems[$key])) {
@@ -144,9 +150,10 @@ class QueryStringComponent extends Component
      * - Transform to array when key ends with 's' like 'has-users'
      * - Transform to array when multiple comma separated values are present
      *
+     * @param array $query original query string items
      * @return array $query the sanitized query
      */
-    static function extractQueryItems($query)
+    public static function extractQueryItems($query)
     {
         foreach ($query as $key => $items) {
             if (is_array($items)) {
@@ -168,12 +175,12 @@ class QueryStringComponent extends Component
     /**
      * Validate query items
      *
-     * @params array $allowedQueryItems whitelisted items
-     * @params array $query items to validate
+     * @param array $query items to validate
+     * @param array $allowedQueryItems whitelisted items
      * @throws BadRequestException if a validation error occurs
      * @return bool true if validate
      */
-    static function validateQueryItems($query, $allowedQueryItems)
+    public static function validateQueryItems($query, $allowedQueryItems)
     {
         foreach ($query as $key => $parameters) {
             switch ($key) {
@@ -207,13 +214,22 @@ class QueryStringComponent extends Component
     /**
      * Validate filters
      *
-     * @params array $filters
+     * @param array $filters such as:
+     * - search: a string to do a keyword based search
+     * - has-access: a resource id
      * - has-users: an array of user uuids
      * - has-manager: an array of user uuids
-     * @throws Exception if one of the has-managers or has-users values is not a valid uuid
-     * @return true if valid
+     * - has-groups: an array of group uuids
+     * - is-shared-with-group: a group uuid
+     * - modified-after: timestamp
+     * - is-active: bool
+     * - is-favorite: bool
+     * - is-owned-by-me: bool
+     * - is-shared-with-me: bool
+     * @throws Exception if one of the filters is not supported / not in the list
+     * @return bool true if valid
      */
-    static function validateFilters($filters = null)
+    public static function validateFilters($filters = null)
     {
         if (isset($filters)) {
             foreach ($filters as $filter => $values) {
@@ -222,7 +238,7 @@ class QueryStringComponent extends Component
                         self::validateFilterSearch($values);
                         break;
                     case 'has-access':
-                        self::validateFilterResource($values, $filter);
+                        self::validateFilterResources($values, $filter);
                         break;
                     case 'has-managers':
                     case 'has-users':
@@ -231,6 +247,7 @@ class QueryStringComponent extends Component
                     case 'has-groups':
                         self::validateFilterGroups($values, $filter);
                         break;
+                    // TODO rename: only booleans should start with is-
                     case 'is-shared-with-group':
                         self::validateFilterGroup($values, $filter);
                         break;
@@ -245,7 +262,6 @@ class QueryStringComponent extends Component
                         break;
                     default:
                         throw new Exception(__('No validation rule for filter {0}. Please create one.', $filter));
-                    break;
                 }
             }
         }
@@ -256,9 +272,10 @@ class QueryStringComponent extends Component
     /**
      * Check if the filter is a valid boolean
      *
-     * @param $values
+     * @param mixed $values to check
+     * @param string $filtername for error message display
      * @throw Exception if the filter is not valid
-     * @return true if the filter is valid
+     * @return bool true if the filter is valid
      */
     public static function validateFilterBoolean($values, $filtername)
     {
@@ -272,12 +289,13 @@ class QueryStringComponent extends Component
     /**
      * Validate Search Filters
      * Input must be a non-assoc array with utf8 char values between 3 and 64 char in length
-     * Bueno: [0 => 'ada', 1 => 'betty']
-     * No Bueno: ['this' => 'no']
+     * Example:
+     * - Bueno: [0 => 'ada', 1 => 'betty']
+     * - No Bueno: ['this' => 'no']
      *
-     * @param $values
+     * @param array $values query items
      * @throw Exception if the filter is not valid
-     * @return true if the filter is valid
+     * @return bool true if the filter is valid
      */
     public static function validateFilterSearch($values)
     {
@@ -302,12 +320,14 @@ class QueryStringComponent extends Component
     /**
      * Validate Users Filters
      * Input must be a non-assoc array with utf8 char values between 3 and 64 char in length
-     * Bueno: [0 => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08']
-     * No Bueno: ['this' => 'no']
+     * Examples:
+     * - Bueno: [0 => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08']
+     * - No Bueno: ['this' => 'no']
      *
-     * @param $values
+     * @param array $values array of user id to check
+     * @param string $filterName for error message display
      * @throw Exception if the filter is not valid
-     * @return true if the filter is valid
+     * @return bool true if the filter is valid
      */
     public static function validateFilterUsers($values, $filterName)
     {
@@ -328,13 +348,14 @@ class QueryStringComponent extends Component
 
     /**
      * Validate a filter that is an array of group id
-     * Bueno: [0 => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08']
-     * No Bueno: ['this' => 'no']
+     * Examples:
+     * - Bueno: [0 => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08']
+     * - No Bueno: ['this' => 'no']
      *
-     * @param $values
-     * @param $filtername
+     * @param array $values array of group id to check
+     * @param string $filtername for error message display
      * @throw Exception if the filter is not valid
-     * @return bool
+     * @return bool true if validate
      */
     public static function validateFilterGroups($values, $filtername)
     {
@@ -353,15 +374,16 @@ class QueryStringComponent extends Component
 
     /**
      * Validate a filter that is a single resource id
-     * Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
-     * No Bueno: 'no'
+     * Examples:
+     * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
+     * - No Bueno: 'no-bueno'
      *
-     * @param $values
-     * @param $filtername
+     * @param array $values resources id
+     * @param string $filtername name of filters
      * @throw Exception if the filter is not valid
-     * @return bool
+     * @return bool true if validate
      */
-    public static function validateFilterResource($values, $filtername)
+    public static function validateFilterResources($values, $filtername)
     {
         foreach ($values as $i => $resourceId) {
             if (!is_int($i)) {
@@ -380,13 +402,14 @@ class QueryStringComponent extends Component
 
     /**
      * Validate a filter that is a single group id
-     * Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
-     * No Bueno: 'no'
+     * Examples:
+     * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
+     * - No Bueno: 'no-bueno'
      *
-     * @param $groupId
-     * @param $filtername
+     * @param string $groupId uuid
+     * @param string $filtername name of filters
      * @throw Exception if the filter is not valid
-     * @return bool
+     * @return bool if validate
      */
     public static function validateFilterGroup($groupId, $filtername)
     {
@@ -400,10 +423,10 @@ class QueryStringComponent extends Component
     /**
      * Validate a filter that is a timestamp
      *
-     * @param $values
-     * @param $filtername
+     * @param string $values timestamp to check
+     * @param string $filtername for error message display
      * @throw Exception if the filter is not valid
-     * @return bool
+     * @return bool if validate
      */
     public static function validateFilterTimestamp($values, $filtername)
     {
@@ -418,10 +441,10 @@ class QueryStringComponent extends Component
     /**
      * Validate order
      *
-     * @param array $orders
-     * - Group.name: a string that is a valid group name
+     * @param array $orders a list of order to validate like ['Groups.name ASC', 'Users.created']
+     * @param array $allowedQueryItems whitelist
      * @throws Exception if the group name does not validate
-     * @return bool true if valid
+     * @return bool true if validate
      */
     public static function validateOrders($orders = null, $allowedQueryItems = null)
     {
@@ -445,7 +468,7 @@ class QueryStringComponent extends Component
      *
      * @param array $contain conditions
      * @throws Exception if the contain value is not 0 or 1
-     * @return bool true if valid
+     * @return bool true if validate
      */
     public static function validateContain($contain = null)
     {
@@ -466,7 +489,7 @@ class QueryStringComponent extends Component
      * 'FALSE', 'False', 'false', '0' becomes false
      *
      * @param string $str the string to normalize
-     * @return boolean|string if original string is not bool
+     * @return bool|string if original string is not bool
      */
     public static function normalizeBoolean($str)
     {
@@ -483,9 +506,14 @@ class QueryStringComponent extends Component
     }
 
     /**
-     * ['order' => ['User.first_name ASC', 'User.last_name DESC']]
+     * Format order so that it can be used as is by ORM layer
+     * Examples:
+     * - ['order' => ['User.first_name ASC', 'User.last_name DESC']]
      * becomes
-     * ['order' => ['Users.first_name' => 'ASC', 'Users.last_name' => 'DESC']]
+     * - ['order' => ['Users.first_name' => 'ASC', 'Users.last_name' => 'DESC']]
+     *
+     * @param array $query items
+     * @return array updated query items
      */
     public static function finalizeOrder($query)
     {
@@ -526,7 +554,7 @@ class QueryStringComponent extends Component
     /**
      * Return true if valid order
      *
-     * @param string $orderName
+     * @param string $orderName like Groups.name
      * @return bool true if valid order
      */
     public static function isOrder($orderName)

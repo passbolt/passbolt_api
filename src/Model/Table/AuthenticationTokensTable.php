@@ -16,11 +16,11 @@ namespace App\Model\Table;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Cake\Network\Exception\InternalErrorException;
 
 /**
  * AuthenticationTokens Model
@@ -115,7 +115,7 @@ class AuthenticationTokensTable extends Table
     /**
      * Build the authentication token
      *
-     * @param $userId
+     * @param string $userId uuid
      * @return \App\Model\Entity\AuthenticationToken
      */
     public function generate($userId)
@@ -146,7 +146,6 @@ class AuthenticationTokensTable extends Table
      */
     public function isValid($tokenId, $userId)
     {
-
         // Are ids valid uuid?
         if (!Validation::uuid($tokenId) || !Validation::uuid($userId)) {
             return false;
@@ -177,7 +176,8 @@ class AuthenticationTokensTable extends Table
     /**
      * Set a token as inactive
      *
-     * @param $tokenId
+     * @param string $tokenId uuid
+     * @return bool save result
      */
     public function setInactive($tokenId)
     {
@@ -185,15 +185,19 @@ class AuthenticationTokensTable extends Table
             ->where(['token' => $tokenId, 'active' => true ])
             ->first();
 
+        if (empty($token)) {
+            return false;
+        }
         $token->active = false;
-        $this->save($token);
+
+        return $this->save($token);
     }
 
     /**
      * Get a token entity using the token id
      * (e.g. get using token->token, not token->id )
      *
-     * @param $tokenId
+     * @param string $tokenId uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     public function findByToken($tokenId)

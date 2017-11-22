@@ -31,7 +31,7 @@ class PermissionsViewController extends AppController
      * @throws BadRequestException If the parameter acoForeignKey is not a valid uuid
      * @throws NotFoundException If the target resource doesn't exist
      * @throws NotFoundException If the target resource is soft deleted
-     *
+     * @return void
      */
     public function viewAcoPermissions($acoForeignKey = null)
     {

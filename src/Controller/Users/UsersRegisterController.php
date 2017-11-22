@@ -15,11 +15,10 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use App\Error\Exception\ValidationRuleException;
-use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
@@ -31,6 +30,7 @@ class UsersRegisterController extends AppController
      * Before filter
      *
      * @param Event $event An Event instance
+     * @throws NotFoundException if registration is not set to public
      * @return \Cake\Http\Response|null
      */
     public function beforeFilter(Event $event)
@@ -39,7 +39,7 @@ class UsersRegisterController extends AppController
             $this->Auth->allow('registerGet');
             $this->Auth->allow('registerPost');
         } else {
-            throw new NotFoundException();
+            throw new NotFoundException(__('Registration is not opened to public. Please contact your administrator.'));
         };
 
         $this->loadModel('Users');
@@ -52,6 +52,7 @@ class UsersRegisterController extends AppController
      * Register user action GET
      * Display a registration form
      *
+     * @throws ForbiddenException if the current user is logged in
      * @return void
      */
     public function registerGet()
@@ -73,6 +74,7 @@ class UsersRegisterController extends AppController
     /**
      * Register user action POST
      *
+     * @throws ForbiddenException if the current user is logged in
      * @return void
      */
     public function registerPost()
@@ -98,6 +100,8 @@ class UsersRegisterController extends AppController
     }
 
     /**
+     * Register a user
+     *
      * @return mixed user or false if could not register the user
      */
     protected function _registerUser()
@@ -129,6 +133,7 @@ class UsersRegisterController extends AppController
      *
      * @param object $user User entity
      * @param object $token Token entity
+     * @return void
      */
     protected function _notifyUser($user, $token)
     {
@@ -140,6 +145,8 @@ class UsersRegisterController extends AppController
 
     /**
      * Manage validation errors
+     *
+     * @throws ValidationException if the user could not be validated
      * @param \Cake\Datasource\EntityInterface $user user
      * @return bool
      */

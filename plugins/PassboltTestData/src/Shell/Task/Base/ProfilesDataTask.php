@@ -21,6 +21,11 @@ class ProfilesDataTask extends DataTask
 {
     public $entityName = 'Profiles';
 
+    /**
+     * Get the profile data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $profiles[] = [

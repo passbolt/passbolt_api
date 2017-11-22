@@ -15,8 +15,8 @@
 
 namespace App\Test\TestCase\Controller\Gpgkeys;
 
-use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\UuidFactory;
 
 class GpgkeysViewControllerTest extends AppIntegrationTestCase
 {

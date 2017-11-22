@@ -96,6 +96,11 @@ class GroupsUsersDataTask extends DataTask
         ],
     ];
 
+    /**
+     * Get the groups users association data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $groupsUsers = [];

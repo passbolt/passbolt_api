@@ -21,6 +21,11 @@ class GroupsDataTask extends DataTask
 {
     public $entityName = 'Groups';
 
+    /**
+     * Get the groups data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $groups[] = [

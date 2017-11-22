@@ -100,7 +100,7 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if no authentication token was provided
      * @throws BadRequestException if the authentication token is not a uuid
      * @throws BadRequestException if the authentication token is expired or invalid
-     * @return entity Token entity
+     * @return object Token entity
      */
     protected function _getAndAssertToken($userId)
     {
@@ -135,8 +135,8 @@ class SetupCompleteController extends AppController
         }
         $user = $this->Users->findSetup($userId);
         if (empty($user)) {
-            // @TODO more precise error message
-            throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
+            $msg = __('The user does not exist or is already active or has been deleted.');
+            throw new BadRequestException($msg);
         }
 
         return $user;
@@ -146,7 +146,6 @@ class SetupCompleteController extends AppController
      * Return the gpg key entity for matching the requesting id
      *
      * @param string $userId the user uuid
-     * @param bool $checkRule if business rules should be checked on top of basic validation
      * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
      * @return object Gpgkey entity
      */

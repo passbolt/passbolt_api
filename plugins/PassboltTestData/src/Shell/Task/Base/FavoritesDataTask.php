@@ -21,6 +21,11 @@ class FavoritesDataTask extends DataTask
 {
     public $entityName = 'Favorites';
 
+    /**
+     * Get the favorites data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $favorites[] = [

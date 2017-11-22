@@ -33,20 +33,19 @@ use Cake\TestSuite\IntegrationTestCase;
 
 class AppIntegrationTestCase extends IntegrationTestCase
 {
+    use ArrayTrait;
     use CommentsModelTrait;
     use FavoritesModelTrait;
+    use GpgkeysModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
-    use GpgkeysModelTrait;
+    use ObjectTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use RolesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
-
-    use ArrayTrait;
-    use ObjectTrait;
 
     /**
      * The response for the most recent json request.

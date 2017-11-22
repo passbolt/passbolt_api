@@ -22,6 +22,11 @@ class PermissionsDataTask extends DataTask
 {
     public $entityName = 'Permissions';
 
+    /**
+     * Get the permissions data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $permissions = [];
@@ -31,6 +36,11 @@ class PermissionsDataTask extends DataTask
         return $permissions;
     }
 
+    /**
+     * Get the resource user permissions association data
+     *
+     * @return array
+     */
     private function getUsersResourcesPermissions()
     {
         $permissions = [];
@@ -58,6 +68,11 @@ class PermissionsDataTask extends DataTask
         return $permissions;
     }
 
+    /**
+     * Get the groups resources association data
+     *
+     * @return array
+     */
     private function getGroupsResourcesPermissions()
     {
         $permissions = [];

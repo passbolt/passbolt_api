@@ -21,6 +21,11 @@ class UsersDataTask extends DataTask
 {
     public $entityName = 'Users';
 
+    /**
+     * Get user data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $users[] = [

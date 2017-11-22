@@ -15,14 +15,15 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
 use Cake\Network\Exception\ForbiddenException;
-use Cake\Validation\Validation;
-use App\Error\Exception\ValidationRuleException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
+use Cake\Validation\Validation;
+use JsonSchema\Exception\ValidationException;
 
 class UsersDeleteController extends AppController
 {
@@ -71,7 +72,13 @@ class UsersDeleteController extends AppController
     /**
      * Assert request sanity and return the sanitized data
      *
-     * @param $id
+     * @param string $id user uuid
+     * @throws ForbiddenException if current user is not an admin
+     * @throws BadRequestException if the user uuid id invalid
+     * @throws BadRequestException if the user tries to delete themselves
+     * @throws NotFoundException if the user does not exist or is already deleted
+     * @throws ValidationException if the user is sole manager of a group
+     * @throws ValidationException if the user is sole owner of a shared resource
      * @return object $user entity
      */
     protected function _validateRequestData($id)

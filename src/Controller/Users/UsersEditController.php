@@ -16,12 +16,12 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Controller\Component\QueryStringComponent;
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Role;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validation;
-use App\Error\Exception\ValidationRuleException;
 
 class UsersEditController extends AppController
 {
@@ -30,6 +30,7 @@ class UsersEditController extends AppController
      * User edit action
      * Allow editing firstname / lastname and role only for admin
      *
+     * @param string $id user uuid
      * @return void
      */
     public function editPost($id)
@@ -101,7 +102,12 @@ class UsersEditController extends AppController
     /**
      * Assert request sanity and return the sanitized data
      *
-     * @param $id
+     * @throws ForbiddenException if the user is not admin or not editing themselves
+     * @throws BadRequestException if the user id is invalid, if data is not provided or invalid
+     * @throws BadRequestException if gpgkey is sent (v2 only)
+     * @throws BadRequestException if groups data is sent (v2 only)
+     * @throws BadRequestException if role data is sent (v2 only)
+     * @param string $id user uuid
      * @return array|null
      */
     protected function _validateRequestData($id)

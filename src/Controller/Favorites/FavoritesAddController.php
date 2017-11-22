@@ -32,6 +32,7 @@ class FavoritesAddController extends AppController
      * @throws NotFoundException If the resource is soft deleted
      * @throws NotFoundException If the user does not have access to the resource
      * @throws NotFoundException
+     * @return void
      */
     public function add($foreignId = null)
     {
@@ -86,7 +87,7 @@ class FavoritesAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $favorite favorite
-     * @return bool
+     * @return void
      */
     protected function _handleValidationError($favorite)
     {

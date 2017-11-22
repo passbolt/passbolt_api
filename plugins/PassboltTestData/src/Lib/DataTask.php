@@ -38,8 +38,8 @@ abstract class DataTask extends Shell
     /**
      * execute() method.
      *
-     * @return bool|int|null Success or error code.
-     * @throws Exception
+     * @throws Exception if the entity name is not defined
+     * @return bool true on success
      */
     public function execute()
     {
@@ -68,13 +68,16 @@ abstract class DataTask extends Shell
             }
         }
         $this->out('Data for entity "' . $this->entityName . '" inserted (' . count($data) . ')');
+
+        return true;
     }
 
     /**
      * Insert an entity.
      *
-     * @param $data
-     * @throws Exception
+     * @param array $data entity request data
+     * @throws Exception if the entity can not be validated or saved
+     * @return void
      */
     public function saveEntity($data)
     {

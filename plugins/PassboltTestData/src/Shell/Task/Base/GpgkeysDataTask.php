@@ -14,8 +14,8 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\UuidFactory;
 use App\Utility\Gpg;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\DataTask;
 
@@ -29,8 +29,8 @@ class GpgkeysDataTask extends DataTask
     /**
      * Get path of the key for the given user.
      *
-     * @param $userId
-     * @return string
+     * @param string $userId uuid
+     * @return string filename
      */
     public function getGpgkeyPath($userId)
     {
@@ -50,8 +50,8 @@ class GpgkeysDataTask extends DataTask
     /**
      * Get the public key of a user.
      *
-     * @param $userId
-     * @return string
+     * @param string $userId uuid
+     * @return string ascii armored key
      */
     protected function _getUserKey($userId)
     {

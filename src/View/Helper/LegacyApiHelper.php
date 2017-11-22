@@ -124,6 +124,7 @@ class LegacyApiHelper extends Helper
      * Format a result set to an array
      *
      * @param array $errors Errors
+     * @param \Cake\ORM\Table $table table
      * @return array new result set
      */
     public static function formatErrors($errors, $table)

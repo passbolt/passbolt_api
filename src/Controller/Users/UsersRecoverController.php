@@ -114,6 +114,7 @@ class UsersRecoverController extends AppController
      *
      * @throws BadRequestException if the username is not provided
      * @throws BadRequestException if the username is not valid
+     * @return \Cake\Datasource\EntityInterface user entity
      */
     protected function _assertValidation()
     {

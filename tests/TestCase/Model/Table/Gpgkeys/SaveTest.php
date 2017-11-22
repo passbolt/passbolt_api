@@ -17,8 +17,8 @@ namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
 use Cake\I18n\Date;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\ORM\TableRegistry;
 

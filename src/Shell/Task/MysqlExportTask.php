@@ -131,6 +131,7 @@ class MysqlExportTask extends AppShell
      *
      * @param string $dir directory
      * @param string $newFile name, to avoid deleting it
+     * @return void
      */
     protected function _clearPrevious($dir, $newFile)
     {

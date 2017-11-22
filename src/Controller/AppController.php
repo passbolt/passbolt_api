@@ -15,12 +15,11 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailsListener;
-use App\Auth\GpgAuthenticate;
-use Cake\Core\Configure;
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
-use Cake\Utility\Text;
 use Cake\Routing\Router;
+use Cake\Utility\Text;
 
 /**
  * Application Controller
@@ -47,8 +46,6 @@ class AppController extends Controller
         parent::initialize();
 
         $this->loadComponent('RequestHandler');
-//        $this->RequestHandler->setConfig('inputTypeMap.json', ['json_decode', true]);
-
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
 
@@ -115,8 +112,9 @@ class AppController extends Controller
     /**
      * Render an error response
      *
-     * @param null $message
-     * @param null $body
+     * @param string $message optional message
+     * @param mixed $body optional json reponse body
+     * @return void
      */
     protected function error($message = null, $body = null)
     {
@@ -137,6 +135,7 @@ class AppController extends Controller
     /**
      * Render a response in legacy json format if required
      *
+     * @return void
      */
     protected function setViewBuilderOptions()
     {

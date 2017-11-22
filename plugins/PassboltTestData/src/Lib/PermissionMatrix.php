@@ -70,7 +70,6 @@ class PermissionMatrix
      * ]
      *
      * @param string $orientation Return the permissions sorted by
-     * @see
      * @return array
      */
     public static function getCalculatedUsersResourcesPermissions($orientation = 'resource')
@@ -84,7 +83,7 @@ class PermissionMatrix
     /**
      * Get the direct access defined for all the users and all the resources.
      *
-     * @param string $orientation
+     * @param string $orientation resource|user
      * @return array
      */
     public static function getUsersResourcesPermissions($orientation = 'resource')
@@ -96,8 +95,8 @@ class PermissionMatrix
 
     /**
      * Get the direct users access for a given resource.
-     * @param $resourceId
-     * @return null
+     * @param string $resourceId uuid
+     * @return array|null
      */
     public static function getUsersResourcePermissions($resourceId)
     {
@@ -120,7 +119,7 @@ class PermissionMatrix
     /**
      * Get the direct access defined for all the groups and all the resources.
      *
-     * @param string $orientation
+     * @param string $orientation resource|user
      * @return array
      */
     public static function getGroupsResourcesPermissions($orientation = 'resource')
@@ -131,9 +130,10 @@ class PermissionMatrix
     }
 
     /**
-     * Get the direct groups access for a given resource.
-     * @param $resourceId
-     * @return null
+     * Get the direct groups access for a given resource
+     *
+     * @param string $resourceId uuod
+     * @return array|null
      */
     public static function getGroupsResourcePermissions($resourceId)
     {
@@ -155,8 +155,9 @@ class PermissionMatrix
 
     /**
      * Load a csv file
-     * @param $file
-     * @param string $orientation
+     *
+     * @param string $file name
+     * @param string $orientation resource|user
      * @return array
      */
     private static function _loadCsv($file, $orientation = 'resource')

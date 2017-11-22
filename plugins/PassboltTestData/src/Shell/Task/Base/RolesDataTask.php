@@ -21,6 +21,11 @@ class RolesDataTask extends DataTask
 {
     public $entityName = 'Roles';
 
+    /**
+     * Get the roles data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $roles[] = [

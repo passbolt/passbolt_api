@@ -14,10 +14,9 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
-use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Ramsey\Uuid\Uuid;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {

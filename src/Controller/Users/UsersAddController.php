@@ -56,6 +56,7 @@ class UsersAddController extends UsersRegisterController
      *
      * @param object $user User entity
      * @param object $token Token entity
+     * @return void
      */
     protected function _notifyUser($user, $token)
     {

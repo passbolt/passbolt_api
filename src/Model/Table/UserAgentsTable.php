@@ -1,14 +1,24 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace App\Model\Table;
 
 use App\Utility\Purifier;
-use Aura\Intl\Exception;
-use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use UserAgentParser\Provider\DonatjUAParser;
 use UserAgentParser\Exception\NoResultFoundException;
+use UserAgentParser\Provider\DonatjUAParser;
 
 /**
  * UserAgents Model
@@ -61,6 +71,7 @@ class UserAgentsTable extends Table
     /**
      * Sanitize and parse the user agent string
      *
+     * @param string $ua user agent (optional)
      * @return string
      */
     public function browserName($ua = null)

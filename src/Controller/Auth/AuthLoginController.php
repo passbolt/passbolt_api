@@ -36,7 +36,8 @@ class AuthLoginController extends AppController
     }
 
     /**
-     * User Index action
+     * User login get action
+     * Display the login page
      *
      * @return void
      */
@@ -52,6 +53,11 @@ class AuthLoginController extends AppController
         $this->success();
     }
 
+    /**
+     * User login post action
+     *
+     * @return void
+     */
     public function loginPost()
     {
         $user = $this->Auth->identify();

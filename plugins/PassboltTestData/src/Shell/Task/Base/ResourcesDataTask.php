@@ -21,6 +21,11 @@ class ResourcesDataTask extends DataTask
 {
     public $entityName = 'Resources';
 
+    /**
+     * Get the resource data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $resources[] = [

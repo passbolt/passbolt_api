@@ -380,6 +380,8 @@ class PermissionsTable extends Table
      * a resource with only a user permission set to anything else than OWNER,
      * but since we might as well delete these, we do cast a wider net.
      *
+     * @param string $userId uuid
+     * @return array list of resource uuid
      */
     public function findResourcesOnlyUserCanAccess($userId)
     {

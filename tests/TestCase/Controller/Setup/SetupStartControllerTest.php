@@ -14,8 +14,8 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
-use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SetupStartControllerTest extends AppIntegrationTestCase
@@ -111,8 +111,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid('user.id.ruth');
         $t = $this->AuthenticationTokens->generate($userId);
-        $url = '/setup/install/' . $userId  . '/' . $t->token;
-
+        $url = '/setup/install/' . $userId . '/' . $t->token;
         $this->get($url);
         $this->assertResponseOk();
         $this->assertResponseContains('Welcome to passbolt! Let\'s take 5 min to setup your system.');

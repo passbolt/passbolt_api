@@ -139,9 +139,10 @@ class ResourcesUpdateController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param \Cake\Datasource\EntityInterface $resource
+     * @param \Cake\Datasource\EntityInterface $resource entity
      * @throws NotFoundException
      * @throws ValidationRuleException
+     * @return void
      */
     protected function _handleValidationError($resource)
     {

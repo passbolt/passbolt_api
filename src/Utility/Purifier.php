@@ -18,7 +18,7 @@ class Purifier
 {
     /**
      * Purify a html string using HTMLPurifier
-     * @param $html
+     * @param string $html html to clean
      * @return string
      */
     public static function clean($html)

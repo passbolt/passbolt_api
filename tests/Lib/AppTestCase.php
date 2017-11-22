@@ -29,18 +29,17 @@ use Cake\TestSuite\TestCase;
 
 class AppTestCase extends TestCase
 {
+    use ArrayTrait;
     use CommentsModelTrait;
     use FavoritesModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
+    use ObjectTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
     use UsersModelTrait;
-
-    use ArrayTrait;
-    use ObjectTrait;
 
     public static $stringMasks = [];
 

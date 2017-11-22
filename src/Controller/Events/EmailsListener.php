@@ -14,15 +14,22 @@
  */
 namespace App\Controller\Events;
 
+use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use EmailQueue\EmailQueue;
 
 class EmailsListener implements EventListenerInterface
 {
-
+    /**
+     * Returns a list of events this object is implementing. When the class is registered
+     * in an event manager, each individual method will be associated with the respective event.
+     *
+     * @return array associative array or event key names pointing to the function
+     * that should be called in the object when the respective event is fired
+     */
     public function implementedEvents()
     {
         return [
@@ -30,16 +37,15 @@ class EmailsListener implements EventListenerInterface
             'UsersRecoverController.registerPost.success' => 'sendSelfRegisteredEmail',
             'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
             'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
-
         ];
     }
 
     /**
      * Send Register Email
      *
-     * @param Event $event
-     * @param null $user
-     * @param null $token
+     * @param Event $event event
+     * @param EntityInterface $user User
+     * @param EntityInterface $token AuthenticationToken
      * @return void
      */
     public function sendSelfRegisteredEmail(Event $event, $user = null, $token = null)
@@ -65,9 +71,10 @@ class EmailsListener implements EventListenerInterface
     /**
      * Send Register Email
      *
-     * @param Event $event
-     * @param null $user
-     * @param null $token
+     * @param Event $event event
+     * @param EntityInterface $user User
+     * @param EntityInterface $token AuthenticationToken
+     * @param EntityInterface $admin User
      * @return void
      */
     public function sendAdminRegisteredEmail(Event $event, $user = null, $token = null, $admin = null)
@@ -96,9 +103,9 @@ class EmailsListener implements EventListenerInterface
     /**
      * Send recover Email
      *
-     * @param Event $event
-     * @param null $user
-     * @param null $token
+     * @param Event $event event
+     * @param EntityInterface $user User
+     * @param EntityInterface $token AuthenticationToken
      * @return void
      */
     public function sendRecoverEmail(Event $event, $user = null, $token = null)
@@ -124,10 +131,10 @@ class EmailsListener implements EventListenerInterface
     /**
      * Send an email
      *
-     * @param $to
-     * @param $subject
-     * @param $data
-     * @param $template
+     * @param string $to email address
+     * @param string $subject email subject
+     * @param string $data email data
+     * @param string $template email template
      * @return void
      */
     protected function _send($to, $subject, $data, $template)

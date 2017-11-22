@@ -74,8 +74,8 @@ class RecoverCompleteController extends SetupCompleteController
         }
         $user = $this->Users->findSetupRecover($userId);
         if (empty($user)) {
-            // @TODO more precise error message
-            throw new BadRequestException(__('The user does not exist or has not completed the setup or was deleted.'));
+            $msg = __('The user does not exist or has not completed the setup or was deleted.');
+            throw new BadRequestException($msg);
         }
 
         return $user;

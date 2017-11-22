@@ -38,6 +38,8 @@ class AppShell extends Shell
     /**
      * Some of the passbolt commands shouldn't be executed as root.
      * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
+     *
+     * @return bool true if user is root
      */
     public function assertNotRoot()
     {
@@ -60,7 +62,7 @@ class AppShell extends Shell
      * Display an error message
      *
      * @param string $msg message
-     * @param bool exit true if exit is required
+     * @return void
      */
     protected function _error($msg)
     {
@@ -71,6 +73,7 @@ class AppShell extends Shell
      * Display a success message
      *
      * @param string $msg message
+     * @return void
      */
     protected function _success($msg)
     {

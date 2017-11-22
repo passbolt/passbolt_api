@@ -19,8 +19,6 @@ use PassboltSeleniumApi\Controller\ConfigController;
 
 class ConfigControllerTest extends AppIntegrationTestCase
 {
-    var $configFile;
-
     /**
      * Clears the state used for tests.
      *

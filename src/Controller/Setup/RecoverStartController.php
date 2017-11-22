@@ -40,8 +40,8 @@ class RecoverStartController extends SetupStartController
         $this->loadModel('Users');
         $user = $this->Users->findSetupRecover($userId);
         if (empty($user)) {
-            // @TODO more precise error message
-            throw new BadRequestException(__('The user does not exist or is not active.'));
+            $msg = __('The user does not exist or is not active.');
+            throw new BadRequestException($msg);
         }
         $this->set('user', $user);
 

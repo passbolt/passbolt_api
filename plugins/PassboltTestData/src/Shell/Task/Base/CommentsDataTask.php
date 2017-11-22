@@ -12,10 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-
 namespace PassboltTestData\Shell\Task\Base;
-
-;
 
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
@@ -24,6 +21,11 @@ class CommentsDataTask extends DataTask
 {
     public $entityName = 'Comments';
 
+    /**
+     * Get the comments data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $comments[] = [

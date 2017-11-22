@@ -15,8 +15,8 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Role;
-use App\Model\Rule\IsNotUniqueGroupOwnerRule;
 use App\Model\Rule\IsNotSharedResourceUniqueOwnerRule;
+use App\Model\Rule\IsNotUniqueGroupOwnerRule;
 use Aura\Intl\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -356,7 +356,7 @@ class UsersTable extends Table
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => false   // forbid users that have completed the setup to retry
+                'Users.active' => false // forbid users that have completed the setup to retry
             ])
             ->first();
 
@@ -377,7 +377,7 @@ class UsersTable extends Table
             ->where([
                 'Users.id' => $userId,
                 'Users.deleted' => false, // forbid deleted users to start setup
-                'Users.active' => true    // forbid users that have not completed the setup to recover
+                'Users.active' => true // forbid users that have not completed the setup to recover
             ])
             ->first();
 
@@ -516,7 +516,7 @@ class UsersTable extends Table
      * @param string $search The string to search.
      * @return \Cake\ORM\Query $query
      */
-    public function _filterQueryBySearch($query, $search)
+    private function _filterQueryBySearch($query, $search)
     {
         $search = '%' . $search . '%';
 
@@ -540,7 +540,7 @@ class UsersTable extends Table
      * @param string $resourceId The resource to search potential users for.
      * @return \Cake\ORM\Query $query
      */
-    public function _filterQueryByHasNotPermission($query, $resourceId)
+    private function _filterQueryByHasNotPermission($query, $resourceId)
     {
         $permissionQuery = $this->Permissions->find()
             ->select(['Permissions.aro_foreign_key'])
@@ -593,9 +593,9 @@ class UsersTable extends Table
      * Also allow editing the role_id but only if admin
      * Other changes such as active or username are not permitted
      *
-     * @param $user
-     * @param $data
-     * @param $roleName
+     * @param EntityInterface $user User
+     * @param array $data request data
+     * @param string $roleName role name for example Role::User or Role::ADMIN
      * @return object the patched user entity
      */
     public function editEntity($user, $data, $roleName)
@@ -637,7 +637,7 @@ class UsersTable extends Table
     /**
      * Get a user info for an email notification context
      *
-     * @param $userId
+     * @param string $userId uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     public function getForEmailContext($userId)
@@ -662,6 +662,7 @@ class UsersTable extends Table
      * Delete all Permissions
      *
      * @param EntityInterface $user entity
+     * @param array $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
     public function softDelete($user, $options)

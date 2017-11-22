@@ -283,8 +283,8 @@ class ResourcesTable extends Table
                 $query->innerJoinWith('Favorites', function ($q) use ($userId) {
                     return $q->where(['Favorites.user_id' => $userId]);
                 });
-            } // Filter out the favorite resources.
-            else {
+            } else {
+                // Filter out the favorite resources.
                 $query->notMatching('Favorites', function ($q) use ($userId) {
                     return $q->where(['Favorites.user_id' => $userId]);
                 });

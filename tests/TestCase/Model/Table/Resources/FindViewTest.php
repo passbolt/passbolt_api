@@ -47,7 +47,7 @@ class FindViewTest extends AppTestCase
     public function testSuccess()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $resourceId =  UuidFactory::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
         $resources = $this->Resources->findView($userId, $resourceId);
 
         // Expected fields.

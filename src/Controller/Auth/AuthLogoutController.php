@@ -35,7 +35,7 @@ class AuthLogoutController extends AppController
     /**
      * User Index action
      *
-     * @return void
+     * @return \Cake\Http\Response|null
      */
     public function logoutGet()
     {

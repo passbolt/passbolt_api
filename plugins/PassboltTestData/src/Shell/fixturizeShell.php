@@ -26,7 +26,7 @@ class FixturizeShell extends Shell
     /**
      * main() method.
      *
-     * @return bool|int|null Success or error code.
+     * @return bool true if success
      */
     public function main()
     {
@@ -40,6 +40,8 @@ class FixturizeShell extends Shell
                 $this->dispatchShell("bake fixture $fixtureName -r -n 10000 --table $tableName -f");
             }
         }
+
+        return true;
     }
 
     /**
@@ -56,7 +58,7 @@ class FixturizeShell extends Shell
         $parser->addArgument('scenario', [
             'help' => 'The scenario to fixturize.',
             'required' => true,
-            'choices' =>  array_keys(Configure::read('PassboltTestData.scenarios')),
+            'choices' => array_keys(Configure::read('PassboltTestData.scenarios')),
         ])->setDescription(__('Fixturize a dummy scenario.'));
 
         return $parser;
@@ -64,7 +66,9 @@ class FixturizeShell extends Shell
 
     /**
      * Get the name of the fixture for a given shell task.
-     * @return array
+     *
+     * @param \Cake\Console\Shell $shellTask task
+     * @return string
      */
     protected function _getFixtureName($shellTask)
     {

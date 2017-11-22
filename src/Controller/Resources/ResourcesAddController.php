@@ -52,7 +52,7 @@ class ResourcesAddController extends AppController
      */
     protected function _buildAndValidateEntity()
     {
-        $data = $this->_formatRequestData($this->request->getData());
+        $data = $this->_formatRequestData();
 
         // Enforce data.
         $data['created_by'] = $this->User->id();
@@ -110,11 +110,11 @@ class ResourcesAddController extends AppController
     /**
      * Format request data formatted for API v1 to API v2 format
      *
-     * @param array $data
-     * @return array
+     * @return array data
      */
-    protected function _formatRequestData($data = [])
+    protected function _formatRequestData()
     {
+        $data = $this->request->getData();
         $output = [];
         if (isset($data['Resource'])) {
             $output = array_merge($output, $data['Resource']);
@@ -130,7 +130,7 @@ class ResourcesAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $resource Resource
-     * @return bool
+     * @return void
      */
     protected function _handleValidationError($resource)
     {

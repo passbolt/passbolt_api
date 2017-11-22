@@ -57,7 +57,7 @@ class GroupsAddController extends AppController
      */
     protected function _buildAndValidateGroupEntity()
     {
-        $data = $this->_formatRequestData($this->request->getData());
+        $data = $this->_formatRequestData();
         $data['created_by'] = UuidFactory::uuid('user.id.admin');
         $data['modified_by'] = UuidFactory::uuid('user.id.admin');
 
@@ -90,17 +90,17 @@ class GroupsAddController extends AppController
     /**
      * Format request data formatted for API v1 to API v2 format
      *
-     * @param array $data
      * @return array
      */
-    protected function _formatRequestData($data = [])
+    protected function _formatRequestData()
     {
+        $data = $this->request->getData();
         $output['name'] = Hash::get($data, 'Group.name');
         if (isset($data['GroupUsers'])) {
             $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
                 $result[] = [
                     'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
-                    'is_admin' => (boolean)Hash::get($row, 'GroupUser.is_admin', false)
+                    'is_admin' => (bool)Hash::get($row, 'GroupUser.is_admin', false)
                 ];
 
                 return $result;
@@ -114,13 +114,13 @@ class GroupsAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $group Group
-     * @return bool
+     * @return void
      */
     protected function _handleValidationError($group)
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            // @TODO white list errors (maybe we don't want some business rule to be communicated : soft deleted by instance, has access)
+            // @TODO hide some business rules: soft deleted, has access for example
             throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
         }
     }

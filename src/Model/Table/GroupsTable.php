@@ -170,7 +170,7 @@ class GroupsTable extends Table
 
         // If contains user_count.
         if (isset($options['contain']['user_count'])) {
-            $this->_containUserCount($query);
+            $query = $this->_containUserCount($query);
         }
 
         // Filter on groups that have specified users.
@@ -215,6 +215,8 @@ class GroupsTable extends Table
         // Add the user_count field to the Groups query.
         $query->select(['user_count' => $subQuery])
             ->enableAutoFields();
+
+        return $query;
     }
 
     /**
@@ -331,7 +333,7 @@ class GroupsTable extends Table
      * @param string $resourceId The resource to search potential groups for.
      * @return \Cake\ORM\Query $query
      */
-    public function _filterQueryByHasNotPermission($query, $resourceId)
+    private function _filterQueryByHasNotPermission($query, $resourceId)
     {
         $permissionQuery = $this->association('Permissions')
             ->find()
@@ -359,7 +361,7 @@ class GroupsTable extends Table
      * @param string $search The string to search.
      * @return \Cake\ORM\Query $query
      */
-    public function _filterQueryBySearch($query, $search)
+    private function _filterQueryBySearch($query, $search)
     {
         $search = '%' . $search . '%';
 

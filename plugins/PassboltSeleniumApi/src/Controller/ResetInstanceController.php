@@ -14,8 +14,8 @@
  */
 namespace PassboltSeleniumApi\Controller;
 
-use App\Shell\Task\InstallTask;
 use App\Controller\AppController;
+use App\Shell\Task\InstallTask;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\InternalErrorException;

@@ -21,6 +21,11 @@ class AuthenticationTokensDataTask extends DataTask
 {
     public $entityName = 'AuthenticationTokens';
 
+    /**
+     * Get the authentication token data
+     *
+     * @return array
+     */
     protected function _getData()
     {
         $tokens[] = [

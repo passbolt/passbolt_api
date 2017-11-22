@@ -15,8 +15,8 @@
 
 namespace App\Test\TestCase\Controller\Users;
 
-use App\Utility\UuidFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\UuidFactory;
 
 class UsersViewControllerTest extends AppIntegrationTestCase
 {

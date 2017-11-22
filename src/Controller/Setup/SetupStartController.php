@@ -56,8 +56,8 @@ class SetupStartController extends AppController
         $this->loadModel('Users');
         $user = $this->Users->findSetup($userId);
         if (empty($user)) {
-            // @TODO more precise error message
-            throw new BadRequestException(__('The user does not exist or is already active or has been deleted.'));
+            $msg = __('The user does not exist or is already active or has been deleted.');
+            throw new BadRequestException($msg);
         }
         $this->set('user', $user);
 
@@ -78,6 +78,9 @@ class SetupStartController extends AppController
      * @throws BadRequestException if the user id is missing or not a uuid
      * @throws BadRequestException if the token is missing or not a uuid
      * @throws BadRequestException if the authentication token is expired or not valid for this user
+     * @param string $userId uuid
+     * @param string $tokenId uuid
+     * @return void
      */
     protected function _assertRequestSanity($userId, $tokenId)
     {

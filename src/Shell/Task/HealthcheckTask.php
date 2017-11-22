@@ -146,7 +146,7 @@ class HealthcheckTask extends AppShell
             $results = array_merge(Healthchecks::{$check}(), $results);
         }
         // Remove all dots
-        $this->out(str_repeat(chr(0x08), sizeof($checks)).str_repeat(" ", sizeof($checks)), 0);
+        $this->out(str_repeat(chr(0x08), count($checks)) . str_repeat(" ", count($checks)), 0);
 
         // Print results
         $this->out('');
@@ -164,13 +164,13 @@ class HealthcheckTask extends AppShell
     /**
      * Assert all the checks
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertEnvironment($checks = null)
     {
         if (!isset($checks)) {
-            $checks =  Healthchecks::environment();
+            $checks = Healthchecks::environment();
         }
         $this->title(__('Environment'));
         $this->assert(
@@ -225,13 +225,13 @@ class HealthcheckTask extends AppShell
     /**
      * Assert config files exist
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertConfigFiles($checks = null)
     {
         if (!isset($checks)) {
-            $checks =  Healthchecks::configFiles();
+            $checks = Healthchecks::configFiles();
         }
         $this->title(__('Config files'));
         $this->assert(
@@ -251,13 +251,13 @@ class HealthcheckTask extends AppShell
     /**
      * Assert the core file configuration
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertCore($checks = null)
     {
         if (!isset($checks)) {
-            $checks =  Healthchecks::core();
+            $checks = Healthchecks::core();
         }
         $this->title(__('Core config'));
         $this->assert(
@@ -307,13 +307,13 @@ class HealthcheckTask extends AppShell
     /**
      * Assert the core file configuration
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertSSL($checks = null)
     {
         if (!isset($checks)) {
-            $checks =  Healthchecks::ssl();
+            $checks = Healthchecks::ssl();
         }
         $this->title(__('SSL Certificate'));
         $this->assert(
@@ -339,13 +339,13 @@ class HealthcheckTask extends AppShell
     /**
      * Assert database is in order
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertDatabase($checks = null)
     {
         if (!isset($checks['database']) || !isset($checks['application'])) {
-            $checks =  array_merge(Healthchecks::database(), Healthchecks::application());
+            $checks = array_merge(Healthchecks::database(), Healthchecks::application());
         }
         $this->title(__('Database'));
         $this->assert(
@@ -390,13 +390,13 @@ class HealthcheckTask extends AppShell
     /**
      * Assert passbolt application configuration is in order
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertApplication($checks = null)
     {
         if (!isset($checks)) {
-            $checks =  Healthchecks::application();
+            $checks = Healthchecks::application();
         }
         $this->title(__('Application configuration'));
         if (!isset($checks['application']['latestVersion'])) {
@@ -467,13 +467,13 @@ class HealthcheckTask extends AppShell
     /**
      * Warn GPG settings are in order
      *
-     * @param $checks array
+     * @param array $checks existing results
      * @return void
      */
     public function assertGpg($checks = null)
     {
         if (!isset($checks)) {
-            $checks =  Healthchecks::gpg();
+            $checks = Healthchecks::gpg();
         }
         $this->title(__('GPG Configuration'));
         $this->assert(
@@ -512,7 +512,7 @@ class HealthcheckTask extends AppShell
                 __('Ensure the keyring location exists and is accessible by the webserver user.'),
                 __('you can try:'),
                 'sudo mkdir ' . $checks['gpg']['info']['gpgHome'],
-                'sudo chown -R '. PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
                 __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in config/app.php.'),
             ]
@@ -525,7 +525,7 @@ class HealthcheckTask extends AppShell
                 [
                     __('Ensure the keyring location is accessible by the webserver user.'),
                     __('you can try:'),
-                    'sudo chown -R '. PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
+                    'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                     'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
                 ]
             );
@@ -600,10 +600,10 @@ class HealthcheckTask extends AppShell
     /**
      * Display a success or error message depending on given condition
      *
-     * @param $condition bool
-     * @param $success string
-     * @param $error string
-     * @param $help string optional help message
+     * @param bool $condition to check
+     * @param string $success to display when success
+     * @param string $error to display when error
+     * @param string $help string optional help message
      * @return void
      */
     protected function assert($condition, $success, $error, $help = null)
@@ -620,10 +620,10 @@ class HealthcheckTask extends AppShell
     /**
      * Display a success or warning message depending on given condition
      *
-     * @param $condition bool
-     * @param $success string
-     * @param $error string
-     * @param $help string optional help message
+     * @param bool $condition to check
+     * @param string $success message to display when success
+     * @param string $warning message to display if fails
+     * @param string $help optional help message
      * @return void
      */
     protected function warning($condition, $success, $warning, $help = null)
@@ -642,7 +642,7 @@ class HealthcheckTask extends AppShell
     /**
      * Display one or more help messages
      *
-     * @param array $help
+     * @param array $help messages
      * @return void
      */
     protected function help($help = null)
@@ -661,36 +661,34 @@ class HealthcheckTask extends AppShell
     /**
      * Display a message for given case
      *
-     * @param $msg string
-     * @param $case string pass or fail
+     * @param string $msg message
+     * @param string $case pass or fail
      * @throws Exception case is not defined or missing
      * @return void
      */
     protected function display($msg, $case)
     {
-
         switch ($case) {
             case 'pass':
                 if ($this->_displayOptions['hide-pass']) {
                     return;
                 }
-                $msg = ' <success>['. __('PASS') . ']</success> ' . $msg;
+                $msg = ' <success>[' . __('PASS') . ']</success> ' . $msg;
                 break;
             case 'fail':
-                $msg = ' <fail>['. __('FAIL') . '] ' . $msg . '</fail>';
+                $msg = ' <fail>[' . __('FAIL') . '] ' . $msg . '</fail>';
                 break;
             case 'warn':
-                $msg = ' <warning>['. __('WARN') . '] ' . $msg . '</warning>';
+                $msg = ' <warning>[' . __('WARN') . '] ' . $msg . '</warning>';
                 break;
             case 'info':
                 if ($this->_displayOptions['hide-help']) {
                     return;
                 }
-                $msg = '  <info>['. __('HELP') . ']</info> ' . $msg;
+                $msg = '  <info>[' . __('HELP') . ']</info> ' . $msg;
                 break;
             default:
                 throw new Exception('Task output case not defined: ' . $case . ' ' . $msg);
-                break;
         }
         $this->out($msg);
     }
@@ -698,8 +696,8 @@ class HealthcheckTask extends AppShell
     /**
      * Title section display
      *
-     * @param $title string
-     * @return title
+     * @param string $title message
+     * @return void
      */
     protected function title($title)
     {

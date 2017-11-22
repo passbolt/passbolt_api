@@ -17,10 +17,10 @@ namespace App\Auth;
 use Aura\Intl\Exception;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
-use Cake\Http\ServerRequest;
 use Cake\Http\Response;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\ServerRequest;
 use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
@@ -70,7 +70,7 @@ class GpgAuthenticate extends BaseAuthenticate
             ->withHeader('X-GPGAuth-Progress', 'stage0');
 
         // Init gpg object and load server key
-        $this->__getData($request);
+        $this->__normalizeRequestData($request);
         $this->__initKeyring();
 
         // Begin process by checking if the user exist and his key is valid
@@ -332,7 +332,13 @@ class GpgAuthenticate extends BaseAuthenticate
         return true;
     }
 
-    private function __getData($request)
+    /**
+     * Normalize request data
+     *
+     * @param object $request Request
+     * @return array|null
+     */
+    private function __normalizeRequestData($request)
     {
         $data = $request->getData();
         if (isset($data['data'])) {
@@ -347,6 +353,12 @@ class GpgAuthenticate extends BaseAuthenticate
         return $this->_data;
     }
 
+    /**
+     * Return the updated response
+     * Usefull to get back response in controller since response is immutable
+     *
+     * @return Response
+     */
     public function getUpdatedResponse()
     {
         return $this->_response;

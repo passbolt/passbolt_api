@@ -16,17 +16,17 @@ namespace App\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
 use App\Utility\Gpg;
-use Cake\I18n\FrozenTime;
+use Cake\Core\Exception\Exception;
 use Cake\I18n\Date;
+use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
-use DateTimeInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use DateTimeInterface;
 use JsonSchema\Exception\ValidationException;
-use Cake\Core\Exception\Exception;
 
 /**
  * Model to store and validate OpenPGP public keys
@@ -313,7 +313,7 @@ class GpgkeysTable extends Table
      * @param Query $query a query instance
      * @param array $options options
      * @throws Exception if no id is specified
-     * @return Query
+     * @return \Cake\ORM\Query
      */
     public function findView(Query $query, array $options)
     {
@@ -332,8 +332,8 @@ class GpgkeysTable extends Table
     /**
      * Get a gpg key for matching fingerprint and user id
      *
-     * @param $fingerprint
-     * @param $userId
+     * @param string $fingerprint char40
+     * @param string $userId uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     public function getByFingerPrintAndUserId($fingerprint, $userId)

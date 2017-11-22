@@ -140,7 +140,7 @@ class InstallTask extends AppShell
     /**
      * Add any global additional options for about to be dispatched tasks
      *
-     * @param $cmd
+     * @param string $cmd command
      * @return string
      */
     protected function _formatCmd($cmd)
@@ -157,7 +157,7 @@ class InstallTask extends AppShell
      * Handle the user registration
      * Dispatch the task to register_user with admin option
      *
-     * @return bool operatio result
+     * @return bool operation result
      */
     protected function _userRegistration()
     {
@@ -214,6 +214,7 @@ class InstallTask extends AppShell
     /**
      * Try to perform a quick install steps
      * Dispatch to mysql_import job
+     *
      * @return bool
      */
     protected function _quickInstall()
@@ -238,6 +239,8 @@ class InstallTask extends AppShell
 
     /**
      * Prepare a backup for next quick install
+     *
+     * @return bool true if shell exited with success code
      */
     protected function _quickBackup()
     {
@@ -256,6 +259,8 @@ class InstallTask extends AppShell
 
     /**
      * Dispatch drop_tables task
+     *
+     * @return bool true if shell exited with success code
      */
     protected function _schemaCleanup()
     {
@@ -269,6 +274,8 @@ class InstallTask extends AppShell
 
     /**
      * Run the migrations
+     *
+     * @return bool true if shell exited with success code
      */
     protected function _schema()
     {
@@ -283,6 +290,8 @@ class InstallTask extends AppShell
     /**
      * Import the server key in the keyring
      * Dispatch to keyring init task
+     *
+     * @return bool true if shell exited with success code
      */
     protected function _keyringInit()
     {
@@ -297,9 +306,9 @@ class InstallTask extends AppShell
     /**
      * Installation healthchecks
      *
-     * @return bool status
+     * @return bool status success
      */
-    public function _healthchecks()
+    protected function _healthchecks()
     {
         $this->out();
         $this->out(__('Running baseline checks, please wait...'));
