@@ -15,12 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Permissions;
 
-use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use PassboltTestData\Lib\PermissionMatrix;
 
 class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
 {

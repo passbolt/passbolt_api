@@ -19,6 +19,7 @@ use App\Model\Entity\Permission;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
@@ -286,34 +287,57 @@ class PermissionsTable extends Table
     }
 
     /**
-     * Returns an array of resources the given user is the owner of
-     * and that are shared with somebody else. Useful to know which resources
-     * need to be transferred when deleting the user
+     * User alias for findSharedResourcesAroIsSoleOwner
      *
      * @param string $userId uuid of the user
      * @return array $results the uuids of the resources
      */
     public function findSharedResourcesUserIsSoleOwner($userId)
     {
+        return $this->findSharedResourcesAroIsSoleOwner($userId);
+    }
+
+    /**
+     * Group alias for findSharedResourcesAroIsSoleOwner
+     *
+     * @param string $groupId uuid of the group
+     * @return array $results the uuids of the resources
+     */
+    public function findSharedResourcesGroupIsSoleOwner($groupId)
+    {
+        return $this->findSharedResourcesAroIsSoleOwner($groupId);
+    }
+
+    /**
+     * Returns an array of resources the given ARO is the owner of
+     * and that are shared with somebody else. Useful to know which resources
+     * need to be transferred when deleting the user or a group
+     *
+     * @param string $aroId uuid of the user|group
+     * @return array $results the uuids of the resources
+     */
+    public function findSharedResourcesAroIsSoleOwner($aroId)
+    {
         $results = [];
 
-        // Show the user counts by permissions for all the resources
-        // the given user is the owner of.
+        // Show the ARO counts by permissions for all the resources
+        // the given user or group is the owner of.
         //
         // SELECT permissions.aco_foreign_key AS resource_id,
-        //    permissions.type, count(permissions.id) AS user_count
+        //    permissions.type, count(permissions.id) AS aro_count
         // FROM permissions
         // WHERE permissions.aco_foreign_key IN (
         //    SELECT permissions.aco_foreign_key
         //    FROM permissions
         //    WHERE permissions.type = Permission::OWNER
-        //    AND permissions.aro_foreign_key = :userId
+        //    AND permissions.aro_foreign_key = :aroId
         // )
         // GROUP BY permissions.aco_foreign_key, permissions.type
         // ORDER BY permissions.aco_foreign_key, permissions.type;
         //
+        // Returns something like:
         // +--------------------------------------+--------+------------+
-        // | resource_id                          | type   | user_count |
+        // | resource_id                          | type   | aro_count  |
         // +--------------------------------------+--------+------------+
         // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | READ   |          2 |
         // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | WRITE  |          1 |
@@ -321,10 +345,10 @@ class PermissionsTable extends Table
         // | ...                                  |  ...   |        ... |
         // +--------------------------------------+--------+------------+
 
-        // Find all the resources the user is owner of
+        // Find all the resources the ARO is owner of
         $subquery = $this->find()
             ->select(['aco_foreign_key'])
-            ->where(['type' => Permission::OWNER, 'aro_foreign_key' => $userId]);
+            ->where(['type' => Permission::OWNER, 'aro_foreign_key' => $aroId]);
 
         // Find the user count by permissions for these
         $query = $this->find();
@@ -332,7 +356,7 @@ class PermissionsTable extends Table
             ->select([
                 'aco_foreign_key' => 'aco_foreign_key',
                 'type' => 'type',
-                'user_count' => $query->func()->count('id')
+                'aro_count' => $query->func()->count('id')
             ])
             ->where(['aco_foreign_key IN' => $subquery])
             ->group(['aco_foreign_key', 'type'])
@@ -340,30 +364,111 @@ class PermissionsTable extends Table
             ->all()
             ->toArray();
 
+        return $this->_extractResourcesWhereAroIsSoleOwner($resources);
+    }
+
+    /**
+     * Find list of shared resources ids for all the groups the given user is admin of
+     * Useful to make sure we do not delete a user from a group that would make a resource
+     * loose its only owner.
+     *
+     * @param string $userId uuid of the user
+     * @return array $results the uuids of the resources
+     */
+    public function findSharedResourcesGroupAdminIsSoleOwner($userId)
+    {
+        // Show the ARO counts by permissions for all the resources
+        // the given user is admin of the group that is the owner of the resource
+        //
+        // SELECT permissions.aco_foreign_key AS resource_id,
+        //    permissions.type, count(permissions.id) AS aro_count
+        // FROM permissions
+        // WHERE permissions.aco_foreign_key IN (
+        //    SELECT permissions.aco_foreign_key
+        //    FROM permissions
+        //    WHERE permissions.type = Permission::OWNER
+        //    AND permissions.aro_foreign_key IN (
+        //        SELECT group_id
+        //        FROM groups
+        //        WHERE user_id=$userId
+        //        AND is_admin=1
+        //    )
+        // )
+        // GROUP BY permissions.aco_foreign_key, permissions.type
+        // ORDER BY permissions.aco_foreign_key, permissions.type;
+        //
+        // Returns something like:
+        // +--------------------------------------+--------+------------+
+        // | resource_id                          | type   | aro_count  |
+        // +--------------------------------------+--------+------------+
+        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | READ   |          2 |
+        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | WRITE  |          1 |
+        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | OWNER  |          1 |
+        // | ...                                  |  ...   |        ... |
+        // +--------------------------------------+--------+------------+
+
+        // Find all the groups a user is admin of
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $subquery1 = $GroupsUsers->find();
+        $subquery1
+            ->select(['group_id'])
+            ->where(['is_admin' => 1, 'user_id' => $userId]);
+
+        // Find all the resources groups are owner of
+        $subquery2 = $this->find()
+            ->select(['aco_foreign_key'])
+            ->where(['type' => Permission::OWNER, 'aro_foreign_key IN' => $subquery1]);
+
+        // Find the user|group count by permissions for these
+        $query = $this->find();
+        $resources = $query
+            ->select([
+                'aco_foreign_key' => 'aco_foreign_key',
+                'type' => 'type',
+                'aro_count' => $query->func()->count('id')
+            ])
+            ->where(['aco_foreign_key IN' => $subquery2])
+            ->group(['aco_foreign_key', 'type'])
+            ->order(['aco_foreign_key', 'type'])
+            ->all()
+            ->toArray();
+
+        return $this->_extractResourcesWhereAroIsSoleOwner($resources);
+    }
+
+    /**
+     * Extract resources id where ARO is sole owner from a list of resources
+     * and their associated permissions map. See. findSharedResourcesGroupAdminIsSoleOwner
+     *
+     * @param array $resources list of resources with associated permissions type count
+     * @return array
+     */
+    private function _extractResourcesWhereAroIsSoleOwner($resources)
+    {
+        $results = [];
+
         // No resources, no problem
         if (empty($resources) || count($resources) === 0) {
             return $results;
         }
 
-        // Hash around the results to look like
+        // Hash around the results to look like a table where the aro id is the key
+        // and the count of each permission rights is a sub table with permission types as keys
+        //
+        // Example:
         // [
         //      [8378fa3d-b9f4-5428-90a4-ab5478c1a5bb] => [
         //          [1] => 2
         //          [7] => 2
         //          [15] => 1
-        //      ],
-        //      ...
+        //      ]
         // ]
-        $resources = Hash::combine($resources, '{n}.type', '{n}.user_count', '{n}.aco_foreign_key');
-
+        $resources = Hash::combine($resources, '{n}.type', '{n}.aro_count', '{n}.aco_foreign_key');
         foreach ($resources as $resourceId => $rights) {
-            // If there is more than one Owner we're good
             if ($rights[Permission::OWNER] === 1) {
-                // If there is one owner and 0 READ/WRITE users we're good
                 $someRead = (isset($rights[Permission::READ]) && count($rights[Permission::READ]));
                 $someUpdate = (isset($rights[Permission::UPDATE]) && count($rights[Permission::UPDATE]));
                 if ($someRead || $someUpdate) {
-                    // Mark the cases like above as no bueno.
                     $results[] = $resourceId;
                 }
             }
@@ -373,33 +478,33 @@ class PermissionsTable extends Table
     }
 
     /**
-     * Returns the list of resources ids that the user has access
+     * Returns the list of resources ids that the ARO has access
      * and that are not shared with anybody
      *
      * Note: this does not check for ownership right. In theory it should not be possible to have
-     * a resource with only a user permission set to anything else than OWNER,
+     * a resource with only a group|user permission set to anything else than OWNER,
      * but since we might as well delete these, we do cast a wider net.
      *
-     * @param string $userId uuid
+     * @param string $aroId uuid
      * @return array list of resource uuid
      */
-    public function findResourcesOnlyUserCanAccess($userId)
+    public function findResourcesOnlyAroCanAccess($aroId)
     {
-        // SELECT aco_foreign_key, count(aro_foreign_key) as count_users
+        // SELECT aco_foreign_key, count(aro_foreign_key) as aro_count
         // FROM permissions
         // GROUP by aco_foreign_key
-        // HAVING aro_foreign_key=:userId
-        // AND count_users=1;
+        // HAVING aro_foreign_key=$aroId
+        // AND aro_count=1;
 
         $query = $this->find();
         $resources = $query
             ->select([
                 'aco_foreign_key' => 'aco_foreign_key',
                 'aro_foreign_key' => 'aro_foreign_key',
-                'user_count' => $query->func()->count('id')
+                'aro_count' => $query->func()->count('id')
             ])
             ->group(['aco_foreign_key'])
-            ->having(['aro_foreign_key' => $userId, 'user_count' => 1])
+            ->having(['aro_foreign_key' => $aroId, 'aro_count' => 1])
             ->all()
             ->toArray();
 
@@ -408,5 +513,27 @@ class PermissionsTable extends Table
         }
 
         return $resources;
+    }
+
+    /**
+     * User alias for findResourcesOnlyAroCanAccess
+     *
+     * @param string $userId uuid
+     * @return array list of resource uuid
+     */
+    public function findResourcesOnlyUserCanAccess($userId)
+    {
+        return $this->findResourcesOnlyAroCanAccess($userId);
+    }
+
+    /**
+     * Group alias for findResourcesOnlyAroCanAccess
+     *
+     * @param string $groupId uuid
+     * @return array list of resource uuid
+     */
+    public function findResourcesOnlyGroupCanAccess($groupId)
+    {
+        return $this->findResourcesOnlyAroCanAccess($groupId);
     }
 }

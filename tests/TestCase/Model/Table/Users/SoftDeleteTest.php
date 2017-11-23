@@ -25,7 +25,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class SoftDeleteTest extends AppTestCase
 {
-    public $Resources;
+    public $Users;
 
     public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.groups', 'app.groups_users', 'app.resources', 'app.permissions'];
 
@@ -47,11 +47,19 @@ class SoftDeleteTest extends AppTestCase
 
     public function testSoftDeleteCheckRulesGroupOwnerError()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // Frances is the only manager of group accountting and should not be deleted
+        $user = $this->Users->get(UuidFactory::uuid('user.id.frances'));
+        $this->assertFalse($this->Users->softDelete($user));
+        $errors = $user->getErrors();
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
     }
 
     public function testSoftDeleteCheckRulesResourceOwnerError()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // Betty is the sole owner of some shared resources and should not be deleted
+        $user = $this->Users->get(UuidFactory::uuid('user.id.betty'));
+        $this->assertFalse($this->Users->softDelete($user));
+        $errors = $user->getErrors();
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
     }
 }

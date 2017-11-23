@@ -13,26 +13,24 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Model\Table\Permissions;
+namespace App\Model\Rule;
 
-use App\Model\Table\PermissionsTable;
-use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use PassboltTestData\Lib\PermissionMatrix;
 
-class FindGroupsWhereUserIsSoleManagerTest extends AppTestCase
+class IsNotSoleManagerOfGroupOwningSharedResourcesRule
 {
-    public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
-
-    public function testFindGroupNotAManager()
+    /**
+     * Check if the user is manager of group that is owner of shared resource
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The entity to check
+     * @param array $options Options passed to the check
+     * @return bool
+     */
+    public function __invoke(EntityInterface $entity, array $options)
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    public function testfindGroupsWhereUserIsSoleManagerSuccess()
-    {
-        $this->markTestIncomplete('Not implemented yet.');
+        $Permissions = TableRegistry::get('Permissions');
+        $resources = $Permissions->findSharedResourcesGroupAdminIsSoleOwner($entity->id);
+        return (empty($resources));
     }
 }

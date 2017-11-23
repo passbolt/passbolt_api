@@ -15,6 +15,7 @@
 namespace App\Model\Table;
 
 use App\Model\Rule\IsNotSoftDeletedRule;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
@@ -140,25 +141,29 @@ class GroupsUsersTable extends Table
     }
 
     /**
-     * Get the list of group id where the user is the sole manager
-     * Useful because we do not want to have a group without manager by deleting a user
+     * Get the list of group id where the user is the sole manager and not the sole member
+     * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return array
+     * @return array of group uuid
      */
-    public function findGroupsWhereUserIsSoleManager($userId)
+    public function findNonEmptyGroupsWhereUserIsSoleManager($userId)
     {
-        // SELECT group_id AS `group_id`, (COUNT(is_admin)) AS `count_admin`
-        // FROM groups_users GroupsUsers
-        // WHERE (is_admin= = :c0 AND group_id in(
-        //      SELECT GroupsUsers.group_id AS `GroupsUsers__group_id`
-        //      FROM groups_users GroupsUsers
-        //      WHERE (user_id = :c1 AND is_admin = :c2))
-        // ) GROUP BY group_id
-        // HAVING count_admin= :c3
+        // SELECT group_id AS `group_id`,
+        //      (SUM(is_admin)) AS `count_admin`,
+        //      (COUNT(user_id)) AS `count_user`
+        // FROM groups_users
+        // WHERE group_id IN (
+        //      SELECT group_id
+        //      FROM groups_users
+        //      WHERE (user_id = $user_id AND is_admin=1)
+        // )
+        // GROUP BY group_id
+        // HAVING count_admin=1 AND count_user > 1;
 
         $subquery = $this->find();
-        $subquery->select(['group_id'])
+        $subquery
+            ->select(['group_id'])
             ->where([
                 'user_id' => $userId,
                 'is_admin' => true
@@ -168,11 +173,54 @@ class GroupsUsersTable extends Table
         $query
             ->select([
                 'group_id' => 'group_id',
-                'count_admin' => $query->func()->count('is_admin')
+                'count_admin' => $query->func()->sum('is_admin'),
+                'count_user' => $query->func()->count('user_id')
             ])
-            ->where(['is_admin' => 1, 'group_id IN' => $subquery])
-            ->group('group_id')
-            ->having(['count_admin' => 1]);
+            ->where(['group_id IN' => $subquery])
+            ->having(['count_admin' => 1, 'count_user >' => 1]);
+
+        $result = $query->all()->toArray();
+        $result = Hash::extract($result, '{n}.group_id');
+
+        return $result;
+    }
+
+    /**
+     * Get the list of group id where the user is the only member
+     * Useful to know which group to delete when deleting a user
+     * The user should be the manager at the point but we might as well cast a larger net
+     *
+     * @param string $userId user uuid
+     * @return array of group uuid
+     */
+    public function findGroupsWhereUserOnlyMember($userId)
+    {
+        // SELECT group_id AS `group_id`,
+        //      (COUNT(user_id)) AS `count_user`
+        // FROM groups_users
+        // WHERE group_id IN (
+        //      SELECT group_id
+        //      FROM groups_users
+        //      WHERE (user_id = $user_id)
+        // )
+        // GROUP BY group_id
+        // HAVING count_user=1;
+
+        $subquery = $this->find();
+        $subquery
+            ->select(['group_id'])
+            ->where([
+                'user_id' => $userId
+            ]);
+
+        $query = $this->find();
+        $query
+            ->select([
+                'group_id' => 'group_id',
+                'count_user' => $query->func()->count('user_id')
+            ])
+            ->where(['group_id IN' => $subquery])
+            ->having(['count_user' => 1]);
 
         $result = $query->all()->toArray();
         $result = Hash::extract($result, '{n}.group_id');

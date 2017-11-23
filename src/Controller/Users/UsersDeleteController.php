@@ -107,17 +107,24 @@ class UsersDeleteController extends AppController
             $errors = $user->getErrors();
             $msg = __('The user cannot be deleted.') . ' ';
 
-            if (isset($errors['id']['notUniqueGroupOwner'])) {
-                $groupIds = $this->GroupsUsers->findGroupsWhereUserIsSoleManager($id);
+            if (isset($errors['id']['soleManagerOfNonEmptyGroup'])) {
+                $groupIds = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($id);
                 $body = $this->Groups->findAllByIds($groupIds);
-                $msg .= $errors['id']['notUniqueGroupOwner'];
+                $msg .= $errors['id']['soleManagerOfNonEmptyGroup'];
                 throw new ValidationRuleException($msg, $body, $this->Groups);
             }
 
-            if (isset($errors['id']['notSharedResourceUniqueOwner'])) {
+            if (isset($errors['id']['soleOwnerOfSharedResource'])) {
                 $resourceIds = $this->Permissions->findSharedResourcesUserIsSoleOwner($id);
                 $body = $this->Resources->findAllByIds($id, $resourceIds);
-                $msg .= $errors['id']['notUniqueGroupOwner'];
+                $msg .= $errors['id']['soleOwnerOfSharedResource'];
+                throw new ValidationRuleException($msg, $body, $this->Resources);
+            }
+
+            if (isset($errors['id']['soleAdminOfGroupOwnerOfSharedResource'])) {
+                $resourceIds = $this->Permissions->findSharedResourcesGroupAdminIsSoleOwner($id);
+                $body = $this->Resources->findAllByIds($id, $resourceIds);
+                $msg .= $errors['id']['soleAdminOfGroupOwnerOfSharedResource'];
                 throw new ValidationRuleException($msg, $body, $this->Resources);
             }
         }

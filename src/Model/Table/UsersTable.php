@@ -16,7 +16,8 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSharedResourceUniqueOwnerRule;
-use App\Model\Rule\IsNotUniqueGroupOwnerRule;
+use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
+use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use Aura\Intl\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -191,13 +192,17 @@ class UsersTable extends Table
         ]);
 
         // Delete rules
-        $rules->addDelete(new IsNotUniqueGroupOwnerRule(), 'notUniqueGroupOwner', [
+        $rules->addDelete(new IsNotSharedResourceUniqueOwnerRule(), 'soleOwnerOfSharedResource', [
+            'errorField' => 'id',
+            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+        ]);
+        $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
             'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
         ]);
-        $rules->addDelete(new IsNotSharedResourceUniqueOwnerRule(), 'notSharedResourceUniqueOwner', [
+        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleAdminOfGroupOwnerOfSharedResource', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+            'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
         ]);
 
         return $rules;
@@ -665,7 +670,7 @@ class UsersTable extends Table
      * @param array $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
-    public function softDelete($user, $options)
+    public function softDelete($user, $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -682,8 +687,19 @@ class UsersTable extends Table
         // transferred to other people already (ref. checkRules)
         $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id);
         if (!empty($resourceIds)) {
+            // TODO soft delete from resource model instead
             $Resources = TableRegistry::get('Resources');
             $Resources->updateAll(['deleted' => true], [
+                'id IN' => $resourceIds
+            ]);
+        }
+
+        // Soft delete all the groups where the user is alone
+        // We do not want empty groups
+        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
+        if (!empty($groupsId)) {
+            // TODO soft delete from groups model instead
+            $this->Groups->updateAll(['deleted' => true], [
                 'id IN' => $resourceIds
             ]);
         }
@@ -696,7 +712,7 @@ class UsersTable extends Table
         // Mark user as deleted
         $user->deleted = true;
         if (!$this->save($user, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not delete the user {0}', $user->id));
+            throw new InternalErrorException(__('Could not delete the user {0}, please try again later.', $user->id));
         }
 
         return true;

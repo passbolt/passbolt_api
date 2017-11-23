@@ -18,10 +18,10 @@ namespace App\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 
-class IsNotUniqueGroupOwnerRule
+class IsNotSoleManagerOfNonEmptyGroupRule
 {
     /**
-     * Performs the check
+     * Check if the user is sole manager of group that is not empty
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
@@ -30,8 +30,7 @@ class IsNotUniqueGroupOwnerRule
     public function __invoke(EntityInterface $entity, array $options)
     {
         $GroupsUsers = TableRegistry::get('GroupsUsers');
-        $groups = $GroupsUsers->findGroupsWhereUserIsSoleManager($entity->id);
-
+        $groups = $GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($entity->id);
         return (empty($groups));
     }
 }
