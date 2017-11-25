@@ -175,7 +175,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteDeletedUserError()
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sophia') . '.json';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }

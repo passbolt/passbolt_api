@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
 
-class FindResourcesOnlyUserCanAccessTest extends AppTestCase
+class FindResourcesOnlyGroupCanAccessTest extends AppTestCase
 {
     public $fixtures = ['app.alt0/permissions', 'app.alt0/groups_users'];
 
@@ -44,36 +44,31 @@ class FindResourcesOnlyUserCanAccessTest extends AppTestCase
         $this->Permissions = TableRegistry::get('Permissions');
     }
 
-    public function testFindOnlyUserCanAccessSuccess()
+    public function testFindOnlyGroupCanAccessSuccess()
     {
-        // Ada has sole owner of with apache
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId);
+        // Creative is sole owner of apache
+        $groupId = UuidFactory::uuid('group.id.creative');
+        $resources = $this->Permissions->findResourcesOnlyGroupCanAccess($groupId);
         $this->assertEquals(count($resources), 1);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.apache'));
-    }
-
-    public function testFindOnlyUserCanAccessWitGroupsSuccess()
-    {
-        // Ada is also indirectly sole owner of composer because she is alone in group creative
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true);
-        $this->assertEquals(count($resources), 2);
-        $this->assertEquals($resources[1], UuidFactory::uuid('resource.id.apache'));
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.composer'));
+
+        // Developer is sole owner of debian
+        $groupId = UuidFactory::uuid('group.id.developer');
+        $resources = $this->Permissions->findResourcesOnlyGroupCanAccess($groupId);
+        $this->assertEquals(count($resources), 1);
+        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.debian'));
     }
 
-    public function testFindOnlyUserCanAccessNoDirectResources()
+    public function testFindOnlyGroupCanAccessNoResult()
     {
-        $userId = UuidFactory::uuid('user.id.betty');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId);
-        $this->assertEquals(count($resources), 0);
-    }
+        // freelancer not owner of anything
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $resources = $this->Permissions->findResourcesOnlyGroupCanAccess($groupId);
+        $this->assertEmpty($resources);
 
-    public function testFindOnlyUserCanAccessNoDirectResourcesWithGroups()
-    {
-        $userId = UuidFactory::uuid('user.id.betty');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true);
-        $this->assertEquals(count($resources), 0);
+        // ergonom is owner of of some resources but never alone
+        $groupId = UuidFactory::uuid('group.id.ergonom');
+        $resources = $this->Permissions->findResourcesOnlyGroupCanAccess($groupId);
+        $this->assertEmpty($resources);
     }
 }

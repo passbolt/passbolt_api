@@ -368,17 +368,20 @@ class PermissionsTable extends Table
     }
 
     /**
-     * Find list of shared resources ids for all the groups the given user is admin of
+     * Find list of shared resources ids for all the groups for a given user
+     * where the user is the only admin of these groups
+     *
      * Useful to make sure we do not delete a user from a group that would make a resource
      * loose its only owner.
      *
      * @param string $userId uuid of the user
      * @return array $results the uuids of the resources
      */
-    public function findSharedResourcesGroupAdminIsSoleOwner($userId)
+    public function findSharedResourcesSoleGroupManagerIsSoleOwner($userId)
     {
         // Show the ARO counts by permissions for all the resources
-        // the given user is admin of the group that is the owner of the resource
+        // the given user is the only admin of a non empty group
+        // and this group is the only owner of the resource
         //
         // SELECT permissions.aco_foreign_key AS resource_id,
         //    permissions.type, count(permissions.id) AS aro_count
@@ -388,10 +391,7 @@ class PermissionsTable extends Table
         //    FROM permissions
         //    WHERE permissions.type = Permission::OWNER
         //    AND permissions.aro_foreign_key IN (
-        //        SELECT group_id
-        //        FROM groups
-        //        WHERE user_id=$userId
-        //        AND is_admin=1
+        //         'uuid_group1', 'uuid_group2', etc.
         //    )
         // )
         // GROUP BY permissions.aco_foreign_key, permissions.type
@@ -407,17 +407,20 @@ class PermissionsTable extends Table
         // | ...                                  |  ...   |        ... |
         // +--------------------------------------+--------+------------+
 
-        // Find all the groups a user is admin of
+        // Find all the groups a user is the only member (and thus only manager)
         $GroupsUsers = TableRegistry::get('GroupsUsers');
-        $subquery1 = $GroupsUsers->find();
-        $subquery1
-            ->select(['group_id'])
-            ->where(['is_admin' => 1, 'user_id' => $userId]);
+        $subquery1 = $GroupsUsers->findGroupsWhereUserOnlyMember($userId);
+        if (empty($subquery1)) {
+            return [];
+        }
 
         // Find all the resources groups are owner of
         $subquery2 = $this->find()
             ->select(['aco_foreign_key'])
             ->where(['type' => Permission::OWNER, 'aro_foreign_key IN' => $subquery1]);
+        if (empty($subquery2)) {
+            return [];
+        }
 
         // Find the user|group count by permissions for these
         $query = $this->find();
@@ -438,7 +441,7 @@ class PermissionsTable extends Table
 
     /**
      * Extract resources id where ARO is sole owner from a list of resources
-     * and their associated permissions map. See. findSharedResourcesGroupAdminIsSoleOwner
+     * and their associated permissions map. See. findSharedResourcesGroupManagerIsSoleOwner
      *
      * @param array $resources list of resources with associated permissions type count
      * @return array
@@ -519,11 +522,25 @@ class PermissionsTable extends Table
      * User alias for findResourcesOnlyAroCanAccess
      *
      * @param string $userId uuid
+     * @param bool $checkGroupsUsers also check for group user is sole member of
      * @return array list of resource uuid
      */
-    public function findResourcesOnlyUserCanAccess($userId)
+    public function findResourcesOnlyUserCanAccess($userId, $checkGroupsUsers = false)
     {
-        return $this->findResourcesOnlyAroCanAccess($userId);
+        $resources = $this->findResourcesOnlyAroCanAccess($userId);
+        if ($checkGroupsUsers) {
+            // @TODO is it doable in one request?
+            $GroupsUsers = TableRegistry::get('GroupsUsers');
+            $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId);
+            foreach ($groups as $i => $groupId) {
+                $r = $this->findResourcesOnlyGroupCanAccess($groupId);
+                if (!empty($r)) {
+                    $resources = array_merge($r, $resources);
+                }
+            }
+        }
+
+        return $resources;
     }
 
     /**

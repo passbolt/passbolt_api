@@ -183,7 +183,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteDeletedUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.sophia') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
     }

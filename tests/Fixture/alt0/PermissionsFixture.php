@@ -1,9 +1,9 @@
 <?php
-namespace App\Test\Fixture;
+namespace App\Test\Fixture\alt0;
 
-use Cake\TestSuite\Fixture\TestFixture;
-use App\Utility\UuidFactory;
 use App\Model\Entity\Permission;
+use App\Utility\UuidFactory;
+use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * PermissionsFixture
@@ -83,6 +83,36 @@ class PermissionsFixture extends TestFixture
                 'aro' => 'User',
                 'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
                 'type' => Permission::READ,
+                'created' => '2017-11-17 12:37:04',
+                'modified' => '2017-11-17 12:37:04'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'aco' => 'Resource',
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.bower'),
+                'aro' => 'User',
+                'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
+                'type' => Permission::OWNER,
+                'created' => '2017-11-17 12:37:04',
+                'modified' => '2017-11-17 12:37:04'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'aco' => 'Resource',
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.bower'),
+                'aro' => 'User',
+                'aro_foreign_key' => UuidFactory::uuid('user.id.dame'),
+                'type' => Permission::OWNER,
+                'created' => '2017-11-17 12:37:04',
+                'modified' => '2017-11-17 12:37:04'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'aco' => 'Resource',
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.bower'),
+                'aro' => 'User',
+                'aro_foreign_key' => UuidFactory::uuid('user.id.frances'),
+                'type' => Permission::UPDATE,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
             ],
@@ -189,6 +219,16 @@ class PermissionsFixture extends TestFixture
             [
                 'id' => UuidFactory::uuid(),
                 'aco' => 'Resource',
+                'aco_foreign_key' => UuidFactory::uuid('resource.id.docker'),
+                'aro' => 'Group',
+                'aro_foreign_key' => UuidFactory::uuid('group.id.freelancer'),
+                'type' => Permission::UPDATE,
+                'created' => '2017-11-17 12:37:04',
+                'modified' => '2017-11-17 12:37:04'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.enlightenment'),
                 'aro' => 'Group',
                 'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
@@ -201,7 +241,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.enlightenment'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::READ,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -221,7 +261,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.fosdem'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::READ,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -241,7 +281,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.framasoft'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::READ,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -261,7 +301,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.fsfe'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::READ,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -281,7 +321,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.ftp'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.betty'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
                 'type' => Permission::READ,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -301,7 +341,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.grogle'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::OWNER,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -321,7 +361,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.grunt'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::OWNER,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -391,7 +431,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.inkscape'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::UPDATE,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
@@ -401,7 +441,7 @@ class PermissionsFixture extends TestFixture
                 'aco' => 'Resource',
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.jquery'),
                 'aro' => 'User',
-                'aro_foreign_key' => UuidFactory::uuid('group.id.carol'),
+                'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
                 'type' => Permission::UPDATE,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'

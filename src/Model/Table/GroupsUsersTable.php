@@ -177,7 +177,52 @@ class GroupsUsersTable extends Table
                 'count_user' => $query->func()->count('user_id')
             ])
             ->where(['group_id IN' => $subquery])
+            ->group('group_id')
             ->having(['count_admin' => 1, 'count_user >' => 1]);
+
+        $result = $query->all()->toArray();
+        $result = Hash::extract($result, '{n}.group_id');
+
+        return $result;
+    }
+
+    /**
+     * Get the list of group id where the user is the sole manager and not the sole member
+     * Useful to know if a new group manager need to be appointed when deleting a user
+     *
+     * @param string $userId user uuid
+     * @return array of group uuid
+     */
+    public function findGroupsWhereUserIsSoleManager($userId)
+    {
+        // SELECT group_id AS `group_id`,
+        //      (SUM(is_admin)) AS `count_admin`
+        // FROM groups_users
+        // WHERE group_id IN (
+        //      SELECT group_id
+        //      FROM groups_users
+        //      WHERE (user_id = $user_id AND is_admin=1)
+        // )
+        // GROUP BY group_id
+        // HAVING count_admin=1;
+
+        $subquery = $this->find();
+        $subquery
+            ->select(['group_id'])
+            ->where([
+                'user_id' => $userId,
+                'is_admin' => true
+            ]);
+
+        $query = $this->find();
+        $query
+            ->select([
+                'group_id' => 'group_id',
+                'count_admin' => $query->func()->sum('is_admin')
+            ])
+            ->where(['group_id IN' => $subquery])
+            ->group('group_id')
+            ->having(['count_admin' => 1]);
 
         $result = $query->all()->toArray();
         $result = Hash::extract($result, '{n}.group_id');
@@ -220,6 +265,7 @@ class GroupsUsersTable extends Table
                 'count_user' => $query->func()->count('user_id')
             ])
             ->where(['group_id IN' => $subquery])
+            ->group('group_id')
             ->having(['count_user' => 1]);
 
         $result = $query->all()->toArray();

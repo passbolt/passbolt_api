@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 class IsNotSoleManagerOfGroupOwningSharedResourcesRule
 {
     /**
-     * Check if the user is manager of group that is owner of shared resource
+     * Check if the user is the only manager of group that is owner of shared resource
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
@@ -30,7 +30,8 @@ class IsNotSoleManagerOfGroupOwningSharedResourcesRule
     public function __invoke(EntityInterface $entity, array $options)
     {
         $Permissions = TableRegistry::get('Permissions');
-        $resources = $Permissions->findSharedResourcesGroupAdminIsSoleOwner($entity->id);
+        $resources = $Permissions->findSharedResourcesSoleGroupManagerIsSoleOwner($entity->id);
+
         return (empty($resources));
     }
 }

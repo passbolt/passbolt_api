@@ -31,6 +31,7 @@ class IsNotSoleManagerOfNonEmptyGroupRule
     {
         $GroupsUsers = TableRegistry::get('GroupsUsers');
         $groups = $GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($entity->id);
+
         return (empty($groups));
     }
 }

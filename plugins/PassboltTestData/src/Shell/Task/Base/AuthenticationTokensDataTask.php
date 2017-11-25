@@ -63,8 +63,8 @@ class AuthenticationTokensDataTask extends DataTask
             'active' => 1,
         ];
         $tokens[] = [
-            'id' => UuidFactory::uuid('token.id.sophia'),
-            'user_id' => UuidFactory::uuid('user.id.sophia'),
+            'id' => UuidFactory::uuid('token.id.sofia'),
+            'user_id' => UuidFactory::uuid('user.id.sofia'),
             'token' => UuidFactory::uuid(),
             'active' => 1,
         ];

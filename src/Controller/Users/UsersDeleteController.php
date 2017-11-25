@@ -121,10 +121,10 @@ class UsersDeleteController extends AppController
                 throw new ValidationRuleException($msg, $body, $this->Resources);
             }
 
-            if (isset($errors['id']['soleAdminOfGroupOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedResourcesGroupAdminIsSoleOwner($id);
+            if (isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource'])) {
+                $resourceIds = $this->Permissions->findSharedResourcesSoleGroupManagerIsSoleOwner($id);
                 $body = $this->Resources->findAllByIds($id, $resourceIds);
-                $msg .= $errors['id']['soleAdminOfGroupOwnerOfSharedResource'];
+                $msg .= $errors['id']['soleManagerOfGroupOwnerOfSharedResource'];
                 throw new ValidationRuleException($msg, $body, $this->Resources);
             }
         }

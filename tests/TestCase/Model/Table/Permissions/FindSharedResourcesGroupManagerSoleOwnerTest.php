@@ -19,7 +19,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
-class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
+class FindSharedResourcesSoleGroupManagerSoleOwnerTest extends AppTestCase
 {
     public $fixtures = ['app.alt0/permissions', 'app.alt0/groups_users'];
 
@@ -41,32 +41,27 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->Permissions = TableRegistry::get('Permissions');
     }
 
-    public function testFindShardResourceUserDoesNotOwnAnything()
+    public function testFindSharedResourcesSoleGroupManagerSoleOwner()
     {
-        // Grace does not anything
-        $userId = UuidFactory::uuid('user.id.grace');
-        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId);
-        $this->assertEmpty($resources);
-    }
-
-    public function testFindShardResourceUserIsSoleOwner()
-    {
-        // Ada is sole owner of april that is shared with betty
+        // Ada is sole member of group creative and creative owns framasoft shared with carol
         $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId);
+        $resources = $this->Permissions->findSharedResourcesSoleGroupManagerIsSoleOwner($userId);
         $this->assertNotEmpty($resources);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.april'));
+        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.framasoft'));
 
-        // Only april is in this case, all other resources have other owners
-        // or are not shared with anybody
+        // Should be the only one, e.g.
+        // - composer is owned by creative group by not shared with anybody
+        // - inkscape is also owned by accounting
         $this->assertEquals(count($resources), 1);
     }
 
-    public function testFindResourceUserIsNotSoleOwner()
+    public function testFindSharedResourcesNotGroupManager()
     {
-        // Betty is owner of bower and so is dame
-        $userId = UuidFactory::uuid('user.id.betty');
-        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId);
-        $this->assertEmpty($resources);
+        // Freelancer group does not anything
+        $userId = UuidFactory::uuid('user.id.ada');
+        $resources = $this->Permissions->findSharedResourcesSoleGroupManagerIsSoleOwner($userId);
+        $this->assertNotEmpty($resources);
+        $this->assertEquals(count($resources), 1);
+        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.framasoft'));
     }
 }

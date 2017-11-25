@@ -100,9 +100,9 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 
     public function testSetupStartBadRequestErrorDeletedUser()
     {
-        $userId = UuidFactory::uuid('user.id.sophia');
+        $userId = UuidFactory::uuid('user.id.sofia');
         $t = $this->AuthenticationTokens->generate($userId);
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.sophia') . '/' . $t->token;
+        $url = '/setup/install/' . UuidFactory::uuid('user.id.sofia') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');
     }

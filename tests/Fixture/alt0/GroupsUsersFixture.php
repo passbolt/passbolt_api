@@ -1,8 +1,8 @@
 <?php
-namespace App\Test\Fixture;
+namespace App\Test\Fixture\alt0;
 
-use Cake\TestSuite\Fixture\TestFixture;
 use App\Utility\UuidFactory;
+use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * GroupsUsersFixture
@@ -95,6 +95,27 @@ class GroupsUsersFixture extends TestFixture
                 'group_id' => UuidFactory::uuid('group.id.ergonom'),
                 'user_id' => UuidFactory::uuid('user.id.dame'),
                 'is_admin' => true,
+                'created' => '2017-11-17 12:37:03'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'group_id' => UuidFactory::uuid('group.id.freelancer'),
+                'user_id' => UuidFactory::uuid('user.id.edith'),
+                'is_admin' => true,
+                'created' => '2017-11-17 12:37:03'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'group_id' => UuidFactory::uuid('group.id.freelancer'),
+                'user_id' => UuidFactory::uuid('user.id.frances'),
+                'is_admin' => false,
+                'created' => '2017-11-17 12:37:03'
+            ],
+            [
+                'id' => UuidFactory::uuid(),
+                'group_id' => UuidFactory::uuid('group.id.freelancer'),
+                'user_id' => UuidFactory::uuid('user.id.grace'),
+                'is_admin' => false,
                 'created' => '2017-11-17 12:37:03'
             ]
         ];

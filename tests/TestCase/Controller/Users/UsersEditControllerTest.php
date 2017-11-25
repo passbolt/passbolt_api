@@ -71,7 +71,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $data = [
             'id' => UuidFactory::uuid('user.id.sofia'),
             'profile' => [
-                'first_name' => 'sophia edited'
+                'first_name' => 'sofia edited'
             ]
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.sofia') . '.json', $data);

@@ -101,9 +101,9 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     public function testRecoverStartBadRequestErrorDeletedUser()
     {
         $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.sophia')])
+            ->where(['id' => UuidFactory::uuid('token.id.sofia')])
             ->first();
-        $url = '/setup/recover/start/' . UuidFactory::uuid('user.id.sophia') . '/' . $t->token;
+        $url = '/setup/recover/start/' . UuidFactory::uuid('user.id.sofia') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');
     }

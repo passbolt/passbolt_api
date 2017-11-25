@@ -19,7 +19,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
-class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
+class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
 {
     public $fixtures = ['app.alt0/permissions', 'app.alt0/groups_users'];
 
@@ -41,32 +41,24 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->Permissions = TableRegistry::get('Permissions');
     }
 
-    public function testFindShardResourceUserDoesNotOwnAnything()
+    public function testFindSharedResourceGroupDoesNotOwnAnything()
     {
-        // Grace does not anything
-        $userId = UuidFactory::uuid('user.id.grace');
-        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId);
+        // Freelancer group does not anything
+        $groupId = UuidFactory::uuid('user.id.freelancer');
+        $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId);
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner()
+    public function testFindSharedResourceGroupIsSoleOwner()
     {
         // Ada is sole owner of april that is shared with betty
-        $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId);
+        $groupId = UuidFactory::uuid('group.id.accounting');
+        $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId);
         $this->assertNotEmpty($resources);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.april'));
+        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.enlightenment'));
 
-        // Only april is in this case, all other resources have other owners
+        // Only enlightenment is in this case, all other resources have some other owner
         // or are not shared with anybody
         $this->assertEquals(count($resources), 1);
-    }
-
-    public function testFindResourceUserIsNotSoleOwner()
-    {
-        // Betty is owner of bower and so is dame
-        $userId = UuidFactory::uuid('user.id.betty');
-        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId);
-        $this->assertEmpty($resources);
     }
 }

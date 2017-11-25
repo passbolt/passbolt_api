@@ -16,8 +16,8 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSharedResourceUniqueOwnerRule;
-use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
+use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use Aura\Intl\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -200,7 +200,7 @@ class UsersTable extends Table
             'errorField' => 'id',
             'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
         ]);
-        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleAdminOfGroupOwnerOfSharedResource', [
+        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleManagerOfGroupOwnerOfSharedResource', [
             'errorField' => 'id',
             'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
         ]);
@@ -682,12 +682,11 @@ class UsersTable extends Table
             }
         }
 
-        // find all the resources that belongs to the user and mark them as deleted
+        // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id);
+        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true);
         if (!empty($resourceIds)) {
-            // TODO soft delete from resource model instead
             $Resources = TableRegistry::get('Resources');
             $Resources->updateAll(['deleted' => true], [
                 'id IN' => $resourceIds
@@ -698,10 +697,8 @@ class UsersTable extends Table
         // We do not want empty groups
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
         if (!empty($groupsId)) {
-            // TODO soft delete from groups model instead
-            $this->Groups->updateAll(['deleted' => true], [
-                'id IN' => $resourceIds
-            ]);
+            $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
+            $this->Permissions->deleteAll(['aco_foreign_key IN' => $groupsId]);
         }
 
         // Delete all group memberships
