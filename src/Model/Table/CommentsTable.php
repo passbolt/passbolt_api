@@ -15,6 +15,7 @@
 
 namespace App\Model\Table;
 
+use App\Error\Exception\ArgumentCountErrorException;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
@@ -138,7 +139,6 @@ class CommentsTable extends Table
         return $validator;
     }
 
-
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
@@ -148,7 +148,6 @@ class CommentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        // Create rules.
         $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
             'table' => 'Resources',
@@ -179,8 +178,14 @@ class CommentsTable extends Table
         // Update rules.
         $rules->addUpdate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
         $rules->addUpdate([$this, 'ruleIsOwner'], 'is_owner', [
-            'errorField' => 'modified_by',
+            'errorField' => 'user_id',
             'message' => __('The user cannot update this comment.')
+        ]);
+
+        // Delete rules.
+        $rules->addDelete([$this, 'ruleIsOwner'], 'is_owner', [
+            'errorField' => 'user_id',
+            'message' => __('The user cannot delete this comment.')
         ]);
 
         return $rules;
@@ -243,13 +248,18 @@ class CommentsTable extends Table
      *
      * @param \App\Model\Entity\Comment $entity The entity that will be deleted.
      * @param array $options options
+     *   Comments.user_id should be provided so that the check can be done.
      * @return bool
      */
     public function ruleIsOwner($entity, array $options = [])
     {
-        if ($entity->{$options['errorField']} != $entity->user_id) {
+        if (!isset($options['Comments.user_id'])) {
+            throw new ArgumentCountErrorException(__('The parameter Comments.user_id should be provided'));
+        }
+        if ($options['Comments.user_id'] != $entity->user_id) {
             return false;
         }
+
         return true;
     }
 }

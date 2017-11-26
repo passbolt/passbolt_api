@@ -213,7 +213,7 @@ class CreateTest extends AppTestCase
 
     public function testErrorCreatedByDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['created_by' => Common::uuid()]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['created_by' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();

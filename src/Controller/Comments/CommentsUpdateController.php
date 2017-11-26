@@ -21,6 +21,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 class CommentsUpdateController extends AppController
@@ -45,7 +46,7 @@ class CommentsUpdateController extends AppController
         $comment = $this->_patchAndValidateCommentEntity($commentId);
         $this->_handleValidationErrors($comment);
 
-        $this->Comments->save($comment);
+        $this->Comments->save($comment, ['Comments.user_id' => $this->User->id()]);
         $this->_handleValidationErrors($comment);
         $this->success(__('The comment was successfully updated.'), $comment);
     }
@@ -80,7 +81,7 @@ class CommentsUpdateController extends AppController
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
-            if(isset($errors['modified_by']) && isset($errors['modified_by']['is_owner'])) {
+            if (!empty(Hash::get($errors, 'user_id.is_owner'))) {
                 throw new ForbiddenException(__('You are not allowed to edit this comment.'));
             }
             throw new ValidationRuleException(__('Could not validate comment data.'), $errors, $this->Comments);
@@ -97,8 +98,7 @@ class CommentsUpdateController extends AppController
     {
         try {
             $comment = $this->Comments->get($commentId);
-        }
-        catch(RecordNotFoundException $e) {
+        } catch(RecordNotFoundException $e) {
             throw new NotFoundException(__('The comment does not exist.'));
         }
 

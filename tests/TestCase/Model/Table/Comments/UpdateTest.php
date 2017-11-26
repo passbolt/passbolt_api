@@ -103,7 +103,7 @@ class UpdateTest extends AppTestCase
     {
         $comment = $this->Comments->get(UuidFactory::uuid('comment.id.apache-1'));
         $comment = $this->Comments->patchEntity($comment, ['content' => 'test', 'modified_by' => UuidFactory::uuid('user.id.notexist')], self::getEntityDefaultOptions());
-        $save = $this->Comments->save($comment);
+        $save = $this->Comments->save($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.irene')]);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
@@ -114,18 +114,18 @@ class UpdateTest extends AppTestCase
     {
         $comment = $this->Comments->get(UuidFactory::uuid('comment.id.apache-1'));
         $comment = $this->Comments->patchEntity($comment, ['content' => 'test', 'modified_by' => UuidFactory::uuid('user.id.jean')], self::getEntityDefaultOptions());
-        $save = $this->Comments->save($comment);
+        $save = $this->Comments->save($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.jean')]);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotEmpty($errors['modified_by']['is_owner']);
+        $this->assertNotEmpty($errors['user_id']['is_owner']);
     }
 
     public function testSuccess()
     {
         $comment = $this->Comments->get(UuidFactory::uuid('comment.id.apache-1'));
         $comment = $this->Comments->patchEntity($comment, ['content' => 'updated comment', 'modified_by' => UuidFactory::uuid('user.id.irene')], self::getEntityDefaultOptions());
-        $save = $this->Comments->save($comment);
+        $save = $this->Comments->save($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.irene')]);
         $this->assertTrue((bool)$save);
         $errors = $comment->getErrors();
         $this->assertEmpty($errors);
