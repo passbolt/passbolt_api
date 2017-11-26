@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -128,6 +129,12 @@ class GroupsTable extends Table
             'message' => __('A group manager must be provided.')
         ]);
 
+        // Delete rules
+        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
+            'errorField' => 'id',
+            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+        ]);
+
         return $rules;
     }
 
@@ -223,7 +230,7 @@ class GroupsTable extends Table
      * Filter a Groups query by groups users.
      *
      * @param \Cake\ORM\Query $query The query to augment.
-     * @param array<string> $usersIds The users to filter the query on.
+     * @param array <string> $usersIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be managers ? Default false.
      * @return \Cake\ORM\Query
      */
@@ -366,5 +373,55 @@ class GroupsTable extends Table
         $search = '%' . $search . '%';
 
         return $query->where(['Groups.name LIKE' => $search]);
+    }
+
+    /**
+     * Soft delete a group and their associated items
+     * Mark group as deleted = true
+     * Mark all the group resources only associated with this group as deleted = true
+     * Delete all UserGroups association entries
+     * Delete all Permissions associated with this group
+     *
+     * @param \App\Model\Entity\Group $group entity
+     * @param array $options additional delete options such as ['checkRules' => true]
+     * @return bool status
+     */
+    public function softDelete($group, $options = null)
+    {
+        // Check the delete rules like a normal operation
+        if (!isset($options['checkRules'])) {
+            $options['checkRules'] = true;
+        }
+        if ($options['checkRules']) {
+            if (!$this->checkRules($group, RulesChecker::DELETE)) {
+                return false;
+            }
+        }
+
+        // find all the resources that only belongs to the group and mark them as deleted
+        // Note: all resources that cannot be deleted should have been
+        // transferred to other people already (ref. delete checkRules)
+        $Permissions = TableRegistry::get('Permissions');
+        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id);
+        if (!empty($resourceIds)) {
+            $Resources = TableRegistry::get('Resources');
+            $Resources->updateAll(['deleted' => true], [
+                'id IN' => $resourceIds
+            ]);
+        }
+
+        // Delete all group memberships
+        // Delete all permissions
+        $this->GroupsUsers->deleteAll(['group_id' => $group->id]);
+        $Permissions->deleteAll(['aro_foreign_key' => $group->id]);
+
+        // Mark group as deleted
+        $group->deleted = true;
+        if (!$this->save($group, ['checkRules' => false, 'validate' => false])) {
+            $msg = __('Could not delete the group {0}, please try again later.', $group->name);
+            throw new InternalErrorException($msg);
+        }
+
+        return true;
     }
 }

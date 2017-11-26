@@ -19,7 +19,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
-class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
+class UsersDeleteControllerTest extends AppIntegrationTestCase
 {
     public $Users;
     public $GroupsUsers;
@@ -39,7 +39,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::get('Permissions');
     }
 
-    public function testUsersSoftDeleteDryRunSuccess()
+    public function testUsersDeleteDryRunSuccess()
     {
         $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.frances');
@@ -49,7 +49,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertFalse($frances->deleted);
     }
 
-    public function testUsersSoftDeleteDryRunError()
+    public function testUsersDeleteDryRunError()
     {
         $this->authenticateAs('admin');
         $adaId = UuidFactory::uuid('user.id.ada');
@@ -61,7 +61,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         );
     }
 
-    public function testUsersSoftDeleteSuccess()
+    public function testUsersDeleteSuccess()
     {
         $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.frances');
@@ -71,14 +71,14 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertTrue($frances->deleted);
     }
 
-    public function testUsersSoftDeleteNotLoggedInError()
+    public function testUsersDeleteNotLoggedInError()
     {
         $francesId = UuidFactory::uuid('user.id.frances');
         $this->deleteJson('/users/' . $francesId . '.json');
         $this->assertAuthenticationError();
     }
 
-    public function testUsersSoftDeleteNotAdminError()
+    public function testUsersDeleteNotAdminError()
     {
         $this->authenticateAs('ada');
         $francesId = UuidFactory::uuid('user.id.frances');
@@ -86,7 +86,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
-    public function testUsersSoftDeleteInvalidUserError()
+    public function testUsersDeleteInvalidUserError()
     {
         $this->authenticateAs('admin');
         $bogusId = '0';
@@ -109,7 +109,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The user id must be a valid uuid.');
     }
 
-    public function testUsersSoftDeleteUserDoesNotExistError()
+    public function testUsersDeleteUserDoesNotExistError()
     {
         $this->authenticateAs('admin');
         $bogusId = UuidFactory::uuid('user.id.bogus');
@@ -117,7 +117,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The user does not exist or has been already deleted.');
     }
 
-    public function testUsersSoftDeleteUserAlreadyDeletedError()
+    public function testUsersDeleteUserAlreadyDeletedError()
     {
         $this->authenticateAs('admin');
         $sofia = UuidFactory::uuid('user.id.sofia');
@@ -125,7 +125,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The user does not exist or has been already deleted.');
     }
 
-    public function testUsersSoftDeleteCannotDeleteSelfError()
+    public function testUsersDeleteCannotDeleteSelfError()
     {
         $this->authenticateAs('admin');
         $adminId = UuidFactory::uuid('user.id.admin');
@@ -133,7 +133,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'You are not allowed to delete yourself.');
     }
 
-    public function testUsersSoftDeleteSoleGroupOwnerError()
+    public function testUsersDeleteSoleGroupOwnerError()
     {
         // Ada cannot be deleted because it's the sole manager of group accounting
         $this->authenticateAs('admin');
@@ -152,7 +152,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertEquals($group->id, UuidFactory::uuid('group.id.accounting'));
     }
 
-    public function testUsersSoftDeleteSoleResourceOwnerError()
+    public function testUsersDeleteSoleResourceOwnerError()
     {
         // Make betty admin of accounting group
         $groupUser = $this->GroupsUsers->find()->select()->where([
@@ -180,7 +180,7 @@ class UsersSoftDeleteControllerTest extends AppIntegrationTestCase
         $this->assertEquals($resource->id, UuidFactory::uuid('resource.id.april'));
     }
 
-    public function testUsersSoftDeleteSoleManagerOfEmptyGroupOwningAResourceError()
+    public function testUsersDeleteSoleManagerOfEmptyGroupOwningAResourceError()
     {
         // Make betty admin of accounting group
         $groupUser = $this->GroupsUsers->find()->select()->where([

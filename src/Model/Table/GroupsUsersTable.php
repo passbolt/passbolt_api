@@ -19,6 +19,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -272,5 +273,28 @@ class GroupsUsersTable extends Table
         $result = Hash::extract($result, '{n}.group_id');
 
         return $result;
+    }
+
+    /**
+     * Check if the given user is the manager of a given group
+     *
+     * @param string $userId uuid
+     * @param string $groupId uuid
+     * @return bool true if user is marked as admin
+     */
+    public function isManager($userId, $groupId)
+    {
+        if (!Validation::uuid($userId) || !Validation::uuid($groupId)) {
+            return false;
+        }
+        $user = $this->find()
+            ->select(['group_id'])
+            ->where([
+                'user_id' => $userId,
+                'group_id' => $groupId,
+                'is_admin' => true
+            ])->first();
+
+        return (!empty($user));
     }
 }

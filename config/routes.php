@@ -131,6 +131,14 @@ Router::prefix('Groups', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['GET']);
 
+    $routes->connect('/:id', ['controller' => 'GroupsDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/:id/dry-run', ['controller' => 'GroupsDelete', 'action' => 'dryRun'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
+
     $routes->connect('/', ['controller' => 'GroupsAdd', 'action' => 'add'])
         ->setMethods(['POST']);
 });

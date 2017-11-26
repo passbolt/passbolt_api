@@ -40,8 +40,8 @@ class UsersDeleteController extends AppController
         $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
-        // To not use userRegisterController beforeFilter rules
-        return AppController::beforeFilter($event);
+
+        return parent::beforeFilter($event);
     }
 
     /**

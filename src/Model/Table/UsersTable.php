@@ -15,9 +15,9 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Role;
-use App\Model\Rule\IsNotSharedResourceUniqueOwnerRule;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
+use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use Aura\Intl\Exception;
 use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -192,7 +192,7 @@ class UsersTable extends Table
         ]);
 
         // Delete rules
-        $rules->addDelete(new IsNotSharedResourceUniqueOwnerRule(), 'soleOwnerOfSharedResource', [
+        $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
             'errorField' => 'id',
             'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
         ]);
@@ -663,10 +663,11 @@ class UsersTable extends Table
      * Soft delete a user and their associated items
      * Mark user as deleted = true
      * Mark all the user resources only associated with this user as deleted = true
+     * Mark all groups where user is sole member as deleted = true
      * Delete all UserGroups association entries
      * Delete all Permissions
      *
-     * @param EntityInterface $user entity
+     * @param \App\Model\Entity\User $user entity
      * @param array $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
@@ -693,8 +694,10 @@ class UsersTable extends Table
             ]);
         }
 
-        // Soft delete all the groups where the user is alone
         // We do not want empty groups
+        // Soft delete all the groups where the user is alone
+        // Note that all associated resources are already deleted in previous step
+        // ref. findResourcesOnlyUserCanAccess checkGroupsUsers = true
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
@@ -709,7 +712,7 @@ class UsersTable extends Table
         // Mark user as deleted
         $user->deleted = true;
         if (!$this->save($user, ['checkRules' => false])) {
-            throw new InternalErrorException(__('Could not delete the user {0}, please try again later.', $user->id));
+            throw new InternalErrorException(__('Could not delete the user {0}, please try again later.', $user->username));
         }
 
         return true;

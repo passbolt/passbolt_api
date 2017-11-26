@@ -18,7 +18,7 @@ namespace App\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 
-class IsNotSharedResourceUniqueOwnerRule
+class IsNotSoleOwnerOfSharedResourcesRule
 {
     /**
      * Performs the check
@@ -30,8 +30,8 @@ class IsNotSharedResourceUniqueOwnerRule
     public function __invoke(EntityInterface $entity, array $options)
     {
         $Permissions = TableRegistry::get('Permissions');
-        $groups = $Permissions->findSharedResourcesUserIsSoleOwner($entity->id);
+        $resources = $Permissions->findSharedResourcesAroIsSoleOwner($entity->id);
 
-        return (empty($groups));
+        return (empty($resources));
     }
 }

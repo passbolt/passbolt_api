@@ -44,11 +44,15 @@ class SoftDeleteTest extends AppTestCase
         $this->Groups = TableRegistry::get('Groups');
     }
 
-    public function testSoftDeleteSimpleSuccess()
+    public function testUsersSoftDeleteSimpleSuccess()
     {
         // Frances is not the admin of any group or owner of any resources
         $user = $this->Users->get(UuidFactory::uuid('user.id.frances'));
         $this->assertTrue($this->Users->softDelete($user));
+
+        // User should be marked as deleted
+        $user = $this->Users->get(UuidFactory::uuid('user.id.frances'));
+        $this->assertTrue($user->deleted);
 
         // Frances should have been deleted from group freelancer
         $groups = $this->GroupsUsers->find()
@@ -63,7 +67,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertEquals(count($permissions), 3);
     }
 
-    public function testSoftDeleteCheckAllRulesError()
+    public function testUsersSoftDeleteCheckAllRulesError()
     {
         $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
         $this->assertFalse($this->Users->softDelete($user));
@@ -73,7 +77,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertNotEmpty($errors['id']['soleManagerOfGroupOwnerOfSharedResource']);
     }
 
-    public function testSoftDeleteSoleResourceOwnerErrorFix()
+    public function testUsersSoftDeleteSoleResourceOwnerErrorFix()
     {
         // Ada breaks all the rules (see next three tests below)
         $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
@@ -88,7 +92,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleOwnerOfSharedResource']));
     }
 
-    public function testSoftDeleteSoleManagerOfNonEmptyGroupErrorFix()
+    public function testUsersSoftDeleteSoleManagerOfNonEmptyGroupErrorFix()
     {
         // Ada cannot be deleted because it is sole admin of group accounting
         // and that group owns a bunch of resources
@@ -109,7 +113,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
     }
 
-    public function testSoftDeleteSoleAdminOfGroupOwnerOfSharedResourceErrorFix()
+    public function testUsersSoftDeleteSoleAdminOfGroupOwnerOfSharedResourceErrorFix()
     {
         // Ada cannot be deleted because it is sole member of group creative
         // and that group owns the framasoft resource
@@ -130,7 +134,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
     }
 
-    public function testSoftDeleteAllErrorFix()
+    public function testUsersSoftDeleteAllErrorFix()
     {
         // Ada breaks all the rules (see next three tests below)
         $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
