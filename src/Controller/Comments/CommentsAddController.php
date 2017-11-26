@@ -39,9 +39,7 @@ class CommentsAddController extends AppController
         $this->loadModel('Comments');
 
         $comment = $this->_buildAndValidateCommentEntity($foreignId);
-        if ($this->_handleValidationErrors($comment)) {
-            return;
-        }
+        $this->_handleValidationErrors($comment);
 
         $this->Comments->save($comment);
         $this->_handleValidationErrors($comment);

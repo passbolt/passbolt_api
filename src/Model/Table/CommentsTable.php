@@ -100,33 +100,44 @@ class CommentsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->uuid('user_id')
-            ->notEmpty('user_id')
-            ->requirePresence('user_id');
+            ->uuid('user_id', __('user_id should be a uuid'))
+            ->notEmpty('user_id', __('The user_id should not be empty'))
+            ->requirePresence('user_id', 'create', __('A user_id is required'));
 
         $validator
-            ->uuid('parent_id')
+            ->uuid('parent_id', __('parent_ud should be a uuid'))
             ->allowEmpty('parent_id');
 
         $validator
-            ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS)
-            ->requirePresence('foreign_model', 'create')
-            ->notEmpty('foreign_model');
+            ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __('The foreign_model provided is not supported'))
+            ->requirePresence('foreign_model', 'create', __('A foreign_model is required'))
+            ->notEmpty('foreign_model', __('The foreign_model should not be empty'));
 
         $validator
-            ->uuid('foreign_id')
-            ->requirePresence('foreign_id', 'create')
-            ->notEmpty('foreign_id');
+            ->uuid('foreign_id', __('foreign_id should be a uuid'))
+            ->requirePresence('foreign_id', 'create', __('A foreign_id is required'))
+            ->notEmpty('foreign_id', __('The foreign_id should not be empty'));
 
         $validator
             ->scalar('content')
-            ->requirePresence('content', 'create')
-            ->notEmpty('content')
-            ->utf8Extended('content')
-            ->lengthBetween('content', [1, 255]);
+            ->requirePresence('content', __('A content is required'))
+            ->notEmpty('content', __('The content should not be empty'))
+            ->utf8Extended('content', __('The content is not a valid utf8 string (emoticons excluded)'))
+            ->lengthBetween('content', [1, 255], __('The content length should be between {0} and {1} characters.', 1, 255));
+
+        $validator
+            ->uuid('created_by', __('created_by should be a uuid'))
+            ->requirePresence('created_by', 'create', __('A created_by is required'))
+            ->notEmpty('created_by', __('The created_by should not be empty'));
+
+        $validator
+            ->uuid('modified_by', __('modified_by should be a uuid'))
+            ->requirePresence('modified_by', 'update', __('A modified_by is required'))
+            ->notEmpty('modified_by', 'update');
 
         return $validator;
     }
+
 
     /**
      * Returns a rules checker object that will be used for validating
@@ -137,6 +148,7 @@ class CommentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        // Create rules.
         $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
             'table' => 'Resources',
@@ -160,6 +172,15 @@ class CommentsTable extends Table
             'errorField' => 'parent_id',
             'message' => __('The parent comment is invalid.'),
             'resourceField' => 'foreign_id',
+        ]);
+        $rules->addCreate($rules->existsIn('created_by', 'Users'), 'creator_exists');
+        $rules->addCreate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
+
+        // Update rules.
+        $rules->addUpdate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
+        $rules->addUpdate([$this, 'ruleIsOwner'], 'is_owner', [
+            'errorField' => 'modified_by',
+            'message' => __('The user cannot update this comment.')
         ]);
 
         return $rules;
@@ -215,5 +236,20 @@ class CommentsTable extends Table
         }
 
         return $query;
+    }
+
+    /**
+     * Validate that the comment belongs to the associated user.
+     *
+     * @param \App\Model\Entity\Comment $entity The entity that will be deleted.
+     * @param array $options options
+     * @return bool
+     */
+    public function ruleIsOwner($entity, array $options = [])
+    {
+        if ($entity->{$options['errorField']} != $entity->user_id) {
+            return false;
+        }
+        return true;
     }
 }

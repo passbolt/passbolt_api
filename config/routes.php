@@ -102,6 +102,10 @@ Router::prefix('Comments', function ($routes) {
 	$routes->connect('/resource/:foreignId', ['controller' => 'CommentsAdd', 'action' => 'add'])
 	       ->setPass(['foreignId'])
 	       ->setMethods(['POST']);
+
+    $routes->connect('/:commentId', ['controller' => 'CommentsUpdate', 'action' => 'update'])
+        ->setPass(['commentId'])
+        ->setMethods(['PUT']);
 });
 
 /**
