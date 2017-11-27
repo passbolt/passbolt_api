@@ -109,6 +109,7 @@ module.exports = function(grunt) {
             'controls/infinite-bar.gif',
             'controls/loading.gif',
             'controls/overlay-opacity-50.png',
+            'controls/tree-ctrl.png',
             // Background images for error pages for ex
             'illustrations/nest.png',
             'illustrations/birds6_850.png',
