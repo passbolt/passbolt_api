@@ -153,7 +153,7 @@ class PermissionsTable extends Table
     }
 
     /**
-     * Custom validation rule to validate permission type
+     * Validate a permission type
      *
      * @param int $value permission type
      * @return bool

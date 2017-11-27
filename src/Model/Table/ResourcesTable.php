@@ -157,17 +157,17 @@ class ResourcesTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         // Create rules.
-        $rules->addCreate([$this, 'ruleOwnerPermissionProvided'], 'owner_permission_provided', [
+        $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
             'errorField' => 'permission',
             'message' => __('The permission of the owner is required.')
         ]);
-        $rules->addCreate([$this, 'ruleOwnerSecretProvided'], 'owner_secret_provided', [
+        $rules->addCreate([$this, 'isOwnerSecretProvidedRule'], 'owner_secret_provided', [
             'errorField' => 'secrets',
             'message' => __('The secret of the owner is required.')
         ]);
 
         // Update rules.
-        $rules->addUpdate([$this, 'ruleSecretsProvided'], 'secrets_provided', [
+        $rules->addUpdate([$this, 'isSecretsProvidedRule'], 'secrets_provided', [
             'errorField' => 'secrets',
             'message' => __('The secrets of all the users having access to the resource are required.')
         ]);
@@ -194,9 +194,9 @@ class ResourcesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function ruleOwnerPermissionProvided($entity, array $options = [])
+    public function isOwnerPermissionProvidedRule($entity, array $options = [])
     {
-        return $entity->permission->aro_foreign_key == $entity->created_by;
+        return ($entity->permission->aro_foreign_key === $entity->created_by);
     }
 
     /**
@@ -206,9 +206,9 @@ class ResourcesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function ruleOwnerSecretProvided($entity, array $options = [])
+    public function isOwnerSecretProvidedRule($entity, array $options = [])
     {
-        return $entity->secrets[0]->user_id == $entity->created_by;
+        return ($entity->secrets[0]->user_id === $entity->created_by);
     }
 
     /**
@@ -218,7 +218,7 @@ class ResourcesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function ruleSecretsProvided($entity, array $options = [])
+    public function isSecretsProvidedRule($entity, array $options = [])
     {
         // Secrets are not required to update a resource.
         if (!isset($entity->secrets) || empty($entity->secrets)) {

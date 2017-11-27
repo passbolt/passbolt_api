@@ -222,7 +222,8 @@ class UsersTable extends Table
 
         // Options must contain a role
         if (!isset($role)) {
-            throw new Exception(__('User table findIndex should have a role set in options.'));
+            $msg = __('User table findIndex should have a role set in options.');
+            throw new \InvalidArgumentException($msg);
         }
 
         // Default associated data

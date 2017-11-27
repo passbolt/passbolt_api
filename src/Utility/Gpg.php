@@ -177,7 +177,7 @@ class Gpg
      * @param string $armoredKey ASCII armored key data
      * @return bool true if valid, false otherwise
      */
-    public function isParsableArmoredPublicKey($armoredKey)
+    public function isParsableArmoredPublicKeyRule($armoredKey)
     {
         // First, we try to get the marker of the gpg message.
         try {
@@ -254,7 +254,7 @@ class Gpg
      */
     public function getPublicKeyInfo($armoredKey)
     {
-        if ($this->isParsableArmoredPublicKey($armoredKey) === false) {
+        if ($this->isParsableArmoredPublicKeyRule($armoredKey) === false) {
             throw new Exception('The public key could not be parsed.');
         }
 

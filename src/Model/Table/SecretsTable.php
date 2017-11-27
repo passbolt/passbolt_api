@@ -84,8 +84,8 @@ class SecretsTable extends Table
 
         $validator
             ->ascii('data', __('The message is not a valid armored gpg message.'))
-            ->add('data', 'isValidGpgMessage', [
-                'rule' => [$this, 'isValidGpgMessage'],
+            ->add('data', 'isValidGpgMessageRule', [
+                'rule' => [$this, 'isValidGpgMessageRule'],
                 'message' => __('The message is not a valid armored gpg message.')
             ])
             ->requirePresence('data', 'create', __('A message is required.'))
@@ -117,7 +117,7 @@ class SecretsTable extends Table
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function isValidGpgMessage($check, array $context)
+    public function isValidGpgMessageRule($check, array $context)
     {
         $gpg = new Gpg();
 

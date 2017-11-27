@@ -138,7 +138,7 @@ class FavoritesTable extends Table
         );
 
         // Add delete rules.
-        $rules->addDelete([$this, 'ruleIsOwner'], 'is_owner', [
+        $rules->addDelete([$this, 'isOwnerRule'], 'is_owner', [
             'errorField' => 'user_id',
             'message' => __('The user cannot delete this favorite.')
         ]);
@@ -153,7 +153,7 @@ class FavoritesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function ruleIsOwner($entity, array $options = [])
+    public function isOwnerRule($entity, array $options = [])
     {
         if ($options['Favorites.user_id'] != $entity->user_id) {
             return false;

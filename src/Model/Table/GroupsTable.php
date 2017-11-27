@@ -124,7 +124,7 @@ class GroupsTable extends Table
             ),
             'group_unique'
         );
-        $rules->addCreate([$this, 'ruleAtLeastOneAdmin'], 'at_least_one_admin', [
+        $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
             'message' => __('A group manager must be provided.')
         ]);
@@ -145,7 +145,7 @@ class GroupsTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function ruleAtLeastOneAdmin($entity, array $options = [])
+    public function atLeastOneAdminRule($entity, array $options = [])
     {
         $adminUsers = [];
         if (isset($entity->groups_users)) {

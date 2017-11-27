@@ -325,7 +325,7 @@ class Healthchecks
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
             $Gpgkeys = TableRegistry::get('Gpgkeys');
-            $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmail($publicKeyInfo['uid']);
+            $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
 
         // Check that the private key is present in the keyring.

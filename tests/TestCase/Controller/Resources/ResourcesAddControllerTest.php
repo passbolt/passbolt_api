@@ -210,7 +210,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
                 'data' => $this->_getDummyPostData(['Secret' => null])
             ],
             'secret is invalid' => [
-                'errorField' => 'Secrets.0.Secret.data.isValidGpgMessage',
+                'errorField' => 'Secrets.0.Secret.data.isValidGpgMessageRule',
                 'errorMessage' => 'The message is not a valid armored gpg message.',
                 'data' => $this->_getDummyPostData(['Secret' => [
                     0 => ['data' => 'Invalid secret']

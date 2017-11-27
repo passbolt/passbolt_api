@@ -256,7 +256,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // validate the fingerprint format
         $Gpgkeys = TableRegistry::get('Gpgkeys');
-        if (!$Gpgkeys->isValidFingerprint($keyid)) {
+        if (!$Gpgkeys->isValidFingerprintRule($keyid)) {
             $this->__debug('Invalid fingerprint.');
 
             return false;

@@ -159,7 +159,7 @@ class SetupCompleteController extends AppController
         }
 
         $this->loadModel('Gpgkeys');
-        if (!$this->Gpgkeys->isParsableArmoredPublicKey($armoredKey)) {
+        if (!$this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKey)) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
         }
         try {

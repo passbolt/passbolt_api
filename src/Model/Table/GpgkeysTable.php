@@ -85,7 +85,7 @@ class GpgkeysTable extends Table
             ->requirePresence('armored_key', 'create')
             ->notEmpty('armored_key')
             ->add('armored_key', ['custom' => [
-                'rule' => [$this, 'isParsableArmoredPublicKey'],
+                'rule' => [$this, 'isParsableArmoredPublicKeyRule'],
                 'message' => __('The key should be a valid OpenPGPG ASCII armored key.')
             ]]);
 
@@ -103,7 +103,7 @@ class GpgkeysTable extends Table
             ->requirePresence('key_id', 'create')
             ->notEmpty('key_id')
             ->add('key_id', ['custom' => [
-                'rule' => [$this, 'isValidKeyId'],
+                'rule' => [$this, 'isValidKeyIdRule'],
                 'message' => __('The key id should be a string of 8 hexadecimal characters.')
             ]]);
 
@@ -112,7 +112,7 @@ class GpgkeysTable extends Table
             ->requirePresence('fingerprint', 'create')
             ->notEmpty('fingerprint')
             ->add('fingerprint', ['custom' => [
-                'rule' => [$this, 'isValidFingerprint'],
+                'rule' => [$this, 'isValidFingerprintRule'],
                 'message' => __('The key id should be a string of 40 hexadecimal characters.')
             ]]);
 
@@ -121,7 +121,7 @@ class GpgkeysTable extends Table
             ->requirePresence('type', 'create')
             ->notEmpty('type')
             ->add('type', ['custom' => [
-                'rule' => [$this, 'isValidKeyType'],
+                'rule' => [$this, 'isValidKeyTypeRule'],
                 'message' => __('The key type should be one of the following: RSA, DSA, ECC, ELGAMAL, ECDSA, DH.')
             ]]);
 
@@ -129,7 +129,7 @@ class GpgkeysTable extends Table
             ->dateTime('expires')
             ->allowEmpty('expires')
             ->add('expires', ['custom' => [
-                'rule' => [$this, 'isInFuture'],
+                'rule' => [$this, 'isInFutureRule'],
                 'message' => __('The key should not already be expired.')
             ]]);
 
@@ -138,7 +138,7 @@ class GpgkeysTable extends Table
             ->requirePresence('key_created', 'create')
             ->notEmpty('key_created')
             ->add('key_created', ['custom' => [
-                'rule' => [$this, 'isInFuturePast'],
+                'rule' => [$this, 'isInFuturePastRule'],
                 'message' => __('The key creation date should be set in the past.')
             ]]);
 
@@ -177,7 +177,7 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isValidFingerprint($value, array $context = null)
+    public function isValidFingerprintRule($value, array $context = null)
     {
         return (preg_match('/^[A-F0-9]{40}$/', $value) === 1);
     }
@@ -189,7 +189,7 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isValidKeyId($value, array $context = null)
+    public function isValidKeyIdRule($value, array $context = null)
     {
         return (preg_match('/^[A-F0-9]{8}$/', $value) === 1);
     }
@@ -201,14 +201,14 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isParsableArmoredPublicKey($value, array $context = null)
+    public function isParsableArmoredPublicKeyRule($value, array $context = null)
     {
         if (!is_scalar($value) || !is_string($value)) {
             return false;
         }
         $gpg = new Gpg();
 
-        return $gpg->isParsableArmoredPublicKey($value);
+        return $gpg->isParsableArmoredPublicKeyRule($value);
     }
 
     /**
@@ -223,7 +223,7 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isInFuturePast($value, array $context = null)
+    public function isInFuturePastRule($value, array $context = null)
     {
         if (empty($value) || !($value instanceof DateTimeInterface)) {
             return false;
@@ -241,7 +241,7 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isInFuture($value, array $context = null)
+    public function isInFutureRule($value, array $context = null)
     {
         if (empty($value) || !($value instanceof DateTimeInterface)) {
             return false;
@@ -257,7 +257,7 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isValidKeyType($value, array $context = null)
+    public function isValidKeyTypeRule($value, array $context = null)
     {
         if (empty($value) || !is_scalar($value)) {
             return false;
@@ -278,7 +278,7 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function uidContainValidEmail($value, array $context = null)
+    public function uidContainValidEmailRule($value, array $context = null)
     {
         preg_match('/<(\S+@\S+)>$/', $value, $matches);
         if (isset($matches[1])) {

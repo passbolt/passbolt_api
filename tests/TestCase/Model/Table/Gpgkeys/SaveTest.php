@@ -86,12 +86,12 @@ class SaveTest extends AppTestCase
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
-                $this->Gpgkeys->isValidFingerprint($value),
+                $this->Gpgkeys->isValidFingerprintRule($value),
                 'Fingerprint validation should fail for case ' . $case
             );
         }
 
-        $this->assertTrue($this->Gpgkeys->isValidFingerprint('03F60E958F4CB29723ACDF761353B5B15D9B054A'));
+        $this->assertTrue($this->Gpgkeys->isValidFingerprintRule('03F60E958F4CB29723ACDF761353B5B15D9B054A'));
     }
 
     public function testGpgkeysValidationKeyId()
@@ -105,12 +105,12 @@ class SaveTest extends AppTestCase
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
-                $this->Gpgkeys->isValidKeyId($value),
+                $this->Gpgkeys->isValidKeyIdRule($value),
                 'Fingerprint validation should fail for case ' . $case
             );
         }
 
-        $this->assertTrue($this->Gpgkeys->isValidKeyId('03F60E95'));
+        $this->assertTrue($this->Gpgkeys->isValidKeyIdRule('03F60E95'));
     }
 
     public function testGpgkeysValidationKeyType()
@@ -123,7 +123,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
-                $this->Gpgkeys->isValidKeyType($value),
+                $this->Gpgkeys->isValidKeyTypeRule($value),
                 'Fingerprint validation should fail for case ' . $case
             );
         }
@@ -131,7 +131,7 @@ class SaveTest extends AppTestCase
         $success = ['RSA', 'DSA', 'ECC', 'ELGAMAL', 'ECDSA', 'DH'];
         foreach ($success as $i => $case) {
             $this->assertTrue(
-                $this->Gpgkeys->isValidKeyType($case),
+                $this->Gpgkeys->isValidKeyTypeRule($case),
                 'Key type should work for case ' . $case
             );
         }
@@ -147,7 +147,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
-                $this->Gpgkeys->uidContainValidEmail($value),
+                $this->Gpgkeys->uidContainValidEmailRule($value),
                 'Uid email validation should fail for case ' . $case
             );
         }
@@ -158,7 +158,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($success as $case => $value) {
             $this->assertTrue(
-                $this->Gpgkeys->uidContainValidEmail($value),
+                $this->Gpgkeys->uidContainValidEmailRule($value),
                 'Uid email validation should work for case ' . $case
             );
         }
@@ -173,7 +173,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
-                $this->Gpgkeys->isInFuture($value),
+                $this->Gpgkeys->isInFutureRule($value),
                 'Gpgkey expires date should not validate for case ' . $case
             );
         }
@@ -185,7 +185,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($successes as $case => $value) {
             $this->assertTrue(
-                $this->Gpgkeys->isInFuture($value),
+                $this->Gpgkeys->isInFutureRule($value),
                 'Gpgkey expires date should validate for case ' . $case
             );
         }
@@ -201,7 +201,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($fails as $case => $value) {
             $this->assertFalse(
-                $this->Gpgkeys->isInFuturePast($value),
+                $this->Gpgkeys->isInFuturePastRule($value),
                 'Gpgkey created date should not validate for case ' . $case
             );
         }
@@ -213,7 +213,7 @@ class SaveTest extends AppTestCase
         ];
         foreach ($successes as $case => $value) {
             $this->assertTrue(
-                $this->Gpgkeys->isInFuturePast($value),
+                $this->Gpgkeys->isInFuturePastRule($value),
                 'Gpgkey created date should validate for case ' . $case
             );
         }
@@ -222,13 +222,13 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationisParsableArmoredPublicKey()
     {
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
-        $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKey($armoredKey));
+        $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKey));
 
         $armoredKeySplit = str_split($armoredKey, 300);
-        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeySplit[0]));
+        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKeySplit[0]));
 
         $armoredKeyCorrupt = str_replace('F', '0', $armoredKey);
-        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeyCorrupt));
+        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKeyCorrupt));
 
         //@TODO expired key
     }

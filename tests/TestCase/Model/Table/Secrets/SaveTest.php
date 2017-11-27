@@ -58,7 +58,7 @@ class SaveTest extends AppTestCase
     protected function getGpgMessageTestCases()
     {
         return [
-            'rule_name' => 'isValidGpgMessage',
+            'rule_name' => 'isValidGpgMessageRule',
             'test_cases' => [
                 '!#*' => false,
                 // Message without gpg markers shouldn't be valid
@@ -128,7 +128,7 @@ hcciUFw5
     public function testValidationData()
     {
         $testCases = [
-            'isValidGpgMessage' => $this->getGpgMessageTestCases(),
+            'isValidGpgMessageRule' => $this->getGpgMessageTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
