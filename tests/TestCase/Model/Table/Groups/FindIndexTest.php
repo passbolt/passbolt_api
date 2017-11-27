@@ -124,6 +124,33 @@ class FindIndexTest extends AppTestCase
         }
     }
 
+    public function testContainGroupUser()
+    {
+        $options['contain']['group_user'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+        $group = $groups->first();
+
+        // Expected content.
+        $this->assertGroupAttributes($group);
+        $this->assertObjectHasAttribute('groups_users', $group);
+        $this->assertGroupUserAttributes($group->groups_users[0]);
+
+        // Check that the groups contain only the expected users.
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $groupUsers = [
+            UuidFactory::uuid('user.id.jean'),
+            UuidFactory::uuid('user.id.kathleen'),
+            UuidFactory::uuid('user.id.lynne'),
+            UuidFactory::uuid('user.id.marlyn'),
+            UuidFactory::uuid('user.id.nancy'),
+        ];
+        // Retrieve the users from the group we want to test.
+        $group = Hash::extract($groups->toArray(), '{n}[id=' . $groupId . ']')[0];
+        $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
+        // Check that all the expected users are there.
+        $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
+    }
+
     public function testFilterHasUsers()
     {
         $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];
@@ -229,5 +256,16 @@ class FindIndexTest extends AppTestCase
         $this->assertCount(1, $groups);
         $group = $groups->first();
         $this->assertEquals(UuidFactory::uuid('group.id.creative'), $group->id);
+    }
+
+    public function testOrderByName()
+    {
+        $findIndexOptions = ['order' => ['Groups.name ASC']];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all()->toArray();
+        $this->assertEquals($groups[0]->id, UuidFactory::uuid('group.id.accounting'));
+
+        $findIndexOptions = ['order' => ['Groups.name DESC']];
+        $groups = $this->Groups->findIndex($findIndexOptions)->all()->toArray();
+        $this->assertEquals($groups[0]->id, UuidFactory::uuid('group.id.traffic'));
     }
 }

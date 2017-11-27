@@ -176,6 +176,11 @@ class GroupsTable extends Table
             $query->contain('Users');
         }
 
+        // If contains group_user.
+        if (isset($options['contain']['group_user'])) {
+            $query->contain('GroupsUsers');
+        }
+
         // If contains user_count.
         if (isset($options['contain']['user_count'])) {
             $query = $this->_containUserCount($query);
@@ -203,6 +208,11 @@ class GroupsTable extends Table
 
         // Filter out deleted groups
         $query->where(['Groups.deleted' => false]);
+
+        // Ordering options
+        if (isset($options['order'])) {
+            $query->order($options['order']);
+        }
 
         return $query;
     }
