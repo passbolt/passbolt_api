@@ -34,6 +34,7 @@ trait CommentsModelTrait
             'foreign_model' => 'Resource',
             'content' => 'this is a test comment',
             'parent_id' => null,
+            'created_by' => UuidFactory::uuid('user.id.ada'),
         ];
         $entityContent = array_merge($entityContent, $data);
 

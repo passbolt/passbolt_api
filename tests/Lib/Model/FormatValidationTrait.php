@@ -16,6 +16,7 @@
 namespace App\Test\Lib\Model;
 
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 
 trait FormatValidationTrait
 {
@@ -73,7 +74,7 @@ trait FormatValidationTrait
      *
      * @param \Cake\ORM\Table $entityTable the entityTable object
      * @param string $fieldName field name to be validated
-     * @param array $entityData data to populate the entity with
+     * @param array $entityData data to populate the entity with. Add 'id' if you want to test an update.
      * @param array $entityOptions entity options used at the creation
      * @param array $testCases the test cases to run
      *   a test case array is composed as follow:
@@ -93,12 +94,22 @@ trait FormatValidationTrait
      */
     public function assertFieldFormatValidation($entityTable, $fieldName, $entityData, $entityOptions, $testCases)
     {
+        $context = isset($entityData['id']) ? 'update' : 'create';
         foreach ($testCases as $testCaseName => $testCase) {
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
-                // Update entity data with the input we want to test.
-                $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
-                $entityData = $this->_adjustEntityData($entityData);
-                $entity = $entityTable->newEntity($entityData, $entityOptions);
+                if ($context == 'create') {
+                    // Update entity data with the input we want to test.
+                    $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
+                    $entityData = $this->_adjustEntityData($entityData);
+                    $entity = $entityTable->newEntity($entityData, $entityOptions);
+                }
+                elseif($context == 'update') {
+                    $entity = $entityTable->get($entityData['id']);
+                    $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
+                    $entityData = $this->_adjustEntityData($entityData);
+                    $entity = $entityTable->patchEntity($entity, $entityData, $entityOptions);
+                }
+
                 $save = $entityTable->save($entity, ['checkRules' => false]);
 
                 if ($expectedResult == true) {

@@ -21,7 +21,7 @@ use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
-class SaveTest extends AppTestCase
+class CreateTest extends AppTestCase
 {
     use FormatValidationTrait;
 
@@ -53,6 +53,7 @@ class SaveTest extends AppTestCase
                 'foreign_id' => true,
                 'foreign_model' => true,
                 'content' => true,
+                'created_by' => true,
             ]
         ];
 
@@ -112,6 +113,16 @@ class SaveTest extends AppTestCase
             'lengthBetween' => self::getLengthBetweenTestCases(1, 255),
         ];
         $this->assertFieldFormatValidation($this->Comments, 'content', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationCreatedBy()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Comments, 'created_by', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
     }
 
     /* ************************************************************** */
@@ -200,17 +211,27 @@ class SaveTest extends AppTestCase
         $this->assertNotEmpty($errors['foreign_id']['has_resource_access']);
     }
 
+    public function testErrorCreatedByDoesNotExist()
+    {
+        $comment = $this->Comments->newEntity(self::getDummyComment(['created_by' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
+        $save = $this->Comments->save($comment);
+        $this->assertFalse($save);
+        $errors = $comment->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotEmpty($errors['created_by']['creator_exists']);
+    }
+
     public function testSuccess()
     {
         $comment = $this->Comments->newEntity(self::getDummyComment(), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
-        $this->assertNotNull($save);
+        $this->assertNotEmpty($save);
         $errors = $comment->getErrors();
         $this->assertEmpty($errors);
 
         // Check the favorite exists in db.
         $addedComment = $this->Comments->get($save->id);
-        $this->assertNotNull($addedComment);
+        $this->assertNotEmpty($addedComment);
         $this->assertEquals(UuidFactory::uuid('user.id.ada'), $addedComment->user_id);
         $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedComment->foreign_id);
         $this->assertEquals('Resource', $addedComment->foreign_model);
