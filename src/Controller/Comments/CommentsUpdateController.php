@@ -98,7 +98,7 @@ class CommentsUpdateController extends AppController
     {
         try {
             $comment = $this->Comments->get($commentId);
-        } catch(RecordNotFoundException $e) {
+        } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The comment does not exist.'));
         }
 

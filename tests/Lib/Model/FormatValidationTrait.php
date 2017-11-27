@@ -102,8 +102,7 @@ trait FormatValidationTrait
                     $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
                     $entityData = $this->_adjustEntityData($entityData);
                     $entity = $entityTable->newEntity($entityData, $entityOptions);
-                }
-                elseif($context == 'update') {
+                } elseif ($context == 'update') {
                     $entity = $entityTable->get($entityData['id']);
                     $entityData = array_merge($entityData, [$fieldName => $testCaseData]);
                     $entityData = $this->_adjustEntityData($entityData);

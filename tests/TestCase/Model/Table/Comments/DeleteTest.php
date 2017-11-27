@@ -57,7 +57,8 @@ class DeleteTest extends AppTestCase
         }
     }
 
-    public function testDeleteErrorIsOwnerRule() {
+    public function testDeleteErrorIsOwnerRule()
+    {
         $commentId = UuidFactory::uuid('comment.id.apache-1');
         $comment = $this->Comments->get($commentId);
         $delete = $this->Comments->delete($comment, ['Comments.user_id' => UuidFactory::uuid('user.id.ada')]);
@@ -66,5 +67,4 @@ class DeleteTest extends AppTestCase
         $this->assertNotEmpty($errors);
         $this->assertNotEmpty(Hash::get($errors, 'user_id.is_owner'));
     }
-
 }
