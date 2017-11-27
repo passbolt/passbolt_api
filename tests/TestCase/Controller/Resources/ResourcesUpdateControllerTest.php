@@ -268,12 +268,21 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testUpdateErrorAccessDenied_ReadAccess()
+    public function testErrorAccessDenied()
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->putJson("/resources/$resourceId.json");
-        $this->assertError(404, 'The resource does not exist.');
+        $testCases = [
+            'Cannot update a resource if no permission' => [
+                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.april')],
+            'Cannot update a resource with only read access' => [
+                'userAlias' => 'ada', 'resourceId' => UuidFactory::uuid('resource.id.bower')],
+        ];
+
+        foreach ($testCases as $testCase) {
+            $this->authenticateAs($testCase['userAlias']);
+            $resourceId = $testCase['resourceId'];
+            $this->putJson("/resources/$resourceId.json");
+            $this->assertError(404, 'The resource does not exist.');
+        }
     }
 
     public function testUpdateErrorNotAuthenticated()

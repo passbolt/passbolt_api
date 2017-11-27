@@ -126,6 +126,31 @@ trait FormatValidationTrait
         }
     }
 
+    public function assertPatchEntityValidation($entityTable, $fieldName, $entity, $entityOptions, $testCases)
+    {
+        foreach ($testCases as $testCaseName => $testCase) {
+            foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
+                // Patch the entity with the input we want to test.
+                $entityData = [$fieldName => $testCaseData];
+                $entityData = $this->_adjustEntityData($entityData);
+                $entity = $entityTable->patchEntity($entity, $entityData, $entityOptions);
+                $save = $entityTable->save($entity, ['checkRules' => false]);
+
+                if ($expectedResult == true) {
+                    $this->assertEquals(true, (bool)$save, __("The test for {0}:{1} = {2} is expected to save data", $fieldName, $testCaseName, $testCaseData));
+                } else {
+                    $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", $fieldName, $testCaseName, $testCaseData));
+                    $errors = $entity->getErrors();
+                    $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertNotEmpty(
+                        Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
+                        __("The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.", $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                    );
+                }
+            }
+        }
+    }
+
     /**
      * Test cases for uuid validation rule.
      *
@@ -318,5 +343,56 @@ trait FormatValidationTrait
         }
 
         return $test;
+    }
+
+    /**
+     * Test cases for gpg message validation rule.
+     *
+     * @return array
+     */
+    protected static function getGpgMessageTestCases()
+    {
+        return [
+            'rule_name' => 'isValidGpgMessage',
+            'test_cases' => [
+                '!#*' => false,
+                // Message without gpg markers shouldn't be valid
+                'hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF' => false,
+                // Corrupted message
+                '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+-----END PGP MESSAGE-----' => false,
+                '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----' => true,
+            ],
+        ];
     }
 }

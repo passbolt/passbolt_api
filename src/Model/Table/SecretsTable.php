@@ -15,6 +15,7 @@
 
 namespace App\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\Gpg;
 use Cake\ORM\RulesChecker;
@@ -84,7 +85,7 @@ class SecretsTable extends Table
 
         $validator
             ->ascii('data', __('The message is not a valid armored gpg message.'))
-            ->add('data', 'isValidGpgMessageRule', [
+            ->add('data', 'isValidGpgMessage', [
                 'rule' => [$this, 'isValidGpgMessageRule'],
                 'message' => __('The message is not a valid armored gpg message.')
             ])
@@ -160,5 +161,69 @@ class SecretsTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * Patch a list of secrets entities with a list of secrets to add and a list of users for whom the secrets
+     * must be deleted.
+     *
+     * @param string $resourceId The resource identifier the secrets belong to
+     * @param array $entities The list of secrets entities to patch
+     * @param array $add The list of secrets to add
+     * @param array $delete The list of user identifies for whom the secrets must be deleted
+     * @throw ValidationRuleException If a user identifier for whom a secret has to deleted is not found in the list
+     *   of secrets
+     * @throw ValidationRuleException If a secret to add does not validate when calling newEntity
+     * @return array The list of secrets entities patched with the changes
+     */
+    public function patchEntitiesWithChanges(string $resourceId, array $entities, array $add = [], array $delete = [])
+    {
+        // Remove secrets from the list.
+        foreach ($delete as $userId) {
+            $secretKey = array_search($userId, array_column($entities, 'user_id'));
+            // The user_id does not have a secret.
+            if ($secretKey === false) {
+                $errors = ['secret_exists' => __('There is no secret to delete for the user {0}.', $userId)];
+                throw new ValidationRuleException(__('Validation error.'), $errors);
+            }
+            array_splice($entities, $secretKey, 1);
+        }
+
+        // Add the new secrets to the list.
+        foreach ($add as $addKey => $secret) {
+            // Enforce data.
+            $secret['resource_id'] = $resourceId;
+            // New entity options.
+            $options = ['accessibleFields' => [
+                'resource_id' => true,
+                'user_id' => true,
+                'data' => true
+            ]];
+            // Create and validate the new secret entity.
+            $secret = $this->newEntity($secret, $options);
+            $errors = $secret->getErrors();
+            if (!empty($errors)) {
+                throw new ValidationRuleException(__('Validation error.'), [$addKey => $errors]);
+            }
+            $entities[] = $secret;
+        }
+
+        return $entities;
+    }
+
+    /**
+     * Event fired before request data is converted into entities
+     * - On create, set not deleted to false
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (isset($options['validate']) && $options['validate'] === 'default') {
+            $data['deleted'] = false;
+        }
     }
 }

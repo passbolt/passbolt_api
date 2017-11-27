@@ -17,6 +17,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
+use App\Model\Entity\Permission;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
@@ -48,6 +49,11 @@ class ResourcesUpdateController extends AppController
         try {
             $resource = $this->Resources->get($id, ['contain' => ['Secrets']]);
         } catch (RecordNotFoundException $e) {
+            throw new NotFoundException(__('The resource does not exist.'));
+        }
+
+        // The user can access the resource.
+        if (!$this->Resources->hasAccess($this->User->id(), $id, Permission::UPDATE)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 

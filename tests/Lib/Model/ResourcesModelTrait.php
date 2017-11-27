@@ -37,12 +37,12 @@ trait ResourcesModelTrait
             'description' => 'New resource description',
             'created_by' => $userId,
             'modified_by' => $userId,
-            'permission' => [
+            'permissions' => [[
                 'aro' => 'User',
                 'aro_foreign_key' => $userId,
                 'aco' => 'Resource',
                 'type' => Permission::OWNER,
-            ],
+            ]],
             'secrets' => [
                 [
                     'user_id' => $userId,

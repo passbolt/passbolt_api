@@ -24,6 +24,7 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
+use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use Cake\TestSuite\TestCase;
 
@@ -33,6 +34,7 @@ class AppTestCase extends TestCase
     // load them were needed instead
     use ArrayTrait;
     use CommentsModelTrait;
+    use EntityTrait;
     use FavoritesModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;

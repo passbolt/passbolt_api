@@ -14,6 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
+use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
@@ -136,14 +137,14 @@ class SecretsDataTask extends DataTask
         $this->loadModel('Users');
         $this->loadModel('Resources');
 
-        $users = $this->Users->find('index', ['role' => UuidFactory::uuid('role.id.admin')]);
+        $users = $this->Users->findIndex(Role::USER);
         foreach ($users as $user) {
             $resources = $this->Resources->findIndex($user->id);
             foreach ($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);
                 $secrets[] = [
-                    'id' => UuidFactory::uuid(),
+                    'id' => UuidFactory::uuid("secret.id.{$resource->id}-{$user->id}"),
                     'user_id' => $user->id,
                     'resource_id' => $resource->id,
                     'data' => $armoredPassword,

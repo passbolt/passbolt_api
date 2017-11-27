@@ -27,6 +27,7 @@ use App\Test\Lib\Model\RolesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
+use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestCase;
@@ -35,6 +36,7 @@ class AppIntegrationTestCase extends IntegrationTestCase
 {
     use ArrayTrait;
     use CommentsModelTrait;
+    use EntityTrait;
     use FavoritesModelTrait;
     use GpgkeysModelTrait;
     use GroupsModelTrait;
