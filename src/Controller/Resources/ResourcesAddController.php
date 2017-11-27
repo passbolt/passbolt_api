@@ -57,7 +57,7 @@ class ResourcesAddController extends AppController
         // Enforce data.
         $data['created_by'] = $this->User->id();
         $data['modified_by'] = $this->User->id();
-        $data['permission'] = [
+        $data['permissions'][] = [
             'aro' => 'User',
             'aro_foreign_key' => $this->User->id(),
             'aco' => 'Resource',
@@ -79,7 +79,7 @@ class ResourcesAddController extends AppController
                 'created_by' => true,
                 'modified_by' => true,
                 'secrets' => true,
-                'permission' => true
+                'permissions' => true
             ],
             'associated' => [
                 'Permissions' => [

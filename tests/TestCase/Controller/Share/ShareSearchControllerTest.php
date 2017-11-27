@@ -124,7 +124,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testUpdateErrorResourceIsSoftDeleted()
+    public function testShareSearchArosErrorResourceIsSoftDeleted()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -132,7 +132,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testUpdateErrorAccessDenied()
+    public function testShareSearchArosErrorAccessDenied()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');
