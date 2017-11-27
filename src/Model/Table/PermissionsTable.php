@@ -520,19 +520,27 @@ class PermissionsTable extends Table
 
         // SELECT aco_foreign_key, count(aro_foreign_key) as aro_count
         // FROM permissions
+        // WHERE aco_foreign_key IN (
+        //    SELECT aco_foreign_key
+        //    FROM permissions
+        //    WHERE aro_foreign_key = $aroId
+        // )
         // GROUP by aco_foreign_key
-        // HAVING aro_foreign_key=$aroId
-        // AND aro_count=1;
+        // HAVING aro_count=1;
+
+        $subquery = $this->find();
+        $subquery->select(['aco_foreign_key'])
+            ->where(['aro_foreign_key' => $aroId]);
 
         $query = $this->find();
         $resources = $query
             ->select([
                 'aco_foreign_key' => 'aco_foreign_key',
-                'aro_foreign_key' => 'aro_foreign_key',
                 'aro_count' => $query->func()->count('id')
             ])
+            ->where(['aco_foreign_key IN' => $subquery])
             ->group(['aco_foreign_key'])
-            ->having(['aro_foreign_key' => $aroId, 'aro_count' => 1])
+            ->having(['aro_count' => 1])
             ->all()
             ->toArray();
 
