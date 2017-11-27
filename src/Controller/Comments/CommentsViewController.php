@@ -28,7 +28,7 @@ class CommentsViewController extends AppController
     /**
      * Comments View action
      *
-     * @throws InvalidArgumentException if the foreignModelName of foreignId is not correct
+     * @throws \InvalidArgumentException if the foreignModelName of foreignId is not correct
      * @throws NotFoundException if the foreignId can't be found
      * @throws InternalErrorException if the comments can't be retrieved
      * @param string $foreignModelName name of the foreign model used for the comment
@@ -40,12 +40,12 @@ class CommentsViewController extends AppController
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
         if (!in_array($foreignModelName, CommentsTable::ALLOWED_FOREIGN_MODELS)) {
-            throw new InvalidArgumentException(__('Invalid model name}'));
+            throw new \InvalidArgumentException(__('Invalid model name}'));
         }
 
         // Check uuid sanity.
         if (!Validation::uuid($foreignId)) {
-            throw new InvalidArgumentException(__('Invalid id'));
+            throw new \InvalidArgumentException(__('Invalid id'));
         }
 
         // Retrieve and sanity the query options.

@@ -31,7 +31,7 @@ trait ObjectTrait
     {
         if (is_a($object, 'Cake\ORM\Entity')) {
             $objectProperties = $object->toArray();
-            self::assertTrue(array_key_exists($attributeName, $objectProperties));
+            self::assertTrue(array_key_exists($attributeName, $objectProperties), 'Missing attribute ' . $attributeName);
         } else {
             parent::assertObjectHasAttribute($attributeName, $object, $message);
         }

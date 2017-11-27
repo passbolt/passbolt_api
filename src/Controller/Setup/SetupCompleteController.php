@@ -115,7 +115,7 @@ class SetupCompleteController extends AppController
         if (!$this->AuthenticationTokens->isValid($tokenId, $userId)) {
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
-        $token = $this->AuthenticationTokens->findByToken($tokenId);
+        $token = $this->AuthenticationTokens->getByToken($tokenId);
 
         return $token;
     }

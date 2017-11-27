@@ -286,7 +286,7 @@ class UsersTable extends Table
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws InvalidArgumentException if the role name or user id are not valid
+     * @throws \InvalidArgumentException if the role name or user id are not valid
      * @return Query
      */
     public function findView(string $userId, string $roleName)
@@ -307,7 +307,7 @@ class UsersTable extends Table
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws InvalidArgumentException if the role name or user id are not valid
+     * @throws \InvalidArgumentException if the role name or user id are not valid
      * @return Query
      */
     public function findDelete(string $userId, string $roleName)
@@ -353,7 +353,7 @@ class UsersTable extends Table
      *
      * @param string $username email of user to retrieve
      * @param array $options options
-     * @throws InvalidArgumentException if the username is not an email
+     * @throws \InvalidArgumentException if the username is not an email
      * @return \Cake\ORM\Query
      */
     public function findRecover(string $username, array $options = [])
@@ -374,7 +374,7 @@ class UsersTable extends Table
      * Build the query that fetches data for user setup start
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id is not a uuid
+     * @throws \InvalidArgumentException if the user id is not a uuid
      * @return object $user entity
      */
     public function findSetup($userId)
@@ -400,7 +400,7 @@ class UsersTable extends Table
      * Build the query that checks data for user setup start/completion
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id is not a uuid
+     * @throws \InvalidArgumentException if the user id is not a uuid
      * @return object $user entity
      */
     public function findSetupRecover(string $userId)
@@ -583,7 +583,7 @@ class UsersTable extends Table
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource to search potential users for.
-     * @throws InvalidArgumentException if the resource id is not a valid uuid
+     * @throws \InvalidArgumentException if the resource id is not a valid uuid
      * @return \Cake\ORM\Query $query
      */
     private function _filterQueryByHasNotPermission(\Cake\ORM\Query $query, string $resourceId)
@@ -608,15 +608,16 @@ class UsersTable extends Table
      *
      * @param array $data the request data
      * @param string $roleName the role of the user building the entity
-     * @throws InvalidArgumentException if role name is not valid
+     * @throws \InvalidArgumentException if role name is not valid
      * @return \App\Model\Entity\User
      */
     public function buildEntity(array $data, string $roleName)
     {
         if (!$this->Roles->isValidRoleName($roleName)) {
             $msg = __('The role name should be from the list of allowed role names');
-            throw new InvalidArgumentException($msg);
+            throw new \InvalidArgumentException($msg);
         }
+
         return $this->newEntity(
             $data,
             [
@@ -693,7 +694,7 @@ class UsersTable extends Table
      * Get a user info for an email notification context
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id is not a valid uuid
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     public function getForEmailContext(string $userId)

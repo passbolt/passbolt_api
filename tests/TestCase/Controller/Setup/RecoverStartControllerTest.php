@@ -65,7 +65,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartBadRequestErrorExpiredToken()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('token.id.expired'));
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.expired'));
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was expired');
@@ -73,16 +73,20 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartBadRequestErrorInactiveToken()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.inactive')])
-            ->first();
+        // Create a valid token for ruth and set it to inactive
+        $userId = UuidFactory::uuid('user.id.ruth');
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
+        $t->active = false;
+        $this->AuthenticationTokens->save($t);
+
         $url = '/setup/recover/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
+    }
 
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.expired_inactive')])
-            ->first();
+    public function testRecoverStartBadRequestErrorInactiveAndExpiredToken()
+    {
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.expired_inactive'));
         $url = '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
@@ -90,9 +94,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartBadRequestErrorInactiveUser()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.ruth')])
-            ->first();
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.ruth'));
         $url = '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has not completed setup.');
@@ -100,9 +102,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
 
     public function testRecoverStartBadRequestErrorDeletedUser()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.sofia')])
-            ->first();
+        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.sofia'));
         $url = '/setup/recover/start/' . UuidFactory::uuid('user.id.sofia') . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');

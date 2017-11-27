@@ -15,14 +15,13 @@
 namespace App\Model\Table;
 
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Cake\Network\Exception\InternalErrorException;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Groups Model
@@ -393,7 +392,7 @@ class GroupsTable extends Table
      * Delete all UserGroups association entries
      * Delete all Permissions associated with this group
      *
-     * @throws InvalidArgumentException if $group is not a valid group entity
+     * @throws \InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array $options additional delete options such as ['checkRules' => true]
      * @return bool status

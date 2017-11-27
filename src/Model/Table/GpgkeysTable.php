@@ -17,7 +17,6 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationRuleException;
 use App\Utility\Gpg;
 use Cake\Core\Exception\Exception;
-use Cake\I18n\Date;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
 use Cake\ORM\Query;
@@ -26,8 +25,6 @@ use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use DateTimeInterface;
-use JsonSchema\Exception\ValidationException;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Model to store and validate OpenPGP public keys
@@ -209,6 +206,7 @@ class GpgkeysTable extends Table
     public function isParsableArmoredPublicKeyRule(string $value, array $context = null)
     {
         $gpg = new Gpg();
+
         return $gpg->isParsableArmoredPublicKeyRule($value);
     }
 
@@ -227,6 +225,7 @@ class GpgkeysTable extends Table
     public function isInFuturePastRule(DateTimeInterface $value, array $context = null)
     {
         $nowWithMargin = Time::now()->modify('+12 hours');
+
         return $value->lt($nowWithMargin);
     }
 
@@ -324,10 +323,10 @@ class GpgkeysTable extends Table
      *
      * @param string $fingerprint char40
      * @param string $userId uuid
-     * @throws InvalidArgumentException if the user id or fingerprint are not valid
+     * @throws \InvalidArgumentException if the user id or fingerprint are not valid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function getByFingerPrintAndUserId(string $fingerprint, string $userId)
+    public function getByFingerprintAndUserId(string $fingerprint, string $userId)
     {
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
@@ -335,6 +334,7 @@ class GpgkeysTable extends Table
         if (!$this->isValidFingerprintRule($fingerprint)) {
             throw new \InvalidArgumentException(__('The fingerprint should be a valid hexadecimal string.'));
         }
+
         return $this->find()
             ->where([
                 'user_id' => $userId,
@@ -348,7 +348,7 @@ class GpgkeysTable extends Table
      *
      * @param string $armoredKey ascii armored key
      * @param string $userId uuid of the user using the key
-     * @throws InvalidArgumentException if the user is not valid
+     * @throws \InvalidArgumentException if the user is not valid
      * @throws ValidationRuleException if the key info can not be parsed
      * @return object Gpgkey entity
      */
@@ -361,7 +361,7 @@ class GpgkeysTable extends Table
             $gpg = new Gpg();
             $info = $gpg->getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {
-            throw new ValidationException(__('Could not create Gpgkey from armored key.'));
+            throw new ValidationRuleException(__('Could not create Gpgkey from armored key.'));
         }
 
         $data = [

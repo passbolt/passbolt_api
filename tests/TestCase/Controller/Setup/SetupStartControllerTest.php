@@ -93,16 +93,30 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $t = $this->AuthenticationTokens->generate($userId);
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.ada') . '/' . $t->token;
+        $url = '/setup/install/' . $userId . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has already completed setup.');
     }
 
     public function testSetupStartBadRequestErrorDeletedUser()
     {
+        // Build the token manually as generate do not allow creating token for deleted users
         $userId = UuidFactory::uuid('user.id.sofia');
-        $t = $this->AuthenticationTokens->generate($userId);
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.sofia') . '/' . $t->token;
+        $token = $this->AuthenticationTokens->newEntity(
+            [
+            'user_id' => $userId,
+            'token' => UuidFactory::uuid(),
+            'active' => true
+            ],
+            ['accessibleFields' => [
+                'user_id' => true,
+                'token' => true,
+                'active' => true
+            ]]
+        );
+        $this->AuthenticationTokens->save($token, ['checkRules' => false]);
+
+        $url = '/setup/install/' . $userId . '/' . $token->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');
     }

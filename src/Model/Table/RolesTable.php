@@ -104,12 +104,13 @@ class RolesTable extends Table
     /**
      * Check if a role name is valid
      *
-     * @param string $roleName
+     * @param string $roleName for example 'admin' or 'user'
      * @return bool true if whitelisted
      */
     public function isValidRoleName(string $roleName)
     {
         $allowedRoleNames = [Role::GUEST, Role::USER, Role::ADMIN, Role::ROOT];
+
         return (in_array($roleName, $allowedRoleNames));
     }
 
@@ -117,14 +118,14 @@ class RolesTable extends Table
      * Get a role id by providing its name
      *
      * @param string $roleName such as "admin" or "user"
-     * @throws InvalidArgumentException if the role name is not whitelisted
+     * @throws \InvalidArgumentException if the role name is not whitelisted
      * @return mixed|null
      */
     public function getIdByName(string $roleName)
     {
         if (!$this->isValidRoleName($roleName)) {
             $msg = __('The role name should be from the list of allowed role names');
-            throw new InvalidArgumentException($msg);
+            throw new \InvalidArgumentException($msg);
         }
         $role = $this->find('all')
             ->where(['name' => $roleName])

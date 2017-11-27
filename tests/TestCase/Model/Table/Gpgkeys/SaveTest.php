@@ -227,8 +227,6 @@ class SaveTest extends AppTestCase
 
         $armoredKeyCorrupt = str_replace('F', '0', $armoredKey);
         $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKeyCorrupt));
-
-        //@TODO expired key
     }
 
     public function testGpgkeysRulesUniqueFingerprint()

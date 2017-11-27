@@ -41,7 +41,9 @@ class AuthenticationToken extends Entity
      * @var array
      */
     protected $_accessible = [
-        '*' => true,
-        'id' => false
+        'id' => false,
+        'user_id' => false,
+        'token' => false,
+        'active' => false
     ];
 }

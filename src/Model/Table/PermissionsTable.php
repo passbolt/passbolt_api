@@ -291,7 +291,7 @@ class PermissionsTable extends Table
      * User alias for findSharedResourcesAroIsSoleOwner
      *
      * @param string $userId uuid of the user
-     * @throws InvalidArgumentException if the user id is not a valid uuid
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
      * @return array $results the uuids of the resources
      */
     public function findSharedResourcesUserIsSoleOwner(string $userId)
@@ -299,6 +299,7 @@ class PermissionsTable extends Table
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
+
         return $this->findSharedResourcesAroIsSoleOwner($userId);
     }
 
@@ -306,7 +307,7 @@ class PermissionsTable extends Table
      * Group alias for findSharedResourcesAroIsSoleOwner
      *
      * @param string $groupId uuid of the group
-     * @throws InvalidArgumentException if the group id is not a valid uuid
+     * @throws \InvalidArgumentException if the group id is not a valid uuid
      * @return array $results the uuids of the resources
      */
     public function findSharedResourcesGroupIsSoleOwner(string $groupId)
@@ -314,6 +315,7 @@ class PermissionsTable extends Table
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
         }
+
         return $this->findSharedResourcesAroIsSoleOwner($groupId);
     }
 
@@ -323,7 +325,7 @@ class PermissionsTable extends Table
      * need to be transferred when deleting the user or a group
      *
      * @param string $aroId uuid of the user|group
-     * @throw InvalidArgumentException if the aro id is not a valid uuid
+     * @throw \InvalidArgumentException if the aro id is not a valid uuid
      * @return array $results the uuids of the resources
      */
     public function findSharedResourcesAroIsSoleOwner(string $aroId)
@@ -388,7 +390,7 @@ class PermissionsTable extends Table
      * loose its only owner.
      *
      * @param string $userId uuid of the user
-     * @throws InvalidArgumentException if the user id is not a valid uuid
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
      * @return array $results the uuids of the resources
      */
     public function findSharedResourcesSoleGroupManagerIsSoleOwner(string $userId)
@@ -507,7 +509,7 @@ class PermissionsTable extends Table
      * but since we might as well delete these, we do cast a wider net.
      *
      * @param string $aroId uuid
-     * @throws InvalidArgumentException if the aro id is not a valid uuid
+     * @throws \InvalidArgumentException if the aro id is not a valid uuid
      * @return array list of resource uuid
      */
     public function findResourcesOnlyAroCanAccess(string $aroId)
@@ -546,7 +548,7 @@ class PermissionsTable extends Table
      *
      * @param string $userId uuid
      * @param bool $checkGroupsUsers also check for group user is sole member of
-     * @throws InvalidArgumentException if the user id is not a valid uuid
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
      * @return array list of resource uuid
      */
     public function findResourcesOnlyUserCanAccess(string $userId, bool $checkGroupsUsers = false)
@@ -574,7 +576,7 @@ class PermissionsTable extends Table
      * Group alias for findResourcesOnlyAroCanAccess
      *
      * @param string $groupId uuid
-     * @throws InvalidArgumentException if the group id is not a valid uuid
+     * @throws \InvalidArgumentException if the group id is not a valid uuid
      * @return array list of resource uuid
      */
     public function findResourcesOnlyGroupCanAccess(string $groupId)
@@ -582,6 +584,7 @@ class PermissionsTable extends Table
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
         }
+
         return $this->findResourcesOnlyAroCanAccess($groupId);
     }
 }

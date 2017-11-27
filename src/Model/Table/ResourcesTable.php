@@ -363,8 +363,8 @@ class ResourcesTable extends Table
      *
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
-     * @throws InvalidArgumentException if the userId parameter is not a valid uuid.
-     * @throws InvalidArgumentException if the resourceId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
     public function findAllByIds(string $userId, array $resourceIds)
@@ -434,7 +434,7 @@ class ResourcesTable extends Table
      * @param \Cake\ORM\Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
      * @param int $permissionType The minimum permission type.
-     * @throws InvalidArgumentException if the user id is not a uuid
+     * @throws \InvalidArgumentException if the user id is not a uuid
      * @return \Cake\ORM\Query
      */
     private function _filterQueryByPermissionsType(\Cake\ORM\Query $query, string $userId, int $permissionType = Permission::READ)
@@ -481,7 +481,7 @@ class ResourcesTable extends Table
      * Retrieve the groups a user is member of.
      *
      * @param string $userId The user to retrieve the group for.
-     * @throws InvalidArgumentException if the user id is not a uuid
+     * @throws \InvalidArgumentException if the user id is not a uuid
      * @return \Cake\ORM\Query
      */
     private function _findGroupsByUserId(string $userId)
@@ -489,6 +489,7 @@ class ResourcesTable extends Table
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
+
         return $this->association('Permissions')
             ->association('Groups')
             ->find()
@@ -505,7 +506,7 @@ class ResourcesTable extends Table
      * @todo function signature should be like delete e.g (entity, options)
      * @param string $userId The user who perform the delete.
      * @param \App\Model\Entity\Resource $resource The resource to delete.
-     * @throws InvalidArgumentException if the user id is not a uuid
+     * @throws \InvalidArgumentException if the user id is not a uuid
      * @return bool true if success
      */
     public function softDelete(string $userId, \App\Model\Entity\Resource $resource)
@@ -520,12 +521,14 @@ class ResourcesTable extends Table
             $resource->setError('deleted', [
                 'is_not_soft_deleted' => __('The resource cannot be soft deleted.')
             ]);
+
             return false;
         }
         if (!$this->hasAccess($userId, $resource->id, Permission::UPDATE)) {
             $resource->setError('id', [
                 'has_access' => __('The user cannot delete this resource.')
             ]);
+
             return false;
         }
 

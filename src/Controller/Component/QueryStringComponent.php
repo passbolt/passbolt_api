@@ -48,7 +48,7 @@ class QueryStringComponent extends Component
      * @param array $allowedQueryItems whitelist
      * @return array
      */
-    public function get($allowedQueryItems)
+    public function get(array $allowedQueryItems)
     {
         $query = $this->_request->getQueryParams();
         $query = self::rewriteLegacyItems($query);
@@ -68,7 +68,7 @@ class QueryStringComponent extends Component
      * @param array $query original query string items
      * @return array modified query
      */
-    public static function rewriteLegacyItems($query)
+    public static function rewriteLegacyItems(array $query)
     {
         if (isset($query['modified_after'])) {
             $query['filter']['modified-after'] = $query['modified_after'];
@@ -88,7 +88,7 @@ class QueryStringComponent extends Component
      * @param array $query original query string items
      * @return array modified query
      */
-    public static function normalizeQueryItems($query)
+    public static function normalizeQueryItems(array $query)
     {
         // order should always be an array even when one value is provided
         if (isset($query['order']) && !is_array($query['order'])) {
@@ -126,7 +126,7 @@ class QueryStringComponent extends Component
      * @param array $allowedQueryItems whitelist
      * @return array $query the sanitized query
      */
-    public static function unsetUnwantedQueryItems($query, $allowedQueryItems)
+    public static function unsetUnwantedQueryItems(array $query, array $allowedQueryItems)
     {
         foreach ($query as $key => $items) {
             if (!isset($allowedQueryItems[$key])) {
@@ -153,7 +153,7 @@ class QueryStringComponent extends Component
      * @param array $query original query string items
      * @return array $query the sanitized query
      */
-    public static function extractQueryItems($query)
+    public static function extractQueryItems(array $query)
     {
         foreach ($query as $key => $items) {
             if (is_array($items)) {
@@ -180,7 +180,7 @@ class QueryStringComponent extends Component
      * @throws BadRequestException if a validation error occurs
      * @return bool true if validate
      */
-    public static function validateQueryItems($query, $allowedQueryItems)
+    public static function validateQueryItems(array $query, array $allowedQueryItems)
     {
         foreach ($query as $key => $parameters) {
             switch ($key) {
@@ -229,7 +229,7 @@ class QueryStringComponent extends Component
      * @throws Exception if one of the filters is not supported / not in the list
      * @return bool true if valid
      */
-    public static function validateFilters($filters = null)
+    public static function validateFilters(array $filters = null)
     {
         if (isset($filters)) {
             foreach ($filters as $filter => $values) {
@@ -277,7 +277,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterBoolean($values, $filtername)
+    public static function validateFilterBoolean($values, string $filtername)
     {
         if (!is_bool($values)) {
             throw new Exception(__('"{0}" is not a valid value for filter {1}.', $values, $filtername));
@@ -297,7 +297,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterSearch($values)
+    public static function validateFilterSearch(array $values)
     {
         foreach ($values as $i => $keyword) {
             if (!is_int($i)) {
@@ -329,7 +329,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterUsers($values, $filterName)
+    public static function validateFilterUsers(array $values, string $filterName)
     {
         foreach ($values as $i => $userId) {
             if (!is_int($i)) {
@@ -357,7 +357,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterGroups($values, $filtername)
+    public static function validateFilterGroups(array $values, string $filtername)
     {
         foreach ($values as $i => $groupId) {
             if (!is_int($i)) {
@@ -383,7 +383,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterResources($values, $filtername)
+    public static function validateFilterResources(array $values, string $filtername)
     {
         foreach ($values as $i => $resourceId) {
             if (!is_int($i)) {
@@ -411,7 +411,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterGroup($groupId, $filtername)
+    public static function validateFilterGroup(string $groupId, string $filtername)
     {
         if (!Validation::uuid($groupId)) {
             throw new Exception(__('"{0}" is not a valid group id for filter {1}.', $groupId, $filtername));
@@ -428,7 +428,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterTimestamp($values, $filtername)
+    public static function validateFilterTimestamp($values, string $filtername)
     {
         $timestamp = $values;
         if (!self::isTimestamp($timestamp)) {
@@ -446,7 +446,7 @@ class QueryStringComponent extends Component
      * @throws Exception if the group name does not validate
      * @return bool true if validate
      */
-    public static function validateOrders($orders = null, $allowedQueryItems = null)
+    public static function validateOrders(array $orders = null, array $allowedQueryItems = null)
     {
         if (isset($orders)) {
             foreach ($orders as $i => $orderName) {
@@ -470,7 +470,7 @@ class QueryStringComponent extends Component
      * @throws Exception if the contain value is not 0 or 1
      * @return bool true if validate
      */
-    public static function validateContain($contain = null)
+    public static function validateContain(array $contain = null)
     {
         if (isset($contain)) {
             foreach ($contain as $item => $value) {
@@ -515,7 +515,7 @@ class QueryStringComponent extends Component
      * @param array $query items
      * @return array updated query items
      */
-    public static function finalizeOrder($query)
+    public static function finalizeOrder(array $query)
     {
         if (isset($query['order']) && count($query['order'])) {
             $neworder = [];

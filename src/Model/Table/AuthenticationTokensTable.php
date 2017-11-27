@@ -14,14 +14,14 @@
  */
 namespace App\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
+use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * AuthenticationTokens Model
@@ -76,9 +76,14 @@ class AuthenticationTokensTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('token')
+            ->uuid('token')
             ->requirePresence('token', 'create')
             ->notEmpty('token');
+
+        $validator
+            ->uuid('user_id')
+            ->requirePresence('user_id', 'create')
+            ->notEmpty('user_id');
 
         $validator
             ->boolean('active')
@@ -110,6 +115,12 @@ class AuthenticationTokensTable extends Table
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
+            'table' => 'Users',
+            'errorField' => 'user_id',
+            'message' => __('The user does not exist.')
+        ]);
+
         return $rules;
     }
 
@@ -117,21 +128,33 @@ class AuthenticationTokensTable extends Table
      * Build the authentication token
      *
      * @param string $userId uuid
-     * @throws InvalidArgumentException is the user is not a valid uuid
+     * @throws ValidationRuleException is the user is not a valid uuid
+     * @throws ValidationRuleException is the user is not found
+     * @throws ValidationRuleException is the user is deleted
      * @return \App\Model\Entity\AuthenticationToken
      */
     public function generate(string $userId)
     {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        $token = $this->newEntity(
+            [
+                'user_id' => $userId,
+                'token' => UuidFactory::uuid(),
+                'active' => true
+            ],
+            ['accessibleFields' => [
+                'user_id' => true,
+                'token' => true,
+                'active' => true
+            ]]
+        );
+        $errors = $token->getErrors();
+        if (!empty($errors)) {
+            $msg = __('It is not possible to create an authentication token for this user.');
+            throw new ValidationRuleException($msg);
         }
-        $token = $this->newEntity([
-            'user_id' => $userId,
-            'token' => UuidFactory::uuid(),
-            'active' => true
-        ]);
-        if (!$this->save($token, ['checkRules' => false, 'atomic' => false])) {
-            throw new InternalErrorException(__('The authentication token could not be saved.'));
+        if (!$this->save($token)) {
+            $msg = __('It is not possible to create an authentication token for this user.');
+            throw new ValidationRuleException($msg);
         }
 
         return $token;
@@ -166,7 +189,6 @@ class AuthenticationTokensTable extends Table
 
         // Is it expired?
         $valid = $token->created->wasWithinLast(Configure::read('passbolt.auth.tokenExpiry'));
-
         if (!$valid) {
             // update the token to inactive
             $token->active = false;
@@ -182,7 +204,7 @@ class AuthenticationTokensTable extends Table
      * Set a token as inactive
      *
      * @param string $tokenId uuid
-     * @throws InvalidArgumentException is the token is not a valid uuid
+     * @throws \InvalidArgumentException is the token is not a valid uuid
      * @return bool save result
      */
     public function setInactive(string $tokenId)
@@ -199,7 +221,11 @@ class AuthenticationTokensTable extends Table
         }
         $token->active = false;
 
-        return $this->save($token);
+        if (!$this->save($token)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -207,10 +233,10 @@ class AuthenticationTokensTable extends Table
      * (e.g. get using token->token, not token->id )
      *
      * @param string $tokenId uuid
-     * @throws InvalidArgumentException is the token is not a valid uuid
+     * @throws \InvalidArgumentException is the token is not a valid uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function findByToken(string $tokenId)
+    public function getByToken(string $tokenId)
     {
         if (!Validation::uuid($tokenId)) {
             throw new \InvalidArgumentException(__('The token id should be a valid uuid.'));
