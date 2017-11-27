@@ -70,12 +70,12 @@ class SoftDeleteTest extends AppTestCase
     {
         // Creative and account groups are sole owner of shared resources
         $group = $this->Groups->get(UuidFactory::uuid('group.id.accounting'));
-        $this->assertFalse($this->Users->softDelete($group));
+        $this->assertFalse($this->Groups->softDelete($group));
         $errors = $group->getErrors();
         $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
 
         $group = $this->Groups->get(UuidFactory::uuid('group.id.creative'));
-        $this->assertFalse($this->Users->softDelete($group));
+        $this->assertFalse($this->Groups->softDelete($group));
         $errors = $group->getErrors();
         $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
     }
@@ -92,7 +92,7 @@ class SoftDeleteTest extends AppTestCase
 
         // Creative group can now be deleted
         $group = $this->Groups->get(UuidFactory::uuid('group.id.creative'));
-        $this->assertTrue($this->Users->softDelete($group));
+        $this->assertTrue($this->Groups->softDelete($group));
 
         // Composer resources solely owned by group has been deleted
         $composer = $this->Resources->get(UuidFactory::uuid('resource.id.composer'));

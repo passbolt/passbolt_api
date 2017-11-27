@@ -14,16 +14,15 @@
  */
 namespace App\Model\Table;
 
-use Cake\Network\Exception\NotFoundException;
-use Cake\ORM\Query;
+use App\Model\Entity\Role;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Roles Model
  *
- * @property \App\Model\Table\ControllerLogsTable|\Cake\ORM\Association\HasMany $ControllerLogs
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $Users
  *
  * @method \App\Model\Entity\Role get($primaryKey, $options = [])
@@ -103,13 +102,30 @@ class RolesTable extends Table
     }
 
     /**
+     * Check if a role name is valid
+     *
+     * @param string $roleName
+     * @return bool true if whitelisted
+     */
+    public function isValidRoleName(string $roleName)
+    {
+        $allowedRoleNames = [Role::GUEST, Role::USER, Role::ADMIN, Role::ROOT];
+        return (in_array($roleName, $allowedRoleNames));
+    }
+
+    /**
      * Get a role id by providing its name
      *
      * @param string $roleName such as "admin" or "user"
+     * @throws InvalidArgumentException if the role name is not whitelisted
      * @return mixed|null
      */
-    public function getIdByName($roleName)
+    public function getIdByName(string $roleName)
     {
+        if (!$this->isValidRoleName($roleName)) {
+            $msg = __('The role name should be from the list of allowed role names');
+            throw new InvalidArgumentException($msg);
+        }
         $role = $this->find('all')
             ->where(['name' => $roleName])
             ->first();

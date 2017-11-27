@@ -148,8 +148,12 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return array of group uuid
      */
-    public function findNonEmptyGroupsWhereUserIsSoleManager($userId)
+    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         // SELECT group_id AS `group_id`,
         //      (SUM(is_admin)) AS `count_admin`,
         //      (COUNT(user_id)) AS `count_user`
@@ -194,8 +198,12 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return array of group uuid
      */
-    public function findGroupsWhereUserIsSoleManager($userId)
+    public function findGroupsWhereUserIsSoleManager(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         // SELECT group_id AS `group_id`,
         //      (SUM(is_admin)) AS `count_admin`
         // FROM groups_users
@@ -239,8 +247,12 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return array of group uuid
      */
-    public function findGroupsWhereUserOnlyMember($userId)
+    public function findGroupsWhereUserOnlyMember(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         // SELECT group_id AS `group_id`,
         //      (COUNT(user_id)) AS `count_user`
         // FROM groups_users
@@ -282,7 +294,7 @@ class GroupsUsersTable extends Table
      * @param string $groupId uuid
      * @return bool true if user is marked as admin
      */
-    public function isManager($userId, $groupId)
+    public function isManager(string $userId, string $groupId)
     {
         if (!Validation::uuid($userId) || !Validation::uuid($groupId)) {
             return false;

@@ -15,11 +15,11 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\ArgumentCountErrorException;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -110,6 +110,7 @@ class CommentsTable extends Table
             ->allowEmpty('parent_id');
 
         $validator
+            ->ascii('foreign_model')
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __('The foreign_model provided is not supported'))
             ->requirePresence('foreign_model', 'create', __('A foreign_model is required'))
             ->notEmpty('foreign_model', __('The foreign_model should not be empty'));
@@ -201,7 +202,7 @@ class CommentsTable extends Table
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findViewForeignComments($userId, $foreignModelName, $foreignId, array $options = [])
+    public function findViewForeignComments(string $userId, string $foreignModelName, string $foreignId, array $options = [])
     {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
@@ -251,10 +252,10 @@ class CommentsTable extends Table
      *   Comments.user_id should be provided so that the check can be done.
      * @return bool
      */
-    public function ruleIsOwner($entity, array $options = [])
+    public function ruleIsOwner(\App\Model\Entity\Comment $entity, array $options = [])
     {
         if (!isset($options['Comments.user_id'])) {
-            throw new ArgumentCountErrorException(__('The parameter Comments.user_id should be provided'));
+            throw new BadRequestException(__('The parameter Comments.user_id should be provided'));
         }
         if ($options['Comments.user_id'] != $entity->user_id) {
             return false;

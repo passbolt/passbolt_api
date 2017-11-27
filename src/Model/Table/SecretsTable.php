@@ -117,7 +117,7 @@ class SecretsTable extends Table
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function isValidGpgMessageRule($check, array $context)
+    public function isValidGpgMessageRule(string $check, array $context)
     {
         $gpg = new Gpg();
 

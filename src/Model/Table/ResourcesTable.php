@@ -27,6 +27,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Resources Model
@@ -194,7 +195,7 @@ class ResourcesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function isOwnerPermissionProvidedRule($entity, array $options = [])
+    public function isOwnerPermissionProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
     {
         return ($entity->permission->aro_foreign_key === $entity->created_by);
     }
@@ -206,7 +207,7 @@ class ResourcesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function isOwnerSecretProvidedRule($entity, array $options = [])
+    public function isOwnerSecretProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
     {
         return ($entity->secrets[0]->user_id === $entity->created_by);
     }
@@ -218,7 +219,7 @@ class ResourcesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function isSecretsProvidedRule($entity, array $options = [])
+    public function isSecretsProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
     {
         // Secrets are not required to update a resource.
         if (!isset($entity->secrets) || empty($entity->secrets)) {
@@ -251,10 +252,10 @@ class ResourcesTable extends Table
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findIndex($userId, array $options = [])
+    public function findIndex(string $userId, array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
         $query = $this->find();
@@ -342,7 +343,7 @@ class ResourcesTable extends Table
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findView($userId, $resourceId, array $options = [])
+    public function findView(string $userId, string $resourceId, array $options = [])
     {
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
@@ -362,10 +363,25 @@ class ResourcesTable extends Table
      *
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
+     * @throws InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findAllByIds($userId, $resourceIds)
+    public function findAllByIds(string $userId, array $resourceIds)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+        if (empty($resourceIds)) {
+            throw new \InvalidArgumentException(__('The resources can not be empty.'));
+        } else {
+            foreach ($resourceIds as $resourceId) {
+                if (!Validation::uuid($resourceId)) {
+                    throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
+                }
+            }
+        }
+
         $query = $this->findIndex($userId)
             ->where(['Resources.id IN' => $resourceIds])
             ->all();
@@ -383,16 +399,16 @@ class ResourcesTable extends Table
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return bool
      */
-    public function hasAccess($userId, $resourceId, $permissionType = Permission::READ)
+    public function hasAccess(string $userId, string $resourceId, int $permissionType = Permission::READ)
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
         if (!Validation::uuid($resourceId)) {
-            throw new \InvalidArgumentException(__('The parameter resourceId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
         }
         if (!$this->association('Permissions')->isValidPermissionType($permissionType)) {
-            throw new \InvalidArgumentException(__('The parameter permissionType should be a permission type.'));
+            throw new \InvalidArgumentException(__('The permission type should be in the list of allowed permission type.'));
         }
 
         $query = $this->find();
@@ -418,10 +434,15 @@ class ResourcesTable extends Table
      * @param \Cake\ORM\Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
      * @param int $permissionType The minimum permission type.
+     * @throws InvalidArgumentException if the user id is not a uuid
      * @return \Cake\ORM\Query
      */
-    private function _filterQueryByPermissionsType($query, $userId, $permissionType = Permission::READ)
+    private function _filterQueryByPermissionsType(\Cake\ORM\Query $query, string $userId, int $permissionType = Permission::READ)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         // Retrieve the groups ids the user is member of.
         $groupsIds = $this->_findGroupsByUserId($userId)
             ->extract('id')
@@ -460,10 +481,14 @@ class ResourcesTable extends Table
      * Retrieve the groups a user is member of.
      *
      * @param string $userId The user to retrieve the group for.
+     * @throws InvalidArgumentException if the user id is not a uuid
      * @return \Cake\ORM\Query
      */
-    private function _findGroupsByUserId($userId)
+    private function _findGroupsByUserId(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
         return $this->association('Permissions')
             ->association('Groups')
             ->find()
@@ -477,28 +502,31 @@ class ResourcesTable extends Table
     /**
      * Soft delete a resource.
      *
+     * @todo function signature should be like delete e.g (entity, options)
      * @param string $userId The user who perform the delete.
-     * @param EntityInterface $resource The resource to delete.
-     * @return EntityInterface
+     * @param \App\Model\Entity\Resource $resource The resource to delete.
+     * @throws InvalidArgumentException if the user id is not a uuid
+     * @return bool true if success
      */
-    public function softDelete($userId, EntityInterface $resource)
+    public function softDelete(string $userId, \App\Model\Entity\Resource $resource)
     {
-        /* The softDelete will perform an update to the entity to soft delete it.
-           However as this update cannot be considered as a classic data update, the integrity check won't be done
-           using buildRules, but here in the softDelete function. */
+        // The softDelete will perform an update to the entity to soft delete it.
+        // @TODO use delete build rules and call them manually
 
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The parameter userId should be a valid uuid.'));
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
         if ($resource->deleted) {
-            return $resource->setError('deleted', [
+            $resource->setError('deleted', [
                 'is_not_soft_deleted' => __('The resource cannot be soft deleted.')
             ]);
+            return false;
         }
         if (!$this->hasAccess($userId, $resource->id, Permission::UPDATE)) {
-            return $resource->setError('id', [
+            $resource->setError('id', [
                 'has_access' => __('The user cannot delete this resource.')
             ]);
+            return false;
         }
 
         // Patch the entity.
@@ -515,13 +543,13 @@ class ResourcesTable extends Table
         ];
         $this->patchEntity($resource, $data, $patchOptions);
         if ($resource->getErrors()) {
-            return $resource;
+            return false;
         }
 
         // Soft delete the resource.
         $this->save($resource, ['checkRules' => false]);
         if ($resource->getErrors()) {
-            return $resource;
+            return false;
         }
 
         // Remove all the associated permissions.
@@ -532,7 +560,7 @@ class ResourcesTable extends Table
         $this->association('Favorites')
             ->deleteAll(['Favorites.foreign_id' => $resource->id]);
 
-        return $resource;
+        return true;
     }
 
     /**

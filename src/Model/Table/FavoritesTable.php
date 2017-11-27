@@ -153,7 +153,7 @@ class FavoritesTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function isOwnerRule($entity, array $options = [])
+    public function isOwnerRule(\App\Model\Entity\Favorite $entity, array $options = [])
     {
         if ($options['Favorites.user_id'] != $entity->user_id) {
             return false;

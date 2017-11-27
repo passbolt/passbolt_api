@@ -21,6 +21,8 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Cake\Network\Exception\InternalErrorException;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Groups Model
@@ -80,7 +82,7 @@ class GroupsTable extends Table
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->scalar('id')
+            ->uuid('id')
             ->allowEmpty('id', 'create');
 
         $validator
@@ -145,7 +147,7 @@ class GroupsTable extends Table
      * @param array $options options
      * @return bool
      */
-    public function atLeastOneAdminRule($entity, array $options = [])
+    public function atLeastOneAdminRule(\App\Model\Entity\Group $entity, array $options = [])
     {
         $adminUsers = [];
         if (isset($entity->groups_users)) {
@@ -212,7 +214,7 @@ class GroupsTable extends Table
      * @param \Cake\ORM\Query $query The query to augment.
      * @return \Cake\ORM\Query
      */
-    private function _containUserCount($query)
+    private function _containUserCount(\Cake\ORM\Query $query)
     {
         // Count the members of the groups in a subquery.
         $subQuery = $this->association('GroupsUsers')->find();
@@ -234,7 +236,7 @@ class GroupsTable extends Table
      * @param bool $areManager (optional) Should the users be managers ? Default false.
      * @return \Cake\ORM\Query
      */
-    private function _filterQueryByGroupsUsers($query, array $usersIds, $areManager = false)
+    private function _filterQueryByGroupsUsers(\Cake\ORM\Query $query, array $usersIds, bool $areManager = false)
     {
         // If there is only one user use a left join
         if (count($usersIds) == 1) {
@@ -288,7 +290,7 @@ class GroupsTable extends Table
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findView($groupId, array $options = [])
+    public function findView(string $groupId, array $options = [])
     {
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
@@ -304,8 +306,17 @@ class GroupsTable extends Table
      * @param array $groupsIds array of groups uuids
      * @return \Cake\ORM\Query
      */
-    public function findAllByIds($groupsIds)
+    public function findAllByIds(array $groupsIds)
     {
+        if (empty($groupsIds)) {
+            throw new \InvalidArgumentException(__('The parameter groupIds cannot be empty.'));
+        }
+        foreach ($groupsIds as $groupId) {
+            if (!Validation::uuid($groupId)) {
+                throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+            }
+        }
+
         return $this->findIndex()
             ->where(['Groups.id IN' => $groupsIds])
             ->all();
@@ -340,7 +351,7 @@ class GroupsTable extends Table
      * @param string $resourceId The resource to search potential groups for.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryByHasNotPermission($query, $resourceId)
+    private function _filterQueryByHasNotPermission(\Cake\ORM\Query $query, string $resourceId)
     {
         $permissionQuery = $this->association('Permissions')
             ->find()
@@ -368,7 +379,7 @@ class GroupsTable extends Table
      * @param string $search The string to search.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryBySearch($query, $search)
+    private function _filterQueryBySearch(\Cake\ORM\Query $query, string $search)
     {
         $search = '%' . $search . '%';
 
@@ -382,11 +393,12 @@ class GroupsTable extends Table
      * Delete all UserGroups association entries
      * Delete all Permissions associated with this group
      *
+     * @throws InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
-    public function softDelete($group, $options = null)
+    public function softDelete(\App\Model\Entity\Group $group, array $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {

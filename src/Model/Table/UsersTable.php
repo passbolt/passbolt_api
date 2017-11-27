@@ -19,14 +19,15 @@ use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use Aura\Intl\Exception;
-use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Users Model
@@ -216,7 +217,7 @@ class UsersTable extends Table
      * @throws Exception if no role is specified
      * @return Query
      */
-    public function findIndex($role, $options = null)
+    public function findIndex(string $role, array $options = null)
     {
         $query = $this->find();
 
@@ -224,6 +225,9 @@ class UsersTable extends Table
         if (!isset($role)) {
             $msg = __('User table findIndex should have a role set in options.');
             throw new \InvalidArgumentException($msg);
+        }
+        if (!$this->Roles->isValidRoleName($role)) {
+            throw new \InvalidArgumentException(__('The role name is not valid.'));
         }
 
         // Default associated data
@@ -282,11 +286,18 @@ class UsersTable extends Table
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws Exception if no id is specified
+     * @throws InvalidArgumentException if the role name or user id are not valid
      * @return Query
      */
-    public function findView($userId, $roleName)
+    public function findView(string $userId, string $roleName)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+        if (!$this->Roles->isValidRoleName($roleName)) {
+            throw new \InvalidArgumentException(__('The role name is not valid.'));
+        }
+
         // Same rule than index apply with a specific id requested
         return $this->findIndex($roleName)->where(['Users.id' => $userId]);
     }
@@ -296,11 +307,18 @@ class UsersTable extends Table
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws Exception if no id is specified
+     * @throws InvalidArgumentException if the role name or user id are not valid
      * @return Query
      */
-    public function findDelete($userId, $roleName)
+    public function findDelete(string $userId, string $roleName)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+        if (!$this->Roles->isValidRoleName($roleName)) {
+            throw new \InvalidArgumentException(__('The role name is not valid.'));
+        }
+
         // Same rule than view but with inactive users also shown
         $options['filter']['is-active'] = true;
 
@@ -335,10 +353,14 @@ class UsersTable extends Table
      *
      * @param string $username email of user to retrieve
      * @param array $options options
+     * @throws InvalidArgumentException if the username is not an email
      * @return \Cake\ORM\Query
      */
-    public function findRecover($username, array $options = [])
+    public function findRecover(string $username, array $options = [])
     {
+        if (!Validation::email($username)) {
+            throw new \InvalidArgumentException(__('The username should be a valid email.'));
+        }
         // show active first and do not count deleted ones
         $query = $this->find()
             ->where(['Users.username' => $username, 'Users.deleted' => false])
@@ -352,10 +374,15 @@ class UsersTable extends Table
      * Build the query that fetches data for user setup start
      *
      * @param string $userId uuid
+     * @throws InvalidArgumentException if the user id is not a uuid
      * @return object $user entity
      */
     public function findSetup($userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         // show active first and do not count deleted ones
         $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
@@ -373,10 +400,15 @@ class UsersTable extends Table
      * Build the query that checks data for user setup start/completion
      *
      * @param string $userId uuid
+     * @throws InvalidArgumentException if the user id is not a uuid
      * @return object $user entity
      */
-    public function findSetupRecover($userId)
+    public function findSetupRecover(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         // show active first and do not count deleted ones
         $user = $this->find()
             ->contain(['Roles', 'Profiles', 'Roles'])
@@ -418,15 +450,18 @@ class UsersTable extends Table
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param array<string> $groupsIds The users to filter the query on.
-     * @param bool $areManager (optional) Should the users be managers ? Default false.
+     * @param bool $areManager (optional) Should the users be only managers ? Default false.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryByGroupsUsers($query, array $groupsIds, $areManager = false)
+    private function _filterQueryByGroupsUsers(\Cake\ORM\Query $query, array $groupsIds, bool $areManager = false)
     {
         // If there is only one group use a left join
         if (count($groupsIds) == 1) {
             $query->leftJoinWith('GroupsUsers');
             $query->where(['GroupsUsers.group_id' => $groupsIds[0]]);
+            if ($areManager) {
+                $query->where(['GroupsUsers.is_admin' => true]);
+            }
 
             return $query;
         }
@@ -470,8 +505,12 @@ class UsersTable extends Table
      * @param string $resourceId The resource the users must have access.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryByResourceAccess($query, $resourceId)
+    private function _filterQueryByResourceAccess(\Cake\ORM\Query $query, string $resourceId)
     {
+        if (!Validation::uuid($resourceId)) {
+            throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
+        }
+
         // The query requires a join with Permissions not constraint with the default condition added by the HasMany
         // relationship : Users.id = Permissions.aro_foreign_key.
         // The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
@@ -522,7 +561,7 @@ class UsersTable extends Table
      * @param string $search The string to search.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryBySearch($query, $search)
+    private function _filterQueryBySearch(\Cake\ORM\Query $query, string $search)
     {
         $search = '%' . $search . '%';
 
@@ -544,10 +583,15 @@ class UsersTable extends Table
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource to search potential users for.
+     * @throws InvalidArgumentException if the resource id is not a valid uuid
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryByHasNotPermission($query, $resourceId)
+    private function _filterQueryByHasNotPermission(\Cake\ORM\Query $query, string $resourceId)
     {
+        if (!Validation::uuid($resourceId)) {
+            throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
+        }
+
         $permissionQuery = $this->Permissions->find()
             ->select(['Permissions.aro_foreign_key'])
             ->where([
@@ -564,10 +608,15 @@ class UsersTable extends Table
      *
      * @param array $data the request data
      * @param string $roleName the role of the user building the entity
+     * @throws InvalidArgumentException if role name is not valid
      * @return \App\Model\Entity\User
      */
-    public function buildEntity($data, $roleName)
+    public function buildEntity(array $data, string $roleName)
     {
+        if (!$this->Roles->isValidRoleName($roleName)) {
+            $msg = __('The role name should be from the list of allowed role names');
+            throw new InvalidArgumentException($msg);
+        }
         return $this->newEntity(
             $data,
             [
@@ -599,12 +648,12 @@ class UsersTable extends Table
      * Also allow editing the role_id but only if admin
      * Other changes such as active or username are not permitted
      *
-     * @param EntityInterface $user User
+     * @param \App\Model\Entity\User $user User
      * @param array $data request data
      * @param string $roleName role name for example Role::User or Role::ADMIN
      * @return object the patched user entity
      */
-    public function editEntity($user, $data, $roleName)
+    public function editEntity(\App\Model\Entity\User $user, array $data, string $roleName)
     {
         $accessibleUserFields = [
             'active' => false,
@@ -644,10 +693,15 @@ class UsersTable extends Table
      * Get a user info for an email notification context
      *
      * @param string $userId uuid
+     * @throws InvalidArgumentException if the user id is not a valid uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function getForEmailContext($userId)
+    public function getForEmailContext(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
         $user = $this->find()
             ->where(['Users.id' => $userId])
             ->contain([
@@ -672,7 +726,7 @@ class UsersTable extends Table
      * @param array $options additional delete options such as ['checkRules' => true]
      * @return bool status
      */
-    public function softDelete($user, $options = null)
+    public function softDelete(\App\Model\Entity\User $user, array $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {

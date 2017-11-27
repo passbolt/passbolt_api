@@ -167,7 +167,6 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationExpires()
     {
         $fails = [
-            'not a date' => '12',
             'yesterday' => FrozenTime::yesterday(),
             'now' => FrozenTime::now()
         ];
@@ -194,7 +193,6 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationIsInFuturePast()
     {
         $fails = [
-            'not a date' => '12',
             'future' => FrozenTime::createFromDate('2030'),
             'more than half a day' => Time::now()->modify('+13 hours'),
             'tomorrow as time' => Time::now()->modify('+24 hours'),

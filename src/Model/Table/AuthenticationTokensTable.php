@@ -21,6 +21,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * AuthenticationTokens Model
@@ -116,10 +117,14 @@ class AuthenticationTokensTable extends Table
      * Build the authentication token
      *
      * @param string $userId uuid
+     * @throws InvalidArgumentException is the user is not a valid uuid
      * @return \App\Model\Entity\AuthenticationToken
      */
-    public function generate($userId)
+    public function generate(string $userId)
     {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
         $token = $this->newEntity([
             'user_id' => $userId,
             'token' => UuidFactory::uuid(),
@@ -144,7 +149,7 @@ class AuthenticationTokensTable extends Table
      * @param string $userId uuid of the user
      * @return bool true if it is valid
      */
-    public function isValid($tokenId, $userId)
+    public function isValid(string $tokenId, string $userId)
     {
         // Are ids valid uuid?
         if (!Validation::uuid($tokenId) || !Validation::uuid($userId)) {
@@ -177,10 +182,14 @@ class AuthenticationTokensTable extends Table
      * Set a token as inactive
      *
      * @param string $tokenId uuid
+     * @throws InvalidArgumentException is the token is not a valid uuid
      * @return bool save result
      */
-    public function setInactive($tokenId)
+    public function setInactive(string $tokenId)
     {
+        if (!Validation::uuid($tokenId)) {
+            throw new \InvalidArgumentException(__('The token id should be a valid uuid.'));
+        }
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
             ->first();
@@ -198,10 +207,14 @@ class AuthenticationTokensTable extends Table
      * (e.g. get using token->token, not token->id )
      *
      * @param string $tokenId uuid
+     * @throws InvalidArgumentException is the token is not a valid uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function findByToken($tokenId)
+    public function findByToken(string $tokenId)
     {
+        if (!Validation::uuid($tokenId)) {
+            throw new \InvalidArgumentException(__('The token id should be a valid uuid.'));
+        }
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
             ->first();

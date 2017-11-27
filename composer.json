@@ -20,7 +20,7 @@
         "source": "https://github.com/passbolt/passbolt"
     },
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.0",
         "cakephp/cakephp": "3.5.*",
         "mobiledetect/mobiledetectlib": "2.*",
         "cakephp/migrations": "~1.0",
