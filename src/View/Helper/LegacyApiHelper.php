@@ -92,7 +92,12 @@ class LegacyApiHelper extends Helper
                     $result[$subEntityName] = [];
                 } else {
                     foreach ($value as $i => $entity2) {
-                        $result[$subEntityName][$i] = self::formatEntity($entity2, $subEntityName)[$subEntityName];
+                        $formattedEntity = self::formatEntity($entity2, $subEntityName);
+                        $result[$subEntityName][$i] = $formattedEntity[$subEntityName];
+                        unset($formattedEntity[$subEntityName]);
+                        if (!empty($formattedEntity)) {
+                            $result[$subEntityName][$i] = array_merge($result[$subEntityName][$i], $formattedEntity);
+                        }
                     }
                 }
             }

@@ -20,7 +20,7 @@ use App\Utility\UuidFactory;
 
 class GroupsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.groups', 'app.groups_users'];
+    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.profiles'];
 
     public function testSuccess()
     {
@@ -56,7 +56,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1';
+        $urlParameter = 'contain[modifier]=1&contain[user]=1&&contain[group_user]=1&contain[group_user.user.profile]=1';
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
@@ -68,12 +68,17 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody->modifier);
         $this->assertObjectHasAttribute('users', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->users[0]);
+        $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody);
+        $this->assertGroupUserAttributes($this->_responseJsonBody->groups_users[0]);
+        $this->assertObjectHasAttribute('user', $this->_responseJsonBody->groups_users[0]);
+        $this->assertObjectHasAttribute('profile', $this->_responseJsonBody->groups_users[0]->user);
+        $this->assertProfileAttributes($this->_responseJsonBody->groups_users[0]->user->profile);
     }
 
     public function testContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1';
+        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1&contain[group_user.user.profile]=1';
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?$urlParameter");
         $this->assertSuccess();
@@ -86,6 +91,11 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody->Modifier);
         $this->assertObjectHasAttribute('User', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->User[0]);
+        $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody);
+        $this->assertGroupUserAttributes($this->_responseJsonBody->GroupUser[0]);
+        $this->assertObjectHasAttribute('User', $this->_responseJsonBody->GroupUser[0]);
+        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody->GroupUser[0]->User);
+        $this->assertProfileAttributes($this->_responseJsonBody->GroupUser[0]->User->Profile);
     }
 
     public function testErrorNotAuthenticated()

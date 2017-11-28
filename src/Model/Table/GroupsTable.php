@@ -181,6 +181,11 @@ class GroupsTable extends Table
             $query->contain('GroupsUsers');
         }
 
+        // If contains user profile.
+        if (isset($options['contain']['group_user.user.profile'])) {
+            $query->contain('GroupsUsers.Users.Profiles');
+        }
+
         // If contains user_count.
         if (isset($options['contain']['user_count'])) {
             $query = $this->_containUserCount($query);

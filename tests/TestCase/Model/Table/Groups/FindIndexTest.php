@@ -26,7 +26,7 @@ class FindIndexTest extends AppTestCase
 {
     public $Groups;
 
-    public $fixtures = ['app.groups', 'app.users', 'app.groups_users', 'app.permissions'];
+    public $fixtures = ['app.groups', 'app.users', 'app.groups_users', 'app.profiles', 'app.permissions'];
 
     public function setUp()
     {
@@ -149,6 +149,20 @@ class FindIndexTest extends AppTestCase
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         // Check that all the expected users are there.
         $this->assertEquals(0, count(array_diff($groupUsers, $usersIds)));
+    }
+
+    public function testContainGroupUserProfile()
+    {
+        $options['contain']['group_user.user.profile'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+        $group = $groups->first();
+
+        // Expected content.
+        $this->assertGroupAttributes($group);
+        $this->assertObjectHasAttribute('groups_users', $group);
+        $this->assertObjectHasAttribute('user', $group->groups_users[0]);
+        $this->assertObjectHasAttribute('profile', $group->groups_users[0]->user);
+        $this->assertProfileAttributes($group->groups_users[0]->user->profile);
     }
 
     public function testFilterHasUsers()
