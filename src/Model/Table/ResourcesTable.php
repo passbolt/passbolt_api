@@ -15,19 +15,17 @@
 
 namespace App\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Collection\CollectionInterface;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Resources Model
@@ -79,11 +77,17 @@ class ResourcesTable extends Table
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
         ]);
-        $this->hasOne('Permissions', [
+        $this->hasOne('Permission', [
+            'className' => 'Permissions',
             'foreignKey' => 'aco_foreign_key'
         ]);
+        $this->hasMany('Permissions', [
+            'foreignKey' => 'aco_foreign_key',
+            'saveStrategy' => 'replace'
+        ]);
         $this->hasMany('Secrets', [
-            'foreignKey' => 'resource_id'
+            'foreignKey' => 'resource_id',
+            'saveStrategy' => 'replace'
         ]);
     }
 
@@ -137,8 +141,9 @@ class ResourcesTable extends Table
 
         // Associated fields
         $validator
-            ->requirePresence('permission', 'create', __('A permission is required.'))
-            ->notEmpty('permission', __('The permission cannot be empty.'));
+            ->requirePresence('permissions', 'create', __('The permissions are required.'))
+            ->notEmpty('permissions', __('The permissions cannot be empty.'))
+            ->count(1, __('Only the permission of the owner is required.'));
 
         $validator
             ->requirePresence('secrets', 'create', __('A secret is required.'))
@@ -159,8 +164,8 @@ class ResourcesTable extends Table
     {
         // Create rules.
         $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
-            'errorField' => 'permission',
-            'message' => __('The permission of the owner is required.')
+            'errorField' => 'permissions',
+            'message' => __('At least one owner permission must be provided.')
         ]);
         $rules->addCreate([$this, 'isOwnerSecretProvidedRule'], 'owner_secret_provided', [
             'errorField' => 'secrets',
@@ -177,27 +182,31 @@ class ResourcesTable extends Table
             'errorField' => 'id',
             'message' => __('The resource cannot be soft deleted.')
         ]);
-        $rules->addUpdate(new HasResourceAccessRule(), 'has_resource_access', [
-            'errorField' => 'id',
-            'message' => __('Access denied.'),
-            'userField' => 'modified_by',
-            'resourceField' => 'id',
-            'permissionType' => Permission::UPDATE
+        $rules->addUpdate([$this, 'isOwnerPermissionProvidedRule'], 'at_least_one_owner', [
+            'errorField' => 'permissions',
+            'message' => __('At least one owner permission must be provided.')
         ]);
 
         return $rules;
     }
 
     /**
-     * Validate that the a resource can be created only if the permission of the owner is provided.
+     * Validate that the entity has at least one owner
      *
-     * @param \App\Model\Entity\Resource $entity The entity that will be created.
+     * @param \App\Model\Entity\Resource $entity The entity that will be created or updated.
      * @param array $options options
      * @return bool
      */
-    public function isOwnerPermissionProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
+    public function isOwnerPermissionProvidedRule($entity, array $options = [])
     {
-        return ($entity->permission->aro_foreign_key === $entity->created_by);
+        if (isset($entity->permissions)) {
+            $found = Hash::extract($entity->permissions, '{n}[type=' . Permission::OWNER . ']');
+            if (empty($found)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -221,8 +230,9 @@ class ResourcesTable extends Table
      */
     public function isSecretsProvidedRule(\App\Model\Entity\Resource $entity, array $options = [])
     {
-        // Secrets are not required to update a resource.
-        if (!isset($entity->secrets) || empty($entity->secrets)) {
+        // Secrets are not required to update a resource, but if provided check that the list of secrets correspond
+        // only to the users who have access to the resource.
+        if (!isset($entity->secrets)) {
             return true;
         }
 
@@ -236,8 +246,10 @@ class ResourcesTable extends Table
         // Extract the users for whom the secrets will be updated.
         $secretsUsersIds = Hash::extract($entity->secrets, '{n}.user_id');
 
-        // If the lists are not the same, it means the list of secrets provided are not good.
-        if (!empty(array_diff($allowedUsersIds, $secretsUsersIds))) {
+        // If the list of secrets does not correspond to the list of users who have access to the resource,
+        // do not validate.
+        if (count($secretsUsersIds) != count($allowedUsersIds)
+            || !empty(array_diff($allowedUsersIds, $secretsUsersIds))) {
             return false;
         }
 
@@ -300,30 +312,25 @@ class ResourcesTable extends Table
         }
 
         /*
-         * Filter on resources the user is allowed to access.
-         *
-         * If the contain permission option is given, prefer to use the \Cake\ORM\Query::matching
-         * function instead of the \Cake\ORM\Query::innerJoinWith function. The permission will be
-         * retrieved within a unique sql request and the permission will be available in the
-         * property _matchingData. Format the query result to populate the permission property
-         * as a contain would do.
+         * If the contain permission option is given, filter on resources the user is allowed to access
+         * and retrieve the user permission. Otherwise only filter on resources the user is allowed to
+         * access.
          */
         if (isset($options['contain']['permission'])) {
-            // Filter on resources the user is allowed to access.
-            $query->matching('Permissions');
+            // Matching will make available the user permission in the result _matchingData property.
+            $query->matching('Permission');
             $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
-
             // Format the query result to populate the permission property as a contain would do.
             $query->formatResults(function (CollectionInterface $results) {
                 return $results->map(function ($row) {
-                    $row['permission'] = $row['_matchingData']['Permissions'];
-                    unset($row['_matchingData']['Permissions']);
+                    $row['permission'] = $row['_matchingData']['Permission'];
+                    unset($row['_matchingData']['Permission']);
 
                     return $row;
                 });
             });
         } else {
-            $query->innerJoinWith('Permissions');
+            $query->innerJoinWith('Permission');
             $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
         }
 
@@ -413,7 +420,7 @@ class ResourcesTable extends Table
 
         $query = $this->find();
         $query->where(['Resources.id' => $resourceId]);
-        $query->innerJoinWith('Permissions');
+        $query->innerJoinWith('Permission');
         $query = $this->_filterQueryByPermissionsType($query, $userId, $permissionType);
 
         return !is_null($query->first());
@@ -453,12 +460,14 @@ class ResourcesTable extends Table
             ->find()
             ->select('Permissions.id');
 
+        // A permission is defined directly for the user and for a given resource.
         $where = [
             'Permissions.aco_foreign_key = Resources.id',
             'Permissions.aro_foreign_key' => $userId,
             'Permissions.type >=' => $permissionType,
         ];
 
+        // A permission is defined for a group the user is member of and for a given resource.
         if (!empty($groupsIds)) {
             $where = [
                 'OR' => [ $where, [
@@ -472,7 +481,7 @@ class ResourcesTable extends Table
             ->limit(1);
 
         // Filter the Resources query by permissions.
-        $query->where(['Permissions.id' => $permissionSubquery]);
+        $query->where(['Permission.id' => $permissionSubquery]);
 
         return $query;
     }
@@ -580,5 +589,269 @@ class ResourcesTable extends Table
         if (isset($options['validate']) && $options['validate'] === 'default') {
             $data['deleted'] = false;
         }
+    }
+
+    /**
+     * Simulate a share of a resource with a list of changes.
+     * To see how a change is formatted, see : App\Model\Table\Permissions::patchEntitiesWithChanges
+     *
+     * The function returns an associative array that contains a list of new users who will have access to the resource,
+     * and a list of users who will lose their access. These lists will be used to encrypt the secrets for the users
+     * who get access and to remove the secrets of the users who lost their access.
+     *
+     * [
+     *   'added' => [uuid],
+     *   'removed' => [uuid]
+     * ]
+     *
+     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
+     * @param array $changes The list of changes to apply
+     * @return array
+     */
+    public function shareDryRun($resource, array $changes = [])
+    {
+        // Save the permissions changes. As it's a simulate execute the operation in a transaction so the operation
+        // can be canceled with a rollback.
+        $result = [];
+        $this->getConnection()->transactional(function () use ($resource, $changes, &$result) {
+            $result = $this->_patchAndUpdatePermissions($resource, $changes);
+
+            return false;
+        });
+
+        return $result;
+    }
+
+    /**
+     * Share a resource by applying a list of changes.
+     * To see how a change is formatted, see : App\Model\Table\Permissions::patchEntitiesWithChanges
+     *
+     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions and secrets properties have to be populated.
+     * @param array $changes The list of changes to apply
+     * @param array $secrets The list secrets corresponding to the users who will get access to the resource
+     * @return void
+     */
+    public function share($resource, array $changes = [], array $secrets = [])
+    {
+        // As the share is done in two times: save the permissions and save the secrets. Do the operation
+        // in a transaction, so in case of error the operation can be canceled with a rollback.
+        $this->getConnection()->transactional(function () use ($resource, $changes, $secrets) {
+            $resultUpdatePermissions = $this->_patchAndUpdatePermissions($resource, $changes);
+            if (!empty($resource->getErrors())) {
+                return false;
+            }
+
+            $this->_patchAndUpdateSecrets($resource, $secrets, $resultUpdatePermissions['removed']);
+            if (!empty($resource->getErrors())) {
+                return false;
+            }
+        });
+    }
+
+    /**
+     * Patch and update the resource permissions.
+     *
+     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property
+     *        has to be populated.
+     * @param array $changes The list of changes to apply
+     * @return array
+     */
+    protected function _patchAndUpdatePermissions($resource, array $changes = [])
+    {
+        // @todo document
+        $changesReferences = [];
+
+        // Patch the resource permissions
+        $resource = $this->_patchPermissionsWithChanges($resource, $changes, $changesReferences);
+
+        // Retrieve the users who have access to the resource before applying the changes.
+        $findUsersOptions['filter']['has-access'] = [$resource->id];
+        $beforeUsersIds = $this->Permissions->Users->findIndex(Role::USER, $findUsersOptions)->extract('id')->toArray();
+
+        // Save the resource permissions.
+        $resource = $this->_updatePermissions($resource, $changesReferences);
+
+        // Retrieve the users who have access to the resource after applying the changes.
+        $afterUsersIds = $this->Permissions->Users->findIndex(Role::USER, $findUsersOptions)->extract('id')->toArray();
+
+        // Extract the users that will require the secrets to be encrypted for.
+        $secretsToAddFor = array_diff($afterUsersIds, $beforeUsersIds);
+        // Extract the users the secrets will be deleted for.
+        $secretsToDeleteFor = array_diff($beforeUsersIds, $afterUsersIds);
+
+        return [
+            'added' => $secretsToAddFor,
+            'removed' => $secretsToDeleteFor
+        ];
+    }
+
+    /**
+     * Patch the resource permissions with a list of changes
+     *
+     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
+     * @param array $changes The list of changes to apply
+     * @param array $changesReferences (Reference) A list of reference to know on which permissions the changes have
+     *        been applied on.
+     * @return \Cake\Datasource\EntityInterface
+     */
+    protected function _patchPermissionsWithChanges($resource, array $changes = [], array &$changesReferences = [])
+    {
+        // Cannot use the association Permissions to call the function patchEntitiesWithChanges.
+        // A weird bug make the passage by reference of the variables not working as expected.
+        // The variable ($changesReferences) changes made in patchEntitiesWithChanges are not visible in the current
+        // scope when using $this->Permission->patchEntitiesWithChanges().
+        // @todo check if it is a known bug.
+        $Permissions = TableRegistry::get('Permissions');
+
+        // Patch the permission entities with the changes.
+        try {
+            $resource->permissions = $Permissions->patchEntitiesWithChanges(
+                $resource->permissions,
+                $changes,
+                $resource->id,
+                $changesReferences
+            );
+            $resource->dirty('permissions', true);
+        } catch (ValidationRuleException $e) {
+            return $resource->setError('permissions', $e->getErrors());
+        }
+
+        return $resource;
+    }
+
+    /**
+     * Update the resource permissions.
+     *
+     * If an error occurred when saving the resource, try to associate the error with a change, so the caller
+     * can identify easily what's wrong.
+     *
+     * By instance, if the caller try to update a permission with this changes list :
+     *
+     * $changes = [
+     *   0 => [
+     *     'id' => 'PERMISSION_ID',
+     *     'type' => UNKNOWN_TYPE
+     *   ]
+     * ];
+     *
+     * The resource save returns an error like :
+     *
+     * $errors = [
+     *   'permissions' => [
+     *     24 => [
+     *       'type' => [
+     *         'inList' => 'The type must be one of the following: ...'
+     *       ]
+     *     ]
+     *   ]
+     * ];
+     *
+     * Then it's hard for the caller to identify the change that is responsible of the error. To avoid this the errors
+     * should be associated with the changes (if possible) :
+     *
+     * $errors = [
+     *   'permissions' => [
+     *     0 => [
+     *       'type' => [
+     *         'inList' => 'The type must be one of the following: ...'
+     *       ]
+     *     ]
+     *   ]
+     * ];
+     *
+     * @param \Cake\Datasource\EntityInterface $resource The resource to update. The permissions property has to be populated.
+     * @param array $changesReferences (Reference) A list of reference to know on which permissions the changes have
+     *        been applied on.
+     * @return \Cake\Datasource\EntityInterface
+     */
+    protected function _updatePermissions($resource, array $changesReferences = [])
+    {
+        // Save the resource permissions.
+        $options = [
+            'validate' => 'default',
+            'accessibleFields' => [
+                'permissions' => true
+            ],
+            'associated' => [
+                'Permissions' => [
+                    'validate' => 'default',
+                    'accessibleFields' => [
+                        'aco' => true,
+                        'aco_foreign_key' => true,
+                        'aro' => true,
+                        'aro_foreign_key' => true,
+                        'type' => true
+                    ]
+                ]
+            ]
+        ];
+        $this->save($resource, $options);
+
+        // Associate the errors that occurred while saving with the changes (if possible).
+        $errors = $resource->getErrors();
+        if (!empty($errors['permissions'])) {
+            $errorsPermissions = $errors['permissions'];
+            unset($errors['permissions']);
+            foreach ($errorsPermissions as $permissionKey => $errors) {
+                // If the error key is an integer, the error is relative to the save operation of a permission entity.
+                // Try to link it with a corresponding change if any.
+                if (is_int($permissionKey)) {
+                    $changeKey = array_search($permissionKey, $changesReferences);
+                    if ($changeKey !== false) {
+                        $resource->setError('permissions', [$changeKey => $errors]);
+                    } else {
+                        // @todo An issue relative to a permission that has not been updated is unexpected.
+                    }
+                } else {
+                    // This is an error relative to the field permissions of the model Resource.
+                    $resource->setError('permissions', [$permissionKey => $errors]);
+                }
+            }
+        }
+
+        return $resource;
+    }
+
+    /**
+     * Patch and update the resource secrets.
+     *
+     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
+     * @param array $add The list of secrets to add
+     * @param array $delete The list of user identifies for whom the secrets must be deleted
+     * @return array
+     */
+    protected function _patchAndUpdateSecrets($resource, array $add = [], array $delete = [])
+    {
+        // Patch the secret entities with the changes.
+        try {
+            $resource->secrets = $this->Secrets->patchEntitiesWithChanges(
+                $resource->id,
+                $resource->secrets,
+                $add,
+                $delete
+            );
+            $resource->dirty('secrets', true);
+        } catch (ValidationRuleException $e) {
+            $resource->setError('secrets', $e->getErrors());
+
+            return false;
+        }
+
+        // Save the resource secrets.
+        $options = [
+            'validate' => 'default',
+            'accessibleFields' => [
+                'secrets' => true
+            ],
+            'associated' => [
+                'Secrets' => [
+                    'validate' => 'default',
+                    'accessibleFields' => [
+                        'data' => true,
+                    ]
+                ]
+            ]
+        ];
+        $this->save($resource, $options);
     }
 }

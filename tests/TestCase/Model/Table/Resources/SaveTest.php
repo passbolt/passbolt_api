@@ -15,6 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
+use App\Model\Entity\Permission;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
@@ -55,7 +56,7 @@ class SaveTest extends AppTestCase
                 'created_by' => true,
                 'modified_by' => true,
                 'secrets' => true,
-                'permission' => true
+                'permissions' => true
             ],
             'associated' => [
                 'Permissions' => [
@@ -123,13 +124,14 @@ class SaveTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Resources, 'description', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
     }
 
-    public function testValidationPermission()
+    public function testValidationPermissions()
     {
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Resources, 'permission', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Resources, 'permissions', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
+        $this->markTestIncomplete('test the count rule');
     }
 
     public function testValidationSecrets()
@@ -139,7 +141,7 @@ class SaveTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases()
         ];
         $this->assertFieldFormatValidation($this->Resources, 'secrets', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
-        $this->markTestIncomplete('The rule checking the size of the array cannot be tested');
+        $this->markTestIncomplete('test the count rule');
     }
 
     /* ************************************************************** */
@@ -186,13 +188,15 @@ class SaveTest extends AppTestCase
         $this->assertEquals($userId, $resource->modifier->id);
 
         // Check the permission attribute
-        $this->assertNotNull($resource->permission);
-        $this->assertPermissionAttributes($resource->permission);
-        $this->assertEquals($data['permission']['aco'], $resource->permission->aco);
-        $this->assertEquals($save->id, $resource->permission->aco_foreign_key);
-        $this->assertEquals($data['permission']['aro'], $resource->permission->aro);
-        $this->assertEquals($userId, $resource->permission->aro_foreign_key);
-        $this->assertEquals($data['permission']['type'], $resource->permission->type);
+        $this->assertNotEmpty($resource->permissions);
+        $this->assertCount(1, $resource->permissions);
+        $permission = $resource->permissions[0];
+        $this->assertPermissionAttributes($permission);
+        $this->assertEquals($data['permissions'][0]['aco'], $permission->aco);
+        $this->assertEquals($save->id, $permission->aco_foreign_key);
+        $this->assertEquals($data['permissions'][0]['aro'], $permission->aro);
+        $this->assertEquals($userId, $permission->aro_foreign_key);
+        $this->assertEquals($data['permissions'][0]['type'], $permission->type);
 
         // Check the secret attribute
         $this->assertNotEmpty($resource->secrets);
@@ -202,17 +206,17 @@ class SaveTest extends AppTestCase
         $this->assertEquals($data['secrets'][0]['data'], $resource->secrets[0]->data);
     }
 
-    public function testErrorRuleOwnerPermissionProvided()
+    public function testErrorRulAtLeastOneOwner()
     {
         $data = self::getDummyResource();
-        $data['permission']['aro_foreign_key'] = UuidFactory::uuid('user.id.betty');
+        $data['permissions'][0]['type'] = Permission::UPDATE;
         $options = self::getEntityDefaultOptions();
         $entity = $this->Resources->newEntity($data, $options);
         $save = $this->Resources->save($entity);
         $this->assertFalse($save, 'The resource save operation should fail.');
         $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotNull($errors['permission']['owner_permission_provided']);
+        $this->assertNotNull($errors['permissions']['owner_permission_provided']);
     }
 
     public function testErrorRuleOwnerSecretProvided()

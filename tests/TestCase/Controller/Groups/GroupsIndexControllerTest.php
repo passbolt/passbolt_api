@@ -56,7 +56,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1';
+        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1';
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -67,12 +67,14 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->modifier);
         $this->assertObjectHasAttribute('users', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->users[0]);
+        $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody[0]);
+        $this->assertGroupUserAttributes($this->_responseJsonBody[0]->groups_users[0]);
     }
 
     public function testContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1';
+        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1';
         $this->getJson("/groups.json?$urlParameter");
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -84,6 +86,8 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
         $this->assertObjectHasAttribute('User', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->User[0]);
+        $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody[0]);
+        $this->assertGroupUserAttributes($this->_responseJsonBody[0]->GroupUser[0]);
     }
 
     public function testFilterHasUsersSuccess()

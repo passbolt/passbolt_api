@@ -15,7 +15,6 @@
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
-use App\Model\Table\SecretsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
@@ -32,8 +31,7 @@ class SaveTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Secrets') ? [] : ['className' => SecretsTable::class];
-        $this->Secrets = TableRegistry::get('Secrets', $config);
+        $this->Secrets = TableRegistry::get('Secrets');
     }
 
     public function tearDown()
@@ -48,55 +46,11 @@ class SaveTest extends AppTestCase
         return [
             'validate' => 'default',
             'accessibleFields' => [
-                'resource_id' => true, // Make it accessible for the test, it shouldn't when saving in association to resource.
+                // Make it accessible for the test, in practice a secret is saved along with a resource.
+                // See the validationSaveResource.
+                'resource_id' => true,
                 'user_id' => true,
                 'data' => true
-            ],
-        ];
-    }
-
-    protected function getGpgMessageTestCases()
-    {
-        return [
-            'rule_name' => 'isValidGpgMessageRule',
-            'test_cases' => [
-                '!#*' => false,
-                // Message without gpg markers shouldn't be valid
-                'hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
-xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
-y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
-SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
-tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
-kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
-P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
-hcciUFw5
-=TcQF' => false,
-                // Corrupted message
-                '-----BEGIN PGP MESSAGE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
-xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
-y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
-SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
-tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
-kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
-P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
-hcciUFw5
------END PGP MESSAGE-----' => false,
-                '-----BEGIN PGP MESSAGE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
-xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
-y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
-SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
-tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
-kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
-P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
-hcciUFw5
-=TcQF
------END PGP MESSAGE-----' => true,
             ],
         ];
     }
@@ -128,7 +82,7 @@ hcciUFw5
     public function testValidationData()
     {
         $testCases = [
-            'isValidGpgMessageRule' => $this->getGpgMessageTestCases(),
+            'isValidGpgMessage' => self::getGpgMessageTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];

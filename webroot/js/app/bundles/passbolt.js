@@ -17237,6 +17237,7 @@ define('passbolt-mad/util/validation', [
             return returnValue;
         },
         notEmpty: function notEmpty(value, values, options) {
+            options = options || {};
             if (typeof value == 'undefined' || value == null || $.isArray(value) && !value.length || $.trim(value) == '') {
                 return options.message || __('Should not be empty');
             }
@@ -17250,7 +17251,7 @@ define('passbolt-mad/util/validation', [
             var regexp = '^[abcdef0-9]{8}-[abcdef0-9]{4}-[abcdef0-9]{4}-[abcdef0-9]{4}-[abcdef0-9]{12}$';
             var xregexp = new _xregexp2.default(regexp);
             if (!xregexp.test(value)) {
-                return __('Not valid uuid');
+                return options.message || __('Not valid uuid');
             }
             return true;
         },
@@ -17272,6 +17273,26 @@ define('passbolt-mad/util/validation', [
             }
             return true;
         },
+        utf8Extended: function utf8Extended(value, values, options) {
+            options = options || {};
+            var message = options.message || __('Only utf8 characters allowed.');
+            if (typeof value !== 'string') {
+                return message;
+            }
+            return true;
+        },
+        utf8: function utf8(value, values, options) {
+            options = options || {};
+            var message = options.message || __('Only utf8 characters allowed (except emoticons).');
+            if (typeof value !== 'string') {
+                return message;
+            }
+            var xregexp = (0, _xregexp2.default)('\\pS', 'A');
+            if (xregexp.test(value)) {
+                return message;
+            }
+            return true;
+        },
         num: function num(value) {
             var xregexp = (0, _xregexp2.default)('^-?[0-9]+.?[0-9]*$');
             if (!xregexp.test(value)) {
@@ -17279,10 +17300,11 @@ define('passbolt-mad/util/validation', [
             }
             return true;
         },
-        required: function required(value) {
+        required: function required(value, values, options) {
+            options = options || {};
             var xregexp = (0, _xregexp2.default)('^[s\n\t ]*$');
             if (typeof value == 'undefined' || value === null || xregexp.test(value)) {
-                return __('This information is required');
+                return options.message || __('This information is required');
             }
             return true;
         },
@@ -17308,12 +17330,13 @@ define('passbolt-mad/util/validation', [
             }
             return true;
         },
-        email: function email(value) {
+        email: function email(value, values, options) {
+            options = options || {};
             var hostnameRegexp = '(?:[_\\p{L}0-9][-_\\p{L}0-9]*\\.)*(?:[\\p{L}0-9][-\\p{L}0-9]{0,62})\\.(?:(?:[a-z]{2}\\.)?[a-z]{2,})';
             var emailRegexp = '^[\\p{L}0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[\\p{L}0-9!#$%&\'*+/=?^_`{|}~-]+)*@' + hostnameRegexp + '$';
             var xregexp = (0, _xregexp2.default)(emailRegexp);
             if (!xregexp.test(value)) {
-                return __('Only email format is allowed');
+                return options.message || __('Only email format is allowed');
             }
             return true;
         },
@@ -17735,17 +17758,17 @@ define('passbolt-mad/model/model', [
             }
             return this.validationRules || {};
         },
-        isRequired: function isRequired(attrName, validationCase) {
-            var required = false;
+        getAttributeRule: function getAttributeRule(attrName, ruleName, validationCase) {
             var rules = this.getValidationRules(validationCase);
+            var rule = null;
             if ($.isArray(rules[attrName])) {
-                required = rules[attrName].reduce(function (carry, item) {
-                    if (item.rule && item.rule == 'required')
-                        carry = true;
-                    return carry;
-                }, false);
+                for (var i in rules[attrName]) {
+                    if (rules[attrName][i].rule && rules[attrName][i].rule == 'required') {
+                        rule = rules[attrName][i];
+                    }
+                }
             }
-            return required;
+            return rule;
         },
         search: function search(data, key, value) {
             var returnValue = [], split = key.split('.'), modelName = split[0], attrName = split[1];
@@ -17785,13 +17808,18 @@ define('passbolt-mad/model/model', [
             }
             var rules = this.getValidationRules(validationCase);
             if (typeof rules[attrName] != 'undefined') {
-                var required = this.isRequired(attrName, validationCase);
-                var requiredValidation = _util2.default.Validation.validate('required', value);
-                if (required && requiredValidation !== true) {
-                    returnValue.push(requiredValidation);
-                    return returnValue;
-                } else if (!required && requiredValidation !== true) {
-                    return returnValue;
+                var requiredRule = this.getAttributeRule(attrName, 'required', validationCase);
+                if (requiredRule != null) {
+                    var requiredResult = _util2.default.Validation.validate(requiredRule, value);
+                    if (requiredResult !== true) {
+                        returnValue.push(requiredResult);
+                        return returnValue;
+                    }
+                } else {
+                    var requiredResult = _util2.default.Validation.validate('required', value);
+                    if (requiredResult !== true) {
+                        return returnValue;
+                    }
                 }
                 var attributeRules = rules[attrName];
                 for (var i in attributeRules) {
@@ -24764,12 +24792,57 @@ define('app/model/profile', [
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var Profile = passbolt.model.Profile = mad.Model.extend('passbolt.model.Profile', {
-        checkServerRules: true,
         attributes: {
             id: 'string',
             first_name: 'string',
             last_name: 'string',
             Avatar: 'passbolt.model.ImageStorage.model'
+        },
+        validationRules: {
+            first_name: [
+                {
+                    rule: 'required',
+                    message: __('A first name is required')
+                },
+                {
+                    rule: 'notEmpty',
+                    message: __('A first name is required')
+                },
+                {
+                    rule: 'utf8',
+                    message: __('First name should be a valid utf8 string.')
+                },
+                {
+                    rule: [
+                        'lengthBetween',
+                        0,
+                        255
+                    ],
+                    message: __('The first name length should be maximum 255 characters.')
+                }
+            ],
+            last_name: [
+                {
+                    rule: 'required',
+                    message: __('A last name is required')
+                },
+                {
+                    rule: 'notEmpty',
+                    message: __('A last name is required')
+                },
+                {
+                    rule: 'utf8',
+                    message: __('Last name should be a valid utf8 string.')
+                },
+                {
+                    rule: [
+                        'lengthBetween',
+                        0,
+                        255
+                    ],
+                    message: __('The last name length should be maximum 255 characters.')
+                }
+            ]
         },
         findAll: function findAll(params, success, error) {
             return mad.net.Ajax.request({
@@ -24806,7 +24879,6 @@ define('app/model/user', [
     Object.defineProperty(exports, '__esModule', { value: true });
     var User = passbolt.model.User = mad.Model.extend('passbolt.model.User', {
         current: null,
-        checkServerRules: true,
         attributes: {
             id: 'string',
             username: 'string',
@@ -24816,6 +24888,31 @@ define('app/model/user', [
             last_logged_in: 'string',
             Profile: 'passbolt.model.Profile.model',
             GroupUser: 'passbolt.model.GroupUser.models'
+        },
+        validationRules: {
+            id: [{ rule: 'uuid' }],
+            username: [
+                {
+                    rule: 'required',
+                    message: __('A username is required.')
+                },
+                {
+                    rule: 'notEmpty',
+                    message: __('A username is required.')
+                },
+                {
+                    rule: [
+                        'lengthBetween',
+                        0,
+                        255
+                    ],
+                    message: __('The username length should be maximum 254 characters.')
+                },
+                {
+                    rule: ['email'],
+                    message: __('The username should be a valid email address.')
+                }
+            ]
         },
         getCurrent: function getCurrent() {
             return passbolt.model.User.current;
@@ -25364,7 +25461,10 @@ define('passbolt-mad/form/form', [
                     var fieldAttrs = mad.Model.getModelAttributes(eltModelRef), modelFullName = fieldAttrs[fieldAttrs.length - 2].name, attrName = fieldAttrs[fieldAttrs.length - 1].name, modelName = modelFullName.substr(modelFullName.lastIndexOf('.') + 1), eltId = element.getId();
                     for (var j in errors) {
                         if (errors[modelName] != undefined && errors[modelName][attrName] != undefined) {
-                            var error = errors[modelName][attrName][0];
+                            var error = '';
+                            for (var errorRule in errors[modelName][attrName]) {
+                                error = errors[modelName][attrName][errorRule] + ' ';
+                            }
                             var eltStates = ['error'];
                             if (element.state.is('hidden')) {
                                 eltStates.push('hidden');
@@ -26500,16 +26600,260 @@ define('app/model/permission_type', [
     });
     exports.default = PermissionType;
 });
+/*app/model/model*/
+define('app/model/model', [
+    'exports',
+    'passbolt-mad/model/model'
+], function (exports) {
+    'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var Model = passbolt.Model = mad.Model.extend('passbolt.Model', {
+        getFilteredFields: function getFilteredFields(filteredCase) {
+            return false;
+        },
+        filterAttributes: function filterAttributes(attrs) {
+            var filteredAttrs = {};
+            if (typeof attrs.__FILTER_CASE__ != 'undefined') {
+                var fields = this.getFilteredFields(attrs.__FILTER_CASE__);
+                if (fields !== false) {
+                    for (var i in fields) {
+                        var value = can.getObject(fields[i], attrs);
+                        can.getObject(fields[i], filteredAttrs, true, value);
+                    }
+                } else {
+                    filteredAttrs = attrs;
+                    delete filteredAttrs.__FILTER_CASE__;
+                }
+            } else {
+                filteredAttrs = attrs;
+            }
+            return filteredAttrs;
+        }
+    }, {
+        clone: function clone() {
+            var data = this.attr();
+            delete data[this.constructor.id];
+            return new this.constructor(data);
+        }
+    });
+    exports.default = Model;
+});
+/*app/model/resource*/
+define('app/model/resource', [
+    'exports',
+    'app/model/model',
+    'app/model/secret',
+    'passbolt-mad/model/serializer/cake_serializer'
+], function (exports) {
+    'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.Resource', {
+        attributes: {
+            id: 'string',
+            name: 'string',
+            username: 'string',
+            uri: 'string',
+            created: 'string',
+            modified: 'string',
+            description: 'string',
+            Secret: 'passbolt.model.Secret.models',
+            Favorite: 'passbolt.model.Favorite.model',
+            Creator: 'passbolt.model.User.model',
+            Modifier: 'passbolt.model.User.model',
+            Permission: 'passbolt.model.Permission.model'
+        },
+        validationRules: {
+            id: [{ rule: 'uuid' }],
+            name: [
+                {
+                    rule: 'required',
+                    message: __('A name is required.')
+                },
+                {
+                    rule: [
+                        'lengthBetween',
+                        3,
+                        64
+                    ],
+                    message: __('The name should be between %s and %s characters.', 3, 64)
+                },
+                {
+                    rule: 'utf8Extended',
+                    message: __('The name should be a valid utf8 string.')
+                }
+            ],
+            username: [
+                {
+                    rule: [
+                        'lengthBetween',
+                        0,
+                        64
+                    ],
+                    message: __('The username should be between %s and %s characters.', 3, 64)
+                },
+                {
+                    rule: 'utf8Extended',
+                    message: __('The username should be a valid utf8 string.')
+                }
+            ],
+            uri: [
+                {
+                    rule: [
+                        'lengthBetween',
+                        3,
+                        255
+                    ],
+                    message: __('The uri should be between %s and %s characters.', 3, 64)
+                },
+                {
+                    rule: 'utf8Extended',
+                    message: __('The uri should be a valid utf8 string.')
+                }
+            ],
+            description: [
+                {
+                    rule: [
+                        'lengthBetween',
+                        3,
+                        10000
+                    ],
+                    message: __('The description should be between %s and %s characters.', 3, 64)
+                },
+                {
+                    rule: 'utf8Extended',
+                    message: __('The description should be a valid utf8 string.')
+                }
+            ]
+        },
+        create: function create(attrs, success, error) {
+            var self = this;
+            var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+            return mad.net.Ajax.request({
+                url: APP_URL + 'resources',
+                type: 'POST',
+                params: params,
+                success: success,
+                error: error
+            }).pipe(function (data, textStatus, jqXHR) {
+                var def = $.Deferred();
+                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+                return def;
+            });
+        },
+        destroy: function destroy(id, success, error) {
+            var params = { id: id };
+            return mad.net.Ajax.request({
+                url: APP_URL + 'resources/{id}.json',
+                type: 'DELETE',
+                params: params,
+                success: success,
+                error: error
+            });
+        },
+        findAll: function findAll(params, success, error) {
+            return mad.net.Ajax.request({
+                url: APP_URL + 'resources.json',
+                type: 'GET',
+                params: params,
+                success: success,
+                error: error
+            });
+        },
+        findOne: function findOne(params, success, error) {
+            return mad.net.Ajax.request({
+                url: APP_URL + 'resources/{id}.json',
+                type: 'GET',
+                params: params,
+                success: success,
+                error: error
+            });
+        },
+        update: function update(id, attrs) {
+            var self = this, params = {};
+            var data = this.filterAttributes(attrs);
+            params = mad.model.serializer.CakeSerializer.to(data, this);
+            params.id = id;
+            return mad.net.Ajax.request({
+                url: APP_URL + 'resources/{id}.json',
+                type: 'PUT',
+                params: params
+            }).pipe(function (data, textStatus, jqXHR) {
+                var def = $.Deferred();
+                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+                return def;
+            });
+        },
+        getFilteredFields: function getFilteredFields(filteredCase) {
+            var filteredFields = false;
+            switch (filteredCase) {
+            case 'edit':
+                filteredFields = [
+                    'name',
+                    'username',
+                    'expiry_date',
+                    'uri',
+                    'description'
+                ];
+                break;
+            case 'edit_with_secrets':
+                filteredFields = [
+                    'name',
+                    'username',
+                    'expiry_date',
+                    'uri',
+                    'description',
+                    'Secret'
+                ];
+                break;
+            case 'edit_description':
+                filteredFields = ['description'];
+                break;
+            }
+            return filteredFields;
+        },
+        findUsers: function findUsers(id) {
+            var params = { filter: { 'has-access': id } };
+            return mad.net.Ajax.request({
+                url: APP_URL + 'users.json',
+                type: 'GET',
+                params: params
+            }).pipe(function (data, textStatus, jqXHR) {
+                var def = $.Deferred();
+                def.resolveWith(this, [passbolt.model.User.models(data)]);
+                return def;
+            });
+        }
+    }, {
+        isFavorite: function isFavorite() {
+            if (this.Favorite && this.Favorite.id) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    });
+    exports.default = Resource;
+});
 /*app/model/permission*/
 define('app/model/permission', [
     'exports',
     'passbolt-mad/model/model',
     'app/model/permission_type',
+    'app/model/resource',
+    'app/model/user',
     'passbolt-mad/model/serializer/cake_serializer'
-], function (exports) {
+], function (exports, _model, _permission_type, _resource, _user, _cake_serializer) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var Permission = passbolt.model.Permission = mad.Model.extend('passbolt.model.Permission', {
+    var _model2 = _interopRequireDefault(_model);
+    var _permission_type2 = _interopRequireDefault(_permission_type);
+    var _resource2 = _interopRequireDefault(_resource);
+    var _user2 = _interopRequireDefault(_user);
+    var _cake_serializer2 = _interopRequireDefault(_cake_serializer);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var Permission = _model2.default.extend('passbolt.model.Permission', {
         attributes: {
             id: 'string',
             type: 'string',
@@ -26534,7 +26878,7 @@ define('app/model/permission', [
                 {
                     rule: 'foreignRule',
                     options: {
-                        model: passbolt.model.PermissionType,
+                        model: _permission_type2.default,
                         attribute: 'serial'
                     }
                 }
@@ -26544,7 +26888,7 @@ define('app/model/permission', [
             var self = this;
             var uri = 'permissions/' + attrs['aco'].toLowerCase() + '/' + attrs['aco_foreign_key'];
             delete attrs['aco'], attrs['aco_foreign_key'];
-            var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+            var params = _cake_serializer2.default.to(attrs, this);
             return mad.net.Ajax.request({
                 url: APP_URL + uri,
                 type: 'POST',
@@ -26553,7 +26897,7 @@ define('app/model/permission', [
                 error: error
             }).pipe(function (data, textStatus, jqXHR) {
                 var def = $.Deferred();
-                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+                def.resolveWith(this, [_cake_serializer2.default.from(data, self)]);
                 return def;
             });
         },
@@ -26595,7 +26939,7 @@ define('app/model/permission', [
             var self = this;
             delete attrs.created;
             delete attrs.modified;
-            var params = mad.model.serializer.CakeSerializer.to(attrs, this);
+            var params = _cake_serializer2.default.to(attrs, this);
             params.id = id;
             return mad.net.Ajax.request({
                 url: APP_URL + 'permissions/{id}',
@@ -26605,29 +26949,36 @@ define('app/model/permission', [
                 error: error
             }).pipe(function (data, textStatus, jqXHR) {
                 var def = $.Deferred();
-                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
+                def.resolveWith(this, [_cake_serializer2.default.from(data, self)]);
                 return def;
             });
         },
         share: function share(aco, acoForeignKey, attrs, success, error) {
-            var self = this;
             return mad.net.Ajax.request({
-                url: APP_URL + 'share/' + aco + '/' + acoForeignKey + '.json',
+                url: APP_URL + 'share/resource/' + acoForeignKey + '.json',
                 type: 'PUT',
                 params: attrs,
                 success: success,
                 error: error
-            }).pipe(function (data, textStatus, jqXHR) {
-                var def = $.Deferred();
-                if (data.acoInstance != null) {
-                    var resource = passbolt.model.Resource.model(mad.model.serializer.CakeSerializer.from(data.acoInstance, passbolt.model.Resource));
+            }).pipe(function (data) {
+                var findOptions = {
+                    id: acoForeignKey,
+                    silentLoading: false,
+                    contain: {
+                        creator: 1,
+                        favorite: 1,
+                        modifier: 1,
+                        secret: 1,
+                        permission: 1
+                    }
+                };
+                _resource2.default.findOne(findOptions).then(function (resource) {
                     resource.updated();
-                } else {
-                    var storedResource = passbolt.model.Resource.store[acoForeignKey];
+                }, function () {
+                    var storedResource = _resource2.default.store[acoForeignKey];
                     storedResource.destroyed();
-                }
-                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-                return def;
+                });
+                return data;
             });
         },
         searchUsers: function searchUsers(params, success, error) {
@@ -26639,7 +26990,7 @@ define('app/model/permission', [
                 error: error
             }).pipe(function (data, textStatus, jqXHR) {
                 var def = $.Deferred();
-                def.resolveWith(this, [passbolt.model.User.models(data)]);
+                def.resolveWith(this, [_user2.default.models(data)]);
                 return def;
             });
         }
@@ -30120,211 +30471,6 @@ define('passbolt-mad/form/element/checkbox', [
     }, {});
     exports.default = Checkbox;
 });
-/*app/model/model*/
-define('app/model/model', [
-    'exports',
-    'passbolt-mad/model/model'
-], function (exports) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var Model = passbolt.Model = mad.Model.extend('passbolt.Model', {
-        getFilteredFields: function getFilteredFields(filteredCase) {
-            return false;
-        },
-        filterAttributes: function filterAttributes(attrs) {
-            var filteredAttrs = {};
-            if (typeof attrs.__FILTER_CASE__ != 'undefined') {
-                var fields = this.getFilteredFields(attrs.__FILTER_CASE__);
-                if (fields !== false) {
-                    for (var i in fields) {
-                        var value = can.getObject(fields[i], attrs);
-                        can.getObject(fields[i], filteredAttrs, true, value);
-                    }
-                } else {
-                    filteredAttrs = attrs;
-                    delete filteredAttrs.__FILTER_CASE__;
-                }
-            } else {
-                filteredAttrs = attrs;
-            }
-            return filteredAttrs;
-        }
-    }, {
-        clone: function clone() {
-            var data = this.attr();
-            delete data[this.constructor.id];
-            return new this.constructor(data);
-        }
-    });
-    exports.default = Model;
-});
-/*app/model/resource*/
-define('app/model/resource', [
-    'exports',
-    'app/model/model',
-    'app/model/secret',
-    'passbolt-mad/model/serializer/cake_serializer'
-], function (exports) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var Resource = passbolt.model.Resource = passbolt.Model.extend('passbolt.model.Resource', {
-        attributes: {
-            id: 'string',
-            name: 'string',
-            username: 'string',
-            uri: 'string',
-            created: 'string',
-            modified: 'string',
-            description: 'string',
-            Secret: 'passbolt.model.Secret.models',
-            Favorite: 'passbolt.model.Favorite.model',
-            Creator: 'passbolt.model.User.model',
-            Modifier: 'passbolt.model.User.model',
-            Permission: 'passbolt.model.Permission.model'
-        },
-        validationRules: {
-            id: [{ rule: 'uuid' }],
-            name: [
-                { rule: 'required' },
-                {
-                    rule: [
-                        'lengthBetween',
-                        3,
-                        64
-                    ]
-                }
-            ],
-            username: [{
-                    rule: [
-                        'lengthBetween',
-                        0,
-                        64
-                    ]
-                }],
-            uri: [{
-                    rule: [
-                        'lengthBetween',
-                        3,
-                        255
-                    ]
-                }],
-            description: [{
-                    rule: [
-                        'lengthBetween',
-                        0,
-                        10000
-                    ]
-                }]
-        },
-        create: function create(attrs, success, error) {
-            var self = this;
-            var params = mad.model.serializer.CakeSerializer.to(attrs, this);
-            return mad.net.Ajax.request({
-                url: APP_URL + 'resources',
-                type: 'POST',
-                params: params,
-                success: success,
-                error: error
-            }).pipe(function (data, textStatus, jqXHR) {
-                var def = $.Deferred();
-                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-                return def;
-            });
-        },
-        destroy: function destroy(id, success, error) {
-            var params = { id: id };
-            return mad.net.Ajax.request({
-                url: APP_URL + 'resources/{id}.json',
-                type: 'DELETE',
-                params: params,
-                success: success,
-                error: error
-            });
-        },
-        findAll: function findAll(params, success, error) {
-            return mad.net.Ajax.request({
-                url: APP_URL + 'resources.json',
-                type: 'GET',
-                params: params,
-                success: success,
-                error: error
-            });
-        },
-        findOne: function findOne(params, success, error) {
-            return mad.net.Ajax.request({
-                url: APP_URL + 'resources/{id}.json',
-                type: 'GET',
-                params: params,
-                success: success,
-                error: error
-            });
-        },
-        update: function update(id, attrs) {
-            var self = this, params = {};
-            var data = this.filterAttributes(attrs);
-            params = mad.model.serializer.CakeSerializer.to(data, this);
-            params.id = id;
-            return mad.net.Ajax.request({
-                url: APP_URL + 'resources/{id}.json',
-                type: 'PUT',
-                params: params
-            }).pipe(function (data, textStatus, jqXHR) {
-                var def = $.Deferred();
-                def.resolveWith(this, [mad.model.serializer.CakeSerializer.from(data, self)]);
-                return def;
-            });
-        },
-        getFilteredFields: function getFilteredFields(filteredCase) {
-            var filteredFields = false;
-            switch (filteredCase) {
-            case 'edit':
-                filteredFields = [
-                    'name',
-                    'username',
-                    'expiry_date',
-                    'uri',
-                    'description'
-                ];
-                break;
-            case 'edit_with_secrets':
-                filteredFields = [
-                    'name',
-                    'username',
-                    'expiry_date',
-                    'uri',
-                    'description',
-                    'Secret'
-                ];
-                break;
-            case 'edit_description':
-                filteredFields = ['description'];
-                break;
-            }
-            return filteredFields;
-        },
-        findUsers: function findUsers(id) {
-            var params = { filter: { 'has-access': id } };
-            return mad.net.Ajax.request({
-                url: APP_URL + 'users.json',
-                type: 'GET',
-                params: params
-            }).pipe(function (data, textStatus, jqXHR) {
-                var def = $.Deferred();
-                def.resolveWith(this, [passbolt.model.User.models(data)]);
-                return def;
-            });
-        }
-    }, {
-        isFavorite: function isFavorite() {
-            if (this.Favorite && this.Favorite.id) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    });
-    exports.default = Resource;
-});
 /*app/model/favorite*/
 define('app/model/favorite', [
     'exports',
@@ -31199,7 +31345,6 @@ define('app/model/group', [
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var Group = passbolt.model.Group = mad.Model.extend('passbolt.model.Group', {
-        checkServerRules: true,
         attributes: {
             id: 'string',
             name: 'string',
@@ -31207,6 +31352,27 @@ define('app/model/group', [
             modified: 'string',
             Modifier: 'passbolt.model.User.model',
             GroupUser: 'passbolt.model.GroupUser.models'
+        },
+        validationRules: {
+            id: [{ rule: 'uuid' }],
+            name: [
+                {
+                    rule: 'required',
+                    message: __('A name is required.')
+                },
+                {
+                    rule: [
+                        'lengthBetween',
+                        0,
+                        255
+                    ],
+                    message: __('The name length should be maximum %s characters.', 255)
+                },
+                {
+                    rule: 'utf8Extended',
+                    message: __('The name should be a valid utf8 string.')
+                }
+            ]
         },
         findAll: function findAll(params, success, error) {
             return mad.net.Ajax.request({
@@ -31903,7 +32069,6 @@ define('app/model/comment', [
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var Comment = passbolt.model.Comment = mad.Model.extend('passbolt.model.Comment', {
-        checkServerRules: true,
         attributes: {
             id: 'string',
             parent_id: 'string',
@@ -31915,11 +32080,32 @@ define('app/model/comment', [
             Creator: 'passbolt.model.User.model',
             Modifier: 'passbolt.model.User.model'
         },
+        validationRules: {
+            id: [{ rule: 'uuid' }],
+            content: [
+                {
+                    rule: 'required',
+                    message: __('A comment is required.')
+                },
+                {
+                    rule: [
+                        'lengthBetween',
+                        1,
+                        255
+                    ],
+                    message: __('The comment should be between %s and %s characters.', 1, 255)
+                },
+                {
+                    rule: 'utf8Extended',
+                    message: __('The comment should be a valid utf8 string.')
+                }
+            ]
+        },
         create: function create(attrs, success, error) {
             var self = this;
             var params = mad.model.serializer.CakeSerializer.to(attrs, this);
             return mad.net.Ajax.request({
-                url: APP_URL + 'comments/' + attrs.foreign_model + '/' + attrs.foreign_id + '.json',
+                url: APP_URL + 'comments/resource/' + attrs.foreign_id + '.json',
                 type: 'POST',
                 params: params,
                 success: success,
@@ -31942,7 +32128,7 @@ define('app/model/comment', [
         },
         findAll: function findAll(params, success, error) {
             return mad.net.Ajax.request({
-                url: APP_URL + 'comments/{foreignModel}/{foreignId}.json',
+                url: APP_URL + 'comments/resource/{foreignId}.json',
                 type: 'GET',
                 params: params,
                 success: success,
@@ -31951,7 +32137,7 @@ define('app/model/comment', [
         },
         findOne: function findOne(params, success, error) {
             return mad.net.Ajax.request({
-                url: APP_URL + 'comments/{foreignModel}/{foreignId}.json',
+                url: APP_URL + 'comments/resource/{foreignId}.json',
                 type: 'GET',
                 params: params,
                 success: success,
@@ -31983,13 +32169,14 @@ define('app/view/component/comments', [
     'exports',
     'passbolt-mad/view/view',
     'app/view/template/component/comments.ejs!'
-], function (exports) {
+], function (exports, _view) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var Comments = passbolt.view.component.Comments = mad.View.extend('passbolt.view.component.Comments', {}, {
-        init: function init(el, options) {
-            this._super(el, options);
-        },
+    var _view2 = _interopRequireDefault(_view);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var Comments = _view2.default.extend('passbolt.view.component.Comments', {}, {
         ' a.js_add_comment click': function aJs_add_commentClick(el, ev) {
             this.getController().addForm.setState('ready');
         },
@@ -32003,8 +32190,7 @@ define('app/view/component/comments', [
 define('app/view/component/comments_list', [
     'exports',
     'passbolt-mad/view/view',
-    'passbolt-mad/view/component/tree',
-    'app/view/template/component/comments.ejs!'
+    'passbolt-mad/view/component/tree'
 ], function (exports) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
@@ -32076,17 +32262,15 @@ define('app/view/template/component/comment/comment_item.ejs!passbolt-mad/lib/ca
 /*app/component/comments_list*/
 define('app/component/comments_list', [
     'exports',
-    'app/view/template/component/comments.ejs!',
     'app/view/template/component/comment/comment_item.ejs!',
     'passbolt-mad/component/confirm',
     'passbolt-mad/component/tree',
     'app/view/component/comments_list',
     'app/view/component/comments',
     'app/model/comment'
-], function (exports, _comments, _comment_item) {
+], function (exports, _comment_item) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var _comments2 = _interopRequireDefault(_comments);
     var _comment_item2 = _interopRequireDefault(_comment_item);
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
@@ -32096,11 +32280,9 @@ define('app/component/comments_list', [
             label: 'Comments List Controller',
             viewClass: passbolt.view.component.CommentsList,
             itemClass: passbolt.model.Comment,
-            template: _comments2.default,
             itemTemplate: _comment_item2.default,
             foreignModel: null,
             foreignId: null,
-            selfLoad: false,
             map: new mad.Map({
                 id: 'id',
                 content: 'content',
@@ -32120,18 +32302,6 @@ define('app/component/comments_list', [
             })
         }
     }, {
-        init: function init(el, opts) {
-            this._super(el, opts);
-            if (this.options.selfLoad === true) {
-                var self = this;
-                passbolt.model.Comment.findAll({
-                    foreignModel: this.options.foreignModel,
-                    foreignId: this.options.foreignId
-                }, function (comments, response, request) {
-                    self.load(comments);
-                });
-            }
-        },
         insertItem: function insertItem(item, refItem, position) {
             this._super(item, refItem, position);
             var isOwner = item.created_by != undefined && item.created_by == passbolt.model.User.getCurrent().id;
@@ -32163,24 +32333,33 @@ define('app/view/template/form/comment/add.ejs!passbolt-mad/lib/can/viewEjsSyste
             with (_CONTEXT) {
                 var ___v1ew = [];
                 ___v1ew.push('<ul>\n\t<li class="comment-wrapper">\n        <form id="js_comment_add_form" class="form comment add">\n            <div class="wrap-right-column">\n                <div class="right-column">\n                    <div class="form-content">\n                        <input name="data[comment][parent_id]" class="js_comment_parent_id required" type="hidden" />\n                        <input name="data[comment][foreign_id]" class="js_comment_foreign_id required" type="hidden" />\n                        <input name="data[comment][foreign_model]" class="js_comment_foreign_model required" type="hidden" />\n                        <div class="input textarea required">\n                            <label for="js_field_comment_content">Add a comment</label>\n                            <textarea id="js_field_comment_content" name="data[comment][content]" class="js_comment_content required" maxlength="255"  placeholder="add a comment"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('</textarea>\n                            <div class="js_comment_content_feedback message"></div>\n                        </div>\n                        <div class="metadata">\n                            <span class="author username"><a>You</a></span>\n                            <span class="modified">right now</span>\n                        </div>\n                        <div class="actions">\n                            <a class="button comment-submit"><span>send</span></a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class="left-column">\n                <div class="author profile picture"><a><img ');
-                ___v1ew.push(can.view.txt(2, 'img', 'src', this, function () {
+                ___v1ew.push('</textarea>\n                            <div class="js_comment_content_feedback message"></div>\n                        </div>\n                        <div class="metadata">\n                            <span class="author username"><a>You</a></span>\n                            <span class="modified">right now</span>\n                        </div>\n                        <div class="actions">\n                            <a class="button comment-submit"><span>send</span></a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <div class="left-column">\n                ');
+                ___v1ew.push(can.view.txt(0, 'div', 0, this, function () {
                     var ___v1ew = [];
-                    ___v1ew.push('src="');
-                    ___v1ew.push(user.Profile.Avatar.url.small);
-                    ___v1ew.push('"');
+                    if (user.Profile.Avatar) {
+                        ___v1ew.push('\n                <div class="author profile picture"><a><img ');
+                        ___v1ew.push(can.view.txt(2, 'img', 'src', this, function () {
+                            var ___v1ew = [];
+                            ___v1ew.push('src="');
+                            ___v1ew.push(user.Profile.Avatar.url.small);
+                            ___v1ew.push('"');
+                            return ___v1ew.join('');
+                        }));
+                        ___v1ew.push(' alt="');
+                        ___v1ew.push(can.view.txt(true, 'img', 'alt', this, function () {
+                            return user.Profile.first_name;
+                        }));
+                        ___v1ew.push(' ');
+                        ___v1ew.push(can.view.txt(true, 'img', 'alt', this, function () {
+                            return user.Profile.last_name;
+                        }));
+                        ___v1ew.push(' avatar"', can.view.pending({ scope: this }), '>');
+                        ___v1ew.push('</a></div>\n                ');
+                    }
+                    ;
                     return ___v1ew.join('');
                 }));
-                ___v1ew.push(' alt="');
-                ___v1ew.push(can.view.txt(true, 'img', 'alt', this, function () {
-                    return user.Profile.first_name;
-                }));
-                ___v1ew.push(' ');
-                ___v1ew.push(can.view.txt(true, 'img', 'alt', this, function () {
-                    return user.Profile.last_name;
-                }));
-                ___v1ew.push(' avatar"', can.view.pending({ scope: this }), '>');
-                ___v1ew.push('</a></div>\n            </div>\n        </form>\n\t</li>\n</ul>');
+                ___v1ew.push('\n            </div>\n        </form>\n\t</li>\n</ul>');
                 ;
                 return ___v1ew.join('');
             }
@@ -32265,43 +32444,46 @@ define('app/component/comments', [
     }, {
         afterStart: function afterStart() {
             this.addForm = new passbolt.form.comment.Create($('#js_rs_details_comments_add_form', this.element), {
-                'foreignModel': this.options.foreignModel,
-                'foreignId': this.options.foreignId
+                foreignModel: this.options.foreignModel,
+                foreignId: this.options.foreignId,
+                state: 'hidden'
             });
             this.addForm.start();
-            this.addForm.setState('hidden');
             this.commentsList = new passbolt.component.CommentsList($('#js_rs_details_comments_list', this.element), {
-                'resource': this.options.resource,
-                'foreignModel': this.options.foreignModel,
-                'foreignId': this.options.foreignId
+                resource: this.options.resource,
+                foreignModel: this.options.foreignModel,
+                foreignId: this.options.foreignId
             });
             this.commentsList.start();
-            var self = this;
-            passbolt.model.Comment.findAll({
-                'foreignModel': this.options.foreignModel,
-                'foreignId': this.options.foreignId
-            }, function (comments, response, request) {
-                if (comments.length > 0) {
-                    self.commentsList.load(comments);
-                } else {
-                    self.addForm.setState('visible');
-                }
-            });
+            this.loadComments();
             this._super();
         },
-        '{passbolt.model.Comment} created': function passboltModelCommentCreated(model, ev, resource) {
-            if (resource.foreign_id == this.options.resource.id) {
-                this.addForm.setState('hidden');
-                this.commentsList.insertItem(resource, null, 'first');
-            }
-        },
-        '{mad.bus.element} request_delete_comment': function madBusElementRequest_delete_comment(model, ev, resource) {
-            resource.destroy().then(function () {
-                mad.bus.trigger('comment_deleted', resource);
+        loadComments: function loadComments() {
+            var self = this;
+            passbolt.model.Comment.findAll({
+                foreignModel: this.options.foreignModel,
+                foreignId: this.options.foreignId,
+                contain: { creator: 1 }
+            }).then(function (comments) {
+                if (!comments.length) {
+                    self.addForm.setState('visible');
+                    return;
+                }
+                self.commentsList.load(comments);
             });
         },
-        '{mad.bus.element} comment_deleted': function madBusElementComment_deleted(model, ev, resource) {
-            this.commentsList.removeItem(resource);
+        '{mad.bus.element} request_delete_comment': function madBusElementRequest_delete_comment(model, ev, comment) {
+            comment.destroy().then(function () {
+                mad.bus.trigger('comment_deleted', comment);
+            });
+        },
+        '{passbolt.model.Comment} created': function passboltModelCommentCreated(model, ev, comment) {
+            if (comment.foreign_id == this.options.resource.id) {
+                this.refresh();
+            }
+        },
+        '{mad.bus.element} comment_deleted': function madBusElementComment_deleted(model, ev, comment) {
+            this.commentsList.removeItem(comment);
             if (this.commentsList.options.items.attr('length') == 0) {
                 this.addForm.emptyContent();
                 this.addForm.setState('visible');
@@ -32915,6 +33097,12 @@ define('app/component/resource_sidebar', [
             descriptionController.start();
             var permissionsComponent = new passbolt.component.sidebarSection.Permissions($('#js_rs_details_permissions', this.element), { acoInstance: this.options.selectedItem });
             permissionsComponent.start();
+            var commentsController = new passbolt.component.Comments($('#js_rs_details_comments', this.element), {
+                resource: this.options.selectedItem,
+                foreignModel: 'Resource',
+                foreignId: this.options.selectedItem.id
+            });
+            commentsController.start();
         },
         ' password_clicked': function password_clicked(el, ev) {
             var secret = this.options.selectedItem.Secret[0].data;
@@ -33220,7 +33408,10 @@ define('app/component/groups_list', [
         loadGroups: function loadGroups(filter) {
             var self = this;
             var findOptions = {
-                contain: { user: 1 },
+                contain: {
+                    user: 1,
+                    group_user: 1
+                },
                 order: ['Group.name ASC'],
                 filter: filter
             };
@@ -35731,10 +35922,14 @@ define('app/component/group_sidebar', [
         afterStart: function afterStart() {
             var self = this;
             this._super();
-            passbolt.model.Group.findOne({
+            var options = {
                 id: this.options.selectedItem.id,
-                contain: { modifier: 1 }
-            }).then(function (group) {
+                contain: {
+                    modifier: 1,
+                    'group_user.user.profile': 1
+                }
+            };
+            passbolt.model.Group.findOne(options).then(function (group) {
                 self.options.selectedItem = group;
                 self._refreshView();
                 self.initGroupMembersList(group.GroupUser);

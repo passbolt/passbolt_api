@@ -66,6 +66,12 @@ class LegacyApiHelper extends Helper
         $result = [];
         foreach ($entity->visibleProperties() as $property) {
             $value = $entity->get($property);
+            // @todo to remove when avatar is done.
+            if ($property == 'avatar') {
+                $result['Avatar'] = $value;
+                continue;
+            }
+            // @todo end of section to remove
             if (is_string($value) || is_bool($value) || is_numeric($value) || is_null($value)) {
                 // example: id
                 $result[$name][$property] = $value;
@@ -92,7 +98,12 @@ class LegacyApiHelper extends Helper
                     $result[$subEntityName] = [];
                 } else {
                     foreach ($value as $i => $entity2) {
-                        $result[$subEntityName][$i] = self::formatEntity($entity2, $subEntityName)[$subEntityName];
+                        $formattedEntity = self::formatEntity($entity2, $subEntityName);
+                        $result[$subEntityName][$i] = $formattedEntity[$subEntityName];
+                        unset($formattedEntity[$subEntityName]);
+                        if (!empty($formattedEntity)) {
+                            $result[$subEntityName][$i] = array_merge($result[$subEntityName][$i], $formattedEntity);
+                        }
                     }
                 }
             }

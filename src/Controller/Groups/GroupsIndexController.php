@@ -30,8 +30,9 @@ class GroupsIndexController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['modifier', 'user'],
-            'filter' => ['has-users', 'has-managers']
+            'contain' => ['modifier', 'user', 'group_user'],
+            'filter' => ['has-users', 'has-managers'],
+            'order' => ['Group.name']
         ];
         $options = $this->QueryString->get($whitelist);
 

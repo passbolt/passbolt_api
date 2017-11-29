@@ -40,7 +40,7 @@ class GroupsViewController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['modifier', 'user']
+            'contain' => ['modifier', 'user', 'group_user', 'group_user.user.profile']
         ];
         $options = $this->QueryString->get($whitelist);
 

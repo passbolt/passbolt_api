@@ -246,8 +246,10 @@ class UsersTable extends Table
         ]);
 
         // If user is admin, we allow seeing inactive users via the 'is-active' filter
-        if ($role === Role::ADMIN && isset($options['filter']['is-active'])) {
-            $query->where(['Users.active' => $options['filter']['is-active']]);
+        if ($role === Role::ADMIN) {
+            if (isset($options['filter']['is-active'])) {
+                $query->where(['Users.active' => $options['filter']['is-active']]);
+            }
         } else {
             // otherwise we only show active users
             $query->where(['Users.active' => true]);

@@ -220,6 +220,14 @@ Router::prefix('Share', function ($routes) {
     $routes->connect('/search-users/resource/:acoForeignKey', ['controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
         ->setPass(['acoForeignKey'])
         ->setMethods(['GET']);
+
+    $routes->connect('/simulate/resource/:acoForeignKey', ['controller' => 'Share', 'action' => 'dryRun'])
+        ->setPass(['acoForeignKey'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/resource/:acoForeignKey', ['controller' => 'Share', 'action' => 'share'])
+        ->setPass(['acoForeignKey'])
+        ->setMethods(['PUT']);
 });
 
 /**

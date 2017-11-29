@@ -15,6 +15,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Routing\Router;
 
 /**
  * Profile Entity
@@ -30,6 +31,7 @@ use Cake\ORM\Entity;
  */
 class Profile extends Entity
 {
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -45,4 +47,17 @@ class Profile extends Entity
         'first_name' => false,
         'last_name' => false
     ];
+
+    // @todo to remove when avatar is done.
+    protected $_virtual = ['avatar'];
+    protected function _getAvatar()
+    {
+        return [
+            'url' => [
+                'medium' => Router::url('/', true) . 'img/avatar/user_medium.png',
+                'small' => Router::url('/', true) . 'img/avatar/user.png'
+            ]
+        ];
+    }
+    // @todo end of section to remove
 }

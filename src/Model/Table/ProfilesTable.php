@@ -72,15 +72,15 @@ class ProfilesTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->requirePresence('first_name', 'create')
+            ->requirePresence('first_name', 'create', __('A first name is required'))
             ->notEmpty('first_name')
-            ->utf8('first_name', 'First name should be a valid utf8 string.')
+            ->utf8('first_name', __('First name should be a valid utf8 string.'))
             ->maxLength('first_name', 255, __('The first name length should be maximum 254 characters.'));
 
         $validator
-            ->requirePresence('last_name', 'create')
+            ->requirePresence('last_name', 'create', __('A last name is required'))
             ->notEmpty('last_name')
-            ->utf8('last_name', 'Last name should be a valid utf8 string.')
+            ->utf8('last_name', __('Last name should be a valid utf8 string.'))
             ->maxLength('last_name', 255, __('The last name length should be maximum 254 characters.'));
 
         return $validator;

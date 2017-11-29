@@ -191,27 +191,22 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $errors = [
             'resource name is missing' => [
                 'errorField' => 'Resource.name._empty',
-                'errorMessage' => 'The name cannot be empty.',
                 'data' => $this->_getDummyPostData(['Resource' => ['name' => null]])
             ],
             'resource name is not valid' => [
                 'errorField' => 'Resource.name.utf8Extended',
-                'errorMessage' => 'The name is not a valid utf8 string.',
                 'data' => $this->_getDummyPostData(['Resource' => ['name' => 1234]])
             ],
             'resource uri is not valid' => [
                 'errorField' => 'Resource.uri.lengthBetween',
-                'errorMessage' => 'The uri length should be between 3 and 255 characters.',
                 'data' => $this->_getDummyPostData(['Resource' => ['uri' => 'a']])
             ],
             'secret must be provided' => [
                 'errorField' => 'Secrets._required',
-                'errorMessage' => 'A secret is required.',
                 'data' => $this->_getDummyPostData(['Secret' => null])
             ],
             'secret is invalid' => [
-                'errorField' => 'Secrets.0.Secret.data.isValidGpgMessageRule',
-                'errorMessage' => 'The message is not a valid armored gpg message.',
+                'errorField' => 'Secrets.0.Secret.data.isValidGpgMessage',
                 'data' => $this->_getDummyPostData(['Secret' => [
                     0 => ['data' => 'Invalid secret']
                 ]])
@@ -223,7 +218,8 @@ W3AI8+rWjK8MGH2T88hCYI/6
             $this->postJson("/resources.json", $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
-            $this->assertEquals($case['errorMessage'], Hash::get($arr, $case['errorField']), 'The expected message is not found. errors ' . json_encode($arr));
+            $error = Hash::get($arr, $case['errorField']);
+            $this->assertNotNull($error);
         }
     }
 
