@@ -75,6 +75,7 @@ class FindIndexTest extends AppTestCase
 
             // Find all the users who have no permission for the resource.
             $findIndexOptions['filter']['has-not-permission'] = [UuidFactory::uuid("resource.id.$resourceAlias")];
+            $findIndexOptions['filter']['is-active'] = true;
             $users = $this->Users->findIndex(Role::ADMIN, $findIndexOptions)->all();
             $usersIds = Hash::extract($users->toArray(), '{n}.id');
 

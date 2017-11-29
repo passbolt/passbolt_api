@@ -48,8 +48,16 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($userE);
         $this->assertUserAttributes($userE);
 
-        // Should not find the user Ada
+        // Should not find the user Ada who already has access to the resource
         $userAId = UuidFactory::uuid('user.id.ada');
+        $this->assertFalse(array_search($userAId, $arosIds));
+
+        // Should not return inactive users
+        $userAId = UuidFactory::uuid('user.id.ruth');
+        $this->assertFalse(array_search($userAId, $arosIds));
+
+        // Should not return deleted users
+        $userAId = UuidFactory::uuid('user.id.sofia');
         $this->assertFalse(array_search($userAId, $arosIds));
 
         // Should find the group creative
@@ -60,9 +68,13 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         // Contain user count field.
         $this->assertNotEmpty($groupC->user_count);
 
-        // Should not find the group board
+        // Should not find the group board which already has access to the resource
         $groupBId = UuidFactory::uuid('group.id.board');
         $this->assertFalse(array_search($groupBId, $arosIds));
+
+        // Should not return deleted groups
+        $groupDId = UuidFactory::uuid('group.id.deleted');
+        $this->assertFalse(array_search($groupDId, $arosIds));
     }
 
     public function testShareSearchArosSuccess_SearchUserWang()

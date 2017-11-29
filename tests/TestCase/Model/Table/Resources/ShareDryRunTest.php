@@ -147,7 +147,14 @@ class ShareDryRunTest extends AppTestCase
                     'aro' => 'User',
                     'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
                     'type' => Permission::OWNER]]
-            ]
+            ],
+            'cannot add a permissions for an inactive user' => [
+                'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
+                'data' => [[
+                    'aro' => 'User',
+                    'aro_foreign_key' => UuidFactory::uuid('user.id.ruth'),
+                    'type' => Permission::OWNER]]
+            ],
         ];
 
         foreach ($testCases as $caseLabel => $case) {

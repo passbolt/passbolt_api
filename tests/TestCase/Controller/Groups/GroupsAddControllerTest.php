@@ -155,6 +155,13 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
                     0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.sofia'), 'is_admin' => true]]
                 ]])
             ],
+            'group user inactive' => [
+                'errorField' => 'GroupUsers.0.GroupUser.user_id.user_is_active',
+                'errorMessage' => 'The user does not exist.',
+                'data' => $this->_getDummyPostData(['GroupUsers' => [
+                    0 => ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ruth'), 'is_admin' => true]]
+                ]])
+            ],
         ];
 
         foreach ($errors as $caseLabel => $case) {

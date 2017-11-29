@@ -175,4 +175,17 @@ class SaveTest extends AppTestCase
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['user_id']['user_is_not_soft_deleted']);
     }
+
+    public function testErrorRuleUserIsActive()
+    {
+        $data = self::getDummyGroupUser();
+        $data['user_id'] = UuidFactory::uuid('user.id.ruth');
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->GroupsUsers->newEntity($data, $options);
+        $save = $this->GroupsUsers->save($entity);
+        $this->assertFalse($save);
+        $errors = $entity->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['user_is_active']);
+    }
 }

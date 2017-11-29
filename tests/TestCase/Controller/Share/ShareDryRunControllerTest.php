@@ -109,6 +109,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
         $userAId = UuidFactory::uuid('user.id.ada');
+        $userRId = UuidFactory::uuid('user.id.ruth');
         $userSId = UuidFactory::uuid('user.id.sofia');
         $testCases = [
             'cannot update a permission that does not exist' => [
@@ -129,6 +130,13 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
                 'data' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userSId,
+                    'type' => Permission::OWNER]]
+            ],
+            'cannot add a permission for an inactive user' => [
+                'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
+                'data' => [[
+                    'aro' => 'User',
+                    'aro_foreign_key' => $userRId,
                     'type' => Permission::OWNER]]
             ],
             'cannot remove the latest owner' => [

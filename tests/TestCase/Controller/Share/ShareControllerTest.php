@@ -133,6 +133,8 @@ hcciUFw5
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
         $userAId = UuidFactory::uuid('user.id.ada');
         $userEId = UuidFactory::uuid('user.id.edith');
+        $userRId = UuidFactory::uuid('user.id.ruth');
+        $userSId = UuidFactory::uuid('user.id.sofia');
         $testCases = [
             'cannot a permission that does not exist' => [
                 'errorField' => 'permissions.0.id.permission_exists',
@@ -151,6 +153,22 @@ hcciUFw5
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'type' => Permission::OWNER]
                 ]]
+            ],
+            'cannot add a permission for a soft deleted user' => [
+                'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
+                'data' => ['permissions' => [[
+                    'aro' => 'User',
+                    'aro_foreign_key' => $userSId,
+                    'type' => Permission::OWNER]
+                ]],
+            ],
+            'cannot add a permission for an inactive user' => [
+                'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
+                'data' => ['permissions' => [[
+                    'aro' => 'User',
+                    'aro_foreign_key' => $userRId,
+                    'type' => Permission::OWNER]
+                ]],
             ],
             'cannot remove the latest owner' => [
                 'errorField' => 'permissions.at_least_one_owner',
