@@ -48,6 +48,7 @@ class Profile extends Entity
         'last_name' => false
     ];
 
+    // @codingStandardsIgnoreStart
     // @todo to remove when avatar is done.
     protected $_virtual = ['avatar'];
     protected function _getAvatar()
@@ -60,4 +61,5 @@ class Profile extends Entity
         ];
     }
     // @todo end of section to remove
+    // @codingStandardsIgnoreEnd
 }
