@@ -66,6 +66,12 @@ class LegacyApiHelper extends Helper
         $result = [];
         foreach ($entity->visibleProperties() as $property) {
             $value = $entity->get($property);
+            // @todo to remove when avatar is done.
+            if ($property == 'avatar') {
+                $result['Avatar'] = $value;
+                continue;
+            }
+            // @todo end of section to remove
             if (is_string($value) || is_bool($value) || is_numeric($value) || is_null($value)) {
                 // example: id
                 $result[$name][$property] = $value;
