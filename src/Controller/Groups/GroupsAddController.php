@@ -19,6 +19,7 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
+use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Utility\Hash;
@@ -32,7 +33,7 @@ class GroupsAddController extends AppController
      * @throws ForbiddenException If the user is not an admin
      * @return void
      */
-    public function add()
+    public function addPost()
     {
         if ($this->User->role() != Role::ADMIN) {
             throw new ForbiddenException();
@@ -45,7 +46,11 @@ class GroupsAddController extends AppController
 
         // Save the entity
         $result = $this->Groups->save($group);
-        $this->_handleValidationError($group);
+        if (!$result) {
+            $this->_handleValidationError($group);
+            throw new InternalErrorException(__('Could not add the group. Please try again later'));
+        }
+        $this->_notifyUsers($group);
 
         $this->success(__('The group has been added successfully.'), $result);
     }
@@ -122,6 +127,28 @@ class GroupsAddController extends AppController
         if (!empty($errors)) {
             // @TODO hide some business rules: soft deleted, has access for example
             throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
+        }
+    }
+
+    /**
+     * Notify the users they have been added to the group
+     *
+     * @param \App\Model\Entity\Group $group Goup
+     * @return void
+     */
+    protected function _notifyUsers($group)
+    {
+        $Users = $this->loadModel('Users');
+        $admin = $Users->getForEmailContext($this->User->id());
+
+        foreach ($group->groups_users as $group_user) {
+            // @todo findall in one query
+            $user = $Users->getForEmailContext($group_user->user_id);
+            $user->groups_users = $group_user;
+            $event = new Event('GroupsAddController.addPost.success', $this, [
+                'user' => $user, 'admin' => $admin, 'group' => $group
+            ]);
+            $this->getEventManager()->dispatch($event);
         }
     }
 }

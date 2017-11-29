@@ -12,25 +12,39 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-    use Cake\Routing\Router;
+use Cake\Routing\Router;
 
-    $user = $body['user'];
-    $admin = $body['admin'];
-    $token = $body['token'];
+$user = $body['user'];
+$admin = $body['admin'];
+$token = $body['token'];
 
-    $text = $this->element('email/content/register_admin_avatar_text', ['user' => $user, 'admin' => $admin]);
+echo $this->element('email/module/avatar',[
+    // @TODO avatar url in email
+    'url' => Router::url('/img/avatar' . DS . 'user.png', true),
+    'text' => $this->element('email/module/avatar_text', [
+        'username' => $admin->username,
+        'first_name' => $admin->profile->first_name,
+        'last_name' => $admin->profile->last_name,
+        'datetime' => $user->created,
+        'text' => __('{0} just created an account for you on passbolt!')
+    ])
+]);
 
-    // @TODO avatar this should be the admin avatar
-    echo $this->element('email/module/avatar',[
-        'url' => Router::url('/img/avatar' . DS . 'user.png', true),
-        'text' => $text
-    ]);
+$text = '<h3>' . __('Welcome {0}', $user->profile->first_name) . ',</h3><br/>';
+$text .= __('{0} just invited you to join passbolt at {1}',
+        ucfirst($admin->profile->first_name),
+        '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
+        );
+$text .= __('Passbolt is an open source password manager.');
+$text .= __('It is designed to allow sharing credentials securely with your team!');
+$text .= '<br/><br/>';
+$text .= __('Let\'s take the next five minutes to get you started!');
+$text .= '<br/>';
+echo $this->element('email/module/text', [
+    'text' => $text
+]);
 
-    echo $this->element('email/module/text', [
-        'text' => $this->element('email/content/register_admin_text', ['user' => $user, 'admin' => $admin])
-    ]);
-
-    echo $this->element('email/module/button', [
-        'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token']),
-        'text' => __('get started')
-    ]);
+echo $this->element('email/module/button', [
+    'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token']),
+    'text' => __('get started')
+]);

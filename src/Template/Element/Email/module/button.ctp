@@ -43,7 +43,7 @@
                                     </tr>
                                 </table>
                                 <!-- // CONTENT TABLE -->
-
+                                <br>
                             </td>
                         </tr>
                     </table>

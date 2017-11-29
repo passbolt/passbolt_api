@@ -147,7 +147,7 @@ Router::prefix('Groups', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    $routes->connect('/', ['controller' => 'GroupsAdd', 'action' => 'add'])
+    $routes->connect('/', ['controller' => 'GroupsAdd', 'action' => 'addPost'])
         ->setMethods(['POST']);
 });
 

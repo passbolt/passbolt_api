@@ -77,6 +77,11 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $roles = TableRegistry::get('Roles');
             $role = $roles->get($user->get('role_id'));
             $this->assertEquals(Role::USER, $role->name);
+
+            // check email notification
+            $this->get('/seleniumtests/showLastEmail/' . $user->username);
+            $this->assertResponseOk();
+            $this->assertResponseContains('You just opened an account');
         }
     }
 

@@ -14,8 +14,9 @@
  */
 namespace App\Controller\Events;
 
+use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\User;
 use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Network\Exception\InternalErrorException;
@@ -37,6 +38,7 @@ class EmailsListener implements EventListenerInterface
             'UsersRecoverController.registerPost.success' => 'sendSelfRegisteredEmail',
             'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
             'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
+            'GroupsAddController.addPost.success' => 'sendGroupUserAddEmail',
         ];
     }
 
@@ -44,11 +46,11 @@ class EmailsListener implements EventListenerInterface
      * Send Register Email
      *
      * @param Event $event event
-     * @param EntityInterface $user User
-     * @param EntityInterface $token AuthenticationToken
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
      * @return void
      */
-    public function sendSelfRegisteredEmail(Event $event, $user = null, $token = null)
+    public function sendSelfRegisteredEmail(Event $event, User $user = null, AuthenticationToken $token = null)
     {
         // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.create')) {
@@ -72,12 +74,12 @@ class EmailsListener implements EventListenerInterface
      * Send Register Email
      *
      * @param Event $event event
-     * @param EntityInterface $user User
-     * @param EntityInterface $token AuthenticationToken
-     * @param EntityInterface $admin User
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
+     * @param \App\Model\Entity\User $admin User
      * @return void
      */
-    public function sendAdminRegisteredEmail(Event $event, $user = null, $token = null, $admin = null)
+    public function sendAdminRegisteredEmail(Event $event, User $user = null, AuthenticationToken $token = null, User $admin = null)
     {
         // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.create')) {
@@ -104,11 +106,11 @@ class EmailsListener implements EventListenerInterface
      * Send recover Email
      *
      * @param Event $event event
-     * @param EntityInterface $user User
-     * @param EntityInterface $token AuthenticationToken
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
      * @return void
      */
-    public function sendRecoverEmail(Event $event, $user = null, $token = null)
+    public function sendRecoverEmail(Event $event, User $user = null, AuthenticationToken $token = null)
     {
         // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.recover')) {
@@ -129,15 +131,45 @@ class EmailsListener implements EventListenerInterface
     }
 
     /**
+     * Send Group Add Email
+     *
+     * @param Event $event event
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\User $admin Admin
+     * @param \App\Model\Entity\Group $group Group
+     * @return void
+     */
+    public function sendGroupUserAddEmail(Event $event, User $user = null, User $admin = null, \App\Model\Entity\Group $group = null)
+    {
+        // Notification toggle and baseline check
+        if (!Configure::read('passbolt.email.send.group.user.add')) {
+            return;
+        }
+        if (!isset($user)) {
+            throw new InternalErrorException('User should not be empty when group add notification email.');
+        }
+        if (!isset($admin)) {
+            throw new InternalErrorException('Admin should not be empty when group add notification email.');
+        }
+
+        // Send notification.
+        $subject = __("{0} added you to the group {1}", $admin->profile->first_name, $group->name);
+
+        $template = 'group_user_add';
+        $data = ['body' => ['user' => $user, 'admin' => $admin, 'group' => $group], 'title' => $subject];
+        $this->_send($user->username, $subject, $data, $template);
+    }
+
+    /**
      * Send an email
      *
      * @param string $to email address
      * @param string $subject email subject
-     * @param string $data email data
+     * @param array $data email data
      * @param string $template email template
      * @return void
      */
-    protected function _send($to, $subject, $data, $template)
+    protected function _send(string $to, string $subject, array $data, string $template)
     {
         $options = [
             'template' => $template,

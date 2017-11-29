@@ -107,6 +107,11 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 $data['role_id'] = $userRoleId;
             }
             $this->assertEquals($role->id, $data['role_id']);
+
+            // check email notification
+            $this->get('/seleniumtests/showLastEmail/' . $user->username);
+            $this->assertResponseOk();
+            $this->assertResponseContains('just created an account for you');
         }
     }
 

@@ -695,7 +695,7 @@ class UsersTable extends Table
      *
      * @param string $userId uuid
      * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * @return object User
      */
     public function getForEmailContext(string $userId)
     {

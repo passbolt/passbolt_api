@@ -12,25 +12,32 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-    use Cake\Routing\Router;
+use Cake\Routing\Router;
 
-    $user = $body['user'];
-    $token = $body['token'];
+$user = $body['user'];
+$token = $body['token'];
 
-    $text = $this->element('email/content/recover_avatar_text', ['user' => $user]);
+echo $this->element('email/module/avatar',[
+    // @TODO avatar url in email
+    'url' => Router::url('/img/avatar' . DS . 'user.png', true),
+    'text' => $this->element('email/module/avatar_text', [
+        'username' => $user->username,
+        'first_name' => $user->profile->first_name,
+        'last_name' => $user->profile->last_name,
+        'datetime' => $user->created,
+        'text' => __('You have initiated an account recovery!')
+    ])
+]);
 
-    // @TODO avatar in email
-    echo $this->element('email/module/avatar',[
-        'url' => Router::url('/img/avatar' . DS . 'user.png', true),
-        'text' => $text
-    ]);
+$text = '<h3>' . __('Welcome back!') . '</h3><br/>';
+$text .= __('You have just requested to recover your passbolt account on this device.');
+$text .= ' ' . __('Make sure you have a backup of your secret key handy.');
+$text .= ' ' . __('Click on the link below to proceed.');
+echo $this->element('email/module/text', [
+    'text' => $text
+]);
 
-    echo $this->element('email/module/text', [
-        'text' => $this->element('email/content/recover_text', ['user' => $user])
-    ]);
-
-    echo $this->element('email/module/button', [
-        'url' => Router::url('/setup/recover/' . $user['id'] . '/' . $token['token']),
-        'text' => __('start recovery')
-    ]);
-?>
+echo $this->element('email/module/button', [
+    'url' => Router::url('/setup/recover/' . $user['id'] . '/' . $token['token']),
+    'text' => __('start recovery')
+]);

@@ -12,15 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Routing\Router;
-?>
-<h3>Welcome <?php echo $user->profile->first_name; ?>,</h3>
-<br/>
-<?= __('{0} just invited you to join passbolt at {1}',
-        ucfirst($admin->profile->first_name),
-    '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>');?>.
-<?= __('Passbolt is an open source password manager.');?>
-<?= __('It is designed to allow sharing credentials with your team without making compromises on security!'); ?>
-<br/>
-<br/>
-<?= __('Let\'s take the next five minutes to get you started!'); ?><br/>
+?><span style="font-weight:bold;"><?= $first_name; ?> <?php $last_name; ?>
+     (<a href="mailto:<?= $username; ?>" style="color:#888;text-decoration: underline;"><?= $username; ?></a>)</span><br>
+<span style=""><?= $text ?></span><br>
+<span style="color:#888888"><?= $datetime->nice(); ?></span><br>
