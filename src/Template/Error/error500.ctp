@@ -14,11 +14,11 @@ $this->assign('title', $message);
         </p>
     </div>
 <?php if (Configure::read('debug')): ?>
-    <div class="row">
+    <div class="row" style="max-width:960px;padding:1em;margin-bottom:2em;background:#efefef;font-family: monospace;">
     <?php if (!empty($error->queryString)) : ?>
         <p class="notice">
             <strong>SQL Query: </strong>
-            <?= h($error->queryString) ?>
+            <pre><?= h($error->queryString) ?></pre>
         </p>
     <?php endif; ?>
     <?php if (!empty($error->params)) : ?>
@@ -27,12 +27,14 @@ $this->assign('title', $message);
     <?php endif; ?>
     <?php if ($error instanceof Error) : ?>
         <strong>Error in: </strong>
+        <pre>
         <?= sprintf('%s, line %s', str_replace(ROOT, 'ROOT', $error->getFile()), $error->getLine()) ?>
     <?php endif; ?>
     <?php
         echo $this->element('auto_table_warning');
         if (extension_loaded('xdebug')): xdebug_print_function_stack(); endif;
     ?>
+        </pre>
 <?php endif; ?>
     </div>
 </div>

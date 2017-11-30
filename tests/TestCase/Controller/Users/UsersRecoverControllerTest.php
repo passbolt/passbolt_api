@@ -18,7 +18,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.email_queue'];
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
 
     public $fails = [
         'cannot recover with username that is empty' => [
@@ -102,15 +102,5 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             $this->postJson('/users/recover.json', $data['form-data']);
             $this->assertSuccess();
         }
-
-        // check emails
-        // setup
-        $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('You just opened an account');
-        // recovery
-        $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('You have initiated an account recovery!');
     }
 }

@@ -22,9 +22,12 @@ use Cake\ORM\TableRegistry;
 
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.gpgkeys', 'app.groups_users', 'app.roles', 'app.profiles', 'app.email_queue', 'app.authentication_tokens'];
+    public $fixtures = [
+        'app.users', 'app.gpgkeys', 'app.groups_users', 'app.roles',
+        'app.profiles', 'app.authentication_tokens'
+    ];
 
-    public function testUserAddNotLoggedInError()
+    public function testUsersAddNotLoggedInError()
     {
         $data = [
             'username' => 'notallowed@passbolt.com',
@@ -37,7 +40,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
-    public function testUserAddNotAdminError()
+    public function testUsersAddNotAdminError()
     {
         $this->authenticateAs('ada');
         $data = [
@@ -51,7 +54,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertError('403', 'Only administrators can add new users.');
     }
 
-    public function testUserAddSuccess()
+    public function testUsersAddSuccess()
     {
         $this->authenticateAs('admin');
         $roles = TableRegistry::get('Roles');
@@ -107,15 +110,10 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 $data['role_id'] = $userRoleId;
             }
             $this->assertEquals($role->id, $data['role_id']);
-
-            // check email notification
-            $this->get('/seleniumtests/showLastEmail/' . $user->username);
-            $this->assertResponseOk();
-            $this->assertResponseContains('just created an account for you');
         }
     }
 
-    public function testUserAddCannotModifyNotAccessibleFields()
+    public function testUsersAddCannotModifyNotAccessibleFields()
     {
         $this->authenticateAs('admin');
         $date = '1983-04-01 23:34:45';
@@ -146,7 +144,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertTrue($user->created->gt(FrozenTime::create($date)));
     }
 
-    public function testUserAddSuccessEmail()
+    public function testUsersAddSuccessEmail()
     {
         $this->authenticateAs('admin');
         $data = [
@@ -164,7 +162,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('created an account for you');
     }
 
-    public function testUserAddRequestDataApiV1Success()
+    public function testUsersAddRequestDataApiV1Success()
     {
         $this->authenticateAs('admin');
         $data = [
@@ -184,7 +182,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseContains('created an account for you');
     }
 
-    public function testUserAddRequestDataApiV1Error()
+    public function testUsersAddRequestDataApiV1Error()
     {
         $this->authenticateAs('admin');
         $data = [

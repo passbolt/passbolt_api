@@ -25,15 +25,14 @@ echo $this->element('email/module/avatar',[
         'username' => $admin->username,
         'first_name' => $admin->profile->first_name,
         'last_name' => $admin->profile->last_name,
-        'datetime' => $user->groups_users->created,
-        'text' => __('{0} added you to a group', null)
+        'datetime' => $group->modified,
+        'text' => __('{0} deleted a group', null)
     ])
 ]);
 
-$text = __('As member of the group you now have access to all the passwords that are shared with this group.');
-if ($user->groups_users->is_admin) {
-    $text .= ' ' . __('And as group manager you are also authorized to edit the members of the group.');
-}
+$text = __('{0} deleted the group "{1}" you were a member of.', $admin->profile->first_name, $group->name);
+$text .= ' ' . __('All passwords that were shared only with this group were also deleted.');
+
 echo $this->element('email/module/text', [
     'text' => $text
 ]);

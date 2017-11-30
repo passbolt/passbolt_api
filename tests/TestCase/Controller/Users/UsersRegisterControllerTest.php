@@ -22,15 +22,15 @@ use Cake\ORM\TableRegistry;
 
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.email_queue'];
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
 
-    public function testUserRegisterGetSuccess()
+    public function testUsersRegisterGetSuccess()
     {
         $this->get('/users/register');
         $this->assertResponseOk();
     }
 
-    public function testUserRegisterPostSuccess()
+    public function testUsersRegisterPostSuccess()
     {
         $success = [
             'chinese_name' => [
@@ -77,15 +77,10 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $roles = TableRegistry::get('Roles');
             $role = $roles->get($user->get('role_id'));
             $this->assertEquals(Role::USER, $role->name);
-
-            // check email notification
-            $this->get('/seleniumtests/showLastEmail/' . $user->username);
-            $this->assertResponseOk();
-            $this->assertResponseContains('You just opened an account');
         }
     }
 
-    public function testUserRegisterPostApiV1Success()
+    public function testUsersRegisterPostApiV1Success()
     {
         $success = [
             'legacy format' => [
@@ -105,7 +100,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUserRegisterPostFailValidation()
+    public function testUsersRegisterPostFailValidation()
     {
         $fails = [
             'username is missing' => [
@@ -160,7 +155,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUserRegisterCannotModifyNotAccessibleFields()
+    public function testUsersRegisterCannotModifyNotAccessibleFields()
     {
         // Not allowed to edit: id, active, deleted, created, modified, role_id
         $roles = TableRegistry::get('Roles');

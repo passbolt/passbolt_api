@@ -22,8 +22,8 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
+use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use JsonSchema\Exception\ValidationException;
 
 class GroupsDeleteController extends AppController
 {
@@ -66,6 +66,7 @@ class GroupsDeleteController extends AppController
     {
         $group = $this->_validateRequestData($id);
         $this->Groups->softDelete($group, ['checkRules' => false]);
+        $this->_notifyUsers($group);
         $this->success(__('The group was deleted successfully.'));
     }
 
@@ -76,8 +77,8 @@ class GroupsDeleteController extends AppController
      * @throws ForbiddenException if current group is not an admin
      * @throws BadRequestException if the group uuid id invalid
      * @throws NotFoundException if the group does not exist or is already deleted
-     * @throws ValidationException if the group is sole manager of a group
-     * @throws ValidationException if the group is sole owner of a shared resource
+     * @throws ValidationRuleException if the group is sole manager of a group
+     * @throws ValidationRuleException if the group is sole owner of a shared resource
      * @return object $group entity
      */
     protected function _validateRequestData($id)
@@ -91,7 +92,7 @@ class GroupsDeleteController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The group id must be a valid uuid.'));
         }
-        $group = $this->Groups->findView($id)->first();
+        $group = $this->Groups->findView($id, ['contain' => ['group_user' => true]])->first();
         if (empty($group)) {
             throw new NotFoundException(__('The group does not exist or has been already deleted.'));
         }
@@ -113,5 +114,26 @@ class GroupsDeleteController extends AppController
         }
 
         return $group;
+    }
+
+    /**
+     * Notify the users that they group have been deleted
+     *
+     * @param \App\Model\Entity\Group $group Goup
+     * @return void
+     */
+    protected function _notifyUsers($group)
+    {
+        $Users = $this->loadModel('Users');
+        $admin = $Users->getForEmail($this->User->id());
+        $usersIds = Hash::extract($group->groups_users,'{n}.user_id');
+        $users = $Users->findForEmail($usersIds);
+
+        foreach ($users as $user) {
+            $event = new Event('GroupsDeleteController.delete.success', $this, [
+                'user' => $user, 'admin' => $admin, 'group' => $group
+            ]);
+            $this->getEventManager()->dispatch($event);
+        }
     }
 }

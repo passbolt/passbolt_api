@@ -699,7 +699,7 @@ class UsersTable extends Table
      * @throws \InvalidArgumentException if the user id is not a valid uuid
      * @return object User
      */
-    public function getForEmailContext(string $userId)
+    public function getForEmail(string $userId)
     {
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
@@ -715,6 +715,32 @@ class UsersTable extends Table
             ->first();
 
         return $user;
+    }
+
+    /**
+     * Get a user info for an email notification context
+     *
+     * @param array $userIds of user uuid
+     * @throws \InvalidArgumentException if the user id is not a valid uuid
+     * @return object User
+     */
+    public function findForEmail(array $userIds)
+    {
+        foreach ($userIds as $userId) {
+            if (!Validation::uuid($userId)) {
+                throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            }
+        }
+        $users = $this->find()
+            ->where(['Users.id IN' => $userIds])
+            ->contain([
+                'Profiles',
+                'Roles',
+                //'Avatar' // TODO avatar
+            ])
+            ->all();
+
+        return $users;
     }
 
     /**

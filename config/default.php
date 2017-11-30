@@ -83,13 +83,14 @@ return [
                     'recover' => true,
                 ],
                 'group' => [
-                    'user' => [
+                    'delete' => true, // notify all members that a group was deleted
+                    'user' => [ // notify user group membership changes
                         'add' => true,
                         'delete' => true,
                         'update' => true,
                     ],
                     'manager' => [
-                        // notify manager when group user is updated / deleted
+                        // notify manager when a group user is updated / deleted
                         'update' => true,
                         'delete' => true,
                     ]

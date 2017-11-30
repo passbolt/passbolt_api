@@ -16,10 +16,10 @@ namespace App\Controller\Events;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Model\Entity\Group;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Network\Exception\InternalErrorException;
 use EmailQueue\EmailQueue;
 
 class EmailsListener implements EventListenerInterface
@@ -39,6 +39,7 @@ class EmailsListener implements EventListenerInterface
             'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
             'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
             'GroupsAddController.addPost.success' => 'sendGroupUserAddEmail',
+            'GroupsDeleteController.delete.success' => 'sendGroupDeleteEmail',
         ];
     }
 
@@ -50,17 +51,11 @@ class EmailsListener implements EventListenerInterface
      * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
      * @return void
      */
-    public function sendSelfRegisteredEmail(Event $event, User $user = null, AuthenticationToken $token = null)
+    public function sendSelfRegisteredEmail(Event $event, User $user, AuthenticationToken $token)
     {
         // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
-        }
-        if (!isset($user)) {
-            throw new InternalErrorException('User should not be empty when sending registration emails');
-        }
-        if (!isset($token)) {
-            throw new InternalErrorException('Authentication token should not be empty when sending registration emails');
         }
 
         // Send notification
@@ -79,20 +74,11 @@ class EmailsListener implements EventListenerInterface
      * @param \App\Model\Entity\User $admin User
      * @return void
      */
-    public function sendAdminRegisteredEmail(Event $event, User $user = null, AuthenticationToken $token = null, User $admin = null)
+    public function sendAdminRegisteredEmail(Event $event, User $user, AuthenticationToken $token, User $admin)
     {
         // Notification toggle and baseline check
-        if (!Configure::read('passbolt.email.send.user.create')) {
+        if (Configure::read('passbolt.email.send.user.create') === false) {
             return;
-        }
-        if (!isset($user)) {
-            throw new InternalErrorException('User should not be empty when sending registration emails');
-        }
-        if (!isset($token)) {
-            throw new InternalErrorException('Authentication token should not be empty when sending registration emails');
-        }
-        if (!isset($admin)) {
-            throw new InternalErrorException('Administrator info not be empty when sending registration emails');
         }
 
         // Send notification
@@ -110,17 +96,11 @@ class EmailsListener implements EventListenerInterface
      * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
      * @return void
      */
-    public function sendRecoverEmail(Event $event, User $user = null, AuthenticationToken $token = null)
+    public function sendRecoverEmail(Event $event, User $user, AuthenticationToken $token)
     {
         // Notification toggle and baseline check
-        if (!Configure::read('passbolt.email.send.user.recover')) {
+        if (Configure::read('passbolt.email.send.user.recover') === false) {
             return;
-        }
-        if (!isset($user)) {
-            throw new InternalErrorException('User should not be empty when sending recovery emails');
-        }
-        if (!isset($token)) {
-            throw new InternalErrorException('Authentication token should not be empty when sending recovery emails');
         }
 
         // Send notification.
@@ -139,23 +119,45 @@ class EmailsListener implements EventListenerInterface
      * @param \App\Model\Entity\Group $group Group
      * @return void
      */
-    public function sendGroupUserAddEmail(Event $event, User $user = null, User $admin = null, \App\Model\Entity\Group $group = null)
+    public function sendGroupUserAddEmail(Event $event, User $user, User $admin, Group $group)
     {
         // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.group.user.add')) {
             return;
         }
-        if (!isset($user)) {
-            throw new InternalErrorException('User should not be empty when group add notification email.');
-        }
-        if (!isset($admin)) {
-            throw new InternalErrorException('Admin should not be empty when group add notification email.');
+        // Don't send notification if you added yourself
+        if ($user->id === $admin->id) {
+            return;
         }
 
         // Send notification.
         $subject = __("{0} added you to the group {1}", $admin->profile->first_name, $group->name);
 
         $template = 'group_user_add';
+        $data = ['body' => ['user' => $user, 'admin' => $admin, 'group' => $group], 'title' => $subject];
+        $this->_send($user->username, $subject, $data, $template);
+    }
+
+    /**
+     * Send Group delete Email
+     *
+     * @param Event $event event
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\User $admin Admin
+     * @param \App\Model\Entity\Group $group Group
+     * @return void
+     */
+    public function sendGroupDeleteEmail(Event $event, User $user, User $admin, Group $group)
+    {
+        // Notification toggle and baseline check
+        if (!Configure::read('passbolt.email.send.group.delete')) {
+            return;
+        }
+
+        // Send notification.
+        $subject = __("{0} deleted the group {1}", $admin->profile->first_name, $group->name);
+
+        $template = 'group_delete';
         $data = ['body' => ['user' => $user, 'admin' => $admin, 'group' => $group], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
     }
