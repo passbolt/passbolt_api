@@ -15,8 +15,9 @@
 namespace App\Controller\Events;
 
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Entity\User;
 use App\Model\Entity\Group;
+use App\Model\Entity\Resource;
+use App\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -40,6 +41,7 @@ class EmailsListener implements EventListenerInterface
             'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
             'GroupsAddController.addPost.success' => 'sendGroupUserAddEmail',
             'GroupsDeleteController.delete.success' => 'sendGroupDeleteEmail',
+            'ResourcesAddController.addPost.success' => 'sendResourceCreateEmail'
         ];
     }
 
@@ -53,12 +55,10 @@ class EmailsListener implements EventListenerInterface
      */
     public function sendSelfRegisteredEmail(Event $event, User $user, AuthenticationToken $token)
     {
-        // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
         }
 
-        // Send notification
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'user_register_self';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
@@ -76,12 +76,10 @@ class EmailsListener implements EventListenerInterface
      */
     public function sendAdminRegisteredEmail(Event $event, User $user, AuthenticationToken $token, User $admin)
     {
-        // Notification toggle and baseline check
         if (Configure::read('passbolt.email.send.user.create') === false) {
             return;
         }
 
-        // Send notification
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'user_register_admin';
         $data = ['body' => ['user' => $user, 'token' => $token, 'admin' => $admin], 'title' => $subject];
@@ -98,12 +96,10 @@ class EmailsListener implements EventListenerInterface
      */
     public function sendRecoverEmail(Event $event, User $user, AuthenticationToken $token)
     {
-        // Notification toggle and baseline check
         if (Configure::read('passbolt.email.send.user.recover') === false) {
             return;
         }
 
-        // Send notification.
         $subject = __("Your account recovery, {0}!", $user->profile->first_name);
         $template = 'user_recover';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
@@ -121,7 +117,6 @@ class EmailsListener implements EventListenerInterface
      */
     public function sendGroupUserAddEmail(Event $event, User $user, User $admin, Group $group)
     {
-        // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.group.user.add')) {
             return;
         }
@@ -130,9 +125,7 @@ class EmailsListener implements EventListenerInterface
             return;
         }
 
-        // Send notification.
         $subject = __("{0} added you to the group {1}", $admin->profile->first_name, $group->name);
-
         $template = 'group_user_add';
         $data = ['body' => ['user' => $user, 'admin' => $admin, 'group' => $group], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
@@ -149,16 +142,36 @@ class EmailsListener implements EventListenerInterface
      */
     public function sendGroupDeleteEmail(Event $event, User $user, User $admin, Group $group)
     {
-        // Notification toggle and baseline check
         if (!Configure::read('passbolt.email.send.group.delete')) {
             return;
         }
+        // Don't send notification if user is the one who deleted the group
+        if ($user->id === $admin->id) {
+            return;
+        }
 
-        // Send notification.
         $subject = __("{0} deleted the group {1}", $admin->profile->first_name, $group->name);
-
         $template = 'group_delete';
         $data = ['body' => ['user' => $user, 'admin' => $admin, 'group' => $group], 'title' => $subject];
+        $this->_send($user->username, $subject, $data, $template);
+    }
+
+    /**
+     * Send resource create email
+     *
+     * @param \App\Model\Entity\Event $event event
+     * @param \App\Model\Entity\User $user User
+     * @param \App\Model\Entity\Resource $resource Resource
+     * @return void
+     */
+    public function sendResourceCreateEmail(Event $event, User $user, Resource $resource)
+    {
+        if (!Configure::read('passbolt.email.send.password.create')) {
+            return;
+        }
+        $subject = __("You added the resource {0}", $resource->name);
+        $template = 'resource_create';
+        $data = ['body' => ['user' => $user, 'resource' => $resource], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
     }
 

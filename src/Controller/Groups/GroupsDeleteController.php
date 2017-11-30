@@ -126,7 +126,7 @@ class GroupsDeleteController extends AppController
     {
         $Users = $this->loadModel('Users');
         $admin = $Users->getForEmail($this->User->id());
-        $usersIds = Hash::extract($group->groups_users,'{n}.user_id');
+        $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         $users = $Users->findForEmail($usersIds);
 
         foreach ($users as $user) {

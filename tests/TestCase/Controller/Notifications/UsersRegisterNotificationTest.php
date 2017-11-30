@@ -14,8 +14,8 @@
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
-use Cake\Core\Configure;
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\Configure;
 
 class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {

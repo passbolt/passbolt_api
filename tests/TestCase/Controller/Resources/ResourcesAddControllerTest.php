@@ -22,7 +22,9 @@ use Cake\Utility\Hash;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
+    public $fixtures = [
+        'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.profiles', 'app.roles',
+        'app.secrets', 'app.favorites', 'app.permissions'];
 
     protected function _getDummyPostData($data = [])
     {
@@ -60,7 +62,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         return $data;
     }
 
-    public function testSuccess()
+    public function testResourcesAddSuccess()
     {
         $success = [
             'chinese' => $this->_getDummyPostData(['Resource' => [
@@ -136,7 +138,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         }
     }
 
-    public function testAddApiV1Success()
+    public function testResourcesAddApiV1Success()
     {
         $this->authenticateAs('ada');
         $userId = UuidFactory::uuid('user.id.ada');
@@ -184,7 +186,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEquals($data['Secret'][0]['data'], $resource->Secret[0]->data);
     }
 
-    public function testValidationErrors()
+    public function testResourcesAddValidationErrors()
     {
         $responseCode = 400;
         $responseMessage = 'Could not validate resource data';
@@ -223,7 +225,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         }
     }
 
-    public function testErrorNotAuthenticated()
+    public function testResourcesAddErrorNotAuthenticated()
     {
         $data = $this->_getDummyPostData();
         $this->postJson("/resources.json", $data);

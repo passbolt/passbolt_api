@@ -66,14 +66,15 @@ return [
             // see. https://www.passbolt.com/help/tech/backup
             'show' => [
                 'secret' => true,
-                'username' => true
+                'username' => true,
+                'url' => true
             ],
             // Choose which emails are sent system wide
             'send' => [
                 'password' => [
+                    'create' => true,
                     'share' => true,
                     'comment' => true,
-                    'create' => true,
                     'update' => true,
                     'delete' => true,
                 ],

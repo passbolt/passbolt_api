@@ -18,6 +18,8 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
+use Cake\Event\Event;
 
 class ResourcesAddController extends AppController
 {
@@ -39,10 +41,16 @@ class ResourcesAddController extends AppController
 
         // Retrieve the saved resource.
         $options = [
-            'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true]
+            'contain' => [
+                'creator' => true, 'favorite' => true, 'modifier' => true,
+                'secret' => true, 'permission' => true
+            ]
         ];
-        $output = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
-        $this->success(__('The resource has been added successfully.'), $output);
+        $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
+
+        $this->_notifyUser($resource);
+
+        $this->success(__('The resource has been added successfully.'), $resource);
     }
 
     /**
@@ -138,5 +146,21 @@ class ResourcesAddController extends AppController
         if (!empty($errors)) {
             throw new ValidationRuleException(__('Could not validate resource data.'), $errors, $this->Resources);
         }
+    }
+
+    /**
+     * Send email notification
+     *
+     * @param resource $resource Resource
+     * @return void
+     */
+    protected function _notifyUser(Resource $resource)
+    {
+        $Users = $this->loadModel('Users');
+        $user = $Users->getForEmail($this->User->id());
+        $event = new Event('ResourcesAddController.addPost.success', $this, [
+            'user' => $user, 'resource' => $resource
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }
