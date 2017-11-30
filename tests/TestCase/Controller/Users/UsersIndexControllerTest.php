@@ -17,6 +17,7 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Cake\Utility\Hash;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
@@ -29,6 +30,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertUserAttributes($this->_responseJsonBody[0]);
+        $usersIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
         // gpgkey
         $this->assertObjectHasAttribute('gpgkey', $this->_responseJsonBody[0]);
@@ -40,7 +42,27 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('role', $this->_responseJsonBody[0]);
         $this->assertRoleAttributes($this->_responseJsonBody[0]->role);
 
+        // Should not contain inactive users.
+        $notActiveUserId = UuidFactory::uuid('user.id.ruth');
+        $this->assertNotContains($notActiveUserId, $usersIds);
+
         // @todo v2 groups_users check
+    }
+
+    // As admin the request should also contain not active users.
+    public function testUsersIndexGetAsAdminSuccess()
+    {
+        $this->authenticateAs('admin');
+        $this->getJson('/users.json?api-version=2');
+        $usersIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+
+        // Should not contain inactive users.
+        $notActiveUserId = UuidFactory::uuid('user.id.ruth');
+        $this->assertContains($notActiveUserId, $usersIds);
+
+        // Should contain active users.
+        $activeUserId = UuidFactory::uuid('user.id.ada');
+        $this->assertContains($activeUserId, $usersIds);
     }
 
     public function testUsersIndexGetApiV1Success()

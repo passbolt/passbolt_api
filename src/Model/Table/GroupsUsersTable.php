@@ -14,8 +14,8 @@
  */
 namespace App\Model\Table;
 
+use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
@@ -133,6 +133,11 @@ class GroupsUsersTable extends Table
             'message' => __('The user does not exist.')
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
+            'table' => 'Users',
+            'errorField' => 'user_id',
+            'message' => __('The user does not exist.')
+        ]);
+        $rules->addCreate(new IsActiveRule(), 'user_is_active', [
             'table' => 'Users',
             'errorField' => 'user_id',
             'message' => __('The user does not exist.')

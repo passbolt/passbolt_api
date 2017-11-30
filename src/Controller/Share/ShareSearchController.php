@@ -17,9 +17,8 @@ namespace App\Controller\Share;
 
 use App\Controller\AppController;
 use App\Model\Entity\Group;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Utility\UuidFactory;
+use Cake\Collection\Collection;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
@@ -36,7 +35,7 @@ class ShareSearchController extends AppController
      * @throws NotFoundException if the user does not have access to the resource
      * @return void
      */
-    public function searchArosToShareWith($resourceId)
+    public function searchArosToShareWith(string $resourceId)
     {
         // Check request sanity
         if (!Validation::uuid($resourceId)) {
@@ -68,16 +67,12 @@ class ShareSearchController extends AppController
             'filter' => ['search']
         ];
         $options = $this->QueryString->get($whitelist);
-        $options['filter']['has-not-permission'] = [$resourceId];
 
         // Retrieve the groups.
-        $groupsOptions = array_merge($options, [
-            'contain' => ['user_count' => true]
-        ]);
-        $groups = $this->Groups->findIndex($groupsOptions);
+        $groups = $this->_searchGroups($resourceId, $options);
 
         // Retrieve the users.
-        $users = $this->Users->findIndex(Role::USER, $options);
+        $users = $this->_searchUsers($resourceId, $options);
 
         // Merge the users and groups.
         $aros = $users->append($groups);
@@ -89,12 +84,42 @@ class ShareSearchController extends AppController
     }
 
     /**
+     * Search the groups.
+     *
+     * @param string $resourceId uuid Identifier of the resource
+     * @param array $options The find options
+     * @return \Cake\ORM\Query
+     */
+    private function _searchGroups(string $resourceId, array $options = [])
+    {
+        $options['filter']['has-not-permission'] = [$resourceId];
+        $options['contain']['user_count'] = true;
+
+        return $this->Groups->findIndex($options);
+    }
+
+    /**
+     * Search the users.
+     *
+     * @param string $resourceId uuid Identifier of the resource
+     * @param array $options The find options
+     * @return \Cake\ORM\Query
+     */
+    private function _searchUsers(string $resourceId, array $options = [])
+    {
+        $options['filter']['has-not-permission'] = [$resourceId];
+        $options['filter']['is-active'] = true;
+
+        return $this->Users->findIndex($this->User->role(), $options);
+    }
+
+    /**
      * Format the result alphabetically.
      *
      * @param \Cake\Collection\Collection $aros The collection of groups and users to sort.
      * @return \Cake\Collection\Collection
      */
-    private function _formatResult($aros)
+    private function _formatResult(Collection $aros)
     {
         $sortIterator = $aros->sortBy(function ($item) {
             if ($item instanceof Group) {

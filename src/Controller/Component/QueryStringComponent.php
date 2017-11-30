@@ -78,6 +78,10 @@ class QueryStringComponent extends Component
             $query['filter']['search'] = $query['keywords'];
             unset($query['keywords']);
         }
+        if (isset($query['filter']['keywords'])) {
+            $query['filter']['search'] = $query['filter']['keywords'];
+            unset($query['filter']['keywords']);
+        }
 
         return $query;
     }

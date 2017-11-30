@@ -17,6 +17,7 @@ namespace App\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
+use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -244,15 +245,26 @@ class PermissionsTable extends Table
         $rules = new RulesChecker($options);
         $aro = Inflector::pluralize($entity->aro);
         if (in_array($aro, ['Users', 'Groups'])) {
+            // The aro instance exists.
             $existRule = $rules->existsIn('aro_foreign_key', $aro);
             $existIn = $existRule($entity, $options);
+            // The aro instance is not soft deleted.
             $isNotSoftDeletedRule = new IsNotSoftDeletedRule();
             $isNotSoftDeleted = $isNotSoftDeletedRule($entity, [
                 'table' => $aro,
                 'errorField' => 'aro_foreign_key',
             ]);
+            // The user is active.
+            $isActive = true;
+            if ($aro == 'Users') {
+                $isActiveRule = new IsActiveRule();
+                $isActive = $isActiveRule($entity, [
+                    'table' => $aro,
+                    'errorField' => 'aro_foreign_key',
+                ]);
+            }
 
-            return $existIn && $isNotSoftDeleted;
+            return $existIn && $isNotSoftDeleted && $isActive;
         }
 
         return false;

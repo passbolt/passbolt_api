@@ -39,6 +39,16 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertContains('<div id="container" class="page login', $data);
     }
 
+    public function testUserLoginAsInactiveUserError()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testUserLoginAsDeletedUserError()
+    {
+        $this->markTestIncomplete();
+    }
+
     /**
      * Test error 500 if the GnuPG fingerprint config for the server is missing.
      * It can happen if a sysop overrides the GnuPG config for the server post installation.
