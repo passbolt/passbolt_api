@@ -29,7 +29,7 @@ class SoftDeleteTest extends AppTestCase
     public $Users;
 
     public $fixtures = [
-        'app.users', 'app.groups',
+        'app.users', 'app.groups', 'app.favorites',
         'app.profiles', 'app.gpgkeys', 'app.resources',
         'app.alt0/groups_users', 'app.alt0/permissions'
     ];
@@ -163,6 +163,11 @@ class SoftDeleteTest extends AppTestCase
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
 
+        // Check if some favorites exist for ada
+        $Favorites = TableRegistry::get('Favorites');
+        $favorites = $Favorites->find()->where(['user_id' => $user->id])->all()->toArray();
+        $this->assertNotEmpty($favorites);
+
         // Can delete ada
         $this->assertTrue($this->Users->softDelete($user));
         $errors = $user->getErrors();
@@ -191,5 +196,9 @@ class SoftDeleteTest extends AppTestCase
         // Framasoft previously owned by creative is still theres since it's owned by carol
         $framasoft = $this->Resources->get(UuidFactory::uuid('resource.id.framasoft'));
         $this->assertFalse($framasoft->deleted);
+
+        // Check Favorites are gone
+        $favorites = $Favorites->find()->where(['user_id' => $user->id])->all()->toArray();
+        $this->assertEmpty($favorites);
     }
 }

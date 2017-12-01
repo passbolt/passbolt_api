@@ -797,6 +797,10 @@ class UsersTable extends Table
         $this->GroupsUsers->deleteAll(['user_id' => $user->id]);
         $this->Permissions->deleteAll(['aro_foreign_key' => $user->id]);
 
+        // Delete all favorites
+        $Favorites = TableRegistry::get('Favorites');
+        $Favorites->deleteAll(['user_id' => $user->id]);
+
         // Mark user as deleted
         $user->deleted = true;
         if (!$this->save($user, ['checkRules' => false])) {
