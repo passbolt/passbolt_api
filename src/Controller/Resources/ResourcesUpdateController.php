@@ -19,7 +19,9 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -61,14 +63,18 @@ class ResourcesUpdateController extends AppController
         $this->_patchAndValidateEntity($resource);
 
         // Save the entity
-        $this->Resources->save($resource);
-        $this->_handleValidationError($resource);
+        if (!$this->Resources->save($resource)) {
+            $this->_handleValidationError($resource);
+            throw new InternalErrorException(__('The resource could not be updated. Try again later.'));
+        }
 
         // Retrieve the updated resource.
         $options = [
             'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true]
         ];
         $output = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
+
+        $this->_notifyUser($resource);
         $this->success(__('The resource has been updated successfully.'), $output);
     }
 
@@ -161,5 +167,19 @@ class ResourcesUpdateController extends AppController
 
             throw new ValidationRuleException(__('Could not validate resource data.'), $errors, $this->Resources);
         }
+    }
+
+    /**
+     * Send email notification
+     *
+     * @param \App\Model\Entity\Resource $resource Resource
+     * @return void
+     */
+    protected function _notifyUser(\App\Model\Entity\Resource $resource)
+    {
+        $event = new Event('ResourcesUpdateController.update.success', $this, [
+            'resource' => $resource
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }

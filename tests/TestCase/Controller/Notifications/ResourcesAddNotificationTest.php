@@ -54,4 +54,10 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
         $this->assertResponseCode(200);
         $this->assertResponseContains('You have saved a new password');
     }
+
+    public function testResourcesAddNotificationSettings()
+    {
+        // Test the configuration flags like passbolt.show.resource.url
+        $this->markTestIncomplete();
+    }
 }

@@ -15,6 +15,7 @@
 namespace App\Controller\Events\EmailTraits;
 
 use App\Model\Entity\Resource;
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
@@ -53,6 +54,43 @@ trait ResourcesEmailTrait
     }
 
     /**
+     * Send resource update email
+     *
+     * @param Event $event event
+     * @param resource $resource resource
+     * @return void
+     */
+    public function sendResourceUpdateEmail(Event $event, Resource $resource)
+    {
+        if (!Configure::read('passbolt.email.send.password.update')) {
+            return;
+        }
+        $Users = TableRegistry::get('Users');
+        $owner = $Users->getForEmail($resource->modified_by);
+        $subject = __("{0} edited the resource {1}", $owner->profile->first_name, $resource->name);
+        $template = 'resource_update';
+
+        // Get the users that can access this resource
+        // if there is nobody or just one user, give it up
+        $Users = TableRegistry::get('Users');
+        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
+        $users = $Users->findIndex(Role::USER, $options)->all();
+        if (count($users) < 2) {
+            return;
+        }
+
+        // Send emails to everybody that can see the resource
+        // except for the user who modified the resource
+        foreach ($users as $user) {
+            if ($user->id === $resource->modified_by) {
+                continue;
+            }
+            $data = ['body' => ['user' => $owner, 'resource' => $resource], 'title' => $subject];
+            $this->_send($user->username, $subject, $data, $template);
+        }
+    }
+
+    /**
      * Send resource delete email
      *
      * @param Event $event event
@@ -69,18 +107,17 @@ trait ResourcesEmailTrait
         $Users = TableRegistry::get('Users');
         $admin = $Users->getForEmail($deletedBy);
 
-        // Find the users that have access to the resource (including via their groups)
-        if (count($users) === 0 || count($users) === 1) {
-            // if there is nobody or just one user, give it up
+        // if there is nobody or just one user, give it up
+        if (count($users) < 2) {
             return;
         }
 
         $subject = __("{0} deleted the resource {1}", $admin->profile->first_name, $resource->name);
+        $template = 'resource_delete';
         foreach ($users as $user) {
             if ($user->id === $deletedBy) {
                 continue;
             }
-            $template = 'resource_delete';
             $data = ['body' => ['user' => $admin, 'resource' => $resource], 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);
         }

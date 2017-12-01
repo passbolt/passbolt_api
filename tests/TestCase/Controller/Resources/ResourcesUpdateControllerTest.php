@@ -32,7 +32,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
-    protected function _getDummyPostdata($resource, $data = [])
+    protected function _getDummyPostdata($resource = null, $data = [])
     {
         // Build the default data
         $defaultData = [
@@ -63,7 +63,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return $data;
     }
 
-    public function testUpdateResourceWithoutSecret()
+    public function testResourcesUpdateWithoutSecret()
     {
         $ownerId = UuidFactory::uuid('user.id.ada');
         $modifierId = UuidFactory::uuid('user.id.betty');
@@ -133,7 +133,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUpdateResourceWithSecret_SharedWithUsers()
+    public function testResourcesUpdateWithSecret_SharedWithUsers()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('betty');
@@ -155,7 +155,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUpdateResourceWithSecret_SharedWithGroups()
+    public function testResourcesUpdateWithSecret_SharedWithGroups()
     {
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->authenticateAs('grace');
@@ -177,7 +177,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUpdateResourceApiV1()
+    public function testResourcesUpdateApiV1()
     {
         $ownerId = UuidFactory::uuid('user.id.ada');
         $modifierId = UuidFactory::uuid('user.id.betty');
@@ -232,17 +232,17 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testValidationErrors()
+    public function testResourcesUpdateValidationErrors()
     {
         $this->markTestIncomplete();
     }
 
-    public function testUpdateCannotModifyNotAccessibleFields()
+    public function testResourcesUpdateCannotModifyNotAccessibleFields()
     {
         $this->markTestIncomplete();
     }
 
-    public function testUpdateErrorNotValidId()
+    public function testResourcesUpdateErrorNotValidId()
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -250,7 +250,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The resource id is not valid.');
     }
 
-    public function testAddErrorDoesNotExistResource()
+    public function testResourcesUpdateErrorDoesNotExistResource()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
@@ -258,7 +258,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testUpdateErrorResourceIsSoftDeleted()
+    public function testResourcesUpdateErrorResourceIsSoftDeleted()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -268,7 +268,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorAccessDenied()
+    public function testResourcesUpdateErrorAccessDenied()
     {
         $testCases = [
             'Cannot update a resource if no permission' => [
@@ -285,7 +285,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUpdateErrorNotAuthenticated()
+    public function testResourcesUpdateErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resource = $this->Resources->get($resourceId);

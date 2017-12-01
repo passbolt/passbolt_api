@@ -50,7 +50,7 @@ trait CommentsEmailTrait
         $Users = TableRegistry::get('Users');
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_id]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
-        if (count($users) === 0 || count($users) === 1) {
+        if (count($users) < 2) {
             // if there is nobody or just one user, give it up
             return;
         }
