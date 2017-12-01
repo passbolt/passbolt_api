@@ -434,6 +434,8 @@ class GroupsTable extends Table
             $Resources->updateAll(['deleted' => true], [
                 'id IN' => $resourceIds
             ]);
+            $Favorites = TableRegistry::get('Favorites');
+            $Favorites->deleteAll(['foreign_id IN' => $resourceIds]);
         }
 
         // Delete all group memberships
