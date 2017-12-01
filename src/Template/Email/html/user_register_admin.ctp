@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use App\Utility\Purifier;
 use Cake\Routing\Router;
 
 $user = $body['user'];
@@ -22,9 +23,9 @@ echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
     'url' => Router::url('/img/avatar' . DS . 'user.png', true),
     'text' => $this->element('email/module/avatar_text', [
-        'username' => $admin->username,
-        'first_name' => $admin->profile->first_name,
-        'last_name' => $admin->profile->last_name,
+        'username' => Purifier::clean($admin->username),
+        'first_name' => Purifier::clean($admin->profile->first_name),
+        'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => $user->created,
         'text' => __('{0} just created an account for you on passbolt!')
     ])

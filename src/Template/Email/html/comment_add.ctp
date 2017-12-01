@@ -13,32 +13,32 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 
-$user = $body['user'];
-$token = $body['token'];
+$creator = $body['creator'];
+$comment = $body['comment'];
+$resource = $body['resource'];
 
 echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
     'url' => Router::url('/img/avatar' . DS . 'user.png', true),
     'text' => $this->element('email/module/avatar_text', [
-        'username' => Purifier::clean($user->username),
-        'first_name' => Purifier::clean($user->profile->first_name),
-        'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $user->created,
-        'text' => __('You have initiated an account recovery!')
+        'username' => Purifier::clean($creator->username),
+        'first_name' => Purifier::clean($creator->profile->first_name),
+        'last_name' => Purifier::clean($creator->profile->last_name),
+        'datetime' => $comment->created,
+        'text' => __('{0} commented on {1}', null, Purifier::clean($resource->name))
     ])
 ]);
 
-$text = '<h3>' . __('Welcome back!') . '</h3><br/>';
-$text .= __('You have just requested to recover your passbolt account on this device.');
-$text .= ' ' . __('Make sure you have a backup of your secret key handy.');
-$text .= ' ' . __('Click on the link below to proceed.');
-echo $this->element('email/module/text', [
-    'text' => $text
-]);
+if (Configure::read('passbolt.email.show.comment')) {
+    echo $this->element('email/module/text', [
+        'text' => Purifier::clean($comment->content)
+    ]);
+}
 
 echo $this->element('email/module/button', [
-    'url' => Router::url('/setup/recover/' . $user['id'] . '/' . $token['token']),
-    'text' => __('start recovery')
+    'url' => Router::url('/'),
+    'text' => __('log in passbolt')
 ]);

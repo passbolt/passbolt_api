@@ -14,7 +14,7 @@
  */
 namespace App\Controller;
 
-use App\Controller\Events\EmailsListener;
+use App\Controller\Events\EmailNotificationsListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Network\Exception\NotFoundException;
@@ -74,7 +74,7 @@ class AppController extends Controller
         /*
          * Email notifications
          */
-        $emails = new EmailsListener();
+        $emails = new EmailNotificationsListener();
         $this->getEventManager()->on($emails);
 
         /*

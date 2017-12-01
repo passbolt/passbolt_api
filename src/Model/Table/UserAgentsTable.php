@@ -79,12 +79,12 @@ class UserAgentsTable extends Table
         if ($ua == null) {
             $ua = Purifier::clean(env('HTTP_USER_AGENT'), 'nohtml');
         }
+        $browserName = 'undefined';
         try {
             $provider = new DonatjUAParser();
             $userAgent = $provider->parse($ua);
             $browserName = $userAgent->getBrowser()->getName();
-        } catch (NoResultFoundException $e) {
-            $browserName = 'undefined';
+        } catch (\Exception $e) {
         }
 
         return $browserName;

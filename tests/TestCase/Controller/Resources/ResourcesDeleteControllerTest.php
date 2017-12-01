@@ -23,7 +23,9 @@ use Cake\Utility\Hash;
 
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.groups', 'app.favorites', 'app.groups_users', 'app.resources', 'app.permissions'];
+    public $fixtures = [
+        'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.permissions'
+    ];
 
     public function setUp()
     {
@@ -32,7 +34,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
-    public function testDeleteSuccess()
+    public function testResourcesDeleteSuccess()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -40,7 +42,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
     }
 
-    public function testDeleteErrorResourceIsSoftDeleted()
+    public function testResourcesDeleteErrorResourceIsSoftDeleted()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -48,7 +50,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testDeleteErrorAccessDenied()
+    public function testResourcesDeleteErrorAccessDenied()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');
@@ -56,7 +58,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testDeleteErrorAccessDenied_ReadAccess()
+    public function testResourcesDeleteErrorAccessDenied_ReadAccess()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
@@ -64,7 +66,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(403, 'You do not have the permission to delete this resource.');
     }
 
-    public function testDeleteErrorNotAuthenticated()
+    public function testResourcesDeleteErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->deleteJson("/resources/$resourceId.json");

@@ -231,13 +231,16 @@ class UsersTable extends Table
         }
 
         // Default associated data
-        $query->contain([
-            'Profiles',
-            'Gpgkeys',
-            'Roles',
-            'GroupsUsers'
+        $containWhitelist = [
+            'Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'
             // @todo avatar as part of profile.avatar
-        ]);
+        ];
+        if (!isset($options['contain']) || (!is_array($options['contain']))) {
+            $contain = $containWhitelist;
+        } else {
+            $contain = array_intersect($options['contain'], $containWhitelist);
+        }
+        $query->contain($contain);
 
         // Filter out guests and deleted users
         $query->where([
@@ -505,6 +508,7 @@ class UsersTable extends Table
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource the users must have access.
+     * @throws \InvalidArgumentException if the ressourceId is not a valid uuid
      * @return \Cake\ORM\Query $query
      */
     private function _filterQueryByResourceAccess(\Cake\ORM\Query $query, string $resourceId)

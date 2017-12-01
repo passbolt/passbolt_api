@@ -629,7 +629,7 @@ class ResourcesTable extends Table
      * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions and secrets properties have to be populated.
      * @param array $changes The list of changes to apply
      * @param array $secrets The list secrets corresponding to the users who will get access to the resource
-     * @return void
+     * @return bool
      */
     public function share($resource, array $changes = [], array $secrets = [])
     {
@@ -711,7 +711,7 @@ class ResourcesTable extends Table
                 $resource->id,
                 $changesReferences
             );
-            $resource->dirty('permissions', true);
+            $resource->setDirty('permissions', true);
         } catch (ValidationRuleException $e) {
             return $resource->setError('permissions', $e->getErrors());
         }
@@ -818,7 +818,7 @@ class ResourcesTable extends Table
      * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
      * @param array $add The list of secrets to add
      * @param array $delete The list of user identifies for whom the secrets must be deleted
-     * @return array
+     * @return array|bool
      */
     protected function _patchAndUpdateSecrets($resource, array $add = [], array $delete = [])
     {
@@ -830,7 +830,7 @@ class ResourcesTable extends Table
                 $add,
                 $delete
             );
-            $resource->dirty('secrets', true);
+            $resource->setDirty('secrets', true);
         } catch (ValidationRuleException $e) {
             $resource->setError('secrets', $e->getErrors());
 

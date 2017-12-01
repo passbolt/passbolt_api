@@ -124,16 +124,10 @@ class GroupsDeleteController extends AppController
      */
     protected function _notifyUsers($group)
     {
-        $Users = $this->loadModel('Users');
-        $admin = $Users->getForEmail($this->User->id());
-        $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
-        $users = $Users->findForEmail($usersIds);
-
-        foreach ($users as $user) {
-            $event = new Event('GroupsDeleteController.delete.success', $this, [
-                'user' => $user, 'admin' => $admin, 'group' => $group
-            ]);
-            $this->getEventManager()->dispatch($event);
-        }
+        $event = new Event('GroupsDeleteController.delete.success', $this, [
+            'group' => $group,
+            'userId' => $this->User->id()
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }

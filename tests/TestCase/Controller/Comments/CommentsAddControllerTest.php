@@ -37,7 +37,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->Resources = TableRegistry::get('Resources');
     }
 
-    public function testAddApiV1Success()
+    public function testCommentsAddApiV1Success()
     {
         $this->authenticateAs('ada');
         $commentContent = 'this is a test';
@@ -57,7 +57,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals($commentContent, $comment->content);
     }
 
-    public function testAddApiV1WithParentIdSuccess()
+    public function testCommentsAddApiV1WithParentIdSuccess()
     {
         $this->authenticateAs('ada');
         $commentContent = 'this is a test with parent_id';
@@ -89,7 +89,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testAddRuleValidationResourceDoesNotExist()
+    public function testCommentsAddRuleValidationResourceDoesNotExist()
     {
         $this->authenticateAs('ada');
         $commentContent = 'this is a test';
@@ -100,7 +100,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testAddRuleValidationResourceIsSoftDeleted()
+    public function testCommentsAddRuleValidationResourceIsSoftDeleted()
     {
         // Soft delete resource "cakephp".
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -119,7 +119,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testAddRuleValidationResourceAccessDenied()
+    public function testCommentsAddRuleValidationResourceAccessDenied()
     {
         $this->authenticateAs('ada');
         $commentContent = 'this is a test';
@@ -130,7 +130,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testAddErrorValidationParentIdDoesNotExist()
+    public function testCommentsAddErrorValidationParentIdDoesNotExist()
     {
         $this->authenticateAs('ada');
         $commentContent = 'this is a test with parent_id';
@@ -146,7 +146,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testAddErrorValidationContentNotProvided()
+    public function testCommentsAddErrorValidationContentNotProvided()
     {
         $this->authenticateAs('ada');
         $postData = [
@@ -192,7 +192,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($createdBy, $comment->user_id);
     }
 
-    public function testAddErrorNotAuthenticated()
+    public function testCommentsAddErrorNotAuthenticated()
     {
         $postData = [];
         $resourceId = UuidFactory::uuid('resource.id.cakephp');

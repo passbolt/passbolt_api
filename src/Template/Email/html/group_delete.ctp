@@ -12,25 +12,27 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use App\Utility\Purifier;
 use Cake\Routing\Router;
 
 $admin = $body['admin'];
-$user = $body['user'];
 $group = $body['group'];
 
 echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
     'url' => Router::url('/img/avatar' . DS . 'user.png', true),
     'text' => $this->element('email/module/avatar_text', [
-        'username' => $admin->username,
-        'first_name' => $admin->profile->first_name,
-        'last_name' => $admin->profile->last_name,
+        'username' => Purifier::clean($admin->username),
+        'first_name' => Purifier::clean($admin->profile->first_name),
+        'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => $group->modified,
         'text' => __('{0} deleted a group', null)
     ])
 ]);
 
-$text = __('{0} deleted the group "{1}" you were a member of.', $admin->profile->first_name, $group->name);
+$text = __('{0} deleted the group "{1}" you were a member of.',
+    Purifier::clean($admin->profile->first_name), Purifier::clean($group->name)
+);
 $text .= ' ' . __('All passwords that were shared only with this group were also deleted.');
 
 echo $this->element('email/module/text', [

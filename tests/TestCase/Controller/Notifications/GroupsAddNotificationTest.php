@@ -67,10 +67,11 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         // check email notification
         $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
         $this->assertResponseCode(200);
-        $this->assertResponseContains('added you to a group');
+        $this->assertResponseContains('added you to the group Temp Group');
+        $this->assertResponseContains('And as group manager you');
         $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
+        $this->assertResponseNotContains('And as group manager you');
         $this->assertResponseCode(200);
-        $this->assertResponseContains('added you to a group');
 
         // emails are not send if you add yourself to a group
         $this->get('/seleniumtests/showLastEmail/admin@passbolt.com');

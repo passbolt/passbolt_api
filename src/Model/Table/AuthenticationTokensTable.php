@@ -131,7 +131,7 @@ class AuthenticationTokensTable extends Table
      * @throws ValidationRuleException is the user is not a valid uuid
      * @throws ValidationRuleException is the user is not found
      * @throws ValidationRuleException is the user is deleted
-     * @return \App\Model\Entity\AuthenticationToken
+     * @return \App\Model\Entity\AuthenticationToken $token
      */
     public function generate(string $userId)
     {

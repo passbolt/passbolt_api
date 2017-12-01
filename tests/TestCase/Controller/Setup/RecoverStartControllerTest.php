@@ -20,7 +20,9 @@ use Cake\ORM\TableRegistry;
 
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.authentication_tokens'];
+    public $fixtures = [
+        'app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.authentication_tokens'
+    ];
     public $AuthenticationTokens;
 
     public function setUp()

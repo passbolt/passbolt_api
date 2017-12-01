@@ -138,17 +138,9 @@ class GroupsAddController extends AppController
      */
     protected function _notifyUsers($group)
     {
-        $Users = $this->loadModel('Users');
-        $admin = $Users->getForEmail($this->User->id());
-
-        foreach ($group->groups_users as $group_user) {
-            // TODO optimize to be one sql request
-            $user = $Users->getForEmail($group_user->user_id);
-            $user->groups_users = $group_user;
-            $event = new Event('GroupsAddController.addPost.success', $this, [
-                'user' => $user, 'admin' => $admin, 'group' => $group
-            ]);
-            $this->getEventManager()->dispatch($event);
-        }
+        $event = new Event('GroupsAddController.addPost.success', $this, [
+            'group' => $group
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }

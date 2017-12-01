@@ -18,14 +18,20 @@ class Purifier
 {
     /**
      * Purify a html string using HTMLPurifier
-     * @param string $html html to clean
-     * @return string
+     * @param mixed $html html to clean
+     * @return mixed
      */
     public static function clean($html)
     {
         $config = \HTMLPurifier_Config::createDefault();
         $purifier = new \HTMLPurifier($config);
+        if (is_string($html)) {
+            return $purifier->purify($html);
+        }
+        if (is_array($html)) {
+            return $purifier->purifyArray($html);
+        }
 
-        return $purifier->purify($html);
+        return null;
     }
 }

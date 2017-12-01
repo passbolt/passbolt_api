@@ -16,7 +16,10 @@
 namespace App\Controller\Comments;
 
 use App\Controller\AppController;
+use App\Model\Entity\Comment;
+use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -31,7 +34,7 @@ class CommentsAddController extends AppController
      * @throws NotFoundException
      * @return void
      */
-    public function add($foreignId = null)
+    public function addPost($foreignId)
     {
         if (!Validation::uuid($foreignId)) {
             throw new BadRequestException(__('The resource id is not valid.'));
@@ -41,19 +44,24 @@ class CommentsAddController extends AppController
         $comment = $this->_buildAndValidateCommentEntity($foreignId);
         $this->_handleValidationErrors($comment);
 
-        $this->Comments->save($comment);
-        $this->_handleValidationErrors($comment);
+        if (!$this->Comments->save($comment)) {
+            $this->_handleValidationErrors($comment);
+            $oops = __('Could not save the comment, please try again later.');
+            throw new InternalErrorException($oops);
+        }
+        $this->_notifyUsers($comment);
         $this->success(__('The comment was successfully added.'), $comment);
     }
 
     /**
      * Manage validation errors.
-     * @param \Cake\Datasource\EntityInterface $comment comment
+     *
+     * @param \App\Model\Entity\Comment $comment comment
      * @throws BadRequestException
      * @throws NotFoundException
      * @return void
      */
-    protected function _handleValidationErrors($comment)
+    protected function _handleValidationErrors(Comment $comment)
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
@@ -73,9 +81,9 @@ class CommentsAddController extends AppController
      * Build and validate comment entity from user input.
      *
      * @param string $foreignId The identifier of the instance the comment belongs to.
-     * @return \Cake\Datasource\EntityInterface $comment comment entity
+     * @return \App\Model\Entity\Comment $comment comment entity
      */
-    protected function _buildAndValidateCommentEntity($foreignId = null)
+    protected function _buildAndValidateCommentEntity(string $foreignId = null)
     {
         // Build entity and perform basic check.
         $comment = $this->Comments->newEntity(
@@ -105,5 +113,18 @@ class CommentsAddController extends AppController
         $this->_handleValidationErrors($comment);
 
         return $comment;
+    }
+
+    /**
+     * Notify users about this new comment
+     *
+     * @param \App\Model\Entity\Comment $comment comment entity
+     */
+    protected function _notifyUsers($comment)
+    {
+        $event = new Event('CommentAddController.addPost.success', $this, [
+            'comment' => $comment
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }

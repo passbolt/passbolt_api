@@ -99,7 +99,7 @@ Router::prefix('Comments', function ($routes) {
 		->setPass(['model', 'id'])
 		->setMethods(['GET']);
 
-	$routes->connect('/resource/:foreignId', ['controller' => 'CommentsAdd', 'action' => 'add'])
+	$routes->connect('/resource/:foreignId', ['controller' => 'CommentsAdd', 'action' => 'addPost'])
 	       ->setPass(['foreignId'])
 	       ->setMethods(['POST']);
 

@@ -12,26 +12,27 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use App\Utility\Purifier;
 use Cake\Routing\Router;
 
 $admin = $body['admin'];
-$user = $body['user'];
+$group_user = $body['group_user'];
 $group = $body['group'];
 
 echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
     'url' => Router::url('/img/avatar' . DS . 'user.png', true),
     'text' => $this->element('email/module/avatar_text', [
-        'username' => $admin->username,
-        'first_name' => $admin->profile->first_name,
-        'last_name' => $admin->profile->last_name,
-        'datetime' => $user->groups_users->created,
-        'text' => __('{0} added you to a group', null)
+        'username' => Purifier::clean($admin->username),
+        'first_name' => Purifier::clean($admin->profile->first_name),
+        'last_name' => Purifier::clean($admin->profile->last_name),
+        'datetime' => $group_user->created,
+        'text' => __('{0} added you to the group {1}', null, Purifier::clean($group->name))
     ])
 ]);
 
 $text = __('As member of the group you now have access to all the passwords that are shared with this group.');
-if ($user->groups_users->is_admin) {
+if ($group_user->is_admin) {
     $text .= ' ' . __('And as group manager you are also authorized to edit the members of the group.');
 }
 echo $this->element('email/module/text', [

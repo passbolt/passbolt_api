@@ -14,7 +14,7 @@
  */
 namespace App\Shell\Task;
 
-use App\Controller\Events\EmailsListener;
+use App\Controller\Events\EmailNotificationsListener;
 use App\Model\Entity\Role;
 use App\Shell\AppShell;
 use Cake\Event\Event;
@@ -226,7 +226,7 @@ class RegisterUserTask extends AppShell
         ]);
 
         $eventManager = new EventManager();
-        $emails = new EmailsListener();
+        $emails = new EmailNotificationsListener();
         $eventManager->on($emails);
         $eventManager->dispatch($event);
 

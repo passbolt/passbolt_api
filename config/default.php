@@ -67,14 +67,17 @@ return [
             'show' => [
                 'secret' => true,
                 'username' => true,
-                'url' => true
+                'url' => true,
+                'comment' => true,
             ],
             // Choose which emails are sent system wide
             'send' => [
+                'comment' => [
+                    'add' => true
+                ],
                 'password' => [
                     'create' => true,
                     'share' => true,
-                    'comment' => true,
                     'update' => true,
                     'delete' => true,
                 ],

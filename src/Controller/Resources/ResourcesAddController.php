@@ -156,11 +156,7 @@ class ResourcesAddController extends AppController
      */
     protected function _notifyUser(Resource $resource)
     {
-        $Users = $this->loadModel('Users');
-        $user = $Users->getForEmail($this->User->id());
-        $event = new Event('ResourcesAddController.addPost.success', $this, [
-            'user' => $user, 'resource' => $resource
-        ]);
+        $event = new Event('ResourcesAddController.addPost.success', $this, ['resource' => $resource]);
         $this->getEventManager()->dispatch($event);
     }
 }
