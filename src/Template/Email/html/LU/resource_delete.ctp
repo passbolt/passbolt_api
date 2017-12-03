@@ -39,7 +39,7 @@ if (Configure::read('passbolt.email.show.uri')) {
     $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
 }
 if (Configure::read('passbolt.email.show.description')) {
-    $text .= __('URL: {0}', Purifier::clean($resource->description)) . '<br/>';
+    $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
 echo $this->element('email/module/text', [
     'text' => $text

@@ -635,7 +635,7 @@ class ResourcesTable extends Table
     {
         // As the share is done in two times: save the permissions and save the secrets. Do the operation
         // in a transaction, so in case of error the operation can be canceled with a rollback.
-        $this->getConnection()->transactional(function () use ($resource, $changes, $secrets) {
+        return $this->getConnection()->transactional(function () use ($resource, $changes, $secrets) {
             $resultUpdatePermissions = $this->_patchAndUpdatePermissions($resource, $changes);
             if (!empty($resource->getErrors())) {
                 return false;
@@ -645,6 +645,8 @@ class ResourcesTable extends Table
             if (!empty($resource->getErrors())) {
                 return false;
             }
+
+            return true;
         });
     }
 

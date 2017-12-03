@@ -18,6 +18,7 @@ use App\Controller\Events\EmailTraits\CommentsEmailTrait;
 use App\Controller\Events\EmailTraits\GroupsEmailTrait;
 use App\Controller\Events\EmailTraits\RecoveryEmailTrait;
 use App\Controller\Events\EmailTraits\ResourcesEmailTrait;
+use App\Controller\Events\EmailTraits\ShareEmailTrait;
 use App\Controller\Events\EmailTraits\UsersEmailTrait;
 use App\Utility\Purifier;
 use Cake\Event\EventListenerInterface;
@@ -29,6 +30,7 @@ class EmailNotificationsListener implements EventListenerInterface
     use GroupsEmailTrait;
     use RecoveryEmailTrait;
     use ResourcesEmailTrait;
+    use ShareEmailTrait;
     use UsersEmailTrait;
 
     /**
@@ -42,16 +44,17 @@ class EmailNotificationsListener implements EventListenerInterface
     {
         return [
             'CommentAddController.addPost.success' => 'sendCommentAddEmail',
-            'UsersRegisterController.registerPost.success' => 'sendSelfRegisteredEmail',
-            'UsersRecoverController.registerPost.success' => 'sendSelfRegisteredEmail',
-            'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
-            'UsersDeleteController.delete.success' => 'sendUserDeleteEmail',
-            'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
             'GroupsAddController.addPost.success' => 'sendGroupUserAddEmail',
             'GroupsDeleteController.delete.success' => 'sendGroupDeleteEmail',
+            'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
+            'UsersDeleteController.delete.success' => 'sendUserDeleteEmail',
+            'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
+            'UsersRecoverController.registerPost.success' => 'sendSelfRegisteredEmail',
+            'UsersRegisterController.registerPost.success' => 'sendSelfRegisteredEmail',
             'ResourcesAddController.addPost.success' => 'sendResourceCreateEmail',
             'ResourcesDeleteController.delete.success' => 'sendResourceDeleteEmail',
-            'ResourcesUpdateController.update.success' => 'sendResourceUpdateEmail'
+            'ResourcesUpdateController.update.success' => 'sendResourceUpdateEmail',
+            'ShareController.share.success' => 'sendShareEmails'
         ];
     }
 

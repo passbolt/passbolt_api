@@ -14,11 +14,12 @@
  */
 use App\Utility\Purifier;
 use Cake\Core\Configure;
+use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 
-$user = $body['user'];
 $owner = $body['owner'];
 $resource = $body['resource'];
+$secret = $body['secret'];
 
 echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
@@ -27,7 +28,7 @@ echo $this->element('email/module/avatar',[
         'username' => Purifier::clean($owner->username),
         'first_name' => Purifier::clean($owner->profile->first_name),
         'last_name' => Purifier::clean($owner->profile->last_name),
-        'datetime' => $resource->secrets[0]->modified,
+        'datetime' => FrozenTime::now(),
         'text' => __('{0} shared a password with you', null)
     ])
 ]);
@@ -41,14 +42,14 @@ if (Configure::read('passbolt.email.show.uri')) {
     $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
 }
 if (Configure::read('passbolt.email.show.description')) {
-    $text .= __('URL: {0}', Purifier::clean($resource->description)) . '<br/>';
+    $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
 echo $this->element('email/module/text', [
     'text' => $text
 ]);
 if (Configure::read('passbolt.email.show.secret')) {
     echo $this->element('email/module/code', [
-        'text' => $resource->secrets[0]->data
+        'text' => $secret
     ]);
 }
 echo $this->element('email/module/button', [

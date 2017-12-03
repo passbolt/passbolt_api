@@ -67,7 +67,8 @@ return [
             'show' => [
                 'secret' => true,
                 'username' => true,
-                'url' => true,
+                'uri' => true,
+                'description' => true,
                 'comment' => true,
             ],
             // Choose which emails are sent system wide

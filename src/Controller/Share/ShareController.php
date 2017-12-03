@@ -18,8 +18,11 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -66,6 +69,7 @@ class ShareController extends AppController
      * @throws NotFoundException if the resource is soft deleted
      * @throws NotFoundException if the user does not have access to the resource
      * @throws ValidationRuleException if the provided changes do not validate
+     * @throws InternalErrorException if something else went wrong during the save
      * @return void
      */
     public function share($resourceId)
@@ -81,9 +85,11 @@ class ShareController extends AppController
 
         // Patch and validate the entity
         $data = $this->_formatRequestData();
-        $this->Resources->share($resource, $data['permissions'], $data['secrets']);
-        $this->_handleValidationError($resource);
-
+        if (!$this->Resources->share($resource, $data['permissions'], $data['secrets'])) {
+            $this->_handleValidationError($resource);
+            throw new InternalErrorException(__('Could not update the password permissions. Please try again later.'));
+        }
+        $this->_notifyUsers($resource, $data);
         $this->success(__('The operation was successful.'));
     }
 
@@ -201,5 +207,22 @@ class ShareController extends AppController
         }
 
         return $result;
+    }
+
+    /**
+     * Notify users
+     *
+     * @param resource $resource affected resource
+     * @param array $data changes requested by resource owner
+     * @return void
+     */
+    protected function _notifyUsers(Resource $resource, array $data)
+    {
+        $event = new Event('ShareController.share.success', $this, [
+            'resource' => $resource,
+            'changes' => $data,
+            'ownerId' => $this->User->id(),
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }
