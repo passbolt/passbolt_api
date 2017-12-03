@@ -47,7 +47,7 @@ trait RecoveryEmailTrait
         }
 
         $subject = __("Your account recovery, {0}!", $user->profile->first_name);
-        $template = 'user_recover';
+        $template = 'AN/user_recover';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
     }

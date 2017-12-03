@@ -119,6 +119,7 @@ class CommentsAddController extends AppController
      * Notify users about this new comment
      *
      * @param \App\Model\Entity\Comment $comment comment entity
+     * @return void
      */
     protected function _notifyUsers($comment)
     {

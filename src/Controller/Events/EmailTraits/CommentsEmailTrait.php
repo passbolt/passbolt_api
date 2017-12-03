@@ -65,7 +65,7 @@ trait CommentsEmailTrait
                 continue;
             }
             $subject = __("{0} commented on {1}", $creator->profile->first_name, $resource->name);
-            $template = 'comment_add';
+            $template = 'LU/comment_add';
             $body = ['creator' => $creator, 'comment' => $comment, 'resource' => $resource];
             $data = ['body' => $body, 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);

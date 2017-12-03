@@ -13,11 +13,11 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 
-$user = $body['user'];
 $admin = $body['admin'];
-$token = $body['token'];
+$group = $body['group'];
 
 echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
@@ -26,26 +26,22 @@ echo $this->element('email/module/avatar',[
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
-        'datetime' => $user->created,
-        'text' => __('{0} just created an account for you on passbolt!')
+        'datetime' => FrozenTime::now(),
+        'text' => __('{0} removed you from the group {1}', null, Purifier::clean($group->name))
     ])
 ]);
 
-$text = '<h3>' . __('Welcome {0}', $user->profile->first_name) . ',</h3><br/>';
-$text .= __('{0} just invited you to join passbolt at {1}',
-        ucfirst($admin->profile->first_name),
-        '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
-        );
-$text .= __('Passbolt is an open source password manager.');
-$text .= __('It is designed to allow sharing credentials securely with your team!');
-$text .= '<br/><br/>';
-$text .= __('Let\'s take the next five minutes to get you started!');
-$text .= '<br/>';
+$text = __('You are no longer a member of this group.');
+$text .= ' ' . __('You are no longer authorized to access the passwords shared with this group.');
+$text .= ' ' . __('Please contact {0} or another group manager if this is a mistake.',
+    Purifier::clean($admin->profile->first_name)
+);
+
 echo $this->element('email/module/text', [
     'text' => $text
 ]);
 
 echo $this->element('email/module/button', [
-    'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token']),
-    'text' => __('get started')
+    'url' => Router::url('/'),
+    'text' => __('log in passbolt')
 ]);

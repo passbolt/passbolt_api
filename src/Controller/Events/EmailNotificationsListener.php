@@ -17,8 +17,8 @@ namespace App\Controller\Events;
 use App\Controller\Events\EmailTraits\CommentsEmailTrait;
 use App\Controller\Events\EmailTraits\GroupsEmailTrait;
 use App\Controller\Events\EmailTraits\RecoveryEmailTrait;
-use App\Controller\Events\EmailTraits\RegistrationEmailTrait;
 use App\Controller\Events\EmailTraits\ResourcesEmailTrait;
+use App\Controller\Events\EmailTraits\UsersEmailTrait;
 use App\Utility\Purifier;
 use Cake\Event\EventListenerInterface;
 use EmailQueue\EmailQueue;
@@ -28,8 +28,8 @@ class EmailNotificationsListener implements EventListenerInterface
     use CommentsEmailTrait;
     use GroupsEmailTrait;
     use RecoveryEmailTrait;
-    use RegistrationEmailTrait;
     use ResourcesEmailTrait;
+    use UsersEmailTrait;
 
     /**
      * Returns a list of events this object is implementing. When the class is registered
@@ -45,6 +45,7 @@ class EmailNotificationsListener implements EventListenerInterface
             'UsersRegisterController.registerPost.success' => 'sendSelfRegisteredEmail',
             'UsersRecoverController.registerPost.success' => 'sendSelfRegisteredEmail',
             'UsersRecoverController.recoverPost.success' => 'sendRecoverEmail',
+            'UsersDeleteController.delete.success' => 'sendUserDeleteEmail',
             'UsersAddController.addPost.success' => 'sendAdminRegisteredEmail',
             'GroupsAddController.addPost.success' => 'sendGroupUserAddEmail',
             'GroupsDeleteController.delete.success' => 'sendGroupDeleteEmail',

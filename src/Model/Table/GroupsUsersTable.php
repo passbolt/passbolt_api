@@ -293,6 +293,53 @@ class GroupsUsersTable extends Table
     }
 
     /**
+     * Get the list of group id where the user is not the only member
+     * Useful to know which group to delete when deleting a user
+     *
+     * @param string $userId user uuid
+     * @return array of group uuid
+     */
+    public function findGroupsWhereUserNotOnlyMember(string $userId)
+    {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+
+        // SELECT group_id AS `group_id`,
+        //      (COUNT(user_id)) AS `count_user`
+        // FROM groups_users
+        // WHERE group_id IN (
+        //      SELECT group_id
+        //      FROM groups_users
+        //      WHERE (user_id = $user_id)
+        // )
+        // GROUP BY group_id
+        // HAVING count_user>1;
+
+        $subquery = $this->find();
+        $subquery
+            ->select(['group_id'])
+            ->where([
+                'user_id' => $userId
+            ]);
+
+        $query = $this->find();
+        $query
+            ->select([
+                'group_id' => 'group_id',
+                'count_user' => $query->func()->count('user_id')
+            ])
+            ->where(['group_id IN' => $subquery])
+            ->group('group_id')
+            ->having(['count_user >' => 1]);
+
+        $result = $query->all()->toArray();
+        $result = Hash::extract($result, '{n}.group_id');
+
+        return $result;
+    }
+
+    /**
      * Check if the given user is the manager of a given group
      *
      * @param string $userId uuid

@@ -17,13 +17,15 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validation;
-use JsonSchema\Exception\ValidationException;
 
 class UsersDeleteController extends AppController
 {
@@ -65,7 +67,15 @@ class UsersDeleteController extends AppController
     public function delete($id)
     {
         $user = $this->_validateRequestData($id);
-        $this->Users->softDelete($user, ['checkRules' => false]);
+
+        // keep list of group the user was a member of
+        // useful to notify the group managers
+        $groupIds = $this->GroupsUsers->findGroupsWhereUserNotOnlyMember($id);
+
+        if (!$this->Users->softDelete($user, ['checkRules' => false])) {
+            throw new InternalErrorException(__('Could not delete the user, please try again later.'));
+        }
+        $this->_notifyUsers($user, $groupIds);
         $this->success(__('The user was deleted successfully.'));
     }
 
@@ -77,8 +87,8 @@ class UsersDeleteController extends AppController
      * @throws BadRequestException if the user uuid id invalid
      * @throws BadRequestException if the user tries to delete themselves
      * @throws NotFoundException if the user does not exist or is already deleted
-     * @throws ValidationException if the user is sole manager of a group
-     * @throws ValidationException if the user is sole owner of a shared resource
+     * @throws ValidationRuleException if the user is sole manager of a group
+     * @throws ValidationRuleException if the user is sole owner of a shared resource
      * @return object $user entity
      */
     protected function _validateRequestData($id)
@@ -130,5 +140,22 @@ class UsersDeleteController extends AppController
         }
 
         return $user;
+    }
+
+    /**
+     * Send email notification
+     *
+     * @param User $user entity
+     * @param ResultSetInterface $groupIds list of Group entity user was member of
+     * @return void
+     */
+    protected function _notifyUsers(User $user, array $groupIds)
+    {
+        $event = new Event('UsersDeleteController.delete.success', $this, [
+            'user' => $user,
+            'groupsIds' => $groupIds,
+            'deletedBy' => $this->User->id(),
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 }

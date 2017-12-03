@@ -51,6 +51,7 @@ trait GroupsEmailTrait
         $userIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $userIds])->all();
         $userNames = Hash::combine($userNames->toArray(), '{n}.id', '{n}.username');
+        $template = 'LU/group_user_add';
 
         foreach ($group->groups_users as $group_user) {
             // Don't send notification if the user added added themselves
@@ -58,7 +59,6 @@ trait GroupsEmailTrait
                 continue;
             }
             $subject = __("{0} added you to the group {1}", $admin->profile->first_name, $group->name);
-            $template = 'group_user_add';
             $data = ['body' => ['group_user' => $group_user, 'admin' => $admin, 'group' => $group], 'title' => $subject];
             $this->_send($userNames[$group_user->user_id], $subject, $data, $template);
         }
@@ -83,6 +83,7 @@ trait GroupsEmailTrait
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $usersIds])->all();
         $userNames = Hash::combine($userNames->toArray(), '{n}.id', '{n}.username');
+        $template = 'LU/group_delete';
 
         foreach ($usersIds as $userId) {
             // Don't send notification if user is the one who deleted the group
@@ -90,7 +91,6 @@ trait GroupsEmailTrait
                 continue;
             }
             $subject = __("{0} deleted the group {1}", $admin->profile->first_name, $group->name);
-            $template = 'group_delete';
             $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
             $this->_send($userNames[$userId], $subject, $data, $template);
         }

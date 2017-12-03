@@ -17,10 +17,12 @@ namespace App\Controller\Events\EmailTraits;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use Cake\Core\Configure;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
-trait RegistrationEmailTrait
+trait UsersEmailTrait
 {
     /**
      * Send an email
@@ -48,7 +50,7 @@ trait RegistrationEmailTrait
         }
 
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
-        $template = 'user_register_self';
+        $template = 'AN/user_register_self';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
     }
@@ -71,8 +73,48 @@ trait RegistrationEmailTrait
         $Users = TableRegistry::get('Users');
         $admin = $Users->getForEmail($adminId);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
-        $template = 'user_register_admin';
+        $template = 'AN/user_register_admin';
         $data = ['body' => ['user' => $user, 'token' => $token, 'admin' => $admin], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
+    }
+
+    /**
+     * Send Register Email
+     *
+     * @param Event $event event
+     * @param \App\Model\Entity\User $user user that was deleted
+     * @param array $groupsIds that was deleted
+     * @param string $deletedById User uuid of the admin who delete the user
+     * @return void
+     */
+    public function sendUserDeleteEmail(Event $event, User $user, array $groupsIds, string $deletedById)
+    {
+        if (Configure::read('passbolt.email.send.user.delete') === false) {
+            return;
+        }
+        if (empty($groupsIds)) {
+            return;
+        }
+
+        $Users = TableRegistry::get('Users');
+        $deletedBy = $Users->getForEmail($deletedById);
+        $subject = __('{0} deleted user {1}', $deletedBy->profile->firtname, $user->profile->firstname);
+        $template = 'GM/user_delete';
+
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $groupManagers = $GroupsUsers->find()
+            ->select()
+            ->contain(['Users', 'Groups'])
+            ->where(['group_id IN' => $groupsIds, 'is_admin' => 1])
+            ->all();
+
+        $toNotify = [];
+        foreach ($groupManagers as $groupManager) {
+            $toNotify[$groupManager->user->username][] = $groupManager->group;
+        }
+        foreach ($toNotify as $username => $groups) {
+            $data = ['body' => ['user' => $user, 'groups' => $groups, 'admin' => $deletedBy], 'title' => $subject];
+            $this->_send($username, $subject, $data, $template);
+        }
     }
 }
