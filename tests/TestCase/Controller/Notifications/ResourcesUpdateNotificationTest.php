@@ -24,7 +24,7 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
     public $fixtures = [
         'app.users', 'app.groups', 'app.resources', 'app.secrets', 'app.gpgkeys',
         'app.favorites', 'app.email_queue', 'app.profiles', 'app.roles',
-        'app.groups_users', 'app.permissions',
+        'app.groups_users', 'app.permissions', 'app.avatars'
     ];
 
     public function testResourcesUpdateNotificationDisabled()

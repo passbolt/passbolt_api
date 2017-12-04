@@ -23,7 +23,7 @@ use PassboltTestData\Shell\Task\Base\GpgkeysDataTask;
 
 class AuthLoginControllerTest extends IntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.gpgkeys', 'app.groups_users'];
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.gpgkeys', 'app.groups_users', 'app.avatars'];
     public $keyid;
     public $gpg;
 

@@ -23,7 +23,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.users', 'app.groups', 'app.groups_users', 'app.resources',
-        'app.secrets', 'app.favorites', 'app.permissions'
+        'app.secrets', 'app.favorites', 'app.permissions', 'app.avatars'
     ];
 
     public function testSuccess()

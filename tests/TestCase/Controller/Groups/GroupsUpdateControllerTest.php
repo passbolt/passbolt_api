@@ -25,7 +25,7 @@ use Cake\Utility\Hash;
 class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.groups', 'app.groups_users', 'app.resources', 'app.permissions', 'app.users',
-        'app.secrets', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.favorites'];
+        'app.secrets', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.favorites', 'app.avatars'];
 
     public function setUp()
     {

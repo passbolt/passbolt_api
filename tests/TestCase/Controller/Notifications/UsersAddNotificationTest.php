@@ -23,7 +23,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.users', 'app.gpgkeys', 'app.groups_users', 'app.roles',
-        'app.profiles', 'app.email_queue', 'app.authentication_tokens'
+        'app.profiles', 'app.email_queue', 'app.authentication_tokens', 'app.avatars'
     ];
 
     public function testUserAddNotificationDisabled()

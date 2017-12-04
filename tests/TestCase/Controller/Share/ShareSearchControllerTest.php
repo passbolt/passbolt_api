@@ -23,7 +23,7 @@ use Cake\Utility\Hash;
 
 class ShareSearchControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.gpgkeys', 'app.profiles', 'app.roles', 'app.groups', 'app.groups_users', 'app.resources', 'app.permissions'];
+    public $fixtures = ['app.users', 'app.gpgkeys', 'app.profiles', 'app.avatars', 'app.roles', 'app.groups', 'app.groups_users', 'app.resources', 'app.permissions'];
 
     public function setUp()
     {

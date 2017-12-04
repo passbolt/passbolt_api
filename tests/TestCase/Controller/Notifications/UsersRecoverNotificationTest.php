@@ -19,7 +19,7 @@ use Cake\Core\Configure;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.email_queue'];
+    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.email_queue', 'app.avatars'];
 
     public function testUsersRecoverNotificationSuccess()
     {
