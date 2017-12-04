@@ -366,6 +366,30 @@ class ResourcesTable extends Table
     }
 
     /**
+     * Build the query that fetches the resources that a group has access on.
+     *
+     * @param string $groupId uuid The group to fetch the resources for
+     * @return \Cake\ORM\Query
+     */
+    public function findAllByGroupAccess(string $groupId)
+    {
+        if (!Validation::uuid($groupId)) {
+            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+        }
+
+        $query = $this->find();
+
+        // Filter on resources the group has a permission for.
+        $query->innerJoinWith('Permissions')
+            ->where(['aro_foreign_key' => $groupId]);
+
+        // Filter out deleted resources
+        $query->where(['Resources.deleted' => false]);
+
+        return $query;
+    }
+
+    /**
      * Get a list of resources with a given list of ids
      *
      * @param string $userId uuid
@@ -604,7 +628,7 @@ class ResourcesTable extends Table
      *   'removed' => [uuid]
      * ]
      *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
+     * @param \App\Model\Entity\Resource $resource The resource to patch. The permissions property has to be populated.
      * @param array $changes The list of changes to apply
      * @return array
      */
@@ -626,34 +650,45 @@ class ResourcesTable extends Table
      * Share a resource by applying a list of changes.
      * To see how a change is formatted, see : App\Model\Table\Permissions::patchEntitiesWithChanges
      *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions and secrets properties have to be populated.
+     * @param \App\Model\Entity\Resource $resource The resource to patch. The permissions and secrets properties have to be populated.
      * @param array $changes The list of changes to apply
-     * @param array $secrets The list secrets corresponding to the users who will get access to the resource
-     * @return bool
+     * @param array $secrets The list of secrets to add
+     * @return \App\Model\Entity\Resource|bool Return the resource or false if an error occurred.
+     * @throw \InvalidArgumentException If the resource permission property is not populated
+     * @throw \InvalidArgumentException If the resource secrets property is not populated
      */
     public function share($resource, array $changes = [], array $secrets = [])
     {
-        // As the share is done in two times: save the permissions and save the secrets. Do the operation
-        // in a transaction, so in case of error the operation can be canceled with a rollback.
+        if (!isset($resource->permissions)) {
+            throw new \InvalidArgumentException(__('The resource permissions property is not populated.'));
+        }
+        if (!isset($resource->secrets)) {
+            throw new \InvalidArgumentException(__('The resource secrets property is not populated.'));
+        }
+
+        // As the share is done with multiple sql operations: save the permissions and save the secrets. Do the
+        // operations in a transaction, so in case of error the operations can be canceled with a rollback.
         return $this->getConnection()->transactional(function () use ($resource, $changes, $secrets) {
             $resultUpdatePermissions = $this->_patchAndUpdatePermissions($resource, $changes);
             if (!empty($resource->getErrors())) {
                 return false;
             }
 
-            $this->_patchAndUpdateSecrets($resource, $secrets, $resultUpdatePermissions['removed']);
+            $this->patchAndUpdateSecrets($resource, $secrets, $resultUpdatePermissions['removed']);
             if (!empty($resource->getErrors())) {
                 return false;
             }
 
             return true;
         });
+
+        return $resource;
     }
 
     /**
      * Patch and update the resource permissions.
      *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property
+     * @param \App\Model\Entity\Resource $resource The resource to patch. The permissions property
      *        has to be populated.
      * @param array $changes The list of changes to apply
      * @return array
@@ -690,11 +725,11 @@ class ResourcesTable extends Table
     /**
      * Patch the resource permissions with a list of changes
      *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
+     * @param \App\Model\Entity\Resource $resource The resource to patch. The permissions property has to be populated.
      * @param array $changes The list of changes to apply
      * @param array $changesReferences (Reference) A list of reference to know on which permissions the changes have
      *        been applied on.
-     * @return \Cake\Datasource\EntityInterface
+     * @return \App\Model\Entity\Resource
      */
     protected function _patchPermissionsWithChanges($resource, array $changes = [], array &$changesReferences = [])
     {
@@ -761,10 +796,10 @@ class ResourcesTable extends Table
      *   ]
      * ];
      *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to update. The permissions property has to be populated.
+     * @param \App\Model\Entity\Resource $resource The resource to update. The permissions property has to be populated.
      * @param array $changesReferences (Reference) A list of reference to know on which permissions the changes have
      *        been applied on.
-     * @return \Cake\Datasource\EntityInterface
+     * @return \App\Model\Entity\Resource
      */
     protected function _updatePermissions($resource, array $changesReferences = [])
     {
@@ -817,12 +852,12 @@ class ResourcesTable extends Table
     /**
      * Patch and update the resource secrets.
      *
-     * @param \Cake\Datasource\EntityInterface $resource The resource to patch. The permissions property has to be populated.
+     * @param \App\Model\Entity\Resource $resource The resource to patch. The permissions property has to be populated.
      * @param array $add The list of secrets to add
      * @param array $delete The list of user identifies for whom the secrets must be deleted
-     * @return array|bool
+     * @return \App\Model\Entity\Resource|bool
      */
-    protected function _patchAndUpdateSecrets($resource, array $add = [], array $delete = [])
+    public function patchAndUpdateSecrets($resource, array $add = [], array $delete = [])
     {
         // Patch the secret entities with the changes.
         try {
@@ -854,6 +889,7 @@ class ResourcesTable extends Table
                 ]
             ]
         ];
-        $this->save($resource, $options);
+
+        return $this->save($resource, $options);
     }
 }

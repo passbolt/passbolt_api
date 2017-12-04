@@ -18,16 +18,14 @@ namespace App\Test\TestCase\Model\Table\Permissions;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class PatchEntitiesWithChangesTest extends AppTestCase
 {
-    use FormatValidationTrait;
-
     public $Resources;
+    public $Permissions;
 
     public $fixtures = ['app.permissions', 'app.resources'];
 
@@ -41,6 +39,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
     public function tearDown()
     {
         unset($this->Resources);
+        unset($this->Permissions);
 
         parent::tearDown();
     }

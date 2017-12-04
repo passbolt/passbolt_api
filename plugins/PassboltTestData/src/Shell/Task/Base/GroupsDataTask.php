@@ -196,8 +196,8 @@ class GroupsDataTask extends DataTask
             'deleted' => 1,
             'created' => '2016-02-02 18:59:05',
             'modified' => '2016-02-02 18:59:05',
-            'created_by' => UuidFactory::uuid('user.id.anonymous'),
-            'modified_by' => UuidFactory::uuid('user.id.anonymous')
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
 
         return $groups;

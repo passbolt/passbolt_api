@@ -56,6 +56,16 @@ class UserComponent extends Component
     }
 
     /**
+     * Return true if the current user is an administrator
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role() == Role::ADMIN;
+    }
+
+    /**
      * Get user agent details from name defined in environment variable
      *
      * @return array

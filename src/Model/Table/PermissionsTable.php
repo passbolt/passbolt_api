@@ -354,7 +354,6 @@ class PermissionsTable extends Table
         if (!Validation::uuid($aroId)) {
             throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
         }
-        $results = [];
 
         // Show the ARO counts by permissions for all the resources
         // the given user or group is the owner of.

@@ -35486,20 +35486,22 @@ define('app/component/group_edit', [
             data: { Group: {} }
         }
     }, {
+        init: function init(el, options) {
+            this._super(el, options);
+        },
         afterStart: function afterStart() {
-            this.options.data.Group = this.options.data.Group || {};
-            this.group = this.options.data.Group;
-            this.formState = this.group.id == undefined ? 'create' : 'edit';
+            var group = this.options.data.Group;
+            this.formState = group.id == undefined ? 'create' : 'edit';
             this.changeList = [];
             this.isAdmin = passbolt.model.User.getCurrent().Role.name == 'admin' ? true : false;
-            this.isGroupManager = this.formState == 'edit' ? this.group.isGroupManager(passbolt.model.User.getCurrent()) : false;
+            this.isGroupManager = this.formState == 'edit' ? group.isGroupManager(passbolt.model.User.getCurrent()) : false;
             this.formGroup = new passbolt.form.group.Create($('#js_group_edit_form'), {
-                data: this.group,
+                data: group,
                 canUpdateName: this.isGroupManager && !this.isAdmin ? false : true,
                 callbacks: {}
             });
             this.formGroup.start();
-            this.formGroup.load(this.group);
+            this.formGroup.load(group);
             this.groupUserList = new mad.component.Tree($('#js_permissions_list'), {
                 cssClasses: ['group_user'],
                 viewClass: mad.view.component.Tree,
@@ -35547,7 +35549,7 @@ define('app/component/group_edit', [
             });
             this.groupUserList.start();
             mad.bus.trigger('passbolt.plugin.group_edit', {
-                groupId: this.group.id != undefined ? this.group.id : '',
+                groupId: group.id != undefined ? group.id : '',
                 canAddGroupUsers: this.formState == 'create' || this.isGroupManager
             });
             this.options.saveChangesButton = new mad.component.Button($('#js_group_save'), { state: 'disabled' }).start();
@@ -35581,6 +35583,15 @@ define('app/component/group_edit', [
                 $('.message.feedback').addClass('hidden');
             }
         },
+        loadGroup: function loadGroup(group) {
+            var self = this;
+            this.formGroup.load(group);
+            group.GroupUser.each(function (groupUser) {
+                self.addGroupUser(groupUser);
+            });
+            this.options.state = 'ready';
+            this.setState('ready');
+        },
         loadGroupUser: function loadGroupUser(groupUser) {
             var groupUserId = groupUser.id, groupUserTypeSelector = '#js_group_user_is_admin_select_' + groupUserId, groupUserSelector = '#' + groupUserId, availableTypes = passbolt.model.GroupUser.membershipType;
             this.groupUserList.insertItem(groupUser);
@@ -35603,7 +35614,6 @@ define('app/component/group_edit', [
             } else {
                 groupUser.isNew = false;
             }
-            var groupUser = passbolt.model.GroupUser.model(groupUser);
             this.loadGroupUser(groupUser);
             $('.group_members').removeClass('empty');
             this.checkManager();
@@ -35692,18 +35702,13 @@ define('app/component/group_edit', [
                 }
             }
         },
-        '{mad.bus.element} passbolt.plugin.group.edit.group_loaded': function madBusElementPassboltPluginGroupEditGroup_loaded(el, ev, group) {
-            group = passbolt.model.Group.model(group);
-            this.formGroup.load(group);
-            var self = this;
-            group.GroupUser.each(function (groupUser) {
-                self.addGroupUser(groupUser);
-            });
-            this.options.state = 'ready';
-            this.setState('ready');
+        '{mad.bus.element} passbolt.plugin.group.edit.group_loaded': function madBusElementPassboltPluginGroupEditGroup_loaded(el, ev, data) {
+            var group = passbolt.model.Group.model(data);
+            this.loadGroup(group);
         },
         '{mad.bus.element} passbolt.group.edit.add_user': function madBusElementPassboltGroupEditAdd_user(el, ev, data) {
-            this.addGroupUser(data);
+            var groupUser = passbolt.model.GroupUser.model(data);
+            this.addGroupUser(groupUser);
         },
         '{mad.bus.element} passbolt.plugin.group.edit.group_users_updated': function madBusElementPassboltPluginGroupEditGroup_users_updated(el, ev, data) {
             var self = this;

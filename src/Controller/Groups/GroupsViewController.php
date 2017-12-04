@@ -44,6 +44,12 @@ class GroupsViewController extends AppController
         ];
         $options = $this->QueryString->get($whitelist);
 
+        // Default v1 options.
+        $defaultV1Options = [
+            'contain' => ['group_user' => 1, 'group_user.user.profile' => 1]
+        ];
+        $options = array_merge_recursive($options, $defaultV1Options);
+
         // Retrieve the group.
         $group = $this->Groups->findView($id, $options)->first();
         if (empty($group)) {
