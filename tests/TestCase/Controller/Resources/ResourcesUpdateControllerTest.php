@@ -24,7 +24,7 @@ use Cake\Utility\Hash;
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.users', 'app.gpgkeys', 'app.profiles', 'app.roles', 'app.groups', 'app.groups_users',
-        'app.resources', 'app.secrets', 'app.favorites', 'app.permissions', 'app.email_queue'];
+        'app.resources', 'app.secrets', 'app.favorites', 'app.permissions', 'app.email_queue', 'app.avatars'];
 
     public function setUp()
     {

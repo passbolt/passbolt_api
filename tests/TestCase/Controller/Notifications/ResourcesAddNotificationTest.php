@@ -23,7 +23,7 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
 {
     public $fixtures = [
         'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets',
-        'app.favorites', 'app.permissions', 'app.email_queue', 'app.profiles', 'app.roles'
+        'app.favorites', 'app.permissions', 'app.email_queue', 'app.profiles', 'app.roles', 'app.avatars'
     ];
 
     public function testResourcesAddNotificationDisabled()

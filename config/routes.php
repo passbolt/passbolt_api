@@ -286,6 +286,12 @@ Router::prefix('Users', function ($routes) {
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
+
+    $routes->connect('/avatar', ['controller' => 'UsersAvatar', 'action' => 'complete'])
+        ->setPass(['userId'])
+        ->setMethods(['PUT', 'POST']);
+
+    Router::connect('/users/avatar/*', array('controller' => 'users', 'action' => 'editAvatar', '[method]' => 'POST'));
 });
 
 /**

@@ -47,19 +47,4 @@ class Profile extends Entity
         'first_name' => false,
         'last_name' => false
     ];
-
-    // @codingStandardsIgnoreStart
-    // @todo to remove when avatar is done.
-    protected $_virtual = ['avatar'];
-    protected function _getAvatar()
-    {
-        return [
-            'url' => [
-                'medium' => Router::url('/', true) . 'img/avatar/user_medium.png',
-                'small' => Router::url('/', true) . 'img/avatar/user.png'
-            ]
-        ];
-    }
-    // @todo end of section to remove
-    // @codingStandardsIgnoreEnd
 }
