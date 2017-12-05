@@ -53,36 +53,36 @@
                                                             <td style="width:15px;">&bull;</td>
                                                             <td>
                                                                 <?= $addedUser->profile->first_name; ?> <?= $addedUser->profile->last_name; ?>
-                                                                (<?= $addedUser->group_user->is_admin ? __('Group manager') : __('Member'); ?>)
+                                                                (<?= isset($whoIsAdmin[$addedUser->id]) && $whoIsAdmin[$addedUser->id] ? __('Group manager') : __('Member'); ?>)
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </table>
                                                 <br>
                                             <?php endif; ?>
-                                            <?php if (!empty($deletedUsers)) : ?>
+                                            <?php if (!empty($removedUsers)) : ?>
                                                 <span style="font-weight:bold;">Removed members</span>
                                                 <table id="deleted_users" style="border:0; margin:5px 0 0 5px;">
-                                                    <?php foreach ($deletedUsers as $deletedUser): ?>
+                                                    <?php foreach ($removedUsers as $removedUser): ?>
                                                         <tr>
                                                             <td style="width:15px;">&bull;</td>
-                                                            <td><?= $deletedUser->profile->first_name; ?> <?= $deletedUser->profile->last_name; ?>
-                                                                (<?= $deletedUser->group_user->is_admin ? __('Group manager') : __('Member'); ?>)
+                                                            <td><?= $removedUser->profile->first_name; ?> <?= $removedUser->profile->last_name; ?>
+                                                                (<?= isset($whoIsAdmin[$removedUser->id]) && $whoIsAdmin[$removedUser->id] ? __('Group manager') : __('Member'); ?>)
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </table>
                                                 <br>
                                             <?php endif; ?>
-                                            <?php if (!empty($updatedRoles)): ?>
+                                            <?php if (!empty($updatedUsers)): ?>
                                                 <span style="font-weight:bold;">Updated roles</span>
                                                 <table id="updated_roles" style="border:0; margin:5px 0 0 5px;">
-                                                    <?php foreach ($updatedRoles as $updatedRole): ?>
+                                                    <?php foreach ($updatedUsers as $updatedUser): ?>
                                                         <tr style="margin-left:5px;">
                                                             <td style="width:15px;">&bull;</td>
                                                             <td>
-                                                                <?= $updatedRole->profile->first_name; ?> <?= $updatedRole->profile->last_name; ?>
-                                                                <?= $updatedRole->group_user->is_admin ? __('is now group manager') : __('is not anymore group manager'); ?>
+                                                                <?= $updatedUser->profile->first_name; ?> <?= $updatedUser->profile->last_name; ?>
+                                                                <?= isset($whoIsAdmin[$updatedUser->id]) && $whoIsAdmin[$updatedUser->id] ? __('is now group manager') : __('is not anymore group manager'); ?>
                                                             </td>
                                                         </tr>
                                                     <?php endforeach; ?>

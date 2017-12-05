@@ -13,11 +13,12 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 
 $admin = $body['admin'];
-$group_user = $body['group_user'];
 $group = $body['group'];
+$isAdmin = $body['isAdmin'];
 
 echo $this->element('email/module/avatar',[
     // @TODO avatar url in email
@@ -26,13 +27,13 @@ echo $this->element('email/module/avatar',[
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
-        'datetime' => $group_user->created,
+        'datetime' => FrozenTime::now(),
         'text' => __('{0} added you to the group {1}', null, Purifier::clean($group->name))
     ])
 ]);
 
 $text = __('As member of the group you now have access to all the passwords that are shared with this group.');
-if ($group_user->is_admin) {
+if ($isAdmin) {
     $text .= ' ' . __('And as group manager you are also authorized to edit the members of the group.');
 }
 echo $this->element('email/module/text', [
