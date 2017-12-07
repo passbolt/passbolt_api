@@ -19,11 +19,18 @@
         "help": "https://www.passbolt.com/help",
         "source": "https://github.com/passbolt/passbolt"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/passbolt/migrations.git",
+            "no-api": true
+        }
+    ],
     "require": {
         "php": ">=7.0",
         "cakephp/cakephp": "3.5.*",
         "mobiledetect/mobiledetectlib": "2.*",
-        "cakephp/migrations": "~1.0",
+        "cakephp/migrations": "1.7.1001",
         "cakephp/plugin-installer": "~1.0",
         "ramsey/uuid": "^3.7",
         "singpolyma/openpgp-php": "^0.3.0",
