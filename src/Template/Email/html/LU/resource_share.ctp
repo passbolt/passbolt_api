@@ -22,8 +22,7 @@ $resource = $body['resource'];
 $secret = $body['secret'];
 
 echo $this->element('email/module/avatar',[
-    // @TODO avatar url in email
-    'url' => Router::url('/img/avatar' . DS . 'user.png', true),
+    'url' => Router::url($owner->profile->avatar->url['small'], true),
     'text' => $this->element('email/module/avatar_text', [
         'username' => Purifier::clean($owner->username),
         'first_name' => Purifier::clean($owner->profile->first_name),

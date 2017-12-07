@@ -15,6 +15,7 @@
 namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
@@ -35,6 +36,7 @@ use Cake\TestSuite\IntegrationTestCase;
 class AppIntegrationTestCase extends IntegrationTestCase
 {
     use ArrayTrait;
+    use AvatarsModelTrait;
     use CommentsModelTrait;
     use EntityTrait;
     use FavoritesModelTrait;
@@ -69,6 +71,15 @@ class AppIntegrationTestCase extends IntegrationTestCase
      * @var Object
      */
     protected $_responseJsonBody;
+
+    /**
+     * Setup.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->initAvatarEvents();
+    }
 
     /**
      * Asserts that the latest json request is a success.

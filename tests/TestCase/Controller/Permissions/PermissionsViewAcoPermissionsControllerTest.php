@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.groups', 'app.groups_users', 'app.permissions', 'app.profiles', 'app.resources', 'app.users'];
+    public $fixtures = ['app.groups', 'app.groups_users', 'app.permissions', 'app.profiles', 'app.resources', 'app.users', 'app.avatars'];
 
     public function testSuccess()
     {
@@ -72,6 +72,9 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         // Contain user profile.
         $this->assertObjectHasAttribute('profile', $permission->user);
         $this->assertProfileAttributes($permission->user->profile);
+        // Contain profile avatar.
+        $this->assertObjectHasAttribute('avatar', $permission->user->profile);
+        $this->assertAvatarAttributes($permission->user->profile->avatar);
 
         // Search a group permission.
         $key = array_search('Group', array_column($this->_responseJsonBody, 'aro'));
@@ -80,9 +83,6 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         // Contain group.
         $this->assertObjectHasAttribute('group', $permission);
         $this->assertGroupAttributes($permission->group);
-
-        // @TODO test contain avatar
-        $this->markTestIncomplete();
     }
 
     public function testContainApiV1Success()
@@ -110,6 +110,9 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         // Contain user profile.
         $this->assertObjectHasAttribute('Profile', $permission->User);
         $this->assertProfileAttributes($permission->User->Profile);
+        // Contain profile avatar.
+        $this->assertObjectHasAttribute('Avatar', $permission->User->Profile);
+        $this->assertAvatarAttributes($permission->User->Profile->Avatar);
 
         // Search a group permission.
         $permission = array_reduce($this->_responseJsonBody, function ($carry, $item) {
@@ -124,9 +127,6 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         // Contain group.
         $this->assertObjectHasAttribute('Group', $permission);
         $this->assertGroupAttributes($permission->Group);
-
-        // @TODO test contain avatar
-        $this->markTestIncomplete();
     }
 
     public function testErrorNotAuthenticated()

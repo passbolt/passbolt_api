@@ -32,23 +32,10 @@ class FindTest extends AppTestCase
 
     public $fixtures = ['app.users', 'app.profiles', 'app.avatars'];
 
-    public $localFileStorageListener = null;
-    public $imageProcessingListener = null;
-
     public function setUp()
     {
         parent::setUp();
         $this->Avatars = TableRegistry::get('Avatars');
-
-        if (empty($this->localFileStorageListener)) {
-            $this->localFileStorageListener = new LocalFileStorageListener();
-            EventManager::instance()->on($this->localFileStorageListener);
-        }
-
-        if (empty($this->imageProcessingListener)) {
-            $this->imageProcessingListener = new ImageProcessingListener();
-            EventManager::instance()->on($this->imageProcessingListener);
-        }
     }
 
     public function tearDown()
@@ -58,12 +45,13 @@ class FindTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testFindContainDefaultAvatar() {
+    public function testFindContainDefaultAvatar()
+    {
         $Users = TableRegistry::get('Users');
         $adminUser = $Users->find()
             ->where(['Users.id' => UuidFactory::uuid('user.id.admin')])
             ->contain([
-                'Profiles' =>[
+                'Profiles' => [
                     'Avatars' => function ($q) {
                         // Formatter for empty avatars.
                         return $q->formatResults(function (CollectionInterface $avatars) {
@@ -81,12 +69,13 @@ class FindTest extends AppTestCase
         $this->assertEquals(Hash::get($adminUser, 'profile.avatar.url.medium'), Configure::read('FileStorage.imageDefaults.Avatar.medium'));
     }
 
-    public function testFindContainExistingAvatar() {
+    public function testFindContainExistingAvatar()
+    {
         $Users = TableRegistry::get('Users');
         $adaUser = $Users->find()
             ->where(['Users.id' => UuidFactory::uuid('user.id.ada')])
             ->contain([
-                'Profiles' =>[
+                'Profiles' => [
                     'Avatars' => function ($q) {
                         // Formatter for empty avatars.
                         return $q->formatResults(function (CollectionInterface $avatars) {

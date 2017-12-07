@@ -300,9 +300,12 @@ class PermissionsTable extends Table
 
         // If contains user profile.
         if (isset($options['contain']['user.profile'])) {
-            $query->contain('Users.Profiles');
-            // @TODO when Avatars model is implemented.
-            // ->contain('Users.Profiles.Avatars');
+            $query->contain([
+                'Users' => [
+                    'Profiles' =>
+                        AvatarsTable::addContainAvatar()
+                ]
+            ]);
         }
 
         return $query;

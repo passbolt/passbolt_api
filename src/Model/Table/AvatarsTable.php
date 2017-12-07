@@ -17,6 +17,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Avatar;
 use Burzum\FileStorage\Model\Table\ImageStorageTable;
 use Burzum\FileStorage\Storage\StorageManager;
+use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
@@ -79,34 +80,37 @@ class AvatarsTable extends ImageStorageTable
     public function afterSave(Event $event, EntityInterface $entity, $options)
     {
         // If there was an existing avatar, we delete it.
-        $formerAvatarToCleanUp = $this->getFormerAvatar($entity->foreign_key);
+        $formerAvatarToCleanUp = $this->getFormerAvatar($entity);
         if (!empty($formerAvatarToCleanUp)) {
             $this->deleteAvatar($formerAvatarToCleanUp);
         }
 
-        return parent::afterSave($event, $entity, $options);
+        $afterSave = parent::afterSave($event, $entity, $options);
+
+        return $afterSave;
     }
 
     /**
      * Get former avatar, if any, for a given profile.
      * (The former avatar will be considered obsolete).
-     * @param uuid $profileId the profile id
+     * @param \App\Model\Entity\Avatar $entity the avatar entity that has been created
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function getFormerAvatar($profileId)
+    public function getFormerAvatar($entity)
     {
         $profileAvatarEntity = $this->find()
-            ->where(['foreign_key' => $profileId])
-            ->where(['model' => 'Avatar'])
-            ->orderAsc('created')
-            ->limit(2)
-            ->all();
+            ->where([
+                'foreign_key' => $entity->foreign_key,
+                'id <>' => $entity->id,
+                'model' => 'Avatar'
+            ])
+            ->first();
 
-        if (count($profileAvatarEntity) <= 1) {
+        if (empty($profileAvatarEntity)) {
             return null;
         }
 
-        return $profileAvatarEntity->first();
+        return $profileAvatarEntity;
     }
 
     /**
@@ -168,5 +172,21 @@ class AvatarsTable extends ImageStorageTable
 
             return $avatar;
         });
+    }
+
+    /**
+     * Generate an Avatar contain clause to be inserted in a contain table.
+     * @return array
+     */
+    public static function addContainAvatar()
+    {
+        return [
+            'Avatars' => function ($q) {
+                // Formatter for empty avatars.
+                return $q->formatResults(function (CollectionInterface $avatars) {
+                    return AvatarsTable::formatResults($avatars);
+                });
+            }
+        ];
     }
 }

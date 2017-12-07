@@ -33,16 +33,6 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Avatars = TableRegistry::get('Avatars');
-
-        if (empty($this->localFileStorageListener)) {
-            $this->localFileStorageListener = new LocalFileStorageListener();
-            EventManager::instance()->on($this->localFileStorageListener);
-        }
-
-        if (empty($this->imageProcessingListener)) {
-            $this->imageProcessingListener = new ImageProcessingListener();
-            EventManager::instance()->on($this->imageProcessingListener);
-        }
     }
 
     public function testUsersEditAvatarSuccess()
@@ -83,7 +73,8 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertTrue(file_exists(Configure::read('ImageStorage.basePath') . DS . $ireneAvatar->first()->path));
     }
 
-    public function testUsersEditAvatarWrongFileFormat() {
+    public function testUsersEditAvatarWrongFileFormat()
+    {
         $filesDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'data';
         $pdfFile = $filesDirectory . DS . 'sample.pdf';
 
@@ -109,7 +100,8 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertEquals($avatarCountsBefore, $avatarCountsAfter, "The number of avatars in db should be same before and after the test");
     }
 
-    public function testUsersEditAvatarNoDataProvided() {
+    public function testUsersEditAvatarNoDataProvided()
+    {
         $this->authenticateAs('irene');
         $data = [
             'id' => UuidFactory::uuid('user.id.irene'),
@@ -122,7 +114,8 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->_required);
     }
 
-    public function testUsersEditAvatarCantOverrideData() {
+    public function testUsersEditAvatarCantOverrideData()
+    {
         $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
         $adaAvatar = $avatarsDirectory . DS . 'ada.png';
 

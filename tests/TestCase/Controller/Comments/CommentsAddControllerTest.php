@@ -27,7 +27,10 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 {
     public $Comments;
 
-    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.comments', 'app.permissions'];
+    public $fixtures = [
+        'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.comments',
+        'app.permissions', 'app.avatars', 'app.roles', 'app.profiles', 'app.email_queue'
+    ];
 
     public function setUp()
     {

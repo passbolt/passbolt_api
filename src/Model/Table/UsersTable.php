@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
@@ -242,15 +243,8 @@ class UsersTable extends Table
         }
 
         // If contains Profiles, then include Avatars too.
-        if(in_array('Profiles', $contain)) {
-            $contain['Profiles'] = [
-                'Avatars' => function ($q) {
-                    // Formatter for empty avatars.
-                    return $q->formatResults(function (CollectionInterface $avatars) {
-                        return AvatarsTable::formatResults($avatars);
-                    });
-                }
-            ];
+        if (in_array('Profiles', $contain)) {
+            $contain['Profiles'] = AvatarsTable::addContainAvatar();
             unset($contain[array_search('Profiles', $contain)]);
         }
 
@@ -385,14 +379,7 @@ class UsersTable extends Table
             ->where(['Users.username' => $username, 'Users.deleted' => false])
             ->contain([
                 'Roles',
-                'Profiles' => [
-                    'Avatars' => function ($q) {
-                        // Formatter for empty avatars.
-                        return $q->formatResults(function (CollectionInterface $avatars) {
-                            return AvatarsTable::formatResults($avatars);
-                        });
-                    }
-                ]
+                'Profiles' => AvatarsTable::addContainAvatar()
             ])
             ->order(['Users.active' => 'DESC']);
 
@@ -712,6 +699,8 @@ class UsersTable extends Table
         if (!empty(Hash::get($data, 'profile.avatar'))) {
             $data['profile']['avatar']['user_id'] = $user->id;
             $data['profile']['avatar']['foreign_key'] = $user->profile->id;
+            // Force creation of new Avatar.
+            $user->profile->avatar = new Avatar();
         }
 
         $entity = $this->patchEntity($user, $data, [
@@ -748,14 +737,7 @@ class UsersTable extends Table
         $user = $this->find()
             ->where(['Users.id' => $userId])
             ->contain([
-                'Profiles' => [
-                    'Avatars' => function ($q) {
-                        // Formatter for empty avatars.
-                        return $q->formatResults(function (CollectionInterface $avatars) {
-                            return AvatarsTable::formatResults($avatars);
-                        });
-                    }
-                ],
+                'Profiles' => AvatarsTable::addContainAvatar(),
                 'Roles',
             ])
             ->first();
@@ -780,9 +762,8 @@ class UsersTable extends Table
         $users = $this->find()
             ->where(['Users.id IN' => $userIds])
             ->contain([
-                'Profiles',
+                'Profiles' => AvatarsTable::addContainAvatar(),
                 'Roles',
-                //'Avatar' // TODO avatar
             ])
             ->all();
 

@@ -17,9 +17,6 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Burzum\FileStorage\Event\ImageProcessingListener;
-use Burzum\FileStorage\Event\LocalFileStorageListener;
-use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 
 class CreateTest extends AppTestCase
@@ -28,23 +25,10 @@ class CreateTest extends AppTestCase
 
     public $fixtures = ['app.users', 'app.profiles', 'app.avatars'];
 
-    public $localFileStorageListener = null;
-    public $imageProcessingListener = null;
-
     public function setUp()
     {
         parent::setUp();
         $this->Avatars = TableRegistry::get('Avatars');
-
-        if (empty($this->localFileStorageListener)) {
-            $this->localFileStorageListener = new LocalFileStorageListener();
-            EventManager::instance()->on($this->localFileStorageListener);
-        }
-
-        if (empty($this->imageProcessingListener)) {
-            $this->imageProcessingListener = new ImageProcessingListener();
-            EventManager::instance()->on($this->imageProcessingListener);
-        }
     }
 
     public function tearDown()
@@ -53,7 +37,8 @@ class CreateTest extends AppTestCase
         parent::tearDown();
     }
 
-    private function _createAvatar($name='ada') {
+    private function _createAvatar($name = 'ada')
+    {
         $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
         $userAvatarFullPath = $avatarsDirectory . DS . $name . '.png';
 
@@ -69,10 +54,12 @@ class CreateTest extends AppTestCase
         $entity = $this->Avatars->newEntity();
         $entity = $this->Avatars->patchEntity($entity, $data);
         $avatar = $this->Avatars->save($entity);
+
         return $avatar;
     }
 
-    public function testCreateFileIsCreated() {
+    public function testCreateFileIsCreated()
+    {
         $avatar = $this->_createAvatar('ada');
         $errors = $avatar->getErrors();
 
@@ -82,7 +69,8 @@ class CreateTest extends AppTestCase
         $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['medium']));
     }
 
-    public function testDeleteFormerVersionAfterCreate() {
+    public function testDeleteFormerVersionAfterCreate()
+    {
         $avatar = $this->_createAvatar('ada');
         $errors = $avatar->getErrors();
         $this->assertTrue(empty($errors));

@@ -22,7 +22,10 @@ use Cake\ORM\TableRegistry;
 
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens'];
+    public $fixtures = [
+        'app.users', 'app.roles', 'app.profiles',
+        'app.authentication_tokens', 'app.avatars', 'app.email_queue'
+    ];
 
     public function testUsersRegisterGetSuccess()
     {

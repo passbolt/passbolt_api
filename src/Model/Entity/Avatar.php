@@ -56,7 +56,6 @@ class Avatar extends ImageStorage
         // Add path for each available size.
         foreach ($sizes as $size => $filters) {
             $url = $this->getAvatarUrl($this, $size);
-            //$url = "test.jpg";
             $avatarsPath[$size] = $url ? $url : '';
         }
         // Transform original model to add paths.

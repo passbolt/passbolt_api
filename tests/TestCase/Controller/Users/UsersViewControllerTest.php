@@ -20,7 +20,7 @@ use App\Utility\UuidFactory;
 
 class UsersViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles'];
+    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.avatars', 'app.groups_users'];
 
     public function testUsersViewGetSuccess()
     {
@@ -33,13 +33,14 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('profile', $this->_responseJsonBody);
         $this->assertProfileAttributes($this->_responseJsonBody->profile);
+        $this->assertObjectHasAttribute('avatar', $this->_responseJsonBody->profile);
+        $this->assertAvatarAttributes($this->_responseJsonBody->profile->avatar);
         $this->assertObjectHasAttribute('gpgkey', $this->_responseJsonBody);
         $this->assertGpgkeyAttributes($this->_responseJsonBody->gpgkey);
         $this->assertObjectHasAttribute('role', $this->_responseJsonBody);
         $this->assertRoleAttributes($this->_responseJsonBody->role);
 
         // @todo group users
-        // @todo avatar
     }
 
     public function testUsersViewGetApiV1Success()
@@ -54,13 +55,14 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody->User);
         $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody);
         $this->assertProfileAttributes($this->_responseJsonBody->Profile);
+        $this->assertObjectHasAttribute('Avatar', $this->_responseJsonBody->Profile);
+        $this->assertAvatarAttributes($this->_responseJsonBody->Profile->Avatar);
         $this->assertObjectHasAttribute('Gpgkey', $this->_responseJsonBody);
         $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
         $this->assertObjectHasAttribute('Role', $this->_responseJsonBody);
         $this->assertRoleAttributes($this->_responseJsonBody->Role);
 
         // @todo group users
-        // @todo avatar
     }
 
     public function testUsersViewGetMeSuccess()
