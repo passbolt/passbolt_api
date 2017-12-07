@@ -17,6 +17,7 @@ namespace App\Controller\Groups;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
+use App\Model\Entity\Group;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
@@ -59,10 +60,10 @@ class GroupsUpdateController extends AppController
     public function dryRun($id)
     {
         $group = $this->_validateRequestParameter($id);
+        $groupUserOriginal = $this->_extractGroupUsersData($group);
         $data = $this->_formatRequestData();
 
         // Patch and validate the group.
-        $usersIdsBeforeUpdate = Hash::extract($group->groups_users, '{n}.user_id');
         $group = $this->_patchAndValidateGroupEntity($group, $data);
 
         // Dry run the save.
@@ -76,7 +77,7 @@ class GroupsUpdateController extends AppController
         });
 
         // Retrieve the secrets to request to the client to encrypt.
-        $secretsToRequest = $this->_getSecretsToRequest($group, $usersIdsBeforeUpdate);
+        $secretsToRequest = $this->_getSecretsToRequest($group, $groupUserOriginal);
 
         // Retrieve the current user secrets that the client will encrypt for the new users.
         $userSecrets = $this->_getUserSecrets($secretsToRequest);
@@ -98,14 +99,16 @@ class GroupsUpdateController extends AppController
     public function update($id)
     {
         $group = $this->_validateRequestParameter($id);
+        $groupUserOriginal = $this->_extractGroupUsersData($group);
         $data = $this->_formatRequestData();
 
         // Patch and validate the group.
-        $usersIdsBeforeUpdate = Hash::extract($group->groups_users, '{n}.user_id');
         $group = $this->_patchAndValidateGroupEntity($group, $data);
+        list($addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers)
+            = $this->_getGroupsUsersChanges($groupUserOriginal, $group->groups_users);
 
         // Try to save the changes.
-        $this->Groups->getConnection()->transactional(function () use ($group, $usersIdsBeforeUpdate, $data) {
+        $this->Groups->getConnection()->transactional(function () use ($group, $groupUserOriginal, $data) {
             // Save the memberships changes.
             $saveResult = $this->Groups->save($group);
             if (!$saveResult) {
@@ -116,7 +119,7 @@ class GroupsUpdateController extends AppController
                 return true;
             }
             // Patch the group resources secrets.
-            $resources = $this->_patchAndValidateResourcesEntities($group, $usersIdsBeforeUpdate, Hash::get($data, 'secrets', []));
+            $resources = $this->_patchAndValidateResourcesEntities($group, $groupUserOriginal, Hash::get($data, 'secrets', []));
             // Save the group resources secrets.
             $saveResult = $this->_saveResourcesEntities($resources);
             if (!$saveResult) {
@@ -126,7 +129,90 @@ class GroupsUpdateController extends AppController
             }
         });
 
+        // Notify the users
+        $this->_notifyUsers($group, $addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers);
+
         $this->success(__('The operation was successful.'));
+    }
+
+    /**
+     * Extract the group users data in an array, it will be useful to compare data before and after the update
+     * is performed.
+     *
+     * @param Group $group The target group
+     * @return array
+     */
+    protected function _extractGroupUsersData(Group $group)
+    {
+        return array_reduce($group->groups_users, function ($carry, $item) {
+            $carry[] = $item->toArray();
+
+            return $carry;
+        }, []);
+    }
+
+    /**
+     * Retrieve and organize the changes by change type that occurred on a list of group user entity.
+     *
+     * @param array $originalGroupsUsers The list of original groups users
+     * @param array $groupsUsers The list of groups users after patching the list of entity
+     * @return array
+     */
+    protected function _getGroupsUsersChanges(array $originalGroupsUsers, array $groupsUsers)
+    {
+        // Added groups users
+        $addedGroupsUsers = array_reduce($groupsUsers, function ($carry, $item) {
+            if ($item->isNew()) {
+                $carry[] = $item;
+            }
+
+            return $carry;
+        }, []);
+
+        // Removed groups users
+        $updatedGroupsUsers = array_reduce($groupsUsers, function ($carry, $item) {
+            if ($item->isDirty() && !$item->isNew()) {
+                $carry[] = $item;
+            }
+
+            return $carry;
+        }, []);
+
+        // Updated groups users
+        $removedGroupsUsers = array_reduce($originalGroupsUsers, function ($carry, $item) use ($groupsUsers) {
+            $extract = hash::extract($groupsUsers, "{n}[id={$item['id']}]");
+            if (empty($extract)) {
+                $carry[] = $item;
+            }
+
+            return $carry;
+        }, []);
+
+        return [$addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers];
+    }
+
+    /**
+     * Notify the users that they group have been deleted
+     *
+     * @param \App\Model\Entity\Group $group The updated group
+     * @param array $addedGroupsUsers changes requested by group editor
+     * @param array $updatedGroupsUsers the list of users removed from the group
+     * @return void
+     */
+    protected function _notifyUsers(
+        \App\Model\Entity\Group $group,
+        array $addedGroupsUsers,
+        array $updatedGroupsUsers,
+        array $removedGroupsUsers
+    ) {
+        $event = new Event('GroupsUpdateController.update.success', $this, [
+            'group' => $group,
+            'addedGroupsUsers' => $addedGroupsUsers,
+            'updatedGroupsUsers' => $updatedGroupsUsers,
+            'removedGroupsUsers' => $removedGroupsUsers,
+            'userId' => $this->User->id()
+        ]);
+        $this->getEventManager()->dispatch($event);
     }
 
     /**
@@ -254,16 +340,15 @@ class GroupsUpdateController extends AppController
      * Patch the resources entities the groups has access with the requested changes.
      *
      * @param \App\Model\Entity\Group $group The group to update.
-     * @param array $usersIdsBeforeUpdate The list of users identifies who were already members of the group before
-     *        the entry point was called.
+     * @param array $groupsUsersBeforeUpdate The list of group user as it was before the update process start
      * @param array $secrets The list of secrets provided by the client.
      * @return array The list of resources
      */
-    protected function _patchAndValidateResourcesEntities(\App\Model\Entity\Group $group, array $usersIdsBeforeUpdate, array $secrets)
+    protected function _patchAndValidateResourcesEntities(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate, array $secrets)
     {
         $resources = [];
-        $requestedSecrets = $this->_getSecretsToRequest($group, $usersIdsBeforeUpdate);
-        $secretsToRemove = $this->_getSecretsToRemove($group, $usersIdsBeforeUpdate);
+        $requestedSecrets = $this->_getSecretsToRequest($group, $groupsUsersBeforeUpdate);
+        $secretsToRemove = $this->_getSecretsToRemove($group, $groupsUsersBeforeUpdate);
 
         // Group the changes by resource.
         $changes = [];
@@ -357,8 +442,7 @@ class GroupsUpdateController extends AppController
      * Get the secrets to request for encryption to the client.
      *
      * @param \App\Model\Entity\Group $group The group to update.
-     * @param array $usersIdsBeforeUpdate The list of users identifies who were already members of the group before
-     *        the entry point was called.
+     * @param array $groupsUsersBeforeUpdate The list of group user as it was before the update process start
      * @return array A list of secrets to request to the client
      *
      * Format:
@@ -370,11 +454,12 @@ class GroupsUpdateController extends AppController
      *   ...
      * ]
      */
-    protected function _getSecretsToRequest(\App\Model\Entity\Group $group, array $usersIdsBeforeUpdate)
+    protected function _getSecretsToRequest(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate = [])
     {
         $secretsToRequest = [];
 
         // Retrieve the users who are added to the group.
+        $usersIdsBeforeUpdate = Hash::extract($groupsUsersBeforeUpdate, '{n}.user_id');
         $usersIdsAfterUpdate = Hash::extract($group->groups_users, '{n}.user_id');
         $addedUsersIds = array_diff($usersIdsAfterUpdate, $usersIdsBeforeUpdate);
 
@@ -404,8 +489,7 @@ class GroupsUpdateController extends AppController
      * Get the secrets to remove for the users who have been removed from the group.
      *
      * @param \App\Model\Entity\Group $group The group to update.
-     * @param array $usersIdsBeforeUpdate The list of users identifies who were already members of the group before
-     *        the entry point was called.
+     * @param array $groupsUsersBeforeUpdate The list of group user as it was before the update process start
      * @return array A list of secrets to remove
      *
      * Format:
@@ -417,11 +501,12 @@ class GroupsUpdateController extends AppController
      *   ...
      * ]
      */
-    protected function _getSecretsToRemove(\App\Model\Entity\Group $group, array $usersIdsBeforeUpdate)
+    protected function _getSecretsToRemove(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate = [])
     {
         $secretsToRemove = [];
 
-        // Retrieve the users who are added to the group.
+        // Retrieve the users who are removed from the groups
+        $usersIdsBeforeUpdate = Hash::extract($groupsUsersBeforeUpdate, '{n}.user_id');
         $usersIdsAfterUpdate = Hash::extract($group->groups_users, '{n}.user_id');
         $removedUsersIds = array_diff($usersIdsBeforeUpdate, $usersIdsAfterUpdate);
 

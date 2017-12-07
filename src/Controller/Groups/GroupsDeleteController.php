@@ -117,9 +117,9 @@ class GroupsDeleteController extends AppController
     }
 
     /**
-     * Notify the users that they group have been deleted
+     * Notify the users that their group has been deleted
      *
-     * @param \App\Model\Entity\Group $group Goup
+     * @param \App\Model\Entity\Group $group Group
      * @return void
      */
     protected function _notifyUsers($group)
