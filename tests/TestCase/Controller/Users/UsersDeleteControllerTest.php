@@ -180,6 +180,43 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $this->assertEquals($resource->id, UuidFactory::uuid('resource.id.april'));
     }
 
+    /**
+     * Assert that a user who is the sole owner of soft deleted resource can be deleted.
+     */
+    public function testUsersDeleteSoleDeletedResourceOwnerError()
+    {
+        // Remove ada as the owner of canjs.
+        $permission = $this->Permissions->find()->select()->where([
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.canjs'),
+            'aro_foreign_key' => UuidFactory::uuid('user.id.ada')
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        // Betty now cannot be deleted because it's the sole owner of the
+        // shared resource canjs.
+        $this->authenticateAs('admin');
+        $bettyId = UuidFactory::uuid('user.id.betty');
+        $this->deleteJson('/users/' . $bettyId . '.json');
+        $this->assertError(400);
+        // Canjs should be returned as the shared resource which Betty is the sole owner of.
+        $this->assertEquals(1, count($this->_responseJsonBody->resources));
+        $resource = $this->_responseJsonBody->resources[0]->Resource;
+        $this->assertEquals($resource->id, UuidFactory::uuid('resource.id.canjs'));
+
+        // We soft delete canjs, so that there is no more restriction for deletion.
+        $this->Resources = TableRegistry::get('Resources');
+        $entityToDelete = $this->Resources->find()->where([
+            'id' => UuidFactory::uuid('resource.id.canjs')
+        ])->first();
+        $deleted = $this->Resources->softDelete($bettyId, $entityToDelete);
+        $this->assertTrue($deleted);
+
+        // Try to delete the user again.
+        $this->deleteJson('/users/' . $bettyId . '.json');
+        $this->assertSuccess();
+    }
+
     public function testUsersDeleteSoleManagerOfEmptyGroupOwningAResourceError()
     {
         // Make betty admin of accounting group
