@@ -138,6 +138,9 @@ class MysqlExportTask extends AppShell
         $files = glob($dir . '*');
         foreach ($files as $file) {
             if (is_file($file) && $file !== ($dir . $newFile)) {
+                if (strpos($file, 'empty') !== false) {
+                    continue;
+                }
                 unlink($file);
                 $this->out('Deleting previous backup: ' . $file);
             }

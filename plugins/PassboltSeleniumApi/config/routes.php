@@ -20,7 +20,8 @@ use Cake\Routing\Router;
 Router::plugin('PassboltSeleniumApi', ['path' => '/seleniumtests'], function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/resetInstance', ['controller' => 'ResetInstance', 'action' => 'resetInstance'])
+    $routes->connect('/resetInstance/:dataset', ['controller' => 'ResetInstance', 'action' => 'resetInstance'])
+        ->setPass(['dataset'])
         ->setMethods(['GET']);
 
     $routes->connect('/config', ['controller' => 'Config', 'action' => 'index'])

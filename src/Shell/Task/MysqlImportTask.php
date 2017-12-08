@@ -63,7 +63,7 @@ class MysqlImportTask extends AppShell
             return false;
         }
         $file = $this->_getFile($dir);
-        if (empty($file)) {
+        if (empty($file) || $file === 'empty') {
             return false;
         }
         $this->out('Loading backup file: ' . $dir . $file);
@@ -119,12 +119,12 @@ class MysqlImportTask extends AppShell
             return null;
         } else {
             $files = array_diff(scandir($dir, SCANDIR_SORT_DESCENDING), ['..', '.']);
-            if (!isset($files[0])) {
+            if (!isset($files[1])) {
                 $this->_error('Error: no existing backup found in ' . $dir);
 
                 return null;
             }
-            $file = $files[0];
+            $file = $files[1];
         }
 
         return $file;

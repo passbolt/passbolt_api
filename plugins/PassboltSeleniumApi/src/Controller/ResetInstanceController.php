@@ -44,18 +44,20 @@ class ResetInstanceController extends AppController
      * Reset passbolt instance data. All data will be lost
      * This is same as calling the cake shell : cake install [--data=[default|...]]
      *
-     * @param string $dummy data set name
+     * @param string $dataset data set name
      * @return void
      */
-    public function resetInstance($dummy = 'default')
+    public function resetInstance($dataset = 'default')
     {
         // Install job shell.
         $job = new InstallTask();
         $job->startup();
-        $job->params['data'] = $dummy;
+        $job->params['data'] = $dataset;
         $job->params['quick'] = 'true';
         $job->params['quiet'] = 'true';
         $job->params['no-admin'] = 'true';
+        $job->params['force'] = 'true';
+
         $result = $job->main();
         if ($result === false) {
             throw new InternalErrorException(__('Something went wrong. Check the server logs.'));
