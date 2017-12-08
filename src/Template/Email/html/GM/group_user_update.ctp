@@ -19,12 +19,12 @@ use Cake\Routing\Router;
 $admin = $body['admin'];
 $group = $body['group'];
 $addedUsers = $body['addedUsers'];
+$updatedUsers = $body['updatedUsers'];
 $removedUsers = $body['removedUsers'];
-$updatedRoles = $body['updatedRoles'];
+$whoIsAdmin = $body['whoIsAdmin'];
 
 echo $this->element('email/module/avatar',[
-    // @TODO avatar url in email
-    'url' => Router::url('/img/avatar' . DS . 'user.png', true),
+    'url' => Router::url($admin->profile->avatar->url['small'], true),
     'text' => $this->element('email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
@@ -37,8 +37,9 @@ echo $this->element('email/module/avatar',[
 echo $this->element('email/content/group_changes_summary', [
     'group' => $group,
     'addedUsers' => $addedUsers,
+    'updatedUsers' => $updatedUsers,
     'removedUsers' => $removedUsers,
-    'updatedRoles' => $updatedRoles
+    'whoIsAdmin' => $whoIsAdmin
 ]);
 
 echo $this->element('email/module/button', [

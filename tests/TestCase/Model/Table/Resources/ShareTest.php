@@ -17,14 +17,12 @@ namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ShareTest extends AppTestCase
 {
-    use FormatValidationTrait;
 
     public $Resources;
 
@@ -34,20 +32,39 @@ class ShareTest extends AppTestCase
     {
         parent::setUp();
         $this->Resources = TableRegistry::get('Resources');
+        $this->Permissions = TableRegistry::get('Permissions');
     }
 
     public function tearDown()
     {
         unset($this->Resources);
+        unset($this->Permissions);
 
         parent::tearDown();
+    }
+
+    protected function getValidSecret()
+    {
+        return '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----';
     }
 
     public function testSuccess()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions']]);
+        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
         // Users
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
@@ -63,46 +80,32 @@ class ShareTest extends AppTestCase
         $groupFId = UuidFactory::uuid('group.id.freelancer');
         $groupAId = UuidFactory::uuid('group.id.accounting');
 
-        // Expected results.
-        $expectedAddedUsersIds = [];
-        $expectedRemovedUsersIds = [];
-
         // Build the changes.
         $changes = [];
+        $secrets = [];
 
         // Users permissions changes.
         // Change the permission of the user Ada to read (no users are expected to be added or removed).
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
         // Delete the permission of the user Betty.
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
-        $expectedRemovedUsersIds[] = $userBId;
         // Add an owner permission for the user Edith
         $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $expectedAddedUsersIds[] = $userEId;
+        $secrets[] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
 
         // Groups permissions changes.
         // Change the permission of the group Board (no users are expected to be added or removed).
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
         // Delete the permission of the group Freelancer.
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
-        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
         // Add a read permission for the group Accounting.
         $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
-        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+        $secrets[] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
 
         // Share dry run.
-        $result = $this->Resources->shareDryRun($resource, $changes);
-        $this->assertNotEmpty($result);
-        $this->assertNotEmpty($result['added']);
-        $addedUsersIds = $result['added'];
-        $this->assertNotEmpty($result['removed']);
-        $removedUsersIds = $result['removed'];
-
-        // Assert the results.
-        $this->assertCount(count($expectedAddedUsersIds), $addedUsersIds);
-        $this->assertCount(count($expectedRemovedUsersIds), $removedUsersIds);
-        $this->assertEmpty(array_diff($expectedAddedUsersIds, $addedUsersIds));
-        $this->assertEmpty(array_diff($expectedRemovedUsersIds, $removedUsersIds));
+        $result = $this->Resources->share($resource, $changes, $secrets);
+        $this->assertNotFalse($result);
+        $this->markTestIncomplete('test access');
     }
 
     /*

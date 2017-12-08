@@ -79,7 +79,7 @@ class GroupsDeleteController extends AppController
      * @throws NotFoundException if the group does not exist or is already deleted
      * @throws ValidationRuleException if the group is sole manager of a group
      * @throws ValidationRuleException if the group is sole owner of a shared resource
-     * @return object $group entity
+     * @return \App\Model\Entity\Group $group entity
      */
     protected function _validateRequestData($id)
     {
@@ -117,9 +117,9 @@ class GroupsDeleteController extends AppController
     }
 
     /**
-     * Notify the users that they group have been deleted
+     * Notify the users that their group has been deleted
      *
-     * @param \App\Model\Entity\Group $group Goup
+     * @param \App\Model\Entity\Group $group Group
      * @return void
      */
     protected function _notifyUsers($group)

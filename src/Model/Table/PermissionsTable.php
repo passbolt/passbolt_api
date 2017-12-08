@@ -300,9 +300,12 @@ class PermissionsTable extends Table
 
         // If contains user profile.
         if (isset($options['contain']['user.profile'])) {
-            $query->contain('Users.Profiles');
-            // @TODO when Avatars model is implemented.
-            // ->contain('Users.Profiles.Avatars');
+            $query->contain([
+                'Users' => [
+                    'Profiles' =>
+                        AvatarsTable::addContainAvatar()
+                ]
+            ]);
         }
 
         return $query;
@@ -354,7 +357,6 @@ class PermissionsTable extends Table
         if (!Validation::uuid($aroId)) {
             throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
         }
-        $results = [];
 
         // Show the ARO counts by permissions for all the resources
         // the given user or group is the owner of.

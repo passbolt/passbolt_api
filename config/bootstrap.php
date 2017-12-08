@@ -246,6 +246,12 @@ Plugin::load('Migrations');
 Plugin::load('EmailQueue');
 
 /*
+ * Enable FileStorage plugin
+ */
+Plugin::load('Burzum/FileStorage');
+require_once (CONFIG . DS . 'file_storage.php');
+
+/*
  * Only try to load selenium helper in development mode
  */
 if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {

@@ -24,7 +24,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.users', 'app.groups', 'app.resources', 'app.secrets',
         'app.favorites', 'app.email_queue', 'app.profiles', 'app.roles',
-        'app.alt0/groups_users', 'app.alt0/permissions'
+        'app.alt0/groups_users', 'app.alt0/permissions', 'app.avatars'
     ];
 
     public function testResourcesDeleteNotificationDisabled()

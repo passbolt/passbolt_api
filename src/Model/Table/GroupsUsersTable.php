@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
@@ -360,5 +361,85 @@ class GroupsUsersTable extends Table
             ])->first();
 
         return (!empty($user));
+    }
+
+    /**
+     * Patch a list of group_user entities with a list of changes.
+     * A change is formatted as following :
+     *
+     * - Add a new group user:
+     * [
+     *   'user_id' => string,
+     *   'is_admin' => bool
+     * ]
+     *
+     * - Update a group user:
+     * [
+     *   'id' => uuid,
+     *   'is_admin' => bool
+     * ]
+     *
+     * - Delete a group user
+     * [
+     *   'id' => uuid,
+     *   'delete' => boolean
+     * ]
+     *
+     * @param array $entities The list of groups users entities to patch
+     * @param array $changes The changes to apply
+     * @param null $groupId The group identifier that the entities belong to
+     * @throw ValidationRuleException If a change try to modify a group user that is not in the list of groups users
+     * @throw ValidationRuleException If a change does not validate when calling patchEntity
+     * @throw ValidationRuleException If a change does not validate when calling newEntity
+     * @return array The list of groups users entities patched with the changes
+     */
+    public function patchEntitiesWithChanges($entities = [], $changes = [], $groupId = null)
+    {
+        foreach ($changes as $changeKey => $change) {
+            // Update or Delete case.
+            if (isset($change['id'])) {
+                // Retrieve the group_user a change is requested for.
+                $groupUserKey = array_search($change['id'], array_column($entities, 'id'));
+                // The groupUserKey does not belong to the group.
+                if ($groupUserKey === false) {
+                    $errors = ['id' => [
+                        'group_user_exists' => __('The membership does not exist.', $change['id'])
+                    ]];
+                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                }
+
+                // Delete case.
+                if (isset($change['delete']) && $change['delete']) {
+                    unset($entities[$groupUserKey]);
+                } else {
+                    // Update case
+                    $options = ['accessibleFields' => ['is_admin' => true]];
+                    $this->patchEntity($entities[$groupUserKey], $change, $options);
+                    $errors = $entities[$groupUserKey]->getErrors();
+                    if (!empty($errors)) {
+                        throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    }
+                }
+            } else {
+                // Add case.
+                // Enforce data.
+                $change['group_id'] = $groupId;
+                // New entity options.
+                $options = ['accessibleFields' => [
+                    'group_id' => true,
+                    'user_id' => true,
+                    'is_admin' => true,
+                ]];
+                // Create and validate the new group_user entity.
+                $groupUser = $this->newEntity($change, $options);
+                $errors = $groupUser->getErrors();
+                if (!empty($errors)) {
+                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                }
+                $entities[] = $groupUser;
+            }
+        }
+
+        return $entities;
     }
 }

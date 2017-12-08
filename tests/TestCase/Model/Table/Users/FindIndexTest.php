@@ -27,7 +27,7 @@ class FindIndexTest extends AppTestCase
 {
     public $Resources;
 
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.groups', 'app.groups_users', 'app.resources', 'app.permissions'];
+    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.groups', 'app.groups_users', 'app.resources', 'app.permissions', 'app.avatars'];
 
     public function setUp()
     {

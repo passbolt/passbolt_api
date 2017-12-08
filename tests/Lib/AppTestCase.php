@@ -14,6 +14,7 @@
  */
 namespace App\Test\Lib;
 
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\CommentsModelTrait;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -33,6 +34,7 @@ class AppTestCase extends TestCase
     // Do not load all the traits here
     // load them were needed instead
     use ArrayTrait;
+    use AvatarsModelTrait;
     use CommentsModelTrait;
     use EntityTrait;
     use FavoritesModelTrait;
@@ -46,6 +48,15 @@ class AppTestCase extends TestCase
     use UsersModelTrait;
 
     public static $stringMasks = [];
+
+    /**
+     * Setup.
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->initAvatarEvents();
+    }
 
     /**
      * Initialize string masks.

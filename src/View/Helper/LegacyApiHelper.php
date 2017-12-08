@@ -66,23 +66,17 @@ class LegacyApiHelper extends Helper
         $result = [];
         foreach ($entity->visibleProperties() as $property) {
             $value = $entity->get($property);
-            // @todo to remove when avatar is done.
-            if ($property == 'avatar') {
-                $result['Avatar'] = $value;
-                continue;
-            }
-            // @todo end of section to remove
             if (is_string($value) || is_bool($value) || is_numeric($value) || is_null($value)) {
                 // example: id
                 $result[$name][$property] = $value;
             } elseif (is_object($value) && is_a($value, 'Cake\Chronos\ChronosInterface')) {
                 // example: modified
                 $result[$name][$property] = $value->toDateTimeString();
-            } elseif (is_object($value) &&
-                (get_parent_class($value) === 'Cake\ORM\Entity' || get_class($value) === 'Cake\ORM\Entity')) {
+            } elseif (is_object($value) && $value instanceof \Cake\ORM\Entity) {
                 // example: gpgkey, scafolded model
                 $subEntityName = self::formatModelName($property);
                 $formattedEntity = self::formatEntity($value, $subEntityName);
+                //pr($formattedEntity);
                 $result[$subEntityName] = $formattedEntity[$subEntityName];
                 unset($formattedEntity[$subEntityName]);
                 if (!empty($formattedEntity)) {
@@ -91,12 +85,16 @@ class LegacyApiHelper extends Helper
             } elseif ($property == 'children' && is_array($value)) {
                 $result[$property] = self::formatResultSet($value);
             } elseif (is_array($value)) {
-                // example: groups_users
                 $subEntityName = self::formatModelName($property);
-                if (count($value) === 0) {
+                // example: avatar.url (array of strings).
+                if (!empty($value) && is_scalar($value[key($value)])) {
+                    $result[$name][$property] = $value;
+                    continue;
+                } elseif (count($value) === 0) {
                     // if array is empty mark it as such
                     $result[$subEntityName] = [];
                 } else {
+                    // example: groups_users
                     foreach ($value as $i => $entity2) {
                         $formattedEntity = self::formatEntity($entity2, $subEntityName);
                         $result[$subEntityName][$i] = $formattedEntity[$subEntityName];

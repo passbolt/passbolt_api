@@ -24,7 +24,7 @@ class ShareNotificationTest extends ShareControllerTest
     public $fixtures = [
         'app.users', 'app.gpgkeys', 'app.profiles', 'app.roles',
         'app.groups', 'app.groups_users', 'app.resources', 'app.permissions', 'app.secrets',
-        'app.email_queue'
+        'app.email_queue', 'app.avatars'
     ];
 
     public function testShareNotificationSuccess()

@@ -25,7 +25,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.groups', 'app.users', 'app.groups_users', 'app.profiles', 'app.roles',
-        'app.email_queue'
+        'app.email_queue', 'app.avatars'
     ];
 
     public function testGroupsUsersAddNotificationDisabled()
@@ -57,7 +57,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->postJson('/groups.json', [
             'Group' => ['name' => 'Temp Group'],
             'GroupUsers' => [
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
+                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => true]],
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.admin')]]
             ],

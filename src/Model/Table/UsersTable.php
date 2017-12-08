@@ -14,11 +14,15 @@
  */
 namespace App\Model\Table;
 
+use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
+use App\Model\Table\AvatarsTable;
 use Aura\Intl\Exception;
+use Cake\Collection\CollectionInterface;
+use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -231,15 +235,19 @@ class UsersTable extends Table
         }
 
         // Default associated data
-        $containWhitelist = [
-            'Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'
-            // @todo avatar as part of profile.avatar
-        ];
+        $containWhitelist = ['Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'];
         if (!isset($options['contain']) || (!is_array($options['contain']))) {
             $contain = $containWhitelist;
         } else {
             $contain = array_intersect($options['contain'], $containWhitelist);
         }
+
+        // If contains Profiles, then include Avatars too.
+        if (in_array('Profiles', $contain)) {
+            $contain['Profiles'] = AvatarsTable::addContainAvatar();
+            unset($contain[array_search('Profiles', $contain)]);
+        }
+
         $query->contain($contain);
 
         // Filter out guests and deleted users
@@ -369,7 +377,10 @@ class UsersTable extends Table
         // show active first and do not count deleted ones
         $query = $this->find()
             ->where(['Users.username' => $username, 'Users.deleted' => false])
-            ->contain(['Roles', 'Profiles']) // @TODO Avatar for recovery email
+            ->contain([
+                'Roles',
+                'Profiles' => AvatarsTable::addContainAvatar()
+            ])
             ->order(['Users.active' => 'DESC']);
 
         return $query;
@@ -669,7 +680,7 @@ class UsersTable extends Table
             'username' => false,
             'role_id' => false,
             'profile' => true,
-            'gpgkey' => false
+            'gpgkey' => false,
         ];
         // only admins can set roles
         if ($roleName === Role::ADMIN) {
@@ -680,20 +691,34 @@ class UsersTable extends Table
             'user_id' => false,
             'created' => false,
             'first_name' => true,
-            'last_name' => true
+            'last_name' => true,
+            'avatar' => true,
         ];
 
-        return $this->patchEntity($user, $data, [
+        // Populates fields required for Avatar, if needed.
+        if (!empty(Hash::get($data, 'profile.avatar'))) {
+            $data['profile']['avatar']['user_id'] = $user->id;
+            $data['profile']['avatar']['foreign_key'] = $user->profile->id;
+            // Force creation of new Avatar.
+            $user->profile->avatar = new Avatar();
+        }
+
+        $entity = $this->patchEntity($user, $data, [
                 'validate' => 'update',
                 'accessibleFields' => $accessibleUserFields,
                 'associated' => [
                     'Profiles' => [
                         'validate' => 'update',
-                        'accessibleFields' => $accessibleProfileFields
+                        'accessibleFields' => $accessibleProfileFields,
+                        'associated' => [
+                            'Avatars'
+                        ]
                     ]
                 ],
                 'currentUserRole' => $roleName
             ]);
+
+        return $entity;
     }
 
     /**
@@ -712,9 +737,8 @@ class UsersTable extends Table
         $user = $this->find()
             ->where(['Users.id' => $userId])
             ->contain([
-                'Profiles',
+                'Profiles' => AvatarsTable::addContainAvatar(),
                 'Roles',
-                //'Avatar' // TODO avatar
             ])
             ->first();
 
@@ -738,9 +762,8 @@ class UsersTable extends Table
         $users = $this->find()
             ->where(['Users.id IN' => $userIds])
             ->contain([
-                'Profiles',
+                'Profiles' => AvatarsTable::addContainAvatar(),
                 'Roles',
-                //'Avatar' // TODO avatar
             ])
             ->all();
 

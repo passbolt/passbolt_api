@@ -15,8 +15,6 @@
 namespace App\Utility;
 
 use Aura\Intl\Exception;
-use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
-use Ramsey\Uuid\Uuid;
 
 class PassboltText
 {

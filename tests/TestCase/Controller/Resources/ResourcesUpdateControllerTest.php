@@ -23,13 +23,31 @@ use Cake\Utility\Hash;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.gpgkeys', 'app.profiles', 'app.roles', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets', 'app.favorites', 'app.permissions'];
+    public $fixtures = ['app.users', 'app.gpgkeys', 'app.profiles', 'app.roles', 'app.groups', 'app.groups_users',
+        'app.resources', 'app.secrets', 'app.favorites', 'app.permissions', 'app.email_queue', 'app.avatars'];
 
     public function setUp()
     {
         $this->Resources = TableRegistry::get('Resources');
         $this->gpg = new Gpg();
         parent::setUp();
+    }
+
+    protected function getValidSecret()
+    {
+        return '-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+hQEMAwvNmZMMcWZiAQf9HpfcNeuC5W/VAzEtAe8mTBUk1vcJENtGpMyRkVTC8KbQ
+xaEr3+UG6h0ZVzfrMFYrYLolS3fie83cj4FnC3gg1uijo7zTf9QhJMdi7p/ASB6N
+y7//8AriVqUAOJ2WCxAVseQx8qt2KqkQvS7F7iNUdHfhEhiHkczTlehyel7PEeas
+SdM/kKEsYKk6i4KLPBrbWsflFOkfQGcPL07uRK3laFz8z4LNzvNQOoU7P/C1L0X3
+tlK3vuq+r01zRwmflCaFXaHVifj3X74ljhlk5i/JKLoPRvbxlPTevMNag5e6QhPQ
+kpj+TJD2frfGlLhyM50hQMdJ7YVypDllOBmnTRwZ0tJFAXm+F987ovAVLMXGJtGO
+P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
+hcciUFw5
+=TcQF
+-----END PGP MESSAGE-----';
     }
 
     protected function _getDummyPostdata($resource = null, $data = [])
@@ -45,15 +63,10 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         // If secrets provided update them all.
         if (isset($resource->secrets)) {
             foreach ($resource->secrets as $secret) {
-                // Encrypt the secret for the user.
-                $gpgKey = $this->Resources->association('Creator')->association('Gpgkeys')
-                    ->find()->where(['user_id' => $secret->user_id])->first();
-                $this->gpg->setEncryptKey($gpgKey->armored_key);
-                $encrypted = $this->gpg->encrypt('Updated resource secret');
                 $defaultData['secrets'][] = [
                     'id' => $secret->id,
                     'user_id' => $secret->user_id,
-                    'data' => $encrypted
+                    'data' => $this->getValidSecret()
                 ];
             }
         }

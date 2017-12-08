@@ -25,7 +25,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.groups', 'app.users', 'app.resources', 'app.profiles', 'app.roles', 'app.email_queue',
-        'app.alt0/groups_users', 'app.alt0/permissions'
+        'app.alt0/groups_users', 'app.alt0/permissions', 'app.avatars'
     ];
 
     public function testGroupsDeleteNotificationDisabled()

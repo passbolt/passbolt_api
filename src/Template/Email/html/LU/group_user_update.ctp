@@ -13,25 +13,25 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 
 $admin = $body['admin'];
 $group = $body['group'];
-$groupUser = $body['group_user'];
+$isAdmin = $body['isAdmin'];
 
 echo $this->element('email/module/avatar',[
-    // @TODO avatar url in email
-    'url' => Router::url('/img/avatar' . DS . 'user.png', true),
+    'url' => Router::url($admin->profile->avatar->url['small'], true),
     'text' => $this->element('email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
-        'datetime' => $groupUser->modified,
+        'datetime' => FrozenTime::now(),
         'text' => __('{0} updated your group membership', null)
     ])
 ]);
 
-if ($groupUser->is_admin) {
+if ($isAdmin) {
     $text = __('You are now a group manager of this group.');
     $text .= ' ' . __('As group manager you are now authorized to edit the members of this group.');
     $text .= ' ' . __('As member of the group you still have access to all the passwords that are shared with this group.');

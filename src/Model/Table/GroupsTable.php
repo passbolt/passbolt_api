@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -63,7 +64,9 @@ class GroupsTable extends Table
             'bindingKey' => 'modified_by',
             'foreignKey' => 'id'
         ]);
-        $this->hasMany('GroupsUsers');
+        $this->hasMany('GroupsUsers', [
+            'saveStrategy' => 'replace'
+        ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aro_foreign_key'
         ]);
@@ -128,6 +131,24 @@ class GroupsTable extends Table
         $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
             'message' => __('A group manager must be provided.')
+        ]);
+
+        // Update rules.
+        $rules->addUpdate(
+            $rules->isUnique(
+                ['name'],
+                __('The name provided is already used by another group.')
+            ),
+            'group_unique'
+        );
+        $rules->addUpdate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
+            'errorField' => 'groups_users',
+            'message' => __('A group manager must be provided.')
+        ]);
+        $rules->addUpdate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
+            'table' => 'Groups',
+            'errorField' => 'id',
+            'message' => __('The group cannot be soft deleted.')
         ]);
 
         // Delete rules

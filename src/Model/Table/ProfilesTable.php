@@ -57,6 +57,11 @@ class ProfilesTable extends Table
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
         ]);
+
+        $this->hasOne('Avatars', [
+            'foreignKey' => 'foreign_key',
+            'conditions' => ['model' => 'Avatar']
+        ]);
     }
 
     /**

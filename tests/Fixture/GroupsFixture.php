@@ -127,8 +127,8 @@ class GroupsFixture extends TestFixture
             'deleted' => true,
             'created' => '2016-02-02 18:59:05',
             'modified' => '2016-02-02 18:59:05',
-            'created_by' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-            'modified_by' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53'
+            'created_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+            'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856'
         ],
         [
             'id' => 'a89b771e-62ab-5434-b2fa-950827439ac7',

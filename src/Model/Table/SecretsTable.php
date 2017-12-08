@@ -226,4 +226,36 @@ class SecretsTable extends Table
             $data['deleted'] = false;
         }
     }
+
+    /**
+     * Retrieve a resource secret that belong to a user
+     *
+     * @param string $resourceId The resource to find the secret for
+     * @param string $userId The user to find the secret for
+     * @return \Cake\ORM\Query
+     */
+    public function findByResourceUser(string $resourceId, string $userId)
+    {
+        return $this->find()
+            ->where([
+                'resource_id' => $resourceId,
+                'user_id' => $userId
+            ]);
+    }
+
+    /**
+     * Retrieve all the resources secrets that belong to a given user
+     *
+     * @param array $resourcesIds The list of resources to find the secrets for
+     * @param string $userId The user to find the secrets for
+     * @return \Cake\ORM\Query
+     */
+    public function findByResourcesUser(array $resourcesIds, string $userId)
+    {
+        return $this->find()
+            ->where([
+                'resource_id IN' => $resourcesIds,
+                'user_id' => $userId
+            ]);
+    }
 }

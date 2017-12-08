@@ -28,7 +28,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.users', 'app.groups', 'app.profiles', 'app.gpgkeys', 'app.roles',
         'app.resources',
-        'app.alt0/groups_users', 'app.alt0/permissions'
+        'app.alt0/groups_users', 'app.alt0/permissions', 'app.avatars', 'app.favorites', 'app.email_queue'
     ];
 
     public function setUp()
