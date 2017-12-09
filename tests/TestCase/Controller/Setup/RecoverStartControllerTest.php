@@ -35,7 +35,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $fails = [
             'no parameter given' => '/setup/recover/nope',
-            // @TODO add when legacy urls removed (/setup/recover/nope/nope get called instead of 404)
+            // Add when legacy urls removed (/setup/recover/nope/nope get called instead of 404)
             //'only one parameter given' => '/setup/recover/start/' . UuidFactory::uuid(),
             'no parameter given on legacy url' => '/setup/recover',
             'only one parameter given on legacy url' => '/setup/recover/' . UuidFactory::uuid()

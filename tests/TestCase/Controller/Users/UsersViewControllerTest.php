@@ -24,8 +24,8 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 
     public function testUsersViewGetSuccess()
     {
-        $this->authenticateAs('ada');
-        $uuid = UuidFactory::uuid('user.id.ada');
+        $this->authenticateAs('ursula');
+        $uuid = UuidFactory::uuid('user.id.ursula');
         $this->getJson('/users/' . $uuid . '.json?api-version=2');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -39,14 +39,14 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertGpgkeyAttributes($this->_responseJsonBody->gpgkey);
         $this->assertObjectHasAttribute('role', $this->_responseJsonBody);
         $this->assertRoleAttributes($this->_responseJsonBody->role);
-
-        // @todo group users
+        $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody);
+        $this->assertGroupUserAttributes($this->_responseJsonBody->groups_users[0]);
     }
 
     public function testUsersViewGetApiV1Success()
     {
-        $this->authenticateAs('ada');
-        $uuid = UuidFactory::uuid('user.id.ada');
+        $this->authenticateAs('ursula');
+        $uuid = UuidFactory::uuid('user.id.ursula');
         $this->getJson('/users/' . $uuid . '.json');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -61,8 +61,8 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertGpgkeyAttributes($this->_responseJsonBody->Gpgkey);
         $this->assertObjectHasAttribute('Role', $this->_responseJsonBody);
         $this->assertRoleAttributes($this->_responseJsonBody->Role);
-
-        // @todo group users
+        $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody);
+        $this->assertGroupUserAttributes($this->_responseJsonBody->GroupUser[0]);
     }
 
     public function testUsersViewGetMeSuccess()

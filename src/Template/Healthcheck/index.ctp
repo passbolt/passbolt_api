@@ -12,40 +12,13 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use App\View\Helper\HealthcheckHtmlHelper;
 
 $this->assign('title',	__('Health checks'));
 $this->Html->css('main.min', ['block' => 'css']);
 $this->Html->css('check.min', ['block' => 'css']);
 $this->assign('pageClass', 'status');
 
-/**
- * HealthcheckHtmlHelper
- * Shenanigans to reuse outputs from app/Console/HealtcheckTask.php
- */
-use App\Shell\AppShell;
-use App\Shell\Task\HealthcheckTask;
-
-class HealthcheckHtmlHelper extends HealthcheckTask {
-    public function __construct() {
-    }
-    protected function assert($condition, $success, $error, $help = null) {
-        if ($condition) {
-            echo '<div class="message success">' . $success . '</div>' . PHP_EOL;
-        } else {
-            echo '<div class="message error">' . $error . '</div>' . PHP_EOL;
-        }
-    }
-    protected function warning($condition, $success, $warning, $help = null) {
-        if ($condition) {
-            echo '<div class="message success">' . $success . '</div>' . PHP_EOL;
-        } else {
-            echo '<div class="message warning">' . $warning . '</div>' . PHP_EOL;
-        }
-    }
-    protected function title($title) {
-        echo '<h3>' . $title . '</h3>' . PHP_EOL;
-    }
-}
 $healtcheck = new HealthcheckHtmlHelper();
 ?>
 <div class="grid grid-responsive-12">

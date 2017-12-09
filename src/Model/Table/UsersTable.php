@@ -332,10 +332,7 @@ class UsersTable extends Table
             throw new \InvalidArgumentException(__('The role name is not valid.'));
         }
 
-        // Same rule than view but with inactive users also shown
-        $options['filter']['is-active'] = true;
-
-        return $this->findIndex($roleName, $options)->where(['Users.id' => $userId]);
+        return $this->findIndex($roleName)->where(['Users.id' => $userId]);
     }
 
     /**

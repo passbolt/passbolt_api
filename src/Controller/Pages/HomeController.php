@@ -34,10 +34,6 @@ class HomeController extends AppController
 
         $this->set('title', Configure::read('passbolt.meta.description'));
         $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-
-        // @TODO Backlog following tasks request to stop the cakephpconfig to be injected in the view for js application.
-        // #PASSBOLT-2435
-        // #PASSBOLT-2436
         $this->set('cakephpConfig', $this->_buildConfigToInject());
 
         $this->success();

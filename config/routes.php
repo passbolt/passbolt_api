@@ -282,7 +282,7 @@ Router::prefix('Users', function ($routes) {
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    // @TODO remove deprated legacy v1 backward compatibility routes
+    // Legacy v1 backward compatibility routes
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
@@ -317,7 +317,7 @@ Router::prefix('/setup', function ($routes) {
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
 
-    // @TODO remove deprated legacy v1 backward compatibility routes
+    // Legacy v1 backward compatibility routes
     $routes->connect('/install/:userId/:tokenId', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);

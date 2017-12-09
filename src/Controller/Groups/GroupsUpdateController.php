@@ -196,11 +196,12 @@ class GroupsUpdateController extends AppController
      *
      * @param \App\Model\Entity\Group $group The updated group
      * @param array $addedGroupsUsers changes requested by group editor
-     * @param array $updatedGroupsUsers the list of users removed from the group
+     * @param array $updatedGroupsUsers the list of users updated for the group
+     * @param array $removedGroupsUsers the list of users removed from the group
      * @return void
      */
     protected function _notifyUsers(
-        \App\Model\Entity\Group $group,
+        Group $group,
         array $addedGroupsUsers,
         array $updatedGroupsUsers,
         array $removedGroupsUsers
@@ -428,7 +429,6 @@ class GroupsUpdateController extends AppController
         // If an error occurred on the group.
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            // @TODO hide some business rules: soft deleted, has access for example
             throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
         }
         // If an error occurred on the resources.
@@ -581,7 +581,6 @@ class GroupsUpdateController extends AppController
      *
      * @param array $secretsToRequest The list of secrets to request for encryption to the client.
      * @param array $userSecrets The current user secrets that will be used to encrypt the new secrets.
-     * @todo Make this entry point output v2 compliant.
      * @return array
      */
     private function _formatDryRunResult(array $secretsToRequest, array $userSecrets)

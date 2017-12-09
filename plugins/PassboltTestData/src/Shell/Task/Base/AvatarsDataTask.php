@@ -20,7 +20,13 @@ class AvatarsDataTask extends DataTask
 {
     public $entityName = 'Avatars';
 
-    public function execute() {
+    /**
+     * Execute data task
+     *
+     * @return void
+     */
+    public function execute()
+    {
         $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
 
         $this->loadModel('Avatars');
@@ -29,7 +35,7 @@ class AvatarsDataTask extends DataTask
             ->contain('Profiles')
             ->all();
         $count = 0;
-        foreach($users as $user) {
+        foreach ($users as $user) {
             $matches = [];
             preg_match('/^(.*)@(.*)$/', $user->username, $matches);
             $userAvatarFileName = $matches[1] . '.png';

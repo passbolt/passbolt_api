@@ -125,7 +125,6 @@ class GroupsAddController extends AppController
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            // @TODO hide some business rules: soft deleted, has access for example
             throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
         }
     }

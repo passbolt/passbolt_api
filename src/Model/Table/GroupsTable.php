@@ -308,7 +308,7 @@ class GroupsTable extends Table
 
         // Filter the query.
         if (empty($matchingGroupsIds)) {
-            // @TODO If no group contains all the users, the main request should return nothing. Find an elegant way to do it.
+            // If no group contains all the users, the main request should return nothing
             $query->where(['true' => false]);
         } else {
             $query->where(['Groups.id IN' => $matchingGroupsIds]);

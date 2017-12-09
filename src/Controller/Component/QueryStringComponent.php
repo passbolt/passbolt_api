@@ -251,7 +251,6 @@ class QueryStringComponent extends Component
                     case 'has-groups':
                         self::validateFilterGroups($values, $filter);
                         break;
-                    // TODO rename: only booleans should start with is-
                     case 'is-shared-with-group':
                         self::validateFilterGroup($values, $filter);
                         break;

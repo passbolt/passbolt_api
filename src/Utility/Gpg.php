@@ -200,7 +200,9 @@ class Gpg
         }
 
         // Try to parse the key
+        // @codingStandardsIgnoreStart
         $publicKey = @(\OpenPGP_PublicKeyPacket::parse($keyUnarmored));
+        // @codingStandardsIgnoreEnd
         if (empty($publicKey)) {
             return false;
         } else {

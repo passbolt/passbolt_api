@@ -20,6 +20,7 @@ use Ramsey\Uuid\Uuid;
 
 class UuidFactory
 {
+    const PASSBOLT_SEED = 'd5447ca1-950f-459d-8b20-86ddfdd0f922';
 
     /**
      * Return a UUID v4 or v5
@@ -45,7 +46,7 @@ class UuidFactory
             }
         } else {
             // Generate a version 5 (name-based and hashed with SHA1) UUID object
-            $uuid5 = Uuid::uuid5('d5447ca1-950f-459d-8b20-86ddfdd0f922', $seed);
+            $uuid5 = Uuid::uuid5(UuidFactory::PASSBOLT_SEED, $seed);
 
             return $uuid5->toString();
         }

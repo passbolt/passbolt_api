@@ -49,7 +49,7 @@ Router::plugin('PassboltSeleniumApi', ['path' => '/seleniumtests'], function ($r
         ->setPass(['username'])
         ->setMethods(['GET']);
 
-    // @TODO remove deprecated legacy v1 backward compatibility routes
+    // Legacy v1 backward compatibility routes
     $routes->connect('/showLastEmail/:username', ['controller' => 'Email', 'action' => 'showLastEmail'])
         ->setPass(['username'])
         ->setMethods(['GET']);

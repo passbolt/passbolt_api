@@ -20,6 +20,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Collection\CollectionInterface;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -536,7 +537,6 @@ class ResourcesTable extends Table
     /**
      * Soft delete a resource.
      *
-     * @todo function signature should be like delete e.g (entity, options)
      * @param string $userId The user who perform the delete.
      * @param \App\Model\Entity\Resource $resource The resource to delete.
      * @throws \InvalidArgumentException if the user id is not a uuid
@@ -545,8 +545,6 @@ class ResourcesTable extends Table
     public function softDelete(string $userId, \App\Model\Entity\Resource $resource)
     {
         // The softDelete will perform an update to the entity to soft delete it.
-        // @TODO use delete build rules and call them manually
-
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
@@ -653,9 +651,9 @@ class ResourcesTable extends Table
      * @param \App\Model\Entity\Resource $resource The resource to patch. The permissions and secrets properties have to be populated.
      * @param array $changes The list of changes to apply
      * @param array $secrets The list of secrets to add
-     * @return \App\Model\Entity\Resource|bool Return the resource or false if an error occurred.
      * @throw \InvalidArgumentException If the resource permission property is not populated
      * @throw \InvalidArgumentException If the resource secrets property is not populated
+     * @return bool true if success
      */
     public function share($resource, array $changes = [], array $secrets = [])
     {
@@ -681,8 +679,6 @@ class ResourcesTable extends Table
 
             return true;
         });
-
-        return $resource;
     }
 
     /**
@@ -695,7 +691,6 @@ class ResourcesTable extends Table
      */
     protected function _patchAndUpdatePermissions($resource, array $changes = [])
     {
-        // @todo document
         $changesReferences = [];
 
         // Patch the resource permissions
@@ -737,7 +732,6 @@ class ResourcesTable extends Table
         // A weird bug make the passage by reference of the variables not working as expected.
         // The variable ($changesReferences) changes made in patchEntitiesWithChanges are not visible in the current
         // scope when using $this->Permission->patchEntitiesWithChanges().
-        // @todo check if it is a known bug.
         $Permissions = TableRegistry::get('Permissions');
 
         // Patch the permission entities with the changes.
@@ -837,7 +831,7 @@ class ResourcesTable extends Table
                     if ($changeKey !== false) {
                         $resource->setError('permissions', [$changeKey => $errors]);
                     } else {
-                        // @todo An issue relative to a permission that has not been updated is unexpected.
+                        // An issue relative to a permission that has not been updated is unexpected.
                     }
                 } else {
                     // This is an error relative to the field permissions of the model Resource.

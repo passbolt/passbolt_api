@@ -589,7 +589,6 @@ class PermissionsTable extends Table
         }
         $resources = $this->findResourcesOnlyAroCanAccess($userId);
         if ($checkGroupsUsers) {
-            // @TODO is it doable in one request?
             $GroupsUsers = TableRegistry::get('GroupsUsers');
             $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId);
             foreach ($groups as $i => $groupId) {

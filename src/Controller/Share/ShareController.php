@@ -183,8 +183,6 @@ class ShareController extends AppController
      *   ]
      * ]
      *
-     * @todo Make this entry point output v2 compliant.
-     *
      * @param array $addedUsersIds The identifiers of the users the secret need to be encrypted
      * @param array $removedUsersIds The identifiers of the users the secret need to be deleted
      * @return array

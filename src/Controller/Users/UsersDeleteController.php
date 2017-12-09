@@ -104,7 +104,6 @@ class UsersDeleteController extends AppController
         if ($id === $this->User->id()) {
             throw new BadRequestException(__('You are not allowed to delete yourself.'));
         }
-        // TODO inactive users should be returned
         $user = $this->Users->findDelete($id, $this->User->role())->first();
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist or has been already deleted.'));
@@ -146,7 +145,7 @@ class UsersDeleteController extends AppController
      * Send email notification
      *
      * @param User $user entity
-     * @param ResultSetInterface $groupIds list of Group entity user was member of
+     * @param array $groupIds list of Group entity user was member of
      * @return void
      */
     protected function _notifyUsers(User $user, array $groupIds)

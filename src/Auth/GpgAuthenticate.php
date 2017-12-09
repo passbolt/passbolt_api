@@ -174,7 +174,7 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param ServerRequest $request interface for accessing request parameters
      * @param Response $response features and functionality for generating HTTP responses
      * @throws ForbiddenException
-     * @return true
+     * @return void
      */
     public function unauthenticated(ServerRequest $request, Response $response)
     {
@@ -182,8 +182,6 @@ class GpgAuthenticate extends BaseAuthenticate
         if ($request->is('json')) {
             throw new ForbiddenException(__('You need to login to access this location.'));
         }
-
-        return parent::unauthenticated($request, $response);
     }
 
     /**

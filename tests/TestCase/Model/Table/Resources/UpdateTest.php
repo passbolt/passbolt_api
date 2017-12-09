@@ -231,8 +231,6 @@ class UpdateTest extends AppTestCase
         $entity = $this->Resources->patchEntity($resource, $data, $options);
         $save = $this->Resources->save($entity);
         $this->assertFalse($save);
-        // @todo error return is not clear
-        //$this->assertEntityError($entity, 'secrets.secrets_provided');
     }
 
     public function testErrorResourceNotSoftDeleted()

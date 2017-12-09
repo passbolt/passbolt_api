@@ -17,6 +17,7 @@ namespace App\Controller\Events\EmailTraits;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -94,12 +95,12 @@ trait ResourcesEmailTrait
      * Send resource delete email
      *
      * @param Event $event event
-     * @param \App\Model\Entity\Resource $resource resource
+     * @param resource $resource resource
      * @param string $deletedBy uuid of the user who deleted the resource
-     * @param  \Cake\Datasource\ResultSetInterface $users list of users who had access to the resource before
+     * @param ResultSetInterface $users list of users who had access to the resource before
      * @return void
      */
-    public function sendResourceDeleteEmail(Event $event, Resource $resource, string $deletedBy, \Cake\Datasource\ResultSetInterface $users)
+    public function sendResourceDeleteEmail(Event $event, Resource $resource, string $deletedBy, ResultSetInterface $users)
     {
         if (!Configure::read('passbolt.email.send.password.delete')) {
             return;
