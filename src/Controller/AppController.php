@@ -34,10 +34,7 @@ class AppController extends Controller
 
     /**
      * Initialization hook method.
-     *
-     * Use this method to add common initialization code like loading components.
-     *
-     * e.g. `$this->loadComponent('Security');`
+     * Used to add common initialization code like loading components.
      *
      * @return void
      */
@@ -81,8 +78,29 @@ class AppController extends Controller
          * Enable the following components for recommended CakePHP security settings.
          * see http://book.cakephp.org/3.0/en/controllers/components/security.html
          */
-        //$this->loadComponent('Security');
-        //$this->loadComponent('Csrf');
+        // $this->loadComponent('Security');
+        // $this->loadComponent('Csrf');
+
+        /*
+         * Additional security headers
+         * - Only allow assets to be loaded from the passbolt instance domain
+         * - Don't allow framing the site
+         * - Tell browser to block XSS attempts
+         * - Stick to the content type declared by the server
+         * - Only set the referrer header on requests to the same origin
+         */
+        $this->response = $this->response
+            ->withHeader('Content-Security-Policy', 'default-src ' . Router::url('/', true))
+            ->withHeader('x-frame-options', 'DENY')
+            ->withHeader('X-XSS-Protection', '1; mode=block')
+            ->withHeader('X-Content-Type-Options', 'nosniff')
+            ->withHeader('Referrer-Policy', 'same-origin');
+
+        // Tell the browser to force HTTPS use
+        if (Configure::read('passbolt.ssl.force')) {
+            $this->response = $this->response
+                ->withHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
+        }
     }
 
     /**

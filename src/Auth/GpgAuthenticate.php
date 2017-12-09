@@ -428,6 +428,8 @@ class GpgAuthenticate extends BaseAuthenticate
 
     /**
      * Handle missing user error
+     *
+     * @return void
      */
     private function __missingUserError()
     {
