@@ -79,7 +79,7 @@ class UserComponent extends Component
             try {
                 $agent = env('HTTP_USER_AGENT');
                 if ($agent === null) {
-                    throw new Exception('undefined user agent');
+                    throw new Exception(__('undefined user agent'));
                 }
                 // For now we use the simple DonatjUAParser which allow only a basic parsing to retrieve
                 // browser information. Other parser are available, check out the project repository for more information:

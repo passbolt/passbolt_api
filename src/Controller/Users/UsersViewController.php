@@ -46,6 +46,6 @@ class UsersViewController extends AppController
         if (empty($user)) {
             throw new NotFoundException(__('The user does not exist.'));
         }
-        $this->success('The operation was successful.', $user);
+        $this->success(__('The operation was successful.'), $user);
     }
 }

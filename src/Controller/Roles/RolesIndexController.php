@@ -27,6 +27,6 @@ class RolesIndexController extends AppController
     {
         $this->loadModel('Roles');
         $roles = $this->Roles->find('all');
-        $this->success('The operation was successful.', $roles);
+        $this->success(__('The operation was successful.'), $roles);
     }
 }

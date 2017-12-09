@@ -49,6 +49,6 @@ class AuthVerifyController extends AppController
             throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
         }
         $key['keydata'] = $file->read();
-        $this->success('The operation was successful.', $key);
+        $this->success(__('The operation was successful.'), $key);
     }
 }

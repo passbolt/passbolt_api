@@ -58,6 +58,6 @@ class PermissionsViewController extends AppController
 
         // Retrieve the permissions.
         $permissions = $this->Permissions->findViewAcoPermissions($acoForeignKey, $options);
-        $this->success('The operation was successful.', $permissions);
+        $this->success(__('The operation was successful.'), $permissions);
     }
 }

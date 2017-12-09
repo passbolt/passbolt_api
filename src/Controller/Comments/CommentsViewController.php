@@ -63,6 +63,6 @@ class CommentsViewController extends AppController
             throw new InternalErrorException(__('Could not retrieve the comments'));
         }
 
-        $this->success('The operation was successful.', $comments);
+        $this->success(__('The operation was successful.'), $comments);
     }
 }

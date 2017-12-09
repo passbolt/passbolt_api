@@ -25,6 +25,6 @@ class AuthCheckSessionController extends AppController
      */
     public function checkSessionGet()
     {
-        $this->success('Look! It\'s moving. It\'s alive. It\'s alive...');
+        $this->success(__('Look! It\'s moving. It\'s alive. It\'s alive...'));
     }
 }

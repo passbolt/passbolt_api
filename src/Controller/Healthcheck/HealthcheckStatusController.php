@@ -43,6 +43,6 @@ class HealthcheckStatusController extends AppController
         $this->viewBuilder()
             ->setLayout('ajax')
             ->setTemplatePath('Healthcheck');
-        $this->success('OK', 'OK');
+        $this->success(__('OK'), 'OK');
     }
 }

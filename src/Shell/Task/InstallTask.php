@@ -317,50 +317,50 @@ class InstallTask extends AppShell
             $checks = Healthchecks::configFiles();
             foreach ($checks['configFile'] as $file => $enabled) {
                 if (!$enabled) {
-                    throw new Exception('One config file is missing (' . $file . ').');
+                    throw new Exception(__('One config file is missing ({0}).', $file));
                 }
             }
 
             // Check application url config
             $checks = Healthchecks::core();
             if (!$checks['core']['fullBaseUrl'] && !$checks['core']['validFullBaseUrl']) {
-                throw new Exception('The fullBaseUrl is not set or not valid. ' . $checks['core']['info']['fullBaseUrl']);
+                throw new Exception(__('The fullBaseUrl is not set or not valid. {0}', $checks['core']['info']['fullBaseUrl']));
             }
 
             // Check that a GPG configuration id is provided
             $checks = Healthchecks::gpg();
             if (!$checks['gpg']['gpgKey'] || !$checks['gpg']['gpgKeyPublic'] || !$checks['gpg']['gpgKeyPrivate']) {
-                throw new Exception('The GnuPG config for the server is not available or incomplete');
+                throw new Exception(__('The GnuPG config for the server is not available or incomplete'));
             }
             // Check if keyring is present and writable
             if (!$checks['gpg']['gpgHome'] || !$checks['gpg']['gpgHomeWritable']) {
-                throw new Exception("The GPG keyring location is not set or not writable.");
+                throw new Exception(__('The GPG keyring location is not set or not writable.'));
             }
 
             // In production don't accept default GPG server key
             if (!Configure::read('debug')) {
                 if (!$checks['gpg']['gpgKeyNotDefault']) {
-                    $msg = "Default GnuPG server key cannot be used in production. ";
-                    $msg .= "Please change the values of 'GPG.server' in 'APP/Config/app.php' with your server key information. ";
-                    $msg .= "If you don't have yet a server key, please generate one, take a look at the install documentation.";
+                    $msg = __('Default GnuPG server key cannot be used in production.');
+                    $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/app.php with your server key information.');
+                    $msg .= ' ' . __('If you do not have yet a server key, please generate one, take a look at the install documentation.');
                     throw new Exception($msg);
                 }
             }
 
             // Check that there is a public and private key found at the given path
             if (!$checks['gpg']['gpgKeyPublicReadable']) {
-                throw new Exception("No public key found at the given path " . Configure::read('GPG.serverKey.public'));
+                throw new Exception(__('No public key found at the given path {0}', Configure::read('GPG.serverKey.public')));
             }
             if (!$checks['gpg']['gpgKeyPrivateReadable']) {
-                throw new Exception("No private key found at the given path " . Configure::read('GPG.serverKey.private'));
+                throw new Exception(__('No private key found at the given path {0}', Configure::read('GPG.serverKey.private')));
             }
 
             // Check that the public and private key match the fingerprint
             if (!$checks['gpg']['gpgKeyPrivateFingerprint'] || !$checks['gpg']['gpgKeyPublicFingerprint']) {
-                throw new Exception('The server key fingerprint does not match the fingerprint mentioned in app/config.php');
+                throw new Exception(__('The server key fingerprint does not match the fingerprint mentioned in app/config.php'));
             }
             if (!$checks['gpg']['gpgKeyPublicEmail']) {
-                throw new Exception('The server public key should have an email id.');
+                throw new Exception(__('The server public key should have an email id.'));
             }
         } catch (Exception $e) {
             $this->_error($e->getMessage());

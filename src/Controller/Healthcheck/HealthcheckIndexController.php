@@ -56,7 +56,7 @@ class HealthcheckIndexController extends AppController
             ->setTemplatePath('Healthcheck');
         $checks = Healthchecks::all();
         $checks = array_merge($this->__webChecks(), $checks);
-        $this->success('All checks ran successfully!', $checks);
+        $this->success(__('All checks ran successfully!'), $checks);
     }
 
     /**

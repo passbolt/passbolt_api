@@ -44,6 +44,6 @@ class UsersIndexController extends AppController
         $options = $this->QueryString->get($whitelist);
         $users = $this->Users->findIndex($this->User->role(), $options);
 
-        $this->success('The operation was successful.', $users);
+        $this->success(__('The operation was successful.'), $users);
     }
 }

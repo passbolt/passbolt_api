@@ -37,6 +37,6 @@ class ResourcesIndexController extends AppController
 
         // Retrieve the resources.
         $resources = $this->Resources->findIndex($this->User->id(), $options);
-        $this->success('The operation was successful.', $resources);
+        $this->success(__('The operation was successful.'), $resources);
     }
 }

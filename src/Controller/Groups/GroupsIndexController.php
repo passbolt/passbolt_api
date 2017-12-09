@@ -38,6 +38,6 @@ class GroupsIndexController extends AppController
 
         // Retrieve the groups.
         $groups = $this->Groups->findIndex($options);
-        $this->success('The operation was successful.', $groups);
+        $this->success(__('The operation was successful.'), $groups);
     }
 }
