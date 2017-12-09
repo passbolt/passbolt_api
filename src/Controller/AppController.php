@@ -90,7 +90,7 @@ class AppController extends Controller
          * - Only set the referrer header on requests to the same origin
          */
         $this->response = $this->response
-            ->withHeader('Content-Security-Policy', 'default-src ' . Router::url('/', true))
+//            ->withHeader('Content-Security-Policy', 'default-src ' . Router::url('/', true))
             ->withHeader('x-frame-options', 'DENY')
             ->withHeader('X-XSS-Protection', '1; mode=block')
             ->withHeader('X-Content-Type-Options', 'nosniff')
