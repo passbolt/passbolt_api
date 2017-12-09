@@ -14,6 +14,8 @@
  */
 namespace App\Auth;
 
+use App\Model\Entity\AuthenticationToken;
+use App\Model\Entity\User;
 use Aura\Intl\Exception;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
@@ -57,116 +59,14 @@ class GpgAuthenticate extends BaseAuthenticate
     protected $_data;
 
     /**
-     * Authenticate
-     *
-     * @param ServerRequest $request interface for accessing request parameters
-     * @param Response $response features and functionality for generating HTTP responses
-     * @return array|false the user or false if authentication failed
+     * @var User $_user
      */
-    public function authenticate(ServerRequest $request, Response $response)
-    {
-        $this->_response = $response
-            ->withHeader('X-GPGAuth-Authenticated', 'false')
-            ->withHeader('X-GPGAuth-Progress', 'stage0');
+    protected $_user;
 
-        // Init gpg object and load server key
-        $this->__normalizeRequestData($request);
-        $this->__initKeyring();
-
-        // Begin process by checking if the user exist and his key is valid
-        $user = $this->__identifyUserWithFingerprint();
-        if ($user === false) {
-            // If the user doesn't exist, we want to mention it in the debug anyway (no matter we are in debug mode or not)
-            // IMPORTANT : Do not change this behavior. Exceptionally here, the client will need to know that
-            // we are in this case to be able to render a proper feedback.
-            $msg = 'There is no user associated with this key. ' . $this->_debug;
-            $this->__error($msg);
-            $this->_response = $this->_response->withHeader('X-GPGAuth-Debug', $msg);
-
-            return false;
-        }
-
-        // Step 0. Server authentication
-        // The user is asking the server to identify itself by decrypting a token
-        // that was encrypted by the client using the server public key
-        if (isset($this->_data['server_verify_token'])) {
-            // Log authenticate call.
-            //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_0', '');
-            try {
-                $nonce = $this->_gpg->decrypt($this->_data['server_verify_token']);
-                // check if the nonce is in valid format to avoid returning something sensitive decrypted
-                if ($this->__checkNonce($nonce)) {
-                    $this->_response = $this->_response->withHeader('X-GPGAuth-Verify-Response', $nonce);
-                }
-            } catch (Exception $e) {
-                return $this->__error('Decryption failed');
-            }
-
-            return false;
-        }
-
-        // Stage 1.
-        // The user request an authentication by claiming he owns a given public key
-        // We therefore send an encrypted message that must be returned next time in order to verify
-        $AuthenticationToken = TableRegistry::get('AuthenticationTokens');
-        if (!isset($this->_data['user_token_result'])) {
-            //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_1', '');
-            // set the stage
-            $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage1');
-
-            // set encryption and signature keys
-            try {
-                $this->__setUserKey($this->_data['keyid'], $user);
-            } catch (Exception $e) {
-                return $this->__error($e->getMessage());
-            }
-            $this->_gpg->addsignkey(
-                $this->_config['serverKey']['fingerprint'],
-                $this->_config['serverKey']['passphrase']
-            );
-
-            // generate the authentication token
-            $authenticationToken = $AuthenticationToken->generate($user->id);
-            if (!isset($authenticationToken->token)) {
-                return $this->__error('Failed to create token');
-            }
-            $token = 'gpgauthv1.3.0|36|' . $authenticationToken->token . '|gpgauthv1.3.0';
-
-            // encrypt and sign and send
-            $msg = $this->_gpg->encryptsign($token);
-            $msg = quotemeta(urlencode($msg));
-            $this->_response = $this->_response->withHeader('X-GPGAuth-User-Auth-Token', $msg);
-
-            return false;
-        }
-
-        // Stage 2.
-        // Check if the token provided at stage 1 have been decrypted and is still valid
-        if (isset($this->_data['user_token_result'])) {
-            //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
-            $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage2');
-            if (!($this->__checkNonce($this->_data['user_token_result']))) {
-                return $this->__error('The user token result is not a valid UUID');
-            }
-            // extract the UUID to get the database records
-            list($version, $length, $uuid, $version2) = explode('|', $this->_data['user_token_result']);
-            $isValidToken = $AuthenticationToken->isValid($uuid, $user->id);
-            if (!$isValidToken) {
-                return $this->__error('The user token result could not be found ' .
-                    't=' . $uuid . ' u=' . $user->id);
-            }
-        }
-
-        // Completed
-        // we set the user to active, delete the auth token and provide some success feedback
-        $AuthenticationToken->setInactive($uuid);
-        $this->_response = $this->_response
-            ->withHeader('X-GPGAuth-Progress', 'complete')
-            ->withHeader('X-GPGAuth-Authenticated', 'true')
-            ->withHeader('X-GPGAuth-Refer', '/');
-
-        return $user->toArray();
-    }
+    /**
+     * @var AuthenticationToken $_AuthenticationToken
+     */
+    protected $_AuthenticationToken;
 
     /**
      * When an unauthenticated user tries to access a protected page this method is called
@@ -182,12 +82,177 @@ class GpgAuthenticate extends BaseAuthenticate
         if ($request->is('json')) {
             throw new ForbiddenException(__('You need to login to access this location.'));
         }
+        // Otherwise we let the controller handle it
+    }
+
+    /**
+     * Authenticate
+     * See. https://www.passbolt.com/help/tech/auth
+     *
+     * @param ServerRequest $request interface for accessing request parameters
+     * @param Response $response features and functionality for generating HTTP responses
+     * @throws InternalErrorException if the config or key is not set or not usable
+     * @return mixed User|false the user or false if authentication failed
+     */
+    public function authenticate(ServerRequest $request, Response $response)
+    {
+        if (!$this->__initForAllSteps($request, $response)) {
+            return false;
+        }
+
+        // Step 0. Server authentication
+        // The user is asking the server to identify itself by decrypting a token
+        // that was encrypted by the client using the server public key
+        if (isset($this->_data['server_verify_token'])) {
+            $this->__stage0();
+
+            return false;
+        }
+
+        // Stage 1.
+        // The user request an authentication by claiming he owns a given public key
+        // We therefore send an encrypted message that must be returned next time in order to verify
+        if (!isset($this->_data['user_token_result'])) {
+            $this->__stage1();
+
+            return false;
+        } else {
+            // Stage 2.
+            // Check if the token provided at stage 1 have been decrypted and is still valid
+            if (!$this->__stage2()) {
+                return false;
+            }
+        }
+
+        // Return the user to be set as active
+        return $this->_user->toArray();
+    }
+
+    /**
+     * Step 0 - Server private key verification
+     * Decrypt server_verify_token and set it X-GPGAuth-Verify-Response
+     *
+     * @return bool
+     */
+    private function __stage0()
+    {
+        try {
+            $nonce = $this->_gpg->decrypt($this->_data['server_verify_token']);
+            // check if the nonce is in valid format to avoid returning something sensitive decrypted
+            if ($this->__checkNonce($nonce)) {
+                $this->_response = $this->_response->withHeader('X-GPGAuth-Verify-Response', $nonce);
+            }
+        } catch (Exception $e) {
+            return $this->__error('Decryption failed');
+        }
+
+        return true;
+    }
+
+    /**
+     * Stage 1 - Client private key verification
+     * Generate a random number, encrypt and send it back for the user to decrypts
+     *
+     * @throws InternalErrorException
+     * @return bool
+     */
+    private function __stage1()
+    {
+        $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage1');
+
+        // set encryption and signature keys
+        try {
+            $this->__initUserKey($this->_data['keyid']);
+        } catch (Exception $e) {
+            return $this->__error($e->getMessage());
+        }
+        $this->_gpg->addsignkey(
+            $this->_config['serverKey']['fingerprint'],
+            $this->_config['serverKey']['passphrase']
+        );
+
+        // generate the authentication token
+        $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
+        $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id);
+        if (!isset($authenticationToken->token)) {
+            return $this->__error('Failed to create token');
+        }
+
+        // encrypt and sign and send
+        $token = 'gpgauthv1.3.0|36|' . $authenticationToken->token . '|gpgauthv1.3.0';
+        $msg = $this->_gpg->encryptsign($token);
+        $msg = quotemeta(urlencode($msg));
+        $this->_response = $this->_response->withHeader('X-GPGAuth-User-Auth-Token', $msg);
+
+        return true;
+    }
+
+    /**
+     * Stage 2
+     * Check if the token provided at stage 1 have been decrypted and is still valid
+     *
+     * @return bool
+     */
+    private function __stage2()
+    {
+        //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
+        $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage2');
+        if (!($this->__checkNonce($this->_data['user_token_result']))) {
+            return $this->__error('The user token result is not a valid UUID');
+        }
+
+        // extract the UUID to get the database records
+        list($version, $length, $uuid, $version2) = explode('|', $this->_data['user_token_result']);
+        $isValidToken = $this->_AuthenticationToken->isValid($uuid, $this->_user->id);
+        if (!$isValidToken) {
+            return $this->__error('The user token result could not be found ' .
+                't=' . $uuid . ' u=' . $this->_user->id);
+        }
+
+        // All good!
+        $this->_AuthenticationToken->setInactive($uuid);
+        $this->_response = $this->_response
+            ->withHeader('X-GPGAuth-Progress', 'complete')
+            ->withHeader('X-GPGAuth-Authenticated', 'true')
+            ->withHeader('X-GPGAuth-Refer', '/');
+
+        return true;
+    }
+
+    /**
+     * Common initialization for all steps
+     *
+     * @param ServerRequest $request request
+     * @param Response $response response
+     * @throws InternalErrorException when the key is not valid
+     * @return bool
+     */
+    private function __initForAllSteps(ServerRequest $request, Response $response)
+    {
+        $this->_response = $response
+            ->withHeader('X-GPGAuth-Authenticated', 'false')
+            ->withHeader('X-GPGAuth-Progress', 'stage0');
+
+        $this->__normalizeRequestData($request);
+        $this->__initKeyring();
+
+        // Begin process by checking if the user exist and his key is valid
+        $this->_user = $this->__identifyUserWithFingerprint();
+        if ($this->_user === false) {
+            $this->__missingUserError();
+
+            return false;
+        }
+
+        $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
+
+        return true;
     }
 
     /**
      * Initialize GPG keyring and load the config
      *
-     * @throws CakeException if the config is missing or key is not set or not usable to decrypt
+     * @throws InternalErrorException if the config is missing or key is not set or not usable to decrypt
      * @return void
      */
     private function __initKeyring()
@@ -217,15 +282,14 @@ class GpgAuthenticate extends BaseAuthenticate
      * Set user key for encryption and import it in the keyring if needed
      *
      * @param string $keyid SHA1 fingerprint
-     * @param array $user the current user
-     * @throws CakeException when the key is not valid
+     * @throws InternalErrorException when the key is not valid
      * @return void
      */
-    private function __setUserKey($keyid, $user)
+    private function __initUserKey(string $keyid)
     {
         $info = $this->_gpg->keyinfo($keyid);
         if (empty($info)) {
-            if (!$this->_gpg->import($user->gpgkey->armored_key)) {
+            if (!$this->_gpg->import($this->_user->gpgkey->armored_key)) {
                 throw new InternalErrorException('The GnuPG key for the user could not be imported');
             }
             // check that the imported key match the fingerprint
@@ -240,7 +304,7 @@ class GpgAuthenticate extends BaseAuthenticate
     /**
      * Find a user record from a public key fingerprint
      *
-     * @return mixed false or user
+     * @return mixed false or User
      */
     private function __identifyUserWithFingerprint()
     {
@@ -360,5 +424,18 @@ class GpgAuthenticate extends BaseAuthenticate
     public function getUpdatedResponse()
     {
         return $this->_response;
+    }
+
+    /**
+     * Handle missing user error
+     */
+    private function __missingUserError()
+    {
+        // If the user doesn't exist, we want to mention it in the debug anyway (no matter we are in debug mode or not)
+        // IMPORTANT : Do not change this behavior. Exceptionally here, the client will need to know that
+        // we are in this case to be able to render a proper feedback.
+        $msg = 'There is no user associated with this key. ' . $this->_debug;
+        $this->__error($msg);
+        $this->_response = $this->_response->withHeader('X-GPGAuth-Debug', $msg);
     }
 }

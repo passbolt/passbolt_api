@@ -23,7 +23,10 @@ use PassboltTestData\Shell\Task\Base\GpgkeysDataTask;
 
 class AuthLoginControllerTest extends IntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.gpgkeys', 'app.groups_users', 'app.avatars'];
+    public $fixtures = [
+        'app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens',
+        'app.gpgkeys', 'app.groups_users', 'app.avatars'
+    ];
     public $keyid;
     public $gpg;
 
@@ -39,14 +42,20 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertContains('<div id="container" class="page login', $data);
     }
 
-    public function testUserLoginAsInactiveUserError()
-    {
-        $this->markTestIncomplete();
-    }
-
+    /**
+     * Test getting login started with deleted account
+     */
     public function testUserLoginAsDeletedUserError()
     {
-        $this->markTestIncomplete();
+        $this->post('/auth/login', [
+            'data' => [
+                'gpg_auth' => [
+                    'keyid' => '252B91CB28A96C6D67E8FC139020576F08D8B763'
+                ]
+            ]
+        ]);
+        $msg = 'There is no user associated with this key. User not found.';
+        $this->assertHeader('X-GPGAuth-Debug', $msg);
     }
 
     /**
