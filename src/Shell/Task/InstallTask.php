@@ -39,6 +39,11 @@ class InstallTask extends AppShell
                 'boolean' => true,
                 'default' => false
             ])
+            ->addOption('backup', [
+                'help' => 'Make a database dump to speed things up for next quick install.',
+                'boolean' => true,
+                'default' => false
+            ])
             ->addOption('cache', [
                 'help' => 'Create a database dump to enable cache option use later on',
                 'default' => 'true',
@@ -244,7 +249,7 @@ class InstallTask extends AppShell
      */
     protected function _quickBackup()
     {
-        if ($this->param('quick')) {
+        if ($this->param('backup')) {
             $this->out();
             $this->out(__('Backup data for next quick reinstall.'));
             $this->hr();

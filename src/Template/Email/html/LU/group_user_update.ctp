@@ -20,9 +20,9 @@ $admin = $body['admin'];
 $group = $body['group'];
 $isAdmin = $body['isAdmin'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($admin->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
@@ -41,11 +41,11 @@ if ($isAdmin) {
     $text .= ' ' . __('As member of the group you still have access to all the passwords that are shared with this group.');
 }
 
-echo $this->element('email/module/text', [
+echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/'),
     'text' => __('log in passbolt')
 ]);

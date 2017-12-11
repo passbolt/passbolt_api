@@ -18,10 +18,10 @@ use Cake\Routing\Router;
 $user = $body['user'];
 $token = $body['token'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     // @TODO avatar url in email
     'url' => Router::url($user->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($user->username),
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
@@ -34,11 +34,11 @@ $text = '<h3>' . __('Welcome back!') . '</h3><br/>';
 $text .= __('You have just requested to recover your passbolt account on this device.');
 $text .= ' ' . __('Make sure you have a backup of your secret key handy.');
 $text .= ' ' . __('Click on the link below to proceed.');
-echo $this->element('email/module/text', [
+echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/setup/recover/' . $user['id'] . '/' . $token['token']),
     'text' => __('start recovery')
 ]);

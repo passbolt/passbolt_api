@@ -20,9 +20,9 @@ $creator = $body['creator'];
 $comment = $body['comment'];
 $resource = $body['resource'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($creator->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($creator->username),
         'first_name' => Purifier::clean($creator->profile->first_name),
         'last_name' => Purifier::clean($creator->profile->last_name),
@@ -32,12 +32,12 @@ echo $this->element('email/module/avatar',[
 ]);
 
 if (Configure::read('passbolt.email.show.comment')) {
-    echo $this->element('email/module/text', [
+    echo $this->element('Email/module/text', [
         'text' => Purifier::clean($comment->content)
     ]);
 }
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/'),
     'text' => __('log in passbolt')
 ]);

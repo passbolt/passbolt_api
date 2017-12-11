@@ -19,9 +19,9 @@ $user = $body['user'];
 $admin = $body['admin'];
 $token = $body['token'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($admin->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
@@ -40,11 +40,11 @@ $text .= ' ' . __('It is designed to allow sharing credentials securely with you
 $text .= '<br/><br/>';
 $text .= __('Let\'s take the next five minutes to get you started!');
 $text .= '<br/>';
-echo $this->element('email/module/text', [
+echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token']),
     'text' => __('get started')
 ]);
