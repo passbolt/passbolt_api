@@ -113,11 +113,14 @@ class AppController extends Controller
      */
     protected function success($message = null, $body = null)
     {
+        $prefix = $this->request->getParam('prefix');
+        $action = $this->request->getParam('action');
         $this->set([
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'success',
                 'servertime' => time(),
+                'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'message' => $message,
                 'url' => Router::url(),
             ],
