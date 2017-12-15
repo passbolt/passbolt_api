@@ -132,7 +132,12 @@ class GroupsUpdateController extends AppController
         // Notify the users
         $this->_notifyUsers($group, $addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers);
 
-        $this->success(__('The operation was successful.'));
+        // The v1 expect the updated group to be returned.
+        $viewOptions = [
+            'contain' => ['group_user' => 1, 'group_user.user.profile' => 1]
+        ];
+        $group = $this->Groups->findView($id, $viewOptions)->first();
+        $this->success(__('The operation was successful.'), $group);
     }
 
     /**
