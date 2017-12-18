@@ -66,7 +66,7 @@ class ConfigController extends AppController
     public function setExtraConfig()
     {
         $data = $this->request->getData();
-        $seleniumExtraConfig = '<?php $config = ' . var_export($data, true) . ';';
+        $seleniumExtraConfig = '<?php return ' . var_export($data, true) . ';';
         $fileName = self::EXTRA_CONFIG_PATH . self::EXTRA_CONFIG_FILENAME;
         file_put_contents($fileName, $seleniumExtraConfig);
         $this->success(__('Additional configuration added in: {0}', $fileName));
