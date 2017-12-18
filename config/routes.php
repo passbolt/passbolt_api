@@ -26,6 +26,7 @@ Router::defaultRouteClass(DashedRoute::class);
  * Shorthands and legacy redirect
  */
 Router::scope('/', function (RouteBuilder $routes) {
+    $routes->redirect('auth/register', '/users/register');
     $routes->redirect('register', '/users/register');
     $routes->redirect('login', '/auth/login');
     $routes->redirect('users/login', '/auth/login');

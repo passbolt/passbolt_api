@@ -105,7 +105,7 @@ module.exports = function(grunt) {
             'logo/icon-48_white.png', 'logo/icon-48.png',
             'logo/logo.png', 'logo/logo@2x.png',
             // Image for inputs and controls
-            'controls/passwords-dots.png',
+            'controls/password-dots.png',
             'controls/infinite-bar.gif',
             'controls/loading.gif',
             'controls/overlay-opacity-50.png',
