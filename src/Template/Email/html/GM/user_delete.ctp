@@ -20,9 +20,9 @@ $admin = $body['admin'];
 $user = $body['user'];
 $groups = $body['groups'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($admin->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
@@ -35,15 +35,15 @@ $text = __('The user {0} {1} ({2}) is now deleted from your organisation in pass
     $user->profile->first_name, $user->profile->last_name, $user->username);
 $text .= ' ' . __('This user was a member of the following group(s) you manage:') . '<br>';
 
-$text .= $this->element('email/content/user_delete_groups_summary', [
+$text .= $this->element('Email/content/user_delete_groups_summary', [
     'groups' => $groups
 ]);
 
-echo $this->element('email/module/text', [
+echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/'),
     'text' => __('log in passbolt')
 ]);

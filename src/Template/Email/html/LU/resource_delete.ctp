@@ -18,9 +18,9 @@ use Cake\Routing\Router;
 
 $user = $body['user'];
 $resource = $body['resource'];
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($user->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($user->username),
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
@@ -40,11 +40,11 @@ if (Configure::read('passbolt.email.show.uri')) {
 if (Configure::read('passbolt.email.show.description')) {
     $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
-echo $this->element('email/module/text', [
+echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/'),
     'text' => __('log in passbolt')
 ]);

@@ -23,9 +23,9 @@ $updatedUsers = $body['updatedUsers'];
 $removedUsers = $body['removedUsers'];
 $whoIsAdmin = $body['whoIsAdmin'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($admin->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
@@ -34,7 +34,7 @@ echo $this->element('email/module/avatar',[
     ])
 ]);
 
-echo $this->element('email/content/group_changes_summary', [
+echo $this->element('Email/content/group_changes_summary', [
     'group' => $group,
     'addedUsers' => $addedUsers,
     'updatedUsers' => $updatedUsers,
@@ -42,7 +42,7 @@ echo $this->element('email/content/group_changes_summary', [
     'whoIsAdmin' => $whoIsAdmin
 ]);
 
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/'),
     'text' => __('log in passbolt')
 ]);

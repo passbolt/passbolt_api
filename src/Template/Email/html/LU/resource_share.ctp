@@ -21,9 +21,9 @@ $owner = $body['owner'];
 $resource = $body['resource'];
 $secret = $body['secret'];
 
-echo $this->element('email/module/avatar',[
+echo $this->element('Email/module/avatar',[
     'url' => Router::url($owner->profile->avatar->url['small'], true),
-    'text' => $this->element('email/module/avatar_text', [
+    'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($owner->username),
         'first_name' => Purifier::clean($owner->profile->first_name),
         'last_name' => Purifier::clean($owner->profile->last_name),
@@ -43,15 +43,15 @@ if (Configure::read('passbolt.email.show.uri')) {
 if (Configure::read('passbolt.email.show.description')) {
     $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
-echo $this->element('email/module/text', [
+echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 if (Configure::read('passbolt.email.show.secret')) {
-    echo $this->element('email/module/code', [
+    echo $this->element('Email/module/code', [
         'text' => $secret
     ]);
 }
-echo $this->element('email/module/button', [
+echo $this->element('Email/module/button', [
     'url' => Router::url('/'),
     'text' => __('log in passbolt')
 ]);
