@@ -68,7 +68,7 @@ class AppController extends Controller
             ->withHeader('X-GPGAuth-Logout-URL', '/auth/logout')
             ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
             ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json')
-            ->withHeader('Access-Control-Expose-Headers',GpgAuthenticate::HEADERS_WHITELIST);
+            ->withHeader('Access-Control-Expose-Headers', GpgAuthenticate::HEADERS_WHITELIST);
 
         /*
          * Email notifications

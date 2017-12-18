@@ -38,7 +38,7 @@ trait ResourcesEmailTrait
      * Send resource create email
      *
      * @param Event $event event
-     * @param Resource $resource resource
+     * @param \App\Model\Entity\Resource $resource resource
      * @return void
      */
     public function sendResourceCreateEmail(Event $event, Resource $resource)
@@ -58,7 +58,7 @@ trait ResourcesEmailTrait
      * Send resource update email
      *
      * @param Event $event event
-     * @param Resource $resource resource
+     * @param \App\Model\Entity\Resource $resource resource
      * @return void
      */
     public function sendResourceUpdateEmail(Event $event, Resource $resource)
@@ -95,7 +95,7 @@ trait ResourcesEmailTrait
      * Send resource delete email
      *
      * @param Event $event event
-     * @param Resource $resource resource
+     * @param \App\Model\Entity\Resource $resource resource
      * @param string $deletedBy uuid of the user who deleted the resource
      * @param ResultSetInterface $users list of users who had access to the resource before
      * @return void

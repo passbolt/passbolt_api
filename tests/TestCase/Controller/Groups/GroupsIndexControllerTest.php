@@ -22,7 +22,7 @@ use Cake\Utility\Hash;
 
 class GroupsIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.groups', 'app.groups_users', 'app.permissions'];
+    public $fixtures = ['app.users', 'app.profiles', 'app.groups', 'app.groups_users', 'app.permissions'];
 
     public function testSuccess()
     {
@@ -56,7 +56,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1';
+        $urlParameter = 'contain[modifier]=1&contain[modifier.profile]=1&contain[user]=1&contain[group_user]=1';
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -65,6 +65,8 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($this->_responseJsonBody[0]);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->modifier);
+        $this->assertObjectHasAttribute('profile', $this->_responseJsonBody[0]->modifier);
+        $this->assertProfileAttributes($this->_responseJsonBody[0]->modifier->profile);
         $this->assertObjectHasAttribute('users', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->users[0]);
         $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody[0]);

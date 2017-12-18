@@ -14,9 +14,9 @@
  */
 namespace App\Utility;
 
+use Exception;
 use Ramsey\Uuid\Exception\UnsatisfiedDependencyException;
 use Ramsey\Uuid\Uuid;
-use Exception;
 
 class UuidFactory
 {

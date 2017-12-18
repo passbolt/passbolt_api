@@ -84,6 +84,19 @@ class FindIndexTest extends AppTestCase
         $this->assertUserAttributes($group->modifier);
     }
 
+    public function testContainModifierProfile()
+    {
+        $options['contain']['modifier.profile'] = true;
+        $groups = $this->Groups->findIndex($options)->all();
+        $group = $groups->first();
+
+        // Expected content.
+        $this->assertGroupAttributes($group);
+        $this->assertObjectHasAttribute('modifier', $group);
+        $this->assertObjectHasAttribute('profile', $group->modifier);
+        $this->assertProfileAttributes($group->modifier->profile);
+    }
+
     public function testContainUser()
     {
         $options['contain']['user'] = true;

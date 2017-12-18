@@ -16,7 +16,6 @@ namespace App\Auth;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use Exception;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
 use Cake\Http\Response;
@@ -25,10 +24,11 @@ use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Exception;
 
 class GpgAuthenticate extends BaseAuthenticate
 {
-   const HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, '.
+    const HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
         'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
         'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
 

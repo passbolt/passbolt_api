@@ -192,6 +192,11 @@ class GroupsTable extends Table
             $query->contain('Modifier');
         }
 
+        // If contains modifier profile.
+        if (isset($options['contain']['modifier.profile'])) {
+            $query->contain('Modifier.Profiles');
+        }
+
         // If contains user.
         if (isset($options['contain']['user'])) {
             $query->contain('Users');

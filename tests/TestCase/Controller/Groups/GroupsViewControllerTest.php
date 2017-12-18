@@ -56,7 +56,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1&&contain[group_user]=1&contain[group_user.user.profile]=1';
+        $urlParameter = 'contain[modifier]=1&contain[modifier.profile]=1&contain[user]=1&&contain[group_user]=1&contain[group_user.user.profile]=1';
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
@@ -66,6 +66,8 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->modifier);
+        $this->assertObjectHasAttribute('profile', $this->_responseJsonBody->modifier);
+        $this->assertProfileAttributes($this->_responseJsonBody->modifier->profile);
         $this->assertObjectHasAttribute('users', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->users[0]);
         $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody);
