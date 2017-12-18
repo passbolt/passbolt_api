@@ -19,7 +19,7 @@
   "dependencies": {
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
-    "passbolt-appjs": "git+ssh://git@bitbucket.org:passbolt/passbolt-appjs.git#develop",
-    "passbolt-styleguide": "^1.6.6"
+    "passbolt-appjs": "git+ssh://git@bitbucket.org/passbolt/passbolt-appjs.git#develop",
+    "passbolt-styleguide": "^1.6.11"
   }
 }

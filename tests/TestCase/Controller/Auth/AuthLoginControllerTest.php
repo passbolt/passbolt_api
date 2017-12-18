@@ -225,6 +225,40 @@ class AuthLoginControllerTest extends IntegrationTestCase
     }
 
     /**
+     * Stage 0. Verify server key is incorrect or changed
+     */
+    public function testStage0WrongServerKey()
+    {
+        $this->_gpgSetup();
+        $uuid = UuidFactory::uuid();
+
+        // Use betty public key instead of server
+        $wrongPublicKey = GpgkeysDataTask::$testKeysPath . 'betty_public.key';
+        $keyInfo = $this->_gpg->import(file_get_contents($wrongPublicKey));
+        $this->serverKeyId = $keyInfo['fingerprint'];
+        $token = 'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0';
+        $this->_gpg->addencryptkey($this->serverKeyId);
+        $this->_gpg->addsignkey($this->adaKeyId);
+        $msg = $this->_gpg->encrypt($token);
+
+        $this->post('/auth/verify.json', [
+            'data' => [
+                'gpg_auth' => [
+                    'keyid' => $this->adaKeyId,
+                    'server_verify_token' => $msg
+                ]
+            ]
+        ]);
+        $headers = $this->getHeaders();
+        $this->assertTrue(isset($headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set');
+        $this->assertEquals($headers['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
+        $this->assertTrue(isset($headers['X-GPGAuth-Progress']), 'The progress indicator should be set in the headers');
+        $this->assertEquals($headers['X-GPGAuth-Progress'], 'stage0', 'The progress indicator should be set to stage1');
+        $this->assertTrue(isset($headers['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
+        $this->assertEquals($headers['X-GPGAuth-Debug'], 'Decryption failed');
+    }
+
+    /**
      * Stage 1. Authenticate user
      */
     public function testStage1UserToken()

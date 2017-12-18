@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Auth\GpgAuthenticate;
 use App\Controller\Events\EmailNotificationsListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
@@ -66,7 +67,8 @@ class AppController extends Controller
             ->withHeader('X-GPGAuth-Login-URL', '/auth/login')
             ->withHeader('X-GPGAuth-Logout-URL', '/auth/logout')
             ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
-            ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json');
+            ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json')
+            ->withHeader('Access-Control-Expose-Headers',GpgAuthenticate::HEADERS_WHITELIST);
 
         /*
          * Email notifications
