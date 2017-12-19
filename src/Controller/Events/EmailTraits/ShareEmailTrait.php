@@ -84,7 +84,7 @@ trait ShareEmailTrait
 
         foreach ($users as $userId => $userName) {
             $secret = $secrets[$userId];
-            $subject = __("{0} shared the resource {1}", $owner->profile->first_name, $resource->name);
+            $subject = __("{0} shared the password {1}", $owner->profile->first_name, $resource->name);
             $template = 'LU/resource_share';
 
             $data = ['body' => ['owner' => $owner, 'resource' => $resource, 'secret' => $secret], 'title' => $subject];
