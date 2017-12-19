@@ -48,7 +48,7 @@ trait ResourcesEmailTrait
         }
         $Users = TableRegistry::get('Users');
         $user = $Users->getForEmail($resource->created_by);
-        $subject = __("You added the resource {0}", $resource->name);
+        $subject = __("You added the password {0}", $resource->name);
         $template = 'LU/resource_create';
         $data = ['body' => ['user' => $user, 'resource' => $resource], 'title' => $subject];
         $this->_send($user->username, $subject, $data, $template);
@@ -68,7 +68,7 @@ trait ResourcesEmailTrait
         }
         $Users = TableRegistry::get('Users');
         $owner = $Users->getForEmail($resource->modified_by);
-        $subject = __("{0} edited the resource {1}", $owner->profile->first_name, $resource->name);
+        $subject = __("{0} edited the password {1}", $owner->profile->first_name, $resource->name);
         $template = 'LU/resource_update';
 
         // Get the users that can access this resource
@@ -105,7 +105,7 @@ trait ResourcesEmailTrait
             return;
         }
 
-        $subject = __("{0} deleted the resource {1}", $admin->profile->first_name, $resource->name);
+        $subject = __("{0} deleted the password {1}", $admin->profile->first_name, $resource->name);
         $template = 'LU/resource_delete';
         foreach ($users as $user) {
             if ($user->id === $deletedBy) {
