@@ -72,20 +72,12 @@ trait ResourcesEmailTrait
         $template = 'LU/resource_update';
 
         // Get the users that can access this resource
-        // if there is nobody or just one user, give it up
         $Users = TableRegistry::get('Users');
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
-        if (count($users) < 2) {
-            return;
-        }
 
         // Send emails to everybody that can see the resource
-        // except for the user who modified the resource
         foreach ($users as $user) {
-            if ($user->id === $resource->modified_by) {
-                continue;
-            }
             $data = ['body' => ['user' => $owner, 'resource' => $resource], 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);
         }
