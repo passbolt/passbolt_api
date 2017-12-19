@@ -66,10 +66,10 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
         $this->assertResponseCode(200);
         $this->assertResponseContains('have updated the password');
 
-        // NO no emails should be sent to ada
+        // email should be send to self as backup
         $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('have updated the password');
     }
 
     public function testResourcesUpdateNotificationSettings()
