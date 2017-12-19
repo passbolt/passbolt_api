@@ -50,13 +50,16 @@ class PatchEntitiesWithChangesTest extends AppTestCase
             ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false],
             ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'is_admin' => true]
         ];
+        $patchOptions = ['allowedOperations' => [
+            'update' => true
+        ]];
 
         // Retrieve the groups and its groups_users to update.
         $group = $this->Groups->get($groupId, ['contain' => ['GroupsUsers']]);
 
         // Patch the group groups_users.
         try {
-            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id);
+            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id, $patchOptions);
         } catch (ValidationRuleException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
@@ -84,13 +87,16 @@ class PatchEntitiesWithChangesTest extends AppTestCase
             ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true],
             ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true]
         ];
+        $patchOptions = ['allowedOperations' => [
+            'delete' => true
+        ]];
 
         // Retrieve the groups and its groups_users to update.
         $group = $this->Groups->get($groupId, ['contain' => ['GroupsUsers']]);
 
         // Patch the group groups_users.
         try {
-            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id);
+            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id, $patchOptions);
         } catch (ValidationRuleException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
@@ -116,13 +122,16 @@ class PatchEntitiesWithChangesTest extends AppTestCase
             ['user_id' => UuidFactory::uuid("user.id.ada"), 'isAdmin' => true],
             ['user_id' => UuidFactory::uuid("user.id.betty"), 'isAdmin' => false],
         ];
+        $patchOptions = ['allowedOperations' => [
+            'add' => true
+        ]];
 
         // Retrieve the groups and its groups_users to update.
         $group = $this->Groups->get($groupId, ['contain' => ['GroupsUsers']]);
 
         // Patch the group groups_users.
         try {
-            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id);
+            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id, $patchOptions);
         } catch (ValidationRuleException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));

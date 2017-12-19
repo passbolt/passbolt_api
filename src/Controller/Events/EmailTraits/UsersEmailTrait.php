@@ -98,7 +98,7 @@ trait UsersEmailTrait
 
         $Users = TableRegistry::get('Users');
         $deletedBy = $Users->getForEmail($deletedById);
-        $subject = __('{0} deleted user {1}', $deletedBy->profile->firtname, $user->profile->firstname);
+        $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
         $template = 'GM/user_delete';
 
         $GroupsUsers = TableRegistry::get('GroupsUsers');

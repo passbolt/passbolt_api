@@ -44,7 +44,6 @@
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
                                         <td valign="top" class="textContent">
-                                            Name: <?= $group->name ?><br><br>
                                             <?php if (!empty($addedUsers)): ?>
                                                 <span style="font-weight:bold;">Added members</span>
                                                 <table id="added_users" style="border:0; margin:5px 0 0 5px;">

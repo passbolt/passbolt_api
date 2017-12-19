@@ -69,7 +69,7 @@ class GroupsUpdateController extends AppController
         // Dry run the save.
         $this->Groups->getConnection()->transactional(function () use ($group) {
             $saveResult = $this->Groups->save($group);
-            if (!$saveResult) {
+            if ($saveResult === false) {
                 $this->_handleValidationError($group);
             }
 
@@ -111,7 +111,7 @@ class GroupsUpdateController extends AppController
         $this->Groups->getConnection()->transactional(function () use ($group, $groupUserOriginal, $data) {
             // Save the memberships changes.
             $saveResult = $this->Groups->save($group);
-            if (!$saveResult) {
+            if ($saveResult === false) {
                 $this->_handleValidationError($group);
             }
             // If not manager, do not need to continue.
@@ -122,7 +122,7 @@ class GroupsUpdateController extends AppController
             $resources = $this->_patchAndValidateResourcesEntities($group, $groupUserOriginal, Hash::get($data, 'secrets', []));
             // Save the group resources secrets.
             $saveResult = $this->_saveResourcesEntities($resources);
-            if (!$saveResult) {
+            if ($saveResult === false) {
                 $this->_handleValidationError($group, $resources);
 
                 return false;
@@ -297,46 +297,51 @@ class GroupsUpdateController extends AppController
      */
     protected function _patchAndValidateGroupEntity(\App\Model\Entity\Group $group, array $data)
     {
-        $patchEntityOptions = [
+        $groupPatchOptions = [
             'validate' => 'default'
         ];
+        $groupsUsersPatchOptions = [];
 
-        // Only administrator can update group name.
+        // An administrator can update the group name.
+        // An administrator can update the group members roles.
         if ($this->User->isAdmin()) {
-            $patchEntityOptions['accessibleFields']['name'] = true;
-        }
-
-        // Only group manager can update the group memberships.
-        if ($this->_isGroupManager) {
-            // Add the groups_users options used when saving.
-            $patchEntityOptions = array_merge_recursive([
-                'associated' => [
-                    'GroupsUsers' => [
-                        'validate' => 'default',
-                        'accessibleFields' => [
-                            'group_id' => true,
-                            'user_id' => true,
-                            'is_admin' => true
-                        ]
-                    ]
+            $groupPatchOptions['accessibleFields']['name'] = true;
+            $groupsUsersPatchOptions = array_merge_recursive($groupsUsersPatchOptions, [
+                'allowedOperations' => [
+                    'add' => false,
+                    'update' => true,
+                    'delete' => false,
                 ]
             ]);
-
-            // The changes won't be applied with the classic patchEntity method.
-            // Instead use the patchEntitiesWithChanges which works directly on the entities array.
-            try {
-                $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges(
-                    $group->groups_users,
-                    Hash::get($data, 'groups_users', []),
-                    $group->id
-                );
-                $group->dirty('groups_users', true);
-            } catch (ValidationRuleException $e) {
-                $group->setError('groups_users', $e->getErrors());
-            }
         }
 
-        $this->Groups->patchEntity($group, $data, $patchEntityOptions);
+        // A group manager can update the group members roles.
+        // A group manager can add or delete group members.
+        if ($this->_isGroupManager) {
+            $groupsUsersPatchOptions = array_merge_recursive($groupsUsersPatchOptions, [
+                'allowedOperations' => [
+                    'add' => true,
+                    'update' => true,
+                    'delete' => true,
+                ]
+            ]);
+        }
+
+        // Apply the changes to the groups_users entities.
+        try {
+            $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges(
+                $group->groups_users,
+                Hash::get($data, 'groups_users', []),
+                $group->id,
+                $groupsUsersPatchOptions
+            );
+            $group->dirty('groups_users', true);
+        } catch (ValidationRuleException $e) {
+            $group->setError('groups_users', $e->getErrors());
+        }
+
+        // Patch the group.
+        $this->Groups->patchEntity($group, $data, $groupPatchOptions);
         $this->_handleValidationError($group);
 
         return $group;
@@ -372,7 +377,7 @@ class GroupsUpdateController extends AppController
             $changes[$secret['resource_id']]['remove'][] = $secret['user_id'];
         }
 
-        // Patch the resources.
+        // Apply the changes to the resources secrets entities.
         foreach ($changes as $resourceId => $change) {
             $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
             try {
@@ -397,7 +402,7 @@ class GroupsUpdateController extends AppController
      * Save the resources secrets.
      *
      * @param array $resources The list of resources to save
-     * @return \App\Model\Entity\Group|bool False in case of error, otherwise the saved entities
+     * @return array|bool False in case of error, otherwise the list of saved entities
      */
     protected function _saveResourcesEntities(array $resources = [])
     {
