@@ -434,6 +434,49 @@ hcciUFw5
     }
 
     /*
+	* As a, administrator I can delete members to a group I manage
+	*   - A member who has access to the resources shared with the group only because of its membership
+	*   - A member who has access to some resources shared with the group because of other permissions
+	*/
+    public function testAsADDeleteMembersSuccess()
+    {
+        // Define actors of this tests
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $userKId = UuidFactory::uuid('user.id.kathleen');
+        $userLId = UuidFactory::uuid('user.id.lynne');
+        $resourceCId = UuidFactory::uuid('resource.id.chai');
+
+        // Retrieve the resources the group has access.
+        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
+        $groupHasAccess = Hash::extract($resources, '{n}.id');
+
+        // Build the request data.
+        $changes = [];
+
+        // Remove users from the group
+        // Remove Kathleen who has access to the group resources only because of her membership.
+        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true];
+
+        // Remove a user who has its own access to the same resource the group has.
+        // Remove lynne who has a direct access to the resource chai.
+        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true];
+
+        // Update the group users.
+        $this->authenticateAs('admin');
+        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $this->assertSuccess();
+
+        // kathleen should not have anymore access to the group resources.
+        $this->_assertUserHasNotAccessResources($userKId, $groupHasAccess);
+
+        // Lynne should not have anymore access to the group resources (except chai).
+        $userHasAccess = [$resourceCId];
+        $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
+        $this->_assertUserHasNotAccessResources($userLId, $userHasNotAccess);
+        $this->_assertUserHasAccessResources($userLId, $userHasAccess);
+    }
+
+    /*
      * As a administrator I can update a group (complex scenario).
      *
      * - Update group name

@@ -114,10 +114,6 @@ class GroupsUpdateController extends AppController
             if ($saveResult === false) {
                 $this->_handleValidationError($group);
             }
-            // If not manager, do not need to continue.
-            if (!$this->_isGroupManager) {
-                return true;
-            }
             // Patch the group resources secrets.
             $resources = $this->_patchAndValidateResourcesEntities($group, $groupUserOriginal, Hash::get($data, 'secrets', []));
             // Save the group resources secrets.
@@ -310,7 +306,7 @@ class GroupsUpdateController extends AppController
                 'allowedOperations' => [
                     'add' => false,
                     'update' => true,
-                    'delete' => false,
+                    'delete' => true,
                 ]
             ]);
         }
