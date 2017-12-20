@@ -16,8 +16,6 @@ namespace App\Controller\Auth;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
 
 class AuthLoginController extends AppController
 {
