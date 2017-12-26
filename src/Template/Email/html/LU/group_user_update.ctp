@@ -27,7 +27,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} updated your group membership', null)
+        'text' => __('{0} updated your membership in the group {1}', $admin->profile->first_name, $group->name)
     ])
 ]);
 

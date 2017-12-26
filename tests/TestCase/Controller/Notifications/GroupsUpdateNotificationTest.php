@@ -23,7 +23,8 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 {
 
     public $fixtures = ['app.groups', 'app.groups_users', 'app.resources', 'app.permissions', 'app.users',
-        'app.secrets', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.favorites', 'app.email_queue'];
+        'app.secrets', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.favorites', 'app.email_queue',
+        'app.avatars'];
 
     public function testUpdateNotificationAddMemberSuccess()
     {

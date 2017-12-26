@@ -26,7 +26,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => $user->created,
-        'text' => __('{0} just created an account for you on passbolt!')
+        'text' => __('{0} just created an account for you on passbolt!', $admin->profile->first_name)
     ])
 ]);
 

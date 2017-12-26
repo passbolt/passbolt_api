@@ -18,6 +18,7 @@ namespace App\Model\Table;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Table\AvatarsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\RulesChecker;
@@ -233,12 +234,16 @@ class CommentsTable extends Table
 
         // If contains creator.
         if (isset($options['contain']['creator'])) {
-            $query->contain('Creator');
+            $query->contain([
+                'Creator' => ['Profiles' => AvatarsTable::addContainAvatar()]
+            ]);
         }
 
         // If contains modifier.
         if (isset($options['contain']['modifier'])) {
-            $query->contain('Modifier');
+            $query->contain([
+                'Modifier' => ['Profiles' => AvatarsTable::addContainAvatar()]
+            ]);
         }
 
         return $query;

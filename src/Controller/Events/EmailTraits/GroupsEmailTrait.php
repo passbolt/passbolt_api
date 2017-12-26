@@ -193,7 +193,7 @@ trait GroupsEmailTrait
 
         foreach ($users as $userId => $userName) {
             $isAdmin = isset($whoIsAdmin[$userId]) && $whoIsAdmin[$userId];
-            $subject = __("{0} updated your group membership", $modifiedBy->profile->first_name, $group->name);
+            $subject = __("{0} updated your membership in the group {1}", $modifiedBy->profile->first_name, $group->name);
             $template = 'LU/group_user_update';
 
             $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
@@ -303,7 +303,7 @@ trait GroupsEmailTrait
 
         // Send the email to all the group managers.
         foreach ($groupManagers as $groupManager) {
-            $subject = __("{0} updated the group memberships", $modifiedBy->profile->first_name, $group->name);
+            $subject = __("{0} updated the group {1}", $modifiedBy->profile->first_name, $group->name);
             $template = 'GM/group_user_update';
             $data = ['body' => [
                 'admin' => $modifiedBy,

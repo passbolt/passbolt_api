@@ -388,13 +388,30 @@ class GroupsUsersTable extends Table
      * @param array $entities The list of groups users entities to patch
      * @param array $changes The changes to apply
      * @param null $groupId The group identifier that the entities belong to
+     * @param array $options A list of options to apply to the operations
+     *
+     *  Allowed operations:
+     *  Define which operations are allowed when patching the entities, by default none of them are allowed.
+     *  [
+     *    'allowedOperations' => [
+     *      'add' => true,
+     *      'update' => true
+     *      'delete' => true,
+     *  ]
+     *
      * @throw ValidationRuleException If a change try to modify a group user that is not in the list of groups users
      * @throw ValidationRuleException If a change does not validate when calling patchEntity
      * @throw ValidationRuleException If a change does not validate when calling newEntity
      * @return array The list of groups users entities patched with the changes
      */
-    public function patchEntitiesWithChanges($entities = [], $changes = [], $groupId = null)
+    public function patchEntitiesWithChanges($entities = [], $changes = [], $groupId = null, array $options = [])
     {
+        // What operations are allowed.
+        $canAdd = Hash::get($options, 'allowedOperations.add', false);
+        $canUpdate = Hash::get($options, 'allowedOperations.update', false);
+        $canDelete = Hash::get($options, 'allowedOperations.delete', false);
+
+        // Apply the changes to the list of entities.
         foreach ($changes as $changeKey => $change) {
             // Update or Delete case.
             if (isset($change['id'])) {
@@ -409,9 +426,9 @@ class GroupsUsersTable extends Table
                 }
 
                 // Delete case.
-                if (isset($change['delete']) && $change['delete']) {
+                if ($canDelete && isset($change['delete']) && $change['delete']) {
                     unset($entities[$groupUserKey]);
-                } else {
+                } elseif ($canUpdate) {
                     // Update case
                     $options = ['accessibleFields' => ['is_admin' => true]];
                     $this->patchEntity($entities[$groupUserKey], $change, $options);
@@ -420,7 +437,7 @@ class GroupsUsersTable extends Table
                         throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
                     }
                 }
-            } else {
+            } elseif ($canAdd) {
                 // Add case.
                 // Enforce data.
                 $change['group_id'] = $groupId;
@@ -441,5 +458,21 @@ class GroupsUsersTable extends Table
         }
 
         return $entities;
+    }
+
+    /**
+     * Event fired before request data is converted into entities
+     * - On create, if not defined set is_admin to false
+     *
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (!isset($data['is_admin'])) {
+            $data['is_admin'] = false;
+        }
     }
 }
