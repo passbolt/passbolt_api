@@ -102,6 +102,9 @@ class QueryStringComponent extends Component
         // filters with is-* means we are expecting a boolean
         // we accept 'TRUE', 'true', '1' as true and the rest is set to false
         if (isset($query['filter'])) {
+            if (!is_array($query['filter'])) {
+                throw new BadRequestException(__('Invalid query string. Filter should be an array.'));
+            }
             foreach ($query['filter'] as $filterName => $filter) {
                 if (substr($filterName, 0, 3) === "is-") {
                     $query['filter'][$filterName] = self::normalizeBoolean($filter);
@@ -115,6 +118,9 @@ class QueryStringComponent extends Component
         }
         // idem with contain clauses
         if (isset($query['contain'])) {
+            if (!is_array($query['contain'])) {
+                throw new BadRequestException(__('Invalid query string. Contain should be an array.'));
+            }
             foreach ($query['contain'] as $containName => $contain) {
                 $query['contain'][$containName] = self::normalizeBoolean($contain);
             }
