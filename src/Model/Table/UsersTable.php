@@ -694,10 +694,16 @@ class UsersTable extends Table
 
         // Populates fields required for Avatar, if needed.
         if (!empty(Hash::get($data, 'profile.avatar'))) {
-            $data['profile']['avatar']['user_id'] = $user->id;
-            $data['profile']['avatar']['foreign_key'] = $user->profile->id;
-            // Force creation of new Avatar.
-            $user->profile->avatar = new Avatar();
+            if (!empty(Hash::get($data, 'profile.avatar.file'))) {
+                $data['profile']['avatar']['user_id'] = $user->id;
+                $data['profile']['avatar']['foreign_key'] = $user->profile->id;
+                // Force creation of new Avatar.
+                $user->profile->avatar = new Avatar();
+            } else {
+                // If file is not provided, nothing else should be. We simply delete the whole entry.
+                unset($data['profile']['avatar']);
+                $user->profile->avatar = null;
+            }
         }
 
         $entity = $this->patchEntity($user, $data, [
