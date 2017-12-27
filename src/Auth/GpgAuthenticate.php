@@ -28,7 +28,7 @@ use Exception;
 
 class GpgAuthenticate extends BaseAuthenticate
 {
-    const HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
+    const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
         'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
         'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
 

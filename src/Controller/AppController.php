@@ -62,14 +62,6 @@ class AppController extends Controller
             ],
         ]);
 
-        $this->response = $this->response
-            ->withHeader('X-GPGAuth-Version', '1.3.0')
-            ->withHeader('X-GPGAuth-Login-URL', '/auth/login')
-            ->withHeader('X-GPGAuth-Logout-URL', '/auth/logout')
-            ->withHeader('X-GPGAuth-Verify-URL', '/auth/verify')
-            ->withHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json')
-            ->withHeader('Access-Control-Expose-Headers', GpgAuthenticate::HEADERS_WHITELIST);
-
         /*
          * Email notifications
          */

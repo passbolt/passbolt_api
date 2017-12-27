@@ -14,7 +14,8 @@
  */
 namespace App;
 
-use Cake\Core\Configure;
+use App\Middleware\GpgAuthHeadersMiddleware;
+use App\Middleware\GpgAuthSignMiddleware;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -45,8 +46,14 @@ class Application extends BaseApplication
             ->add(AssetMiddleware::class)
 
             // Apply routing
-            ->add(RoutingMiddleware::class);
+            ->add(RoutingMiddleware::class)
 
+            // Apply GPG Auth signatures
+            ->add(GpgAuthHeadersMiddleware::class)
+//
+            // Apply GPG signatures
+            ->add(GpgAuthSignMiddleware::class)
+        ;
         return $middleware;
     }
 }
