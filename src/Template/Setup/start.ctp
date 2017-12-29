@@ -21,9 +21,9 @@ $this->Html->css('setup.min', ['block' => 'css']);
 
 // Only Firefox and Chrome are supported right now.
 if ($browserName == 'firefox' || $browserName == 'chrome') {
-    $pluginCheckTemplate = 'public/Setup/supported';
+    $pluginCheckTemplate = 'Public/Setup/supported';
 } else {
-    $pluginCheckTemplate = 'public/Setup/unsupported';
+    $pluginCheckTemplate = 'Public/Setup/unsupported';
 }
 ?>
 <input type="hidden" id="js_setup_user_username" value="<?php echo $user->username; ?>"/>
