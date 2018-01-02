@@ -31,7 +31,6 @@ class AuthVerifyController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow('verifyGet');
-        $this->Auth->allow('verifyPost');
 
         return parent::beforeFilter($event);
     }
