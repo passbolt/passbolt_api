@@ -83,7 +83,7 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         // If it's JSON we show an error message
         if ($request->is('json')) {
-            throw new ForbiddenException(_('You need to login to access this location.'));
+            throw new ForbiddenException(__('You need to login to access this location.'));
         }
         // Otherwise we let the controller handle it
     }
