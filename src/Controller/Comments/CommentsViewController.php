@@ -21,7 +21,6 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
 class CommentsViewController extends AppController
 {
@@ -40,7 +39,7 @@ class CommentsViewController extends AppController
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
         if (!in_array($foreignModelName, CommentsTable::ALLOWED_FOREIGN_MODELS)) {
-            throw new \InvalidArgumentException(__('Invalid model name}'));
+            throw new \InvalidArgumentException(__('Invalid model name'));
         }
 
         // Check uuid sanity.
