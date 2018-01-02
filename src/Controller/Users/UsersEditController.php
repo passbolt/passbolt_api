@@ -92,6 +92,11 @@ class UsersEditController extends AppController
             if (isset($data['GroupUser'])) {
                 $result['groups_user'] = $data['GroupUser'];
             }
+            // nested model: User.Profile.Avatar case.
+            if (isset($data['Profile']) && isset($data['Profile']['Avatar'])) {
+                $result['profile']['avatar'] = $data['Profile']['Avatar'];
+                unset($result['profile']['Avatar']);
+            }
         } else {
             $result = $data;
         }
