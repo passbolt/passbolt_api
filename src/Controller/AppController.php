@@ -107,7 +107,7 @@ class AppController extends Controller
      */
     protected function success($message = null, $body = null)
     {
-        $prefix = $this->request->getParam('prefix');
+        $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
         $this->set([
             'header' => [
@@ -133,11 +133,14 @@ class AppController extends Controller
      */
     protected function error($message = null, $body = null)
     {
+        $prefix = strtolower($this->request->getParam('prefix'));
+        $action = $this->request->getParam('action');
         $this->set([
             'header' => [
                 'id' => Text::uuid(),
                 'status' => 'error',
                 'servertime' => time(),
+                'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'message' => $message,
                 'url' => Router::url(),
             ],
