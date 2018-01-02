@@ -305,6 +305,11 @@ class ResourcesTable extends Table
             }
         }
 
+        // If shared with group.
+        if (isset($options['filter']['is-shared-with-group'])) {
+            $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
+        }
+
         // If contains favorite.
         if (isset($options['contain']['favorite'])) {
             $query->contain('Favorites', function ($q) use ($userId) {
@@ -507,6 +512,31 @@ class ResourcesTable extends Table
 
         // Filter the Resources query by permissions.
         $query->where(['Permission.id' => $permissionSubquery]);
+
+        return $query;
+    }
+
+    /**
+     * Augment any Resources queries to filter on resources shared with a given group.
+     *
+     * @param \Cake\ORM\Query $query The query to filter.
+     * @param string $groupId The group to check the permissions for.
+     * @throws \InvalidArgumentException if the group id is not a uuid
+     * @return \Cake\ORM\Query
+     */
+    private function _filterQuerySharedWithGroup(\Cake\ORM\Query $query, string $groupId)
+    {
+        if (!Validation::uuid($groupId)) {
+            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+        }
+
+        // Filter the main query.
+        $query->innerJoinWith('Permissions', function ($q) use ($groupId) {
+            return $q->where([
+                'Permissions.aco_foreign_key = Resources.id',
+                'Permissions.aro_foreign_key' => $groupId
+            ]);
+        });
 
         return $query;
     }

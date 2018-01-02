@@ -50,10 +50,10 @@ class Application extends BaseApplication
 
             // Apply GPG Auth signatures
             ->add(GpgAuthHeadersMiddleware::class)
-//
+
             // Apply GPG signatures
-            ->add(GpgAuthSignMiddleware::class)
-        ;
+            ->add(GpgAuthSignMiddleware::class);
+
         return $middleware;
     }
 }

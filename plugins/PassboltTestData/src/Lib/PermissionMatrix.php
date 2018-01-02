@@ -178,7 +178,7 @@ class PermissionMatrix
 
             if ($orientation == 'resource') {
                 $matrix[$value[0]] = array_combine($header, $row);
-            } elseif ($orientation == 'user') {
+            } elseif ($orientation == 'user' || $orientation == 'group') {
                 foreach ($header as $i => $column) {
                     $matrix[$column][$value[0]] = $row[$i];
                 }

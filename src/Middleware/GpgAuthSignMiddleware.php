@@ -14,13 +14,16 @@
  */
 namespace App\Middleware;
 
-use Psr\Http\Message\ResponseInterface;
 use Cake\Core\Configure;
+use Psr\Http\Message\ResponseInterface;
 
 class GpgAuthSignMiddleware
 {
     const HTTP_HEADER_GPG_SIG_BODY = 'X-GPG-Body-Signature';
 
+    /**
+     * {@inheritdoc}
+     */
     public function __invoke($request, ResponseInterface $response, $next)
     {
         // Calling $next() delegates control to the *next* middleware
@@ -28,8 +31,8 @@ class GpgAuthSignMiddleware
         $response = $next($request, $response);
 
         // Sign the successfull json responses
-        if($response->statusCode() === 200 && $request->is('json')) {
-            $body = (string) $response->getBody();
+        if ($response->statusCode() === 200 && $request->is('json')) {
+            $body = (string)$response->getBody();
             $gpg = new \gnupg();
             $gpg->addsignkey(
                 Configure::read('passbolt.gpg.serverKey.fingerprint'),
