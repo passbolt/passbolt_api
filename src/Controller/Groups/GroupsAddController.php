@@ -35,7 +35,7 @@ class GroupsAddController extends AppController
      */
     public function addPost()
     {
-        if ($this->User->role() != Role::ADMIN) {
+        if (!$this->User->isAdmin()) {
             throw new ForbiddenException();
         }
 
