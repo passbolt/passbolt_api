@@ -434,10 +434,10 @@ hcciUFw5
     }
 
     /*
-	* As a, administrator I can delete members to a group I manage
-	*   - A member who has access to the resources shared with the group only because of its membership
-	*   - A member who has access to some resources shared with the group because of other permissions
-	*/
+     * As a, administrator I can delete members to a group I manage
+     *   - A member who has access to the resources shared with the group only because of its membership
+     *   - A member who has access to some resources shared with the group because of other permissions
+     */
     public function testAsADDeleteMembersSuccess()
     {
         // Define actors of this tests

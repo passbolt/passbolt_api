@@ -80,7 +80,7 @@ class InstallTask extends AppShell
 //            ])
 //            ->addOption('send-anonymous-statistics', [
 //                'help' => 'Whether or not anonymous usage statistics should be sent to passbolt servers.
-//				(Check our privacy policy for more information: https://www.passbolt.com/privacy#statistics).',
+//              (Check our privacy policy for more information: https://www.passbolt.com/privacy#statistics).',
 //                'default' => '',
 //                'choices' => [
 //                    'true',
