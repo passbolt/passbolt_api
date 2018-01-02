@@ -78,14 +78,14 @@ Router::scope('/auth', function (RouteBuilder $routes) {
 /**
  * Favorites prefixed routes
  */
-Router::prefix('Favorites', function ($routes) {
+Router::scope('/favorites', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/resource/:foreignId', ['controller' => 'FavoritesAdd', 'action' => 'add'])
+    $routes->connect('/resource/:foreignId', ['prefix' => 'Favorites', 'controller' => 'FavoritesAdd', 'action' => 'add'])
         ->setPass(['foreignId'])
         ->setMethods(['POST']);
 
-    $routes->connect('/:id', ['controller' => 'FavoritesDelete', 'action' => 'delete'])
+    $routes->connect('/:id', ['prefix' => 'Favorites', 'controller' => 'FavoritesDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 });
@@ -93,22 +93,22 @@ Router::prefix('Favorites', function ($routes) {
 /**
  * Comments prefixed routes
  */
-Router::prefix('Comments', function ($routes) {
+Router::scope('/comments', function ($routes) {
 	$routes->setExtensions(['json']);
 
-	$routes->connect('/:model/:id', ['controller' => 'CommentsView', 'action' => 'view'])
+	$routes->connect('/:model/:id', ['prefix' => 'Comments', 'controller' => 'CommentsView', 'action' => 'view'])
 		->setPass(['model', 'id'])
 		->setMethods(['GET']);
 
-	$routes->connect('/resource/:foreignId', ['controller' => 'CommentsAdd', 'action' => 'addPost'])
+	$routes->connect('/resource/:foreignId', ['prefix' => 'Comments', 'controller' => 'CommentsAdd', 'action' => 'addPost'])
 	       ->setPass(['foreignId'])
 	       ->setMethods(['POST']);
 
-    $routes->connect('/:commentId', ['controller' => 'CommentsUpdate', 'action' => 'update'])
+    $routes->connect('/:commentId', ['prefix' => 'Comments', 'controller' => 'CommentsUpdate', 'action' => 'update'])
         ->setPass(['commentId'])
         ->setMethods(['PUT']);
 
-    $routes->connect('/:commentId', ['controller' => 'CommentsDelete', 'action' => 'delete'])
+    $routes->connect('/:commentId', ['prefix' => 'Comments', 'controller' => 'CommentsDelete', 'action' => 'delete'])
         ->setPass(['commentId'])
         ->setMethods(['DELETE']);
 });
@@ -116,7 +116,7 @@ Router::prefix('Comments', function ($routes) {
 /**
  * Gpgkeys prefixed routes
  */
-Router::prefix('/gpgkeys', function ($routes) {
+Router::scope('/gpgkeys', function ($routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['prefix' => 'gpgkeys', 'controller' => 'GpgkeysIndex', 'action' => 'index'])
@@ -130,32 +130,32 @@ Router::prefix('/gpgkeys', function ($routes) {
 /**
  * Groups prefixed routes
  */
-Router::prefix('Groups', function ($routes) {
+Router::prefix('/groups', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'GroupsIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Groups', 'controller' => 'GroupsIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['controller' => 'GroupsView', 'action' => 'view'])
+    $routes->connect('/:id', ['prefix' => 'Groups', 'controller' => 'GroupsView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['controller' => 'GroupsDelete', 'action' => 'delete'])
+    $routes->connect('/:id', ['prefix' => 'Groups', 'controller' => 'GroupsDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    $routes->connect('/:id/dry-run', ['controller' => 'GroupsDelete', 'action' => 'dryRun'])
+    $routes->connect('/:id/dry-run', ['prefix' => 'Groups', 'controller' => 'GroupsDelete', 'action' => 'dryRun'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    $routes->connect('/', ['controller' => 'GroupsAdd', 'action' => 'addPost'])
+    $routes->connect('/', ['prefix' => 'Groups', 'controller' => 'GroupsAdd', 'action' => 'addPost'])
         ->setMethods(['POST']);
 
-    $routes->connect('/:id/dry-run', ['controller' => 'GroupsUpdate', 'action' => 'dryRun'])
+    $routes->connect('/:id/dry-run', ['prefix' => 'Groups', 'controller' => 'GroupsUpdate', 'action' => 'dryRun'])
         ->setPass(['id'])
         ->setMethods(['PUT']);
 
-    $routes->connect('/:id', ['controller' => 'GroupsUpdate', 'action' => 'update'])
+    $routes->connect('/:id', ['prefix' => 'Groups', 'controller' => 'GroupsUpdate', 'action' => 'update'])
         ->setPass(['id'])
         ->setMethods(['PUT']);
 });
@@ -163,7 +163,7 @@ Router::prefix('Groups', function ($routes) {
 /**
  * Healthchecks routes
  */
-Router::prefix('/healthcheck', function ($routes) {
+Router::scope('/healthcheck', function ($routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/status', ['prefix' => 'healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
@@ -177,10 +177,10 @@ Router::prefix('/healthcheck', function ($routes) {
 /**
  * Permissions prefixed routes
  */
-Router::prefix('Permissions', function ($routes) {
+Router::scope('/permissions', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/resource/:acoForeignKey', ['controller' => 'PermissionsView', 'action' => 'viewAcoPermissions'])
+    $routes->connect('/resource/:acoForeignKey', ['prefix' => 'Permissions', 'controller' => 'PermissionsView', 'action' => 'viewAcoPermissions'])
         ->setPass(['acoForeignKey'])
         ->setMethods(['GET']);
 });
@@ -188,24 +188,24 @@ Router::prefix('Permissions', function ($routes) {
 /**
  * Resources prefixed routes
  */
-Router::prefix('Resources', function ($routes) {
+Router::scope('/resources', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'ResourcesIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Resources', 'controller' => 'ResourcesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['controller' => 'ResourcesView', 'action' => 'view'])
+    $routes->connect('/:id', ['prefix' => 'Resources', 'controller' => 'ResourcesView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/', ['controller' => 'ResourcesAdd', 'action' => 'add'])
+    $routes->connect('/', ['prefix' => 'Resources', 'controller' => 'ResourcesAdd', 'action' => 'add'])
         ->setMethods(['POST']);
 
-    $routes->connect('/:id', ['controller' => 'ResourcesUpdate', 'action' => 'update'])
+    $routes->connect('/:id', ['prefix' => 'Resources', 'controller' => 'ResourcesUpdate', 'action' => 'update'])
         ->setPass(['id'])
         ->setMethods(['PUT']);
 
-    $routes->connect('/:id', ['controller' => 'ResourcesDelete', 'action' => 'delete'])
+    $routes->connect('/:id', ['prefix' => 'Resources', 'controller' => 'ResourcesDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 });
@@ -213,28 +213,28 @@ Router::prefix('Resources', function ($routes) {
 /**
  * Roles prefixed routes
  */
-Router::prefix('Roles', function ($routes) {
+Router::scope('/roles', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'RolesIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Roles', 'controller' => 'RolesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 });
 
 /**
  * Share prefixed routes
  */
-Router::prefix('Share', function ($routes) {
+Router::prefix('/share', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/search-users/resource/:acoForeignKey', ['controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
+    $routes->connect('/search-users/resource/:acoForeignKey', ['prefix' => 'Share', 'controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
         ->setPass(['acoForeignKey'])
         ->setMethods(['GET']);
 
-    $routes->connect('/simulate/resource/:acoForeignKey', ['controller' => 'Share', 'action' => 'dryRun'])
+    $routes->connect('/simulate/resource/:acoForeignKey', ['prefix' => 'Share', 'controller' => 'Share', 'action' => 'dryRun'])
         ->setPass(['acoForeignKey'])
         ->setMethods(['POST']);
 
-    $routes->connect('/resource/:acoForeignKey', ['controller' => 'Share', 'action' => 'share'])
+    $routes->connect('/resource/:acoForeignKey', ['prefix' => 'Share', 'controller' => 'Share', 'action' => 'share'])
         ->setPass(['acoForeignKey'])
         ->setMethods(['PUT']);
 });
@@ -242,57 +242,57 @@ Router::prefix('Share', function ($routes) {
 /**
  * Users prefixed routes
  */
-Router::prefix('Users', function ($routes) {
+Router::scope('/users', function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'UsersIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'Users', 'controller' => 'UsersIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/', ['controller' => 'UsersAdd', 'action' => 'addPost'])
+    $routes->connect('/', ['prefix' => 'Users', 'controller' => 'UsersAdd', 'action' => 'addPost'])
         ->setMethods(['POST']);
 
-    $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerGet'])
+    $routes->connect('/register', ['prefix' => 'Users', 'controller' => 'UsersRegister', 'action' => 'registerGet'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/register', ['controller' => 'UsersRegister', 'action' => 'registerPost'])
-        ->setPass(['id'])
-        ->setMethods(['POST']);
-
-    $routes->connect('/recover', ['controller' => 'UsersRecover', 'action' => 'recoverGet'])
-        ->setPass(['id'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/recover', ['controller' => 'UsersRecover', 'action' => 'recoverPost'])
+    $routes->connect('/register', ['prefix' => 'Users', 'controller' => 'UsersRegister', 'action' => 'registerPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
 
-    $routes->connect('/:id', ['controller' => 'UsersView', 'action' => 'view'])
+    $routes->connect('/recover', ['prefix' => 'Users', 'controller' => 'UsersRecover', 'action' => 'recoverGet'])
         ->setPass(['id'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['controller' => 'UsersEdit', 'action' => 'editPost'])
+    $routes->connect('/recover', ['prefix' => 'Users', 'controller' => 'UsersRecover', 'action' => 'recoverPost'])
+        ->setPass(['id'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersView', 'action' => 'view'])
+        ->setPass(['id'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersEdit', 'action' => 'editPost'])
         ->setPass(['id'])
         ->setMethods(['PUT', 'POST']);
 
-    $routes->connect('/:id/dry-run', ['controller' => 'UsersDelete', 'action' => 'dryrun'])
+    $routes->connect('/:id/dry-run', ['prefix' => 'Users', 'controller' => 'UsersDelete', 'action' => 'dryrun'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    $routes->connect('/:id', ['controller' => 'UsersDelete', 'action' => 'delete'])
+    $routes->connect('/:id', ['prefix' => 'Users', 'controller' => 'UsersDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
 
-    // Legacy v1 backward compatibility routes
     $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
+
 });
 
 /**
  * Setup routes
  */
-Router::prefix('/setup', function ($routes) {
+Router::scope('/setup', function ($routes) {
     $routes->setExtensions(['json']);
 
     // new routes
@@ -324,7 +324,6 @@ Router::prefix('/setup', function ($routes) {
     $routes->connect('/completeRecovery/:userId', ['prefix' => 'Setup', 'controller' => 'RecoverComplete', 'action' => 'complete'])
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
-
 });
 
 /**
