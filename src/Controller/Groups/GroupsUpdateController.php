@@ -67,10 +67,14 @@ class GroupsUpdateController extends AppController
         $group = $this->_patchAndValidateGroupEntity($group, $data);
 
         // Dry run the save.
-        $saveResult = $this->Groups->save($group);
-        if ($saveResult === false) {
-            $this->_handleValidationError($group);
-        }
+        $this->Groups->getConnection()->transactional(function () use ($group) {
+            $saveResult = $this->Groups->save($group);
+            if ($saveResult === false) {
+                $this->_handleValidationError($group);
+            }
+
+            return false;
+        });
 
         // Retrieve the secrets to request to the client to encrypt.
         $secretsToRequest = $this->_getSecretsToRequest($group, $groupUserOriginal);
