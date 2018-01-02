@@ -31,7 +31,6 @@ class AuthVerifyController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow('verifyGet');
-        $this->Auth->allow('verifyPost');
 
         return parent::beforeFilter($event);
     }
@@ -43,12 +42,20 @@ class AuthVerifyController extends AppController
      */
     public function verifyGet()
     {
-        $key['fingerprint'] = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $configMissing = (Configure::read('passbolt.gpg.serverKey.public') === null);
+        $configMissing = ($configMissing || Configure::read('passbolt.gpg.serverKey.public') === null);
+        if ($configMissing) {
+            $msg = __('The public key information was not found in config.');
+            throw new InternalErrorException($msg);
+        }
         $file = new File(Configure::read('passbolt.gpg.serverKey.public'));
         if (!$file->exists()) {
             throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
         }
-        $key['keydata'] = $file->read();
+        $key = [
+            'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
+            'keydata' => $file->read()
+        ];
         $this->success(__('The operation was successful.'), $key);
     }
 }

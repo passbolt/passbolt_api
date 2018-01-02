@@ -53,24 +53,24 @@ class HomeController extends AppController
 
         // Build the cakephp config to inject in the view.
         return [
-            "app" => [
-                "name" => Configure::read('App.name'),
-                "description" => Configure::read('App.punchline'),
-                "title" => Configure::read('App.title'),
-                "version" => [
-                    "number" => Configure::read('App.version.number'),
-                    "name" => Configure::read('App.version.name')
+            'app' => [
+                'name' => Configure::read('App.name'),
+                'description' => Configure::read('App.punchline'),
+                'title' => Configure::read('App.title'),
+                'version' => [
+                    'number' => Configure::read('App.version.number'),
+                    'name' => Configure::read('App.version.name')
                 ],
-                "url" => Router::url('/', true),
-                "debug" => Configure::read('debug'),
-                "server_timezone" => date_default_timezone_get()
+                'url' => Router::url('/', true),
+                'debug' => Configure::read('debug'),
+                'server_timezone' => date_default_timezone_get()
             ],
-            "user" => [
-                "id" => $this->User->id()
+            'user' => [
+                'id' => $this->User->id()
             ],
-            "roles" => $roles,
-            "image_storage" => [
-                "public_path" => Configure::read('ImageStorage.publicPath')
+            'roles' => $roles,
+            'image_storage' => [
+                'public_path' => Configure::read('ImageStorage.publicPath')
             ]
         ];
     }

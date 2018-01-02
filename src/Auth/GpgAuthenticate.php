@@ -83,7 +83,7 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         // If it's JSON we show an error message
         if ($request->is('json')) {
-            throw new ForbiddenException(__('You need to login to access this location.'));
+            throw new ForbiddenException(_('You need to login to access this location.'));
         }
         // Otherwise we let the controller handle it
     }
@@ -99,7 +99,7 @@ class GpgAuthenticate extends BaseAuthenticate
      */
     public function authenticate(ServerRequest $request, Response $response)
     {
-        if (!$this->__initForAllSteps($request, $response)) {
+        if (!$this->_initForAllSteps($request, $response)) {
             return false;
         }
 
@@ -107,7 +107,7 @@ class GpgAuthenticate extends BaseAuthenticate
         // The user is asking the server to identify itself by decrypting a token
         // that was encrypted by the client using the server public key
         if (isset($this->_data['server_verify_token'])) {
-            $this->__stage0();
+            $this->_stage0();
 
             return false;
         }
@@ -116,13 +116,13 @@ class GpgAuthenticate extends BaseAuthenticate
         // The user request an authentication by claiming he owns a given public key
         // We therefore send an encrypted message that must be returned next time in order to verify
         if (!isset($this->_data['user_token_result'])) {
-            $this->__stage1();
+            $this->_stage1();
 
             return false;
         } else {
             // Stage 2.
             // Check if the token provided at stage 1 have been decrypted and is still valid
-            if (!$this->__stage2()) {
+            if (!$this->_stage2()) {
                 return false;
             }
         }
@@ -137,16 +137,16 @@ class GpgAuthenticate extends BaseAuthenticate
      *
      * @return bool
      */
-    private function __stage0()
+    private function _stage0()
     {
         try {
             $nonce = $this->_gpg->decrypt($this->_data['server_verify_token']);
             // check if the nonce is in valid format to avoid returning something sensitive decrypted
-            if ($this->__checkNonce($nonce)) {
+            if ($this->_checkNonce($nonce)) {
                 $this->_response = $this->_response->withHeader('X-GPGAuth-Verify-Response', $nonce);
             }
         } catch (Exception $e) {
-            return $this->__error('Decryption failed');
+            return $this->_error('Decryption failed');
         }
 
         return true;
@@ -159,15 +159,15 @@ class GpgAuthenticate extends BaseAuthenticate
      * @throws InternalErrorException
      * @return bool
      */
-    private function __stage1()
+    private function _stage1()
     {
         $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage1');
 
         // set encryption and signature keys
         try {
-            $this->__initUserKey($this->_data['keyid']);
+            $this->_initUserKey($this->_data['keyid']);
         } catch (Exception $e) {
-            return $this->__error($e->getMessage());
+            return $this->_error($e->getMessage());
         }
         $this->_gpg->addsignkey(
             $this->_config['serverKey']['fingerprint'],
@@ -178,7 +178,7 @@ class GpgAuthenticate extends BaseAuthenticate
         $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
         $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id);
         if (!isset($authenticationToken->token)) {
-            return $this->__error('Failed to create token');
+            return $this->_error('Failed to create token');
         }
 
         // encrypt and sign and send
@@ -196,19 +196,19 @@ class GpgAuthenticate extends BaseAuthenticate
      *
      * @return bool
      */
-    private function __stage2()
+    private function _stage2()
     {
         //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
         $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage2');
-        if (!($this->__checkNonce($this->_data['user_token_result']))) {
-            return $this->__error('The user token result is not a valid UUID');
+        if (!($this->_checkNonce($this->_data['user_token_result']))) {
+            return $this->_error('The user token result is not a valid UUID');
         }
 
         // extract the UUID to get the database records
         list($version, $length, $uuid, $version2) = explode('|', $this->_data['user_token_result']);
         $isValidToken = $this->_AuthenticationToken->isValid($uuid, $this->_user->id);
         if (!$isValidToken) {
-            return $this->__error('The user token result could not be found ' .
+            return $this->_error('The user token result could not be found ' .
                 't=' . $uuid . ' u=' . $this->_user->id);
         }
 
@@ -230,19 +230,19 @@ class GpgAuthenticate extends BaseAuthenticate
      * @throws InternalErrorException when the key is not valid
      * @return bool
      */
-    private function __initForAllSteps(ServerRequest $request, Response $response)
+    private function _initForAllSteps(ServerRequest $request, Response $response)
     {
         $this->_response = $response
             ->withHeader('X-GPGAuth-Authenticated', 'false')
             ->withHeader('X-GPGAuth-Progress', 'stage0');
 
-        $this->__normalizeRequestData($request);
-        $this->__initKeyring();
+        $this->_normalizeRequestData($request);
+        $this->_initKeyring();
 
         // Begin process by checking if the user exist and his key is valid
-        $this->_user = $this->__identifyUserWithFingerprint();
+        $this->_user = $this->_identifyUserWithFingerprint();
         if ($this->_user === false) {
-            $this->__missingUserError();
+            $this->_missingUserError();
 
             return false;
         }
@@ -258,7 +258,7 @@ class GpgAuthenticate extends BaseAuthenticate
      * @throws InternalErrorException if the config is missing or key is not set or not usable to decrypt
      * @return void
      */
-    private function __initKeyring()
+    private function _initKeyring()
     {
         // load base configuration
         $this->_config = Configure::read('passbolt.gpg');
@@ -288,7 +288,7 @@ class GpgAuthenticate extends BaseAuthenticate
      * @throws InternalErrorException when the key is not valid
      * @return void
      */
-    private function __initUserKey(string $keyid)
+    private function _initUserKey(string $keyid)
     {
         $info = $this->_gpg->keyinfo($keyid);
         if (empty($info)) {
@@ -309,11 +309,11 @@ class GpgAuthenticate extends BaseAuthenticate
      *
      * @return mixed false or User
      */
-    private function __identifyUserWithFingerprint()
+    private function _identifyUserWithFingerprint()
     {
         // First we check if we can get the user with the key fingerprint
         if (!isset($this->_data['keyid'])) {
-            $this->__debug('No key id set.');
+            $this->_debug('No key id set.');
 
             return false;
         }
@@ -322,7 +322,7 @@ class GpgAuthenticate extends BaseAuthenticate
         // validate the fingerprint format
         $Gpgkeys = TableRegistry::get('Gpgkeys');
         if (!$Gpgkeys->isValidFingerprintRule($keyid)) {
-            $this->__debug('Invalid fingerprint.');
+            $this->_debug('Invalid fingerprint.');
 
             return false;
         }
@@ -331,7 +331,7 @@ class GpgAuthenticate extends BaseAuthenticate
         $Users = TableRegistry::get('Users');
         $user = $Users->find('auth', ['fingerprint' => $keyid])->first();
         if (empty($user)) {
-            $this->__debug('User not found.');
+            $this->_debug('User not found.');
 
             return false;
         }
@@ -345,7 +345,7 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param string $s debug message
      * @return void
      */
-    private function __debug($s = null)
+    private function _debug($s = null)
     {
         $this->_debug = $s;
         if (isset($s) && Configure::read('debug')) {
@@ -359,9 +359,9 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param string $msg the error message
      * @return bool always false, that will be used as authenticated method final result
      */
-    private function __error($msg = null)
+    private function _error($msg = null)
     {
-        $this->__debug($msg);
+        $this->_debug($msg);
         $this->_response = $this->_response->withHeader('X-GPGAuth-Error', 'true');
 
         return false;
@@ -373,25 +373,25 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param string $nonce for example: 'gpgauthv1.3.0|36|de305d54-75b4-431b-adb2-eb6b9e546014|gpgauthv1.3.0'
      * @return bool true if valid, false otherwise
      */
-    private function __checkNonce($nonce)
+    private function _checkNonce($nonce)
     {
         $result = explode('|', $nonce);
         $errorMsg = 'Invalid verify token format, ';
         if (count($result) != 4) {
-            return $this->__error($errorMsg . 'sections missing or wrong delimiters');
+            return $this->_error($errorMsg . 'sections missing or wrong delimiters');
         }
         list($version, $length, $uuid, $version2) = $result;
         if ($version != $version2) {
-            return $this->__error($errorMsg . 'version numbers don\'t match');
+            return $this->_error($errorMsg . 'version numbers don\'t match');
         }
         if ($version != 'gpgauthv1.3.0') {
-            return $this->__error($errorMsg . 'wrong version number');
+            return $this->_error($errorMsg . 'wrong version number');
         }
         if ($version != Validation::uuid($uuid)) {
-            return $this->__error($errorMsg . 'not a UUID');
+            return $this->_error($errorMsg . 'not a UUID');
         }
         if ($length != 36) {
-            return $this->__error($errorMsg . 'wrong token data length');
+            return $this->_error($errorMsg . 'wrong token data length');
         }
 
         return true;
@@ -403,7 +403,7 @@ class GpgAuthenticate extends BaseAuthenticate
      * @param object $request Request
      * @return array|null
      */
-    private function __normalizeRequestData($request)
+    private function _normalizeRequestData($request)
     {
         $data = $request->getData();
         if (isset($data['data'])) {
@@ -434,13 +434,13 @@ class GpgAuthenticate extends BaseAuthenticate
      *
      * @return void
      */
-    private function __missingUserError()
+    private function _missingUserError()
     {
         // If the user doesn't exist, we want to mention it in the debug anyway (no matter we are in debug mode or not)
         // IMPORTANT : Do not change this behavior. Exceptionally here, the client will need to know that
         // we are in this case to be able to render a proper feedback.
         $msg = 'There is no user associated with this key. ' . $this->_debug;
-        $this->__error($msg);
+        $this->_error($msg);
         $this->_response = $this->_response->withHeader('X-GPGAuth-Debug', $msg);
     }
 }
