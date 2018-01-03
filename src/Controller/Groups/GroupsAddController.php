@@ -63,12 +63,11 @@ class GroupsAddController extends AppController
     protected function _buildAndValidateGroupEntity()
     {
         $data = $this->_formatRequestData();
-        $data['created_by'] = UuidFactory::uuid('user.id.admin');
-        $data['modified_by'] = UuidFactory::uuid('user.id.admin');
+        $data['created_by'] = $this->User->id();
+        $data['modified_by'] = $this->User->id();
 
         // Build entity and perform basic check
         $group = $this->Groups->newEntity($data, [
-            'validate' => 'default',
             'accessibleFields' => [
                 'name' => true,
                 'created_by' => true,

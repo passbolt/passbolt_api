@@ -30,7 +30,7 @@ class SoftDeleteTest extends AppTestCase
 
     public $fixtures = [
         'app.users', 'app.groups',
-        'app.profiles', 'app.gpgkeys', 'app.resources',
+        'app.profiles', 'app.gpgkeys', 'app.resources', 'app.favorites',
         'app.alt0/groups_users', 'app.alt0/permissions'
     ];
 

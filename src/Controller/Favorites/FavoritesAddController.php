@@ -68,7 +68,6 @@ class FavoritesAddController extends AppController
                 'foreign_model' => 'Resource',
             ],
             [
-                'validate' => 'default',
                 'accessibleFields' => [
                     'user_id' => true,
                     'foreign_key' => true,

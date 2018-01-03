@@ -95,7 +95,6 @@ class GroupsTable extends Table
 
         $validator
             ->boolean('deleted')
-            ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
         $validator
@@ -360,22 +359,6 @@ class GroupsTable extends Table
         return $this->findIndex()
             ->where(['Groups.id IN' => $groupsIds])
             ->all();
-    }
-
-    /**
-     * Event fired before request data is converted into entities
-     * - On created, set not deleted to false
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (isset($options['validate']) && $options['validate'] === 'default') {
-            $data['deleted'] = false;
-        }
     }
 
     /**

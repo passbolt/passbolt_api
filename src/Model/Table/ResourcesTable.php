@@ -127,7 +127,6 @@ class ResourcesTable extends Table
 
         $validator
             ->boolean('deleted')
-            ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
         $validator
@@ -628,22 +627,6 @@ class ResourcesTable extends Table
     }
 
     /**
-     * Event fired before request data is converted into entities
-     * - On create, set not deleted to false
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (isset($options['validate']) && $options['validate'] === 'default') {
-            $data['deleted'] = false;
-        }
-    }
-
-    /**
      * Simulate a share of a resource with a list of changes.
      * To see how a change is formatted, see : App\Model\Table\Permissions::patchEntitiesWithChanges
      *
@@ -829,13 +812,11 @@ class ResourcesTable extends Table
     {
         // Save the resource permissions.
         $options = [
-            'validate' => 'default',
             'accessibleFields' => [
                 'permissions' => true
             ],
             'associated' => [
                 'Permissions' => [
-                    'validate' => 'default',
                     'accessibleFields' => [
                         'aco' => true,
                         'aco_foreign_key' => true,
@@ -900,13 +881,11 @@ class ResourcesTable extends Table
 
         // Save the resource secrets.
         $options = [
-            'validate' => 'default',
             'accessibleFields' => [
                 'secrets' => true
             ],
             'associated' => [
                 'Secrets' => [
-                    'validate' => 'default',
                     'accessibleFields' => [
                         'data' => true,
                     ]

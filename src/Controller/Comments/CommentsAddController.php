@@ -97,7 +97,6 @@ class CommentsAddController extends AppController
                 'modified_by' => $this->User->id(),
             ],
             [
-                'validate' => 'default',
                 'accessibleFields' => [
                     'user_id' => true,
                     'foreign_key' => true,

@@ -111,7 +111,6 @@ class CommentsUpdateController extends AppController
                 'modified_by' => $this->User->id(),
             ],
             [
-                'validate' => 'default',
                 'accessibleFields' => [
                     'content' => true,
                     'modified_by' => true,

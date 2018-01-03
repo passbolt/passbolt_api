@@ -86,7 +86,7 @@ class GroupsUsersTable extends Table
 
         $validator
             ->boolean('is_admin')
-            ->allowEmpty('is_admin', 'create');
+            ->notEmpty('is_admin');
 
         return $validator;
     }
@@ -458,21 +458,5 @@ class GroupsUsersTable extends Table
         }
 
         return $entities;
-    }
-
-    /**
-     * Event fired before request data is converted into entities
-     * - On create, if not defined set is_admin to false
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (!isset($data['is_admin'])) {
-            $data['is_admin'] = false;
-        }
     }
 }

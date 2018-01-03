@@ -29,7 +29,7 @@ class UpdateTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.groups', 'app.groups_users', 'app.users', 'app.roles', 'app.gpgkeys', 'app.profiles', 'app.permissions', 'app.resources', 'app.secrets'];
+    public $fixtures = ['app.groups', 'app.groups_users', 'app.users', 'app.roles', 'app.gpgkeys', 'app.profiles', 'app.avatars', 'app.permissions', 'app.resources', 'app.secrets'];
 
     public function setUp()
     {

@@ -65,12 +65,12 @@ class ResourcesAddController extends AppController
         // Enforce data.
         $data['created_by'] = $this->User->id();
         $data['modified_by'] = $this->User->id();
-        $data['permissions'][] = [
+        $data['permissions'] = [[
             'aro' => 'User',
             'aro_foreign_key' => $this->User->id(),
             'aco' => 'Resource',
             'type' => Permission::OWNER,
-        ];
+        ]];
         // If no secrets given, a specific message is returned.
         if (isset($data['secrets'])) {
             $data['secrets'][0]['user_id'] = $this->User->id();
@@ -78,7 +78,6 @@ class ResourcesAddController extends AppController
 
         // Build entity and perform basic check
         $resource = $this->Resources->newEntity($data, [
-            'validate' => 'default',
             'accessibleFields' => [
                 'name' => true,
                 'username' => true,
