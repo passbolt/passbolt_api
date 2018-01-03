@@ -64,7 +64,7 @@ class FavoritesTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Resources', [
-            'foreignKey' => 'foreign_id'
+            'foreignKey' => 'foreign_key'
         ]);
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id'
@@ -94,9 +94,9 @@ class FavoritesTable extends Table
             ->notEmpty('foreign_model');
 
         $validator
-            ->uuid('foreign_id')
-            ->requirePresence('foreign_id', 'create')
-            ->notEmpty('foreign_id');
+            ->uuid('foreign_key')
+            ->requirePresence('foreign_key', 'create')
+            ->notEmpty('foreign_key');
 
         return $validator;
     }
@@ -117,21 +117,21 @@ class FavoritesTable extends Table
             'errorField' => 'user_id',
             'message' => __('The user is soft deleted.')
         ]);
-        $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
+        $rules->addCreate($rules->existsIn('foreign_key', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
-            'errorField' => 'foreign_id',
+            'errorField' => 'foreign_key',
             'message' => __('The resource is soft deleted.')
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
-            'errorField' => 'foreign_id',
+            'errorField' => 'foreign_key',
             'message' => __('Access denied.'),
             'userField' => 'user_id',
-            'resourceField' => 'foreign_id',
+            'resourceField' => 'foreign_key',
         ]);
         $rules->addCreate(
             $rules->isUnique(
-                ['user_id', 'foreign_id'],
+                ['user_id', 'foreign_key'],
                 __('The resource is already marked as favorite.')
             ),
             'favorite_unique'

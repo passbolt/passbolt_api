@@ -64,7 +64,7 @@ hcciUFw5
             $this->assertNull($secret);
             // Not favorite for the resource.
             $favorite = $this->Resources->Favorites->find()
-                ->where(['foreign_id' => $resourceId, 'user_id' => $userId])->first();
+                ->where(['foreign_key' => $resourceId, 'user_id' => $userId])->first();
             $this->assertNull($favorite);
         }
     }

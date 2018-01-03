@@ -71,7 +71,7 @@ class ResourcesTable extends Table
             'foreignKey' => 'id'
         ]);
         $this->hasOne('Favorites', [
-            'foreignKey' => 'foreign_id'
+            'foreignKey' => 'foreign_key'
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
@@ -622,7 +622,7 @@ class ResourcesTable extends Table
 
         // Remove all the associated favorites.
         $this->association('Favorites')
-            ->deleteAll(['Favorites.foreign_id' => $resource->id]);
+            ->deleteAll(['Favorites.foreign_key' => $resource->id]);
 
         return true;
     }

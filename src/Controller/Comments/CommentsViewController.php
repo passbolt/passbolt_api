@@ -27,14 +27,14 @@ class CommentsViewController extends AppController
     /**
      * Comments View action
      *
-     * @throws \InvalidArgumentException if the foreignModelName of foreignId is not correct
-     * @throws NotFoundException if the foreignId can't be found
+     * @throws \InvalidArgumentException if the foreignModelName of foreignKey is not correct
+     * @throws NotFoundException if the foreignKey can't be found
      * @throws InternalErrorException if the comments can't be retrieved
      * @param string $foreignModelName name of the foreign model used for the comment
-     * @param string $foreignId uuid Identifier of the model
+     * @param string $foreignKey uuid Identifier of the model
      * @return void
      */
-    public function view($foreignModelName = null, $foreignId = null)
+    public function view($foreignModelName = null, $foreignKey = null)
     {
         $foreignModelName = ucfirst($foreignModelName);
         // Check model sanity.
@@ -43,7 +43,7 @@ class CommentsViewController extends AppController
         }
 
         // Check uuid sanity.
-        if (!Validation::uuid($foreignId)) {
+        if (!Validation::uuid($foreignKey)) {
             throw new \InvalidArgumentException(__('Invalid id'));
         }
 
@@ -55,7 +55,7 @@ class CommentsViewController extends AppController
 
         $this->loadModel('Comments');
         try {
-            $comments = $this->Comments->findViewForeignComments($this->User->id(), $foreignModelName, $foreignId, $options);
+            $comments = $this->Comments->findViewForeignComments($this->User->id(), $foreignModelName, $foreignKey, $options);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('Could not find comments for the requested model'));
         } catch (\Exception $e) {

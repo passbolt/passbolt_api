@@ -461,7 +461,7 @@ class GroupsTable extends Table
                 'id IN' => $resourceIds
             ]);
             $Favorites = TableRegistry::get('Favorites');
-            $Favorites->deleteAll(['foreign_id IN' => $resourceIds]);
+            $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
         }
 
         // Delete all group memberships

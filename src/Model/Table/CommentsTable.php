@@ -70,7 +70,7 @@ class CommentsTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Resources', [
-            'foreignKey' => 'foreign_id'
+            'foreignKey' => 'foreign_key'
         ]);
 
         $this->belongsTo('Users', [
@@ -117,9 +117,9 @@ class CommentsTable extends Table
             ->notEmpty('foreign_model', __('The foreign_model should not be empty'));
 
         $validator
-            ->uuid('foreign_id', __('foreign_id should be a uuid'))
-            ->requirePresence('foreign_id', 'create', __('A foreign_id is required'))
-            ->notEmpty('foreign_id', __('The foreign_id should not be empty'));
+            ->uuid('foreign_key', __('foreign_key should be a uuid'))
+            ->requirePresence('foreign_key', 'create', __('A foreign_key is required'))
+            ->notEmpty('foreign_key', __('The foreign_key should not be empty'));
 
         $validator
             ->scalar('content')
@@ -150,10 +150,10 @@ class CommentsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->addCreate($rules->existsIn('foreign_id', 'Resources'), 'resource_exists');
+        $rules->addCreate($rules->existsIn('foreign_key', 'Resources'), 'resource_exists');
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_soft_deleted', [
             'table' => 'Resources',
-            'errorField' => 'foreign_id',
+            'errorField' => 'foreign_key',
             'message' => __('The resource is soft deleted.')
         ]);
         $rules->addCreate($rules->existsIn('user_id', 'Users'), 'user_exists');
@@ -163,16 +163,16 @@ class CommentsTable extends Table
             'message' => __('The user is soft deleted.')
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
-            'errorField' => 'foreign_id',
+            'errorField' => 'foreign_key',
             'message' => __('Access denied.'),
             'userField' => 'user_id',
-            'resourceField' => 'foreign_id',
+            'resourceField' => 'foreign_key',
         ]);
         $rules->addCreate(new HasValidParentRule(), 'has_valid_parent_id', [
             'table' => 'Comments',
             'errorField' => 'parent_id',
             'message' => __('The parent comment is invalid.'),
-            'resourceField' => 'foreign_id',
+            'resourceField' => 'foreign_key',
         ]);
         $rules->addCreate($rules->existsIn('created_by', 'Users'), 'creator_exists');
         $rules->addCreate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
@@ -198,12 +198,12 @@ class CommentsTable extends Table
      *
      * @param string $userId The id of the user that tries to retrieve comments.
      * @param string $foreignModelName The foreign model name to find comments for (example: 'Resource')
-     * @param string $foreignId The foreign model uuid to find comments for
+     * @param string $foreignKey The foreign model uuid to find comments for
      * @param array $options options
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findViewForeignComments(string $userId, string $foreignModelName, string $foreignId, array $options = [])
+    public function findViewForeignComments(string $userId, string $foreignModelName, string $foreignKey, array $options = [])
     {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
@@ -211,14 +211,14 @@ class CommentsTable extends Table
         }
 
         // Check uuid format.
-        if (!Validation::uuid($foreignId)) {
+        if (!Validation::uuid($foreignKey)) {
             throw new \InvalidArgumentException(__('The parameter groupId should be a valid uuid.'));
         }
 
         // Retrieve the resource.
         // This will break if the resource doesn't exist, if it is soft deleted, or if the user is not allowed to access it.
         $ResourcesTable = TableRegistry::get('Resources');
-        $foreignModelLookup = $ResourcesTable->findView($userId, $foreignId)->first();
+        $foreignModelLookup = $ResourcesTable->findView($userId, $foreignKey)->first();
         if (empty($foreignModelLookup)) {
             throw new RecordNotFoundException(__('The foreign model does not exist.'));
         }
@@ -226,7 +226,7 @@ class CommentsTable extends Table
         $query = $this->find('threaded');
         $query->where([
             'Comments.foreign_model' => $foreignModelName,
-            'Comments.foreign_id' => $foreignId
+            'Comments.foreign_key' => $foreignKey
         ]);
         $query->order([
             'Comments.modified' => 'DESC'

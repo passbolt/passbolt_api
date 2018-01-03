@@ -26,7 +26,7 @@ class FavoritesAddController extends AppController
     /**
      * Mark a resource as favorite.
      *
-     * @param string $foreignId The identifier of the instance to mark as favorite.
+     * @param string $foreignKey The identifier of the instance to mark as favorite.
      * @throws BadRequestException If the resource id is not valid
      * @throws NotFoundException If the resource does not exist
      * @throws NotFoundException If the resource is soft deleted
@@ -34,16 +34,16 @@ class FavoritesAddController extends AppController
      * @throws NotFoundException
      * @return void
      */
-    public function add($foreignId = null)
+    public function add($foreignKey = null)
     {
         // Check request sanity
-        if (!Validation::uuid($foreignId)) {
+        if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The resource id is not valid.'));
         }
         $this->loadModel('Favorites');
 
         // Build and validate the favorite entity.
-        $favorite = $this->_buildAndValidateFavorite($foreignId);
+        $favorite = $this->_buildAndValidateFavorite($foreignKey);
 
         // Save the favorite
         $result = $this->Favorites->save($favorite);
@@ -55,23 +55,23 @@ class FavoritesAddController extends AppController
     /**
      * Build and validate favorite entity from user input.
      *
-     * @param string $foreignId The identifier of the instance to mark as favorite.
+     * @param string $foreignKey The identifier of the instance to mark as favorite.
      * @return \Cake\Datasource\EntityInterface $favorite favorite entity
      */
-    protected function _buildAndValidateFavorite($foreignId = null)
+    protected function _buildAndValidateFavorite($foreignKey = null)
     {
         // Build entity and perform basic check.
         $favorite = $this->Favorites->newEntity(
             [
                 'user_id' => $this->User->id(),
-                'foreign_id' => $foreignId,
+                'foreign_key' => $foreignKey,
                 'foreign_model' => 'Resource',
             ],
             [
                 'validate' => 'default',
                 'accessibleFields' => [
                     'user_id' => true,
-                    'foreign_id' => true,
+                    'foreign_key' => true,
                     'foreign_model' => true
                 ]
             ]
@@ -93,9 +93,9 @@ class FavoritesAddController extends AppController
     {
         $errors = $favorite->getErrors();
         if (!empty($errors)) {
-            if (isset($errors['foreign_id']['resource_exists'])
-                || isset($errors['foreign_id']['resource_is_not_soft_deleted'])
-                || isset($errors['foreign_id']['has_resource_access'])) {
+            if (isset($errors['foreign_key']['resource_exists'])
+                || isset($errors['foreign_key']['resource_is_not_soft_deleted'])
+                || isset($errors['foreign_key']['has_resource_access'])) {
                 throw new NotFoundException(__('The resource does not exist.'));
             }
             if (isset($errors['user_id']['favorite_unique'])) {

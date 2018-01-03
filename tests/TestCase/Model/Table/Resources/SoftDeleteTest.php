@@ -57,7 +57,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertTrue($resource->deleted);
         // No favorites in db.
         $favorites = $this->Resources->association('Favorites')
-            ->find()->where(['Favorites.foreign_id' => $resource->id])->toArray();
+            ->find()->where(['Favorites.foreign_key' => $resource->id])->toArray();
         $this->assertEmpty($favorites);
         // No permissions in db.
         $permissions = $this->Resources->association('Permissions')

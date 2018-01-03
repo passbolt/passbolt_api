@@ -31,19 +31,19 @@ class FavoritesDataTask extends DataTask
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.ada-apache'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'foreign_id' => UuidFactory::uuid('resource.id.apache'),
+            'foreign_key' => UuidFactory::uuid('resource.id.apache'),
             'foreign_model' => 'Resource'
         ];
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.dame-apache'),
             'user_id' => UuidFactory::uuid('user.id.dame'),
-            'foreign_id' => UuidFactory::uuid('resource.id.apache'),
+            'foreign_key' => UuidFactory::uuid('resource.id.apache'),
             'foreign_model' => 'Resource'
         ];
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.dame-april'),
             'user_id' => UuidFactory::uuid('user.id.dame'),
-            'foreign_id' => UuidFactory::uuid('resource.id.april'),
+            'foreign_key' => UuidFactory::uuid('resource.id.april'),
             'foreign_model' => 'Resource'
         ];
 
