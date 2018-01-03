@@ -18,13 +18,11 @@ use Migrations\AbstractMigration;
 class V200AddCommentsUserIdField extends AbstractMigration
 {
     /**
-     * Change Method.
+     * Up
      *
-     * More information on this method is available here:
-     * http://docs.phinx.org/en/latest/migrations.html#the-change-method
      * @return void
      */
-    public function change()
+    public function up()
     {
         // Add column user_id.
         $this->table('comments')
@@ -37,21 +35,5 @@ class V200AddCommentsUserIdField extends AbstractMigration
 
         // Populate user_id with the content of created_by.
         $this->query('UPDATE comments SET user_id=created_by');
-    }
-
-    /**
-     * Migrate Up.
-     * @return void
-     */
-    public function up()
-    {
-    }
-
-    /**
-     * Migrate Down.
-     * @return void
-     */
-    public function down()
-    {
     }
 }
