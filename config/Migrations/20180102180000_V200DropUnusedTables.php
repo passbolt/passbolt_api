@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V200DropUnusedControllerLogsTable extends AbstractMigration
+class V200DropUnusedTables extends AbstractMigration
 {
     /**
      * Up
@@ -25,6 +25,9 @@ class V200DropUnusedControllerLogsTable extends AbstractMigration
     public function up()
     {
         $this->table('controller_logs')
+            ->drop();
+
+        $this->table('schema_migrations')
             ->drop();
     }
 }
