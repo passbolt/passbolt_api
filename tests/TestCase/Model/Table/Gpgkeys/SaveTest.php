@@ -50,7 +50,6 @@ class SaveTest extends AppTestCase
         $this->assertNotEmpty($errors['bits']['_required']);
         $this->assertNotEmpty($errors['fingerprint']['_required']);
         $this->assertNotEmpty($errors['key_id']['_required']);
-        $this->assertNotEmpty($errors['deleted']['_required']);
 
         // allowed to be empty
         $this->assertFalse(isset($errors['id']));
