@@ -27,8 +27,10 @@ class AuthLoginController extends AppController
      */
     public function beforeFilter(Event $event)
     {
-        $this->Auth->allow('loginGet');
-        $this->Auth->allow('loginPost');
+        $this->Auth->allow([
+            'loginGet',
+            'loginPost'
+        ]);
 
         return parent::beforeFilter($event);
     }
