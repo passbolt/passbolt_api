@@ -44,6 +44,7 @@ class EmailConfig {
 		'timeout' => 30,
 		'username' => '',
 		'password' => '',
+		'client' => null,
 		'tls' => false,
 	);
 
