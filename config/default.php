@@ -158,7 +158,7 @@ return [
         // Should the app be SSL / HTTPS only
         // false will render your installation insecure
         'ssl' => [
-            'force' => true,
+            'force' => env('PASSBOLT_FORCE_SSL',true),
         ]
     ],
     // Override the Cake ExceptionRenderer.
