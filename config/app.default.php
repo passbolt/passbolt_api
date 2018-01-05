@@ -180,13 +180,13 @@ return [
         'default' => [
             'className' => 'Mail',
             // The following keys are used in SMTP transports
-            'host' => 'localhost',
-            'port' => 25,
+            'host' => env('PASSBOLT_EMAIL_HOST', 'localhost'),
+            'port' => env('PASSBOLT_EMAIL_PORT', 25),
             'timeout' => 30,
-            'username' => 'user',
-            'password' => 'secret',
-            'client' => null,
-            'tls' => null,
+            'username' => env('PASSBOLT_EMAIL_USERNAME', null),
+            'password' => env('PASSBOLT_EMAIL_PASSWORD', null),
+            'client' => env('PASSBOLT_EMAIL_CLIENT',null),
+            'tls' => env('PASSBOLT_EMAIL_TLS',null),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
@@ -203,7 +203,7 @@ return [
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => 'you@localhost',
+            'from' => env('PASSBOLT_EMAIL_FROM','you@localhost'),
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
         ],
