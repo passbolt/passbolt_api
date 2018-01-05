@@ -146,7 +146,7 @@ return [
 
         // Is public registration allowed
         'registration' => [
-            'public' => false
+            'public' => env('PASSBOLT_REGISTRATION',false)
         ],
 
         // Activate specific entry points for selenium testing.
