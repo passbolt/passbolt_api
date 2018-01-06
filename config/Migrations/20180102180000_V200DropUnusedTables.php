@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V200AddCommentsUserIdField extends AbstractMigration
+class V200DropUnusedTables extends AbstractMigration
 {
     /**
      * Up
@@ -24,16 +24,10 @@ class V200AddCommentsUserIdField extends AbstractMigration
      */
     public function up()
     {
-        // Add column user_id.
-        $this->table('comments')
-             ->addColumn('user_id', 'char', [
-                 'default' => null,
-                 'limit' => 36,
-                 'null' => false,
-             ])
-             ->save();
+        $this->table('controller_logs')
+            ->drop();
 
-        // Populate user_id with the content of created_by.
-        $this->query('UPDATE comments SET user_id=created_by');
+        $this->table('schema_migrations')
+            ->drop();
     }
 }

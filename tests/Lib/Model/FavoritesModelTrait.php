@@ -30,7 +30,7 @@ trait FavoritesModelTrait
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.dame'),
-            'foreign_id' => UuidFactory::uuid('resource.id.bower'),
+            'foreign_key' => UuidFactory::uuid('resource.id.bower'),
             'foreign_model' => 'Resource',
         ];
         $entityContent = array_merge($entityContent, $data);
@@ -45,7 +45,7 @@ trait FavoritesModelTrait
      */
     public function assertFavoriteAttributes($favorite)
     {
-        $attributes = ['id', 'user_id', 'foreign_id', 'foreign_model', 'created'];
+        $attributes = ['id', 'user_id', 'foreign_key', 'foreign_model', 'created'];
         $this->assertObjectHasAttributes($attributes, $favorite);
     }
 }

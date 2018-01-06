@@ -54,7 +54,6 @@ class ErrorController extends AppController
                 $body = $error;
             }
 
-
             $prefix = strtolower($this->request->getParam('prefix'));
             $action = $this->request->getParam('action');
             $this->set([

@@ -120,7 +120,6 @@ class UsersTable extends Table
 
         $validator
             ->boolean('active')
-            ->requirePresence('active', 'create')
             ->notEmpty('active');
 
         $validator
@@ -130,7 +129,6 @@ class UsersTable extends Table
 
         $validator
             ->boolean('deleted')
-            ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
         $validator
@@ -448,9 +446,6 @@ class UsersTable extends Table
     {
         // Do not allow the user to set these flags during registration
         if (isset($options['validate']) && $options['validate'] === 'register') {
-            $data['active'] = false;
-            $data['deleted'] = false;
-
             // Only admin can set the user role on registration
             if (!isset($data['role_id']) || $options['currentUserRole'] !== Role::ADMIN) {
                 $data['role_id'] = $this->Roles->getIdByName(Role::USER);
@@ -639,9 +634,7 @@ class UsersTable extends Table
                 'accessibleFields' => [
                     'username' => true,
                     'profile' => true,
-                    'active' => true, // reset in beforeMarshal
-                    'deleted' => true, // idem
-                    'role_id' => true, // idem if current user is not admin
+                    'role_id' => true, // Overridded in beforMarshal if current user is not admin
                 ],
                 'associated' => [
                     'Profiles' => [

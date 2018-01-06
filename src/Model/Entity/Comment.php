@@ -22,7 +22,7 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $parent_id
  * @property string $user_id
- * @property string $foreign_id
+ * @property string $foreign_key
  * @property string $foreign_model
  * @property string $content
  * @property \Cake\I18n\FrozenTime $created
@@ -45,7 +45,7 @@ class Comment extends Entity
     protected $_accessible = [
         'user_id' => false,
         'parent_id' => false,
-        'foreign_id' => false,
+        'foreign_key' => false,
         'foreign_model' => false,
         'content' => false,
         'created' => false,

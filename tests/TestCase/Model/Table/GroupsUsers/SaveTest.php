@@ -83,7 +83,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'boolean' => self::getBooleanTestCases(),
-            'allowEmpty' => self::getAllowEmptyTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->GroupsUsers, 'is_admin', self::getDummyGroupUser(), self::getEntityDefaultOptions(), $testCases);
     }

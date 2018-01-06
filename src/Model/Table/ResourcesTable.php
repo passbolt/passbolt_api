@@ -71,7 +71,7 @@ class ResourcesTable extends Table
             'foreignKey' => 'id'
         ]);
         $this->hasOne('Favorites', [
-            'foreignKey' => 'foreign_id'
+            'foreignKey' => 'foreign_key'
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
@@ -127,7 +127,6 @@ class ResourcesTable extends Table
 
         $validator
             ->boolean('deleted')
-            ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
         $validator
@@ -303,6 +302,11 @@ class ResourcesTable extends Table
                     return $q->where(['Favorites.user_id' => $userId]);
                 });
             }
+        }
+
+        // If shared with group.
+        if (isset($options['filter']['is-shared-with-group'])) {
+            $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
         // If contains favorite.
@@ -512,6 +516,31 @@ class ResourcesTable extends Table
     }
 
     /**
+     * Augment any Resources queries to filter on resources shared with a given group.
+     *
+     * @param \Cake\ORM\Query $query The query to filter.
+     * @param string $groupId The group to check the permissions for.
+     * @throws \InvalidArgumentException if the group id is not a uuid
+     * @return \Cake\ORM\Query
+     */
+    private function _filterQuerySharedWithGroup(\Cake\ORM\Query $query, string $groupId)
+    {
+        if (!Validation::uuid($groupId)) {
+            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
+        }
+
+        // Filter the main query.
+        $query->innerJoinWith('Permissions', function ($q) use ($groupId) {
+            return $q->where([
+                'Permissions.aco_foreign_key = Resources.id',
+                'Permissions.aro_foreign_key' => $groupId
+            ]);
+        });
+
+        return $query;
+    }
+
+    /**
      * Retrieve the groups a user is member of.
      *
      * @param string $userId The user to retrieve the group for.
@@ -592,25 +621,9 @@ class ResourcesTable extends Table
 
         // Remove all the associated favorites.
         $this->association('Favorites')
-            ->deleteAll(['Favorites.foreign_id' => $resource->id]);
+            ->deleteAll(['Favorites.foreign_key' => $resource->id]);
 
         return true;
-    }
-
-    /**
-     * Event fired before request data is converted into entities
-     * - On create, set not deleted to false
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (isset($options['validate']) && $options['validate'] === 'default') {
-            $data['deleted'] = false;
-        }
     }
 
     /**
@@ -799,13 +812,11 @@ class ResourcesTable extends Table
     {
         // Save the resource permissions.
         $options = [
-            'validate' => 'default',
             'accessibleFields' => [
                 'permissions' => true
             ],
             'associated' => [
                 'Permissions' => [
-                    'validate' => 'default',
                     'accessibleFields' => [
                         'aco' => true,
                         'aco_foreign_key' => true,
@@ -870,13 +881,11 @@ class ResourcesTable extends Table
 
         // Save the resource secrets.
         $options = [
-            'validate' => 'default',
             'accessibleFields' => [
                 'secrets' => true
             ],
             'associated' => [
                 'Secrets' => [
-                    'validate' => 'default',
                     'accessibleFields' => [
                         'data' => true,
                     ]

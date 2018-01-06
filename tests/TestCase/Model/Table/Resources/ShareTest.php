@@ -26,7 +26,7 @@ class ShareTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.permissions', 'app.resources', 'app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.groups_users', 'app.groups', 'app.secrets'];
+    public $fixtures = ['app.permissions', 'app.resources', 'app.users', 'app.profiles', 'app.avatars', 'app.gpgkeys', 'app.roles', 'app.groups_users', 'app.groups', 'app.secrets'];
 
     public function setUp()
     {

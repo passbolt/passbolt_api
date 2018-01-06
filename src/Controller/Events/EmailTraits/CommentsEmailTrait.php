@@ -48,7 +48,7 @@ trait CommentsEmailTrait
 
         // Find the users that have access to the resource (including via their groups)
         $Users = TableRegistry::get('Users');
-        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_id]]];
+        $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_key]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
         if (count($users) < 2) {
             // if there is nobody or just one user, give it up
@@ -57,7 +57,7 @@ trait CommentsEmailTrait
 
         $Resources = TableRegistry::get('Resources');
         $creator = $Users->getForEmail($comment->created_by);
-        $resource = $Resources->get($comment->foreign_id);
+        $resource = $Resources->get($comment->foreign_key);
 
         foreach ($users as $user) {
             if ($user->id === $comment->created_by) {

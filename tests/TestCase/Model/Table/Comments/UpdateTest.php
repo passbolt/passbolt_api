@@ -50,7 +50,7 @@ class UpdateTest extends AppTestCase
             'accessibleFields' => [
                 'user_id' => false,
                 'parent_id' => false,
-                'foreign_id' => false,
+                'foreign_key' => false,
                 'foreign_model' => false,
                 'content' => true,
                 'created_by' => false,

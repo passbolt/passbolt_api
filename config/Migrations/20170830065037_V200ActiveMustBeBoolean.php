@@ -26,7 +26,7 @@ class V200ActiveMustBeBoolean extends AbstractMigration
     {
         $this->table('authentication_tokens')
             ->changeColumn('active', 'boolean', [
-                'default' => '1',
+                'default' => true,
                 'limit' => null,
                 'null' => false,
             ])
@@ -34,7 +34,7 @@ class V200ActiveMustBeBoolean extends AbstractMigration
 
         $this->table('users')
             ->changeColumn('active', 'boolean', [
-                'default' => '0',
+                'default' => false,
                 'limit' => null,
                 'null' => false,
             ])

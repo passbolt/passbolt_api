@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
+use PassboltTestData\Lib\PermissionMatrix;
 
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
@@ -142,6 +143,30 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
         // Favorite field shouldn't be present by default even when filtering by favorite.
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
+    }
+
+    public function testFilterIsSharedWithGroupSuccess()
+    {
+        $this->authenticateAs('irene');
+        $groupDId = UuidFactory::uuid('group.id.developer');
+        $urlParameter = "filter[is-shared-with-group]=$groupDId";
+        $this->getJson("/resources.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+        $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        sort($resourcesIds);
+
+        // Extract the resource the group should have access.
+        $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('group');
+        $expectedResourcesIds = [];
+        foreach ($permissionsMatrix['developer'] as $resourceAlias => $resourcePermission) {
+            if ($resourcePermission > 0) {
+                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
+            }
+        }
+        sort($expectedResourcesIds);
+
+        $this->assertCount(count($expectedResourcesIds), $resourcesIds);
+        $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
     }
 
     public function testIndexErrorNotAuthenticated()

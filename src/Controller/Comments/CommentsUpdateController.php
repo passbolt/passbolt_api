@@ -107,11 +107,10 @@ class CommentsUpdateController extends AppController
         $comment = $this->Comments->patchEntity(
             $comment,
             [
-                'content' => $data['content'],
+                'content' => Hash::get($data, 'content'),
                 'modified_by' => $this->User->id(),
             ],
             [
-                'validate' => 'default',
                 'accessibleFields' => [
                     'content' => true,
                     'modified_by' => true,

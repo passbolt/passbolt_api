@@ -50,7 +50,7 @@ class CreateTest extends AppTestCase
             'accessibleFields' => [
                 'user_id' => true,
                 'parent_id' => true,
-                'foreign_id' => true,
+                'foreign_key' => true,
                 'foreign_model' => true,
                 'content' => true,
                 'created_by' => true,
@@ -100,7 +100,7 @@ class CreateTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->Comments, 'foreign_id', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation($this->Comments, 'foreign_key', self::getDummyComment(), self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testValidationContent()
@@ -151,29 +151,29 @@ class CreateTest extends AppTestCase
 
     public function testErrorResourceDoesNotExist()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_key' => UuidFactory::uuid()]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotEmpty($errors['foreign_id']['resource_exists']);
+        $this->assertNotEmpty($errors['foreign_key']['resource_exists']);
     }
 
     public function testErrorResourceIsSoftDeleted()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_id' => UuidFactory::uuid('resource.id.jquery')]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['foreign_key' => UuidFactory::uuid('resource.id.jquery')]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotEmpty($errors['foreign_id']['resource_is_soft_deleted']);
+        $this->assertNotEmpty($errors['foreign_key']['resource_is_soft_deleted']);
     }
 
     public function testErrorParentIdDoesNotExist()
     {
         $comment = $this->Comments->newEntity(
             self::getDummyComment([
-                'foreign_id' => UuidFactory::uuid('resource.id.apache'),
+                'foreign_key' => UuidFactory::uuid('resource.id.apache'),
                 'parent_id' => UuidFactory::uuid('comment.id.doesnotexist')
             ]),
             self::getEntityDefaultOptions()
@@ -189,7 +189,7 @@ class CreateTest extends AppTestCase
     {
         $comment = $this->Comments->newEntity(
             self::getDummyComment([
-                'foreign_id' => UuidFactory::uuid('resource.id.bower'),
+                'foreign_key' => UuidFactory::uuid('resource.id.bower'),
                 'parent_id' => UuidFactory::uuid('comment.id.apache-1')
             ]),
             self::getEntityDefaultOptions()
@@ -203,12 +203,12 @@ class CreateTest extends AppTestCase
 
     public function testErrorHasResourceAccessRule()
     {
-        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid('user.id.dame'), 'foreign_id' => UuidFactory::uuid('resource.id.canjs')]), self::getEntityDefaultOptions());
+        $comment = $this->Comments->newEntity(self::getDummyComment(['user_id' => UuidFactory::uuid('user.id.dame'), 'foreign_key' => UuidFactory::uuid('resource.id.canjs')]), self::getEntityDefaultOptions());
         $save = $this->Comments->save($comment);
         $this->assertFalse($save);
         $errors = $comment->getErrors();
         $this->assertNotEmpty($errors);
-        $this->assertNotEmpty($errors['foreign_id']['has_resource_access']);
+        $this->assertNotEmpty($errors['foreign_key']['has_resource_access']);
     }
 
     public function testErrorCreatedByDoesNotExist()
@@ -233,7 +233,7 @@ class CreateTest extends AppTestCase
         $addedComment = $this->Comments->get($save->id);
         $this->assertNotEmpty($addedComment);
         $this->assertEquals(UuidFactory::uuid('user.id.ada'), $addedComment->user_id);
-        $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedComment->foreign_id);
+        $this->assertEquals(UuidFactory::uuid('resource.id.bower'), $addedComment->foreign_key);
         $this->assertEquals('Resource', $addedComment->foreign_model);
         $this->assertNull($addedComment->parent_id);
     }

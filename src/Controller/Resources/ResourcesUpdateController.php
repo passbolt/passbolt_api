@@ -101,7 +101,6 @@ class ResourcesUpdateController extends AppController
 
         // Build entity and perform basic check
         $resource = $this->Resources->patchEntity($resource, $data, [
-            'validate' => 'default',
             'accessibleFields' => [
                 'name' => true,
                 'username' => true,

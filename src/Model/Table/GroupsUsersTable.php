@@ -86,7 +86,7 @@ class GroupsUsersTable extends Table
 
         $validator
             ->boolean('is_admin')
-            ->allowEmpty('is_admin', 'create');
+            ->notEmpty('is_admin');
 
         return $validator;
     }

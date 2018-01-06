@@ -212,22 +212,6 @@ class SecretsTable extends Table
     }
 
     /**
-     * Event fired before request data is converted into entities
-     * - On create, set not deleted to false
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (isset($options['validate']) && $options['validate'] === 'default') {
-            $data['deleted'] = false;
-        }
-    }
-
-    /**
      * Retrieve a resource secret that belong to a user
      *
      * @param string $resourceId The resource to find the secret for

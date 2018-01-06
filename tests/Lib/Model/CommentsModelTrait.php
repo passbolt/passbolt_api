@@ -30,7 +30,7 @@ trait CommentsModelTrait
     {
         $entityContent = [
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'foreign_id' => UuidFactory::uuid('resource.id.bower'),
+            'foreign_key' => UuidFactory::uuid('resource.id.bower'),
             'foreign_model' => 'Resource',
             'content' => 'this is a test comment',
             'parent_id' => null,
@@ -48,7 +48,7 @@ trait CommentsModelTrait
      */
     protected function assertCommentAttributes($comment)
     {
-        $attributes = ['id', 'parent_id', 'foreign_id', 'foreign_model', 'content', 'created', 'modified', 'created_by', 'modified_by'];
+        $attributes = ['id', 'parent_id', 'foreign_key', 'foreign_model', 'content', 'created', 'modified', 'created_by', 'modified_by'];
         $this->assertObjectHasAttributes($attributes, $comment);
     }
 }

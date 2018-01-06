@@ -293,9 +293,7 @@ class GroupsUpdateController extends AppController
      */
     protected function _patchAndValidateGroupEntity(\App\Model\Entity\Group $group, array $data)
     {
-        $groupPatchOptions = [
-            'validate' => 'default'
-        ];
+        $groupPatchOptions = [];
         $groupsUsersPatchOptions = [];
 
         // An administrator can update the group name.
@@ -403,13 +401,11 @@ class GroupsUpdateController extends AppController
     protected function _saveResourcesEntities(array $resources = [])
     {
         $options = [
-            'validate' => 'default',
             'accessibleFields' => [
                 'secrets' => true
             ],
             'associated' => [
                 'Secrets' => [
-                    'validate' => 'default',
                     'accessibleFields' => [
                         'resource_id' => true,
                         'user_id' => true,

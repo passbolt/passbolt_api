@@ -95,7 +95,6 @@ class GroupsTable extends Table
 
         $validator
             ->boolean('deleted')
-            ->requirePresence('deleted', 'create')
             ->notEmpty('deleted');
 
         $validator
@@ -363,22 +362,6 @@ class GroupsTable extends Table
     }
 
     /**
-     * Event fired before request data is converted into entities
-     * - On created, set not deleted to false
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (isset($options['validate']) && $options['validate'] === 'default') {
-            $data['deleted'] = false;
-        }
-    }
-
-    /**
      * Filter a Groups query by groups that don't have permission for a resource.
      *
      * By instance :
@@ -461,7 +444,7 @@ class GroupsTable extends Table
                 'id IN' => $resourceIds
             ]);
             $Favorites = TableRegistry::get('Favorites');
-            $Favorites->deleteAll(['foreign_id IN' => $resourceIds]);
+            $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
         }
 
         // Delete all group memberships

@@ -165,6 +165,32 @@ class FindIndexTest extends AppTestCase
         $this->assertEquals(0, count(array_intersect($expectedResources, $favoriteResourcesIds)));
     }
 
+    public function testFilterIsSharedWithGroup()
+    {
+        $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('group');
+        $userId = UuidFactory::uuid('user.id.jean');
+        $groupFId = UuidFactory::uuid('group.id.freelancer');
+
+        // Filter resources which are shared with the target group;
+        $options['filter']['is-shared-with-group'] = $groupFId;
+        $resourcesIds = $this->Resources->findIndex($userId, $options)
+            ->extract('id')
+            ->toArray();
+        sort($resourcesIds);
+
+        // Extract the resource the group should have access.
+        $expectedResourcesIds = [];
+        foreach ($permissionsMatrix['freelancer'] as $resourceAlias => $resourcePermission) {
+            if ($resourcePermission > 0) {
+                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
+            }
+        }
+        sort($expectedResourcesIds);
+
+        $this->assertCount(count($expectedResourcesIds), $resourcesIds);
+        $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
+    }
+
     public function testPermissions()
     {
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');

@@ -24,7 +24,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.profiles',
-        'app.secrets', 'app.permissions', 'app.roles', 'app.avatars'
+        'app.secrets', 'app.permissions', 'app.roles', 'app.avatars', 'app.favorites', 'app.email_queue'
     ];
 
     protected function _getDummyPostData($data = [])

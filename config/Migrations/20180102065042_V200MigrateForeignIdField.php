@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V200AddCommentsUserIdField extends AbstractMigration
+class V200MigrateForeignIdField extends AbstractMigration
 {
     /**
      * Up
@@ -24,16 +24,16 @@ class V200AddCommentsUserIdField extends AbstractMigration
      */
     public function up()
     {
-        // Add column user_id.
-        $this->table('comments')
-             ->addColumn('user_id', 'char', [
-                 'default' => null,
-                 'limit' => 36,
-                 'null' => false,
-             ])
-             ->save();
+        // foreign_id is not used anywhere else except in favorites and comments.
+        // we want to stick to the conventions, hence we rename it to
+        // foreign_key
 
-        // Populate user_id with the content of created_by.
-        $this->query('UPDATE comments SET user_id=created_by');
+        $this->table('favorites')
+            ->renameColumn('foreign_id','foreign_key')
+            ->save();
+
+        $this->table('comments')
+            ->renameColumn('foreign_id','foreign_key')
+            ->save();
     }
 }

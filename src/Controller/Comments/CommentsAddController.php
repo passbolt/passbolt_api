@@ -29,19 +29,19 @@ class CommentsAddController extends AppController
     /**
      * Create a new comment for a resource.
      *
-     * @param string $foreignId The identifier of the resource to add a comment to
+     * @param string $foreignKey The identifier of the resource to add a comment to
      * @throws BadRequestException
      * @throws NotFoundException
      * @return void
      */
-    public function addPost($foreignId)
+    public function addPost($foreignKey)
     {
-        if (!Validation::uuid($foreignId)) {
+        if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The resource id is not valid.'));
         }
         $this->loadModel('Comments');
 
-        $comment = $this->_buildAndValidateCommentEntity($foreignId);
+        $comment = $this->_buildAndValidateCommentEntity($foreignKey);
         $this->_handleValidationErrors($comment);
 
         if (!$this->Comments->save($comment)) {
@@ -65,11 +65,11 @@ class CommentsAddController extends AppController
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
-            if (!empty($errors['foreign_id']) &&
+            if (!empty($errors['foreign_key']) &&
                 (
-                    !empty($errors['foreign_id']['resource_exists'])
-                 || !empty($errors['foreign_id']['resource_is_soft_deleted'])
-                 || !empty($errors['foreign_id']['has_resource_access'])
+                    !empty($errors['foreign_key']['resource_exists'])
+                 || !empty($errors['foreign_key']['resource_is_soft_deleted'])
+                 || !empty($errors['foreign_key']['has_resource_access'])
                 )) {
                 throw new NotFoundException(__('The resource does not exist.'));
             }
@@ -80,16 +80,16 @@ class CommentsAddController extends AppController
     /**
      * Build and validate comment entity from user input.
      *
-     * @param string $foreignId The identifier of the instance the comment belongs to.
+     * @param string $foreignKey The identifier of the instance the comment belongs to.
      * @return \App\Model\Entity\Comment $comment comment entity
      */
-    protected function _buildAndValidateCommentEntity(string $foreignId = null)
+    protected function _buildAndValidateCommentEntity(string $foreignKey = null)
     {
         // Build entity and perform basic check.
         $comment = $this->Comments->newEntity(
             [
                 'user_id' => $this->User->id(),
-                'foreign_id' => $foreignId,
+                'foreign_key' => $foreignKey,
                 'foreign_model' => 'Resource',
                 'parent_id' => Hash::get($this->request->getData(), 'Comment.parent_id'),
                 'content' => Hash::get($this->request->getData(), 'Comment.content'),
@@ -97,10 +97,9 @@ class CommentsAddController extends AppController
                 'modified_by' => $this->User->id(),
             ],
             [
-                'validate' => 'default',
                 'accessibleFields' => [
                     'user_id' => true,
-                    'foreign_id' => true,
+                    'foreign_key' => true,
                     'foreign_model' => true,
                     'parent_id' => true,
                     'content' => true,
