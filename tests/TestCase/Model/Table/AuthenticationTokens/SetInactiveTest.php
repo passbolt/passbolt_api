@@ -27,7 +27,7 @@ class SetInactiveTest extends AppTestCase
 
     public $AuthenticationTokens;
 
-    public $fixtures = ['app.authentication_tokens', 'app.users'];
+    public $fixtures = ['app.Base/authentication_tokens', 'app.Base/users'];
 
     public function setUp()
     {

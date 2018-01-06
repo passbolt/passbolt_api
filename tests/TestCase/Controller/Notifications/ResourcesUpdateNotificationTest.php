@@ -22,9 +22,9 @@ use Cake\Core\Configure;
 class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 {
     public $fixtures = [
-        'app.users', 'app.groups', 'app.resources', 'app.secrets', 'app.gpgkeys',
-        'app.favorites', 'app.email_queue', 'app.profiles', 'app.roles',
-        'app.groups_users', 'app.permissions', 'app.avatars'
+        'app.Base/users', 'app.Base/groups', 'app.Base/resources', 'app.Base/secrets', 'app.Base/gpgkeys',
+        'app.Base/favorites', 'app.Base/email_queue', 'app.Base/profiles', 'app.Base/roles',
+        'app.Base/groups_users', 'app.Base/permissions', 'app.Base/avatars'
     ];
 
     public function testResourcesUpdateNotificationDisabled()

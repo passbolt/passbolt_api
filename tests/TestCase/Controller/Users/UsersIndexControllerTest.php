@@ -21,7 +21,7 @@ use Cake\Utility\Hash;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.groups_users', 'app.avatars'];
+    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups_users', 'app.Base/avatars'];
 
     public function testUsersIndexGetSuccess()
     {

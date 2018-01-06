@@ -24,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindGroupsWhereUserIsOnlyMemberTest extends AppTestCase
 {
-    public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
+    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
 
     public function setUp()
     {

@@ -19,7 +19,7 @@ use Cake\Core\Configure;
 
 class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.authentication_tokens', 'app.email_queue', 'app.avatars'];
+    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens', 'app.Base/email_queue', 'app.Base/avatars'];
 
     public function testUserRegisterNotificationDisabled()
     {

@@ -24,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindViewAcoPermissionsTest extends AppTestCase
 {
-    public $fixtures = ['app.groups', 'app.permissions', 'app.profiles', 'app.resources', 'app.users'];
+    public $fixtures = ['app.Base/groups', 'app.Base/permissions', 'app.Base/profiles', 'app.Base/resources', 'app.Base/users'];
 
     /**
      * Test subject

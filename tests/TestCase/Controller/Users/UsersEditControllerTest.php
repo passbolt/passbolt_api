@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles', 'app.gpgkeys', 'app.groups_users', 'app.avatars'];
+    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/avatars'];
 
     public function testUsersEditNotLoggedInError()
     {

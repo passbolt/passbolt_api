@@ -20,7 +20,7 @@ use App\Utility\UuidFactory;
 
 class GpgkeysViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles'];
+    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles'];
 
     public function testGpgkeysViewErrorNotAuthenticated()
     {

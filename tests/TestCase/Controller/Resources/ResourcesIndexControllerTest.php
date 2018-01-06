@@ -23,8 +23,8 @@ use PassboltTestData\Lib\PermissionMatrix;
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.users', 'app.groups', 'app.groups_users', 'app.resources',
-        'app.secrets', 'app.favorites', 'app.permissions', 'app.avatars'
+        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources',
+        'app.Base/secrets', 'app.Base/favorites', 'app.Base/permissions', 'app.Base/avatars'
     ];
 
     public function testSuccess()

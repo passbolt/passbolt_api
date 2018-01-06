@@ -22,9 +22,9 @@ use Cake\Core\Configure;
 class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 {
 
-    public $fixtures = ['app.groups', 'app.groups_users', 'app.resources', 'app.permissions', 'app.users',
-        'app.secrets', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.favorites', 'app.email_queue',
-        'app.avatars'];
+    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions', 'app.Base/users',
+        'app.Base/secrets', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/favorites', 'app.Base/email_queue',
+        'app.Base/avatars'];
 
     public function testUpdateNotificationAddMemberSuccess()
     {

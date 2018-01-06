@@ -27,7 +27,7 @@ class ShareDryRunTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.permissions', 'app.resources', 'app.users', 'app.profiles', 'app.avatars', 'app.gpgkeys', 'app.roles', 'app.groups_users', 'app.groups'];
+    public $fixtures = ['app.Base/permissions', 'app.Base/resources', 'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups_users', 'app.Base/groups'];
 
     public function setUp()
     {

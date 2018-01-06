@@ -24,9 +24,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
     public $Comments;
 
     public $fixtures = [
-        'app.users', 'app.groups', 'app.resources', 'app.comments', 'app.profiles',
-        'app.alt0/permissions', 'app.alt0/groups_users', 'app.roles',
-        'app.email_queue', 'app.avatars'
+        'app.Base/users', 'app.Base/groups', 'app.Base/resources', 'app.Base/comments', 'app.Base/profiles',
+        'app.Alt0/permissions', 'app.Alt0/groups_users', 'app.Base/roles',
+        'app.Base/email_queue', 'app.Base/avatars'
     ];
 
     public function testCommentsAddNotificationGroupSuccess()

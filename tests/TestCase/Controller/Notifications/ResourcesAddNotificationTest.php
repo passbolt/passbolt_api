@@ -22,8 +22,8 @@ use Cake\Core\Configure;
 class ResourcesAddNotificationTest extends ResourcesAddControllerTest
 {
     public $fixtures = [
-        'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.secrets',
-        'app.favorites', 'app.permissions', 'app.email_queue', 'app.profiles', 'app.roles', 'app.avatars'
+        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/secrets',
+        'app.Base/favorites', 'app.Base/permissions', 'app.Base/email_queue', 'app.Base/profiles', 'app.Base/roles', 'app.Base/avatars'
     ];
 
     public function testResourcesAddNotificationDisabled()

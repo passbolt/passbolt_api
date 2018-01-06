@@ -26,7 +26,7 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 {
     use GpgkeysModelTrait;
 
-    public $fixtures = ['app.users', 'app.gpgkeys'];
+    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys'];
     public $fingerprint;
     public $Gpgkeys;
 

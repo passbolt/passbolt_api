@@ -23,7 +23,7 @@ class CreateTest extends AppTestCase
 {
     public $Avatars;
 
-    public $fixtures = ['app.users', 'app.profiles', 'app.avatars'];
+    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/avatars'];
 
     public function setUp()
     {

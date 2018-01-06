@@ -22,8 +22,8 @@ use Cake\ORM\TableRegistry;
 class UsersAddNotificationTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.users', 'app.gpgkeys', 'app.groups_users', 'app.roles',
-        'app.profiles', 'app.email_queue', 'app.authentication_tokens', 'app.avatars'
+        'app.Base/users', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/roles',
+        'app.Base/profiles', 'app.Base/email_queue', 'app.Base/authentication_tokens', 'app.Base/avatars'
     ];
 
     public function testUserAddNotificationDisabled()
