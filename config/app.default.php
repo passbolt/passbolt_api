@@ -9,7 +9,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
+    'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN),
 
     /**
      * Configure basic information about the application.
@@ -45,7 +45,7 @@ return [
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
         // 'baseUrl' => env('SCRIPT_NAME'),
-        'fullBaseUrl' => false,
+        'fullBaseUrl' => env('APP_FULLBASEURL', false),
         'imageBaseUrl' => 'img/',
         'cssBaseUrl' => 'css/',
         'jsBaseUrl' => 'js/',
@@ -341,6 +341,6 @@ return [
      * To use database sessions, load the SQL file located at config/Schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'php',
+        'defaults' => env('SESSION_DEFAULTS', 'php'),
     ],
 ];
