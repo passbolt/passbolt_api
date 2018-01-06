@@ -36,6 +36,9 @@ class UsersIndexController extends AppController
             'order' => [
                 'User.username', 'User.created', 'User.modified',
                 'Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'
+            ],
+            'contain' => [
+                'LastLoggedIn'
             ]
         ];
         if ($this->User->role() === Role::ADMIN) {

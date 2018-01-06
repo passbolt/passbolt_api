@@ -232,18 +232,31 @@ class UsersTable extends Table
             throw new \InvalidArgumentException(__('The role name is not valid.'));
         }
 
+
         // Default associated data
-        $containWhitelist = ['Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'];
+        $containDefault = ['Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'];
+        $containWhiteList = ['LastLoggedIn'];
         if (!isset($options['contain']) || (!is_array($options['contain']))) {
-            $contain = $containWhitelist;
+            $contain = $containDefault;
         } else {
-            $contain = array_intersect($options['contain'], $containWhitelist);
+            $containOptions = [];
+            foreach($options['contain'] as $option => $value) {
+                if($value == 1) {
+                    $containOptions[] = $option;
+                }
+            }
+            $contain = array_merge($containDefault, array_intersect($containOptions, $containWhiteList));
         }
 
         // If contains Profiles, then include Avatars too.
         if (in_array('Profiles', $contain)) {
             $contain['Profiles'] = AvatarsTable::addContainAvatar();
             unset($contain[array_search('Profiles', $contain)]);
+        }
+
+        if (in_array('LastLoggedIn', $contain)) {
+            $query = $this->_containLastLoggedIn($query);
+            unset($contain[array_search('LastLoggedIn', $contain)]);
         }
 
         $query->contain($contain);
@@ -451,6 +464,24 @@ class UsersTable extends Table
                 $data['role_id'] = $this->Roles->getIdByName(Role::USER);
             }
         }
+    }
+
+    /**
+     * Add last_logged_in contain element.
+     * Basically, add a placeholder to the entity that will be treated
+     * in a virtual field in the User entity.
+     * @param Query $query
+     * @return Query
+     */
+    private function _containLastLoggedIn(\Cake\ORM\Query $query) {
+        $query->formatResults(function($results) {
+            return $results->map(function ($row) {
+                $row['__placeholder_last_logged_in__'] = '';
+                return $row;
+            });
+        });
+
+        return $query;
     }
 
     /**
