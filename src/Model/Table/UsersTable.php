@@ -16,6 +16,7 @@ namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
@@ -477,7 +478,7 @@ class UsersTable extends Table
     {
         $query->formatResults(function ($results) {
             return $results->map(function ($row) {
-                $row['__placeholder_last_logged_in__'] = '';
+                $row[User::LAST_LOGGED_IN_PLACEHOLDER] = '';
 
                 return $row;
             });

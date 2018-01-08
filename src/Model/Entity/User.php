@@ -37,7 +37,16 @@ use Cake\ORM\TableRegistry;
  */
 class User extends Entity
 {
+    /**
+     * last_logged_in virtual field.
+     * @var array
+     */
     protected $_virtual = ['last_logged_in'];
+
+    /**
+     * Placeholder name for last_logged_in.
+     */
+    const LAST_LOGGED_IN_PLACEHOLDER = '__placeholder_last_logged_in__';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -65,9 +74,9 @@ class User extends Entity
      */
     protected function _getLastLoggedIn()
     {
-        $fieldExist = isset($this->__placeholder_last_logged_in__);
+        $fieldExist = isset($this->{self::LAST_LOGGED_IN_PLACEHOLDER});
         if ($fieldExist) {
-            $this->__unset('__placeholder_last_logged_in__');
+            $this->__unset(self::LAST_LOGGED_IN_PLACEHOLDER);
             if ($this->active == true) {
                 $authenticationTokens = $this->_getAuthenticationTokensQuery();
                 // If there are more than 2 tokens (first one is usually for setup).
