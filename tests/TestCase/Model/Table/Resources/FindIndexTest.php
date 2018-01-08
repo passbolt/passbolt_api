@@ -15,6 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
+use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
@@ -185,6 +186,64 @@ class FindIndexTest extends AppTestCase
                 $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
             }
         }
+        sort($expectedResourcesIds);
+
+        $this->assertCount(count($expectedResourcesIds), $resourcesIds);
+        $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
+    }
+
+    public function testFilterIsOwnedByMe()
+    {
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Filter resources which are shared with the target group;
+        $options['filter']['is-owned-by-me'] = 1;
+        $resourcesIds = $this->Resources->findIndex($userId, $options)
+            ->extract('id')
+            ->toArray();
+        sort($resourcesIds);
+
+        $expectedResourcesIds = [];
+        foreach($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
+            if ($resourcePermission == 15) {
+                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
+            }
+        }
+        sort($expectedResourcesIds);
+
+        $this->assertCount(count($expectedResourcesIds), $resourcesIds);
+        $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
+    }
+
+    public function testFilterIsSharedWithMe()
+    {
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Filter resources which are shared with the target group;
+        $options['filter']['is-shared-with-me'] = 1;
+        $resourcesIds = $this->Resources->findIndex($userId, $options)
+            ->extract('id')
+            ->toArray();
+        sort($resourcesIds);
+
+        // Get all resources with permissions.
+        $expectedResourcesIds = [];
+        foreach($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
+            if ($resourcePermission > 0) {
+                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
+            }
+        }
+        // Filter resources, remove all resources created by Ada.
+        $expectedResourcesIds = $this->Resources->find()
+            ->where([
+                'id IN' => $expectedResourcesIds,
+                'created_by <>' => $userId
+            ])
+            ->all()
+            ->extract('id')
+            ->toArray();
         sort($expectedResourcesIds);
 
         $this->assertCount(count($expectedResourcesIds), $resourcesIds);
