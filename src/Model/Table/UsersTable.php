@@ -232,7 +232,6 @@ class UsersTable extends Table
             throw new \InvalidArgumentException(__('The role name is not valid.'));
         }
 
-
         // Default associated data
         $containDefault = ['Profiles', 'Gpgkeys', 'Roles', 'GroupsUsers'];
         $containWhiteList = ['LastLoggedIn'];
@@ -240,8 +239,8 @@ class UsersTable extends Table
             $contain = $containDefault;
         } else {
             $containOptions = [];
-            foreach($options['contain'] as $option => $value) {
-                if($value == 1) {
+            foreach ($options['contain'] as $option => $value) {
+                if ($value == 1) {
                     $containOptions[] = $option;
                 }
             }
@@ -470,13 +469,16 @@ class UsersTable extends Table
      * Add last_logged_in contain element.
      * Basically, add a placeholder to the entity that will be treated
      * in a virtual field in the User entity.
-     * @param Query $query
+     *
+     * @param Query $query query
      * @return Query
      */
-    private function _containLastLoggedIn(\Cake\ORM\Query $query) {
-        $query->formatResults(function($results) {
+    private function _containLastLoggedIn(\Cake\ORM\Query $query)
+    {
+        $query->formatResults(function ($results) {
             return $results->map(function ($row) {
                 $row['__placeholder_last_logged_in__'] = '';
+
                 return $row;
             });
         });

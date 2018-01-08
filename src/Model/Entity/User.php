@@ -66,12 +66,12 @@ class User extends Entity
     protected function _getLastLoggedIn()
     {
         $fieldExist = isset($this->__placeholder_last_logged_in__);
-        if($fieldExist) {
+        if ($fieldExist) {
             $this->__unset('__placeholder_last_logged_in__');
-            if($this->active == true) {
+            if ($this->active == true) {
                 $authenticationTokens = $this->_getAuthenticationTokensQuery();
                 // If there are more than 2 tokens (first one is usually for setup).
-                if($authenticationTokens->count() > 1) {
+                if ($authenticationTokens->count() > 1) {
                     return $authenticationTokens->toArray()[0]['modified'];
                 }
             }
@@ -84,8 +84,9 @@ class User extends Entity
      * Get a query that returns used authentication tokens for a given user.
      * @return $this
      */
-    protected function _getAuthenticationTokensQuery() {
-        $AuthenticationTokens =  TableRegistry::get('AuthenticationTokens');
+    protected function _getAuthenticationTokensQuery()
+    {
+        $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
         $tokenQuery = $AuthenticationTokens
             ->find()
             ->select([

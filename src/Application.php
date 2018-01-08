@@ -71,6 +71,7 @@ class Application extends BaseApplication
 
             $middleware->add($headers);
         }
+
         return $middleware;
     }
 }
