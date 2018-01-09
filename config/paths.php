@@ -62,6 +62,11 @@ define('IMAGES', WWW_ROOT . 'img' . DS);
 define('TESTS', ROOT . DS . 'tests' . DS);
 
 /**
+ * Path to the fixtures directory.
+ */
+define('FIXTURES', TESTS . DS . 'Fixture' . DS);
+
+/**
  * Path to the temporary files directory.
  */
 define('TMP', ROOT . DS . 'tmp' . DS);

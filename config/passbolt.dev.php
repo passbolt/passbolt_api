@@ -47,5 +47,10 @@ return [
                 'passphrase' => ''
             ],
         ],
+
+        // Security
+        'security' => [
+            'setHeaders' => false
+        ],
     ]
 ];

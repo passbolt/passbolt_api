@@ -305,6 +305,16 @@ class ResourcesTable extends Table
         }
 
         // If shared with group.
+        if (isset($options['filter']['is-owned-by-me'])) {
+            $query = $this->_filterQueryIsOwnedByUser($query, $userId);
+        }
+
+        // If shared with group.
+        if (isset($options['filter']['is-shared-with-me'])) {
+            $query = $this->_filterQuerySharedWithUser($query, $userId);
+        }
+
+        // If shared with group.
         if (isset($options['filter']['is-shared-with-group'])) {
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
@@ -337,6 +347,13 @@ class ResourcesTable extends Table
         } else {
             $query->innerJoinWith('Permission');
             $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
+        }
+
+        // Manage order clauses.
+        if (isset($options['order']['Resources.modified'])) {
+            $query->order('Resources.modified DESC');
+        } else {
+            $query->orderAsc('Resources.name');
         }
 
         // Filter out deleted resources
@@ -512,6 +529,33 @@ class ResourcesTable extends Table
         // Filter the Resources query by permissions.
         $query->where(['Permission.id' => $permissionSubquery]);
 
+        return $query;
+    }
+
+    /**
+     * Augment any Resources queries to filter on resources owned by the given user.
+     * A owned resource means a resource that is shared with the OWNER permission.
+     * @param \Cake\ORM\Query $query
+     * @param string $userId
+     * @return \Cake\ORM\Query
+     */
+    private function _filterQueryIsOwnedByUser(\Cake\ORM\Query $query, string $userId)
+    {
+        $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::OWNER);
+        return $query;
+    }
+
+    /**
+     * Augment any Resources queries to filter on resources shared with the given user.
+     * We consider that a resource is shared with a user when it is accessible by the user but has not
+     * been created by him.
+     * @param \Cake\ORM\Query $query
+     * @param string $userId
+     * @return \Cake\ORM\Query
+     */
+    private function _filterQuerySharedWithUser(\Cake\ORM\Query $query, string $userId)
+    {
+        $query->where(['Resources.created_by <>' => $userId]);
         return $query;
     }
 

@@ -20,7 +20,7 @@ use Cake\Core\Configure;
 
 class SimulateErrorsControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles'];
+    public $fixtures = ['app.Base/users'];
 
     public function testSimulateError404()
     {

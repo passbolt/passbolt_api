@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.resources', 'app.secrets', 'app.favorites'];
+    public $fixtures = ['app.Base/users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites'];
 
     public function testDeleteSuccess()
     {

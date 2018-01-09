@@ -27,7 +27,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
     public $Resources;
     public $Permissions;
 
-    public $fixtures = ['app.permissions', 'app.resources'];
+    public $fixtures = ['app.Base/permissions', 'app.Base/resources'];
 
     public function setUp()
     {

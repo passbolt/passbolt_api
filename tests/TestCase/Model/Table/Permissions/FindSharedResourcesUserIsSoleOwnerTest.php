@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
 {
-    public $fixtures = ['app.alt0/permissions', 'app.alt0/groups_users'];
+    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users'];
 
     /**
      * Test subject

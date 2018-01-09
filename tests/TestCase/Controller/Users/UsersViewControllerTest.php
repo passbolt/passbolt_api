@@ -20,7 +20,7 @@ use App\Utility\UuidFactory;
 
 class UsersViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.gpgkeys', 'app.roles', 'app.avatars', 'app.groups_users'];
+    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/avatars', 'app.Base/groups_users'];
 
     public function testUsersViewGetSuccess()
     {

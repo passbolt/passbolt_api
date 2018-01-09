@@ -16,15 +16,14 @@ return [
     /*
      * Passbolt application default configuration
      * In alphabetical order:
-     * - Analytics
      * - Authentication
-     * - Anonymous Statistics
      * - Email notifications
      * - Javascript application config
      * - Meta HTML tags
      * - Gpg
      * - Registration settings
      * - Selenium mode
+     * - Security settings
      * - SSL
      *
      * Pick a section a place it in your passbolt.php file to replace default settings
@@ -33,29 +32,9 @@ return [
      */
     'passbolt' => [
 
-        // Analytics configuration
-        'analytics' => [
-            'piwik' => [
-                // Provide this url to activate tracking.
-                // 'url' => ''
-            ],
-        ],
-
         // Authentication & Authorisation
         'auth' => [
-            'tokenExpiry' => '3 days'
-        ],
-
-        // Anonymous statistics configuration.
-        'anonymousStatistics' => [
-            // Url where data will be sent.
-            'url' => 'https://www.passbolt.com/statistics/install.json',
-            // Help url.
-            'help' => 'https://www.passbolt.com/privacy#statistics',
-            // Whether to send the anonymous statistics or not.
-            'send' => false,
-            // Instance ID. (will be populated at installation).
-            'instanceId' => '',
+            'tokenExpiry' => env('PASSBOLT_AUTH_TOKENEXPIRACY', '3 days')
         ],
 
         // Email notification settings
@@ -65,39 +44,40 @@ return [
             // WARNING: make sure you have backups in place if you disable these
             // see. https://www.passbolt.com/help/tech/backup
             'show' => [
-                'secret' => true,
-                'username' => true,
-                'uri' => true,
-                'description' => true,
-                'comment' => true,
+                'comment' => env('PASSBOLT_EMAIL_SHOW_COMMENT', true),
+                'description' => env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', true),
+                'secret' => env('PASSBOLT_EMAIL_SHOW_SECRET', true),
+                'uri' => env('PASSBOLT_EMAIL_SHOW_URI', true),
+                'username' => env('PASSBOLT_EMAIL_SHOW_USERNAME', true),
             ],
             // Choose which emails are sent system wide
             'send' => [
                 'comment' => [
-                    'add' => true
+                    'add' => env('PASSBOLT_EMAIL_SEND_COMMENT_ADD', true)
                 ],
                 'password' => [
-                    'create' => true,
-                    'share' => true,
-                    'update' => true,
-                    'delete' => true,
+                    'create' => env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', true),
+                    'share' => env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true),
+                    'update' => env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true),
+                    'delete' => env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true),
                 ],
                 'user' => [
                     // WARNING: disabling these will prevent user from signing up
-                    'create' => true,
-                    'recover' => true,
+                    'create' => env('PASSBOLT_EMAIL_SEND_USER_CREATE', true),
+                    'recover' => env('PASSBOLT_EMAIL_SEND_USER_RECOVER', true),
                 ],
                 'group' => [
-                    'delete' => true, // notify all members that a group was deleted
+                    // notify all members that a group was deleted
+                    'delete' => env('PASSBOLT_EMAIL_SEND_GROUP_DELETE', true),
                     'user' => [ // notify user group membership changes
-                        'add' => true,
-                        'delete' => true,
-                        'update' => true,
+                        'add' => env('PASSBOLT_EMAIL_SEND_GROUP_USER_ADD', true),
+                        'delete' => env('PASSBOLT_EMAIL_SEND_GROUP_USER_DELETE', true),
+                        'update' => env('PASSBOLT_EMAIL_SEND_GROUP_USER_UPDATE', true),
                     ],
                     'manager' => [
                         // notify manager when a group user is updated / deleted
-                        'update' => true,
-                        'delete' => true,
+                        'update' => env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true),
+                        'delete' => env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_DELETE', true),
                     ]
                 ]
             ]
@@ -107,16 +87,16 @@ return [
         // development will load the non compiled version,
         // production will load the compiled passbolt.js file.
         'js' => [
-            'build' => 'production'
+            'build' => env('PASSBOLT_JS_BUILD', 'production')
         ],
 
         // Html meta information
         'meta' => [
-            'title' => 'Passbolt',
-            'description' => 'Open source password manager for teams',
+            'title' => env('PASSBOLT_META_TITLE','Passbolt'),
+            'description' => env('PASSBOLT_META_DESCRIPTION', 'Open source password manager for teams'),
             // Do you want search engine robots to index your site
             // Default is set to false
-            'robots' => 'noindex, nofollow'
+            'robots' => env('PASSBOLT_META_ROBOTS','noindex, nofollow')
         ],
 
         // GPG Configuration
@@ -127,7 +107,7 @@ return [
             // Apache on Debian it would be in '/home/www-data/.gnupg'
             // Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
             // etc.
-            'keyring' => env('PASSBOLT_KEYRING','/home/www-data/.gnupg'),
+            'keyring' => env('PASSBOLT_GPG_KEYRING', '/home/www-data/.gnupg'),
 
             // replace GNUPGHOME with above value even if it is set
             'putenv' => true,
@@ -135,9 +115,9 @@ return [
             // Main server key
             'serverKey' => [
                 // Server private key location and fingerprint
-                'fingerprint' => env('PASSBOLT_FINGERPRINT','2FC8945833C51946E937F9FED47B0811573EE67E'),
-                'public' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey.asc',
-                'private' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey_private.asc',
+                'fingerprint' => env('PASSBOLT_GPG_SERVERKEY_FINGERPRINT', '2FC8945833C51946E937F9FED47B0811573EE67E'),
+                'public' => env('PASSBOLT_GPG_SERVERKEY_PUBLIC',ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey.asc'),
+                'private' => env('PASSBOLT_GPG_SERVERKEY_PRIVATE',ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey_private.asc'),
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank
                 'passphrase' => ''
@@ -146,19 +126,24 @@ return [
 
         // Is public registration allowed
         'registration' => [
-            'public' => env('PASSBOLT_REGISTRATION',false)
+            'public' => env('PASSBOLT_REGISTRATION_PUBLIC', false)
         ],
 
         // Activate specific entry points for selenium testing.
         // true will render your installation insecure
         'selenium' => [
-            'active' => false
+            'active' => env('PASSBOLT_SELENIUM_ACTIVE', false)
+        ],
+
+        // Security
+        'security' => [
+            'setHeaders' => env('PASSBOLT_SECURITY_SETHEADERS', true)
         ],
 
         // Should the app be SSL / HTTPS only
         // false will render your installation insecure
         'ssl' => [
-            'force' => env('PASSBOLT_FORCE_SSL',true),
+            'force' => env('PASSBOLT_SSL_FORCE', true),
         ]
     ],
     // Override the Cake ExceptionRenderer.

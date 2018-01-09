@@ -27,7 +27,7 @@ class SoftDeleteTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.users', 'app.groups', 'app.favorites', 'app.groups_users', 'app.resources', 'app.permissions'];
+    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/favorites', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
 
     public function setUp()
     {

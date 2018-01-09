@@ -12,26 +12,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+namespace PassboltTestData\Shell\Task\Base;
 
-namespace App\Test\TestCase\Controller\Pages;
+use App\Utility\UuidFactory;
+use PassboltTestData\Lib\DataTask;
 
-use App\Test\Lib\AppIntegrationTestCase;
-
-class HomeControllerTest extends AppIntegrationTestCase
+class EmailQueueDataTask extends DataTask
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles'];
+    public $entityName = 'EmailQueue';
 
-    public function testHomeNotLoggedInError()
+    /**
+     * Get the roles data
+     *
+     * @return array
+     */
+    protected function _getData()
     {
-        $this->get('/home');
-        $this->assertRedirect('/auth/login?redirect=%2Fhome');
-    }
-
-    public function testHomeSuccess()
-    {
-        $this->authenticateAs('ada');
-        $this->get('/home');
-        $this->assertResponseOk();
-        $this->assertResponseContains('loading');
+        return [];
     }
 }

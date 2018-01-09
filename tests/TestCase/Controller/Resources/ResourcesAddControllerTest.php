@@ -23,8 +23,8 @@ use Cake\Utility\Hash;
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.users', 'app.groups', 'app.groups_users', 'app.resources', 'app.profiles',
-        'app.secrets', 'app.permissions', 'app.roles', 'app.avatars', 'app.favorites', 'app.email_queue'
+        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/profiles',
+        'app.Base/secrets', 'app.Base/permissions', 'app.Base/roles', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
     ];
 
     protected function _getDummyPostData($data = [])

@@ -19,7 +19,7 @@ use Cake\TestSuite\IntegrationTestCase;
 
 class AuthLogoutControllerTest extends IntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.roles', 'app.profiles'];
+    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles'];
 
     public function testCheckLogoutLoggedIn()
     {

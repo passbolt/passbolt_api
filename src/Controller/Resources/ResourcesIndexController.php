@@ -31,7 +31,9 @@ class ResourcesIndexController extends AppController
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => ['creator', 'favorite', 'modifier', 'permission', 'secret'],
-            'filter' => ['is-favorite', 'is-shared-with-group']
+            'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me'],
+            'order' => ['Resource.modified']
+
         ];
         $options = $this->QueryString->get($whitelist);
 

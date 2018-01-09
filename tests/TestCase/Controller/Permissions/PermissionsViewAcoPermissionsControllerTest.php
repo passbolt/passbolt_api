@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.groups', 'app.groups_users', 'app.permissions', 'app.profiles', 'app.resources', 'app.users', 'app.avatars'];
+    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/permissions', 'app.Base/profiles', 'app.Base/resources', 'app.Base/users', 'app.Base/avatars'];
 
     public function testSuccess()
     {

@@ -22,7 +22,7 @@ use Cake\Utility\Hash;
 
 class GroupsIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.users', 'app.profiles', 'app.groups', 'app.groups_users', 'app.permissions'];
+    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/permissions'];
 
     public function testSuccess()
     {

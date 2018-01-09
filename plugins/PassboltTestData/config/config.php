@@ -32,6 +32,7 @@ return [
                         'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/CommentsData',
                         'PassboltTestData.Base/SecretsData',
+                        'PassboltTestData.Base/EmailQueueData',
                     ]
                 ],
                 'fixturize' => [
@@ -49,6 +50,15 @@ return [
                         'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/CommentsData',
                         'PassboltTestData.Base/SecretsData',
+                        'PassboltTestData.Base/EmailQueueData',
+                    ]
+                ]
+            ],
+            'alt0' => [
+                'fixturize' => [
+                    'shellTasks' => [
+                        'PassboltTestData.Alt0/GroupsUsersData',
+                        'PassboltTestData.Alt0/PermissionsData',
                     ]
                 ]
             ],
@@ -63,12 +73,6 @@ return [
                 'fixturize' => [
                     'shellTasks' => [
                         'PassboltTestData.Large/UsersData',
-                    ]
-                ]
-            ],
-            'security' => [
-                'install' => [
-                    'shellTasks' => [
                     ]
                 ]
             ]

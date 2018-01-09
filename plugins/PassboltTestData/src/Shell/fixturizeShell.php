@@ -16,6 +16,7 @@ namespace PassboltTestData\Shell;
 
 use Cake\Console\Shell;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Fixturize shell command.
@@ -31,17 +32,70 @@ class FixturizeShell extends Shell
     public function main()
     {
         $shellTasks = Configure::read('PassboltTestData.scenarios.' . $this->args[0] . '.fixturize.shellTasks');
+
         if (!is_null($shellTasks)) {
-            foreach ($shellTasks as $shellTask) {
-                $task = $this->Tasks->load($shellTask);
-                $fixtureName = $this->_getFixtureName($task);
-                $Model = $this->loadModel($task->entityName);
-                $tableName = $Model->getTable();
-                $this->dispatchShell("bake fixture $fixtureName -r -n 10000 --table $tableName -f");
+            $this->_initDatabase();
+            foreach ($shellTasks as $taskName) {
+                $task = $this->Tasks->load($taskName);
+                $this->_insertTask($task);
+                $this->_fixturizeTask($task);
             }
         }
 
         return true;
+    }
+
+    /**
+     * Init database
+     * @return void
+     */
+    protected function _initDatabase()
+    {
+        $dropTableCmd = 'passbolt drop_tables';
+        $this->dispatchShell($dropTableCmd);
+        $migrateCmd = 'migrations migrate';
+        $this->dispatchShell($migrateCmd);
+    }
+
+    /**
+     * Insert the task data
+     * @param \Cake\Console\Shell $task task
+     * @return void
+     */
+    protected function _insertTask($task)
+    {
+        if (method_exists($task, "beforeExecute")) {
+            $task->beforeExecute();
+        }
+        $task->execute();
+        if (method_exists($task, "afterExecute")) {
+            $task->afterExecute();
+        }
+    }
+
+    /**
+     * Fixturize the task data
+     * @param \Cake\Console\Shell $task task
+     * @return void
+     */
+    protected function _fixturizeTask($task)
+    {
+        $Model = $this->loadModel($task->entityName);
+        $tableName = $Model->getTable();
+        $fixtureName = $task->entityName;
+        $this->dispatchShell("bake fixture $fixtureName -r -n 10000 --table $tableName -f");
+
+        // Move the fixture in the right folder.
+        $fixtureFileName = $fixtureName . 'Fixture.php';
+        $taskNamespace = $this->_getTaskNamespace($task);
+        $destFixturePath = FIXTURES . DS . $taskNamespace;
+        @mkdir($destFixturePath);
+        rename(FIXTURES . DS . $fixtureFileName, $destFixturePath . DS . $fixtureFileName);
+
+        // Move Adapt the fixture to take care of the namespace
+        $content = file_get_contents($destFixturePath . DS . $fixtureFileName);
+        $content = preg_replace("/(namespace App.Test.Fixture)/", "$1\\$taskNamespace", $content);
+        file_put_contents($destFixturePath . DS . $fixtureFileName, $content);
     }
 
     /**
@@ -65,17 +119,16 @@ class FixturizeShell extends Shell
     }
 
     /**
-     * Get the name of the fixture for a given shell task.
+     * Get the folder the fixutre will be written in for a given shell task.
      *
      * @param \Cake\Console\Shell $shellTask task
      * @return string
      */
-    protected function _getFixtureName($shellTask)
+    protected function _getTaskNamespace($shellTask)
     {
-        if (isset($shellTask->fixtureName)) {
-            return $shellTask->fixtureName;
-        }
+        $r = new \ReflectionClass($shellTask);
+        $breads = explode('\\', $r->getNamespaceName());
 
-        return $shellTask->entityName;
+        return $breads[count($breads) - 1];
     }
 }

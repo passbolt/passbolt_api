@@ -14,7 +14,6 @@
  */
 namespace App\Controller;
 
-use App\Auth\GpgAuthenticate;
 use App\Controller\Events\EmailNotificationsListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
@@ -41,8 +40,6 @@ class AppController extends Controller
      */
     public function initialize()
     {
-        parent::initialize();
-
         $this->loadComponent('RequestHandler');
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
@@ -74,21 +71,6 @@ class AppController extends Controller
          */
         // $this->loadComponent('Security');
         // $this->loadComponent('Csrf');
-
-        /*
-         * Additional security headers
-         * - Only allow assets to be loaded from the passbolt instance domain
-         * - Don't allow framing the site
-         * - Tell browser to block XSS attempts
-         * - Stick to the content type declared by the server
-         * - Only set the referrer header on requests to the same origin
-         */
-        $this->response = $this->response
-//            ->withHeader('Content-Security-Policy', 'default-src ' . Router::url('/', true))
-            ->withHeader('x-frame-options', 'DENY')
-            ->withHeader('X-XSS-Protection', '1; mode=block')
-            ->withHeader('X-Content-Type-Options', 'nosniff')
-            ->withHeader('Referrer-Policy', 'same-origin');
 
         // Tell the browser to force HTTPS use
         if (Configure::read('passbolt.ssl.force')) {

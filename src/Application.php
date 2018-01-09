@@ -1,36 +1,32 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
  *
- * Licensed under The MIT License
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link      http://cakephp.org CakePHP(tm) Project
- * @since     3.3.0
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
  */
 namespace App;
 
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\GpgAuthSignMiddleware;
+use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 
-/**
- * Application setup class.
- *
- * This defines the bootstrapping logic and middleware layers you
- * want to use in your application.
- */
 class Application extends BaseApplication
 {
     /**
-     * Setup the middleware your application will use.
+     * Setup the PSR-7 middleware passbolt application will use.
      *
      * @param \Cake\Http\MiddlewareQueue $middleware The middleware queue to setup.
      * @return \Cake\Http\MiddlewareQueue The updated middleware.
@@ -48,11 +44,33 @@ class Application extends BaseApplication
             // Apply routing
             ->add(RoutingMiddleware::class)
 
-            // Apply GPG Auth signatures
+            // Apply GPG Auth headers
             ->add(GpgAuthHeadersMiddleware::class)
 
             // Apply GPG signatures
             ->add(GpgAuthSignMiddleware::class);
+
+        /*
+         * Additional security headers
+         * - Only allow assets to be loaded from the passbolt instance domain
+         * - Only set the referrer header on requests to the same origin
+         * - Don't allow framing the site
+         * - Tell browser to block XSS attempts
+         * - Don't allow
+         * - Stick to the content type declared by the server
+         */
+        if (Configure::read('passbolt.security.headers')) {
+            $headers = new SecurityHeadersMiddleware();
+            $headers
+                ->setCrossDomainPolicy()
+                ->setReferrerPolicy()
+                ->setXFrameOptions()
+                ->setXssProtection()
+                ->noOpen()
+                ->noSniff();
+
+            $middleware->add($headers);
+        }
 
         return $middleware;
     }

@@ -26,7 +26,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
     public $Groups;
     public $GroupsUsers;
 
-    public $fixtures = ['app.groups', 'app.users', 'app.groups_users'];
+    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
 
     public function setUp()
     {

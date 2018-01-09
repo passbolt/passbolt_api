@@ -26,8 +26,8 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     public $Permissions;
 
     public $fixtures = [
-        'app.users', 'app.groups', 'app.profiles', 'app.gpgkeys', 'app.roles',
-        'app.resources', 'app.alt0/groups_users', 'app.alt0/permissions', 'app.avatars'
+        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
+        'app.Base/resources', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars'
     ];
 
     public function setUp()
