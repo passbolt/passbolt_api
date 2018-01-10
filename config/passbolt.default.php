@@ -69,31 +69,31 @@ return [
     // and if you are not concerned about the security of your installation.
     // (Don't forget to comment the default config above).
     ///////////////////////////////////////////////////////////////////////////////////////////
-//  // Activate debug mode.
-//  'debug' => true,
-//	'passbolt' => [
-//		'registration' => [
-//			'public' => true
-//		],
-//		'ssl' => [
-//			'force' => false,
-//		],
-//		'gpg' => [
-//			// Tell GPG where to find the keyring
-//			// Needs to be available by the webserver user, for example:
-//			// Apache on Centos it would be in '/usr/share/httpd/.gnupg'
-//			// Apache on Debian it would be in '/home/www-data/.gnupg'
-//			// Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
-//			// etc.
-//			'keyring' => '/var/lib/nginx/.gnupg',
-//			'putenv' => true,
-//			'serverKey' => [
-//				'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
-//				'public' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure.key',
-//				'private' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure_private.key',
-//			],
-//		],
-//	],
+//    // Activate debug mode.
+//    'debug' => true,
+//    'passbolt' => [
+//        'registration' => [
+//            'public' => true
+//        ],
+//        'ssl' => [
+//            'force' => false,
+//        ],
+//        'gpg' => [
+//            // Tell GPG where to find the keyring
+//            // Needs to be available by the webserver user, for example:
+//            // Apache on Centos it would be in '/usr/share/httpd/.gnupg'
+//            // Apache on Debian it would be in '/home/www-data/.gnupg'
+//            // Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
+//            // etc.
+//            'keyring' => '/var/lib/nginx/.gnupg',
+//            'putenv' => true,
+//            'serverKey' => [
+//                'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
+//                'public' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure.key',
+//                'private' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure_private.key',
+//            ],
+//        ],
+//    ],
     //////////////////////////// END DEMO CONFIGURATION EXAMPLE ////////////////////////////
 
     // App configuration.

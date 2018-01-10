@@ -85,7 +85,9 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('default', 'default', false); // passbolt default config
-    Configure::load('passbolt', 'default', true); // merge with default config
+    if (\file_exists(CONFIG . DS . 'passbolt.php')) {
+        Configure::load('passbolt', 'default', true); // merge with default config
+    }
     Configure::load('version', 'default', true);
 } catch (\Exception $e) {
     // let cli handle issues
