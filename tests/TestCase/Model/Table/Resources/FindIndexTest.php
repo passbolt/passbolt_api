@@ -205,7 +205,7 @@ class FindIndexTest extends AppTestCase
         sort($resourcesIds);
 
         $expectedResourcesIds = [];
-        foreach($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
+        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
             if ($resourcePermission == 15) {
                 $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
             }
@@ -230,7 +230,7 @@ class FindIndexTest extends AppTestCase
 
         // Get all resources with permissions.
         $expectedResourcesIds = [];
-        foreach($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
+        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
             if ($resourcePermission > 0) {
                 $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
             }

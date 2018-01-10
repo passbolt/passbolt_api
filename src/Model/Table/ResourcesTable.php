@@ -535,13 +535,14 @@ class ResourcesTable extends Table
     /**
      * Augment any Resources queries to filter on resources owned by the given user.
      * A owned resource means a resource that is shared with the OWNER permission.
-     * @param \Cake\ORM\Query $query
-     * @param string $userId
+     * @param \Cake\ORM\Query $query The query to filter.
+     * @param string $userId The user identifier to filter on.
      * @return \Cake\ORM\Query
      */
     private function _filterQueryIsOwnedByUser(\Cake\ORM\Query $query, string $userId)
     {
         $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::OWNER);
+
         return $query;
     }
 
@@ -549,13 +550,14 @@ class ResourcesTable extends Table
      * Augment any Resources queries to filter on resources shared with the given user.
      * We consider that a resource is shared with a user when it is accessible by the user but has not
      * been created by him.
-     * @param \Cake\ORM\Query $query
-     * @param string $userId
+     * @param \Cake\ORM\Query $query The query to filter.
+     * @param string $userId The user identifier to filter on.
      * @return \Cake\ORM\Query
      */
     private function _filterQuerySharedWithUser(\Cake\ORM\Query $query, string $userId)
     {
         $query->where(['Resources.created_by <>' => $userId]);
+
         return $query;
     }
 

@@ -34,7 +34,7 @@ return [
 
         // Authentication & Authorisation.
         'auth' => [
-            'tokenExpiry' => env('PASSBOLT_AUTH_TOKENEXPIRACY', '3 days')
+            'tokenExpiry' => env('PASSBOLT_AUTH_TOKEN_EXPIRY', '3 days')
         ],
 
         // Email notification settings.
@@ -92,11 +92,11 @@ return [
 
         // Html meta information.
         'meta' => [
-            'title' => env('PASSBOLT_META_TITLE','Passbolt'),
+            'title' => env('PASSBOLT_META_TITLE', 'Passbolt'),
             'description' => env('PASSBOLT_META_DESCRIPTION', 'Open source password manager for teams'),
             // Do you want search engine robots to index your site.
             // Default is set to false.
-            'robots' => env('PASSBOLT_META_ROBOTS','noindex, nofollow')
+            'robots' => env('PASSBOLT_META_ROBOTS', 'noindex, nofollow')
         ],
 
         // GPG Configuration.
@@ -115,9 +115,9 @@ return [
             // Main server key.
             'serverKey' => [
                 // Server public / private key location and fingerprint.
-                'fingerprint' => env('PASSBOLT_GPG_SERVERKEY_FINGERPRINT', '2FC8945833C51946E937F9FED47B0811573EE67E'),
-                'public' => env('PASSBOLT_GPG_SERVERKEY_PUBLIC',ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey.asc'),
-                'private' => env('PASSBOLT_GPG_SERVERKEY_PRIVATE',ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey_private.asc'),
+                'fingerprint' => env('PASSBOLT_GPG_SERVER_KEY_FINGERPRINT', '2FC8945833C51946E937F9FED47B0811573EE67E'),
+                'public' => env('PASSBOLT_GPG_SERVER_KEY_PUBLIC', ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey.asc'),
+                'private' => env('PASSBOLT_GPG_SERVER_KEY_PRIVATE', ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey_private.asc'),
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
@@ -137,7 +137,7 @@ return [
 
         // Security.
         'security' => [
-            'setHeaders' => env('PASSBOLT_SECURITY_SETHEADERS', true)
+            'setHeaders' => env('PASSBOLT_SECURITY_SET_HEADERS', true)
         ],
 
         // Should the app be SSL / HTTPS only.

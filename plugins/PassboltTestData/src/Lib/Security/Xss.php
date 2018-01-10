@@ -41,7 +41,7 @@ class Xss
             'xss space and meta chars before the javascript' => "&#14;  javascript:document.write('XSS14');",
             'xss Extraneous >' => '"' . "><script>document.write('xss15')</script>",
             'xss Extraneous closing double quote' => '">' . "onclick=document.write('xxs16')",
-            'xss & JavaScript includes' =>  "&{document.write('XSS17')}",
+            'xss & JavaScript includes' => "&{document.write('XSS17')}",
             'xss null breaks up javascript directive' => 'java\0script:document.write("XSS18")',
         ];
     }
