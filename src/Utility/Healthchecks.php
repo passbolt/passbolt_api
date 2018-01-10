@@ -64,11 +64,16 @@ class Healthchecks
         try {
             $checks['application']['info']['remoteVersion'] = Migration::getLatestTagName();
             $checks['application']['latestVersion'] = Migration::isLatestVersion();
-        } catch (exception $e) {
+        } catch (\Exception $e) {
             $checks['application']['info']['remoteVersion'] = 'undefined';
             $checks['application']['latestVersion'] = null;
         }
-        $checks['application']['schema'] = !Migration::needMigration();
+        try {
+            $checks['application']['schema'] = !Migration::needMigration();
+        } catch (\Exception $e) {
+            // Cannot connect to the database
+            $checks['application']['schema'] = null;
+        }
         $checks['application']['robotsIndexDisabled'] = (strpos(Configure::read('passbolt.meta.robots'), 'noindex') !== false);
         $checks['application']['sslForce'] = Configure::read('passbolt.ssl.force');
         $checks['application']['sslFullBaseUrl'] = !(strpos(Configure::read('App.fullBaseUrl'), 'https') === false);
@@ -115,9 +120,7 @@ class Healthchecks
 
     /**
      * Return config file checks:
-     * - configFiles.core true if file is present
-     * - configFiles.app true if file is present
-     * - configFiles.email true if file is present
+     * - configFile.app true if file is present, false otherwise
      *
      * @return array
      */
@@ -145,7 +148,7 @@ class Healthchecks
     {
         $settings = Cache::getConfig('_cake_core_');
         $checks['core']['cache'] = (!empty($settings));
-        $checks['core']['debugDisabled'] = (Configure::read('debug') === 0);
+        $checks['core']['debugDisabled'] = (Configure::read('debug') === false);
         $checks['core']['salt'] = (Configure::read('Security.salt') !== '__SALT__');
         $checks['core']['fullBaseUrl'] = (Configure::read('App.fullBaseUrl') !== null);
         $checks['core']['validFullBaseUrl'] = Validation::url(Configure::read('App.fullBaseUrl'), true);
@@ -179,11 +182,11 @@ class Healthchecks
 
     /**
      * Return database checks:
-     * - connect:  can connect to the detabase
+     * - connect: can connect to the database
      * - tablesPrefixes: not using tablesPrefix
      * - tableCount: at least one table is present
      * - info.tableCount: number of tables installed
-     * - defaultContent: some default contennt (4 roles)
+     * - defaultContent: some default content (4 roles)
      *
      * @return array
      */
