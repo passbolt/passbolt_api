@@ -45,7 +45,7 @@ return [
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
         // 'baseUrl' => env('SCRIPT_NAME'),
-        'fullBaseUrl' => env('APP_FULLBASEURL', false),
+        'fullBaseUrl' => env('APP_FULL_BASE_URL', false),
         'imageBaseUrl' => 'img/',
         'cssBaseUrl' => 'css/',
         'jsBaseUrl' => 'js/',
@@ -180,13 +180,13 @@ return [
         'default' => [
             'className' => 'Mail',
             // The following keys are used in SMTP transports
-            'host' => 'localhost',
-            'port' => 25,
-            'timeout' => 30,
-            'username' => 'user',
-            'password' => 'secret',
-            'client' => null,
-            'tls' => null,
+            'host' => env('EMAIL_TRANSPORT_DEFAULT_HOST', 'localhost'),
+            'port' => env('EMAIL_TRANSPORT_DEFAULT_PORT', 25),
+            'timeout' => env('EMAIL_TRANSPORT_DEFAULT_TIMEOUT', 30),
+            'username' => env('EMAIL_TRANSPORT_DEFAULT_USERNAME', null),
+            'password' => env('EMAIL_TRANSPORT_DEFAULT_PASSWORD', null),
+            'client' => env('EMAIL_TRANSPORT_DEFAULT_CLIENT', null),
+            'tls' => env('EMAIL_TRANSPORT_DEFAULT_TLS', null),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
@@ -202,8 +202,8 @@ return [
      */
     'Email' => [
         'default' => [
-            'transport' => 'default',
-            'from' => 'you@localhost',
+            'transport' => env('EMAIL_DEFAULT_TRANSPORT', 'default'),
+            'from' => env('EMAIL_DEFAULT_FROM', 'you@localhost'),
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
         ],
@@ -222,16 +222,17 @@ return [
             'className' => 'Cake\Database\Connection',
             'driver' => 'Cake\Database\Driver\Mysql',
             'persistent' => false,
-            'host' => 'localhost',
+            'host' => env('DATASOURCES_DEFAULT_HOST', 'localhost'),
+            'port' => env('DATASOURCES_DEFAULT_PORT', 3306),
             /**
              * CakePHP will use the default DB port based on the driver selected
              * MySQL on MAMP uses port 8889, MAMP users will want to uncomment
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'my_app',
+            'username' => env('DATASOURCES_DEFAULT_USERNAME', 'my_app'),
+            'password' => env('DATASOURCES_DEFAULT_PASSWORD', 'secret'),
+            'database' => env('DATASOURCES_DEFAULT_DATABASE', 'my_app'),
             'encoding' => 'utf8mb4',
             'timezone' => 'UTC',
             'flags' => [],
