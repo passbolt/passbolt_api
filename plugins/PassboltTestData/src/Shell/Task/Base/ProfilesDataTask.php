@@ -26,7 +26,7 @@ class ProfilesDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.admin'),

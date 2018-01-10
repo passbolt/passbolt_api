@@ -26,7 +26,7 @@ class CommentsDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $comments[] = [
             'id' => UuidFactory::uuid('comment.id.apache-1'),

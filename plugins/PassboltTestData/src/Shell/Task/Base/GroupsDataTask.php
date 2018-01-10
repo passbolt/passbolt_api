@@ -26,7 +26,7 @@ class GroupsDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $groups[] = [
             'id' => UuidFactory::uuid('group.id.accounting'),

@@ -26,7 +26,7 @@ class UsersDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $users[] = [
             'id' => UuidFactory::uuid('user.id.admin'),

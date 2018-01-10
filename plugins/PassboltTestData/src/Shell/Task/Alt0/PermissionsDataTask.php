@@ -24,7 +24,7 @@ class PermissionsDataTask extends \PassboltTestData\Shell\Task\Base\PermissionsD
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $permissions = [];
 

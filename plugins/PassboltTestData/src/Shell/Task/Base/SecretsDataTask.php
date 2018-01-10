@@ -109,16 +109,26 @@ class SecretsDataTask extends DataTask
      */
     protected function _encrypt($text, $user)
     {
-        // Retrieve the user key.
+        // Retrieve the user key file.
         $GpgkeyTask = $this->Tasks->load('PassboltTestData.Base/GpgkeysData');
         $GpgkeyTask->params = $this->params;
         $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user->id);
+
+        // Retrieve the key info.
+        // As a default key can be shared among user, the encryption will require the key fingerprint.
+        // As the key meta data are already stored in db, get the meta data from the db and avoid performance issue
+        // by avoiding any gpg extra parsing.
+        $this->loadModel('Gpgkeys');
+        $gpgkey = $this->Gpgkeys->find('all')
+            ->where(['user_id' => $user->id])
+            ->first();
+        $keyFingerprint = $gpgkey['fingerprint'];
 
         // Import the user public key.
         exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
 
         // Encrypt the text.
-        $command = "echo -n " . escapeshellarg($text) . " | gpg --encrypt -r " . $user->username . " -a --trust-model always";
+        $command = "echo -n " . escapeshellarg($text) . " | gpg --encrypt -r " . $keyFingerprint . " -a --trust-model always";
         exec($command, $output);
 
         // Return the armored message.
@@ -130,7 +140,7 @@ class SecretsDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $secrets = [];
 

@@ -26,7 +26,7 @@ class ResourcesDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $resources[] = [
             'id' => UuidFactory::uuid('resource.id.apache'),

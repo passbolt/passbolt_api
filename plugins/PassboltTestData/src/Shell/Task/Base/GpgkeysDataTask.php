@@ -65,7 +65,7 @@ class GpgkeysDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $Users = TableRegistry::get('Users');
         $users = $Users->find('all');

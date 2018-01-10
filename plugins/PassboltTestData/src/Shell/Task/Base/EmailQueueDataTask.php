@@ -26,7 +26,7 @@ class EmailQueueDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         return [];
     }

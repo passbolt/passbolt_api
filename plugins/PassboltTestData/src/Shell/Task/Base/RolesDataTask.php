@@ -26,7 +26,7 @@ class RolesDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $roles[] = [
             'id' => UuidFactory::uuid('role.id.anonymous'),

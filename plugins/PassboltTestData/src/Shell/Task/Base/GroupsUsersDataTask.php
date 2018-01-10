@@ -109,7 +109,7 @@ class GroupsUsersDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $groupsUsers = [];
         $settings = $this->getGroupsUsersSettings();

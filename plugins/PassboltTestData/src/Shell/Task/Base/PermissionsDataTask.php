@@ -27,7 +27,7 @@ class PermissionsDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $permissions = [];
         $permissions = array_merge($permissions, $this->getUsersResourcesPermissions());

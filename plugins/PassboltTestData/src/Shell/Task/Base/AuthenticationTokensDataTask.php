@@ -26,7 +26,7 @@ class AuthenticationTokensDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $tokens[] = [
             'id' => UuidFactory::uuid('token.id.expired'),

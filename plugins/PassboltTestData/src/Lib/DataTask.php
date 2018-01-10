@@ -36,6 +36,12 @@ abstract class DataTask extends Shell
     protected $_Entity = null;
 
     /**
+     * Truncate data.
+     * @var boolean
+     */
+    protected $_truncate = true;
+
+    /**
      * execute() method.
      *
      * @throws Exception if the entity name is not defined
@@ -50,14 +56,16 @@ abstract class DataTask extends Shell
         $this->loadModel($this->entityName);
         $this->_Entity = $this->{$this->entityName};
 
-        // Flush all the previously stored data.
-        $this->_Entity->deleteAll([]);
+        // Truncate the table.
+        if ($this->_truncate) {
+            $this->_Entity->deleteAll([]);
+        }
 
         $conn = \Cake\Datasource\ConnectionManager::get('default');
         $conn->logQueries(true);
 
         // Insert the data in the db.
-        $data = $this->_getData();
+        $data = $this->getData();
         foreach ($data as $row) {
             try {
                 $this->saveEntity($row);

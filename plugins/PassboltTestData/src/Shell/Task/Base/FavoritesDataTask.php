@@ -26,7 +26,7 @@ class FavoritesDataTask extends DataTask
      *
      * @return array
      */
-    protected function _getData()
+    public function getData()
     {
         $favorites[] = [
             'id' => UuidFactory::uuid('favorite.id.ada-apache'),
