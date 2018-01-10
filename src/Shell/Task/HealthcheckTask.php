@@ -237,15 +237,16 @@ class HealthcheckTask extends AppShell
         $this->assert(
             $checks['configFile']['app'],
             __('The application config file is present'),
-            __('The application config file is missing in {0}', ROOT . 'Config'),
-            __('Copy {0} to {1}', ROOT . 'config/app.php.default', ROOT . 'config/app.php')
+            __('The application config file is missing in {0}', ROOT . DS . 'config'),
+            __('Copy {0} to {1}', ROOT . DS .'config/app.php.default', ROOT . DS .'config/app.php')
         );
-        $this->assert(
-            $checks['configFile']['passbolt'],
-            __('The passbolt config file is present'),
-            __('The passbolt config file is missing in {0}', ROOT . 'Config'),
-            __('Copy {0} to {1}', ROOT . 'config/app.php.default', ROOT . 'config/passbolt.php')
-        );
+        if ($checks['configFile']['passbolt']){
+            $this->display(__('The passbolt config file is present'), 'pass');
+        } else {
+            $this->display(__('The passbolt config file is missing in {0}', ROOT . DS . 'config'), 'warn');
+            $this->display(__('Copy {0} to {1}', 'config/app.php.default', 'config/passbolt.php'), 'info');
+            $this->display(__('The passbolt config file is not required if passbolt is configured with environment variables'), 'info');
+        }
     }
 
     /**
@@ -264,7 +265,7 @@ class HealthcheckTask extends AppShell
             $checks['core']['debugDisabled'],
             __('Debug mode is off.'),
             __('Debug mode is on.'),
-            __('Set Configure::write(\'debug\', 0); in {0}', 'config/app.php')
+            __('Set debug = false; in {0}', 'config/passbolt.php')
         );
         $this->assert(
             $checks['core']['cache'],
@@ -282,14 +283,14 @@ class HealthcheckTask extends AppShell
             $checks['core']['fullBaseUrl'],
             __('Full base url is set to {0}', $checks['core']['info']['fullBaseUrl']),
             __('Full base url is not set. The application is using: {0}.', $checks['core']['info']['fullBaseUrl']),
-            __('Edit App.fullBaseUrl in {0}', 'config/app.php')
+            __('Edit App.fullBaseUrl in {0}', 'config/passbolt.php')
         );
         $this->assert(
             $checks['core']['validFullBaseUrl'],
             __('App.fullBaseUrl validation OK.'),
             __('App.fullBaseUrl does not validate. {0}.', $checks['core']['info']['fullBaseUrl']),
             [
-                __('Edit App.fullBaseUrl in {0}', 'config/app.php'),
+                __('Edit App.fullBaseUrl in {0}', 'config/passbolt.php'),
                 __('Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt')
             ]
         );
@@ -298,7 +299,7 @@ class HealthcheckTask extends AppShell
             __('/healthcheck/status is reachable.'),
             __('Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl'),
             [
-                __('Check that the domain name is correct in {0}', 'config/app.php'),
+                __('Check that the domain name is correct in {0}', 'config/passbolt.php'),
                 __('Check the network settings')
             ]
         );
@@ -353,7 +354,7 @@ class HealthcheckTask extends AppShell
             __('The application is able to connect to the database'),
             __('The application is not able to connect to the database.'),
             [
-                __('Double check the host, database name, username and password in config/app.php'),
+                __('Double check the host, database name, username and password in config/passbolt.php'),
                 __('Make sure the database exists and is accessible for the given database user.')
             ]
         );
@@ -428,7 +429,7 @@ class HealthcheckTask extends AppShell
             $checks['application']['sslFullBaseUrl'],
             __('App.fullBaseUrl is set to HTTPS.'),
             __('App.fullBaseUrl is not set to HTTPS.'),
-            __('Check App.fullBaseUrl url scheme in {0}.', 'config/app.php')
+            __('Check App.fullBaseUrl url scheme in {0}.', 'config/passbolt.php')
         );
         $this->assert(
             $checks['application']['seleniumDisabled'],
@@ -448,7 +449,7 @@ class HealthcheckTask extends AppShell
             __('Registration is open to everyone.'),
             [
                 __('Make sure this instance is not publicly available on the internet.'),
-                __('Or set passbolt.registration.public to false in config/app.php.')
+                __('Or set passbolt.registration.public to false in config/passbolt.php.')
             ]
         );
         $this->warning(
@@ -489,7 +490,7 @@ class HealthcheckTask extends AppShell
                 __('The server gpg key is not the default one'),
                 __('Do not use the default gpg key for the server'),
                 [
-                    __('Create a key, export it and add the fingerprint to config/app.php'),
+                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
                     __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
                 ]
             );
@@ -499,7 +500,7 @@ class HealthcheckTask extends AppShell
                 __('The server gpg key is set'),
                 __('The server gpg key is not set'),
                 [
-                    __('Create a key, export it and add the fingerprint to config/app.php'),
+                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
                     __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
                 ]
             );
@@ -514,7 +515,7 @@ class HealthcheckTask extends AppShell
                 'sudo mkdir ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                 'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
-                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in config/app.php.'),
+                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in config/passbolt.php.'),
             ]
         );
         if ($checks['gpg']['gpgHome']) {
@@ -532,8 +533,8 @@ class HealthcheckTask extends AppShell
         }
         $this->assert(
             $checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'],
-            __('The public key file is defined in app/config.php and readable.'),
-            __('The public key file is not defined in app/config.php or not readable.'),
+            __('The public key file is defined in config/passbolt.php and readable.'),
+            __('The public key file is not defined in config/passbolt.php or not readable.'),
             [
                 __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in config/passbolt.php.'),
                 __('Ensure the public key defined in config/passbolt.php exists and is accessible by the webserver user.'),
@@ -542,8 +543,8 @@ class HealthcheckTask extends AppShell
         );
         $this->assert(
             $checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'],
-            __('The private key file is defined in app/config.php and readable.'),
-            __('The public key file is not defined in app/config.php or not readable.'),
+            __('The private key file is defined in config/passbolt.php and readable.'),
+            __('The public key file is not defined in config/passbolt.php or not readable.'),
             [
                 __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in config/passbolt.php.'),
                 __('Ensure the private key defined in config/passbolt.php exists and is accessible by the webserver user.'),
@@ -552,8 +553,8 @@ class HealthcheckTask extends AppShell
         );
         $this->assert(
             $checks['gpg']['gpgKeyPrivateFingerprint'] && $checks['gpg']['gpgKeyPublicFingerprint'],
-            __('The server key fingerprint matches the one defined in app/config.php.'),
-            __('The server key fingerprint doesn\'t match the one defined in app/config.php.'),
+            __('The server key fingerprint matches the one defined in config/passbolt.php.'),
+            __('The server key fingerprint doesn\'t match the one defined in config/passbolt.php.'),
             [
                 __('Double check the key fingerprint, example: '),
                 'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $checks['gpg']['info']['gpgHome'] . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',

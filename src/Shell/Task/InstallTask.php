@@ -320,10 +320,8 @@ class InstallTask extends AppShell
         try {
             // Make sure the baseline config files are present
             $checks = Healthchecks::configFiles();
-            foreach ($checks['configFile'] as $file => $enabled) {
-                if (!$enabled) {
-                    throw new Exception(__('One config file is missing ({0}).', $file));
-                }
+            if (!$checks['configFile']['app']) {
+                throw new Exception(__('The application config file is missing in {0}.', ROOT . DS . 'config'));
             }
 
             // Check application url config
@@ -346,7 +344,7 @@ class InstallTask extends AppShell
             if (!Configure::read('debug')) {
                 if (!$checks['gpg']['gpgKeyNotDefault']) {
                     $msg = __('Default GnuPG server key cannot be used in production.');
-                    $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/app.php with your server key information.');
+                    $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/passbolt.php with your server key information.');
                     $msg .= ' ' . __('If you do not have yet a server key, please generate one, take a look at the install documentation.');
                     throw new Exception($msg);
                 }
@@ -362,7 +360,7 @@ class InstallTask extends AppShell
 
             // Check that the public and private key match the fingerprint
             if (!$checks['gpg']['gpgKeyPrivateFingerprint'] || !$checks['gpg']['gpgKeyPublicFingerprint']) {
-                throw new Exception(__('The server key fingerprint does not match the fingerprint mentioned in app/config.php'));
+                throw new Exception(__('The server key fingerprint does not match the fingerprint mentioned in config/passbolt.php'));
             }
             if (!$checks['gpg']['gpgKeyPublicEmail']) {
                 throw new Exception(__('The server public key should have an email id.'));
