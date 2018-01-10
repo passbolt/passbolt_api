@@ -238,9 +238,9 @@ class HealthcheckTask extends AppShell
             $checks['configFile']['app'],
             __('The application config file is present'),
             __('The application config file is missing in {0}', ROOT . DS . 'config'),
-            __('Copy {0} to {1}', ROOT . DS .'config/app.php.default', ROOT . DS .'config/app.php')
+            __('Copy {0} to {1}', ROOT . DS . 'config/app.php.default', ROOT . DS . 'config/app.php')
         );
-        if ($checks['configFile']['passbolt']){
+        if ($checks['configFile']['passbolt']) {
             $this->display(__('The passbolt config file is present'), 'pass');
         } else {
             $this->display(__('The passbolt config file is missing in {0}', ROOT . DS . 'config'), 'warn');
