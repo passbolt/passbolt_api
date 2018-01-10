@@ -44,10 +44,10 @@ return [
             // Tell GPG where to find the keyring.
             // Needs to be available by the webserver user, for example:
             // Apache on Centos it would be in '/usr/share/httpd/.gnupg'
-            // Apache on Debian it would be in '/home/www-data/.gnupg'
+            // Apache on Debian it would be in '/var/www/.gnupg'
             // Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
             // etc.
-            'keyring' => '/var/lib/nginx/.gnupg',
+            'keyring' => '/home/www-data/.gnupg',
 
             // Replace GNUPGHOME with above value even if it is set.
             'putenv' => true,
