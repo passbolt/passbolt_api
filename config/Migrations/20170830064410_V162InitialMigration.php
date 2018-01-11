@@ -15,19 +15,48 @@
 
 use Migrations\AbstractMigration;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 
 class V162InitialMigration extends AbstractMigration
 {
     /**
      * Up
      *
+     * @throws Exception if trying to migrate without all tables
      * @return void
      */
     public function up()
     {
-        // If people are migrating from v1 - skip
-        $exists = $this->hasTable('users');
-        if ($exists) return;
+        $options = ($this->getAdapter()->getOptions());
+        $databaseName = $options['name'];
+
+        // Check if v1 tables are present
+        $tables = [
+            'authentication_tokens', 'comments', 'controller_logs', 'email_queue',
+            'favorites', 'file_storage', 'gpgkeys', 'groups', 'groups_users', 'permissions',
+            'permissions_types', 'profiles', 'resources', 'roles', 'schema_migrations',
+            'secrets', 'user_agents', 'users',
+        ];
+        $tableCount = 0;
+        foreach ($tables as $table) {
+            $exists = $this->hasTable($table);
+            if ($exists) {
+                $tableCount++;
+            }
+        }
+
+        // If this is an upgrade from v1
+        if ($tableCount > 0) {
+            if($tableCount < sizeof($tables)) {
+                throw new Exception('Can not upgrade. Some tables are missing.');
+            }
+            // change collations
+            $this->execute('ALTER DATABASE ' . $databaseName . ' COLLATE utf8mb4_unicode_ci');
+            foreach ($tables as $table) {
+                $this->execute('ALTER TABLE ' . $table . ' COLLATE utf8mb4_unicode_ci');
+            }
+            return;
+        }
 
         // If this is a fresh install
         $this->table('authentication_tokens', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
