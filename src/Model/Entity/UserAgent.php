@@ -8,8 +8,6 @@ use Cake\ORM\Entity;
  *
  * @property string $id
  * @property string $name
- *
- * @property \App\Model\Entity\ControllerLog[] $controller_logs
  */
 class UserAgent extends Entity
 {
@@ -24,7 +22,6 @@ class UserAgent extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true,
-        'controller_logs' => true
+        'name' => true
     ];
 }
