@@ -260,7 +260,7 @@ class Healthchecks
 
     /**
      * Return core checks:
-     * - phpVersion: php version is superior to 5.2.8
+     * - phpVersion: php version is superior to 7.0
      * - pcre: unicode support
      * - tmpWritable: the TMP directory is writable for the current user
      *
@@ -268,7 +268,7 @@ class Healthchecks
      */
     public static function environment()
     {
-        $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '5.6.0', '>='));
+        $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '7.0', '>='));
         $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
         $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');

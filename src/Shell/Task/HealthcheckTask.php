@@ -176,7 +176,7 @@ class HealthcheckTask extends AppShell
         $this->assert(
             $checks['environment']['phpVersion'],
             __('PHP version {0}', PHP_VERSION),
-            __('PHP version is too low, passbolt need PHP 5.2.8 or higher')
+            __('PHP version is too low, passbolt need PHP 7.0 or higher')
         );
         $this->assert(
             $checks['environment']['pcre'],
@@ -191,9 +191,9 @@ class HealthcheckTask extends AppShell
             [
                 __('Ensure the temporary directory and its content are writable by the user the webserver user.'),
                 __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . APP . 'tmp',
-                'sudo chmod 775 $(find ' . APP . 'tmp -type d)',
-                'sudo chmod 664 $(find ' . APP . 'tmp -type f)',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'tmp',
+                'sudo chmod 775 $(find ' . ROOT . 'tmp -type d)',
+                'sudo chmod 664 $(find ' . ROOT . 'tmp -type f)',
             ]
         );
         $this->assert(
