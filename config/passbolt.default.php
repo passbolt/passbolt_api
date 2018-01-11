@@ -80,16 +80,9 @@ return [
      * you can use the demo config example provided in the next section below.
      */
     'passbolt' => [
-        // Define if users can register by themselves.
-        'registration' => [
-            'public' => false,
-        ],
-        // Enforce the use of ssl
-        // requires additional webserver configuration and a SSL certificate
-        'ssl' => [
-            'force' => true,
-        ],
         // GPG Configuration.
+        // The keyring must to be owned and accessible by the webserver user.
+        // Example: www-data user on Debian
         'gpg' => [
             // Main server key.
             'serverKey' => [
@@ -100,20 +93,19 @@ return [
                 'private' => '',
             ],
 
-            // Replace the environment variable $GNUPGHOME with above value even if it is set.
-            // Useful if you do not want to use the default keyring location and cannot set environment variables.
-            // 'putenv' => true,
+            // By default passbolt ignore the environment variable $GNUPGHOME even if it is set.
+            // You can change that behavior by setting the variable bellow to false
+            // 'putenv' => false,
 
-            // Tell the application where to find the GnuPG keyring when passbolt.gpg.putenv is set to true.
-            // The keyring must to be owned and accessible by the webserver user.
-            // Example: www-data user on Debian
+            // The keyring variable tells passbolt where to find the GnuPG keyring
+            // when passbolt.gpg.putenv is set to true.
             //
             // The default location of the keyring can vary depending on your system:
             // Apache on Centos: '/usr/share/httpd/.gnupg'
             // Apache on Debian: '/var/www/.gnupg'
             // Nginx on Centos: '/var/lib/nginx/.gnupg'
             //
-            // 'keyring' => '',
+            // 'keyring' => '/home/www-data/.gnupg',
         ],
     ],
 
