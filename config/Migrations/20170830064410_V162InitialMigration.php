@@ -15,7 +15,6 @@
 
 use Migrations\AbstractMigration;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 
 class V162InitialMigration extends AbstractMigration
 {
@@ -44,14 +43,17 @@ class V162InitialMigration extends AbstractMigration
                 $tableCount++;
             }
         }
+        // If this is an upgrade from v1
+        if ($tableCount > 0 && $tableCount < sizeof($tables)) {
+            throw new Exception('Can not upgrade. Some tables are missing.');
+        }
+
+        // Reset the collation just in case
+        $this->execute('ALTER DATABASE ' . $databaseName . ' COLLATE utf8mb4_unicode_ci');
 
         // If this is an upgrade from v1
         if ($tableCount > 0) {
-            if($tableCount < sizeof($tables)) {
-                throw new Exception('Can not upgrade. Some tables are missing.');
-            }
-            // change collations
-            $this->execute('ALTER DATABASE ' . $databaseName . ' COLLATE utf8mb4_unicode_ci');
+            // Alter collation
             foreach ($tables as $table) {
                 $this->execute('ALTER TABLE ' . $table . ' COLLATE utf8mb4_unicode_ci');
             }
