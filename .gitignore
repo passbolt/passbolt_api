@@ -2,6 +2,7 @@
 ################
 /config/app.php
 /config/passbolt.php
+/config/Migrations/schema-dump-default.lock
 
 # Dependencies #
 ################
