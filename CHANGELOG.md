@@ -4,6 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.6.9] - 2018-01-12
+### Fixed
+- PASSBOLT-2599: PR#209: Expose the 'client' variable in the default email conf
+- PASSBOLT-2599: PR#211: Remove stray apostrophe in the filter by group component
+- PASSBOLT-2599: PR#214: Remove html purifier submodule
+- PASSBOLT-2599: PR#208: Fix typos in emails
+- PASSBOLT-2599: PR#159: Rename license file
+
 ## [1.6.5] - 2017-09-12
 ### Added
 - PASSBOLT-2383: Add + and \ to the list of allowed characters for the Resource fields: name, username and description
@@ -325,7 +333,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...HEAD
+[1.6.9]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...v1.6.9
 [1.6.5]: https://github.com/passbolt/passbolt_api/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/passbolt/passbolt_api/compare/v1.6.3...v1.6.4
 [1.6.3]: https://github.com/passbolt/passbolt_api/compare/v1.6.2...v1.6.3

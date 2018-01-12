@@ -104,8 +104,6 @@ before_script:
   - echo yes | pecl install gnupg
   - echo "extension = memcached.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - if [[ $TRAVIS_PHP_VERSION = 5.5 ]] ; then echo yes | pecl install apcu-4.0.10; fi
-  - if [[ $TRAVIS_PHP_VERSION = 5.6 ]] ; then echo yes | pecl install apcu-4.0.10; fi
-  - if [[ $TRAVIS_PHP_VERSION = 7.0 ]] ; then echo yes | pecl install channel://pecl.php.net/apcu-5.1.5; fi
   - echo -e "extension = apcu.so\napc.enable_cli=1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - phpenv rehash
   - set +H
