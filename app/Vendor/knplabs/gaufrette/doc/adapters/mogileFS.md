@@ -1,4 +1,0 @@
-MogileFS
-========
-
-TBW

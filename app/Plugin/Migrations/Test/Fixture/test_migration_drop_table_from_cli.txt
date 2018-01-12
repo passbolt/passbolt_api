@@ -1,9 +1,0 @@
-	public $migration = array(
-		'up' => array(
-			'drop_table' => array(
-				'products'
-			),
-		),
-		'down' => array(
-		),
-	);

@@ -1,4 +1,0 @@
-<?php
-
-trait Foo {
-}

@@ -1,6 +1,0 @@
-filter:
-    excluded_paths: [tests/*]
-
-tools:
-    external_code_coverage:
-        timeout: 600    # Timeout in seconds.

@@ -1,2 +1,0 @@
-<?php
-$map = array();
