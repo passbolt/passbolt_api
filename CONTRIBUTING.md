@@ -4,20 +4,6 @@
 
 Thank you for your interest in passbolt. We welcome contributions from everyone, this guide is here to help you get started!
 
-### How can you help?
-
-There are several ways you can help out:
-
-* Create an [issue](https://github.com/passbolt/passbolt/issues) on GitHub, if you have found a bug or want to propose a new feature or a change request.
-* Review [enhancement or new feature requests](https://github.com/passbolt/passbolt/issues) and contribute to the functional or technical specifications in the issues.
-* Write patches for open bug/feature issues, preferably with test cases included
-* Contribute to the [documentation](https://passbolt.com/help).
-* Help design the proposed changes by editing the [styleguide](https://github.com/passbolt/passbolt_styleguide) or by submitting changes in the [wireframes](https://github.com/passbolt/passbolt_wireframes).
-* Write unit test cases to help increase [test coverage](https://coveralls.io/github/passbolt/passbolt).
-* Extend the [selenium test suite](https://github.com/passbolt/passbolt_selenium) for any open bug or change requests
-
-If you have any suggestions or want to get involved in other ways feel free to get in touch with us at [contact@passbolt.com](mailto:contact@passbolt.com)!
-
 ### Code of Conduct
 
 First things first, please read our [Code of Conduct](https://www.passbolt.com/code_of_conduct).
@@ -42,18 +28,38 @@ The passbolt team will take the following actions:
 - Prominently feature the problem in the release announcement.
 - Provide credits in the release announcement to the reporter if they so desire.
 
-### Reporting regular issues
+### Reporting a bug
+Please only use github for bugs or pull request.
 
 * Make sure you have a [GitHub account](https://github.com/signup/free).
-* If you are planning to start a new functionality or create a major change request, write down the functional and technical specifications first.
-  * Create a document that is viewable by everyone
-  * Define the problem you are trying to solve, who is impacted, why it is important, etc.
-  * Present a solution. Explaining your approach gives an opportunity for other people to contribute and avoid frictions down the line.
 * Submit an [issue](https://github.com/passbolt/passbolt/issues)
   * Check first that a similar issue does not already exist.
   * Make sure you fill in the earliest version that you know has the issue if it is a bug.
-  * Clearly describe the issue including steps to reproduce when it is a bug and/or a link to the specification document
-  * If applicable, allow people to visualize your proposed changes via changes to the [styleguide](https://github.com/passbolt/passbolt_styleguide)
+  * Clearly describe the issue including steps to reproduce the bug
+
+### Requesting a new feature or ehancement
+
+Please use the community forum: http://community.passbolt.com/
+Do not use github to request new features.
+
+### Getting help with an installation issue
+
+Please use the community forum: http://community.passbolt.com/
+Do not use github to request help with your instance installation.
+
+### How can you help?
+
+There are several ways you can help out:
+
+* Create an [issue](https://github.com/passbolt/passbolt/issues) on GitHub ONLY if you have found a bug
+* Review [enhancement or new feature requests](https://community.passbolt.com/c/backlog) on the community foum and contribute to the functional or technical specifications in the issues.
+* Write patches for open bug/feature issues, preferably with test cases included
+* Contribute to the [documentation](https://passbolt.com/help).
+* Help design the proposed changes by editing the [styleguide](https://github.com/passbolt/passbolt_styleguide) or by submitting changes in the [wireframes](https://github.com/passbolt/passbolt_wireframes).
+* Write unit test cases to help increase [test coverage](https://coveralls.io/github/passbolt/passbolt).
+* Extend the [selenium test suite](https://github.com/passbolt/passbolt_selenium) for any open bug or change requests
+
+If you have any suggestions or want to get involved in other ways feel free to get in touch with us at [contact@passbolt.com](mailto:contact@passbolt.com)!
 
 ### Making code changes
 
@@ -82,13 +88,10 @@ The passbolt team will take the following actions:
 * Selenium tests should continue to pass. See [passbolt selenium test suite](https://github.com/passbolt/passbolt_selenium) (see faq bellow).
 * Your work should apply the [CakePHP coding standards](http://book.cakephp.org/2.0/en/contributing/cakephp-coding-conventions.html) (see faq bellow).
 
-
 #### Submitting Changes
 
 * Push your changes to a topic branch in your fork of the repository.
 * Submit a pull request to the official passbolt repository, with the correct target branch.
-
-
 
 # Tools & Workflow FAQ
 

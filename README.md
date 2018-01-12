@@ -59,6 +59,12 @@ https://www.passbolt.com/help/tech/install
 
 Please check out CONTRIBUTING.md for more information on how to get involved!
 
+**Please only use github to report bug or make a pull request.**
+
+If you want to make a feature request or if you are having an issue
+when installing your own passbolt instance you should seek help first from the 
+community here: https://community.passbolt.com/
+
 ## Reporting a security issue
 
 If you've found a security-related issue in passbolt, please don't open an issue on GitHub.
