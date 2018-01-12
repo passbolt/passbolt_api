@@ -1,0 +1,82 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+namespace App\Shell;
+
+use Cake\Console\Shell;
+
+/**
+ * Application Shell
+ *
+ * Add your application-wide methods in the class below, your shells
+ * will inherit them.
+ */
+class AppShell extends Shell
+{
+
+    /**
+     * Display a banner
+     *
+     * @return void
+     */
+    protected function _welcome()
+    {
+        $this->out();
+    }
+
+    /**
+     * Some of the passbolt commands shouldn't be executed as root.
+     * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
+     *
+     * @return bool true if user is root
+     */
+    public function assertNotRoot()
+    {
+        if (PROCESS_USER === 'root') {
+            $this->out('');
+            $this->_error('Passbolt commands cannot be executed as root.', false);
+            $this->out('');
+            $this->out('The command should be executed with the same user as your web server. By instance:');
+            $this->out('su -s /bin/bash -c "' . APP . 'Console/cake COMMAND" HTTP_USER');
+            $this->out('where HTTP_USER match your web server user: www-data, nginx, http');
+            $this->out('');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Display an error message
+     *
+     * @param string $msg message
+     * @return void
+     */
+    protected function _error($msg)
+    {
+        $this->out('<error>' . $msg . '</error>');
+    }
+
+    /**
+     * Display a success message
+     *
+     * @param string $msg message
+     * @return void
+     */
+    protected function _success($msg)
+    {
+        $this->out('<success>' . $msg . '</success>');
+    }
+}
