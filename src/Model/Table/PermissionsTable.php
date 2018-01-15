@@ -512,8 +512,8 @@ class PermissionsTable extends Table
         $resources = Hash::combine($resources, '{n}.type', '{n}.aro_count', '{n}.aco_foreign_key');
         foreach ($resources as $resourceId => $rights) {
             if ($rights[Permission::OWNER] === 1) {
-                $someRead = (isset($rights[Permission::READ]) && count($rights[Permission::READ]));
-                $someUpdate = (isset($rights[Permission::UPDATE]) && count($rights[Permission::UPDATE]));
+                $someRead = !empty($rights[Permission::READ]);
+                $someUpdate = !empty($rights[Permission::UPDATE]);
                 if ($someRead || $someUpdate) {
                     $results[] = $resourceId;
                 }
