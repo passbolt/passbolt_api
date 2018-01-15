@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-2601: Travis phpunit, phpcs, coverage
 
 ## [1.6.9] - 2018-01-12
 ### Fixed

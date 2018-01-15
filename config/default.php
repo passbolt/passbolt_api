@@ -44,40 +44,40 @@ return [
             // WARNING: make sure you have backups in place if you disable these.
             // See. https://www.passbolt.com/help/tech/backup
             'show' => [
-                'comment' => env('PASSBOLT_EMAIL_SHOW_COMMENT', true),
-                'description' => env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', true),
-                'secret' => env('PASSBOLT_EMAIL_SHOW_SECRET', true),
-                'uri' => env('PASSBOLT_EMAIL_SHOW_URI', true),
-                'username' => env('PASSBOLT_EMAIL_SHOW_USERNAME', true),
+                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', true), FILTER_VALIDATE_BOOLEAN),
+                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', true), FILTER_VALIDATE_BOOLEAN),
+                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', true), FILTER_VALIDATE_BOOLEAN),
+                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', true), FILTER_VALIDATE_BOOLEAN),
+                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', true), FILTER_VALIDATE_BOOLEAN),
             ],
             // Choose which emails are sent system wide.
             'send' => [
                 'comment' => [
-                    'add' => env('PASSBOLT_EMAIL_SEND_COMMENT_ADD', true)
+                    'add' => filter_var(env('PASSBOLT_EMAIL_SEND_COMMENT_ADD', true), FILTER_VALIDATE_BOOLEAN)
                 ],
                 'password' => [
-                    'create' => env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', true),
-                    'share' => env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true),
-                    'update' => env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true),
-                    'delete' => env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true),
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'share' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true), FILTER_VALIDATE_BOOLEAN),
+                    'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'user' => [
                     // WARNING: disabling these will prevent user from signing up.
-                    'create' => env('PASSBOLT_EMAIL_SEND_USER_CREATE', true),
-                    'recover' => env('PASSBOLT_EMAIL_SEND_USER_RECOVER', true),
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_CREATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'recover' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_RECOVER', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'group' => [
                     // Notify all members that a group was deleted.
-                    'delete' => env('PASSBOLT_EMAIL_SEND_GROUP_DELETE', true),
+                    'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                     'user' => [ // notify user group membership changes.
-                        'add' => env('PASSBOLT_EMAIL_SEND_GROUP_USER_ADD', true),
-                        'delete' => env('PASSBOLT_EMAIL_SEND_GROUP_USER_DELETE', true),
-                        'update' => env('PASSBOLT_EMAIL_SEND_GROUP_USER_UPDATE', true),
+                        'add' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_USER_ADD', true), FILTER_VALIDATE_BOOLEAN),
+                        'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_USER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
+                        'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_USER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     ],
                     'manager' => [
                         // Notify manager when a group user is updated / deleted.
-                        'update' => env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true),
-                        'delete' => env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_DELETE', true),
+                        'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
+                        'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                     ]
                 ]
             ]
@@ -126,24 +126,24 @@ return [
 
         // Is public registration allowed.
         'registration' => [
-            'public' => env('PASSBOLT_REGISTRATION_PUBLIC', false)
+            'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)
         ],
 
         // Activate specific entry points for selenium testing.
         // true will render your installation insecure.
         'selenium' => [
-            'active' => env('PASSBOLT_SELENIUM_ACTIVE', false)
+            'active' => filter_var(env('PASSBOLT_SELENIUM_ACTIVE', false), FILTER_VALIDATE_BOOLEAN)
         ],
 
         // Security.
         'security' => [
-            'setHeaders' => env('PASSBOLT_SECURITY_SET_HEADERS', true)
+            'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN)
         ],
 
         // Should the app be SSL / HTTPS only.
         // false will render your installation insecure.
         'ssl' => [
-            'force' => env('PASSBOLT_SSL_FORCE', true),
+            'force' => filter_var(env('PASSBOLT_SSL_FORCE', true), FILTER_VALIDATE_BOOLEAN)
         ]
     ],
     // Override the Cake ExceptionRenderer.

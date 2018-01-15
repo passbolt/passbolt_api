@@ -122,7 +122,7 @@ class FindIndexTest extends AppTestCase
             // Check expected permissions are there.
             foreach ($usersExpectedPermissions as $resourceAlias => $expectedPermissionType) {
                 $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
-                $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0];
+                $resource = @Hash::extract($resources->toArray(), "{n}[id=$resourceId]")[0]; // phpcs:ignore
                 if ($expectedPermissionType == 0) {
                     $this->assertEmpty($resource, "$userAlias should not have a permission [$expectedPermissionType] for $resourceAlias");
                 } else {

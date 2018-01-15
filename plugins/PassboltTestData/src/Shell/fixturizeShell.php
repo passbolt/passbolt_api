@@ -89,7 +89,7 @@ class FixturizeShell extends Shell
         $fixtureFileName = $fixtureName . 'Fixture.php';
         $taskNamespace = $this->_getTaskNamespace($task);
         $destFixturePath = FIXTURES . DS . $taskNamespace;
-        @mkdir($destFixturePath);
+        @mkdir($destFixturePath); // phpcs:ignore
         rename(FIXTURES . DS . $fixtureFileName, $destFixturePath . DS . $fixtureFileName);
 
         // Move Adapt the fixture to take care of the namespace
