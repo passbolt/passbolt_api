@@ -102,22 +102,23 @@ return [
         // GPG Configuration.
         'gpg' => [
             // Tell GPG where to find the keyring.
-            // Needs to be available by the webserver user, for example:
-            // Apache on Centos it would be in '/usr/share/httpd/.gnupg'
-            // Apache on Debian it would be in '/var/www/.gnupg'
-            // Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
-            // etc.
-            'keyring' => env('PASSBOLT_GPG_KEYRING', '/home/www-data/.gnupg'),
+            // If putenv is set to false, gnupg will use the default path ~/.gnupg.
+            // For example :
+            // - Apache on Centos it would be in '/usr/share/httpd/.gnupg'
+            // - Apache on Debian it would be in '/var/www/.gnupg'
+            // - Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
+            // - etc.
+            'keyring' => getenv("HOME") . DS . '.gnupg',
 
             // Replace GNUPGHOME with above value even if it is set.
-            'putenv' => true,
+            'putenv' => false,
 
             // Main server key.
             'serverKey' => [
                 // Server public / private key location and fingerprint.
                 'fingerprint' => env('PASSBOLT_GPG_SERVER_KEY_FINGERPRINT', null),
-                'public' => env('PASSBOLT_GPG_SERVER_KEY_PUBLIC', null),
-                'private' => env('PASSBOLT_GPG_SERVER_KEY_PRIVATE', null),
+                'public' => env('PASSBOLT_GPG_SERVER_KEY_PUBLIC', ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey.asc'),
+                'private' => env('PASSBOLT_GPG_SERVER_KEY_PRIVATE', ROOT . DS . 'config' . DS . 'gpg' . DS . 'serverkey_private.asc'),
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
