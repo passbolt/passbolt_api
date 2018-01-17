@@ -8,6 +8,43 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2618: PHP 7.2 compatibility fixes
 - PASSBOLT-2615: Review Gpg default configuration
 
+## [2.0.0-rc1] - 2018-01-12
+### Security
+- XSS protection improvements, with a new test suite dedicated for XSS.
+- HTTP security headers are enabled by default and can be disabled using configuration options.
+- Json responses server signature (experimental).
+
+### Improved 
+- An expired setup link can be re-sent through the recovery procedure.
+- Dropped SQL views (will allow supporting additional database backends).
+- Simplified configuration system. The entire configuration will be done in one dedicated file with safer defaults.
+- Most configuration items are now available as environment variables.
+- Install commands perform additional health checks prior to running.
+- CakePHP and other dependencies have been removed from the repository and are now installed with composer.
+- More flexible validation rules for inputs in most fields.
+- Emojis support where it make sense (comments, descriptions, etc).
+- Some notifications will not be sent if the user is the one doing the action (ex. delete password).
+- The App-JS code is now available on a dedicated repository.
+- Misc javascript foundation code refactoring.
+- Added missing tables index to speed up some database queries.
+- “Owner” has been replaced by “Created by” in the password sidebar to be more relevant.
+- API supports a more standard response format (documentation coming soon).
+- Additional settings for controlling what is displayed in email notifications.
+- Added created date information in password sidebar.
+
+### Changed
+- Passbolt api migration to CakePHP 3.
+- PHP 7.0 is now the minimum supported version.
+- Dropped table “controller_logs”. It will be soon replaced by the Audit Logs feature.
+- Dropped table “schema_migrations”.
+- Dropped table “cake_sessions”.
+- Dropped “anonymous statistics” feature (nobody opted in…).
+
+### Fixed
+- “Passwords I own” filter displays all the passwords for which I have “is owner” permission.
+- An admin can delete a user if the user is the sole group member of a group owning passwords that are not shared.
+- An admin can delete a user if the user is the sole owner of a password that is not shared.
+
 ## [1.6.9] - 2018-01-12
 ### Fixed
 - PASSBOLT-2599: PR#209: Expose the 'client' variable in the default email conf
@@ -15,6 +52,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2599: PR#214: Remove html purifier submodule
 - PASSBOLT-2599: PR#208: Fix typos in emails
 - PASSBOLT-2599: PR#159: Rename license file
+- PASSBOLT-2599 Fixed Travis 
+- PASSBOLT-1453: Add optional predictable UUID for auth token in selenium testing
+- PASSBOLT-2474 New contributing guidelines for community forum
 
 ## [1.6.5] - 2017-09-12
 ### Added
@@ -335,9 +375,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AN: Anonymous user
 - LU: Logged in user
 - AP: User with plugin installed
-- LU: Logged in user
+- AD: Admin
 
 [Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...HEAD
+[2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
 [1.6.9]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...v1.6.9
 [1.6.5]: https://github.com/passbolt/passbolt_api/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/passbolt/passbolt_api/compare/v1.6.3...v1.6.4
