@@ -5,8 +5,8 @@
 	   / ____/ /_/ (__  |__  ) /_/ / /_/ / / /_
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 
-	The open-source password management solution for teams
-	Copyright (c) 2017 Passbolt SARL
+	The open source password manager for teams
+	Copyright (c) 2018 Passbolt SARL
 	https://www.passbolt.com
 
 [![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
