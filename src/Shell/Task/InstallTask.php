@@ -321,7 +321,7 @@ class InstallTask extends AppShell
             // Make sure the baseline config files are present
             $checks = Healthchecks::configFiles();
             if (!$checks['configFile']['app']) {
-                throw new Exception(__('The application config file is missing in {0}.', ROOT . DS . 'config'));
+                throw new Exception(__('The application config file is missing in {0}.', CONFIG));
             }
 
             // Check application url config
