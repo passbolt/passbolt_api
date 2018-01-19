@@ -178,7 +178,7 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'className' => 'Mail',
+            'className' => env('EMAIL_TRANSPORT_DEFAULT_CLASS_NAME', 'Smtp'),
             // The following keys are used in SMTP transports
             'host' => env('EMAIL_TRANSPORT_DEFAULT_HOST', 'localhost'),
             'port' => env('EMAIL_TRANSPORT_DEFAULT_PORT', 25),
