@@ -87,7 +87,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'utf8Extended' => self::getUtf8ExtendedTestCases(64),
-            'lengthBetween' => self::getLengthBetweenTestCases(3, 64),
+            'maxLength' => self::getMaxLengthTestCases(64),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
@@ -98,7 +98,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'utf8Extended' => self::getUtf8ExtendedTestCases(64),
-            'lengthBetween' => self::getLengthBetweenTestCases(3, 64),
+            'maxLength' => self::getMaxLengthTestCases(64),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Resources, 'username', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
@@ -108,7 +108,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'utf8' => self::getUtf8TestCases(255),
-            'lengthBetween' => self::getLengthBetweenTestCases(3, 255),
+            'maxLength' => self::getMaxLengthTestCases(255),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Resources, 'uri', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
@@ -118,7 +118,7 @@ class SaveTest extends AppTestCase
     {
         $testCases = [
             'utf8Extended' => self::getUtf8ExtendedTestCases(10000),
-            'lengthBetween' => self::getLengthBetweenTestCases(3, 10000),
+            'maxLength' => self::getMaxLengthTestCases(10000),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Resources, 'description', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);

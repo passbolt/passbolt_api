@@ -201,8 +201,11 @@ W3AI8+rWjK8MGH2T88hCYI/6
                 'data' => $this->_getDummyPostData(['Resource' => ['name' => 1234]])
             ],
             'resource uri is not valid' => [
-                'errorField' => 'Resource.uri.lengthBetween',
-                'data' => $this->_getDummyPostData(['Resource' => ['uri' => 'a']])
+                'errorField' => 'Resource.uri.maxLength',
+                'data' => $this->_getDummyPostData(['Resource' => ['uri' => '12345678901234567890
+                    123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+                    123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+                    123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890']])
             ],
             'secret must be provided' => [
                 'errorField' => 'Secrets._required',
