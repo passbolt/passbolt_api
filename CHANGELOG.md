@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2601: Travis v2: phpunit, coverage, phpcs
 - PASSBOLT-2618: PHP 7.2 compatibility fixes
 - PASSBOLT-2615: Review Gpg default configuration
-- PASSBOLT-2624: Use CONFIG instead of "ROOT . DS . 'config'"
+- PASSBOLT-2624: PR#219 Use CONFIG instead of "ROOT . DS . 'config'"
 
 ## [2.0.0-rc1] - 2018-01-12
 ### Security
