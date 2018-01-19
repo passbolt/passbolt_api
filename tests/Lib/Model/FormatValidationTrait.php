@@ -346,6 +346,26 @@ trait FormatValidationTrait
     }
 
     /**
+     * Test cases for maxLength validation rule.
+     *
+     * @param int $max maximum
+     * @return array
+     */
+    public static function getMaxLengthTestCases($max)
+    {
+        $test = [
+            'rule_name' => 'maxLength',
+            'test_cases' => [
+                self::getStringMask('alphaASCII', 0) => true,
+                self::getStringMask('alphaASCII', $max) => true,
+                self::getStringMask('alphaASCII', $max + 1) => false,
+            ],
+        ];
+
+        return $test;
+    }
+
+    /**
      * Test cases for gpg message validation rule.
      *
      * @return array

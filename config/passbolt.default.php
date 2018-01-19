@@ -84,28 +84,25 @@ return [
         // The keyring must to be owned and accessible by the webserver user.
         // Example: www-data user on Debian
         'gpg' => [
+            // Tell GPG where to find the keyring.
+            // If putenv is set to false, gnupg will use the default path ~/.gnupg.
+            // For example :
+            // - Apache on Centos it would be in '/usr/share/httpd/.gnupg'
+            // - Apache on Debian it would be in '/var/www/.gnupg'
+            // - Nginx on Centos it would be in '/var/lib/nginx/.gnupg'
+            // - etc.
+            //'keyring' => getenv("HOME") . DS . '.gnupg',
+            //
+            // Replace GNUPGHOME with above value even if it is set.
+            //'putenv' => false,
+
             // Main server key.
             'serverKey' => [
                 // Server private key fingerprint.
                 'fingerprint' => '',
-                // Server public / private key file location.
-                'public' => '',
-                'private' => '',
+                //'public' => CONFIG . DS . 'gpg' . DS . 'serverkey.asc',
+                //'private' => CONFIG . DS . 'gpg' . DS . 'serverkey_private.asc',
             ],
-
-            // By default passbolt ignore the environment variable $GNUPGHOME even if it is set.
-            // You can change that behavior by setting the variable bellow to false
-            // 'putenv' => false,
-
-            // The keyring variable tells passbolt where to find the GnuPG keyring
-            // when passbolt.gpg.putenv is set to true.
-            //
-            // The default location of the keyring can vary depending on your system:
-            // Apache on Centos: '/usr/share/httpd/.gnupg'
-            // Apache on Debian: '/var/www/.gnupg'
-            // Nginx on Centos: '/var/lib/nginx/.gnupg'
-            //
-            // 'keyring' => '/home/www-data/.gnupg',
         ],
     ],
 
@@ -127,11 +124,9 @@ return [
 //        'gpg' => [
 //            'serverKey' => [
 //                'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E',
-//                'public' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure.key',
-//                'private' => ROOT . DS . 'config' . DS . 'gpg' . DS . 'unsecure_private.key',
+//                'public' => CONFIG . DS . 'gpg' . DS . 'unsecure.key',
+//                'private' => CONFIG . DS . 'gpg' . DS . 'unsecure_private.key',
 //            ],
-//            'putenv' => true,
-//            'keyring' => '/var/lib/nginx/.gnupg',
 //        ],
 //    ]
 

@@ -220,7 +220,7 @@ return [
     'Datasources' => [
         'default' => [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'driver' => env('DATASOURCES_DEFAULT_DRIVER', 'Cake\Database\Driver\Mysql'),
             'persistent' => false,
             'host' => env('DATASOURCES_DEFAULT_HOST', 'localhost'),
             'port' => env('DATASOURCES_DEFAULT_PORT', 3306),
@@ -266,20 +266,20 @@ return [
          */
         'test' => [
             'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
+            'driver' => env('DATASOURCES_TEST_DRIVER', 'Cake\Database\Driver\Mysql'),
             'persistent' => false,
-            'host' => 'localhost',
-            //'port' => 'non_standard_port_number',
-            'username' => 'my_app',
-            'password' => 'secret',
-            'database' => 'test_myapp',
+            'host' => env('DATASOURCES_TEST_HOST', 'localhost'),
+            'port' => env('DATASOURCES_TEST_PORT', 3306),
+            'username' => env('DATASOURCES_TEST_USERNAME', 'my_app'),
+            'password' => env('DATASOURCES_TEST_PASSWORD', 'secret'),
+            'database' => env('DATASOURCES_TEST_DATABASE', 'my_app'),
             'encoding' => 'utf8mb4',
             'timezone' => 'UTC',
             'cacheMetadata' => true,
             'quoteIdentifiers' => false,
             'log' => false,
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
-            'url' => env('DATASOURCES_TEST_DATABASE', null),
+            'url' => env('DATASOURCES_TEST_URL', null),
         ],
     ],
 

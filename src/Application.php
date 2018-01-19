@@ -59,7 +59,7 @@ class Application extends BaseApplication
          * - Don't allow
          * - Stick to the content type declared by the server
          */
-        if (Configure::read('passbolt.security.headers')) {
+        if (Configure::read('passbolt.security.setHeaders')) {
             $headers = new SecurityHeadersMiddleware();
             $headers
                 ->setCrossDomainPolicy()

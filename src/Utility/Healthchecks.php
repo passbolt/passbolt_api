@@ -167,7 +167,7 @@ class Healthchecks
                 ],
             ]);
             $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
-            $response = @file_get_contents($url, false, $context);
+            $response = @file_get_contents($url, false, $context); // phpcs:ignore
             if (isset($response)) {
                 $json = json_decode($response);
                 if (isset($json->body)) {

@@ -106,23 +106,23 @@ class ResourcesTable extends Table
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
-            ->lengthBetween('name', [3, 64], __('The name length should be between {0} and {1} characters.', 3, 64))
+            ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
             ->requirePresence('name', 'create', __('A name is required.'))
             ->notEmpty('name', __('The name cannot be empty.'));
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
-            ->lengthBetween('username', [3, 64], __('The username length should be between {0} and {1} characters.', 3, 64))
+            ->maxLength('username', 64, __('The username length should be maximum {0} characters.', 3, 64))
             ->allowEmpty('username');
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
-            ->lengthBetween('uri', [3, 255], __('The uri length should be between {0} and {1} characters.', 3, 255))
+            ->maxLength('uri', 255, __('The uri length should be maximum {0} characters.', 3, 255))
             ->allowEmpty('uri');
 
         $validator
             ->utf8Extended('description', __('The description is not a valid utf8 string.'))
-            ->lengthBetween('description', [3, 10000], __('The description length should be between {0} and {1} characters.', 3, 10000))
+            ->maxLength('description', 10000, __('The description length should be maximum {0} characters.', 10000))
             ->allowEmpty('description');
 
         $validator
