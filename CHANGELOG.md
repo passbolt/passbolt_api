@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2601: Travis v2: phpunit, coverage, phpcs
 - PASSBOLT-2618: PHP 7.2 compatibility fixes
 - PASSBOLT-2615: Review Gpg default configuration
+- PASSBOLT-2624: Use CONFIG instead of "ROOT . DS . 'config'"
 
 ## [2.0.0-rc1] - 2018-01-12
 ### Security
@@ -14,7 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - HTTP security headers are enabled by default and can be disabled using configuration options.
 - Json responses server signature (experimental).
 
-### Improved 
+### Improved
 - An expired setup link can be re-sent through the recovery procedure.
 - Dropped SQL views (will allow supporting additional database backends).
 - Simplified configuration system. The entire configuration will be done in one dedicated file with safer defaults.
@@ -52,7 +53,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2599: PR#214: Remove html purifier submodule
 - PASSBOLT-2599: PR#208: Fix typos in emails
 - PASSBOLT-2599: PR#159: Rename license file
-- PASSBOLT-2599 Fixed Travis 
+- PASSBOLT-2599 Fixed Travis
 - PASSBOLT-1453: Add optional predictable UUID for auth token in selenium testing
 - PASSBOLT-2474 New contributing guidelines for community forum
 
