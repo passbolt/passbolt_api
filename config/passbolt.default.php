@@ -33,7 +33,7 @@
 return [
 
     /**
-     * DEFAULT PASSBOLT CONFIGURATION
+     * DEFAULT APP CONFIGURATION
      *
      * All the information in this section must be provided in order for passbolt to work
      * This configuration overrides the CakePHP defaults locating in app.php
