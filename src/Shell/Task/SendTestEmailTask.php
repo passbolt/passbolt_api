@@ -18,7 +18,7 @@ use App\Shell\AppShell;
 use Cake\Mailer\Email;
 use Cake\Utility\Hash;
 
-class TestEmailConfigTask extends AppShell
+class SendTestEmailTask extends AppShell
 {
     /**
      * Name of the transport configuration that we'll use.
