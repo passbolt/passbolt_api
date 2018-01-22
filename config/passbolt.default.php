@@ -62,12 +62,21 @@ return [
         'default' => [
             'host' => 'localhost',
             'port' => 25,
-            'timeout' => 30,
             'username' => 'user',
             'password' => 'secret',
-            'client' => null,
+            // Is this a secure connection? true if yes, null if no.
             'tls' => null,
-            'url' => null,
+            //'timeout' => 30,
+            //'client' => null,
+            //'url' => null,
+        ],
+    ],
+    'Email' => [
+        'default' => [
+            // Defines the default name and email of the sender of the emails.
+            'from' => ['passbolt@your_organization.com' => 'Passbolt'],
+            //'charset' => 'utf-8',
+            //'headerCharset' => 'utf-8',
         ],
     ],
 

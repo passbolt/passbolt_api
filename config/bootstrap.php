@@ -72,6 +72,7 @@ use Cake\Mailer\Email;
 use Cake\Network\Request;
 use Cake\Utility\Inflector;
 use Cake\Utility\Security;
+use App\Mailer\Transport\DebugSmtpTransport;
 
 /*
  * Read configuration file and inject configuration into various

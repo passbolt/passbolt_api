@@ -189,6 +189,9 @@ return [
             'tls' => env('EMAIL_TRANSPORT_DEFAULT_TLS', null),
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
+        'Debug' => [
+            'className' => 'Debug'
+        ],
     ],
 
     /**
