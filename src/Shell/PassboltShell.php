@@ -31,6 +31,7 @@ class PassboltShell extends AppShell
         'PassboltTestData.Data',
         'PassboltTestData.fixturize',
         'RegisterUser',
+        'TestEmailConfig',
     ];
 
     /**
@@ -102,6 +103,11 @@ class PassboltShell extends AppShell
         $parser->addSubcommand('register_user', [
             'help' => __d('cake_console', 'Register a new user.'),
             'parser' => $this->RegisterUser->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('test_email_config', [
+            'help' => __d('cake_console', 'Test the email configuration by trying to send an email and display the client / server communication trace.'),
+            'parser' => $this->TestEmailConfig->getOptionParser(),
         ]);
 
         return $parser;
