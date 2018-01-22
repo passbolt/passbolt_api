@@ -1,5 +1,5 @@
 {
-	"name": "passbolt/passbolt",
+	"name": "passbolt/passbolt_api",
 	"description": "Open source password manager for teams",
 	"type": "application",
 	"keywords": ["password","passbolt"],
