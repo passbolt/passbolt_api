@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use App\Utility\Purifier;
 ?>
 <!-- MODULE ROW // TEXT -->
 <tr>
@@ -51,7 +52,7 @@
                                                         <tr>
                                                             <td style="width:15px;">&bull;</td>
                                                             <td>
-                                                                <?= $addedUser->profile->first_name; ?> <?= $addedUser->profile->last_name; ?>
+                                                                <?= Purifier::clean($addedUser->profile->first_name); ?> <?= Purifier::clean($addedUser->profile->last_name); ?>
                                                                 (<?= isset($whoIsAdmin[$addedUser->id]) && $whoIsAdmin[$addedUser->id] ? __('Group manager') : __('Member'); ?>)
                                                             </td>
                                                         </tr>
@@ -65,7 +66,7 @@
                                                     <?php foreach ($removedUsers as $removedUser): ?>
                                                         <tr>
                                                             <td style="width:15px;">&bull;</td>
-                                                            <td><?= $removedUser->profile->first_name; ?> <?= $removedUser->profile->last_name; ?>
+                                                            <td><?= Purifier::clean($removedUser->profile->first_name); ?> <?= Purifier::clean($removedUser->profile->last_name); ?>
                                                                 (<?= isset($whoIsAdmin[$removedUser->id]) && $whoIsAdmin[$removedUser->id] ? __('Group manager') : __('Member'); ?>)
                                                             </td>
                                                         </tr>
@@ -80,7 +81,7 @@
                                                         <tr style="margin-left:5px;">
                                                             <td style="width:15px;">&bull;</td>
                                                             <td>
-                                                                <?= $updatedUser->profile->first_name; ?> <?= $updatedUser->profile->last_name; ?>
+                                                                <?= Purifier::clean($updatedUser->profile->first_name); ?> <?= Purifier::clean($updatedUser->profile->last_name); ?>
                                                                 <?= isset($whoIsAdmin[$updatedUser->id]) && $whoIsAdmin[$updatedUser->id] ? __('is now group manager') : __('is not anymore group manager'); ?>
                                                             </td>
                                                         </tr>

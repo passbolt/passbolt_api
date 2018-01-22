@@ -12,7 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-?><span style="font-weight:bold;"><?= $first_name; ?> <?php $last_name; ?>
-     (<a href="mailto:<?= $username; ?>" style="color:#888;text-decoration: underline;"><?= $username; ?></a>)</span><br>
+use App\Utility\Purifier;
+?><span style="font-weight:bold;"><?= Purifier::clean($first_name); ?> <?php Purifier::clean($last_name); ?>
+     (<a href="mailto:<?= Purifier::clean($username); ?>" style="color:#888;text-decoration: underline;"><?= Purifier::clean($username); ?></a>)</span><br>
 <span style=""><?= $text ?></span><br>
 <span style="color:#888888"><?= $datetime->nice(); ?></span><br>
