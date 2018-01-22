@@ -6,8 +6,7 @@
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 	
 	The open-source password management solution for teams
-	(c) 2015-2016 Bolt Softwares Pvt. Ltd.
-	(c) 2017 Passbolt SARL
+	(c) 2016-2018 Passbolt SARL
 	https://www.passbolt.com
 
 [![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
