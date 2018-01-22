@@ -38,6 +38,6 @@ if (Configure::read('passbolt.email.show.comment')) {
 }
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/'),
+    'url' => Router::url('/', true),
     'text' => __('log in passbolt')
 ]);

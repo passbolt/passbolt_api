@@ -45,6 +45,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token']),
+    'url' => Router::url('/setup/install/' . $user['id'] . '/' . $token['token'], true),
     'text' => __('get started')
 ]);

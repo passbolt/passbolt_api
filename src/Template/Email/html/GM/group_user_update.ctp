@@ -43,6 +43,6 @@ echo $this->element('Email/content/group_changes_summary', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/'),
+    'url' => Router::url('/', true),
     'text' => __('log in passbolt')
 ]);
