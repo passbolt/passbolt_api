@@ -32,7 +32,10 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = __('The user {0} {1} ({2}) is now deleted from your organisation in passbolt.',
-    $user->profile->first_name, $user->profile->last_name, $user->username);
+    Purifier::clean($user->profile->first_name),
+    Purifier::clean($user->profile->last_name),
+    Purifier::clean($user->username)
+);
 $text .= ' ' . __('This user was a member of the following group(s) you manage:') . '<br>';
 
 $text .= $this->element('Email/content/user_delete_groups_summary', [

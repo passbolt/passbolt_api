@@ -26,13 +26,13 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => $user->created,
-        'text' => __('{0} just created an account for you on passbolt!', $admin->profile->first_name)
+        'text' => __('{0} just created an account for you on passbolt!', Purifier::clean($admin->profile->first_name))
     ])
 ]);
 
-$text = '<h3>' . __('Welcome {0}', $user->profile->first_name) . ',</h3><br/>';
+$text = '<h3>' . __('Welcome {0}', Purifier::clean($user->profile->first_name)) . ',</h3><br/>';
 $text .= __('{0} just invited you to join passbolt at {1}',
-        ucfirst($admin->profile->first_name),
+        ucfirst(Purifier::clean($admin->profile->first_name)),
         '<a href="' . Router::url('/',true) . '">' . Router::url('/',true) . '</a>'
         );
 $text .= ' ' . __('Passbolt is an open source password manager.');

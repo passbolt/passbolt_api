@@ -8,7 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2618: PHP 7.2 compatibility fixes
 - PASSBOLT-2615: Review Gpg default configuration
 - PASSBOLT-2624: PR#219 Use CONFIG instead of "ROOT . DS . 'config'"
-- PASSBOLT-2631: Fixed default class for EmailTransport to Smtp
+- PASSBOLT-2631: Fixed default class for EmailTransport to Smtp in configuration
+- PASSBOLT-2640: Fixed incomplete urls in email templates
+
+### Added
+- PASSBOLT-2638: Added command to test email configuration and SMTP communication
 
 ## [2.0.0-rc1] - 2018-01-12
 ### Security
