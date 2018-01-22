@@ -7,7 +7,7 @@
         "passbolt"
     ],
     "homepage": "https://www.passbolt.com",
-    "license": "AGPL-3.0",
+    "license": "AGPL-3.0-or-later",
     "authors": [
         {
             "name": "Passbolt Team",
