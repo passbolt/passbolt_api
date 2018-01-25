@@ -76,7 +76,7 @@ class HealthchecksTest extends AppIntegrationTestCase
         $attributes = [
             'lib', 'gpgKey', 'gpgKeyNotDefault', 'gpgHome', 'gpgHomeWritable', 'gpgKeyPublic', 'gpgKeyPublicReadable',
             'gpgKeyPrivate', 'gpgKeyPrivateReadable', 'gpgKeyPrivateFingerprint', 'gpgKeyPublicFingerprint',
-            'gpgKeyPublicEmail', 'gpgKeyPrivateInKeyring', 'canEncrypt', 'canDecrypt'
+            'gpgKeyPublicEmail', 'gpgKeyPublicInKeyring', 'canEncrypt', 'canDecrypt'
         ];
         $this->assertArrayHasAttributes($attributes, $check['gpg']);
     }

@@ -590,9 +590,9 @@ class HealthcheckTask extends AppShell
             ]
         );
         $this->assert(
-            $checks['gpg']['gpgKeyPrivateInKeyring'],
-            __('The server key defined in the config/passbolt.php is in the keyring.'),
-            __('The server key defined in the config/passbolt.php is not in the keyring'),
+            $checks['gpg']['gpgKeyPublicInKeyring'],
+            __('The server public key defined in the config/passbolt.php is in the keyring.'),
+            __('The server public key defined in the config/passbolt.php is not in the keyring'),
             [
                 __('Import the private server key in the keyring of the webserver user.'),
                 __('you can try:'),
@@ -606,22 +606,46 @@ class HealthcheckTask extends AppShell
             __('Edit or generate another key with a valid email id.')
         );
 
-        if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
+        if ($checks['gpg']['gpgKeyPublicInKeyring']) {
+            $tip = [
+                __('Make sure that the server private key is valid and that there is no passphrase.'),
+                __('Make sure you imported the private server key in the keyring of the webserver user.'),
+                __('you can try:'),
+                'sudo su -s /bin/bash -c "gpg --home ' . $checks['gpg']['info']['gpgHome'] . ' --import ' . $checks['gpg']['info']['gpgKeyPrivate'] . '" ' . PROCESS_USER
+            ];
+
             $this->assert(
                 $checks['gpg']['canEncrypt'],
-                __('The public key can be used to encrypt and sign a message.'),
-                __('The public key cannot be used to encrypt and sign a message'),
-                __('Make sure that the server public key is valid and that there is no passphrase.')
+                __('The public key can be used to encrypt a message.'),
+                __('The public key cannot be used to encrypt a message'),
+                $tip
             );
-
-            if ($checks['gpg']['canEncrypt']) {
-                $this->assert(
-                    $checks['gpg']['canDecrypt'],
-                    __('The private key can be used to decrypt a message.'),
-                    __('The private key cannot be used to decrypt a message'),
-                    __('Make sure that the server private key is valid and that there is no passphrase.')
-                );
-            }
+            $this->assert(
+                $checks['gpg']['canSign'],
+                __('The public key can be used to sign a message.'),
+                __('The public key cannot be used to sign a message'),
+                $tip
+            );
+            $this->assert(
+                $checks['gpg']['canEncryptSign'],
+                __('The public key can be used to encrypt and sign a message.'),
+                __('The public key cannot be used to encrypt and sign a message')
+            );
+            $this->assert(
+                $checks['gpg']['canDecrypt'],
+                __('The private key can be used to decrypt a message.'),
+                __('The private key cannot be used to decrypt a message')
+            );
+            $this->assert(
+                $checks['gpg']['canDecryptVerify'],
+                __('The private key can be used to decrypt and verify a message.'),
+                __('The private key cannot be used to decrypt and verify a message')
+            );
+            $this->assert(
+                $checks['gpg']['canVerify'],
+                __('The public key can be used to verify a signature.'),
+                __('The public key cannot be used to verify a signature.')
+            );
         }
     }
 

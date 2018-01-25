@@ -335,20 +335,27 @@ class Healthchecks
             $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
 
-        // Check that the private key is present in the keyring.
-        $checks['gpg']['gpgKeyPrivateInKeyring'] = false;
+        // Check that the public key is present in the keyring.
+        $checks['gpg']['gpgKeyPublicInKeyring'] = false;
         if ($checks['gpg']['gpgHome'] && Configure::read('passbolt.gpg.serverKey.fingerprint')) {
             $gpg = new Gpg();
             $keyInfo = $gpg->getKeyInfoFromKeyring(Configure::read('passbolt.gpg.serverKey.fingerprint'));
             if (!empty($keyInfo)) {
-                $checks['gpg']['gpgKeyPrivateInKeyring'] = true;
+                if ($keyInfo[0]['can_sign'] && $keyInfo[0]['can_encrypt']) {
+                    $checks['gpg']['gpgKeyPublicInKeyring'] = true;
+                }
             }
         }
 
         // Check that the server can be used for encrypting/decrypting
         $checks['gpg']['canDecrypt'] = false;
         $checks['gpg']['canEncrypt'] = false;
-        if ($checks['gpg']['gpgKeyPrivateInKeyring']) {
+        $checks['gpg']['canEncryptSign'] = false;
+        $checks['gpg']['canDecryptVerify'] = false;
+        $checks['gpg']['canVerify'] = false;
+        $checks['gpg']['canSign'] = false;
+
+        if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = new \gnupg();
             $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
             $_gpg->addsignkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
@@ -357,22 +364,70 @@ class Healthchecks
 
             // Try to encrypt a message.
             try {
-                $encryptedMessage = $_gpg->encryptsign($messageToEncrypt);
+                $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
                 if ($encryptedMessage !== false) {
                     $checks['gpg']['canEncrypt'] = true;
                 }
             } catch (Exception $e) {
             }
 
-            // Try to decrypt the message.
+            // Try to sign a message.
+            try {
+                $signature = $_gpg->sign($messageToEncrypt);
+                if ($signature !== false) {
+                    $checks['gpg']['canSign'] = true;
+                }
+            } catch (Exception $e) {
+            }
+
+            // Try to encrypt and sign a message.
+            try {
+                $encryptedMessage2 = $_gpg->encryptsign($messageToEncrypt);
+                if ($encryptedMessage2 !== false) {
+                    $checks['gpg']['canEncryptSign'] = true;
+                }
+            } catch (Exception $e) {
+            }
+
+            // Try to decrypt the unsigned message.
             if ($checks['gpg']['canEncrypt']) {
                 $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
-                $decryptedMessage = '';
 
                 try {
-                    $_gpg->decryptverify($encryptedMessage, $decryptedMessage);
+                    $decryptedMessage = $_gpg->decrypt($encryptedMessage);
                     if ($decryptedMessage === $messageToEncrypt) {
                         $checks['gpg']['canDecrypt'] = true;
+                    }
+                } catch (Exception $e) {
+                }
+            }
+
+            // Try to decrypt and verify the signature of a message.
+            if ($checks['gpg']['canDecrypt']) {
+                $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+                $decryptedMessage2 = '';
+
+                try {
+                    $_gpg->decryptverify($encryptedMessage2, $decryptedMessage2);
+                    if ($decryptedMessage === $messageToEncrypt) {
+                        $checks['gpg']['canDecryptVerify'] = true;
+                    }
+                } catch (Exception $e) {
+                }
+            }
+
+            // Try to verify the signature of a message.
+            if ($checks['gpg']['canDecryptVerify']) {
+                $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+
+                try {
+                    $info = $_gpg->verify($encryptedMessage2, false, $plaintext);
+                    if($info !== false && isset($info['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info['fingerprint']) {
+                        $checks['gpg']['canVerify'] = true;
+                    }
+                    $info = $_gpg->verify($signature, false, $encryptedMessage2);
+                    if($info !== false && isset($info[0]['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info[0]['fingerprint']) {
+                        $checks['gpg']['canVerify'] = true;
                     }
                 } catch (Exception $e) {
                 }
