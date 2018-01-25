@@ -270,6 +270,10 @@ class Healthchecks
     {
         $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '7.0', '>='));
         $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
+        $checks['environment']['mbstring'] = extension_loaded('mbstring');
+        $checks['environment']['gnupg'] = extension_loaded('gnupg');
+        $checks['environment']['intl'] = extension_loaded('intl');
+        $checks['environment']['image'] = (extension_loaded('gd') || extension_loaded('imagick'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
         $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');
         $checks['environment']['logWritable'] = is_writable(LOGS);

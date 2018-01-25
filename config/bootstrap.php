@@ -15,30 +15,27 @@
 
 $isCli = PHP_SAPI === 'cli';
 
-// You can remove this if you are confident that your PHP version is sufficient.
+/*
+ *  Baseline checks
+ */
 if (version_compare(PHP_VERSION, '7.0.0') < 0) {
     trigger_error('Your PHP version must be equal or higher than 7.0.0 to use Passbolt.', E_USER_ERROR);
 }
 
-/*
- *  You can remove this if you are confident you have intl installed.
- */
 if (!extension_loaded('intl')) {
-    trigger_error('You must enable the intl extension to use CakePHP.', E_USER_ERROR);
+    trigger_error('You must enable the intl extension to use Passbolt.', E_USER_ERROR);
 }
 
-/*
- * You can remove this if you are confident you have mbstring installed.
- */
 if (!extension_loaded('mbstring')) {
-    trigger_error('You must enable the mbstring extension to use CakePHP.', E_USER_ERROR);
+    trigger_error('You must enable the mbstring extension to use Passbolt.', E_USER_ERROR);
 }
 
-/*
- * You can remove this if you are confident you have gnupg installed.
- */
 if (!extension_loaded('gnupg')) {
-    throw new Exception('PHP Gnupg library is not installed');
+    trigger_error('You must enable the gnupg extension to use Passbolt.', E_USER_ERROR);
+}
+
+if (!(extension_loaded('gd') || extension_loaded('imagick'))) {
+    trigger_error('You must enable the gd or imagick extensions to use Passbolt.', E_USER_ERROR);
 }
 
 /*

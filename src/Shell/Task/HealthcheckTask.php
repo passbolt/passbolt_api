@@ -175,19 +175,19 @@ class HealthcheckTask extends AppShell
         $this->title(__('Environment'));
         $this->assert(
             $checks['environment']['phpVersion'],
-            __('PHP version {0}', PHP_VERSION),
-            __('PHP version is too low, passbolt need PHP 7.0 or higher')
+            __('PHP version {0}.', PHP_VERSION),
+            __('PHP version is too low, passbolt need PHP 7.0 or higher.')
         );
         $this->assert(
             $checks['environment']['pcre'],
-            __('PCRE compiled with unicode support'),
-            __('PCRE has not been compiled with Unicode support'),
-            __('Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring')
+            __('PCRE compiled with unicode support.'),
+            __('PCRE has not been compiled with Unicode support.'),
+            __('Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring.')
         );
         $this->assert(
             $checks['environment']['tmpWritable'],
-            __('The temporary directory and its content are writable'),
-            __('The temporary directory and its content are not writable'),
+            __('The temporary directory and its content are writable.'),
+            __('The temporary directory and its content are not writable.'),
             [
                 __('Ensure the temporary directory and its content are writable by the user the webserver user.'),
                 __('you can try:'),
@@ -198,8 +198,8 @@ class HealthcheckTask extends AppShell
         );
         $this->assert(
             $checks['environment']['imgPublicWritable'],
-            __('The public image directory and its content are writable'),
-            __('The public image directory and its content are not writable'),
+            __('The public image directory and its content are writable.'),
+            __('The public image directory and its content are not writable.'),
             [
                 __('Ensure the public image directory and its content are writable by the webserver user.'),
                 __('you can try:'),
@@ -210,14 +210,39 @@ class HealthcheckTask extends AppShell
         );
         $this->assert(
             $checks['environment']['logWritable'],
-            __('The logs directory and its content are writable'),
-            __('The logs directory and its content are not writable'),
+            __('The logs directory and its content are writable.'),
+            __('The logs directory and its content are not writable.'),
             [
                 __('Ensure the logs directory and its content are writable by the user the webserver user.'),
                 __('you can try:'),
                 'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'logs',
                 'sudo chmod 775 $(find ' . ROOT . 'logs -type d)',
                 'sudo chmod 664 $(find ' . ROOT . 'logs -type f)',
+            ]
+        );
+        $this->assert(
+            $checks['environment']['image'],
+            __('GD or Imagick extension is installed.'),
+            __('You must enable the gd or imagick extensions to use Passbolt.'),
+            [
+                __('See. https://secure.php.net/manual/en/book.image.php'),
+                __('See. https://secure.php.net/manual/en/book.imagick.php'),
+            ]
+        );
+        $this->assert(
+            $checks['environment']['intl'],
+            __('Intl extension is installed.'),
+            __('You must enable the intl extension to use Passbolt.'),
+            [
+                __('See. https://secure.php.net/manual/en/book.intl.php')
+            ]
+        );
+        $this->assert(
+            $checks['environment']['mbstring'],
+            __('Mbstring extension is installed.'),
+            __('You must enable the mbstring extension to use Passbolt.'),
+            [
+                __('See. https://secure.php.net/manual/en/book.mbstring.php')
             ]
         );
     }
