@@ -28,7 +28,6 @@ use Cake\Core\Configure;
 <div id="container" class="page <?= $this->fetch('pageClass') ?>">
 <?= $this->element('Navigation/default'); ?>
 <div id="content">
-<?= $this->Flash->render() ?>
 <?= $this->fetch('content') ?>
 
 </div>
