@@ -14,11 +14,9 @@
  */
 namespace App\Test\TestCase\Controller\Auth;
 
-use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\TestSuite\IntegrationTestCase;
+use App\Test\Lib\AppIntegrationTestCase;
 
-class CheckSessionControllerTest extends IntegrationTestCase
+class CheckSessionControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens'];
 
@@ -42,15 +40,7 @@ class CheckSessionControllerTest extends IntegrationTestCase
 
     public function testCheckSessionLoggedIn()
     {
-        $this->session([
-            'Auth' => [
-                'User' => [
-                    'id' => UuidFactory::uuid('users.id.ada'),
-                    'username' => 'ada@passbolt.com',
-                ]
-            ]
-        ]);
-
+        $this->authenticateAs('ada');
         $this->get('/auth/checksession.json');
         $this->assertResponseOk();
         $response = json_decode($this->_getBodyAsString());

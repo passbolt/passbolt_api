@@ -33,7 +33,7 @@ use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestCase;
 
-class AppIntegrationTestCase extends IntegrationTestCase
+abstract class AppIntegrationTestCase extends IntegrationTestCase
 {
     use ArrayTrait;
     use AvatarsModelTrait;

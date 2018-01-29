@@ -15,9 +15,23 @@
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
+use Cake\Event\Event;
 
 class AuthCheckSessionController extends AppController
 {
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->Auth->allow('checkSessionGet');
+        return parent::beforeFilter($event);
+    }
+
     /**
      * User Index action
      *
@@ -25,6 +39,11 @@ class AuthCheckSessionController extends AppController
      */
     public function checkSessionGet()
     {
-        $this->success(__('Look! It\'s moving. It\'s alive. It\'s alive...'));
+        if ($this->User->role() !== Role::GUEST) {
+            $this->success(__('Look! It\'s moving. It\'s alive. It\'s alive...'));
+        } else {
+            // Use AppController:error instead of exception to avoid logging the error
+            $this->error(__('You need to login to access this location.'), null, 403);
+        }
     }
 }

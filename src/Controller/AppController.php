@@ -99,6 +99,7 @@ class AppController extends Controller
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'message' => $message,
                 'url' => Router::url(),
+                'code' => 200,
             ],
             'body' => $body,
             '_serialize' => ['header', 'body']
@@ -111,10 +112,14 @@ class AppController extends Controller
      *
      * @param string $message optional message
      * @param mixed $body optional json reponse body
+     * @param int $errorCode optional http error code
      * @return void
      */
-    protected function error($message = null, $body = null)
+    protected function error($message = null, $body = null, $errorCode = 200)
     {
+        if ($errorCode !== 200) {
+            $this->response = $this->response->withStatus($errorCode);
+        }
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
         $this->set([
@@ -125,6 +130,7 @@ class AppController extends Controller
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
                 'message' => $message,
                 'url' => Router::url(),
+                'code' => $errorCode
             ],
             'body' => $body,
             '_serialize' => ['header', 'body']

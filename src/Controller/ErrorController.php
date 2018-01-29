@@ -63,8 +63,8 @@ class ErrorController extends AppController
                     'servertime' => time(),
                     'title' => 'app_' . $prefix . '_' . $action . '_error',
                     'message' => $this->viewVars['message'],
-                    'code' => $this->viewVars['code'],
                     'url' => Router::url(),
+                    'code' => $this->viewVars['code'],
                 ],
                 'body' => $body,
                 '_serialize' => ['header', 'body']
