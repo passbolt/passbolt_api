@@ -33,7 +33,7 @@ class AuthCheckSessionController extends AppController
     }
 
     /**
-     * User Index action
+     * Check if a user is logged in
      *
      * @return void
      */
