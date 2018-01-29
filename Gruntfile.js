@@ -101,7 +101,7 @@ module.exports = function(grunt) {
             // Default Avatars
             'avatar/**',
             // Passbolt logos
-            'logo/icon-20_white.png', 'logo/icon-20.png',
+            'logo/icon-20_white.png', 'logo/icon-20_grey.png', 'logo/icon-20.png',
             'logo/icon-48_white.png', 'logo/icon-48.png',
             'logo/logo.png', 'logo/logo@2x.png',
             // Image for inputs and controls
