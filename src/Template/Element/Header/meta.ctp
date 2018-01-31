@@ -22,3 +22,8 @@ use Cake\Routing\Router;
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="<?= Router::url('/favicon.ico'); ?>"/>
     <link rel="icon" type="image/png" href="<?= Router::url('/favicon.png'); ?>"/>
+    <link rel="apple-touch-icon" href="<?= Router::url('/apple-touch-icon.png'); ?>"/>
+    <link rel="apple-touch-icon-precomposed" href="<?= Router::url('/apple-touch-icon-precomposed.png'); ?>"/>
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="<?= Router::url('/apple-touch-icon-57x57-precomposed.png'); ?>"/>
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?= Router::url('/apple-touch-icon-72x72-precomposed.png'); ?>"/>
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?= Router::url('/apple-touch-icon-114x114-precomposed.png'); ?>"/>
