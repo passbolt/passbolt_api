@@ -61,6 +61,11 @@ class V200TagInitialMigration extends AbstractMigration
                 'limit' => 36,
                 'null' => true,
             ])
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => false,
+            ])
             ->addIndex([
                 'id',
                 'user_id',

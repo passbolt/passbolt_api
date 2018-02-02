@@ -26,6 +26,8 @@ class TagsIndexController extends AppController
      */
     public function index()
     {
-        $this->success('OK');
+        $this->loadModel('Passbolt/Tags.Tags');
+        $tags = $this->Tags->findIndex($this->User->id());
+        $this->success(__('The operation was successful.'), $tags);
     }
 }

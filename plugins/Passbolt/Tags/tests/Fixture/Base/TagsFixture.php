@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Tags\Test\Fixture;
+namespace Passbolt\Tags\Test\Fixture\Base;
 
 use Cake\TestSuite\Fixture\TestFixture;
 use App\Utility\UuidFactory;

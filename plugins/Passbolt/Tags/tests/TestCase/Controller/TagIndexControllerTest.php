@@ -12,17 +12,20 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Tags\Test\TestCase\Controller\Auth;
+namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
 
 class TagIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles'];
+    public $fixtures = [
+        'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',
+        'app.Alt0/groups_users', 'app.Alt0/permissions',
+        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
 
     public function testTagIndexNotLoggedIn()
     {
-        $this->get('/tags.json');
+        $this->getJson('/tags.json');
         $this->assertResponseError();
         $response = json_decode($this->_getBodyAsString());
         $this->assertTextContains('error', $response->header->status);
@@ -31,7 +34,10 @@ class TagIndexControllerTest extends AppIntegrationTestCase
 
     public function testTagIndexSuccess()
     {
-        $this->get('/tags.json');
+        $this->authenticateAs('ada');
+        $this->getJson('/tags.json');
+        $response = json_decode($this->_getBodyAsString());
+        pr($response);
         $this->assertSuccess();
     }
 }
