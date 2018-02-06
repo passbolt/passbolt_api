@@ -29,6 +29,7 @@ class AuthCheckSessionController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->Auth->allow('checkSessionGet');
+
         return parent::beforeFilter($event);
     }
 
