@@ -23,7 +23,8 @@ use Cake\ORM\TableRegistry;
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/profiles',
+        'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/permissions',
+        'app.Base/groups_users', 'app.Base/groups', 'app.Base/favorites',
         'app.Base/authentication_tokens', 'app.Base/avatars', 'app.Base/email_queue'
     ];
 
@@ -156,6 +157,36 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
             $this->assertResponseError();
         }
+    }
+
+    public function testUsersRegisterPostExistingDeletedUserWithSameUsername()
+    {
+        // 1) Try to create a user with same username as an existing one.
+        $data = [
+            'username' =>  'ping@passbolt.com',
+            'profile' => [
+                'first_name' => 'Ping',
+                'last_name' => 'Duplicate'
+            ],
+        ];
+
+        $this->post('/users/register.json', $data);
+        $result = json_decode($this->_getBodyAsString());
+        $this->assertEquals('400', $result->header->code, 'Validation should fail when the username already exists in db');
+        $this->assertResponseError();
+
+        // 2) Soft delete the existing user.
+        $users = TableRegistry::get('Users');
+        $user =  $users->find()
+            ->where(['username' => 'ping@passbolt.com'])
+            ->first();
+        $users->softDelete($user, ['checkRules' => false]);
+
+        // 3) Try again with same data, it should be successful.
+        $this->post('/users/register.json', $data);
+        $result = json_decode($this->_getBodyAsString());
+        $this->assertEquals('200', $result->header->code, 'Validation should be successful when a similar username exists but is soft deleted');
+        $this->assertResponseSuccess();
     }
 
     public function testUsersRegisterCannotModifyNotAccessibleFields()

@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2631: Fixed default class for EmailTransport to Smtp in configuration
 - PASSBOLT-2640: Fixed incomplete urls in email templates
 - PASSBOLT-2640: Improved escaping non safe characters in emails
+- PASSBOLT-2667: Fixed regression: create a user that has been deleted previously returns an error
 
 ### Added
 - PASSBOLT-2638: Added command to test email configuration and SMTP communication
