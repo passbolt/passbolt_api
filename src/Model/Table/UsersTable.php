@@ -188,7 +188,7 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         // Add rule
-        $rules->add($rules->isUnique(['username']), 'uniqueUsername', [
+        $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
             'message' => __('This username is already in use.')
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
@@ -667,6 +667,7 @@ class UsersTable extends Table
                 'validate' => 'register',
                 'accessibleFields' => [
                     'username' => true,
+                    'deleted' => true,
                     'profile' => true,
                     'role_id' => true, // Overridded in beforMarshal if current user is not admin
                 ],

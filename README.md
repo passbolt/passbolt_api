@@ -9,10 +9,10 @@
 	Copyright (c) 2018 Passbolt SARL
 	https://www.passbolt.com
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c804760791534e62b90632215952eaf0)](https://www.codacy.com/app/passbolt/passbolt_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=passbolt/passbolt_api&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
 [![Build Status](https://saucelabs.com/buildstatus/passbolt)](https://saucelabs.com/beta/builds/c32d4f7b34c94ebdab39baed17b4d975)
 [![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt_api/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt_api?branch=master)
-
 [![Build Status](https://saucelabs.com/browser-matrix/passbolt.svg)](https://saucelabs.com/beta/builds/2b2d0f3a120a4818a137fda932a86c75)
 
 ## License
@@ -31,9 +31,9 @@ GNU Affero General Public License for more details.
 
 ## About Passbolt
 
-Passbolt is an open source password manager for teams. It allows you to 
-securely share and store credentials. For instance, the wifi password of your 
-office, the administrator password of a router or your organisation's social 
+Passbolt is an open source password manager for teams. It allows you to
+securely share and store credentials. For instance, the wifi password of your
+office, the administrator password of a router or your organisation's social
 media account passwords, all of them can be secured using passbolt.
 
 Passbolt is different from the other password managers because:
@@ -72,7 +72,7 @@ Please check out CONTRIBUTING.md for more information on how to get involved!
 ## Reporting a security issue
 
 If you've found a security-related issue in passbolt, please don't open an issue on GitHub.
-Instead contact us at security@passbolt.com. In the spirit of responsible disclosure we ask 
+Instead contact us at security@passbolt.com. In the spirit of responsible disclosure we ask
 that the reporter keep the issue confidential until we announce it.
 
 The passbolt team will take the following actions:

@@ -422,11 +422,11 @@ class Healthchecks
 
                 try {
                     $info = $_gpg->verify($encryptedMessage2, false, $plaintext);
-                    if($info !== false && isset($info['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info['fingerprint']) {
+                    if ($info !== false && isset($info['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info['fingerprint']) {
                         $checks['gpg']['canVerify'] = true;
                     }
                     $info = $_gpg->verify($signature, false, $encryptedMessage2);
-                    if($info !== false && isset($info[0]['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info[0]['fingerprint']) {
+                    if ($info !== false && isset($info[0]['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info[0]['fingerprint']) {
                         $checks['gpg']['canVerify'] = true;
                     }
                 } catch (Exception $e) {

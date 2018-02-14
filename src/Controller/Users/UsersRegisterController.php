@@ -178,6 +178,9 @@ class UsersRegisterController extends AppController
     {
         // Build entity and perform basic check
         $data = $this->_formatRequestData();
+        // Force deleted to false. If not set, cakephp will interpret it as null
+        // which causes isUnique build rule not to work when looking for duplicate entries.
+        $data['deleted'] = false;
         $user = $this->Users->buildEntity($data, $this->User->role());
         $this->set('user', $user);
 
