@@ -36,8 +36,6 @@ class TagIndexControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $this->getJson('/tags.json');
-        $response = json_decode($this->_getBodyAsString());
-        pr($response);
         $this->assertSuccess();
     }
 }

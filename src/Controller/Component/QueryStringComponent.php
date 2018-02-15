@@ -244,6 +244,7 @@ class QueryStringComponent extends Component
         if (isset($filters)) {
             foreach ($filters as $filter => $values) {
                 switch ($filter) {
+                    case 'has-tags':
                     case 'search':
                         self::validateFilterSearch($values);
                         break;

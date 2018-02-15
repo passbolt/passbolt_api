@@ -20,7 +20,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Collection\CollectionInterface;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Core\Configure;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -90,6 +90,12 @@ class ResourcesTable extends Table
             'foreignKey' => 'resource_id',
             'saveStrategy' => 'replace'
         ]);
+
+        if (Configure::read('passbolt.plugins.tags')) {
+            $this->belongsToMany('Tags', [
+                'through' => 'Passbolt/Tags.ResourcesTags',
+            ]);
+        }
     }
 
     /**
@@ -324,6 +330,11 @@ class ResourcesTable extends Table
             $query->contain('Favorites', function ($q) use ($userId) {
                 return $q->where(['Favorites.user_id' => $userId]);
             });
+        }
+
+        // If plugin tag is present and request contains tags
+        if (Configure::read('passbolt.plugins.tags')) {
+            $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
         }
 
         /*

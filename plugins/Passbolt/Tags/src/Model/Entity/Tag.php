@@ -25,8 +25,7 @@ class Tag extends Entity
      * @var array
      */
     protected $_accessible = [
-        'slug' => true,
-        'is_shared' => true,
-        'resources' => true
+        '*' => false
     ];
+
 }

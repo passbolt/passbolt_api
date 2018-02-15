@@ -127,6 +127,13 @@ class ResourcesTagsFixture extends TestFixture
                 'tag_id' => UuidFactory::uuid('tag.id.firefox'),
                 'user_id' => UuidFactory::uuid('user.id.ada'),
                 'created' => '2016-01-29 13:39:25'
+            ],
+            [
+                'id' => UuidFactory::uuid('grogle.hindi.ada'),
+                'resource_id' => UuidFactory::uuid('resource.id.grogle'),
+                'tag_id' => UuidFactory::uuid('tag.id.hindi'),
+                'user_id' => UuidFactory::uuid('user.id.ada'),
+                'created' => '2016-01-29 13:39:25'
             ]
         ];
         parent::init();
