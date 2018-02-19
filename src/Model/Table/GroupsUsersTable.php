@@ -417,7 +417,7 @@ class GroupsUsersTable extends Table
             if (isset($change['id'])) {
                 // Retrieve the group_user a change is requested for.
                 $groupUserKey = null;
-                foreach($entities as $groupUserKey => $entity) {
+                foreach ($entities as $groupUserKey => $entity) {
                     if ($entity['id'] == $change['id']) {
                         break;
                     }
