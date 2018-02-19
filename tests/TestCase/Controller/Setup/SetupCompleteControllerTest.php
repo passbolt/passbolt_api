@@ -34,7 +34,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     public function testSetupCompleteApiV1Success()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v1';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
         $data = [
             'AuthenticationToken' => [
@@ -63,7 +63,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     public function testSetupCompleteSuccess()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v1';
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
         $data = [
             'authenticationtoken' => [
@@ -79,7 +79,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteInvalidUserIdError()
     {
-        $url = '/setup/complete/nope.json';
+        $url = '/setup/complete/nope.json?api-version=v1';
         $data = [];
         $this->postJson($url, $data);
         $this->assertError(400, 'The user id is not valid.');
@@ -87,7 +87,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteInvalidUserTokenError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.nope') . '.json?api-version=v1';
         $data = [];
         $this->postJson($url, $data);
         $this->assertError(400, 'The user does not exist');
@@ -95,7 +95,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteInvalidAuthenticationTokenError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v1';
 
         $fails = [
             'empty array' => [
@@ -139,7 +139,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     public function testSetupCompleteInvalidGpgkeyError()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
-        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v1';
 
         $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
@@ -183,14 +183,14 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public function testSetupCompleteDeletedUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.sofia') . '.json?api-version=v1';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
     }
 
     public function testSetupCompleteAlreadyActiveUserError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
     }

@@ -31,7 +31,7 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
         Configure::write('passbolt.email.send.password.create', false);
         $this->authenticateAs('ada');
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson("/resources.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // check email notification
@@ -46,7 +46,7 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
         $this->authenticateAs('ada');
         $userId = UuidFactory::uuid('user.id.ada');
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson("/resources.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // check email notification

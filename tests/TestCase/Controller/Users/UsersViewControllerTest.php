@@ -47,7 +47,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ursula');
         $uuid = UuidFactory::uuid('user.id.ursula');
-        $this->getJson('/users/' . $uuid . '.json');
+        $this->getJson('/users/' . $uuid . '.json?api-version=v1');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -69,7 +69,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $uuid = UuidFactory::uuid('user.id.ada');
-        $this->getJson('/users/me.json');
+        $this->getJson('/users/me.json?api-version=v1');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -80,14 +80,14 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 
     public function testUsersViewNotLoggedInError()
     {
-        $this->getJson('/users/me.json');
+        $this->getJson('/users/me.json?api-version=v1');
         $this->assertAuthenticationError();
     }
 
     public function testUsersViewInvalidIdError()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users/notuuid.json');
+        $this->getJson('/users/notuuid.json?api-version=v1');
         $this->assertError(400, 'The user id should be a uuid or "me".');
     }
 
@@ -95,7 +95,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $uuid = UuidFactory::uuid('user.id.notauser');
-        $this->getJson('/users/' . $uuid . '.json');
+        $this->getJson('/users/' . $uuid . '.json?api-version=v1');
         $this->assertError(404, 'The user does not exist.');
     }
 }

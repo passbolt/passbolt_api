@@ -34,7 +34,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.send.comment.add', true);
         $this->authenticateAs('dame');
         $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.docker') . '.json', $postData);
+        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.docker') . '.json?api-version=v1', $postData);
         $this->assertSuccess();
 
         // Every member of the group should get notification
@@ -57,7 +57,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.send.comment.add', true);
         $this->authenticateAs('betty');
         $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json', $postData);
+        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json?api-version=v1', $postData);
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
@@ -79,7 +79,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.show.comment', false);
         $this->authenticateAs('betty');
         $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json', $postData);
+        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json?api-version=v1', $postData);
         $this->assertSuccess();
 
         // Every users with direct permissions should get notified
@@ -93,7 +93,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.send.comment.add', false);
         $this->authenticateAs('betty');
         $postData = ['Comment' => ['content' => 'this is a test']];
-        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json', $postData);
+        $this->postJson('/comments/resource/' . UuidFactory::uuid('resource.id.bower') . '.json?api-version=v1', $postData);
         $this->assertSuccess();
 
         // Nobody should get notifications

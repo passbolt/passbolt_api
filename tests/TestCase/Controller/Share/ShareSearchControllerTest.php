@@ -105,7 +105,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
+        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=v1");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
 
@@ -124,7 +124,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->getJson("/share/search-users/resource/$resourceId.json");
+        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=v1");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
@@ -132,7 +132,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->getJson("/share/search-users/resource/$resourceId.json");
+        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -140,7 +140,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
+        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -148,14 +148,14 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
+        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testShareSearchAros_NotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
+        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=v1");
         $this->assertAuthenticationError();
     }
 }

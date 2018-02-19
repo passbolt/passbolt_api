@@ -50,7 +50,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -71,7 +71,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -87,7 +87,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $commentContent = 'this is a test';
         $postData = [];
         $resourceId = 'testBadUuid';
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertError(400, 'The resource id is not valid.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -98,7 +98,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
         $resourceId = UuidFactory::uuid('resource.id.notexist');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertError(404, 'The resource does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -117,7 +117,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertError(404, 'The resource does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -128,7 +128,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $commentContent = 'this is a test';
         $postData = ['Comment' => ['content' => $commentContent]];
         $resourceId = UuidFactory::uuid('resource.id.chai');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertError(404, 'The resource does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -144,7 +144,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertError(400, 'Could not validate comment data.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -158,7 +158,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertError(400, 'Could not validate comment data.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -180,7 +180,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -199,7 +199,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
     {
         $postData = [];
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->postJson("/comments/resource/$resourceId.json", $postData);
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v1", $postData);
         $this->assertAuthenticationError();
     }
 }

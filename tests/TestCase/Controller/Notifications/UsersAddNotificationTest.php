@@ -31,7 +31,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.send.user.create', false);
         $this->authenticateAs('admin');
         $roles = TableRegistry::get('Roles');
-        $this->postJson('/users.json', [
+        $this->postJson('/users.json?api-version=v1', [
                 'username' => 'new@passbolt.com',
                 'role_id' => $roles->getIdByName(Role::ADMIN),
                 'profile' => [
@@ -52,7 +52,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
         Configure::write('passbolt.email.send.user.create', true);
         $this->authenticateAs('admin');
         $roles = TableRegistry::get('Roles');
-        $this->postJson('/users.json', [
+        $this->postJson('/users.json?api-version=v1', [
             'username' => 'new.user@passbolt.com',
             'role_id' => $roles->getIdByName(Role::ADMIN),
             'profile' => [

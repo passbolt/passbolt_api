@@ -41,7 +41,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/$groupId.json?api-version=v1");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -110,7 +110,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $groupId = 'invalid-id';
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/$groupId.json?api-version=v1");
         $this->assertError(400, 'The group id is not valid.');
     }
 
@@ -118,7 +118,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('not-found');
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/$groupId.json?api-version=v1");
         $this->assertError(404, 'The group does not exist.');
     }
 
@@ -126,7 +126,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('group.id.deleted');
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/$groupId.json?api-version=v1");
         $this->assertError(404, 'The group does not exist.');
     }
 }
