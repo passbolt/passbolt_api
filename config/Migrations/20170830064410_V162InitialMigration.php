@@ -48,6 +48,17 @@ class V162InitialMigration extends AbstractMigration
             throw new Exception('Can not upgrade. Some tables are missing.');
         }
 
+        // If this is an upgrade from v1
+        if ($tableCount > 0) {
+            // Check the latest 1.x migration is done
+            $latestMigrationName = 'Migration_1_6_1';
+            $schemaMigrationResult = $this->query("SELECT * FROM schema_migrations WHERE class='$latestMigrationName'");
+            $schemaMigrationRows = $schemaMigrationResult->fetchAll();
+            if (!count($schemaMigrationRows)){
+                throw new Exception('Can not upgrade. Please upgrade to the latest 1.x version first and retry. See https://help.passbolt.com/hosting/update.');
+            }
+        }
+
         // Reset the collation just in case
         $this->execute('ALTER DATABASE ' . $databaseName . ' COLLATE utf8mb4_unicode_ci');
 
