@@ -109,8 +109,8 @@ return [
             'serverKey' => [
                 // Server private key fingerprint.
                 'fingerprint' => '',
-                //'public' => CONFIG . DS . 'gpg' . DS . 'serverkey.asc',
-                //'private' => CONFIG . DS . 'gpg' . DS . 'serverkey_private.asc',
+                //'public' => CONFIG . 'gpg' . DS . 'serverkey.asc',
+                //'private' => CONFIG . 'gpg' . DS . 'serverkey_private.asc',
             ],
         ],
     ],
