@@ -122,7 +122,7 @@ class GroupsTable extends Table
         // Add create rules.
         $rules->addCreate(
             $rules->isUnique(
-                ['name'],
+                ['name', 'deleted'],
                 __('The name provided is already used by another group.')
             ),
             'group_unique'
@@ -135,7 +135,7 @@ class GroupsTable extends Table
         // Update rules.
         $rules->addUpdate(
             $rules->isUnique(
-                ['name'],
+                ['name', 'deleted'],
                 __('The name provided is already used by another group.')
             ),
             'group_unique'

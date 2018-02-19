@@ -65,6 +65,7 @@ class GroupsAddController extends AppController
         $data = $this->_formatRequestData();
         $data['created_by'] = $this->User->id();
         $data['modified_by'] = $this->User->id();
+        $data['deleted'] = false;
 
         // Build entity and perform basic check
         $group = $this->Groups->newEntity($data, [
@@ -72,7 +73,8 @@ class GroupsAddController extends AppController
                 'name' => true,
                 'created_by' => true,
                 'modified_by' => true,
-                'groups_users' => true
+                'groups_users' => true,
+                'deleted' => true
             ],
             'associated' => [
                 'GroupsUsers' => [

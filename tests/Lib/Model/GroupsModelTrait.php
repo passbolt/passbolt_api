@@ -36,6 +36,7 @@ trait GroupsModelTrait
             ],
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin'),
+            'deleted' => false,
         ];
         $entityContent = array_merge($entityContent, $data);
 

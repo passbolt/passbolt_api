@@ -416,9 +416,14 @@ class GroupsUsersTable extends Table
             // Update or Delete case.
             if (isset($change['id'])) {
                 // Retrieve the group_user a change is requested for.
-                $groupUserKey = array_search($change['id'], array_column($entities, 'id'));
+                $groupUserKey = null;
+                foreach($entities as $groupUserKey => $entity) {
+                    if ($entity['id'] == $change['id']) {
+                        break;
+                    }
+                }
                 // The groupUserKey does not belong to the group.
-                if ($groupUserKey === false) {
+                if (is_null($groupUserKey)) {
                     $errors = ['id' => [
                         'group_user_exists' => __('The membership does not exist.', $change['id'])
                     ]];

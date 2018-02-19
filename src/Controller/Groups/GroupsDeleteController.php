@@ -53,7 +53,8 @@ class GroupsDeleteController extends AppController
     public function dryrun($id)
     {
         $this->_validateRequestData($id);
-        $this->success(__('The group can be deleted.'));
+        $resources = $this->Resources->findAllByGroupAccess($id);
+        $this->success(__('The group can be deleted.'), $resources);
     }
 
     /**

@@ -28,7 +28,8 @@ class SaveTest extends AppTestCase
 
     public $Groups;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
+    public $fixtures = [
+        'app.Base/groups', 'app.Base/users', 'app.Base/groups_users', 'app.Base/permissions'];
 
     public function setUp()
     {
@@ -52,7 +53,8 @@ class SaveTest extends AppTestCase
                 'name' => true,
                 'created_by' => true,
                 'modified_by' => true,
-                'groups_users' => true
+                'groups_users' => true,
+                'deleted' => true
             ],
             'associated' => [
                 'GroupsUsers' => [
@@ -109,6 +111,19 @@ class SaveTest extends AppTestCase
         $this->assertNotEmpty($groupUserA);
         $groupUserB = Hash::extract($group->groups_users, "{n}[user_id=$userBId]");
         $this->assertNotEmpty($groupUserB);
+    }
+
+    public function testSuccessRuleGroupUnique()
+    {
+        $group = $this->Groups->findById(UuidFactory::uuid('group.id.freelancer'))->first();
+        $this->Groups->softDelete($group);
+        $data = self::getDummyGroup();
+        $data['name'] = 'Freelancer';
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Groups->newEntity($data, $options);
+        $save = $this->Groups->save($entity);
+        $this->assertEmpty($entity->getErrors(), 'Errors occurred while saving the entity: ' . json_encode($entity->getErrors()));
+        $this->assertNotFalse($save, 'The group save operation failed.');
     }
 
     public function testErrorRuleGroupUnique()
