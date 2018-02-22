@@ -16,8 +16,8 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Utility\Hash;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
 {
@@ -29,7 +29,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     public function testResourcesTagsAddResourceDoesNotExistError()
     {
         $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.nope');;
+        $resourceId = UuidFactory::uuid('resource.id.nope');
+        ;
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
         $this->assertError(404);
     }
@@ -37,7 +38,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     public function testResourcesTagsAddNoResourcePermissionError()
     {
         $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');;
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        ;
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2');
         $this->assertError(404);
     }
@@ -45,7 +47,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     public function testResourcesTagsAddSuccess()
     {
         $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');;
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        ;
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', ['#bravo', 'biloute', '#stup']);
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -55,7 +58,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     public function testResourcesTagsAddSuccessDelete()
     {
         $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');;
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        ;
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -65,7 +69,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     public function testResourcesTagsAddSuccessDeleteKeepsOtherPeoplePersonalTags()
     {
         $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.chai');;
+        $resourceId = UuidFactory::uuid('resource.id.chai');
+        ;
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -80,6 +85,5 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
             ->all();
 
         $this->assertNotEmpty($rt);
-
     }
 }

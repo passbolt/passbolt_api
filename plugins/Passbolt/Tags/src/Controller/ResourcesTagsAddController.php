@@ -15,10 +15,10 @@
 namespace Passbolt\Tags\Controller;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Validation\Validation;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
+use Cake\Validation\Validation;
 
 class ResourcesTagsAddController extends AppController
 {
@@ -26,7 +26,7 @@ class ResourcesTagsAddController extends AppController
      * Add tags for a given resource.
      * Providing an empty list of tags delete all the personal tags
      *
-     * @param string $foreignKey The identifier of the resource to add a comment to
+     * @param string $resourceId The identifier of the resource to add a comment to
      * @throws BadRequestException
      * @throws NotFoundException
      * @return void

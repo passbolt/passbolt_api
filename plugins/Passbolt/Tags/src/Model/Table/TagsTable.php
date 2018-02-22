@@ -1,6 +1,8 @@
 <?php
 namespace Passbolt\Tags\Model\Table;
 
+use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\QueryExpression;
@@ -9,7 +11,6 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
-use App\Model\Entity\Permission;
 
 /**
  * Tags Model
@@ -173,13 +174,14 @@ class TagsTable extends Table
      * @throws BadRequestException if the validation fails
      * @return array $tags list of tag entities
      */
-    public function buildEntitiesOrFail(array $tags) {
+    public function buildEntitiesOrFail(array $tags)
+    {
         $collection = [];
         if (!empty($tags)) {
             foreach ($tags as $i => $slug) {
                 $collection[$i] = $this->newEntity([
                     'slug' => $slug
-                ],[
+                ], [
                     'accessibleFields' => [
                         'id' => true,
                         'slug' => true,
@@ -197,12 +199,13 @@ class TagsTable extends Table
         if (!empty($errors)) {
             throw new BadRequestException(__('Could not validate the tags.'), $errors);
         }
+
         return $collection;
     }
 
     /**
      * Given two arrays of tag Entities this function returns the tags organized by changes
-     * ex:
+     * example:
      *  current [ 'alpha', '#bravo' ]
      *  new [ '#bravo', 'echo' ]
      *  result [
@@ -210,11 +213,12 @@ class TagsTable extends Table
      *     'deleted' => ['alpha']
      *     'unchanged' => ['#bravo']
      *
-     * @param $currentTags
-     * @param $requestedTags
+     * @param array $currentTags array of Tag Entity
+     * @param array $requestedTags array of Tag Entity
      * @return mixed
      */
-    static public function calculateChanges($currentTags, $requestedTags) {
+    public static function calculateChanges(array $currentTags, array $requestedTags)
+    {
         $currentTags = Hash::combine($currentTags, '{n}.id', '{n}');
         $requestedTags = Hash::combine($requestedTags, '{n}.id', '{n}');
         $allTags = Hash::merge($currentTags, $requestedTags);
@@ -233,6 +237,7 @@ class TagsTable extends Table
                 $tags[$change][] = $allTags[$tagId];
             }
         }
+
         return $tags;
     }
 
@@ -240,13 +245,14 @@ class TagsTable extends Table
      * Save an assoc array of tag entity organized by changes
      * for a given resource
      *
-     * @param $tags
-     * @param $resource
+     * @param array $tags list of changes from TagsTable::calculateChanges
+     * @param resource $resource entity
+     * @param string $userId UUID
      * @return bool|mixed
      * @throws \Exception
      */
-    public function saveChanges($tags, $resource, $userId) {
-
+    public function saveChanges(array $tags, Resource $resource, string $userId)
+    {
         // check if user is adding/deleting shared tag and not owner
         if (count($tags['created']) || count($tags['deleted'])) {
             $addedSharedTags = count(Hash::extract($tags['created'], '{n}[is_shared=1]'));
@@ -293,6 +299,7 @@ class TagsTable extends Table
 
             return true;
         });
+
         return $success;
     }
 }
