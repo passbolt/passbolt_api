@@ -1,9 +1,9 @@
 <?php
 namespace Passbolt\Tags\Test\TestCase\Model\Table;
 
-use Passbolt\Tags\Model\Table\TagsTable;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Passbolt\Tags\Model\Table\TagsTable;
 
 /**
  * App\Model\Table\TagsTable Test Case

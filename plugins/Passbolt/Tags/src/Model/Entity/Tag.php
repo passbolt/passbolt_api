@@ -27,5 +27,4 @@ class Tag extends Entity
     protected $_accessible = [
         '*' => false
     ];
-
 }

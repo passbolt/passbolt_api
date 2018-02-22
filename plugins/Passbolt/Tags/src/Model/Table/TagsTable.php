@@ -2,13 +2,13 @@
 namespace Passbolt\Tags\Model\Table;
 
 use App\Utility\UuidFactory;
+use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
-use Cake\Validation\Validator;
 use Cake\Utility\Hash;
-use Cake\Collection\CollectionInterface;
+use Cake\Validation\Validator;
 use App\Model\Entity\Permission;
 
 /**
@@ -83,8 +83,8 @@ class TagsTable extends Table
      * @param string $userId uuid
      * @return Query
      */
-    public function findIndex($userId) {
-
+    public function findIndex($userId)
+    {
         $resources = $this->Resources->findIndex($userId);
         $resourcesId = Hash::extract($resources->toArray(), '{n}.id');
 
@@ -102,24 +102,25 @@ class TagsTable extends Table
      * Decorate a query with the necessary tag finder conditions
      * Usefull to do a contain[tag] and filter[has-tags] on resources for example
      *
-     * @param Query $query
-     * @param array $options
-     * @param string $userId
+     * @param Query $query The query to decorate
+     * @param array $options Options
+     * @param string $userId The user identifier to decorate for
      * @return Query
      */
-    static public function decorateForeignFind(Query $query, array $options, string $userId) {
+    public static function decorateForeignFind(Query $query, array $options, string $userId)
+    {
         // Display the user tags for a given resource
         if (isset($options['contain']['tag'])) {
             $query->contain('Tags', function (Query $q) use ($userId) {
                 return $q
                     ->order(['slug'])
                     ->where(function (QueryExpression $where) use ($userId) {
-                    return $where->or_(function (QueryExpression $or) use ($userId) {
-                        return $or
+                        return $where->or_(function (QueryExpression $or) use ($userId) {
+                            return $or
                             ->eq('ResourcesTags.user_id', $userId)
                             ->isNull('ResourcesTags.user_id');
+                        });
                     });
-                });
             });
             // Remove join data
             $query->formatResults(function (CollectionInterface $results) {
@@ -127,21 +128,26 @@ class TagsTable extends Table
                     foreach ($row->tags as $i => $tag) {
                         unset($row->tags[$i]['_joinData']);
                     }
+
                     return $row;
                 });
             });
-
         }
 
         // Filter resources by tags
-        if (isset($options['filter']['has-tags'])) {
-            $tags = $options['filter']['has-tags'];
-            $query
-                ->innerJoinWith('Tags', function (Query $q) use ($tags) {
-                    return $q->where(['Tags.slug IN' => $tags]);
-                })
-                ->distinct();
+        if (isset($options['filter']['has-tag'])) {
+            $slug = $options['filter']['has-tag'];
+            $query->innerJoinWith('Tags', function ($q) use ($slug, $userId) {
+                $isSharedTag = preg_match('/^#/', $slug);
+                $q->where(['Tags.slug' => $slug]);
+                if (!$isSharedTag) {
+                    $q->where(['ResourcesTags.user_id' => $userId]);
+                }
+
+                return $q;
+            });
         }
+
         return $query;
     }
 

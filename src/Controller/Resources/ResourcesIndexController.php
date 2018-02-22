@@ -38,7 +38,7 @@ class ResourcesIndexController extends AppController
 
         if (Configure::read('passbolt.plugins.tags')) {
             $whitelist['contain'][] = 'tag';
-            $whitelist['filter'][] = 'has-tags';
+            $whitelist['filter'][] = 'has-tag';
         }
         $options = $this->QueryString->get($whitelist);
 

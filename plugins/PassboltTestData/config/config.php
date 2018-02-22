@@ -38,6 +38,8 @@ return [
                         'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/CommentsData',
                         'PassboltTestData.Security/XssCommentsData',
+                        'PassboltTestData.Pro/TagsData',
+                        'PassboltTestData.Pro/ResourcesTagsData',
                         'PassboltTestData.Base/SecretsData',
                         'PassboltTestData.Base/EmailQueueData',
                     ]
