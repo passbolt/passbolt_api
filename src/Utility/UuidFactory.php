@@ -28,7 +28,6 @@ class UuidFactory
      * But also do not provide uuid5
      *
      * @param string|null $seed optional, used to create uuid5
-     * @throws Exception if dependencies to generate random uuid are not met
      * @return string uuid4|uuid5
      */
     public static function uuid($seed = null)
@@ -42,7 +41,7 @@ class UuidFactory
 
                 return $uuid4->toString();
             } catch (UnsatisfiedDependencyException $e) {
-                throw new Exception('Cannot generate a random UUID, some dependencies are missing.');
+                trigger_error('Cannot generate a random UUID, some dependencies are missing.', E_USER_ERROR);
             }
         } else {
             // Generate a version 5 (name-based and hashed with SHA1) UUID object

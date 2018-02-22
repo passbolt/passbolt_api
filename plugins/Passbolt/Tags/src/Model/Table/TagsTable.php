@@ -1,13 +1,15 @@
 <?php
 namespace Passbolt\Tags\Model\Table;
 
+use App\Utility\UuidFactory;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Utility\Hash;
 use Cake\Collection\CollectionInterface;
+use App\Model\Entity\Permission;
 
 /**
  * Tags Model
@@ -63,7 +65,7 @@ class TagsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('slug')
+            ->utf8Extended('slug')
             ->maxLength('slug', 128)
             ->requirePresence('slug', 'create')
             ->notEmpty('slug');
@@ -141,5 +143,150 @@ class TagsTable extends Table
                 ->distinct();
         }
         return $query;
+    }
+
+    /**
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    {
+        if (isset($data['slug']) && !empty($data['slug']) && is_string($data['slug'])) {
+            $startWith = mb_substr($data['slug'], 0, 1, 'utf-8');
+            $data['is_shared'] = ($startWith === '#');
+            $data['id'] = UuidFactory::uuid('tag.id.' . $data['slug']);
+        }
+    }
+
+    /**
+     * Build tag entities or fail
+     *
+     * @param array $tags list of tag slugs
+     * @throws BadRequestException if the validation fails
+     * @return array $tags list of tag entities
+     */
+    public function buildEntitiesOrFail(array $tags) {
+        $collection = [];
+        if (!empty($tags)) {
+            foreach ($tags as $i => $slug) {
+                $collection[$i] = $this->newEntity([
+                    'slug' => $slug
+                ],[
+                    'accessibleFields' => [
+                        'id' => true,
+                        'slug' => true,
+                        'is_shared' => true
+                    ]
+                ]);
+            }
+        }
+        $errors = [];
+        foreach ($collection as $i => $tag) {
+            if ($tag->errors()) {
+                $errors[$i] = $tag->errors();
+            }
+        }
+        if (!empty($errors)) {
+            throw new BadRequestException(__('Could not validate the tags.'), $errors);
+        }
+        return $collection;
+    }
+
+    /**
+     * Given two arrays of tag Entities this function returns the tags organized by changes
+     * ex:
+     *  current [ 'alpha', '#bravo' ]
+     *  new [ '#bravo', 'echo' ]
+     *  result [
+     *     'created' => ['echo']
+     *     'deleted' => ['alpha']
+     *     'unchanged' => ['#bravo']
+     *
+     * @param $currentTags
+     * @param $requestedTags
+     * @return mixed
+     */
+    static public function calculateChanges($currentTags, $requestedTags) {
+        $currentTags = Hash::combine($currentTags, '{n}.id', '{n}');
+        $requestedTags = Hash::combine($requestedTags, '{n}.id', '{n}');
+        $allTags = Hash::merge($currentTags, $requestedTags);
+
+        $currentIds = array_keys($currentTags);
+        $requestIds = array_keys($requestedTags);
+        $changes = [
+            'deleted' => array_diff_assoc($currentIds, $requestIds),
+            'created' => array_diff_assoc($requestIds, $currentIds),
+            'unchanged' => array_intersect($requestIds, $currentIds)
+        ];
+        $tags = [];
+        foreach ($changes as $change => $tagIds) {
+            $tags[$change] = [];
+            foreach ($tagIds as $tagId) {
+                $tags[$change][] = $allTags[$tagId];
+            }
+        }
+        return $tags;
+    }
+
+    /**
+     * Save an assoc array of tag entity organized by changes
+     * for a given resource
+     *
+     * @param $tags
+     * @param $resource
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function saveChanges($tags, $resource, $userId) {
+
+        // check if user is adding/deleting shared tag and not owner
+        if (count($tags['created']) || count($tags['deleted'])) {
+            $addedSharedTags = count(Hash::extract($tags['created'], '{n}[is_shared=1]'));
+            $removedSharedTags = count(Hash::extract($tags['deleted'], '{n}[is_shared=1]'));
+            $isNotOwner = ($resource->permission->type !== Permission::OWNER);
+            if (($removedSharedTags || $addedSharedTags) && $isNotOwner) {
+                throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
+            }
+        }
+
+        // Add all the new tags
+        $Tags = $this;
+        $ResourcesTags = $this->ResourcesTags;
+        $resourceId = $resource->id;
+        $success = $this->getConnection()->transactional(function () use ($userId, $resourceId, $tags, $Tags, $ResourcesTags) {
+            // Save all new tags
+            foreach ($tags['created'] as $tag) {
+                $Tags->save($tag, ['atomic' => false]);
+                $resourceData = ['resource_id' => $resourceId, 'tag_id' => $tag->id];
+                $options = ['accessibleFields' => ['resource_id' => true, 'tag_id' => true ]];
+                if ($tag->is_shared) {
+                    $resourceData['user_id'] = $userId;
+                    $options['accessibleFields']['user_id'] = true;
+                }
+                $resourceTag = $ResourcesTags->newEntity($resourceData, $options);
+                if (!$ResourcesTags->save($resourceTag, ['atomic' => false])) {
+                    return false;
+                }
+            }
+
+            // Delete all removed tags
+            foreach ($tags['deleted'] as $tag) {
+                $condition = [
+                    'resource_id' => $resourceId,
+                    'tag_id' => $tag->id
+                ];
+                if (!$tag->is_shared) {
+                    $condition['user_id'] = $userId;
+                }
+                if (!$ResourcesTags->deleteAll($condition)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+        return $success;
     }
 }

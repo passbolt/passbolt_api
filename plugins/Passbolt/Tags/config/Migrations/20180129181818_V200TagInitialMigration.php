@@ -19,7 +19,7 @@ class V200TagInitialMigration extends AbstractMigration
     public function up()
     {
         $this->table('tags', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -41,22 +41,22 @@ class V200TagInitialMigration extends AbstractMigration
             ->create();
 
         $this->table('resources_tags', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('resource_id', 'string', [
+            ->addColumn('resource_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('tag_id', 'string', [
+            ->addColumn('tag_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => true,
