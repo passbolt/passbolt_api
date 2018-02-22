@@ -14,8 +14,8 @@
  */
 namespace Passbolt\Tags\Test\Fixture\Base;
 
-use Cake\TestSuite\Fixture\TestFixture;
 use App\Utility\UuidFactory;
+use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * TagsFixture

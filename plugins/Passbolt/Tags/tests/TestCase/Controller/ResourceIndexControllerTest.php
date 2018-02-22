@@ -55,7 +55,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&filter[has-tags]=alpha');
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $resources = Hash::extract($response->body, "{n}.name");
@@ -70,7 +70,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterContainSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tags]=alpha');
+        $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=alpha');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $resources = Hash::extract($response->body, "{n}.name");
@@ -85,7 +85,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterSharedTagSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tags]=%23bravo');
+        $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=%23bravo');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $resources = Hash::extract($response->body, "{n}.name");
@@ -96,7 +96,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterNonExistingTagEmptySuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&filter[has-tags]=परदेशीपरदेशी');
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=परदेशीपरदेशी');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $this->assertEmpty($response->body);
@@ -105,7 +105,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterExistingUtf8TagSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&filter[has-tags]=परदेशी-परदेशी');
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=परदेशी-परदेशी');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $this->assertNotEmpty($response->body);
@@ -114,7 +114,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterNotMyTagEmptySuccess()
     {
         $this->authenticateAs('betty');
-        $this->getJson('/resources.json?api-version=2&filter[has-tags]=fox-trot');
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=fox-trot');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $this->assertEmpty($response->body);
@@ -123,7 +123,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     public function testTagResourcesIndexFilterEmptyError()
     {
         $this->authenticateAs('betty');
-        $this->getJson('/resources.json?api-version=2&filter[has-tags]=&contain[tag]=');
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=');
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
         $this->assertContains('Invalid filter.', $response->header->message);
@@ -133,7 +133,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('betty');
         $tag = bin2hex(openssl_random_pseudo_bytes(256));
-        $this->getJson('/resources.json?api-version=2&filter[has-tags]=&contain[tag]=' . $tag);
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=' . $tag);
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
         $this->assertContains('Invalid filter.', $response->header->message);

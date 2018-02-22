@@ -16,6 +16,11 @@ use Migrations\AbstractMigration;
 
 class V200TagInitialMigration extends AbstractMigration
 {
+    /**
+     * Up
+     *
+     * @return void
+     */
     public function up()
     {
         $this->table('tags', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
@@ -26,13 +31,13 @@ class V200TagInitialMigration extends AbstractMigration
             ])
             ->addColumn('slug', 'string', [
                 'default' => null,
-                'limit'   => 128,
-                'null'    => false,
+                'limit' => 128,
+                'null' => false,
             ])
             ->addColumn('is_shared', 'boolean', [
                 'default' => 0,
-                'limit'   => null,
-                'null'    => false,
+                'limit' => null,
+                'null' => false,
             ])
             ->addIndex([
                 'id',
@@ -74,5 +79,4 @@ class V200TagInitialMigration extends AbstractMigration
             ])
             ->create();
     }
-
 }
