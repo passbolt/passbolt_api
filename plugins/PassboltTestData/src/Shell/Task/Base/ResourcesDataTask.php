@@ -250,6 +250,16 @@ class ResourcesDataTask extends DataTask
             'created_by' => UuidFactory::uuid('user.id.dame'),
             'modified_by' => UuidFactory::uuid('user.id.dame')
         ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.kde'),
+            'name' => 'KDE',
+            'username' => 'community',
+            'uri' => 'kde.org',
+            'description' => 'The Plasma Desktop is one of the most recognized projects of KDE',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.betty'),
+            'modified_by' => UuidFactory::uuid('user.id.betty')
+        ];
 
         return $resources;
     }

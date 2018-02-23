@@ -15,6 +15,7 @@
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Utility\Hash;
 
 class TagIndexControllerTest extends AppIntegrationTestCase
 {
@@ -23,19 +24,45 @@ class TagIndexControllerTest extends AppIntegrationTestCase
         'app.Alt0/groups_users', 'app.Alt0/permissions',
         'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
 
+    // A user not logged in should not be able to see tags
     public function testTagIndexNotLoggedIn()
     {
-        $this->getJson('/tags.json');
+        $this->getJson('/tags.json?api-version=v2');
         $this->assertResponseError();
         $response = json_decode($this->_getBodyAsString());
         $this->assertTextContains('error', $response->header->status);
         $this->assertTextContains('You need to login to access this location.', $response->header->message);
     }
 
+    // A user should see personal and shared tags or resources via direct and group permissions
     public function testTagIndexSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/tags.json');
+        $this->getJson('/tags.json?api-version=v2');
         $this->assertSuccess();
+        $response = json_decode($this->_getBodyAsString());
+        $results = Hash::extract($response->body, '{n}.slug');
+        $expected = ['alpha', '#echo', '#bravo', 'fox-trot', '#charlie', 'hotel', '#golf', 'firefox'];
+        foreach ($expected as $result) {
+            $this->assertTrue(in_array($result, $results));
+        }
+    }
+
+    // A user should not see other users personal tags or shared tags of resource they don't have access to
+    public function testTagIndexSuccessDoubleCheck()
+    {
+        $this->authenticateAs('betty');
+        $this->getJson('/tags.json?api-version=v2');
+        $this->assertSuccess();
+        $response = json_decode($this->_getBodyAsString());
+        $results = Hash::extract($response->body, '{n}.slug');
+        $notExpected = ['fox-trot', '#echo'];
+        $expected = ['alpha', '#bravo'];
+        foreach ($expected as $result) {
+            $this->assertTrue(in_array($result, $results));
+        }
+        foreach ($notExpected as $result) {
+            $this->assertFalse(in_array($result, $results));
+        }
     }
 }

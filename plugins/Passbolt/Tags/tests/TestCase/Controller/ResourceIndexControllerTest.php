@@ -25,6 +25,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         'app.Alt0/groups_users', 'app.Alt0/permissions',
         'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
 
+    // Success with currect personal and shared tags for resource with direct and group permissions
     public function testTagResourcesIndexContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -52,6 +53,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         }
     }
 
+    // Success on filter by personal tag without contain
     public function testTagResourcesIndexFilterSuccess()
     {
         $this->authenticateAs('ada');
@@ -67,6 +69,19 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertTrue(!isset($response['body'][0]['tags']));
     }
 
+    // Success on filter by personal tag without contain on a tag used by someone else
+    public function testTagResourcesIndexFilterSuccessPersonalTagUsedBySomeoneElse()
+    {
+        $this->authenticateAs('betty');
+        $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
+        $this->assertSuccess();
+        $response = json_decode($this->_getBodyAsString());
+        $resources = Hash::extract($response->body, "{n}.name");
+        $expected = ['chai'];
+        $this->assertEquals($resources, $expected);
+    }
+
+    // Success on filter by personal tag with contain
     public function testTagResourcesIndexFilterContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -82,6 +97,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertTrue(isset($response['body'][0]['tags']));
     }
 
+    // Success on filter by shared tag with contain
     public function testTagResourcesIndexFilterSharedTagSuccess()
     {
         $this->authenticateAs('ada');
@@ -93,6 +109,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals($resources, $expected);
     }
 
+    // Success with empty result set is returned when filtering on a tag that does not exist
     public function testTagResourcesIndexFilterNonExistingTagEmptySuccess()
     {
         $this->authenticateAs('ada');
@@ -102,6 +119,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($response->body);
     }
 
+    // Success with tag in non latin character
     public function testTagResourcesIndexFilterExistingUtf8TagSuccess()
     {
         $this->authenticateAs('ada');
@@ -111,6 +129,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($response->body);
     }
 
+    // Success with empty result set is returned when filtering on a tag I do not have resource for
     public function testTagResourcesIndexFilterNotMyTagEmptySuccess()
     {
         $this->authenticateAs('betty');
@@ -120,6 +139,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($response->body);
     }
 
+    // An error message should be shown if the value in the tag filter is empty
     public function testTagResourcesIndexFilterEmptyError()
     {
         $this->authenticateAs('betty');
@@ -129,6 +149,7 @@ class ResourceIndexControllerTest extends AppIntegrationTestCase
         $this->assertContains('Invalid filter.', $response->header->message);
     }
 
+    // An error message should be shown if the tag in the tag filter is too long
     public function testTagResourcesIndexFilterTooLongError()
     {
         $this->authenticateAs('betty');

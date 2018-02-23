@@ -11,6 +11,7 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use App\Error\Exception\ValidationRuleException;
 
 /**
  * Tags Model
@@ -67,7 +68,7 @@ class TagsTable extends Table
 
         $validator
             ->utf8Extended('slug')
-            ->maxLength('slug', 128)
+            ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'))
             ->requirePresence('slug', 'create')
             ->notEmpty('slug');
 
@@ -197,7 +198,7 @@ class TagsTable extends Table
             }
         }
         if (!empty($errors)) {
-            throw new BadRequestException(__('Could not validate the tags.'), $errors);
+            throw new ValidationRuleException(__('Could not validate the tags.'), $errors);
         }
 
         return $collection;
