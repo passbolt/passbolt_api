@@ -1,6 +1,7 @@
 <?php
 namespace Passbolt\Tags\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Utility\UuidFactory;
@@ -11,7 +12,6 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
-use App\Error\Exception\ValidationRuleException;
 
 /**
  * Tags Model
@@ -67,7 +67,11 @@ class TagsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->utf8Extended('slug')
+            ->add('slug', 'scalar', [
+                'rule' => 'isScalar',
+                'last' => true,
+                'message' => __('The tag should be a string')
+            ])
             ->maxLength('slug', 128, __('Tag can not be more than 128 characters in length.'))
             ->requirePresence('slug', 'create')
             ->notEmpty('slug');

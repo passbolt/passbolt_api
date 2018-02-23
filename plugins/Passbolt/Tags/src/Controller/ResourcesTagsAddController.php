@@ -37,6 +37,12 @@ class ResourcesTagsAddController extends AppController
         if (!Validation::uuid($resourceId)) {
             throw new BadRequestException(__('The resource id is not valid.'));
         }
+        if (empty($this->request->getData())) {
+            throw new BadRequestException(__('Post data cannot be empty.'));
+        }
+        if (!is_array($this->request->getData('Tags'))) {
+            throw new BadRequestException(__('Please provide a list of Tags in post data.'));
+        }
 
         // check if user has read access to the resource
         // and get all the tags for a given resource
@@ -49,7 +55,7 @@ class ResourcesTagsAddController extends AppController
 
         // Make sure all the provided tags are valid
         $this->loadModel('Passbolt/Tags.Tags');
-        $requestTags = $this->Tags->buildEntitiesOrFail($this->request->getData());
+        $requestTags = $this->Tags->buildEntitiesOrFail($this->request->getData('Tags'));
 
         // make diff to get all the tags to create and delete
         $tags = $this->Tags->calculateChanges($resource->tags, $requestTags);

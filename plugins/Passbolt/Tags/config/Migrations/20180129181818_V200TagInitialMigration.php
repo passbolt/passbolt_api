@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+// @codingStandardsIgnoreStart
 use Migrations\AbstractMigration;
 
 class V200TagInitialMigration extends AbstractMigration
@@ -80,3 +81,4 @@ class V200TagInitialMigration extends AbstractMigration
             ->create();
     }
 }
+// @codingStandardsIgnoreEnd

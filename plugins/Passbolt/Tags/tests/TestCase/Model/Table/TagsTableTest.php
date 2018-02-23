@@ -1,6 +1,9 @@
 <?php
 namespace Passbolt\Tags\Test\TestCase\Model\Table;
 
+use App\Error\Exception\ValidationRuleException;
+use App\Utility\UuidFactory;
+use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Passbolt\Tags\Model\Table\TagsTable;
@@ -24,8 +27,9 @@ class TagsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/roles',
-        'app.Base/users'
+        'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',
+        'app.Alt0/groups_users', 'app.Alt0/permissions',
+        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'
     ];
 
     /**
@@ -57,18 +61,94 @@ class TagsTableTest extends TestCase
      *
      * @return void
      */
-    public function testInitialize()
+    public function testTagsTableBuildEntitiesOrFailError()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        try {
+            $tags = [['test']];
+            $this->Tags->buildEntitiesOrFail($tags);
+            $this->fail('Build entities should throw an exception');
+        } catch (ValidationRuleException $e) {
+            $this->assertTrue(true);
+        }
     }
 
     /**
-     * Test validationDefault method
+     * Test initialize method
      *
      * @return void
      */
-    public function testValidationDefault()
+    public function testTagsTableBeforeMarshall()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $tag = $this->Tags->newEntity([
+            'slug' => 'test',
+            'is_shared' => true
+        ]);
+        $this->assertEmpty($tag->toArray());
+        $tag = $this->Tags->newEntity([
+            'slug' => 'test',
+            'is_shared' => true
+        ], [
+            'accessibleFields' => [
+                'id' => true,
+                'slug' => true,
+                'is_shared' => true
+            ]
+        ]);
+        $this->assertNotEmpty($tag->id);
+        $this->assertEquals($tag->id, UuidFactory::uuid('tag.id.test'));
+        $this->assertFalse($tag->is_shared);
+    }
+
+    public function testTagsTableCalculateChanges()
+    {
+        // Test delete and add and unchange
+        $current = [
+            0 => ['id' => UuidFactory::uuid('tag1')],
+            1 => ['id' => UuidFactory::uuid('tag2')]
+        ];
+        $new = [
+            0 => ['id' => UuidFactory::uuid('tag3')],
+            1 => ['id' => UuidFactory::uuid('tag2')]
+        ];
+        $expect = [
+            'created' => [['id' => UuidFactory::uuid('tag3')]],
+            'deleted' => [['id' => UuidFactory::uuid('tag1')]],
+            'unchanged' => [['id' => UuidFactory::uuid('tag2')]]
+        ];
+        $result = $this->Tags->calculateChanges($current, $new);
+        $this->assertEquals($expect, $result);
+
+        // Test add when there is currently no tag
+        $current = [];
+        $new = [0 => ['id' => UuidFactory::uuid('tag1')]];
+        $expect = [
+            'created' => [['id' => UuidFactory::uuid('tag1')]],
+            'deleted' => [],
+            'unchanged' => []
+        ];
+        $result = $this->Tags->calculateChanges($current, $new);
+        $this->assertEquals($expect, $result);
+
+        // Test delete all
+        $current = [0 => ['id' => UuidFactory::uuid('tag1')]];
+        $new = [];
+        $expect = [
+            'created' => [],
+            'deleted' => [['id' => UuidFactory::uuid('tag1')]],
+            'unchanged' => []
+        ];
+        $result = $this->Tags->calculateChanges($current, $new);
+        $this->assertEquals($expect, $result);
+
+        // Test unchange all
+        $current = [0 => ['id' => UuidFactory::uuid('tag1')]];
+        $new = $current;
+        $expect = [
+            'created' => [],
+            'deleted' => [],
+            'unchanged' => [['id' => UuidFactory::uuid('tag1')]]
+        ];
+        $result = $this->Tags->calculateChanges($current, $new);
+        $this->assertEquals($expect, $result);
     }
 }

@@ -26,12 +26,34 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
         'app.Alt0/groups_users', 'app.Alt0/permissions',
         'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
 
+    // A "bad request" error is returned if no data is provided
+    public function testResourcesTagsAddResourceEmptyDataError()
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.nope');
+        $data = [];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->assertError(400);
+    }
+
+    // A "bad request" error is returned if no tags data is provided
+    public function testResourcesTagsAddResourceEmptyTagsDataError()
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.nope');
+        $data = ['Stuffs' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->assertError(400);
+    }
+
     // A "not found" error is returned if the resource does not exist
     public function testResourcesTagsAddResourceDoesNotExistError()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.nope');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
+        $data = ['Tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $response = json_decode($this->_getBodyAsString());
         $this->assertError(404);
     }
 
@@ -40,7 +62,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2');
+        $data = ['Tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(404);
     }
 
@@ -49,7 +72,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', ['tag1', '🤔']);
+        $data = ['Tags' => ['tag1', '🤔']];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -61,7 +85,9 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', ['#tag1']);
+
+        $data = ['Tags' => ['#tag1']];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(400);
     }
 
@@ -70,8 +96,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $tag = bin2hex(openssl_random_pseudo_bytes(256));
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', [$tag]);
+        $data = ['Tags' => [bin2hex(openssl_random_pseudo_bytes(256))]];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
         $msg = 'Tag can not be more than 128 characters in length.';
@@ -83,7 +109,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', ['#bravo', 'flip', '#stup']);
+        $data = ['Tags' => ['#bravo', 'flip', '#stup']];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -95,7 +122,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.kde');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', ['#bravo', 'stup', 'flip']);
+        $data = ['Tags' => ['#bravo', 'stup', 'flip']];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $response = json_decode($this->_getBodyAsString());
         $this->assertSuccess();
         $results = Hash::extract($response->body, '{n}.slug');
@@ -107,7 +135,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.grogle');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', ['#golf', 'stup', 'flip']);
+        $data = ['Tags' => ['#golf', 'stup', 'flip']];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $response = json_decode($this->_getBodyAsString());
         $this->assertSuccess();
         $results = Hash::extract($response->body, '{n}.slug');
@@ -119,7 +148,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
+        $data = ['Tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -131,7 +161,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
+        $data = ['Tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -143,7 +174,8 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.chai');
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', []);
+        $data = ['Tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
