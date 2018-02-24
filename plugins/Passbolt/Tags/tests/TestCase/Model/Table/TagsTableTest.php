@@ -3,7 +3,6 @@ namespace Passbolt\Tags\Test\TestCase\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
 use App\Utility\UuidFactory;
-use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Passbolt\Tags\Model\Table\TagsTable;
@@ -150,5 +149,16 @@ class TagsTableTest extends TestCase
         ];
         $result = $this->Tags->calculateChanges($current, $new);
         $this->assertEquals($expect, $result);
+    }
+
+    public function testDeleteAllUnusedTags()
+    {
+        // unused and #unused
+        $r = $this->Tags->deleteAllUnusedTags();
+        $this->assertEquals($r, 2);
+
+        // there should not be any left
+        $r = $this->Tags->deleteAllUnusedTags();
+        $this->assertEquals($r, 0);
     }
 }

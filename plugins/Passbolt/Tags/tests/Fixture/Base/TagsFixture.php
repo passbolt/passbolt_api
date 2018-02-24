@@ -99,6 +99,16 @@ class TagsFixture extends TestFixture
                 'id' => UuidFactory::uuid('tag.id.hindi'),
                 'slug' => 'परदेशी-परदेशी',
                 'is_shared' => 0
+            ],
+            [
+                'id' => UuidFactory::uuid('tag.id.unused'),
+                'slug' => 'unused',
+                'is_shared' => 0
+            ],
+            [
+                'id' => UuidFactory::uuid('tag.id.#unused'),
+                'slug' => '#unused',
+                'is_shared' => 1
             ]
         ];
         parent::init();

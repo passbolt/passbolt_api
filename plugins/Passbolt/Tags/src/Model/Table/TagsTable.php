@@ -277,7 +277,7 @@ class TagsTable extends Table
             foreach ($tags['created'] as $tag) {
                 $Tags->save($tag, ['atomic' => false]);
                 $resourceData = ['resource_id' => $resourceId, 'tag_id' => $tag->id];
-                $options = ['accessibleFields' => ['resource_id' => true, 'tag_id' => true ]];
+                $options = ['accessibleFields' => ['resource_id' => true, 'tag_id' => true, 'created' => true]];
                 if ($tag->is_shared) {
                     $resourceData['user_id'] = $userId;
                     $options['accessibleFields']['user_id'] = true;
@@ -304,7 +304,35 @@ class TagsTable extends Table
 
             return true;
         });
+        $this->deleteAllUnusedTags();
 
         return $success;
+    }
+
+    /**
+     * Delete all the unused tags if any
+     *
+     * @return int number of affected rows
+     */
+    public function deleteAllUnusedTags()
+    {
+        // SELECT tags.id
+        // FROM tags
+        // LEFT JOIN resources_tags
+        //   ON (tags.id = resources_tags.tag_id)
+        //   WHERE resources_tags.tag_id IS NULL
+        $query = $this->query();
+        $query->select(['id', 'slug'])
+            ->leftJoinWith('ResourcesTags')
+            ->where(function ($exp, $q) {
+                return $exp->isNull('ResourcesTags.tag_id');
+            });
+
+        $tags = Hash::extract($query->toArray(), '{n}.id');
+        if (count($tags)) {
+            return $this->deleteAll(['id IN' => $tags]);
+        }
+
+        return 0;
     }
 }

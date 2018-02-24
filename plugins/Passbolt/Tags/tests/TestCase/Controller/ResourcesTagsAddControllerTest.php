@@ -16,6 +16,7 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -190,5 +191,25 @@ class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
             ->all();
 
         $this->assertNotEmpty($rt);
+    }
+
+    // Unused tags should be deleted
+    public function testResourcesTagsCleanupSuccess()
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $data = ['Tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->assertSuccess();
+
+        // Check tag cleanup
+        // #bravo and alpha should still be there
+        $this->Tags = TableRegistry::get('Passbolt/Tags.Tags');
+        $this->Tags->get(UuidFactory::uuid('tag.id.#bravo'));
+        $this->Tags->get(UuidFactory::uuid('tag.id.alpha'));
+
+        // Fox-trot should have been deleted (not in used anymore)
+        $this->expectException(RecordNotFoundException::class);
+        $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
     }
 }
