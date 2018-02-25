@@ -32,5 +32,4 @@ abstract class TagTestCase extends AppTestCase
             'version' => '1.0.0'
         ]);
     }
-
 }

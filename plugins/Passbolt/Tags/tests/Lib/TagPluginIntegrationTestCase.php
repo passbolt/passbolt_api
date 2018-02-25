@@ -32,5 +32,4 @@ abstract class TagPluginIntegrationTestCase extends AppIntegrationTestCase
             'version' => '1.0.0'
         ]);
     }
-
 }

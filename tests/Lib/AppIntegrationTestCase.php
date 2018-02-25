@@ -31,8 +31,8 @@ use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
-use Cake\TestSuite\IntegrationTestCase;
 use Cake\Core\Configure;
+use Cake\TestSuite\IntegrationTestCase;
 
 abstract class AppIntegrationTestCase extends IntegrationTestCase
 {

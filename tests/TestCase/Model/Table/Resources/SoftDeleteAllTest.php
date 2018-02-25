@@ -47,6 +47,6 @@ class SoftDeleteAllTest extends AppTestCase
 
     public function testSoftDeleteAllSuccess()
     {
-       $this->markTestIncomplete();
+        $this->markTestIncomplete();
     }
 }

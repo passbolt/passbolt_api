@@ -18,7 +18,6 @@ use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Cake\Core\Configure;
 
 class UsersDeleteControllerTest extends AppIntegrationTestCase
 {

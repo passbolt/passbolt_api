@@ -965,10 +965,12 @@ class ResourcesTable extends Table
      * Soft delete a list of given resources by ids
      * Also delete associated data
      *
-     * @param array $resourceIds
+     * @param array $resourceIds array of uuids
+     * @return int number of affected rows
      */
-    public function softDeleteAll(array $resourceIds) {
-        $this->updateAll(['deleted' => true], [
+    public function softDeleteAll(array $resourceIds)
+    {
+        $rowCount = $this->updateAll(['deleted' => true], [
             'id IN' => $resourceIds
         ]);
 
@@ -981,5 +983,7 @@ class ResourcesTable extends Table
             $Tags = TableRegistry::get('Passbolt/Tags.Tags');
             $Tags->deleteAllUnusedTags();
         }
+
+        return $rowCount;
     }
 }
