@@ -18,8 +18,8 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Gpg;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {

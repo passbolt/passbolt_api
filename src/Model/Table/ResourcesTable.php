@@ -680,6 +680,14 @@ class ResourcesTable extends Table
         $this->association('Favorites')
             ->deleteAll(['Favorites.foreign_key' => $resource->id]);
 
+        // Delete all tags
+        if (Configure::read('passbolt.plugins.tags')) {
+            $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll(['resource_id' => $resource->id]);
+            $Tags = TableRegistry::get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
+
         return true;
     }
 
@@ -951,5 +959,27 @@ class ResourcesTable extends Table
         ];
 
         return $this->save($resource, $options);
+    }
+
+    /**
+     * Soft delete a list of given resources by ids
+     * Also delete associated data
+     *
+     * @param array $resourceIds
+     */
+    public function softDeleteAll(array $resourceIds) {
+        $this->updateAll(['deleted' => true], [
+            'id IN' => $resourceIds
+        ]);
+
+        $Favorites = TableRegistry::get('Favorites');
+        $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
+
+        if (Configure::read('passbolt.plugins.tags')) {
+            $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll(['resource_id IN' => $resourceIds]);
+            $Tags = TableRegistry::get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
     }
 }

@@ -32,6 +32,7 @@ use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestCase;
+use Cake\Core\Configure;
 
 abstract class AppIntegrationTestCase extends IntegrationTestCase
 {
@@ -79,6 +80,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
     {
         parent::setUp();
         $this->initAvatarEvents();
+        Configure::write('passbolt.plugins', []);
     }
 
     /**

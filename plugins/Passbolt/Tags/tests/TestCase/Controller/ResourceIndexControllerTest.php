@@ -14,11 +14,11 @@
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourceIndexControllerTest extends AppIntegrationTestCase
+class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',

@@ -14,13 +14,13 @@
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourcesTagsAddControllerTest extends AppIntegrationTestCase
+class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',

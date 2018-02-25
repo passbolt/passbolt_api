@@ -20,10 +20,7 @@ use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
-use App\Model\Table\AvatarsTable;
-use Aura\Intl\Exception;
-use Cake\Collection\CollectionInterface;
-use Cake\Datasource\EntityInterface;
+use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -32,7 +29,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Users Model
@@ -217,7 +213,7 @@ class UsersTable extends Table
      *
      * @param string $role name
      * @param array $options filters
-     * @throws Exception if no role is specified
+     * @throws \InvalidArgumentException if no role is specified
      * @return Query
      */
     public function findIndex(string $role, array $options = null)
@@ -351,14 +347,14 @@ class UsersTable extends Table
      *
      * @param Query $query a query instance
      * @param array $options options
-     * @throws Exception if fingerprint id is not set
+     * @throws \Exception if fingerprint id is not set
      * @return Query $query
      */
     public function findAuth(Query $query, array $options)
     {
         // Options must contain an id
         if (!isset($options['fingerprint'])) {
-            throw new Exception(__('User table findAuth should have a fingerprint id set in options.'));
+            throw new \Exception(__('User table findAuth should have a fingerprint id set in options.'));
         }
 
         // auth query is always done as guest
@@ -831,9 +827,7 @@ class UsersTable extends Table
         $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true);
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
-            $Resources->updateAll(['deleted' => true], [
-                'id IN' => $resourceIds
-            ]);
+            $Resources->softDeleteAll($resourceIds);
         }
 
         // We do not want empty groups
@@ -854,6 +848,14 @@ class UsersTable extends Table
         // Delete all favorites
         $Favorites = TableRegistry::get('Favorites');
         $Favorites->deleteAll(['user_id' => $user->id]);
+
+        // Delete all tags
+        if (Configure::read('passbolt.plugins.tags')) {
+            $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll(['user_id' => $user->id]);
+            $Tags = TableRegistry::get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
 
         // Mark user as deleted
         $user->deleted = true;
