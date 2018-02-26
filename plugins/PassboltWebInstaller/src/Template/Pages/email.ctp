@@ -1,0 +1,133 @@
+<?php
+use Cake\Routing\Router;
+?>
+<?= $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
+<div class="panel main ">
+    <!-- wizard steps -->
+    <div class="panel left">
+        <?= $this->element('navigation', ['selectedSection' => 'emails']) ?>
+    </div>
+    <!-- main -->
+    <?= $this->Form->create(); ?>
+    <div class="panel middle">
+        <div class="grid grid-responsive-12">
+            <div class="row">
+                <div class="col7">
+                    <div class="row">
+                        <div class="col12">
+                            <h3><?= __('Email configuration'); ?></h3>
+                            <?php
+                            echo $this->Form->input('sender_name',
+                                [
+                                    'required' => 'required',
+                                    'placeholder' => __('admin or company name'),
+                                    'label' => __('Sender name'),
+                                    'class' => 'required fluid',
+                                ]
+                            );
+
+                            echo $this->Form->input('sender_email',
+                                [
+                                    'required' => 'required',
+                                    'placeholder' => __('email@company.com'),
+                                    'label' => __('Sender email'),
+                                    'class' => 'required fluid',
+                                    'type' => 'email',
+                                ]
+                            );
+                            ?>
+
+                            <h3><?= __('SMTP server configuration'); ?></h3>
+                            <?= $this->Flash->render() ?>
+                            <?php
+                            echo $this->Form->input('host',
+                                [
+                                    'required' => 'required',
+                                    'placeholder' => __('host name or ip address'),
+                                    'label' => __('SMTP host'),
+                                    'class' => 'required fluid'
+                                ]
+                            );
+                            ?>
+                            <div class="input text required">
+                                <label for="DbType"><?= __('Use TLS?'); ?></label>
+                                <?php
+                                echo $this->Form->select(
+                                    'tls',
+                                    ['1' => 'Yes', '0' => 'No'],
+                                    ['default' => '1', 'class' => 'required fluid']
+                                );
+                                ?>
+                            </div>
+                            <?php
+                            echo $this->Form->input('port',
+                                [
+                                    'required' => 'required',
+                                    'placeholder' => __('port'),
+                                    'label' => __('Port'),
+                                    'class' => 'required fluid',
+                                    'default' => '587',
+                                ]
+                            );
+
+                            echo $this->Form->input('username',
+                                [
+                                    'required' => 'required',
+                                    'placeholder' => __('username'),
+                                    'label' => __('Username'),
+                                    'class' => 'required fluid',
+                                ]
+                            );
+
+                            echo $this->Form->input('password',
+                                [
+                                    'required' => 'required',
+                                    'placeholder' => __('password'),
+                                    'label' => __('Password'),
+                                    'class' => 'required fluid',
+                                    'type' => 'password',
+                                ]
+                            );
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col5 last">
+                    <h2>Why do I need a SMTP server?</h2>
+                    <p>Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications.</p>
+<!--                    <p>You can find configuration examples for some of the most popular email providers in our <a href="https://help.passbolt.com" target="_blank" rel="noopener">knowledge base</a></p>-->
+
+                    <h2>Send test email</h2>
+                    <p>Test your configuration by sending a test email.</p>
+
+                    <?php if(isset($test_email_error)): ?>
+                        <div class="message error">
+                            Email could not be sent:
+                            <?= $test_email_error ?>
+                        </div>
+                    <?php endif; ?>
+                    <div class="input text required">
+                        <?php
+                        echo $this->Form->input('email_test_to',
+                            [
+                                'placeholder' => __('Your email address'),
+                                'label' => false,
+                                'class' => 'required fluid',
+                                'type' => 'email',
+                            ]
+                        );
+                        ?>
+                        <input type="submit" name="send_test_email" class="button" value="<?= __('Send test email'); ?>" >
+                    </div>
+                </div>
+            </div>
+            <div class="row last">
+                <div class="input-wrapper">
+                    <a href="<?= Router::url('install/gpg_key'); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                </div>
+            </div>
+        </div>
+    </div>
+    <?= $this->Form->end(); ?>
+</div>

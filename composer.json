@@ -53,7 +53,8 @@
         "psr-4": {
             "App\\": "src",
             "PassboltTestData\\": "./plugins/PassboltTestData/src",
-            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src"
+            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src",
+            "PassboltWebInstaller\\": "./plugins/PassboltWebInstaller/src"
         }
     },
     "autoload-dev": {
