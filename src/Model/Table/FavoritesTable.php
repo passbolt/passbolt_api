@@ -17,6 +17,9 @@ namespace App\Model\Table;
 
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -39,6 +42,10 @@ use Cake\Validation\Validator;
  */
 class FavoritesTable extends Table
 {
+
+    use TableCleanupTrait;
+    use ResourcesCleanupTrait;
+    use UsersCleanupTrait;
 
     /**
      * List of allowed foreign models on which Favorites can be plugged.

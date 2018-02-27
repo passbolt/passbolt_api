@@ -17,6 +17,9 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Traits\Cleanup\GroupsCleanupTrait;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
@@ -41,6 +44,9 @@ use Cake\Validation\Validator;
  */
 class GroupsUsersTable extends Table
 {
+    use TableCleanupTrait;
+    use UsersCleanupTrait;
+    use GroupsCleanupTrait;
 
     /**
      * Initialize method
@@ -479,5 +485,27 @@ class GroupsUsersTable extends Table
         if (!isset($data['is_admin'])) {
             $data['is_admin'] = false;
         }
+    }
+
+    /**
+     * Delete all groups_users records where groups are soft deleted
+     *
+     * @param boolean $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedGroups($dryRun = false)
+    {
+        return $this->cleanupSoftDeleted('Groups', $dryRun);
+    }
+
+    /**
+     * Delete all groups_users records where groups are deleted
+     *
+     * @param boolean $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedGroups($dryRun = false)
+    {
+        return $this->cleanupHardDeleted('Groups', $dryRun);
     }
 }

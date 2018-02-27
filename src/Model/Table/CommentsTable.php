@@ -19,6 +19,9 @@ use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Table\AvatarsTable;
+use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\RulesChecker;
@@ -45,6 +48,10 @@ use Cake\Validation\Validator;
  */
 class CommentsTable extends Table
 {
+
+    use TableCleanupTrait;
+    use ResourcesCleanupTrait;
+    use UsersCleanupTrait;
 
     /**
      * List of allowed foreign models on which Comments can be plugged.
