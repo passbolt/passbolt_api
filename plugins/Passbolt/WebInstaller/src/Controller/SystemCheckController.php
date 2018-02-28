@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltWebInstaller\Controller;
+namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
 use App\Utility\Healthchecks;

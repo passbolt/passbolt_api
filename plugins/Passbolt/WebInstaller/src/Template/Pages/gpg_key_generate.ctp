@@ -37,7 +37,7 @@ use Cake\Routing\Router;
                     echo $this->Form->input('comment',
                         [
                             'placeholder' => __('add a comment (optional)'),
-                            'label' => __('Server Email'),
+                            'label' => __('Comment'),
                             'class' => 'fluid'
                         ]
                     );

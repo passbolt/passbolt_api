@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltWebInstaller\Controller;
+namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Core\Exception\Exception;
@@ -41,7 +41,7 @@ class DatabaseController extends Controller
 
             // Database is valid, store information in the session.
             $session = $this->request->getSession();
-            $session->write('database', $this->request->getData());
+            $session->write('Passbolt.Config.database', $this->request->getData());
             return $this->redirect('install/gpg_key');
         }
 

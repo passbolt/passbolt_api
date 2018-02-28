@@ -93,18 +93,41 @@ use Cake\Routing\Router;
                     </div>
                 </div>
                 <div class="col5 last">
-                    <h2>Why do I need a SMTP server?</h2>
+                    <div class="message warning side-message">
+                        <strong>A cron job is required</strong><br/>
+                        Once your installation is complete, do not forget to set a cron job.
+                    </div>
+                    <h3>Why do I need a SMTP server?</h3>
                     <p>Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications.</p>
 <!--                    <p>You can find configuration examples for some of the most popular email providers in our <a href="https://help.passbolt.com" target="_blank" rel="noopener">knowledge base</a></p>-->
 
-                    <h2>Send test email</h2>
+                    <h3>Send test email</h3>
                     <p>Test your configuration by sending a test email.</p>
 
-                    <?php if(isset($test_email_error)): ?>
+                    <?php if(isset($test_email_status)): ?>
+                        <?php if($test_email_status == true): ?>
+                            <div class="message success">
+                                <?=  __('The test email has been sent successfully!') ?>
+                            </div>
+                            <?php else: ?>
                         <div class="message error">
-                            Email could not be sent:
-                            <?= $test_email_error ?>
+                            <?= __('Email could not be sent:') ?>
+                            <strong><?= $test_email_error ?></strong><br/>
+                            <a href="#"><?= __('See trace') ?></a>
+                            <span class="trace">
+                                <?php
+                                    foreach($test_email_trace as $trace_entry) {
+                                        echo "<strong>" . $trace_entry['cmd'] . '</strong><br>';
+                                        if (!empty($trace_entry['response'])) {
+                                            foreach($trace_entry['response'] as $response) {
+                                                echo "[{$response['code']}] {$response['message']}<br>";
+                                            }
+                                        }
+                                    }
+                                ?>
+                            </span>
                         </div>
+                            <?php endif; ?>
                     <?php endif; ?>
                     <div class="input text required">
                         <?php

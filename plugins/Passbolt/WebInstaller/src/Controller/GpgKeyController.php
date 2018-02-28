@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltWebInstaller\Controller;
+namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
@@ -39,11 +39,13 @@ class GpgKeyController extends Controller
             }
 
             $session = $this->request->getSession();
-            $session->write('gpg', [
+            $session->write('Passbolt.Config.gpg', [
                 'fingerprint' => $fingerprint,
+                'public' => Configure::read('passbolt.gpg.serverKey.public'),
+                'private' => Configure::read('passbolt.gpg.serverKey.private')
             ]);
 
-            return $this->redirect('install/emails');
+            return $this->redirect('install/email');
         }
 
         $this->render('Pages/gpg_key_generate');

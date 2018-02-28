@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltWebInstaller\Controller;
+namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Core\Exception\Exception;
@@ -51,9 +51,25 @@ class EmailController extends Controller
             if(isset($data['send_test_email'])) {
                 $this->_sendTestEmail($data);
             }
+            else {
+                $this->_saveEmailConfiguration($data);
+            }
         }
 
         $this->render('Pages/email');
+    }
+
+    /**
+     * Save email configuration.
+     * @param $data
+     * @return \Cake\Http\Response|null
+     */
+    private function _saveEmailConfiguration($data) {
+        // TODO validate data.
+        // Email configuration is valid, store information in the session.
+        $session = $this->request->getSession();
+        $session->write('Passbolt.Config.email', $this->request->getData());
+        return $this->redirect('install/options');
     }
 
     /**
@@ -61,22 +77,28 @@ class EmailController extends Controller
      * @param $data
      */
     private function _sendTestEmail($data) {
+        // TODO: validate data.
         $this->email = new Email('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);
 
         try {
             $this->email
-                ->setFrom(Email::getConfig('default')['from'])
+                ->setFrom([
+                    $data['sender_email'] => $data['sender_name']
+                ])
                 ->setTo($data['email_test_to'])
-                ->setSubject('passbolt test email')
+                ->setSubject(__('passbolt test email'))
                 ->send($this->_getDefaultMessage());
         } catch (\Exception $e) {
             $trace = $this->email->getTransport()->getTrace();
             $this->set([
+                'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),
                 'test_email_trace' => $trace,
             ]);
+            return;
         }
+        $this->set(['test_email_status' => true]);
     }
 
     /**

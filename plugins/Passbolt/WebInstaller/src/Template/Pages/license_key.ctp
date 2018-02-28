@@ -1,7 +1,7 @@
 <?php
 use Cake\Routing\Router;
 $this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
-$this->Html->script('PassboltWebInstaller.key_chooser', ['block' => 'scriptBottom']);
+$this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Passbolt pro activation.')]) ?>
 <div class="panel main ">

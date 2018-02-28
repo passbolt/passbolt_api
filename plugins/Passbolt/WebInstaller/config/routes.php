@@ -17,7 +17,7 @@ use Cake\Routing\Router;
 /**
  * Selenium tests routes
  */
-Router::plugin('PassboltWebInstaller', ['path' => '/install'], function ($routes) {
+Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($routes) {
 
     $routes->connect('/', ['controller' => 'SystemCheck', 'action' => 'index'])
         ->setMethods(['GET']);
@@ -35,5 +35,20 @@ Router::plugin('PassboltWebInstaller', ['path' => '/install'], function ($routes
         ->setMethods(['GET', 'POST']);
 
     $routes->connect('/email', ['controller' => 'Email', 'action' => 'index'])
+        ->setMethods(['GET', 'POST']);
+
+    $routes->connect('/options', ['controller' => 'Option', 'action' => 'index'])
+        ->setMethods(['GET', 'POST']);
+
+    $routes->connect('/installation', ['controller' => 'Installation', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/installation/do_install', ['controller' => 'Installation', 'action' => 'install'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/account_creation', ['controller' => 'AccountCreation', 'action' => 'index'])
+        ->setMethods(['GET', 'POST']);
+
+    $routes->connect('/complete', ['controller' => 'AccountCreation', 'action' => 'complete'])
         ->setMethods(['GET', 'POST']);
 });

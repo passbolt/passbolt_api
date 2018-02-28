@@ -54,7 +54,7 @@
             "App\\": "src",
             "PassboltTestData\\": "./plugins/PassboltTestData/src",
             "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src",
-            "PassboltWebInstaller\\": "./plugins/PassboltWebInstaller/src"
+            "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src"
         }
     },
     "autoload-dev": {
