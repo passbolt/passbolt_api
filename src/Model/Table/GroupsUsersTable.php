@@ -44,9 +44,9 @@ use Cake\Validation\Validator;
  */
 class GroupsUsersTable extends Table
 {
+    use GroupsCleanupTrait;
     use TableCleanupTrait;
     use UsersCleanupTrait;
-    use GroupsCleanupTrait;
 
     /**
      * Initialize method
@@ -490,7 +490,7 @@ class GroupsUsersTable extends Table
     /**
      * Delete all groups_users records where groups are soft deleted
      *
-     * @param boolean $dryRun false
+     * @param bool $dryRun false
      * @return number of affected records
      */
     public function cleanupSoftDeletedGroups($dryRun = false)
@@ -501,7 +501,7 @@ class GroupsUsersTable extends Table
     /**
      * Delete all groups_users records where groups are deleted
      *
-     * @param boolean $dryRun false
+     * @param bool $dryRun false
      * @return number of affected records
      */
     public function cleanupHardDeletedGroups($dryRun = false)

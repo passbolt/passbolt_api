@@ -15,12 +15,11 @@
 
 namespace App\Test\TestCase\Model\Table\Permissions;
 
+use App\Model\Entity\Permission;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\Permission;
-use Cake\Utility\Inflector;
 
 class CleanupTest extends AppTestCase
 {
@@ -73,7 +72,7 @@ class CleanupTest extends AppTestCase
             'type' => Permission::OWNER,
         ], $this->options);
         $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions','cleanupSoftDeletedUsers', $originalCount);
+        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedUsers', $originalCount);
     }
 
     public function testCleanupPermissionsHardDeletedUsersSuccess()
@@ -87,7 +86,7 @@ class CleanupTest extends AppTestCase
             'type' => Permission::OWNER,
         ], $this->options);
         $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions','cleanupHardDeletedUsers', $originalCount);
+        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedUsers', $originalCount);
     }
 
     public function testCleanupPermissionsSoftDeletedGroupsSuccess()
@@ -101,7 +100,7 @@ class CleanupTest extends AppTestCase
             'type' => Permission::OWNER,
         ], $this->options);
         $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions','cleanupSoftDeletedGroups', $originalCount);
+        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedGroups', $originalCount);
     }
 
     public function testCleanupPermissionsHardDeletedGroupsSuccess()
@@ -115,7 +114,7 @@ class CleanupTest extends AppTestCase
             'type' => Permission::OWNER,
         ], $this->options);
         $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions','cleanupHardDeletedGroups', $originalCount);
+        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedGroups', $originalCount);
     }
 
     public function testCleanupPermissionsSoftDeletedResourcesSuccess()
@@ -130,7 +129,7 @@ class CleanupTest extends AppTestCase
             'type' => Permission::OWNER,
         ], $this->options);
         $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions','cleanupSoftDeletedResources', $originalCount);
+        $this->runCleanupChecks('Permissions', 'cleanupSoftDeletedResources', $originalCount);
     }
 
     public function testCleanupPermissionsHardDeletedResourcesSuccess()
@@ -144,6 +143,6 @@ class CleanupTest extends AppTestCase
             'type' => Permission::OWNER,
         ], $this->options);
         $this->Permissions->save($perm, ['checkRules' => false]);
-        $this->runCleanupChecks('Permissions','cleanupHardDeletedResources', $originalCount);
+        $this->runCleanupChecks('Permissions', 'cleanupHardDeletedResources', $originalCount);
     }
 }

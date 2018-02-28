@@ -20,7 +20,7 @@ trait GroupsCleanupTrait
     /**
      * Delete all records where associated groups are soft deleted
      *
-     * @param boolean $dryRun false
+     * @param bool $dryRun false
      * @return number of affected records
      */
     public function cleanupSoftDeletedGroups($dryRun = false)
@@ -31,7 +31,7 @@ trait GroupsCleanupTrait
     /**
      * Delete all records where associated groups are deleted
      *
-     * @param boolean $dryRun false
+     * @param bool $dryRun false
      * @return number of affected records
      */
     public function cleanupHardDeletedGroups($dryRun = false)

@@ -20,7 +20,7 @@ trait UsersCleanupTrait
     /**
      * Delete all records where associated users are soft deleted
      *
-     * @param boolean $dryRun false
+     * @param bool $dryRun false
      * @return number of affected records
      */
     public function cleanupSoftDeletedUsers($dryRun = false)
@@ -31,7 +31,7 @@ trait UsersCleanupTrait
     /**
      * Delete all records where associated users are deleted
      *
-     * @param boolean $dryRun false
+     * @param bool $dryRun false
      * @return number of affected records
      */
     public function cleanupHardDeletedUsers($dryRun = false)

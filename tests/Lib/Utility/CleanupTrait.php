@@ -23,11 +23,11 @@ trait CleanupTrait
      * @param string $checkName function to call to cleanup
      * @param int $originalCount initial number of records before broken record insert
      */
-    protected function runCleanupChecks($modelName, $checkName, $originalCount) {
-
+    protected function runCleanupChecks($modelName, $checkName, $originalCount)
+    {
         // Check that the broken record was inserted
         $afterCount = $this->{$modelName}->find()->count();
-        $this->assertEquals($originalCount+1, $afterCount, 'Broken record was not inserted');
+        $this->assertEquals($originalCount + 1, $afterCount, 'Broken record was not inserted');
 
         // Check that a dry run does not delete anything
         $deletedCount = $this->{$modelName}->{$checkName}(true); // dry-run

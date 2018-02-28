@@ -49,8 +49,8 @@ use Cake\Validation\Validator;
 class CommentsTable extends Table
 {
 
-    use TableCleanupTrait;
     use ResourcesCleanupTrait;
+    use TableCleanupTrait;
     use UsersCleanupTrait;
 
     /**

@@ -14,12 +14,8 @@
  */
 namespace App\Shell\Task;
 
-use App\Controller\Events\EmailNotificationsListener;
-use App\Model\Entity\Role;
 use App\Shell\AppShell;
-use Cake\Event\Event;
-use Cake\Event\EventManager;
-use Cake\Routing\Router;
+use Cake\ORM\TableRegistry;
 
 class CleanupTask extends AppShell
 {
@@ -52,7 +48,12 @@ class CleanupTask extends AppShell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->setDescription(__('Cleanup orphan records in database.'));
+        $parser->setDescription(__('Cleanup orphan records in database.'))
+            ->addOption('dry-run', [
+                'help' => 'Don\'t delete only display report',
+                'default' => 'true',
+                'boolean' => true,
+            ]);
 
         return $parser;
     }
@@ -64,8 +65,80 @@ class CleanupTask extends AppShell
      */
     public function main()
     {
+        $dryRun = true;
+        $cleanups = [
+            'GroupsUsers' => [
+                'Soft Deleted Users',
+                'Hard Deleted Users',
+                'Soft Deleted Groups',
+                'Hard Deleted Groups'
+            ],
+            'Favorites' => [
+                'Soft Deleted Users',
+                'Hard Deleted Users',
+                'Soft Deleted Resources',
+                'Hard Deleted Resources'
+            ],
+            'Comments' => [
+                'Soft Deleted Users',
+                'Hard Deleted Users',
+                'Soft Deleted Resources',
+                'Hard Deleted Resources'
+            ],
+            'Permissions' => [
+                'Soft Deleted Users',
+                'Hard Deleted Users',
+                'Soft Deleted Groups',
+                'Hard Deleted Groups',
+                'Soft Deleted Resources',
+                'Hard Deleted Resources'
+            ],
+            'Secrets' => [
+                //'cleanupSoftDeletedUsers', // not a business rule yet
+                'Hard Deleted Users',
+                'Soft Deleted Resources',
+                'Hard Deleted Resources'
+            ]
+        ];
+
+        $this->out(' Cleanup shell', 0);
+        $dryRun = false;
+        if ($this->param('dry-run')) {
+            $dryRun = true;
+            $this->out(' (dry-run)');
+        } else {
+            $this->out(' (delete mode)');
+        }
+        $this->hr();
+
+        $totalErrorCount = 0;
+        foreach ($cleanups as $tableName => $tableCleanup) {
+            $table = TableRegistry::get($tableName);
+            foreach ($tableCleanup as $i => $cleanupName) {
+                $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
+                $recordCount = $table->{$cleanupMethod}($dryRun);
+                $totalErrorCount += $recordCount;
+                if ($recordCount) {
+                    $cleanupName = strtolower($cleanupName);
+                    if ($dryRun) {
+                        $this->out(__('{0} orphan records found in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                    } else {
+                        $this->out(__('{0} orphan records deleted in table {1} ({2})', $recordCount, $tableName, $cleanupName));
+                    }
+                }
+            }
+        }
+
+        if ($totalErrorCount) {
+            if ($dryRun) {
+                $this->out(__('{0} issues detected, please run the same command without --dry-run to fix them.', $totalErrorCount));
+            } else {
+                $this->out(__('{0} issues fixed!', $totalErrorCount));
+            }
+        } else {
+            $this->out(__('No issue found, data looks squeaky clean!'));
+        }
 
         return true;
     }
-
 }

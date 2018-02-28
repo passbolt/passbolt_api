@@ -50,7 +50,8 @@ class CleanupTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testCleanupCommentsSoftDeletedUsersSuccess() {
+    public function testCleanupCommentsSoftDeletedUsersSuccess()
+    {
         $originalCount = $this->Comments->find()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.sofia'),
@@ -60,10 +61,11 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.sofia')
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Comments','cleanupSoftDeletedUsers', $originalCount);
+        $this->runCleanupChecks('Comments', 'cleanupSoftDeletedUsers', $originalCount);
     }
 
-    public function testCleanupCommentsHardDeletedUsersSuccess() {
+    public function testCleanupCommentsHardDeletedUsersSuccess()
+    {
         $originalCount = $this->Comments->find()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.nope'),
@@ -73,10 +75,11 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.nope')
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Comments','cleanupHardDeletedUsers', $originalCount);
+        $this->runCleanupChecks('Comments', 'cleanupHardDeletedUsers', $originalCount);
     }
 
-    public function testCleanupCommentsSoftDeletedResourcesSuccess() {
+    public function testCleanupCommentsSoftDeletedResourcesSuccess()
+    {
         $originalCount = $this->Comments->find()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.ada'),
@@ -86,10 +89,11 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.ada')
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Comments','cleanupSoftDeletedResources', $originalCount);
+        $this->runCleanupChecks('Comments', 'cleanupSoftDeletedResources', $originalCount);
     }
 
-    public function testCleanupCommentsHardDeletedResourcesSuccess() {
+    public function testCleanupCommentsHardDeletedResourcesSuccess()
+    {
         $originalCount = $this->Comments->find()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.ada'),
@@ -99,6 +103,6 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.ada')
         ], $this->options);
         $this->Comments->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Comments','cleanupHardDeletedResources', $originalCount);
+        $this->runCleanupChecks('Comments', 'cleanupHardDeletedResources', $originalCount);
     }
 }

@@ -43,8 +43,8 @@ use Cake\Validation\Validator;
 class FavoritesTable extends Table
 {
 
-    use TableCleanupTrait;
     use ResourcesCleanupTrait;
+    use TableCleanupTrait;
     use UsersCleanupTrait;
 
     /**

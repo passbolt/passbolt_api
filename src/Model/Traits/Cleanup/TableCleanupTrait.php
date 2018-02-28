@@ -13,8 +13,9 @@
  * @since         2.0.0
  */
 namespace App\Model\Traits\Cleanup;
-use Cake\Utility\Hash;
+
 use Cake\ORM\Query;
+use Cake\Utility\Hash;
 
 trait TableCleanupTrait
 {
@@ -22,8 +23,8 @@ trait TableCleanupTrait
     /**
      * Delete all association records where associated model entities are soft deleted
      *
-     * @param string $modelName
-     * @param boolean $dryRun false
+     * @param string $modelName model
+     * @param bool $dryRun false
      * @param query $query custom query to replace the default find if any
      * @return number of affected records
      */
@@ -42,14 +43,15 @@ trait TableCleanupTrait
         if (count($records)) {
             return $this->deleteAll(['id IN' => $records]);
         }
+
         return 0;
     }
 
     /**
      * Delete all association records where associated model entities are deleted
      *
-     * @param string $modelName
-     * @param boolean $dryRun false
+     * @param string $modelName model
+     * @param bool $dryRun false
      * @param query $query custom query to replace the default find if any
      * @return number of affected records
      */
@@ -70,6 +72,7 @@ trait TableCleanupTrait
         if (count($records)) {
             return $this->deleteAll(['id IN' => $records]);
         }
+
         return 0;
     }
 }

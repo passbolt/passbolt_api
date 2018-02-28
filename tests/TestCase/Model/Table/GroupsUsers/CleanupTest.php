@@ -53,7 +53,8 @@ class CleanupTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testCleanupGroupsUsersSoftDeletedUsersSuccess() {
+    public function testCleanupGroupsUsersSoftDeletedUsersSuccess()
+    {
         $originalCount = $this->GroupsUsers->find()->count();
         $gu = $this->GroupsUsers->newEntity([
             'group_id' => UuidFactory::uuid('group.id.accounting'),
@@ -62,10 +63,11 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.admin'),
         ], $this->options);
         $this->GroupsUsers->save($gu, ['checkRules' => false]);
-        $this->runCleanupChecks('GroupsUsers','cleanupSoftDeletedUsers', $originalCount);
+        $this->runCleanupChecks('GroupsUsers', 'cleanupSoftDeletedUsers', $originalCount);
     }
 
-    public function testCleanupGroupsUsersHardDeletedUsersSuccess() {
+    public function testCleanupGroupsUsersHardDeletedUsersSuccess()
+    {
         $originalCount = $this->GroupsUsers->find()->count();
         $gu = $this->GroupsUsers->newEntity([
             'group_id' => UuidFactory::uuid('group.id.accounting'),
@@ -73,10 +75,11 @@ class CleanupTest extends AppTestCase
             'is_admin' => false,
         ], $this->options);
         $this->GroupsUsers->save($gu, ['checkRules' => false]);
-        $this->runCleanupChecks('GroupsUsers','cleanupHardDeletedUsers', $originalCount);
+        $this->runCleanupChecks('GroupsUsers', 'cleanupHardDeletedUsers', $originalCount);
     }
 
-    public function testCleanupGroupsUsersSoftDeletedGroupsSuccess() {
+    public function testCleanupGroupsUsersSoftDeletedGroupsSuccess()
+    {
         $originalCount = $this->GroupsUsers->find()->count();
         $gu = $this->GroupsUsers->newEntity([
             'group_id' => UuidFactory::uuid('group.id.deleted'),
@@ -85,10 +88,11 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.admin'),
         ], $this->options);
         $this->GroupsUsers->save($gu, ['checkRules' => false]);
-        $this->runCleanupChecks('GroupsUsers','cleanupSoftDeletedGroups', $originalCount);
+        $this->runCleanupChecks('GroupsUsers', 'cleanupSoftDeletedGroups', $originalCount);
     }
 
-    public function testCleanupGroupsUsersHardDeletedGroupsSuccess() {
+    public function testCleanupGroupsUsersHardDeletedGroupsSuccess()
+    {
         $originalCount = $this->GroupsUsers->find()->count();
         $gu = $this->GroupsUsers->newEntity([
             'group_id' => UuidFactory::uuid('group.id.nope'),
@@ -97,6 +101,6 @@ class CleanupTest extends AppTestCase
             'created_by' => UuidFactory::uuid('user.id.admin'),
         ], $this->options);
         $this->GroupsUsers->save($gu, ['checkRules' => false]);
-        $this->runCleanupChecks('GroupsUsers','cleanupHardDeletedGroups', $originalCount);
+        $this->runCleanupChecks('GroupsUsers', 'cleanupHardDeletedGroups', $originalCount);
     }
 }

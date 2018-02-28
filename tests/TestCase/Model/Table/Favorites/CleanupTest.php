@@ -50,7 +50,8 @@ class CleanupTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testFavoritesCleanupSoftDeletedUsersSuccess() {
+    public function testCleanupFavoritesSoftDeletedUsersSuccess()
+    {
         $originalCount = $this->Favorites->find()->count();
         $fav = $this->Favorites->newEntity([
             'user_id' => UuidFactory::uuid('user.id.sofia'),
@@ -58,10 +59,11 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.april')
         ], $this->options);
         $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites','cleanupSoftDeletedUsers', $originalCount);
+        $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedUsers', $originalCount);
     }
 
-    public function testFavoritesCleanupHardDeletedUsersSuccess() {
+    public function testCleanupFavoritesHardDeletedUsersSuccess()
+    {
         $originalCount = $this->Favorites->find()->count();
         $fav = $this->Favorites->newEntity([
             'user_id' => UuidFactory::uuid('user.id.nope'),
@@ -69,10 +71,11 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.april')
         ], $this->options);
         $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites','cleanupHardDeletedUsers', $originalCount);
+        $this->runCleanupChecks('Favorites', 'cleanupHardDeletedUsers', $originalCount);
     }
 
-    public function testFavoritesCleanupSoftDeletedResourcesSuccess() {
+    public function testCleanupFavoritesSoftDeletedResourcesSuccess()
+    {
         $originalCount = $this->Favorites->find()->count();
         $fav = $this->Favorites->newEntity([
             'user_id' => UuidFactory::uuid('user.id.ada'),
@@ -80,10 +83,11 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.jquery')
         ], $this->options);
         $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites','cleanupSoftDeletedResources', $originalCount);
+        $this->runCleanupChecks('Favorites', 'cleanupSoftDeletedResources', $originalCount);
     }
 
-    public function testFavoritesCleanupHardDeletedResourcesSuccess() {
+    public function testCleanupFavoritesHardDeletedResourcesSuccess()
+    {
         $originalCount = $this->Favorites->find()->count();
         $fav = $this->Favorites->newEntity([
             'user_id' => UuidFactory::uuid('user.id.ada'),
@@ -91,6 +95,6 @@ class CleanupTest extends AppTestCase
             'foreign_key' => UuidFactory::uuid('resource.id.nope')
         ], $this->options);
         $this->Favorites->save($fav, ['checkRules' => false]);
-        $this->runCleanupChecks('Favorites','cleanupHardDeletedResources', $originalCount);
+        $this->runCleanupChecks('Favorites', 'cleanupHardDeletedResources', $originalCount);
     }
 }
