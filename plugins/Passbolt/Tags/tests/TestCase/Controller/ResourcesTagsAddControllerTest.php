@@ -27,26 +27,6 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         'app.Alt0/groups_users', 'app.Alt0/permissions',
         'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
 
-    // A "bad request" error is returned if no data is provided
-    public function testResourcesTagsAddResourceEmptyDataError()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.nope');
-        $data = [];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        $this->assertError(400);
-    }
-
-    // A "bad request" error is returned if no tags data is provided
-    public function testResourcesTagsAddResourceEmptyTagsDataError()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.nope');
-        $data = ['Stuffs' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        $this->assertError(400);
-    }
-
     // A "not found" error is returned if the resource does not exist
     public function testResourcesTagsAddResourceDoesNotExistError()
     {

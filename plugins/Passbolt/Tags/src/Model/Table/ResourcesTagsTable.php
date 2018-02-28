@@ -1,7 +1,19 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace Passbolt\Tags\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -10,7 +22,7 @@ use Cake\Validation\Validator;
  * ResourcesTags Model
  *
  * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\TagsTable|\Cake\ORM\Association\BelongsTo $Tags
+ * @property \Passbolt\Tags\Model\Table\TagsTable|\Cake\ORM\Association\BelongsTo $Tags
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\ResourcesTag get($primaryKey, $options = [])
@@ -20,6 +32,8 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\ResourcesTag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\ResourcesTag[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\ResourcesTag findOrCreate($search, callable $callback = null, $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ResourcesTagsTable extends Table
 {

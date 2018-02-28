@@ -1,4 +1,17 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
 namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
@@ -10,6 +23,7 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
@@ -17,6 +31,7 @@ use Cake\Validation\Validator;
  * Tags Model
  *
  * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsToMany $Resources
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
  *
  * @method \App\Model\Entity\Tag get($primaryKey, $options = [])
  * @method \App\Model\Entity\Tag newEntity($data = null, array $options = [])
@@ -25,8 +40,6 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Tag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\Tag[] patchEntities($entities, array $data, array $options = [])
  * @method \App\Model\Entity\Tag findOrCreate($search, callable $callback = null, $options = [])
- *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class TagsTable extends Table
 {
@@ -270,15 +283,15 @@ class TagsTable extends Table
 
         // Add all the new tags
         $Tags = $this;
-        $ResourcesTags = $this->ResourcesTags;
+        $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
         $resourceId = $resource->id;
         $success = $this->getConnection()->transactional(function () use ($userId, $resourceId, $tags, $Tags, $ResourcesTags) {
             // Save all new tags
             foreach ($tags['created'] as $tag) {
                 $Tags->save($tag, ['atomic' => false]);
                 $resourceData = ['resource_id' => $resourceId, 'tag_id' => $tag->id];
-                $options = ['accessibleFields' => ['resource_id' => true, 'tag_id' => true, 'created' => true]];
-                if ($tag->is_shared) {
+                $options = ['accessibleFields' => ['resource_id' => true, 'tag_id' => true]];
+                if (!$tag->is_shared) {
                     $resourceData['user_id'] = $userId;
                     $options['accessibleFields']['user_id'] = true;
                 }

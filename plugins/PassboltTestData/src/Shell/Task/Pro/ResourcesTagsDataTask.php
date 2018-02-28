@@ -47,7 +47,7 @@ class ResourcesTagsDataTask extends DataTask
 
         foreach ($resources as $resource) {
             $users = $Users->findIndex(Role::USER, [
-                'has-access' => $resource->id
+                'has-access' => [$resource->id]
             ]);
 
             // Insert shared tags.
