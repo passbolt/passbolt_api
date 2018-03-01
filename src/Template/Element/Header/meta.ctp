@@ -21,3 +21,4 @@ use Cake\Routing\Router;
     <meta name="robots" content="<?= Configure::read('passbolt.meta.robots'); ?>">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" type="image/png" href="<?= Router::url('/favicon.ico'); ?>"/>
+    <base href="<?= Configure::read('App.fullBaseUrl'); ?>/">

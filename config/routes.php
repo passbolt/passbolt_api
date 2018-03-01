@@ -299,6 +299,16 @@ else {
     });
 
     /**
+     * Settings prefixed routes
+     */
+    Router::scope('/settings', function ($routes) {
+        $routes->setExtensions(['json']);
+
+        $routes->connect('/', ['prefix' => 'Settings', 'controller' => 'SettingsIndex', 'action' => 'index'])
+            ->setMethods(['GET']);
+    });
+
+    /**
      * Setup routes
      */
     Router::scope('/setup', function ($routes) {

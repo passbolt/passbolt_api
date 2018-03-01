@@ -67,44 +67,7 @@ class HomeController extends AppController
 
         $this->set('title', Configure::read('passbolt.meta.description'));
         $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-        $this->set('cakephpConfig', $this->_buildConfigToInject());
 
         $this->success();
-    }
-
-    /**
-     * Build the cakephpConfig to inject in the view.
-     * @return array
-     */
-    private function _buildConfigToInject()
-    {
-        // Retrieve the roles (user and admin).
-        $this->loadModel('Roles');
-        $roles = $this->Roles->find()
-            ->where(['name IN' => ['user', 'admin']])
-            ->combine('name', 'id');
-
-        // Build the cakephp config to inject in the view.
-        return [
-            'app' => [
-                'name' => Configure::read('App.name'),
-                'description' => Configure::read('App.punchline'),
-                'title' => Configure::read('App.title'),
-                'version' => [
-                    'number' => Configure::read('App.version.number'),
-                    'name' => Configure::read('App.version.name')
-                ],
-                'url' => Router::url('/', true),
-                'debug' => Configure::read('debug'),
-                'server_timezone' => date_default_timezone_get()
-            ],
-            'user' => [
-                'id' => $this->User->id()
-            ],
-            'roles' => $roles,
-            'image_storage' => [
-                'public_path' => Configure::read('ImageStorage.publicPath')
-            ]
-        ];
     }
 }
