@@ -104,15 +104,18 @@ class TagsTable extends Table
      */
     public function findIndex($userId)
     {
+        $tags = [];
         $resources = $this->Resources->findIndex($userId);
         $resourcesId = Hash::extract($resources->toArray(), '{n}.id');
 
-        $tags = $this->find();
-        $tags->innerJoinWith('ResourcesTags', function (Query $q) use ($resourcesId) {
-            return $q->where(['ResourcesTags.resource_id IN' => $resourcesId]);
-        })
-        ->order('slug')
-        ->distinct();
+        if (!empty($resourcesId)) {
+            $tags = $this->find()
+                ->innerJoinWith('ResourcesTags', function (Query $q) use ($resourcesId) {
+                    return $q->where(['ResourcesTags.resource_id IN' => $resourcesId]);
+                })
+                ->order('slug')
+                ->distinct();
+        }
 
         return $tags;
     }
