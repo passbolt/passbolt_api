@@ -163,7 +163,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     {
         // 1) Try to create a user with same username as an existing one.
         $data = [
-            'username' =>  'ping@passbolt.com',
+            'username' => 'ping@passbolt.com',
             'profile' => [
                 'first_name' => 'Ping',
                 'last_name' => 'Duplicate'
@@ -177,7 +177,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 
         // 2) Soft delete the existing user.
         $users = TableRegistry::get('Users');
-        $user =  $users->find()
+        $user = $users->find()
             ->where(['username' => 'ping@passbolt.com'])
             ->first();
         $users->softDelete($user, ['checkRules' => false]);

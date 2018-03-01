@@ -3,20 +3,33 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.0.0-rc2] - 2018-02-20
+### Added
+- PASSBOLT-2638: Added command to test email configuration and SMTP communication
+- PASSBOLT-2608: Implement Sidebar v2 in the Appjs
+- PASSBOLT-2660: Add codacy badge
+- PASSBOLT-1741: Add more GPG healthchecks
+- PASSBOLT-1741: Add PHP extension checks to the healthcheck
+- PASSBOLT-2597: Add check before upgrade to ensure passbolt is already in latest 1.x
+- PASSBOLT-2631: Add an env var to control which email transport to use and defaults to Smtp
+- PASSBOLT-2601: Add Travis v2: phpunit, coverage, phpcs
+
 ### Fixed
-- PASSBOLT-2601: Travis v2: phpunit, coverage, phpcs
-- PASSBOLT-2618: PHP 7.2 compatibility fixes
-- PASSBOLT-2615: Review Gpg default configuration
-- PASSBOLT-2624: PR#219 Use CONFIG instead of "ROOT . DS . 'config'"
+- PASSBOLT-2618: Fixes for PHP 7.2 compatibility
+- PASSBOLT-2624: PR#219 Fixed use CONFIG instead of "ROOT . DS . 'config'"
 - PASSBOLT-2631: Fixed default class for EmailTransport to Smtp in configuration
 - PASSBOLT-2640: Fixed incomplete urls in email templates
-- PASSBOLT-2640: Improved escaping non safe characters in emails
+- PASSBOLT-2640: Fixed escaping of non safe characters in emails
 - PASSBOLT-2667: Fixed regression: create a user that has been deleted previously returns an error
 - PASSBOLT-2673: Fixed regression: as AD I cannot create a group with the name of previously deleted group
 - PASSBOLT-2545: Fixed regression: As AD deleting a group I should be notified that all members of the group gonna lose access to the passwords shared with the group
-
-### Added
-- PASSBOLT-2638: Added command to test email configuration and SMTP communication
+- PASSBOLT-2139: Fixed check sessions calls are logged as error
+- PASSBOLT-2139: Fixed not found image on password workspace
+- PASSBOLT-1741: Fixed set license to AGPL-3.0-or-later for composer compatibility
+- PASSBOLT-2589: Fixed App-js should check request response code from the http response header and not from the body header
+- PASSBOLT-2533: Fixed resource name, username, uri, description min length should be 1 char not 3
+- PASSBOLT-2660: Fixed remove flash message from login layout	
 
 ## [2.0.0-rc1] - 2018-01-12
 ### Security
