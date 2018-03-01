@@ -233,9 +233,9 @@ return [
              * the following line and set the port accordingly
              */
             //'port' => 'non_standard_port_number',
-            'username' => env('DATASOURCES_DEFAULT_USERNAME', 'my_app'),
-            'password' => env('DATASOURCES_DEFAULT_PASSWORD', 'secret'),
-            'database' => env('DATASOURCES_DEFAULT_DATABASE', 'my_app'),
+            'username' => env('DATASOURCES_DEFAULT_USERNAME', ''),
+            'password' => env('DATASOURCES_DEFAULT_PASSWORD', ''),
+            'database' => env('DATASOURCES_DEFAULT_DATABASE', ''),
             'encoding' => 'utf8mb4',
             'timezone' => 'UTC',
             'flags' => [],
