@@ -18,6 +18,7 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
+use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
@@ -72,6 +73,9 @@ class ResourcesUpdateController extends AppController
         $options = [
             'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true]
         ];
+        if (Configure::read('passbolt.plugins.tags')) {
+            $options['contain']['tag'] = true;
+        }
         $output = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
 
         $this->_notifyUser($resource);
