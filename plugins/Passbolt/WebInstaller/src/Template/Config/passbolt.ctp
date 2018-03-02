@@ -39,7 +39,7 @@ return [
             'port' => '<?= $config['database']['port'] ?>',
             'username' => '<?= $config['database']['username'] ?>',
             'password' => '<?= $config['database']['password'] ?>',
-            'database' => '<?= $config['database']['name'] ?>',
+            'database' => '<?= $config['database']['database'] ?>',
         ],
     ],
 

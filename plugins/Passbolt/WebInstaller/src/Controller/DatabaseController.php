@@ -17,71 +17,55 @@ namespace Passbolt\WebInstaller\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Exception\Exception;
 use Cake\Controller\Component\FlashComponent;
-use Cake\Datasource\ConnectionManager;
+use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
 class DatabaseController extends Controller
 {
     var $components = ['Flash'];
 
-    const TMP_CONNECTION_NAME = 'test_passbolt_db';
+    const CONF_KEY = 'Passbolt.Config.database';
 
     /**
      * Index
      */
     function index() {
         if(!empty($this->request->getData())) {
-            try {
-                $this->_setConnection($this->request->getData());
-                $this->_testConnection($this->request->getData());
-            }
-            catch(Exception $e) {
-                $this->Flash->error($e->getMessage());
-                return $this->render('Pages/database');
+            $dbConf = new DatabaseConfigurationForm();
+            $confIsValid = $dbConf->execute($this->request->getData());
+            $this->set('databaseConfiguration', $dbConf);
+
+            if (!$confIsValid) {
+                return $this->_error(__('The data entered are not correct'));
             }
 
-            // Database is valid, store information in the session.
+            try {
+                $dbConf->testConnection($this->request->getData());
+            }
+            catch(Exception $e) {
+                return $this->_error($e->getMessage());
+            }
+
             $session = $this->request->getSession();
-            $session->write('Passbolt.Config.database', $this->request->getData());
-            return $this->redirect('install/gpg_key');
+
+            // Depending on the database content, check if this is a new passbolt instance,
+            // or if we are reconfiguring an existing one (already users in the db).
+            $nbAdmins = $dbConf->checkDbHasAdmin($this->request->getData());
+            $session->write('Passbolt.Config.isNewInstance', $nbAdmins > 0 ? false : true);
+
+            // Database is valid, store information in the session.
+            $session->write(CONF_KEY, $this->request->getData());
+            return $this->_success();
         }
 
         $this->render('Pages/database');
     }
 
-    /**
-     * Test database connection.
-     * @param $data
-     */
-    private function _testConnection($data) {
-        $connection = ConnectionManager::get(self::TMP_CONNECTION_NAME);
-        try {
-            $results = $connection->execute('SHOW TABLES')->fetchAll('assoc');
-        } catch(\PDOException $e) {
-            throw new Exception(__('A connection could not be established with the credentials provided. Please verify the settings.'));
-        }
-
-        if(!empty($results)) {
-            throw new Exception(__('The database "{0}" already contains data. Please use an empty database.', [$data['name']]));
-        }
+    protected function _error($message) {
+        $this->Flash->error($message);
+        $this->render('Pages/database');
     }
 
-    /**
-     * Set Connection configuration.
-     * @param $data
-     */
-    private function _setConnection($data) {
-        ConnectionManager::setConfig(SELF::TMP_CONNECTION_NAME, [
-            'className' => 'Cake\Database\Connection',
-            'driver' => 'Cake\Database\Driver\Mysql',
-            'persistent' => false,
-            'host' => $data['host'],
-            'port' => $data['port'],
-            'username' => $data['username'],
-            'password' => $data['password'],
-            'database' => $data['name'],
-            'encoding' => 'utf8',
-            'timezone' => 'UTC',
-        ]);
+    protected function _success() {
+        $this->redirect('install/gpg_key');
     }
-
 }

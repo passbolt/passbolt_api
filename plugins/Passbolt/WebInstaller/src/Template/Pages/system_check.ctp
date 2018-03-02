@@ -4,7 +4,7 @@ use Cake\Routing\Router;
 
 $healtcheck = new HealthcheckHtmlHelper();
 ?>
-<?= $this->element('header', ['title' => __('Welcome to passbolt pro! Let\'s get started with the installation.')]) ?>
+<?= $this->element('header', ['title' => __('Welcome to passbolt pro! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">

@@ -1,6 +1,6 @@
 <?php
 $this->Html->css('setup.min', ['block' => 'css']);
-$this->assign('page_classes', 'setup install start');
+$this->assign('page_classes', 'setup install');
 ?>
 <!-- first header -->
 <div class="header first">

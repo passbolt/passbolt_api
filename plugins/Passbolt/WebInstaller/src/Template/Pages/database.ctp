@@ -8,7 +8,7 @@ use Cake\Routing\Router;
         <?= $this->element('navigation', ['selectedSection' => 'database']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create(); ?>
+    <?= $this->Form->create($databaseConfiguration); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -66,7 +66,7 @@ use Cake\Routing\Router;
                                 ]
                             );
 
-                            echo $this->Form->input('name',
+                            echo $this->Form->input('database',
                                 [
                                     'required' => 'required',
                                     'placeholder' => __('database name'),
@@ -79,6 +79,9 @@ use Cake\Routing\Router;
                     </div>
                 </div>
                 <div class="col5 last">
+                    <h3>Existing database?</h3>
+                    <p>If you are configuring passbolt for an existing database, the data will be kept and the schema will be migrated to the current version.</p>
+                    <p>As a precaution, do not forget to backup your database before you continue.</p>
                 </div>
             </div>
             <div class="row last">
