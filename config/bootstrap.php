@@ -287,3 +287,10 @@ if (Configure::read('passbolt.gpg.putenv')) {
 $uid = posix_getuid();
 $user = posix_getpwuid($uid);
 define('PROCESS_USER', $user['name']);
+
+/*
+ * Enable passbolt pro if present
+ */
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Pro')) {
+    Plugin::load('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
+}
