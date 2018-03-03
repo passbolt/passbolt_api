@@ -20,6 +20,6 @@
     "grunt": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "passbolt-appjs": "git+ssh://git@bitbucket.org/passbolt/passbolt-appjs.git#develop",
-    "passbolt-styleguide": "^2.0.3"
+    "passbolt-styleguide": "^2.0.8"
   }
 }

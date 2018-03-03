@@ -31,8 +31,5 @@ $this->start('scriptBottom');
     endif;
 $this->end();
 ?>
-<script type="application/javascript">
-    var cakephpConfig = <?php echo json_encode($cakephpConfig); ?>;
-</script>
 <?php echo $this->element('Loader/splash'); ?>
 <div id="js_app_controller"></div>
