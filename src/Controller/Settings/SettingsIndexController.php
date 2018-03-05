@@ -65,9 +65,7 @@ class SettingsIndexController extends AppController
                 ],
             ],
             'passbolt' => [
-                'plugins' => [
-                    Configure::read('passbolt.plugins')
-                ]
+                'plugins' => Configure::read('passbolt.plugins')
             ],
         ];
         return $settings;
