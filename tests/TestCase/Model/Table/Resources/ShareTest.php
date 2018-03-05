@@ -16,6 +16,7 @@
 namespace App\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -33,12 +34,14 @@ class ShareTest extends AppTestCase
         parent::setUp();
         $this->Resources = TableRegistry::get('Resources');
         $this->Permissions = TableRegistry::get('Permissions');
+        $this->Users = TableRegistry::get('Users');
     }
 
     public function tearDown()
     {
         unset($this->Resources);
         unset($this->Permissions);
+        unset($this->Users);
 
         parent::tearDown();
     }
@@ -84,28 +87,56 @@ hcciUFw5
         $changes = [];
         $secrets = [];
 
+        // Expected results.
+        $expectedAddedUsersIds = [];
+        $expectedRemovedUsersIds = [];
+
         // Users permissions changes.
         // Change the permission of the user Ada to read (no users are expected to be added or removed).
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
         // Delete the permission of the user Betty.
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
+        $expectedRemovedUsersIds[] = $userBId;
         // Add an owner permission for the user Edith
         $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
         $secrets[] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
+        $expectedAddedUsersIds[] = $userEId;
 
         // Groups permissions changes.
         // Change the permission of the group Board (no users are expected to be added or removed).
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
         // Delete the permission of the group Freelancer.
         $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
+        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
         // Add a read permission for the group Accounting.
         $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
         $secrets[] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
+        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
-        // Share dry run.
+        // Share.
         $result = $this->Resources->share($resource, $changes, $secrets);
         $this->assertNotFalse($result);
-        $this->markTestIncomplete('test access');
+
+        // Load the resource.
+        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
+
+        // Verify that all the allowed users have a secret for the resource.
+        $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
+        $hasAccessUsers = $this->Users->findIndex(Role::USER, ['filter' => ['has-access' => [$resourceId]]])->all()->toArray();
+        $hasAccessUsersIds = Hash::extract($hasAccessUsers, '{n}.id');
+        $this->assertEquals(count($secretsUsersIds), count($hasAccessUsersIds));
+        $this->assertEmpty(array_diff($secretsUsersIds, $hasAccessUsersIds));
+
+        // Ensure that the newly added users have a secret, and are allowed to access the resource.
+        foreach ($expectedAddedUsersIds as $userId) {
+            $this->assertContains($userId, $secretsUsersIds);
+            $this->assertContains($userId, $hasAccessUsersIds);
+        }
+        // Ensure that the removed users don't have a secret, and are no more allowed to access the resource.
+        foreach ($expectedRemovedUsersIds as $userId) {
+            $this->assertNotContains($userId, $secretsUsersIds);
+            $this->assertNotContains($userId, $hasAccessUsersIds);
+        }
     }
 
     /*
