@@ -19,6 +19,8 @@ use App\Error\Exception\ValidationRuleException;
 use App\Model\Entity\Permission;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -46,6 +48,8 @@ use Cake\Validation\Validator;
  */
 class PermissionsTable extends Table
 {
+    use ResourcesCleanupTrait;
+    use TableCleanupTrait;
 
     /**
      * List of allowed aco models on which Permissions can be plugged.
@@ -714,5 +718,90 @@ class PermissionsTable extends Table
         }
 
         return $entities;
+    }
+
+    /**
+     * Delete all association records where associated model entities are soft deleted
+     *
+     * @param string $modelName model
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedAro(string $modelName, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith($modelName)
+            ->where([
+                $modelName . '.deleted' => true,
+                'aro' => ucfirst(Inflector::singularize($modelName))
+            ]);
+
+        return $this->cleanupSoftDeleted($modelName, $dryRun, $query);
+    }
+
+    /**
+     * Delete all association records where associated model entities are deleted
+     *
+     * @param string $modelName model
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedAro(string $modelName, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith($modelName)
+            ->where(function ($exp, $q) use ($modelName) {
+                return $exp
+                    ->isNull($modelName . '.id')
+                    ->eq('aro', ucfirst(Inflector::singularize($modelName)));
+            });
+
+        return $this->cleanupHardDeleted($modelName, $dryRun, $query);
+    }
+
+    /**
+     * Delete all records where associated users are soft deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedUsers($dryRun = false)
+    {
+        return $this->cleanupSoftDeletedAro('Users', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated users are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedUsers($dryRun = false)
+    {
+        return $this->cleanupHardDeletedAro('Users', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated groups are soft deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedGroups($dryRun = false)
+    {
+        return $this->cleanupSoftDeletedAro('Groups', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated groups are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedGroups($dryRun = false)
+    {
+        return $this->cleanupHardDeletedAro('Groups', $dryRun);
     }
 }

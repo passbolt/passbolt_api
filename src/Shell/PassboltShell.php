@@ -22,6 +22,7 @@ class PassboltShell extends AppShell
      * @var array of linked tasks
      */
     public $tasks = [
+        'Cleanup',
         'DropTables',
         'Healthcheck',
         'Install',
@@ -64,6 +65,11 @@ class PassboltShell extends AppShell
 
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The Passbolt CLI offers an access to the passbolt API directly from the console.'));
+
+        $parser->addSubcommand('cleanup', [
+            'help' => __d('cake_console', 'Identify and fix database relational integrity issues.'),
+            'parser' => $this->Cleanup->getOptionParser(),
+        ]);
 
         $parser->addSubcommand('data', [
             'help' => __d('cake_console', 'Populate database with predefined data set.'),
