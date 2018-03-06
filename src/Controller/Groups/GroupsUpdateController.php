@@ -77,7 +77,7 @@ class GroupsUpdateController extends AppController
         });
 
         // Retrieve the secrets to request to the client to encrypt.
-        $secretsToRequest = $this->_getSecretsToRequest($group, $groupUserOriginal);
+        $secretsToRequest = $this->_getGrantedAccess($group, $groupUserOriginal);
 
         // Retrieve the current user secrets that the client will encrypt for the new users.
         $userSecrets = $this->_getUserSecrets($secretsToRequest);
@@ -123,6 +123,8 @@ class GroupsUpdateController extends AppController
 
                 return false;
             }
+            // Remove associated data for users who lost access to the resources shared with the group.
+            $this->_deleteLostAccessAssociatedData($group, $groupUserOriginal);
         });
 
         // Notify the users
@@ -190,6 +192,29 @@ class GroupsUpdateController extends AppController
         }, []);
 
         return [$addedGroupsUsers, $updatedGroupsUsers, $removedGroupsUsers];
+    }
+
+    /**
+     * Remove the resource associated data for the users who lost access to the resources shared with the group.
+     *
+     * @param \App\Model\Entity\Group $group The group to update.
+     * @param array $groupsUsersBeforeUpdate The list of group user as it was before the update process start
+     * @return void
+     */
+    protected function _deleteLostAccessAssociatedData(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate)
+    {
+        $removedAccess = $this->_getRemovedAccess($group, $groupsUsersBeforeUpdate);
+        $resourcesLostAccess = [];
+
+        // Regroup the removed access by resource.
+        foreach ($removedAccess as $access) {
+            $resourcesLostAccess[$access['resource_id']][] = $access['user_id'];
+        }
+
+        // Remove resource associated data.
+        foreach ($resourcesLostAccess as $resourceId => $usersId) {
+            $this->Resources->deleteLostAccessAssociatedData($resourceId, $usersId);
+        }
     }
 
     /**
@@ -352,23 +377,23 @@ class GroupsUpdateController extends AppController
     protected function _patchAndValidateResourcesEntities(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate, array $secrets)
     {
         $resources = [];
-        $requestedSecrets = $this->_getSecretsToRequest($group, $groupsUsersBeforeUpdate);
-        $secretsToRemove = $this->_getSecretsToRemove($group, $groupsUsersBeforeUpdate);
+        $addedAccess = $this->_getGrantedAccess($group, $groupsUsersBeforeUpdate);
+        $removedAccess = $this->_getRemovedAccess($group, $groupsUsersBeforeUpdate);
 
         // Group the changes by resource.
         $changes = [];
         // The secrets to add.
-        foreach ($requestedSecrets as $requestedSecret) {
+        foreach ($addedAccess as $access) {
             foreach ($secrets as $secret) {
-                if ($secret['user_id'] == $requestedSecret['user_id']
-                    && $secret['resource_id'] == $requestedSecret['resource_id']) {
-                    $changes[$requestedSecret['resource_id']]['add'][] = $secret;
+                if ($secret['user_id'] == $access['user_id']
+                    && $secret['resource_id'] == $access['resource_id']) {
+                    $changes[$access['resource_id']]['add'][] = $secret;
                 }
             }
         };
         // The secret to remove.
-        foreach ($secretsToRemove as $secret) {
-            $changes[$secret['resource_id']]['remove'][] = $secret['user_id'];
+        foreach ($removedAccess as $access) {
+            $changes[$access['resource_id']]['remove'][] = $access['user_id'];
         }
 
         // Apply the changes to the resources secrets entities.
@@ -441,7 +466,7 @@ class GroupsUpdateController extends AppController
     }
 
     /**
-     * Get the secrets to request for encryption to the client.
+     * Get the granted access after updating the groups users.
      *
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $groupsUsersBeforeUpdate The list of group user as it was before the update process start
@@ -456,9 +481,9 @@ class GroupsUpdateController extends AppController
      *   ...
      * ]
      */
-    protected function _getSecretsToRequest(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate = [])
+    protected function _getGrantedAccess(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate = [])
     {
-        $secretsToRequest = [];
+        $addedAccess = [];
 
         // Retrieve the users who are added to the group.
         $usersIdsBeforeUpdate = Hash::extract($groupsUsersBeforeUpdate, '{n}.user_id');
@@ -467,7 +492,7 @@ class GroupsUpdateController extends AppController
 
         // If no users added to the group, no secrets need to be encrypted.
         if (empty($addedUsersIds)) {
-            return $secretsToRequest;
+            return $addedAccess;
         }
 
         // Retrieve the resources the group has access.
@@ -479,16 +504,16 @@ class GroupsUpdateController extends AppController
             foreach ($resources as $resource) {
                 $secret = $this->Resources->Secrets->findByResourceUser($resource->id, $userId)->first();
                 if (is_null($secret)) {
-                    $secretsToRequest[] = ['resource_id' => $resource->id, 'user_id' => $userId];
+                    $addedAccess[] = ['resource_id' => $resource->id, 'user_id' => $userId];
                 }
             }
         }
 
-        return $secretsToRequest;
+        return $addedAccess;
     }
 
     /**
-     * Get the secrets to remove for the users who have been removed from the group.
+     * Get the removed access after updating the groups users.
      *
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $groupsUsersBeforeUpdate The list of group user as it was before the update process start
@@ -503,9 +528,9 @@ class GroupsUpdateController extends AppController
      *   ...
      * ]
      */
-    protected function _getSecretsToRemove(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate = [])
+    protected function _getRemovedAccess(\App\Model\Entity\Group $group, array $groupsUsersBeforeUpdate = [])
     {
-        $secretsToRemove = [];
+        $accessRemoved = [];
 
         // Retrieve the users who are removed from the groups
         $usersIdsBeforeUpdate = Hash::extract($groupsUsersBeforeUpdate, '{n}.user_id');
@@ -514,7 +539,7 @@ class GroupsUpdateController extends AppController
 
         // If no users added to the group, no secrets need to be encrypted.
         if (empty($removedUsersIds)) {
-            return $secretsToRemove;
+            return $accessRemoved;
         }
 
         // Retrieve the resources the group has access.
@@ -525,12 +550,12 @@ class GroupsUpdateController extends AppController
         foreach ($removedUsersIds as $userId) {
             foreach ($resources as $resource) {
                 if (!$this->Resources->hasAccess($userId, $resource->id)) {
-                    $secretsToRemove[] = ['resource_id' => $resource->id, 'user_id' => $userId];
+                    $accessRemoved[] = ['resource_id' => $resource->id, 'user_id' => $userId];
                 }
             }
         }
 
-        return $secretsToRemove;
+        return $accessRemoved;
     }
 
     /**
