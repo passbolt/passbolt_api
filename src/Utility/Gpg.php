@@ -216,6 +216,49 @@ class Gpg
     }
 
     /**
+     *
+     * @param $armoredKey
+     * @return bool
+     */
+    public function isParsableArmoredPrivateKeyRule($armoredKey)
+    {
+        // First, we try to get the marker of the gpg message.
+        try {
+            $marker = $this->getGpgMarker($armoredKey);
+        } catch (Exception $e) {
+            // If we can't extract the marker, we consider it's not a valid key.
+            return false;
+        }
+
+        // Do not accept secret keys or message as valid marker
+        if ($marker !== 'PGP PRIVATE KEY BLOCK') {
+            return false;
+        }
+
+        // Try to unarmor the key.
+        $keyUnarmored = OpenPGP::unarmor($armoredKey, $marker);
+        // If we don't manage to unarmor the key, we consider it's not a valid one.
+        if ($keyUnarmored == false) {
+            return false;
+        }
+
+        // Try to parse the key
+        // @codingStandardsIgnoreStart
+        $publicKey = @(\OpenPGP_SecretKeyPacket::parse($keyUnarmored));
+        // @codingStandardsIgnoreEnd
+        if (empty($publicKey)) {
+            return false;
+        } else {
+            if (empty($publicKey->fingerprint) || empty($publicKey->key)) {
+                return false;
+            }
+        }
+
+        // All tests pass, return true.
+        return true;
+    }
+
+    /**
      * Check if a message is valid.
      *
      * To do this, we try to unarmor the message. If the operation is successful, then we consider that
@@ -256,7 +299,8 @@ class Gpg
      */
     public function getPublicKeyInfo($armoredKey)
     {
-        if ($this->isParsableArmoredPublicKeyRule($armoredKey) === false) {
+        if ($this->isParsableArmoredPublicKeyRule($armoredKey) === false
+            && $this->isParsableArmoredPrivateKeyRule($armoredKey) === false) {
             throw new Exception('The public key could not be parsed.');
         }
 
