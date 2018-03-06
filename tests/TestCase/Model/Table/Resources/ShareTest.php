@@ -27,11 +27,16 @@ class ShareTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/permissions', 'app.Base/resources', 'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups_users', 'app.Base/groups', 'app.Base/secrets'];
+    public $fixtures = [
+        'app.Base/permissions', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites',
+        'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles',
+        'app.Base/groups_users', 'app.Base/groups'
+    ];
 
     public function setUp()
     {
         parent::setUp();
+        $this->Favorites = TableRegistry::get('Favorites');
         $this->Resources = TableRegistry::get('Resources');
         $this->Permissions = TableRegistry::get('Permissions');
         $this->Users = TableRegistry::get('Users');
@@ -137,6 +142,40 @@ hcciUFw5
             $this->assertNotContains($userId, $secretsUsersIds);
             $this->assertNotContains($userId, $hasAccessUsersIds);
         }
+    }
+
+    public function testLostAccessFavoritesDeleted()
+    {
+        // Define actors of this tests
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
+        // Users
+        $userDId = UuidFactory::uuid('user.id.dame');
+
+        // Build the changes.
+        $changes = [];
+        $secrets = [];
+
+        // Expected results.
+        $expectedRemovedUsersIds = [];
+
+        // Users permissions changes.
+        // Delete the permission of the user Betty.
+        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userDId"), 'delete' => true];
+        $expectedRemovedUsersIds[] = $userDId;
+
+        // Share.
+        $result = $this->Resources->share($resource, $changes, $secrets);
+        $this->assertNotFalse($result);
+
+        // Ensure the apache favorite for Dame is deleted
+        // But the other favorites for this resource are not touched.
+        $resources = $this->Favorites->find()
+            ->where(['user_id' => $userDId])
+            ->all();
+        $resourcesId = Hash::extract($resources->toArray(), '{n}.foreign_key');
+        $this->assertNotContains($resourceId, $resourcesId);
+        $this->assertcontains(UuidFactory::uuid('resource.id.april'), $resourcesId);
     }
 
     /*

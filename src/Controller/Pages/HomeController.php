@@ -16,7 +16,6 @@ namespace App\Controller\Pages;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
-use Cake\Routing\Router;
 use Cake\Event\Event;
 
 class HomeController extends AppController
