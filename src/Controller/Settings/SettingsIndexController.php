@@ -26,7 +26,8 @@ class SettingsIndexController extends AppController
      *
      * @return void
      */
-    public function index() {
+    public function index()
+    {
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => ['header']
@@ -39,6 +40,7 @@ class SettingsIndexController extends AppController
         if ($withHeader == false) {
             $this->set($settings);
             $this->set('_serialize', array_keys($settings));
+
             return;
         }
         $this->success(__('The operation was successful.'), $settings);
@@ -49,7 +51,8 @@ class SettingsIndexController extends AppController
      *
      * @return array
      */
-    protected function _getSettings() {
+    protected function _getSettings()
+    {
         // Build settings array.
         $settings = [
             'app' => [
@@ -65,11 +68,10 @@ class SettingsIndexController extends AppController
                 ],
             ],
             'passbolt' => [
-                'plugins' => [
-                    Configure::read('passbolt.plugins')
-                ]
+                'plugins' => Configure::read('passbolt.plugins')
             ],
         ];
+
         return $settings;
     }
 }

@@ -26,8 +26,8 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/settings.json?api-version=2');
         $this->assertSuccess();
-        $this->assertGreaterThan(0, count((array) $this->_responseJsonBody));
-        $this->assertGreaterThan(1, count((array) $this->_responseJsonBody->app));
+        $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
+        $this->assertGreaterThan(1, count((array)$this->_responseJsonBody->app));
     }
 
     public function testSettingsIndexErrorNotAuthenticated()

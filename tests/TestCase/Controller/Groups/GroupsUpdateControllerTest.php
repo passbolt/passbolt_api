@@ -15,20 +15,20 @@
 
 namespace App\Test\TestCase\Controller\Groups;
 
-use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Gpg;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions', 'app.Base/users',
-        'app.Base/secrets', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/favorites', 'app.Base/avatars', 'app.Base/email_queue'];
+    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions',
+        'app.Base/users', 'app.Base/secrets', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
+        'app.Base/favorites', 'app.Base/avatars', 'app.Base/email_queue'];
 
     public function setUp()
     {
+        $this->Favorites = TableRegistry::get('Favorites');
         $this->Groups = TableRegistry::get('Groups');
         $this->GroupsUsers = TableRegistry::get('GroupsUsers');
         $this->Resources = TableRegistry::get('Resources');
@@ -550,6 +550,32 @@ hcciUFw5
         // The user carol shouldn't be member of the group
         $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userCId, 'group_id' => $groupId])->first();
         $this->assertEmpty($groupUser);
+    }
+
+    public function testLostAccessFavoritesDeleted()
+    {
+        // Define actors of this tests
+        $userLId = UuidFactory::uuid('user.id.lynne');
+        $groupFId = UuidFactory::uuid('group.id.freelancer');
+        $resourceCId = UuidFactory::uuid('resource.id.cakephp');
+
+        // Build the changes.
+        $changes = [];
+
+        // Delete irene from the group developer
+        $changes[] = ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true];
+
+        // Update the group.
+        $this->authenticateAs('admin');
+        $this->putJson("/groups/$groupFId.json", ['groups_users' => $changes]);
+        $this->assertSuccess();
+
+        // As Irene is also member of the group ergonom, the favorite for cakephp shouldn't be removed.
+        $resources = $this->Favorites->find()
+            ->where(['user_id' => $userLId])
+            ->all();
+        $resourcesId = Hash::extract($resources->toArray(), '{n}.foreign_key');
+        $this->assertNotcontains($resourceCId, $resourcesId);
     }
 
     // As an administrator I shouldn't be able to add users to a group

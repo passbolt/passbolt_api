@@ -736,6 +736,9 @@ class ResourcesTable extends Table
                 return false;
             }
 
+            // Remove associated data for users who lost access to the resource
+            $this->deleteLostAccessAssociatedData($resource->id, $resultUpdatePermissions['removed']);
+
             return true;
         });
     }
@@ -940,5 +943,25 @@ class ResourcesTable extends Table
         ];
 
         return $this->save($resource, $options);
+    }
+
+    /**
+     * Remove the resource associated data for the users who lost access to the resource.
+     *
+     * @param string $resourceId The resource identifier the users lost the access to
+     * @param array $usersId The list of users who lost access to the resource
+     * @return void
+     */
+    public function deleteLostAccessAssociatedData($resourceId, array $usersId = [])
+    {
+        if (empty($usersId)) {
+            return;
+        }
+
+        $Favorites = TableRegistry::get('Favorites');
+        $Favorites->deleteAll([
+            'foreign_key' => $resourceId,
+            'user_id IN' => $usersId
+        ]);
     }
 }

@@ -46,6 +46,12 @@ class FavoritesDataTask extends DataTask
             'foreign_key' => UuidFactory::uuid('resource.id.april'),
             'foreign_model' => 'Resource'
         ];
+        $favorites[] = [
+            'id' => UuidFactory::uuid('favorite.id.lynne-cakephp'),
+            'user_id' => UuidFactory::uuid('user.id.lynne'),
+            'foreign_key' => UuidFactory::uuid('resource.id.cakephp'),
+            'foreign_model' => 'Resource'
+        ];
 
         return $favorites;
     }
