@@ -68,6 +68,12 @@ return [
                     'shellTasks' => [
                         'PassboltTestData.Alt0/GroupsUsersData',
                         'PassboltTestData.Alt0/PermissionsData',
+                        'PassboltTestData.Base/UsersData',
+                        'PassboltTestData.Base/ProfilesData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Alt0/SecretsData',
                     ]
                 ]
             ],

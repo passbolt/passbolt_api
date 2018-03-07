@@ -1008,5 +1008,15 @@ class ResourcesTable extends Table
             'foreign_key' => $resourceId,
             'user_id IN' => $usersId
         ]);
+
+        if (Configure::read('passbolt.plugins.tags')) {
+            $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll([
+                'resource_id' => $resourceId,
+                'user_id IN' => $usersId
+            ]);
+            $Tags = TableRegistry::get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
     }
 }

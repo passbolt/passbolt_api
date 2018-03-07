@@ -15,7 +15,6 @@
 
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Resources;
 
-use App\Model\Table\ResourcesTable;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
@@ -23,8 +22,8 @@ use Passbolt\Tags\Test\Lib\TagTestCase;
 
 class SoftDeleteTest extends TagTestCase
 {
-
     public $Resources;
+    public $Tags;
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/favorites',
