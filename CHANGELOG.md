@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 - GITHUB-229: Fix passbolt can not run in a subdirectory
+- PASSBOLT-2697: Add passbolt migrate shell with backup option prior migration
 
 ## [2.0.0-rc2] - 2018-02-20
 ### Added
