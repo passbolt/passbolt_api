@@ -14,20 +14,38 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
+use Passbolt\WebInstaller\Form\LicenseKeyForm;
 
-class LicenseKeyController extends Controller
+class LicenseKeyController extends WebInstallerController
 {
+    /**
+     * Initialize.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->stepInfo['previous'] = 'install';
+        $this->stepInfo['next'] = 'install/database';
+        $this->stepInfo['template'] = 'Pages/license_key';
+    }
+
     /**
      * Index
      */
     function index() {
         if(!empty($this->request->getData())) {
+            $licenseKeyForm = new LicenseKeyForm();
+            $dataIsValid = $licenseKeyForm->execute($this->request->getData());
+            $this->set('licenseKeyForm', $licenseKeyForm);
+
+            if (!$dataIsValid) {
+                return $this->_error(__('The data entered are not correct'));
+            }
+
             return $this->_checkLicense();
         }
 
-        $this->set(['data' => '']);
-        $this->render('Pages/license_key');
+        $this->render($this->stepInfo['template']);
     }
 
     /**
@@ -35,6 +53,6 @@ class LicenseKeyController extends Controller
      */
     private function _checkLicense() {
         // TODO: check license and manage errors.
-        $this->redirect('install/database');
+        $this->_success();
     }
 }

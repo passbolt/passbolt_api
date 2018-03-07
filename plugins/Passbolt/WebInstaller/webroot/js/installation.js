@@ -44,12 +44,10 @@ $(function() {
      * Install passbolt.
      */
     function install() {
-        console.log('enter install function');
         $.ajax(
             $('#install-url').val(),
             {
                 success: function(data, status, xhr) {
-                    console.log('install is done', data);
                     installed = data;
                 }
             }

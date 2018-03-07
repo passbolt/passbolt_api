@@ -14,13 +14,10 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
-use Cake\Core\Exception\Exception;
-use Cake\Controller\Component\FlashComponent;
-use Cake\Datasource\ConnectionManager;
 use Cake\Mailer\Email;
+use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
-class EmailController extends Controller
+class EmailController extends WebInstallerController
 {
     var $components = ['Flash'];
 
@@ -37,10 +34,27 @@ class EmailController extends Controller
     const TRANSPORT_CONFIG_NAME = 'debugEmail';
 
     /**
-     * Will contain the email class.
-     * @var null
+     * Contains the email class.
      */
     protected $email = null;
+
+    /**
+     * Contains the email configuration form.
+     */
+    protected $emailConfigurationForm = null;
+
+    /**
+     * Initialize.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->stepInfo['previous'] = 'install/gpg_key';
+        $this->stepInfo['next'] = 'install/options';
+        $this->stepInfo['template'] = 'Pages/email';
+
+        $this->emailConfigurationForm = new EmailConfigurationForm();
+    }
 
     /**
      * Index
@@ -48,6 +62,7 @@ class EmailController extends Controller
     function index() {
         if(!empty($this->request->getData())) {
             $data = $this->request->getData();
+            $this->_validateData($data);
             if(isset($data['send_test_email'])) {
                 $this->_sendTestEmail($data);
             }
@@ -56,7 +71,20 @@ class EmailController extends Controller
             }
         }
 
-        $this->render('Pages/email');
+        $this->render($this->stepInfo['template']);
+    }
+
+    /**
+     * Validate data.
+     * @param $data
+     */
+    protected function _validateData($data) {
+        $confIsValid = $this->emailConfigurationForm->execute($data);
+        $this->set('emailConfigurationForm', $this->emailConfigurationForm);
+
+        if (!$confIsValid) {
+            return $this->_error(__('The data entered are not correct'));
+        }
     }
 
     /**
@@ -65,11 +93,10 @@ class EmailController extends Controller
      * @return \Cake\Http\Response|null
      */
     private function _saveEmailConfiguration($data) {
-        // TODO validate data.
         // Email configuration is valid, store information in the session.
         $session = $this->request->getSession();
-        $session->write('Passbolt.Config.email', $this->request->getData());
-        return $this->redirect('install/options');
+        $session->write(self::CONFIG_KEY . '.email', $this->request->getData());
+        return $this->_success();
     }
 
     /**
@@ -77,7 +104,6 @@ class EmailController extends Controller
      * @param $data
      */
     private function _sendTestEmail($data) {
-        // TODO: validate data.
         $this->email = new Email('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);
 

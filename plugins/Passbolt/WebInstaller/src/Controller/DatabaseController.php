@@ -14,32 +14,36 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
 use Cake\Core\Exception\Exception;
-use Cake\Controller\Component\FlashComponent;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
-class DatabaseController extends Controller
+class DatabaseController extends WebInstallerController
 {
-    var $components = ['Flash'];
+    // Database configuration form.
+    protected $databaseConfigurationForm = null;
 
-    const CONF_KEY = 'Passbolt.Config.database';
+    /**
+     * Initialize.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->stepInfo['previous'] = 'install/license_key';
+        $this->stepInfo['next'] = 'install/gpg_key';
+        $this->stepInfo['template'] = 'Pages/database';
+
+        $this->databaseConfigurationForm = new DatabaseConfigurationForm();
+    }
 
     /**
      * Index
      */
     function index() {
         if(!empty($this->request->getData())) {
-            $dbConf = new DatabaseConfigurationForm();
-            $confIsValid = $dbConf->execute($this->request->getData());
-            $this->set('databaseConfiguration', $dbConf);
-
-            if (!$confIsValid) {
-                return $this->_error(__('The data entered are not correct'));
-            }
+            $this->_validateData($this->request->getData());
 
             try {
-                $dbConf->testConnection($this->request->getData());
+                $this->databaseConfigurationForm->testConnection($this->request->getData());
             }
             catch(Exception $e) {
                 return $this->_error($e->getMessage());
@@ -49,23 +53,27 @@ class DatabaseController extends Controller
 
             // Depending on the database content, check if this is a new passbolt instance,
             // or if we are reconfiguring an existing one (already users in the db).
-            $nbAdmins = $dbConf->checkDbHasAdmin($this->request->getData());
-            $session->write('Passbolt.Config.isNewInstance', $nbAdmins > 0 ? false : true);
+            $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($this->request->getData());
+            $session->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
 
             // Database is valid, store information in the session.
-            $session->write(CONF_KEY, $this->request->getData());
+            $session->write(self::CONFIG_KEY . '.database', $this->request->getData());
             return $this->_success();
         }
 
-        $this->render('Pages/database');
+        $this->render($this->stepInfo['template']);
     }
 
-    protected function _error($message) {
-        $this->Flash->error($message);
-        $this->render('Pages/database');
-    }
+    /**
+     * Validate data.
+     * @param $data
+     */
+    protected function _validateData($data) {
+        $confIsValid = $this->databaseConfigurationForm->execute($data);
+        $this->set('databaseConfigurationForm', $this->databaseConfigurationForm);
 
-    protected function _success() {
-        $this->redirect('install/gpg_key');
+        if (!$confIsValid) {
+            return $this->_error(__('The data entered are not correct'));
+        }
     }
 }

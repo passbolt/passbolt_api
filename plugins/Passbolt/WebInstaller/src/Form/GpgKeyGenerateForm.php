@@ -1,61 +1,69 @@
 <?php
-/**
- * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
- *
- * Licensed under GNU Affero General Public License version 3 of the or any later version.
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
- * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
- * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
- */
-namespace Passbolt\WebInstaller\Controller;
+namespace Passbolt\WebInstaller\Form;
 
-use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Controller\Component\FlashComponent;
+use Cake\Form\Form;
+use Cake\Form\Schema;
 use Cake\Utility\Hash;
 
-class GpgKeyController extends Controller
+use Cake\Validation\Validator;
+
+class GpgKeyGenerateForm extends Form
 {
-    var $components = ['Flash'];
+    /**
+     * GpgKey generate configuration schema.
+     * @param Schema $schema
+     * @return Schema
+     */
+    protected function _buildSchema(Schema $schema)
+    {
+        return $schema
+            ->addField('name', 'string')
+            ->addField('email', ['type' => 'string'])
+            ->addField('comment', ['type' => 'string']);
+    }
 
     /**
-     * Index
+     * Validation rules.
+     * @param Validator $validator
+     * @return Validator
      */
-    function index() {
-        if(!empty($this->request->getData())) {
-            // TODO: validate key details.
-            try {
-                $fingerprint = $this->_generateKey($this->request->getData());
-                $this->_exportArmoredKeys($fingerprint);
-            } catch (Exception $e) {
-                $this->Flash->error($e->getMessage());
-                return $this->render('Pages/gpg_key_generate');
-            }
+    protected function _buildValidator(Validator $validator)
+    {
+        $validator
+            ->requirePresence('name', 'create', __('A key name is required.'))
+            ->notEmpty('name', __('A key name is required.'))
+            ->utf8('name', __('The key name is not a valid utf8 string.'));
 
-            $session = $this->request->getSession();
-            $session->write('Passbolt.Config.gpg', [
-                'fingerprint' => $fingerprint,
-                'public' => Configure::read('passbolt.gpg.serverKey.public'),
-                'private' => Configure::read('passbolt.gpg.serverKey.private')
-            ]);
+        $validator
+            ->requirePresence('email', 'create', __('A key email is required.'))
+            ->notEmpty('email', __('A key email is required.'))
+            ->utf8('email', __('The key email is not a valid utf8 string.'))
+            ->email('email', __('The key email is not a valid email address'));
 
-            return $this->redirect('install/email');
-        }
+        $validator
+            ->allowEmpty('comment')
+            ->utf8('comment', __('The key comment is not a valid utf8 string.'));
 
-        $this->render('Pages/gpg_key_generate');
+        return $validator;
+    }
+
+    /**
+     * Execute implementation.
+     * @param array $data
+     * @return bool
+     */
+    protected function _execute(array $data)
+    {
+        return true;
     }
 
     /**
      * Export armored keys in the config folder based on the fingerprint provided.
      * @param $fingerprint
      */
-    private function _exportArmoredKeys($fingerprint) {
+    public function exportArmoredKeys($fingerprint) {
         $publicKeyPath = Configure::read('passbolt.gpg.serverKey.public');
         $privateKeyPath = Configure::read('passbolt.gpg.serverKey.private');
 
@@ -77,11 +85,9 @@ class GpgKeyController extends Controller
      * @param $keyData
      * @return string
      */
-    private function _generateKey($keyData) {
+    public function generateKey($keyData) {
         $keyBatchFileContent = "Key-Type: 1
 Key-Length: 2048
-Subkey-Type: 1
-Subkey-Length: 2048
 Name-Real: {$keyData['name']}" . (isset($keyData['comment']) && !empty($keyData['comment']) ? "
 Name-Comment: {$keyData['comment']}" : '') . "
 Name-Email: {$keyData['email']}

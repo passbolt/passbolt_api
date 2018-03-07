@@ -31,7 +31,10 @@ Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($route
     $routes->connect('/database', ['controller' => 'Database', 'action' => 'index'])
         ->setMethods(['GET', 'POST']);
 
-    $routes->connect('/gpg_key', ['controller' => 'GpgKey', 'action' => 'index'])
+    $routes->connect('/gpg_key', ['controller' => 'GpgKeyGenerate', 'action' => 'index'])
+        ->setMethods(['GET', 'POST']);
+
+    $routes->connect('/gpg_key_import', ['controller' => 'GpgKeyImport', 'action' => 'index'])
         ->setMethods(['GET', 'POST']);
 
     $routes->connect('/email', ['controller' => 'Email', 'action' => 'index'])
@@ -49,6 +52,6 @@ Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($route
     $routes->connect('/account_creation', ['controller' => 'AccountCreation', 'action' => 'index'])
         ->setMethods(['GET', 'POST']);
 
-    $routes->connect('/complete', ['controller' => 'AccountCreation', 'action' => 'complete'])
+    $routes->connect('/complete', ['controller' => 'Installation', 'action' => 'complete'])
         ->setMethods(['GET', 'POST']);
 });

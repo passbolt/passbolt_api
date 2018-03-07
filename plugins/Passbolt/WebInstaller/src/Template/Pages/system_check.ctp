@@ -44,7 +44,7 @@ $healtcheck = new HealthcheckHtmlHelper();
                     <?php
                     if (isset($data['system_ok']) && $data['system_ok'] === true):
                     ?>
-                    <a href="<?= Router::url('install/license_key'); ?>" class="button primary next big">Start installation</a>
+                    <a href="<?= Router::url('install/license_key', true); ?>" class="button primary next big"><?= __('Start configuration') ?></a>
                     <?php else: ?>
                     <a href="#" onclick="javascript:location.reload(); return false;" class="button primary next big">Retry</a>
                     <?php

@@ -14,19 +14,46 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
+use Cake\Network\Exception\ForbiddenException;
 use Migrations\Migrations;
 
-class InstallationController extends Controller
+class InstallationController extends WebInstallerController
 {
+
     /**
-     * Index
+     * Initialize.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->stepInfo['previous'] = 'install/options';
+        $this->stepInfo['next_create_user'] = 'install/account_creation';
+        $this->stepInfo['next_complete'] = 'install/complete';
+        $this->stepInfo['template'] = 'Pages/email';
+        $this->stepInfo['install'] = 'install/installation/do_install';
+    }
+
+    /**
+     * Index.
      */
     function index() {
-        $this->request->getSession()->write('Passbolt.Config.database.name', 'passbolt7');
         $this->_writeConfigurationFile();
-
+        $this->set(['redirectUrl' => $this->_getNextStepUrl()]);
         $this->render('Pages/installation');
+    }
+
+    /**
+     * Get next step url.
+     * @return mixed
+     */
+    protected function _getNextStepUrl() {
+        $session = $this->request->getSession();
+        $hasExistingAdmin = $session->read(self::CONFIG_KEY . '.hasExistingAdmin');
+        if (!$hasExistingAdmin) {
+            return $this->stepInfo['next_create_user'];
+        }
+
+        return $this->stepInfo['next_complete'];
     }
 
     /**
@@ -34,10 +61,30 @@ class InstallationController extends Controller
      * This function will be called through ajax.
      */
     function install() {
-        // TODO: make sure these functions can't be called if passbolt is installed.
         $res = $this->_installDb();
         echo $res ? '1' : '0';
+        // TODO: remove die and do something more elegant.
         die();
+    }
+
+    /**
+     * Complete installation
+     */
+    function complete() {
+        $session = $this->request->getSession();
+        $hasExistingAdmin = $session->read(self::CONFIG_KEY . '.hasExistingAdmin');
+        if (!$hasExistingAdmin) {
+            $session = $this->request->getSession();
+            $token = $session->read(self::CONFIG_KEY . '.user.token');
+            $this->set(['redirectUrl' => 'setup/install/' . $token['user_id'] . '/' . $token['token']]);
+        } else {
+            $this->set(['redirectUrl' => '/']);
+        }
+
+        // Delete session info.
+        $session->delete(self::CONFIG_KEY);
+
+        $this->render('Pages/complete');
     }
 
     /**
@@ -47,11 +94,47 @@ class InstallationController extends Controller
         $session = $this->request->getSession();
         $config = $session->read('Passbolt.Config');
 
+        // Sanitize output before writing the file.
+        foreach($config as $key => $itemConfig) {
+            if (is_array($itemConfig)) {
+                $config[$key] = $this->_sanitizeEntries($itemConfig);
+            } elseif (is_string($itemConfig)) {
+                $config[$key] = $this->_sanitizeEntry($itemConfig);
+            }
+        }
+
         $this->set(['config' => $config]);
         $configView = $this->createView();
         $contents = $configView->render('/Config/passbolt', 'ajax');
         $contents = "<?php\n$contents";
         file_put_contents(CONFIG . 'passbolt.php', $contents);
+    }
+
+    /**
+     * Sanitize all entries of a configuration array.
+     * Sanitize = we escape the characters ' and \
+     * Works on a single dimension array only.
+     * @param $entries
+     * @return mixed
+     */
+    private function _sanitizeEntries($entries) {
+        foreach($entries as $key => $entry) {
+            if (is_string($entry)) {
+                $entries[$key] = $this->_sanitizeEntry($entry);
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
+     * Sanitize an entry before writing it in a file.
+     * @param $entry
+     * @return mixed
+     */
+    private function _sanitizeEntry($entry) {
+        $entry = addslashes($entry);
+        return $entry;
     }
 
     /**

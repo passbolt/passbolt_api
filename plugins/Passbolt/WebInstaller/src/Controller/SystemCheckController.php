@@ -14,10 +14,9 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
 use App\Utility\Healthchecks;
 
-class SystemCheckController extends Controller
+class SystemCheckController extends WebInstallerController
 {
     /**
      * Index

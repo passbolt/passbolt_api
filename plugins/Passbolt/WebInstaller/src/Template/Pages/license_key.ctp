@@ -10,7 +10,7 @@ $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBott
         <?= $this->element('navigation', ['selectedSection' => 'license_key']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create(); ?>
+    <?= $this->Form->create($licenseKeyForm); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -18,6 +18,7 @@ $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBott
                         <div class="row">
                             <div class="col12">
                                 <h3><?= __('Copy paste your passbolt pro license key here'); ?></h3>
+                                <?= $this->Flash->render() ?>
                                 <div class="input textarea gpgkey">
                                     <?= $this->Form->textarea('license_key', ['class' => ['key-content']]); ?>
                                 </div>
@@ -35,7 +36,7 @@ $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBott
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url('install/system_check'); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
+                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
                     <input type="submit" class="button primary next big disabled" disabled="disabled" value="<?= __('Next'); ?>">
                 </div>
             </div>

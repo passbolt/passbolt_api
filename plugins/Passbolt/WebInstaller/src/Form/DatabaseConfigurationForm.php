@@ -37,7 +37,8 @@ class DatabaseConfigurationForm extends Form
     {
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
-            ->notEmpty('host', __('A host name is required.'));
+            ->notEmpty('host', __('A host name is required.'))
+            ->utf8('host', __('The host is not a valid utf8 string.'));
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
@@ -47,15 +48,18 @@ class DatabaseConfigurationForm extends Form
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmpty('username', __('A username is required.'));
+            ->notEmpty('username', __('A username is required.'))
+            ->utf8('username', __('The username is not a valid utf8 string.'));
 
         $validator
             ->requirePresence('password', 'create', __('A password is required.'))
-            ->notEmpty('password', __('A password is required.'));
+            ->notEmpty('password', __('A password is required.'))
+            ->utf8('password', __('The host is not a valid utf8 string.'));
 
         $validator
             ->requirePresence('database', 'create', __('A database is required.'))
-            ->notEmpty('database', __('A database is required.'));
+            ->notEmpty('database', __('A database is required.'))
+            ->utf8('database', __('The database is not a valid utf8 string.'));
 
         return $validator;
     }
@@ -131,13 +135,12 @@ class DatabaseConfigurationForm extends Form
     }
 
     /**
-     *
+     * Execute implementation.
      * @param array $data
      * @return bool
      */
     protected function _execute(array $data)
     {
-        // Check database connection.
         return true;
     }
 }

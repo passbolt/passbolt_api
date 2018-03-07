@@ -14,35 +14,39 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
-use Cake\Controller\Component\FlashComponent;
 use App\Model\Entity\Role;
+use Cake\Network\Exception\ForbiddenException;
 
-class AccountCreationController extends Controller
+class AccountCreationController extends WebInstallerController
 {
+    /**
+     * Initialize.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->stepInfo['next'] = 'install/complete';
+        $this->stepInfo['template'] = 'Pages/account_creation';
+    }
+
     /**
      * Index
      */
     function index() {
+        // Make sure that the user is allowed to access this section.
+        $this->_checkIsAllowed();
+
         if(!empty($this->request->getData())) {
+            $data = $this->request->getData();
+            $this->loadModel('Roles');
             $user = $this->_createUser($this->request->getData());
             if ($user !== false) {
                 $this->_createToken($user->id);
-                return $this->redirect('install/complete');
+                return $this->_success();
             }
         }
 
         $this->render('Pages/account_creation');
-    }
-
-    /**
-     * Complete installation
-     */
-    function complete() {
-        $session = $this->request->getSession();
-        $token = $session->read('Passbolt.Config.user.token');
-        $this->set(['token' => $token]);
-        $this->render('Pages/complete');
     }
 
     /**
@@ -55,7 +59,7 @@ class AccountCreationController extends Controller
         $token = $this->AuthenticationTokens->generate($userId);
 
         $session = $this->request->getSession();
-        $session->write('Passbolt.Config.user.token', $token);
+        $session->write(self::CONFIG_KEY . '.user.token', $token);
 
         return $token;
     }
@@ -68,6 +72,7 @@ class AccountCreationController extends Controller
     private function _createUser($data) {
         $this->loadModel('Users');
         $data['deleted'] = false;
+        $data['role_id'] = $this->Roles->getIdByName(Role::ADMIN);
 
         $user = $this->Users->buildEntity($data, Role::ADMIN);
         if ($user->getErrors()) {
@@ -87,5 +92,19 @@ class AccountCreationController extends Controller
         }
 
         return $user;
+    }
+
+    /**
+     * Check if this form is accessible.
+     * We do not want anyone to be able to create new users once passbolt is already installed.
+     * @return bool
+     */
+    protected function _checkIsAllowed() {
+        $session = $this->request->getSession();
+        $hasExistingAdmin = $session->read(self::CONFIG_KEY . '.hasExistingAdmin');
+        if (PASSBOLT_IS_CONFIGURED && (empty($hasExistingAdmin) || $hasExistingAdmin === false)) {
+            return true;
+        }
+        throw new ForbiddenException(__('You cannot access this section'));
     }
 }

@@ -1,14 +1,18 @@
 <?php
 use Cake\Routing\Router;
 ?>
-<?= $this->element('header', ['title' => __('Create a new server key.')]) ?>
+<?= $this->element('header', [
+    'title' => __('Create a new server key or {0} an existing one.', [
+        '<a href="' . (Router::url($stepInfo['import_key_cta'], true)) . '" class="button primary">' . __('import') . '</a>'
+    ])
+]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
         <?= $this->element('navigation', ['selectedSection' => 'server_keys']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create(); ?>
+    <?= $this->Form->create($gpgKeyGenerateForm); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -30,7 +34,7 @@ use Cake\Routing\Router;
                             'required' => 'required',
                             'placeholder' => __('admin@your-server.com'),
                             'label' => __('Server Email'),
-                            'class' => 'required fluid'
+                            'class' => 'required fluid',
                         ]
                     );
 
@@ -70,7 +74,7 @@ use Cake\Routing\Router;
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url('install/system_check'); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
+                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
                     <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
                 </div>
             </div>

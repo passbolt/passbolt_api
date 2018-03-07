@@ -21,12 +21,27 @@ $(function() {
         });
     };
 
-    $('#key-chooser').click(function() {
-        getFile().then(function(fileContent) {
-            $('.key-content').val(fileContent);
+    var onKeyContentChange = function() {
+        if ($('.key-content').val() != '') {
             $('.button.next')
                 .removeClass('disabled')
                 .removeAttr('disabled');
+        } else {
+            $('.button.next')
+                .addClass('disabled')
+                .attr('disabled', 'disabled');
+        }
+    };
+
+    $('#key-chooser').click(function() {
+        getFile().then(function(fileContent) {
+            $('.key-content').val(fileContent);
+            onKeyContentChange();
         });
     });
+    $('.key-content').on('change', function() {
+        onKeyContentChange();
+    });
+    onKeyContentChange();
+
 });

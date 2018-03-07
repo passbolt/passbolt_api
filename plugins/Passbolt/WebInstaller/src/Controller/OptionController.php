@@ -14,41 +14,59 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Controller\Controller;
+use Cake\Routing\Router;
+use Passbolt\WebInstaller\Form\OptionsConfigurationForm;
 
-class OptionController extends Controller
+class OptionController extends WebInstallerController
 {
+    /**
+     * Initialize.
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $this->stepInfo['previous'] = 'install/email';
+        $this->stepInfo['next'] = 'install/installation';
+        $this->stepInfo['template'] = 'Pages/options';
+    }
+
     /**
      * Index
      */
     function index() {
         if(empty($this->request->getData())) {
             // Set default values.
-            $this->request->data['full_base_url'] = $this->_guessFullBaseUrl();
+            $this->request->data['full_base_url'] = trim(Router::url('/', true), '/');
             $this->set(['force_ssl' => $this->request->is('ssl') === true ? 1 : 0]);
         } else {
-            // TODO.
-            $session = $this->request->getSession();
-            $session->write('Passbolt.Config.options', $this->request->getData());
-            return $this->redirect('install/installation');
+            $this->_validateData($this->request->getData());
+            $this->_saveConfiguration($this->request->getData());
+            return $this->_success();
         }
 
-        $this->render('Pages/options');
+        $this->render($this->stepInfo['template']);
     }
 
     /**
-     * Guess the full base url from the browser url.
-     * @return string
+     * Validate data.
+     * @param $data
      */
-    private function _guessFullBaseUrl()
-    {
-        $currentURL = (@$_SERVER["HTTPS"] == "on") ? "https://" : "http://";
-        $currentURL .= $_SERVER["SERVER_NAME"];
+    protected function _validateData($data) {
+        $optionsConfigurationForm = new OptionsConfigurationForm();
+        $confIsValid = $optionsConfigurationForm->execute($data);
+        $this->set('optionsConfigurationForm', $optionsConfigurationForm);
 
-        if ($_SERVER["SERVER_PORT"] != "80" && $_SERVER["SERVER_PORT"] != "443") {
-            $currentURL .= ":".$_SERVER["SERVER_PORT"];
+        if (!$confIsValid) {
+            return $this->_error(__('The data entered are not correct'));
         }
+    }
 
-        return $currentURL;
+    /**
+     * Save configuration.
+     * @param $data
+     */
+    protected function _saveConfiguration($data) {
+        $session = $this->request->getSession();
+        $session->write(self::CONFIG_KEY . '.options', $data);
     }
 }

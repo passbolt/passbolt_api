@@ -74,8 +74,8 @@ return [
             'serverKey' => [
                 // Server private key fingerprint.
                 'fingerprint' => '<?= $config['gpg']['fingerprint'] ?>',
-                'public' => CONFIG . DS . 'gpg' . DS . 'unsecure.key',
-                'private' => CONFIG . DS . 'gpg' . DS . 'unsecure_private.key',
+                'public' => CONFIG . DS . 'gpg' . DS . 'serverkey.asc',
+                'private' => CONFIG . DS . 'gpg' . DS . 'serverkey_private.asc',
             ],
         ],
         'registration' => [
