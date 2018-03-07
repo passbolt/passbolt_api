@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- GITHUB-229: Fix passbolt can not run in a subdirectory
 
 ## [2.0.0-rc2] - 2018-02-20
 ### Added

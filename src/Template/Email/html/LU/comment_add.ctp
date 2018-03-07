@@ -21,7 +21,7 @@ $comment = $body['comment'];
 $resource = $body['resource'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url($creator->profile->avatar->url['small'], true),
+    'url' => Router::url(DS . $creator->profile->avatar->url['small'], true),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($creator->username),
         'first_name' => Purifier::clean($creator->profile->first_name),

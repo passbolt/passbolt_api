@@ -14,7 +14,7 @@
  */
 use Cake\Routing\Router;
 $this->assign('title',	__('Register'));
-$this->Html->css('login.min', ['block' => 'css']);
+$this->Html->css('login.min', ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'register');
 $formContext = [
     'context' => [
