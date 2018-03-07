@@ -1,0 +1,146 @@
+<?php
+namespace Passbolt\WebInstaller\Form;
+
+use App\Model\Entity\Role;
+use Cake\Datasource\ConnectionManager;
+use Cake\Core\Exception\Exception;
+use Cake\Form\Form;
+use Cake\Form\Schema;
+use Cake\ORM\TableRegistry;
+use Cake\Validation\Validator;
+
+class DatabaseConfigurationForm extends Form
+{
+    const TMP_CONNECTION_NAME = 'test_passbolt_db';
+
+    /**
+     * Database configuration schema.
+     * @param Schema $schema
+     * @return Schema
+     */
+    protected function _buildSchema(Schema $schema)
+    {
+        return $schema
+            ->addField('host', 'string')
+            ->addField('port', ['type' => 'string'])
+            ->addField('username', ['type' => 'string'])
+            ->addField('password', ['type' => 'string'])
+            ->addField('database', ['type' => 'string']);
+    }
+
+    /**
+     * Validation rules.
+     * @param Validator $validator
+     * @return Validator
+     */
+    protected function _buildValidator(Validator $validator)
+    {
+        $validator
+            ->requirePresence('host', 'create', __('A host name is required.'))
+            ->notEmpty('host', __('A host name is required.'))
+            ->utf8('host', __('The host is not a valid utf8 string.'));
+
+        $validator
+            ->requirePresence('port', 'create', __('A port number is required.'))
+            ->notEmpty('port', __('A port number is required.'))
+            ->numeric('port', __('Port number should be numeric'))
+            ->range('port', [0, 65535], __('Port should be between 0 and 65535'));
+
+        $validator
+            ->requirePresence('username', 'create', __('A username is required.'))
+            ->notEmpty('username', __('A username is required.'))
+            ->utf8('username', __('The username is not a valid utf8 string.'));
+
+        $validator
+            ->requirePresence('password', 'create', __('A password is required.'))
+            ->notEmpty('password', __('A password is required.'))
+            ->utf8('password', __('The host is not a valid utf8 string.'));
+
+        $validator
+            ->requirePresence('database', 'create', __('A database is required.'))
+            ->notEmpty('database', __('A database is required.'))
+            ->utf8('database', __('The database is not a valid utf8 string.'));
+
+        return $validator;
+    }
+
+    /**
+     * Test database connection.
+     * @param $data 
+     */
+    public function testConnection($data) {
+        $connection = $this->getConnection($data);
+        try {
+            $connection->execute('SHOW TABLES')->fetchAll('assoc');
+        } catch(\PDOException $e) {
+            throw new Exception(__('A connection could not be established with the credentials provided. Please verify the settings.'));
+        }
+    }
+
+    /**
+     * Get connection based on connection parameters provided.
+     * @param $data
+     * @return \Cake\Datasource\ConnectionInterface
+     */
+    public function getConnection($data) {
+        try {
+            $connection = ConnectionManager::get(self::TMP_CONNECTION_NAME);
+        }
+        catch(\Exception $e) {
+            $this->_setConnection($data);
+            $connection = ConnectionManager::get(self::TMP_CONNECTION_NAME);
+        }
+
+        return $connection;
+    }
+
+    /**
+     * Set Connection configuration.
+     */
+    protected function _setConnection($data) {
+        ConnectionManager::setConfig(SELF::TMP_CONNECTION_NAME, [
+            'className' => 'Cake\Database\Connection',
+            'driver' => 'Cake\Database\Driver\Mysql',
+            'persistent' => false,
+            'host' => $data['host'],
+            'port' => $data['port'],
+            'username' => $data['username'],
+            'password' => $data['password'],
+            'database' => $data['database'],
+            'encoding' => 'utf8',
+            'timezone' => 'UTC',
+        ]);
+    }
+
+    /**
+     * Check that the passbolt database has at least one admin user.
+     * @param $data
+     * @return mixed
+     */
+    public function checkDbHasAdmin($data) {
+        $connection = $this->getConnection($data);
+
+        $roles = TableRegistry::get('Roles');
+        $roles->setConnection($connection);
+
+        $users = TableRegistry::get('Users');
+        $users->setConnection($connection);
+
+        $roleId = $roles->getIdByName(Role::ADMIN);
+        $nbAdmins = $users->find()
+            ->where(['role_id' => $roleId])
+            ->count();
+
+        return $nbAdmins;
+    }
+
+    /**
+     * Execute implementation.
+     * @param array $data
+     * @return bool
+     */
+    protected function _execute(array $data)
+    {
+        return true;
+    }
+}
