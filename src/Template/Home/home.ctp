@@ -14,12 +14,12 @@
  */
 
 $this->assign('title', $title);
-$this->Html->css('main.min', ['block' => 'css']);
+$this->Html->css('main.min', ['block' => 'css', 'fullBase' => true]);
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
     // Load the javascript application.
-    echo $this->html->script('/js/app/steal.production.js');
+    echo $this->html->script('/js/app/steal.production.js', ['fullBase' => true]);
 
     // If debug, connect to browserSync service.
     // @see Grunt task appjs-watch

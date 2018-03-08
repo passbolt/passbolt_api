@@ -20,7 +20,7 @@ $admin = $body['admin'];
 $token = $body['token'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url($admin->profile->avatar->url['small'], true),
+    'url' => Router::url(DS . $admin->profile->avatar->url['small'], true),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($admin->username),
         'first_name' => Purifier::clean($admin->profile->first_name),

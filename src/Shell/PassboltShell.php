@@ -27,6 +27,7 @@ class PassboltShell extends AppShell
         'Healthcheck',
         'Install',
         'KeyringInit',
+        'Migrate',
         'MysqlExport',
         'MysqlImport',
         'PassboltTestData.Data',
@@ -94,6 +95,11 @@ class PassboltShell extends AppShell
         $parser->addSubcommand('keyring_init', [
             'help' => __d('cake_console', 'Init the GnuPG keyring.'),
             'parser' => $this->KeyringInit->getOptionParser(),
+        ]);
+
+        $parser->addSubcommand('migrate', [
+            'help' => __d('cake_console', 'Run database migrations.'),
+            'parser' => $this->Install->getOptionParser(),
         ]);
 
         $parser->addSubcommand('mysql_export', [

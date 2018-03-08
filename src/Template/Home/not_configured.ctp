@@ -14,7 +14,7 @@
  */
 use Cake\Routing\Router;
 $this->assign('title',	__('Passbolt is not configured.'));
-$this->Html->css('setup.min', ['block' => 'css']);
+$this->Html->css('setup.min', ['block' => 'css', 'fullBase' => true]);
 $this->assign('page_classes', 'start');
 ?>
 <?php echo $this->element('Navigation/empty'); ?>

@@ -143,22 +143,6 @@ class InstallTask extends AppShell
     }
 
     /**
-     * Add any global additional options for about to be dispatched tasks
-     *
-     * @param string $cmd command
-     * @return string
-     */
-    protected function _formatCmd($cmd)
-    {
-        $quiet = $this->param('quiet');
-        if (isset($quiet) && $quiet == 1) {
-            $cmd .= ' -q';
-        }
-
-        return $cmd;
-    }
-
-    /**
      * Handle the user registration
      * Dispatch the task to register_user with admin option
      *
@@ -190,7 +174,7 @@ class InstallTask extends AppShell
             }
             $cmd = $this->_formatCmd($cmd);
 
-            return ($this->dispatchShell($cmd) === 0);
+            return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
         }
 
         return true;
@@ -232,7 +216,7 @@ class InstallTask extends AppShell
             $this->_keyringInit();
             $cmd = $this->_formatCmd('passbolt mysql_import');
             $code = $this->dispatchShell($cmd);
-            if ($code === 0) {
+            if ($code === self::CODE_SUCCESS) {
                 $this->_success(__('Passbolt installation success! Enjoy! ☮'));
 
                 return true;
@@ -256,7 +240,7 @@ class InstallTask extends AppShell
             $this->_keyringInit();
             $cmd = $this->_formatCmd('passbolt mysql_export --clear-previous');
 
-            return ($this->dispatchShell($cmd) === 0);
+            return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
         }
 
         return true;
@@ -274,7 +258,7 @@ class InstallTask extends AppShell
         $this->hr();
         $cmd = $this->_formatCmd('passbolt drop_tables');
 
-        return ($this->dispatchShell($cmd) === 0);
+        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
     }
 
     /**
@@ -289,7 +273,7 @@ class InstallTask extends AppShell
         $this->hr();
         $cmd = $this->_formatCmd('migrations migrate');
 
-        return ($this->dispatchShell($cmd) === 0);
+        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
     }
 
     /**
@@ -305,7 +289,7 @@ class InstallTask extends AppShell
         $this->hr();
         $cmd = $this->_formatCmd('passbolt keyring_init');
 
-        return ($this->dispatchShell($cmd) === 0);
+        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
     }
 
     /**

@@ -22,7 +22,7 @@ $resource = $body['resource'];
 $secret = $body['secret'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url($owner->profile->avatar->url['small'], true),
+    'url' => Router::url(DS . $owner->profile->avatar->url['small'], true),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($owner->username),
         'first_name' => Purifier::clean($owner->profile->first_name),

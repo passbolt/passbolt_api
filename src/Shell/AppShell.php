@@ -79,4 +79,20 @@ class AppShell extends Shell
     {
         $this->out('<success>' . $msg . '</success>');
     }
+
+    /**
+     * Add any global additional options for about to be dispatched tasks
+     *
+     * @param string $cmd command
+     * @return string
+     */
+    protected function _formatCmd($cmd)
+    {
+        $quiet = $this->param('quiet');
+        if (isset($quiet) && $quiet == 1) {
+            $cmd .= ' -q';
+        }
+
+        return $cmd;
+    }
 }
