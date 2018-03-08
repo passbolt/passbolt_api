@@ -127,8 +127,6 @@ Name-Email: {$keyData['email']}
 Expire-Date: 0
 EOF";
 
-		echo $cmd; die();
-
 		return $cmd;
 	}
 
