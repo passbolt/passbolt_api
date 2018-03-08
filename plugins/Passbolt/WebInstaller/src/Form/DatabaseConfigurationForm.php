@@ -7,6 +7,7 @@ use Cake\Core\Exception\Exception;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 class DatabaseConfigurationForm extends Form
@@ -119,6 +120,23 @@ class DatabaseConfigurationForm extends Form
      */
     public function checkDbHasAdmin($data) {
         $connection = $this->getConnection($data);
+
+	    // Check if database is populated with tables.
+	    $tables = $connection->execute('SHOW TABLES')->fetchAll();
+		$tables = Hash::extract($tables, '{n}.0');
+
+	    if (count($tables) == 0) {
+			return 0;
+	    }
+
+	    // Database already exist, check whether the schema is valid, and how many admins are there.
+	    $expected = ['authentication_tokens', 'comments', 'email_queue', 'favorites', 'gpgkeys', 'groups',
+		    'groups_users', 'permissions', 'profiles', 'resources', 'roles', 'secrets', 'users'];
+	    foreach ($expected as $expectedTableName) {
+		    if(!in_array($expectedTableName, $tables)) {
+				throw new \Exception(__('The database schema does not match the one expected by passbolt'));
+		    }
+	    }
 
         $roles = TableRegistry::get('Roles');
         $roles->setConnection($connection);

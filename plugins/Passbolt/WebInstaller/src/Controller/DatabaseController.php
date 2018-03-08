@@ -52,8 +52,14 @@ class DatabaseController extends WebInstallerController
             $session = $this->request->getSession();
 
             // Depending on the database content, check if this is a new passbolt instance,
-            // or if we are reconfiguring an existing one (already users in the db).
-            $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($this->request->getData());
+            // or if we are reconfiguring an existing one (there already tables and  users in the db).
+	        try {
+		        $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($this->request->getData());
+	        }
+	        catch (\Exception $e) {
+		        return $this->_error($e->getMessage());
+	        }
+
             $session->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
 
             // Database is valid, store information in the session.
