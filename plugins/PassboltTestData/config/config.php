@@ -66,12 +66,13 @@ return [
             'alt0' => [
                 'fixturize' => [
                     'shellTasks' => [
-                        'PassboltTestData.Alt0/GroupsUsersData',
-                        'PassboltTestData.Alt0/PermissionsData',
+                        'PassboltTestData.Base/GroupsData',
                         'PassboltTestData.Base/UsersData',
                         'PassboltTestData.Base/ProfilesData',
                         'PassboltTestData.Base/GpgkeysData',
                         'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Alt0/GroupsUsersData',
+                        'PassboltTestData.Alt0/PermissionsData',
                         'PassboltTestData.Base/ResourcesData',
                         'PassboltTestData.Alt0/SecretsData',
                     ]
