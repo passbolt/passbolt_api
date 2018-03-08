@@ -1,5 +1,7 @@
 <?php
 use Cake\Routing\Router;
+$this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
+$this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
 <div class="panel main ">
@@ -93,9 +95,10 @@ use Cake\Routing\Router;
                     </div>
                 </div>
                 <div class="col5 last">
-                    <div class="message warning side-message">
-                        <strong>A cron job is required</strong><br/>
-                        Once your installation is complete, do not forget to set a cron job.
+                    <p>&nbsp;</p>
+                    <div class="message warning">
+                        <strong>Pro tip: a cron job is required</strong><br>
+                        Once your installation is complete, do not forget to set a cron job in order to have your emails sent automatically. <br><a href="https://help.passbolt.com/hosting/install" rel="noopener" target="_blank">Read the doc</a>
                     </div>
                     <h3>Why do I need a SMTP server?</h3>
                     <p>Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications.</p>
@@ -113,8 +116,8 @@ use Cake\Routing\Router;
                         <div class="message error">
                             <?= __('Email could not be sent:') ?>
                             <strong><?= $test_email_error ?></strong><br/>
-                            <a href="#"><?= __('See trace') ?></a>
-                            <span class="trace">
+                            <a href="#" class="see-trace"><?= __('See trace') ?></a>
+                            <div class="trace hidden">
                                 <?php
                                     foreach($test_email_trace as $trace_entry) {
                                         echo "<strong>" . $trace_entry['cmd'] . '</strong><br>';
@@ -125,7 +128,7 @@ use Cake\Routing\Router;
                                         }
                                     }
                                 ?>
-                            </span>
+                            </div>
                         </div>
                             <?php endif; ?>
                     <?php endif; ?>
