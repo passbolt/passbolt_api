@@ -37,8 +37,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarSuccess()
     {
-        $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
-        $adaAvatar = $avatarsDirectory . DS . 'ada.png';
+        $adaAvatar = PASSBOLT_TEST_DATA_AVATAR_PATH . DS . 'ada.png';
 
         $ireneAvatar = $this->Avatars->find()
             ->where(['user_id' => UuidFactory::uuid('user.id.irene')])
@@ -116,8 +115,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarCantOverrideData()
     {
-        $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
-        $adaAvatar = $avatarsDirectory . DS . 'ada.png';
+        $adaAvatar = PASSBOLT_TEST_DATA_AVATAR_PATH . DS . 'ada.png';
 
         $this->authenticateAs('irene');
         $data = [
