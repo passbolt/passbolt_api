@@ -1,5 +1,5 @@
 {
-    "name": "passbolt/PassboltTestData",
+    "name": "passbolt/passbolt_test_data",
     "description": "Passbolt data test plugin.",
     "type": "cakephp-plugin",
     "version": "2.0",
