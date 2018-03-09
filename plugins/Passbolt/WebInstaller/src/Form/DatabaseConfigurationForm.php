@@ -2,6 +2,7 @@
 namespace Passbolt\WebInstaller\Form;
 
 use App\Model\Entity\Role;
+use App\Utility\Healthchecks;
 use Cake\Datasource\ConnectionManager;
 use Cake\Core\Exception\Exception;
 use Cake\Form\Form;
@@ -130,11 +131,10 @@ class DatabaseConfigurationForm extends Form
 	    }
 
 	    // Database already exist, check whether the schema is valid, and how many admins are there.
-	    $expected = ['authentication_tokens', 'comments', 'email_queue', 'favorites', 'gpgkeys', 'groups',
-		    'groups_users', 'permissions', 'profiles', 'resources', 'roles', 'secrets', 'users'];
+	    $expected = Healthchecks::getSchemaTables();
 	    foreach ($expected as $expectedTableName) {
 		    if(!in_array($expectedTableName, $tables)) {
-				throw new \Exception(__('The database schema does not match the one expected by passbolt'));
+				throw new \Exception(__('The database schema does not match the one expected'));
 		    }
 	    }
 
