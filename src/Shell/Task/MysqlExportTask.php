@@ -123,7 +123,7 @@ class MysqlExportTask extends AppShell
         $this->out('Saving backup file: ' . $dir . $file);
         exec($cmd, $output, $status);
 
-        return ($status === 0);
+        return ($status === self::CODE_SUCCESS);
     }
 
     /**

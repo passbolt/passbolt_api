@@ -15,8 +15,8 @@
 use App\View\Helper\HealthcheckHtmlHelper;
 
 $this->assign('title',	__('Health checks'));
-$this->Html->css('main.min', ['block' => 'css']);
-$this->Html->css('check.min', ['block' => 'css']);
+$this->Html->css('main.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('check.min', ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'status');
 
 $healtcheck = new HealthcheckHtmlHelper();

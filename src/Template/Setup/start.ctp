@@ -17,7 +17,7 @@ if (!isset($setupCase)) {
 }
 $this->assign('title',	__('Install'));
 $this->assign('page_classes', 'setup install start');
-$this->Html->css('setup.min', ['block' => 'css']);
+$this->Html->css('setup.min', ['block' => 'css', 'fullBase' => true]);
 
 // Only Firefox and Chrome are supported right now.
 if ($browserName == 'firefox' || $browserName == 'chrome') {

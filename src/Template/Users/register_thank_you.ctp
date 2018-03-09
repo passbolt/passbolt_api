@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 $this->assign('title',	__('Thank you'));
-$this->Html->css('login.min', ['block' => 'css']);
+$this->Html->css('login.min', ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'register thank-you');
 ?>
 <div class="grid">
