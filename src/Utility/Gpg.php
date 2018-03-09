@@ -216,8 +216,12 @@ class Gpg
     }
 
     /**
+     * Check if an ASCII armored private key is parsable
      *
-     * @param $armoredKey
+     * To do this, we try to unarmor the key. If the operation is successful, then we consider that
+     * the key is a valid one.
+     *
+     * @param  string $armoredKey ASCII armored key data
      * @return bool
      */
     public function isParsableArmoredPrivateKeyRule($armoredKey)
