@@ -23,9 +23,6 @@ class GpgkeysDataTask extends DataTask
 {
     public $entityName = 'Gpgkeys';
 
-    public static $testKeysPath = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' .
-        DS . 'gpg' . DS;
-
     /**
      * Get path of the key for the given user.
      *
@@ -38,10 +35,10 @@ class GpgkeysDataTask extends DataTask
         $user = $Users->find('all')->where(['id' => $userId])->first();
         $prefix = $user->username;
         $uprefix = explode('@', $prefix);
-        if (file_exists(GpgkeysDataTask::$testKeysPath . $uprefix[0] . '_public.key')) {
-            $keyFileName = GpgkeysDataTask::$testKeysPath . $uprefix[0] . '_public.key';
+        if (file_exists(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key')) {
+            $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key';
         } else {
-            $keyFileName = GpgkeysDataTask::$testKeysPath . 'passbolt_dummy_key.asc';
+            $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'passbolt_dummy_key.asc';
         }
 
         return $keyFileName;

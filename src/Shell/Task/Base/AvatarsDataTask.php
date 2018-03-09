@@ -27,8 +27,6 @@ class AvatarsDataTask extends DataTask
      */
     public function execute()
     {
-        $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
-
         $this->loadModel('Avatars');
         $this->loadModel('Users');
         $users = $this->Users->find()
@@ -39,7 +37,7 @@ class AvatarsDataTask extends DataTask
             $matches = [];
             preg_match('/^(.*)@(.*)$/', $user->username, $matches);
             $userAvatarFileName = $matches[1] . '.png';
-            $userAvatarFullPath = $avatarsDirectory . DS . $userAvatarFileName;
+            $userAvatarFullPath = PASSBOLT_TEST_DATA_AVATAR_PATH . DS . $userAvatarFileName;
             if (file_exists($userAvatarFullPath)) {
                 $data = [
                     'file' => [
