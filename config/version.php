@@ -12,19 +12,13 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use Cake\Core\Configure;
 
-// Load the plugin configuration.
-$config = require(__DIR__ . DS . 'config.php');
-Configure::write($config);
-
-// Test gpg keys folder path.
-if (!defined('PASSBOLT_TEST_DATA_GPGKEY_PATH')) {
-	define('PASSBOLT_TEST_DATA_GPGKEY_PATH', __DIR__ . DS . 'gpg');
-}
-// Test avatars folder path.
-if (!defined('PASSBOLT_TEST_DATA_AVATAR_PATH')) {
-	define('PASSBOLT_TEST_DATA_AVATAR_PATH', __DIR__ . DS . 'img' . DS . 'avatar');
-}
-
-Configure::load('PassboltTestData.version', 'default', true);
+return [
+	'passbolt' => [
+		'plugins' => [
+			'passbolt_test_data' => [
+				'version' => '2.0'
+			]
+		]
+	],
+];
