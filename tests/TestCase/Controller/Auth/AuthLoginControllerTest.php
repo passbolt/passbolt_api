@@ -233,7 +233,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $uuid = UuidFactory::uuid();
 
         // Use betty public key instead of server
-        $wrongPublicKey = GpgkeysDataTask::$testKeysPath . 'betty_public.key';
+        $wrongPublicKey = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'betty_public.key';
         $keyInfo = $this->_gpg->import(file_get_contents($wrongPublicKey));
         $this->serverKeyId = $keyInfo['fingerprint'];
         $token = 'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0';
@@ -355,7 +355,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->serverKeyId = $keyInfo['fingerprint'];
 
         // Import the key of ada.
-        $keyInfo = $this->_gpg->import(file_get_contents(GpgkeysDataTask::$testKeysPath . 'ada_private_nopassphrase.key'));
+        $keyInfo = $this->_gpg->import(file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_private_nopassphrase.key'));
         $this->adaKeyId = $keyInfo['fingerprint'];
     }
 

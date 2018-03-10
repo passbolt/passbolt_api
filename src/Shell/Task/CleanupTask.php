@@ -94,10 +94,11 @@ class CleanupTask extends AppShell
                 'Hard Deleted Resources'
             ],
             'Secrets' => [
-                //'cleanupSoftDeletedUsers', // not a business rule yet
+                'Soft Deleted Users',
                 'Hard Deleted Users',
                 'Soft Deleted Resources',
-                'Hard Deleted Resources'
+                'Hard Deleted Resources',
+                'Hard Deleted Permissions'
             ]
         ];
 

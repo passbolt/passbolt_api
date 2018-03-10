@@ -35,7 +35,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
+        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
         $data = [
             'AuthenticationToken' => [
                 'token' => $t->token
@@ -64,7 +64,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
+        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
         $data = [
             'authenticationtoken' => [
                 'token' => $t->token
@@ -141,7 +141,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
         $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
 
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ruth_public.key');
+        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
         $fails = [
             'empty array' => [
