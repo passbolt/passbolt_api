@@ -3137,12 +3137,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt_test_data.git",
-                "reference": "fd076546cbb85f037fd0b08bd221ff279ccd0b55"
+                "reference": "def253029363bfd88b0368b56fc0ab99495ba5c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/fd076546cbb85f037fd0b08bd221ff279ccd0b55",
-                "reference": "fd076546cbb85f037fd0b08bd221ff279ccd0b55",
+                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/def253029363bfd88b0368b56fc0ab99495ba5c6",
+                "reference": "def253029363bfd88b0368b56fc0ab99495ba5c6",
                 "shasum": ""
             },
             "require": {
@@ -3183,7 +3183,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2018-03-09T09:46:16+00:00"
+            "time": "2018-03-10T08:03:23+00:00"
         },
         {
             "name": "phar-io/manifest",
