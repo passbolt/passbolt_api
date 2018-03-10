@@ -73,6 +73,9 @@ class EmailController extends WebInstallerController
             }
         }
 
+	    // Pre-populate form if data already exist in the session.
+	    $this->request->data =  $this->request->getSession()->read(self::CONFIG_KEY . '.email');
+
         $this->render($this->stepInfo['template']);
     }
 
