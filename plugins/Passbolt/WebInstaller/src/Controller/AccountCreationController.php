@@ -58,7 +58,7 @@ class AccountCreationController extends WebInstallerController
      * @param string $userId uuid of user
      * @return mixed
      */
-    private function _createToken($userId)
+    protected function _createToken($userId)
     {
         $this->loadModel('AuthenticationTokens');
         $token = $this->AuthenticationTokens->generate($userId);
@@ -74,7 +74,7 @@ class AccountCreationController extends WebInstallerController
      * @param array $data data provided by request
      * @return bool
      */
-    private function _createUser($data)
+    protected function _createUser($data)
     {
         $this->loadModel('Users');
         $data['deleted'] = false;

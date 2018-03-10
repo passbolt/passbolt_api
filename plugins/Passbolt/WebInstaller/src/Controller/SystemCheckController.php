@@ -39,7 +39,7 @@ class SystemCheckController extends WebInstallerController
      * @param array $checks checks
      * @return bool mixed
      */
-    private function _healthcheckIsOk($checks)
+    protected function _healthcheckIsOk($checks)
     {
         $envCheckResults = array_values($checks['environment']);
         $gpgKeys = ['lib', 'gpgHome', 'gpgHomeWritable'];

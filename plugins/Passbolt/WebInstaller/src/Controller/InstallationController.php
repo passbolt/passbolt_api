@@ -103,7 +103,7 @@ class InstallationController extends WebInstallerController
      * Write passbolt configuration file.
      * @return void
      */
-    private function _writeConfigurationFile()
+    protected function _writeConfigurationFile()
     {
         $session = $this->request->getSession();
         $config = $session->read('Passbolt.Config');
@@ -131,7 +131,7 @@ class InstallationController extends WebInstallerController
      * @param array $entries list of entries
      * @return mixed
      */
-    private function _sanitizeEntries($entries)
+    protected function _sanitizeEntries($entries)
     {
         foreach ($entries as $key => $entry) {
             if (is_string($entry)) {
@@ -147,7 +147,7 @@ class InstallationController extends WebInstallerController
      * @param array $entry list of entries
      * @return mixed
      */
-    private function _sanitizeEntry($entry)
+    protected function _sanitizeEntry($entry)
     {
         $entry = addslashes($entry);
 
@@ -158,7 +158,7 @@ class InstallationController extends WebInstallerController
      * Install database.
      * @return mixed
      */
-    private function _installDb()
+    protected function _installDb()
     {
         $migrations = new Migrations();
         $migrated = $migrations->migrate();

@@ -96,7 +96,7 @@ class EmailController extends WebInstallerController
      * @param array $data request data
      * @return \Cake\Http\Response|null
      */
-    private function _saveEmailConfiguration($data)
+    protected function _saveEmailConfiguration($data)
     {
         // Email configuration is valid, store information in the session.
         $session = $this->request->getSession();
@@ -110,7 +110,7 @@ class EmailController extends WebInstallerController
      * @param array $data request data
      * @return void
      */
-    private function _sendTestEmail($data)
+    protected function _sendTestEmail($data)
     {
         $this->email = new Email('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);
@@ -143,7 +143,7 @@ class EmailController extends WebInstallerController
      * @param array $data request data
      * @return void
      */
-    private function _setTransport($customTransportClassName, $data)
+    protected function _setTransport($customTransportClassName, $data)
     {
         $transportConfig = Email::getConfigTransport('default');
         $transportConfig['className'] = $customTransportClassName;
@@ -160,7 +160,7 @@ class EmailController extends WebInstallerController
      * Get default message (email content).
      * @return string
      */
-    private function _getDefaultMessage()
+    protected function _getDefaultMessage()
     {
         $message = "Congratulations!\n" .
             "If you receive this email, it means that your passbolt smtp configuration is working fine.";

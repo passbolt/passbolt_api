@@ -55,7 +55,7 @@ class LicenseKeyController extends WebInstallerController
      * Check that the license provided is valid.
      * @return void
      */
-    private function _checkLicense()
+    protected function _checkLicense()
     {
         // TODO: check license and manage errors.
         $this->_success();
