@@ -21,6 +21,7 @@ class AccountCreationController extends WebInstallerController
 {
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -31,17 +32,20 @@ class AccountCreationController extends WebInstallerController
 
     /**
      * Index
+     * @return mixed
      */
-    function index() {
+    public function index()
+    {
         // Make sure that the user is allowed to access this section.
         $this->_checkIsAllowed();
 
-        if(!empty($this->request->getData())) {
+        if (!empty($this->request->getData())) {
             $data = $this->request->getData();
             $this->loadModel('Roles');
             $user = $this->_createUser($this->request->getData());
             if ($user !== false) {
                 $this->_createToken($user->id);
+
                 return $this->_success();
             }
         }
@@ -51,10 +55,11 @@ class AccountCreationController extends WebInstallerController
 
     /**
      * Create Authentication token.
-     * @param $userId
+     * @param string $userId uuid of user
      * @return mixed
      */
-    private function _createToken($userId) {
+    private function _createToken($userId)
+    {
         $this->loadModel('AuthenticationTokens');
         $token = $this->AuthenticationTokens->generate($userId);
 
@@ -66,10 +71,11 @@ class AccountCreationController extends WebInstallerController
 
     /**
      * Create user.
-     * @param $data
+     * @param array $data data provided by request
      * @return bool
      */
-    private function _createUser($data) {
+    private function _createUser($data)
+    {
         $this->loadModel('Users');
         $data['deleted'] = false;
         $data['role_id'] = $this->Roles->getIdByName(Role::ADMIN);
@@ -77,17 +83,20 @@ class AccountCreationController extends WebInstallerController
         $user = $this->Users->buildEntity($data, Role::ADMIN);
         if ($user->getErrors()) {
             $this->set('user', $user);
+
             return false;
         }
 
         $result = $this->Users->save($user, ['checkRules' => true, 'atomic' => false]);
         if ($user->getErrors()) {
             $this->set('user', $user);
+
             return false;
         }
 
-        if($result == false) {
+        if ($result == false) {
             $this->Flash->error(__('Could not save the user account'));
+
             return false;
         }
 
@@ -99,7 +108,8 @@ class AccountCreationController extends WebInstallerController
      * We do not want anyone to be able to create new users once passbolt is already installed.
      * @return bool
      */
-    protected function _checkIsAllowed() {
+    protected function _checkIsAllowed()
+    {
         $session = $this->request->getSession();
         $hasExistingAdmin = $session->read(self::CONFIG_KEY . '.hasExistingAdmin');
         if (PASSBOLT_IS_CONFIGURED && (empty($hasExistingAdmin) || $hasExistingAdmin === false)) {

@@ -9,7 +9,7 @@ class LicenseKeyForm extends Form
 {
     /**
      * License key schema.
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -20,7 +20,7 @@ class LicenseKeyForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -34,10 +34,10 @@ class LicenseKeyForm extends Form
 
         return $validator;
     }
-    
+
     /**
      * Execute implementation.
-     * @param array $data
+     * @param array $data formdata
      * @return bool
      */
     protected function _execute(array $data)

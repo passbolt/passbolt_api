@@ -14,7 +14,7 @@ class GpgKeyImportForm extends Form
 {
     /**
      * GpgKey generate configuration schema.
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -25,7 +25,7 @@ class GpgKeyImportForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -40,7 +40,7 @@ class GpgKeyImportForm extends Form
 
     /**
      * Execute implementation.
-     * @param array $data
+     * @param array $data form data
      * @return bool
      */
     protected function _execute(array $data)
@@ -50,19 +50,12 @@ class GpgKeyImportForm extends Form
 
     /**
      * Export armored keys in the config folder based on the fingerprint provided.
-     * @param $fingerprint
+     * @param string $fingerprint key fingerprint
+     * @return void
      */
-    public function exportArmoredKeys($fingerprint) {
+    public function exportArmoredKeys($fingerprint)
+    {
         $gpgKeyGenerateForm = new GpgKeyGenerateForm();
-        return $gpgKeyGenerateForm->exportArmoredKeys($fingerprint);
-    }
-
-    /**
-     * Generate a key pair using system GPG binary.
-     * @param $keyData
-     * @return string
-     */
-    public function importKey($keyData) {
-
+        $gpgKeyGenerateForm->exportArmoredKeys($fingerprint);
     }
 }

@@ -9,7 +9,7 @@ class OptionsConfigurationForm extends Form
 {
     /**
      * Options configuration schema.
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -22,7 +22,7 @@ class OptionsConfigurationForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -47,7 +47,7 @@ class OptionsConfigurationForm extends Form
 
     /**
      * Execute implementation.
-     * @param array $data
+     * @param array $data form data
      * @return bool
      */
     protected function _execute(array $data)

@@ -13,7 +13,7 @@ class GpgKeyGenerateForm extends Form
 {
     /**
      * GpgKey generate configuration schema.
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -26,7 +26,7 @@ class GpgKeyGenerateForm extends Form
 
     /**
      * Validation rules.
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -51,7 +51,7 @@ class GpgKeyGenerateForm extends Form
 
     /**
      * Execute implementation.
-     * @param array $data
+     * @param array $data form data
      * @return bool
      */
     protected function _execute(array $data)
@@ -61,9 +61,12 @@ class GpgKeyGenerateForm extends Form
 
     /**
      * Export armored keys in the config folder based on the fingerprint provided.
-     * @param $fingerprint
+     * @param string $fingerprint key fingerprint
+     * @throws Exception when the key cannot be exported
+     * @return void
      */
-    public function exportArmoredKeys($fingerprint) {
+    public function exportArmoredKeys($fingerprint)
+    {
         $publicKeyPath = Configure::read('passbolt.gpg.serverKey.public');
         $privateKeyPath = Configure::read('passbolt.gpg.serverKey.private');
 
@@ -80,23 +83,26 @@ class GpgKeyGenerateForm extends Form
         }
     }
 
-	/**
-	 * Get server GPG version.
-	 * @return mixed
-	 */
-    public function getGpgVersion() {
-	    exec('gpg --version', $response, $res);
-	    preg_match("/((?:[0-9]+\.?)+)/i", $response[0], $matches);
-	    return $matches[0];
+    /**
+     * Get server GPG version.
+     * @return mixed
+     */
+    public function getGpgVersion()
+    {
+        exec('gpg --version', $response, $res);
+        preg_match("/((?:[0-9]+\.?)+)/i", $response[0], $matches);
+
+        return $matches[0];
     }
 
-	/**
-	 * Generate a key pair using system GPG binary V2.
-	 * @param $keyData
-	 * @return string
-	 */
-	public function generateKeyCmdV2($keyData) {
-		$cmd = "gpg --batch --no-tty --gen-key <<EOF
+    /**
+     * Generate a key pair using system GPG binary V2.
+     * @param array $keyData key data as provided by form
+     * @return string command
+     */
+    public function generateKeyCmdV2($keyData)
+    {
+        $cmd = "gpg --batch --no-tty --gen-key <<EOF
 Key-Type: default
 Key-Length: 2048
 Subkey-Type: default
@@ -109,16 +115,17 @@ Expire-Date: 0
 %commit
 EOF";
 
-		return $cmd;
-	}
+        return $cmd;
+    }
 
-	/**
-	 * Generate a key pair using system GPG binary V1.
-	 * @param $keyData
-	 * @return string
-	 */
-	public function generateKeyCmdV1($keyData) {
-		$cmd = "gpg --batch --gen-key <<EOF
+    /**
+     * Generate a key pair using system GPG binary V1.
+     * @param array $keyData key data as provided by form
+     * @return string command
+     */
+    public function generateKeyCmdV1($keyData)
+    {
+        $cmd = "gpg --batch --gen-key <<EOF
 Key-Type: 1
 Key-Length: 2048
 Name-Real: {$keyData['name']}" . (isset($keyData['comment']) && !empty($keyData['comment']) ? "
@@ -127,22 +134,24 @@ Name-Email: {$keyData['email']}
 Expire-Date: 0
 EOF";
 
-		return $cmd;
-	}
+        return $cmd;
+    }
 
     /**
      * Generate a key pair using system GPG binary V1.
-     * @param $keyData
-     * @return string
+     * @param array $keyData key data as provided by form
+     * @throws Exception if the key cannot be generated
+     * @return string key fingerprint
      */
-    public function generateKey($keyData) {
-	    $version = $this->getGpgVersion();
-	    $isV2 = version_compare($version, '2.0.0', '>=');
-	    if ($isV2) {
-		    $generateKeyCmd = $this->generateKeyCmdV2($keyData);
-	    } else {
-		    $generateKeyCmd = $this->generateKeyCmdV1($keyData);
-	    }
+    public function generateKey($keyData)
+    {
+        $version = $this->getGpgVersion();
+        $isV2 = version_compare($version, '2.0.0', '>=');
+        if ($isV2) {
+            $generateKeyCmd = $this->generateKeyCmdV2($keyData);
+        } else {
+            $generateKeyCmd = $this->generateKeyCmdV1($keyData);
+        }
 
         $cmdOutput = "";
         exec($generateKeyCmd, $cmdOutput, $cmdRes);
@@ -154,7 +163,7 @@ EOF";
         $res = gnupg_init();
         $info = gnupg_keyinfo($res, $keyData['email']);
 
-        if(empty($info) || !isset($info[0]['subkeys'][0]['fingerprint'])) {
+        if (empty($info) || !isset($info[0]['subkeys'][0]['fingerprint'])) {
             throw new Exception("Could not retrieve the generated key");
         }
 

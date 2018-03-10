@@ -21,6 +21,7 @@ class OptionController extends WebInstallerController
 {
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -32,15 +33,18 @@ class OptionController extends WebInstallerController
 
     /**
      * Index
+     * @return mixed
      */
-    function index() {
-        if(empty($this->request->getData())) {
+    public function index()
+    {
+        if (empty($this->request->getData())) {
             // Set default values.
             $this->request->data['full_base_url'] = trim(Router::url('/', true), '/');
             $this->set(['force_ssl' => $this->request->is('ssl') === true ? 1 : 0]);
         } else {
             $this->_validateData($this->request->getData());
             $this->_saveConfiguration($this->request->getData());
+
             return $this->_success();
         }
 
@@ -49,9 +53,11 @@ class OptionController extends WebInstallerController
 
     /**
      * Validate data.
-     * @param $data
+     * @param array $data request data
+     * @return mixed
      */
-    protected function _validateData($data) {
+    protected function _validateData($data)
+    {
         $optionsConfigurationForm = new OptionsConfigurationForm();
         $confIsValid = $optionsConfigurationForm->execute($data);
         $this->set('optionsConfigurationForm', $optionsConfigurationForm);
@@ -63,9 +69,11 @@ class OptionController extends WebInstallerController
 
     /**
      * Save configuration.
-     * @param $data
+     * @param array $data request data
+     * @return void
      */
-    protected function _saveConfiguration($data) {
+    protected function _saveConfiguration($data)
+    {
         $session = $this->request->getSession();
         $session->write(self::CONFIG_KEY . '.options', $data);
     }

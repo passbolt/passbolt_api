@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
     var details = [
         'Installing database',
         'Validating GPG keys',
@@ -17,13 +17,14 @@ $(function() {
     /**
      * Display status.
      */
-    function displayStatus() {
+    function displayStatus()
+    {
         if (details[i] !== undefined) {
             $('.install-details').text(details[i]);
-            setTimeout(function() { displayStatus() }, 1000);
+            setTimeout(function () {
+                displayStatus() }, 1000);
             i++;
-        }
-        else {
+        } else {
             checkInstalled();
         }
     }
@@ -32,9 +33,12 @@ $(function() {
      * Check if passbolt is installed.
      * As long as it is not, keep looping.
      */
-    function checkInstalled() {
+    function checkInstalled()
+    {
         if (installed == 0) {
-            setTimeout(function() { checkInstalled() }, 200);
+            setTimeout(function () {
+                checkInstalled() }, 200);
+
             return;
         }
         document.location.href = $('#redirect-url').val();
@@ -43,11 +47,12 @@ $(function() {
     /**
      * Install passbolt.
      */
-    function install() {
+    function install()
+    {
         $.ajax(
             $('#install-url').val(),
             {
-                success: function(data, status, xhr) {
+                success: function (data, status, xhr) {
                     installed = data;
                 }
             }

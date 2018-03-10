@@ -1,6 +1,6 @@
-$(function() {
-    var getFile = function() {
-        return new Promise(function(resolve, reject) {
+$(function () {
+    var getFile = function () {
+        return new Promise(function (resolve, reject) {
             var fileChooser = document.createElement('input');
             fileChooser.type = 'file';
             fileChooser.addEventListener('change', function () {
@@ -21,7 +21,7 @@ $(function() {
         });
     };
 
-    var onKeyContentChange = function() {
+    var onKeyContentChange = function () {
         if ($('.key-content').val() != '') {
             $('.button.next')
                 .removeClass('disabled')
@@ -33,13 +33,13 @@ $(function() {
         }
     };
 
-    $('#key-chooser').click(function() {
-        getFile().then(function(fileContent) {
+    $('#key-chooser').click(function () {
+        getFile().then(function (fileContent) {
             $('.key-content').val(fileContent);
             onKeyContentChange();
         });
     });
-    $('.key-content').on('change', function() {
+    $('.key-content').on('change', function () {
         onKeyContentChange();
     });
     onKeyContentChange();

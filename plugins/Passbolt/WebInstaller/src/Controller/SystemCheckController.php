@@ -20,8 +20,10 @@ class SystemCheckController extends WebInstallerController
 {
     /**
      * Index
+     * @return void
      */
-    function index() {
+    public function index()
+    {
         $checks = Healthchecks::environment();
         $gpgChecks = Healthchecks::gpg();
         $checks = array_merge($checks, $gpgChecks);
@@ -34,14 +36,15 @@ class SystemCheckController extends WebInstallerController
 
     /**
      * Check if healthcheck values are good enough to continue installation.
-     * @param $checks
+     * @param array $checks checks
      * @return bool mixed
      */
-    private function _healthcheckIsOk($checks) {
+    private function _healthcheckIsOk($checks)
+    {
         $envCheckResults = array_values($checks['environment']);
         $gpgKeys = ['lib', 'gpgHome', 'gpgHomeWritable'];
         $gpgChecks = [];
-        foreach($gpgKeys as $gpgKey) {
+        foreach ($gpgKeys as $gpgKey) {
             $gpgChecks[$gpgKey] = $checks['gpg'][$gpgKey];
         }
         $gpgCheckResults = array_values($gpgChecks);

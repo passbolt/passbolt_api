@@ -24,6 +24,7 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -37,15 +38,16 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Index
+     * @return mixed
      */
-    function index() {
-        if(!empty($this->request->getData())) {
+    public function index()
+    {
+        if (!empty($this->request->getData())) {
             $this->_validateData($this->request->getData());
 
             try {
                 $this->databaseConfigurationForm->testConnection($this->request->getData());
-            }
-            catch(Exception $e) {
+            } catch (Exception $e) {
                 return $this->_error($e->getMessage());
             }
 
@@ -53,17 +55,17 @@ class DatabaseController extends WebInstallerController
 
             // Depending on the database content, check if this is a new passbolt instance,
             // or if we are reconfiguring an existing one (there already tables and  users in the db).
-	        try {
-		        $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($this->request->getData());
-	        }
-	        catch (\Exception $e) {
-		        return $this->_error($e->getMessage());
-	        }
+            try {
+                $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($this->request->getData());
+            } catch (\Exception $e) {
+                return $this->_error($e->getMessage());
+            }
 
             $session->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
 
             // Database is valid, store information in the session.
             $session->write(self::CONFIG_KEY . '.database', $this->request->getData());
+
             return $this->_success();
         }
 
@@ -72,9 +74,11 @@ class DatabaseController extends WebInstallerController
 
     /**
      * Validate data.
-     * @param $data
+     * @param array $data request data
+     * @return mixed
      */
-    protected function _validateData($data) {
+    protected function _validateData($data)
+    {
         $confIsValid = $this->databaseConfigurationForm->execute($data);
         $this->set('databaseConfigurationForm', $this->databaseConfigurationForm);
 

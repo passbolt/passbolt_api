@@ -20,13 +20,12 @@ use Passbolt\WebInstaller\Form\GpgKeyGenerateForm;
 
 class GpgKeyGenerateController extends WebInstallerController
 {
-    var $components = ['Flash'];
-
     // GPG key generate form.
-    protected $gpgKeyGenerateForm =  null;
+    protected $gpgKeyGenerateForm = null;
 
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -41,9 +40,11 @@ class GpgKeyGenerateController extends WebInstallerController
 
     /**
      * Index
+     * @return mixed
      */
-    function index() {
-        if(!empty($this->request->getData())) {
+    public function index()
+    {
+        if (!empty($this->request->getData())) {
             $this->_validateData($this->request->getData());
             try {
                 $fingerprint = $this->gpgKeyGenerateForm->generateKey($this->request->getData());
@@ -62,9 +63,11 @@ class GpgKeyGenerateController extends WebInstallerController
 
     /**
      * Save configuration.
-     * @param $data
+     * @param array $data request data
+     * @return void
      */
-    protected function _saveConfiguration($data) {
+    protected function _saveConfiguration($data)
+    {
         $session = $this->request->getSession();
         $session->write(self::CONFIG_KEY . '.gpg', [
             'fingerprint' => $data['fingerprint'],
@@ -75,9 +78,11 @@ class GpgKeyGenerateController extends WebInstallerController
 
     /**
      * Validate data.
-     * @param $data
+     * @param array $data request data
+     * @return mixed
      */
-    protected function _validateData($data) {
+    protected function _validateData($data)
+    {
         $confIsValid = $this->gpgKeyGenerateForm->execute($data);
         $this->set('gpgKeyGenerateForm', $this->gpgKeyGenerateForm);
 

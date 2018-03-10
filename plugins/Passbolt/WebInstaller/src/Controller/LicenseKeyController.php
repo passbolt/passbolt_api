@@ -20,6 +20,7 @@ class LicenseKeyController extends WebInstallerController
 {
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -31,9 +32,11 @@ class LicenseKeyController extends WebInstallerController
 
     /**
      * Index
+     * @return mixed
      */
-    function index() {
-        if(!empty($this->request->getData())) {
+    public function index()
+    {
+        if (!empty($this->request->getData())) {
             $licenseKeyForm = new LicenseKeyForm();
             $dataIsValid = $licenseKeyForm->execute($this->request->getData());
             $this->set('licenseKeyForm', $licenseKeyForm);
@@ -50,8 +53,10 @@ class LicenseKeyController extends WebInstallerController
 
     /**
      * Check that the license provided is valid.
+     * @return void
      */
-    private function _checkLicense() {
+    private function _checkLicense()
+    {
         // TODO: check license and manage errors.
         $this->_success();
     }

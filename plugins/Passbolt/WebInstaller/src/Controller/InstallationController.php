@@ -22,6 +22,7 @@ class InstallationController extends WebInstallerController
 
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -35,8 +36,10 @@ class InstallationController extends WebInstallerController
 
     /**
      * Index.
+     * @return void
      */
-    function index() {
+    public function index()
+    {
         $this->_writeConfigurationFile();
         $this->set(['redirectUrl' => $this->_getNextStepUrl()]);
         $this->render('Pages/installation');
@@ -46,7 +49,8 @@ class InstallationController extends WebInstallerController
      * Get next step url.
      * @return mixed
      */
-    protected function _getNextStepUrl() {
+    protected function _getNextStepUrl()
+    {
         $session = $this->request->getSession();
         $hasExistingAdmin = $session->read(self::CONFIG_KEY . '.hasExistingAdmin');
         if (!$hasExistingAdmin) {
@@ -57,20 +61,28 @@ class InstallationController extends WebInstallerController
     }
 
     /**
-     * Install passbolt
+     * Install passbolt database.
      * This function will be called through ajax.
+     * Displays 1 or 0 depending on the installation result.
+     * @return void
      */
-    function install() {
+    public function install()
+    {
         $res = $this->_installDb();
-        echo $res ? '1' : '0';
-        // TODO: remove die and do something more elegant.
-        die();
+        $this->set(['installResult' => $res ? '1' : '0']);
+
+        $this->viewBuilder()
+            ->setLayout('ajax');
+
+        $this->render('Pages/installation_result');
     }
 
     /**
      * Complete installation
+     * @return void
      */
-    function complete() {
+    public function complete()
+    {
         $session = $this->request->getSession();
         $hasExistingAdmin = $session->read(self::CONFIG_KEY . '.hasExistingAdmin');
         if (!$hasExistingAdmin) {
@@ -89,13 +101,15 @@ class InstallationController extends WebInstallerController
 
     /**
      * Write passbolt configuration file.
+     * @return void
      */
-    private function _writeConfigurationFile() {
+    private function _writeConfigurationFile()
+    {
         $session = $this->request->getSession();
         $config = $session->read('Passbolt.Config');
 
         // Sanitize output before writing the file.
-        foreach($config as $key => $itemConfig) {
+        foreach ($config as $key => $itemConfig) {
             if (is_array($itemConfig)) {
                 $config[$key] = $this->_sanitizeEntries($itemConfig);
             } elseif (is_string($itemConfig)) {
@@ -114,11 +128,12 @@ class InstallationController extends WebInstallerController
      * Sanitize all entries of a configuration array.
      * Sanitize = we escape the characters ' and \
      * Works on a single dimension array only.
-     * @param $entries
+     * @param array $entries list of entries
      * @return mixed
      */
-    private function _sanitizeEntries($entries) {
-        foreach($entries as $key => $entry) {
+    private function _sanitizeEntries($entries)
+    {
+        foreach ($entries as $key => $entry) {
             if (is_string($entry)) {
                 $entries[$key] = $this->_sanitizeEntry($entry);
             }
@@ -129,18 +144,22 @@ class InstallationController extends WebInstallerController
 
     /**
      * Sanitize an entry before writing it in a file.
-     * @param $entry
+     * @param array $entry list of entries
      * @return mixed
      */
-    private function _sanitizeEntry($entry) {
+    private function _sanitizeEntry($entry)
+    {
         $entry = addslashes($entry);
+
         return $entry;
     }
 
     /**
      * Install database.
+     * @return mixed
      */
-    private function _installDb() {
+    private function _installDb()
+    {
         $migrations = new Migrations();
         $migrated = $migrations->migrate();
 

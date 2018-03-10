@@ -19,7 +19,7 @@ use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
-    var $components = ['Flash'];
+    public $components = ['Flash'];
 
     /**
      * Transport class to be used for testing.
@@ -45,6 +45,7 @@ class EmailController extends WebInstallerController
 
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -58,15 +59,16 @@ class EmailController extends WebInstallerController
 
     /**
      * Index
+     * @return void
      */
-    function index() {
-        if(!empty($this->request->getData())) {
+    public function index()
+    {
+        if (!empty($this->request->getData())) {
             $data = $this->request->getData();
             $this->_validateData($data);
-            if(isset($data['send_test_email'])) {
+            if (isset($data['send_test_email'])) {
                 $this->_sendTestEmail($data);
-            }
-            else {
+            } else {
                 $this->_saveEmailConfiguration($data);
             }
         }
@@ -76,9 +78,11 @@ class EmailController extends WebInstallerController
 
     /**
      * Validate data.
-     * @param $data
+     * @param array $data request data
+     * @return mixed
      */
-    protected function _validateData($data) {
+    protected function _validateData($data)
+    {
         $confIsValid = $this->emailConfigurationForm->execute($data);
         $this->set('emailConfigurationForm', $this->emailConfigurationForm);
 
@@ -89,21 +93,25 @@ class EmailController extends WebInstallerController
 
     /**
      * Save email configuration.
-     * @param $data
+     * @param array $data request data
      * @return \Cake\Http\Response|null
      */
-    private function _saveEmailConfiguration($data) {
+    private function _saveEmailConfiguration($data)
+    {
         // Email configuration is valid, store information in the session.
         $session = $this->request->getSession();
         $session->write(self::CONFIG_KEY . '.email', $this->request->getData());
+
         return $this->_success();
     }
 
     /**
      * Send test email.
-     * @param $data
+     * @param array $data request data
+     * @return void
      */
-    private function _sendTestEmail($data) {
+    private function _sendTestEmail($data)
+    {
         $this->email = new Email('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);
 
@@ -122,6 +130,7 @@ class EmailController extends WebInstallerController
                 'test_email_error' => $e->getMessage(),
                 'test_email_trace' => $trace,
             ]);
+
             return;
         }
         $this->set(['test_email_status' => true]);
@@ -131,6 +140,7 @@ class EmailController extends WebInstallerController
      * Set a custom transport class name.
      * In the context of this debugger, we'll use our own class name.
      * @param string $customTransportClassName name of the custom transport class to use
+     * @param array $data request data
      * @return void
      */
     private function _setTransport($customTransportClassName, $data)

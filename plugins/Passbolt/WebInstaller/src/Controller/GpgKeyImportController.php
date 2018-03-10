@@ -21,17 +21,15 @@ use Passbolt\WebInstaller\Form\GpgKeyImportForm;
 
 class GpgKeyImportController extends WebInstallerController
 {
-    // Components.
-    var $components = ['Flash'];
-
     // Gpg lib.
-    var $Gpg = null;
+    public $Gpg = null;
 
     // Gpg key import form.
-    var $GpgKeyImportForm = null;
+    public $GpgKeyImportForm = null;
 
     /**
      * Initialize.
+     * @return void
      */
     public function initialize()
     {
@@ -47,9 +45,11 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Index
+     * @return mixed
      */
-    function index() {
-        if(!empty($this->request->getData())) {
+    public function index()
+    {
+        if (!empty($this->request->getData())) {
             $data = $this->request->getData();
             $this->_validateData($data);
             $data['fingerprint'] = $this->_importKeyIntoKeyring($data['armored_key']);
@@ -65,37 +65,43 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Import key into keyring.
-     * @param $armoredKey
+     * @param string $armoredKey armored key
      * @return string fingerprint.
      */
-    protected function _importKeyIntoKeyring($armoredKey) {
+    protected function _importKeyIntoKeyring($armoredKey)
+    {
         try {
             $fingerprint = $this->Gpg->importKeyIntoKeyring($armoredKey);
         } catch (Exception $e) {
             return $this->_error($e->getMessage());
         }
+
         return $fingerprint;
     }
 
     /**
      * Export armored keys into config.
-     * @param $fingerprint
+     * @param string $fingerprint key fingerprint
      * @return bool|void
      */
-    protected function _exportArmoredKeysIntoConfig($fingerprint) {
+    protected function _exportArmoredKeysIntoConfig($fingerprint)
+    {
         try {
             $this->GpgKeyImportForm->exportArmoredKeys($fingerprint);
         } catch (Exception $e) {
             return $this->_error($e->getMessage());
         }
+
         return true;
     }
 
     /**
      * Save configuration.
-     * @param $data
+     * @param array $data request data
+     * @return void
      */
-    protected function _saveConfiguration($data) {
+    protected function _saveConfiguration($data)
+    {
         $session = $this->request->getSession();
         $session->write(self::CONFIG_KEY . '.gpg', [
             'fingerprint' => $data['fingerprint'],
@@ -106,10 +112,11 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Validate data.
-     * @param $data
+     * @param array $data request data
      * @return string key fingerprint
      */
-    protected function _validateData($data) {
+    protected function _validateData($data)
+    {
         $gpgKeyImportForm = new GpgKeyImportForm();
         $confIsValid = $gpgKeyImportForm->execute($data);
         $this->set('gpgKeyImportForm', $gpgKeyImportForm);
@@ -132,9 +139,11 @@ class GpgKeyImportController extends WebInstallerController
 
     /**
      * Check that the key provided can be used to encrypt and decrypt.
-     * @param $armoredKey
+     * @param string $armoredKey the armored key
+     * @return mixed
      */
-    protected function _checkEncryptDecrypt($armoredKey) {
+    protected function _checkEncryptDecrypt($armoredKey)
+    {
         try {
             $messageToEncrypt = 'open source password manager for teams';
             $this->Gpg->setEncryptKey($armoredKey);
@@ -144,7 +153,7 @@ class GpgKeyImportController extends WebInstallerController
             $decryptedMessage = $this->Gpg->decrypt($encryptedMessage, '', true);
         } catch (Exception $e) {
             return $this->_error(__('This key cannot be used by passbolt. Please note that passbolt does not support GPG key with master passphrase. Error message: {0}', [$e->getMessage()]));
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             return $this->_error(__('This key cannot be used by passbolt. Please note that passbolt does not support GPG key with master passphrase. Error message: {0}', [$e->getMessage()]));
         }
 
@@ -157,7 +166,7 @@ class GpgKeyImportController extends WebInstallerController
      * Parses a gpg key and verifies that it's readable and with a valid format.
      *
      * @param string $armoredKey the armored key
-     * @return array|boolean information array
+     * @return array|bool information array
      */
     protected function _getAndAssertGpgkey($armoredKey)
     {
@@ -169,7 +178,7 @@ class GpgKeyImportController extends WebInstallerController
             $gpg = new Gpg();
             $info = $gpg->getKeyInfo($armoredKey);
         } catch (Exception $e) {
-           return false;
+            return false;
         }
 
         return $info;

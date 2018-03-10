@@ -26,7 +26,7 @@ use Cake\Network\Exception\ForbiddenException;
  */
 class WebInstallerController extends Controller
 {
-    var $components = ['Flash'];
+    public $components = ['Flash'];
 
     /**
      * Configuration key.
@@ -47,6 +47,7 @@ class WebInstallerController extends Controller
 
     /**
      * Initialize implementation.
+     * @return void
      */
     public function initialize()
     {
@@ -58,10 +59,11 @@ class WebInstallerController extends Controller
      * Before filter.
      * Do not let the user proceed if the configuration is not found in the session.
      * Instead redirect him to the first step.
-     * @param Event $event
+     * @param Event $event event
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(Event $event) {
+    public function beforeFilter(Event $event)
+    {
         parent::beforeFilter($event);
 
         $session = $this->request->getSession();
@@ -84,18 +86,22 @@ class WebInstallerController extends Controller
 
     /**
      * Before render.
-     * @param Event $event
+     * @param Event $event event
+     * @return void
      */
-    public function beforeRender(Event $event) {
+    public function beforeRender(Event $event)
+    {
         parent::beforeRender($event);
         $this->set('stepInfo', $this->stepInfo);
     }
 
     /**
      * Error handler.
-     * @param $message
+     * @param string $message error message
+     * @return void
      */
-    protected function _error($message) {
+    protected function _error($message)
+    {
         $this->Flash->error($message);
         $this->render($this->stepInfo['template']);
         $this->response->send();
@@ -103,8 +109,10 @@ class WebInstallerController extends Controller
 
     /**
      * Success handler.
+     * @return void
      */
-    protected function _success() {
+    protected function _success()
+    {
         $this->redirect($this->stepInfo['next']);
     }
 }
