@@ -274,6 +274,9 @@ if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
 
+// Load Passbolt import plugin.
+Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+
 /*
  * Gpg Config
  */
