@@ -14,7 +14,7 @@
  */
 namespace App\Shell;
 
-use App\Shell\AppShell;
+use Cake\Core\Configure;
 
 class PassboltShell extends AppShell
 {
@@ -72,10 +72,12 @@ class PassboltShell extends AppShell
             'parser' => $this->Cleanup->getOptionParser(),
         ]);
 
-        $parser->addSubcommand('data', [
-            'help' => __d('cake_console', 'Populate database with predefined data set.'),
-            'parser' => $this->Data->getOptionParser(),
-        ]);
+        if (Configure::read('passbolt.plugins.passbolt_test_data')) {
+            $parser->addSubcommand('data', [
+                'help' => __d('cake_console', 'Populate database with predefined data set (development mode).'),
+                'parser' => $this->Data->getOptionParser(),
+            ]);
+        }
 
         $parser->addSubcommand('drop_tables', [
             'help' => __d('cake_console', 'Drop all the tables. Dangerous but useful for a full reinstall.'),
