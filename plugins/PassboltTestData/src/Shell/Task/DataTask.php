@@ -33,13 +33,15 @@ class DataTask extends Shell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser
-            ->setDescription(__('Populate the database with dummy data test.'))
-            ->addArgument('scenario', [
-                'help' => 'The scenario to play.',
-                'required' => true,
-                'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
-            ]);
+        if (Configure::read('debug') > 0) {
+            $parser
+                ->setDescription(__('Populate the database with dummy data test.'))
+                ->addArgument('scenario', [
+                    'help' => 'The scenario to play.',
+                    'required' => true,
+                    'choices' => array_keys(Configure::read('PassboltTestData.scenarios'))
+                ]);
+        }
 
         return $parser;
     }
