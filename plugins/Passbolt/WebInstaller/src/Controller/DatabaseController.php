@@ -70,7 +70,7 @@ class DatabaseController extends WebInstallerController
         }
 
         // Pre-populate form if data already exist in the session.
-	    $this->request->data =  $this->request->getSession()->read(self::CONFIG_KEY . '.database');
+        $this->request->data = $this->request->getSession()->read(self::CONFIG_KEY . '.database');
 
         $this->render($this->stepInfo['template']);
     }
