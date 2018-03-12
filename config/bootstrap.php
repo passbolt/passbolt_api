@@ -13,6 +13,8 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
+$isCli = PHP_SAPI === 'cli';
+
 /*
  *  Baseline checks
  */
@@ -35,18 +37,6 @@ if (!extension_loaded('gnupg')) {
 if (!(extension_loaded('gd') || extension_loaded('imagick'))) {
     trigger_error('You must enable the gd or imagick extensions to use Passbolt.', E_USER_ERROR);
 }
-
-/*
- * Set process user constant
- */
-$uid = posix_getuid();
-$user = posix_getpwuid($uid);
-define('PROCESS_USER', $user['name']);
-
-/*
- * Is the application used from CLI
- */
-$isCli = PHP_SAPI === 'cli';
 
 /*
  * Configure paths required to find CakePHP + general filepath
@@ -104,21 +94,6 @@ try {
     }
 }
 
-// Define constant PASSBOLT_IS_CONFIGURED based on database configuration status.
-if (Configure::read('Datasources.default')) {
-    if (empty(Configure::read('Datasources.default.username'))
-        && empty(Configure::read('Datasources.default.password'))
-        && empty(Configure::read('Datasources.default.database'))
-    ) {
-        define('PASSBOLT_IS_CONFIGURED', 0);
-    } else {
-        define('PASSBOLT_IS_CONFIGURED', 1);
-    }
-}
-
-// Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
-
 /*
  * Load an environment local configuration file.
  * You can use a file like app_local.php to provide local overrides to your
@@ -157,25 +132,48 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
  */
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
-    // Include the CLI bootstrap overrides.
-    require __DIR__ . '/bootstrap_cli.php';
 } else {
     (new ErrorHandler(Configure::read('Error')))->register();
 }
 
 /*
- * Gpg Config
+ * Include the CLI bootstrap overrides.
  */
-if (Configure::read('passbolt.gpg.putenv')) {
-    putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+if ($isCli) {
+    require __DIR__ . '/bootstrap_cli.php';
 }
 
 /*
- * Check if the full base URL is set
+ * Set the full base URL.
+ * This URL is used as the base of all absolute links.
+ *
+ * If you define fullBaseUrl in your config file you can remove this.
  */
 if (!Configure::read('App.fullBaseUrl')) {
-    trigger_error('You must set the app fullBaseUrl to use Passbolt.', E_USER_ERROR);
+    $s = null;
+    if (env('HTTPS')) {
+        $s = 's';
+    }
+
+    $httpHost = env('HTTP_HOST');
+    if (isset($httpHost)) {
+        Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
+    }
+    unset($httpHost, $s);
 }
+
+// Define constant PASSBOLT_IS_CONFIGURED based on database configuration status.
+if (Configure::read('Datasources.default')) {
+    if (empty(Configure::read('Datasources.default.username'))
+        && empty(Configure::read('Datasources.default.password'))
+        && empty(Configure::read('Datasources.default.database'))
+    ) {
+        define('PASSBOLT_IS_CONFIGURED', 0);
+    } else {
+        define('PASSBOLT_IS_CONFIGURED', 1);
+    }
+}
+
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
 Email::setConfigTransport(Configure::consume('EmailTransport'));
@@ -184,18 +182,25 @@ Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
 
 /*
+ * The default crypto extension in 3.0 is OpenSSL.
+ * If you are migrating from 2.x uncomment this code to
+ * use a more compatible Mcrypt based implementation
+ */
+//Security::engine(new \Cake\Utility\Crypto\Mcrypt());
+
+/*
  * Setup detectors for mobile and tablet.
  */
-//Request::addDetector('mobile', function ($request) {
-//    $detector = new \Detection\MobileDetect();
-//
-//    return $detector->isMobile();
-//});
-//Request::addDetector('tablet', function ($request) {
-//    $detector = new \Detection\MobileDetect();
-//
-//    return $detector->isTablet();
-//});
+Request::addDetector('mobile', function ($request) {
+    $detector = new \Detection\MobileDetect();
+
+    return $detector->isMobile();
+});
+Request::addDetector('tablet', function ($request) {
+    $detector = new \Detection\MobileDetect();
+
+    return $detector->isTablet();
+});
 
 /*
  * Enable immutable time objects in the ORM.
@@ -205,10 +210,14 @@ Security::setSalt(Configure::consume('Security.salt'));
  * locale specific date formats. For details see
  * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
  */
-Type::build('time')->useImmutable();
-Type::build('date')->useImmutable();
-Type::build('datetime')->useImmutable();
-Type::build('timestamp')->useImmutable();
+Type::build('time')
+    ->useImmutable();
+Type::build('date')
+    ->useImmutable();
+Type::build('datetime')
+    ->useImmutable();
+Type::build('timestamp')
+    ->useImmutable();
 
 /*
  * Custom Inflector rules, can be set to correctly pluralize or singularize
@@ -267,3 +276,19 @@ if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
 
+/*
+ * Gpg Config
+ */
+if (Configure::read('passbolt.gpg.putenv')) {
+    putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+}
+
+// Is passbolt pro active?
+define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
+
+/*
+ * Set process user constant
+ */
+$uid = posix_getuid();
+$user = posix_getpwuid($uid);
+define('PROCESS_USER', $user['name']);

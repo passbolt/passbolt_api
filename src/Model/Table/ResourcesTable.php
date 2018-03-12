@@ -652,11 +652,13 @@ class ResourcesTable extends Table
         // Patch the entity.
         $data = [
             'deleted' => true,
-            'modified_by' => $userId
+            'modified_by' => $userId,
+            'secrets' => []
         ];
         $patchOptions = [
             'accessibleFields' => [
                 'deleted' => true,
+                'secrets' => true,
                 'modified' => true,
                 'modified_by' => true
             ]
