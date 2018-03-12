@@ -43,7 +43,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson('/users/' . $francesId . '/dry-run.json');
+        $this->deleteJson('/users/' . $francesId . '/dry-run.json?api-version=v1');
         $this->assertSuccess();
         $frances = $this->Users->get($francesId);
         $this->assertFalse($frances->deleted);
@@ -53,7 +53,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $adaId = UuidFactory::uuid('user.id.ada');
-        $this->deleteJson('/users/' . $adaId . '/dry-run.json');
+        $this->deleteJson('/users/' . $adaId . '/dry-run.json?api-version=v1');
         $this->assertError(400);
         $this->assertContains(
             'You need to transfer the user group manager role',
@@ -65,7 +65,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson('/users/' . $francesId . '.json');
+        $this->deleteJson('/users/' . $francesId . '.json?api-version=v1');
         $this->assertSuccess();
         $frances = $this->Users->get($francesId);
         $this->assertTrue($frances->deleted);
@@ -74,7 +74,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     public function testUsersDeleteNotLoggedInError()
     {
         $francesId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson('/users/' . $francesId . '.json');
+        $this->deleteJson('/users/' . $francesId . '.json?api-version=v1');
         $this->assertAuthenticationError();
     }
 
@@ -82,7 +82,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $francesId = UuidFactory::uuid('user.id.frances');
-        $this->deleteJson('/users/' . $francesId . '.json');
+        $this->deleteJson('/users/' . $francesId . '.json?api-version=v1');
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
@@ -90,22 +90,22 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $bogusId = '0';
-        $this->deleteJson('/users/' . $bogusId . '.json');
+        $this->deleteJson('/users/' . $bogusId . '.json?api-version=v1');
         $this->assertError(400, 'The user id must be a valid uuid.');
 
         $this->authenticateAs('admin');
         $bogusId = 'true';
-        $this->deleteJson('/users/' . $bogusId . '.json');
+        $this->deleteJson('/users/' . $bogusId . '.json?api-version=v1');
         $this->assertError(400, 'The user id must be a valid uuid.');
 
         $this->authenticateAs('admin');
         $bogusId = 'null';
-        $this->deleteJson('/users/' . $bogusId . '.json');
+        $this->deleteJson('/users/' . $bogusId . '.json?api-version=v1');
         $this->assertError(400, 'The user id must be a valid uuid.');
 
         $this->authenticateAs('admin');
         $bogusId = '🔥';
-        $this->deleteJson('/users/' . $bogusId . '.json');
+        $this->deleteJson('/users/' . $bogusId . '.json?api-version=v1');
         $this->assertError(400, 'The user id must be a valid uuid.');
     }
 
@@ -113,7 +113,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $bogusId = UuidFactory::uuid('user.id.bogus');
-        $this->deleteJson('/users/' . $bogusId . '.json');
+        $this->deleteJson('/users/' . $bogusId . '.json?api-version=v1');
         $this->assertError(404, 'The user does not exist or has been already deleted.');
     }
 
@@ -121,7 +121,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $sofia = UuidFactory::uuid('user.id.sofia');
-        $this->deleteJson('/users/' . $sofia . '.json');
+        $this->deleteJson('/users/' . $sofia . '.json?api-version=v1');
         $this->assertError(404, 'The user does not exist or has been already deleted.');
     }
 
@@ -129,7 +129,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $adminId = UuidFactory::uuid('user.id.admin');
-        $this->deleteJson('/users/' . $adminId . '.json');
+        $this->deleteJson('/users/' . $adminId . '.json?api-version=v1');
         $this->assertError(400, 'You are not allowed to delete yourself.');
     }
 
@@ -138,7 +138,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         // Ada cannot be deleted because it's the sole manager of group accounting
         $this->authenticateAs('admin');
         $adaId = UuidFactory::uuid('user.id.ada');
-        $this->deleteJson('/users/' . $adaId . '.json');
+        $this->deleteJson('/users/' . $adaId . '.json?api-version=v1');
         $this->assertError(400);
         $this->assertContains(
             'You need to transfer the user group manager role',
@@ -166,7 +166,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         // shared resource april
         $this->authenticateAs('admin');
         $adaId = UuidFactory::uuid('user.id.ada');
-        $this->deleteJson('/users/' . $adaId . '.json');
+        $this->deleteJson('/users/' . $adaId . '.json?api-version=v1');
         $this->assertError(400);
         $this->assertContains(
             'You need to transfer the ownership for the shared passwords',
@@ -197,7 +197,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         // shared resource canjs.
         $this->authenticateAs('admin');
         $bettyId = UuidFactory::uuid('user.id.betty');
-        $this->deleteJson('/users/' . $bettyId . '.json');
+        $this->deleteJson('/users/' . $bettyId . '.json?api-version=v1');
         $this->assertError(400);
         // Canjs should be returned as the shared resource which Betty is the sole owner of.
         $this->assertEquals(1, count($this->_responseJsonBody->resources));
@@ -213,7 +213,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $this->assertTrue($deleted);
 
         // Try to delete the user again.
-        $this->deleteJson('/users/' . $bettyId . '.json');
+        $this->deleteJson('/users/' . $bettyId . '.json?api-version=v1');
         $this->assertSuccess();
     }
 
@@ -239,7 +239,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         // shared resource april
         $this->authenticateAs('admin');
         $adaId = UuidFactory::uuid('user.id.ada');
-        $this->deleteJson('/users/' . $adaId . '.json');
+        $this->deleteJson('/users/' . $adaId . '.json?api-version=v1');
         $this->assertError(400);
         $this->assertContains(
             'This user is the only admin of one (or more) group that is the sole owner of shared',

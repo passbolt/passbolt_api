@@ -440,11 +440,7 @@ class GroupsTable extends Table
         $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id);
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
-            $Resources->updateAll(['deleted' => true], [
-                'id IN' => $resourceIds
-            ]);
-            $Favorites = TableRegistry::get('Favorites');
-            $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
+            $Resources->softDeleteAll($resourceIds);
         }
 
         // Delete all group memberships

@@ -1,0 +1,23 @@
+{
+    "name": "Passbolt/Tags",
+    "description": "Passbolt/Tags plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "AGPL-3.0-or-later",
+    "require": {
+        "cakephp/cakephp": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Passbolt\\Tags\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Passbolt\\Tags\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}

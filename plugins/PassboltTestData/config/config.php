@@ -38,6 +38,8 @@ return [
                         'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/CommentsData',
                         'PassboltTestData.Security/XssCommentsData',
+                        'PassboltTestData.Pro/TagsData',
+                        'PassboltTestData.Pro/ResourcesTagsData',
                         'PassboltTestData.Base/SecretsData',
                         'PassboltTestData.Base/EmailQueueData',
                     ]
@@ -64,8 +66,15 @@ return [
             'alt0' => [
                 'fixturize' => [
                     'shellTasks' => [
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/UsersData',
+                        'PassboltTestData.Base/ProfilesData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Alt0/GroupsUsersData',
                         'PassboltTestData.Alt0/PermissionsData',
+                        'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Alt0/SecretsData',
                     ]
                 ]
             ],

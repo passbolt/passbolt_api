@@ -31,7 +31,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     {
         Configure::write('passbolt.email.send.password.delete', false);
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v1');
         $this->assertSuccess();
 
         // check email notification
@@ -44,7 +44,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
     {
         Configure::write('passbolt.email.send.password.delete', true);
         $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
+        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json?api-version=v1');
         $this->assertSuccess();
 
         // check email notification

@@ -125,6 +125,11 @@ return [
             ],
         ],
 
+        // Wich plugins are enabled
+        'plugins' => [
+
+        ],
+
         // Is public registration allowed.
         'registration' => [
             'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)

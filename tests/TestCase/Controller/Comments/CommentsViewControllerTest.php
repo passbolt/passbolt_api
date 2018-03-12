@@ -45,7 +45,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
-        $this->getJson("/comments/resource/$resourceId.json");
+        $this->getJson("/comments/resource/$resourceId.json?api-version=v1");
         $this->assertSuccess();
         $this->assertGreaterThan(0, count($this->_responseJsonBody));
 
@@ -82,7 +82,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[creator]=1';
+        $urlParameter = 'api-version=v1&contain[modifier]=1&contain[creator]=1';
         $this->getJson("/comments/resource/$resourceId.json?$urlParameter");
         $this->assertSuccess();
         $this->assertGreaterThan(0, count($this->_responseJsonBody));
@@ -101,7 +101,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         // jquery is soft deleted. Hence, not reachable.
         $resourceId = UuidFactory::uuid('Resource.id.jquery');
-        $this->getJson("/comments/resource/$resourceId.json");
+        $this->getJson("/comments/resource/$resourceId.json?api-version=v1");
         $this->assertError('404', 'Could not find comments for the requested model');
     }
 
@@ -109,21 +109,21 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
-        $this->getJson("/comments/WrongModelName/$resourceId.json");
+        $this->getJson("/comments/WrongModelName/$resourceId.json?api-version=v1");
         $this->assertError('500', 'Invalid model name');
     }
 
     public function testErrorWrongUuidParameter()
     {
         $this->authenticateAs('ada');
-        $this->getJson("/comments/resource/wrong-uuid.json");
+        $this->getJson("/comments/resource/wrong-uuid.json?api-version=v1");
         $this->assertError('500', 'Invalid id');
     }
 
     public function testErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/comments/resource/$resourceId.json");
+        $this->getJson("/comments/resource/$resourceId.json?api-version=v1");
         $this->assertAuthenticationError();
     }
 }

@@ -36,7 +36,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'allowed'
             ]
         ];
-        $this->postJson('/users.json', $data);
+        $this->postJson('/users.json?api-version=v1', $data);
         $this->assertAuthenticationError();
     }
 
@@ -50,7 +50,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'allowed'
             ]
         ];
-        $this->postJson('/users.json', $data);
+        $this->postJson('/users.json?api-version=v1', $data);
         $this->assertError('403', 'Only administrators can add new users.');
     }
 
@@ -87,7 +87,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($success as $case => $data) {
-            $this->postJson('/users.json', $data);
+            $this->postJson('/users.json?api-version=v1', $data);
             $this->assertResponseSuccess();
 
             // Check user was saved
@@ -132,7 +132,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             ]
         ];
 
-        $this->postJson('/users.json', $data);
+        $this->postJson('/users.json?api-version=v1', $data);
         $this->assertResponseSuccess();
 
         $users = TableRegistry::get('Users');
@@ -154,7 +154,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'Avarguès-Weber'
             ]
         ];
-        $this->postJson('/users.json', $data);
+        $this->postJson('/users.json?api-version=v1', $data);
         $this->assertResponseSuccess();
 
         $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
@@ -174,7 +174,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'Avarguès-Weber'
             ]
         ];
-        $this->postJson('/users.json', $data);
+        $this->postJson('/users.json?api-version=v1', $data);
         $this->assertResponseSuccess();
 
         $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
@@ -194,7 +194,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'lovelace'
             ]
         ];
-        $this->postJson('/users.json', $data);
+        $this->postJson('/users.json?api-version=v1', $data);
         $this->assertError(400, 'Could not validate user data.');
     }
 }

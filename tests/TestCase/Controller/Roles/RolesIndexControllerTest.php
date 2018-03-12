@@ -33,7 +33,7 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
     public function testRolesIndexGetApiV1Success()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/roles.json');
+        $this->getJson('/roles.json?api-version=v1');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertObjectHasAttribute('Role', $this->_responseJsonBody[0]);
@@ -42,7 +42,7 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
 
     public function testRolesIndexErrorNotAuthenticated()
     {
-        $this->getJson('/roles.json');
+        $this->getJson('/roles.json?api-version=v1');
         $this->assertAuthenticationError();
     }
 }

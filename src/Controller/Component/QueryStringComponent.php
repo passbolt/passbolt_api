@@ -269,6 +269,9 @@ class QueryStringComponent extends Component
                     case 'is-shared-with-me':
                         self::validateFilterBoolean($values, $filter);
                         break;
+                    case 'has-tag':
+                        self::validateFilterString($values, $filter);
+                        break;
                     default:
                         throw new Exception(__('No validation rule for filter {0}. Please create one.', $filter));
                 }
@@ -279,7 +282,24 @@ class QueryStringComponent extends Component
     }
 
     /**
-     * Check if the filter is a valid boolean
+     * Check if the filter is a valid string
+     *
+     * @param mixed $value to check
+     * @param string $filtername for error message display
+     * @throw Exception if the filter is not valid
+     * @return bool true if the filter is valid
+     */
+    public static function validateFilterString($value, string $filtername)
+    {
+        if (empty($value) || !is_string($value)) {
+            throw new Exception(__('"{0}" is not a valid value for filter {1}.', $value, $filtername));
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the filter is a valid tag slug
      *
      * @param mixed $values to check
      * @param string $filtername for error message display

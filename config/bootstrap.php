@@ -13,8 +13,6 @@
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-$isCli = PHP_SAPI === 'cli';
-
 /*
  *  Baseline checks
  */
@@ -37,6 +35,18 @@ if (!extension_loaded('gnupg')) {
 if (!(extension_loaded('gd') || extension_loaded('imagick'))) {
     trigger_error('You must enable the gd or imagick extensions to use Passbolt.', E_USER_ERROR);
 }
+
+/*
+ * Set process user constant
+ */
+$uid = posix_getuid();
+$user = posix_getpwuid($uid);
+define('PROCESS_USER', $user['name']);
+
+/*
+ * Is the application used from CLI
+ */
+$isCli = PHP_SAPI === 'cli';
 
 /*
  * Configure paths required to find CakePHP + general filepath
@@ -147,36 +157,25 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale'));
  */
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
+    // Include the CLI bootstrap overrides.
+    require __DIR__ . '/bootstrap_cli.php';
 } else {
     (new ErrorHandler(Configure::read('Error')))->register();
 }
 
 /*
- * Include the CLI bootstrap overrides.
+ * Gpg Config
  */
-if ($isCli) {
-    require __DIR__ . '/bootstrap_cli.php';
+if (Configure::read('passbolt.gpg.putenv')) {
+    putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
 
 /*
- * Set the full base URL.
- * This URL is used as the base of all absolute links.
- *
- * If you define fullBaseUrl in your config file you can remove this.
+ * Check if the full base URL is set
  */
 if (!Configure::read('App.fullBaseUrl')) {
-    $s = null;
-    if (env('HTTPS')) {
-        $s = 's';
-    }
-
-    $httpHost = env('HTTP_HOST');
-    if (isset($httpHost)) {
-        Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
-    }
-    unset($httpHost, $s);
+    trigger_error('You must set the app fullBaseUrl to use Passbolt.', E_USER_ERROR);
 }
-
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
 Email::setConfigTransport(Configure::consume('EmailTransport'));
@@ -185,25 +184,18 @@ Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
 
 /*
- * The default crypto extension in 3.0 is OpenSSL.
- * If you are migrating from 2.x uncomment this code to
- * use a more compatible Mcrypt based implementation
- */
-//Security::engine(new \Cake\Utility\Crypto\Mcrypt());
-
-/*
  * Setup detectors for mobile and tablet.
  */
-Request::addDetector('mobile', function ($request) {
-    $detector = new \Detection\MobileDetect();
-
-    return $detector->isMobile();
-});
-Request::addDetector('tablet', function ($request) {
-    $detector = new \Detection\MobileDetect();
-
-    return $detector->isTablet();
-});
+//Request::addDetector('mobile', function ($request) {
+//    $detector = new \Detection\MobileDetect();
+//
+//    return $detector->isMobile();
+//});
+//Request::addDetector('tablet', function ($request) {
+//    $detector = new \Detection\MobileDetect();
+//
+//    return $detector->isTablet();
+//});
 
 /*
  * Enable immutable time objects in the ORM.
@@ -213,14 +205,10 @@ Request::addDetector('tablet', function ($request) {
  * locale specific date formats. For details see
  * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
  */
-Type::build('time')
-    ->useImmutable();
-Type::build('date')
-    ->useImmutable();
-Type::build('datetime')
-    ->useImmutable();
-Type::build('timestamp')
-    ->useImmutable();
+Type::build('time')->useImmutable();
+Type::build('date')->useImmutable();
+Type::build('datetime')->useImmutable();
+Type::build('timestamp')->useImmutable();
 
 /*
  * Custom Inflector rules, can be set to correctly pluralize or singularize
@@ -267,6 +255,11 @@ Plugin::load('Burzum/FileStorage');
 require_once (CONFIG . DS . 'file_storage.php');
 
 /*
+ * Enable Tag plugin
+ */
+Plugin::load('Passbolt/Tags', ['bootstrap' => true, 'routes' => true]);
+
+/*
  * Only try to load selenium helper in development mode
  */
 if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
@@ -274,16 +267,3 @@ if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
 
-/*
- * Gpg Config
- */
-if (Configure::read('passbolt.gpg.putenv')) {
-    putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
-}
-
-/*
- * Set process user constant
- */
-$uid = posix_getuid();
-$user = posix_getpwuid($uid);
-define('PROCESS_USER', $user['name']);

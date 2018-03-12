@@ -41,7 +41,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     public function testApiV1Success()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/groups.json');
+        $this->getJson('/groups.json?api-version=v1');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
 
@@ -76,7 +76,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     public function testContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1';
+        $urlParameter = 'api-version=v1&contain[modifier]=1&contain[user]=1&contain[group_user]=1';
         $this->getJson("/groups.json?$urlParameter");
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -118,7 +118,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
 
     public function testErrorNotAuthenticated()
     {
-        $this->getJson('/groups.json');
+        $this->getJson('/groups.json?api-version=v1');
         $this->assertAuthenticationError();
     }
 }

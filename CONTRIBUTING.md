@@ -21,3 +21,8 @@ composer run-script cs-check
 ```
 composer run-script cs-fix
 ```
+
+## How to regenerate the fixtures
+```
+sudo su -s /bin/bash -c "./bin/cake PassboltTestData.fixturize default" www-data
+```

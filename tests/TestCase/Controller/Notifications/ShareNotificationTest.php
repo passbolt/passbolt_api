@@ -69,7 +69,7 @@ class ShareNotificationTest extends ShareControllerTest
         $data['secrets'][] = ['user_id' => $userFId, 'data' => $this->getValidSecret()];
 
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json", $data);
+        $this->putJson("/share/resource/$resourceId.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // check email notification

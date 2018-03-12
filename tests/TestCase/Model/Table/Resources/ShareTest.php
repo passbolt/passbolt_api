@@ -144,7 +144,7 @@ hcciUFw5
         }
     }
 
-    public function testLostAccessFavoritesDeleted()
+    public function testLostAccessAssociatedDataDeleted()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.apache');
