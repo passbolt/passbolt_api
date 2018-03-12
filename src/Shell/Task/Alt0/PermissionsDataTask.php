@@ -448,6 +448,26 @@ class PermissionsDataTask extends \PassboltTestData\Shell\Task\Base\PermissionsD
             'created' => '2017-11-17 12:37:44',
             'modified' => '2017-11-17 12:37:44'
         ];
+        $permissions[] = [
+            'id' => UuidFactory::uuid(),
+            'aco' => 'Resource',
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.kde'),
+            'aro' => 'Group',
+            'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
+            'type' => Permission::OWNER,
+            'created' => '2017-11-17 12:37:04',
+            'modified' => '2017-11-17 12:37:04'
+        ];
+        $permissions[] = [
+            'id' => UuidFactory::uuid(),
+            'aco' => 'Resource',
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.kde'),
+            'aro' => 'Group',
+            'aro_foreign_key' => UuidFactory::uuid('group.id.board'),
+            'type' => Permission::READ,
+            'created' => '2017-11-17 12:37:04',
+            'modified' => '2017-11-17 12:37:04'
+        ];
 
         return $permissions;
     }
