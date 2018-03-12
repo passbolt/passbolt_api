@@ -36,6 +36,6 @@ try {
 }
 
 Plugin::load('Migrations');
-if (Configure::read('debug') > 0) {
+if (Configure::read('debug') > 0 && Configure::read('passbolt.selenium.active')) {
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }

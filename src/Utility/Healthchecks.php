@@ -530,4 +530,32 @@ class Healthchecks
 
         return true;
     }
+
+    /**
+     * Get schema tables list. (as in v2).
+     * @return array
+     */
+    public static function getSchemaTables()
+    {
+        return [
+            'authentication_tokens',
+            'burzum_file_storage_phinxlog',
+            'comments',
+            'email_queue',
+            'email_queue_phinxlog',
+            'favorites',
+            'file_storage',
+            'gpgkeys',
+            'groups',
+            'groups_users',
+            'permissions',
+            'phinxlog',
+            'profiles',
+            'resources',
+            'roles',
+            'secrets',
+            'user_agents',
+            'users',
+        ];
+    }
 }

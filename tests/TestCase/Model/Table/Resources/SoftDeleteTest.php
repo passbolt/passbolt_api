@@ -27,7 +27,10 @@ class SoftDeleteTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/favorites', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
+    public $fixtures = [
+        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users',
+        'app.Base/resources', 'app.Base/favorites', 'app.Base/secrets',
+        'app.Base/permissions'];
 
     public function setUp()
     {
@@ -63,6 +66,10 @@ class SoftDeleteTest extends AppTestCase
         $permissions = $this->Resources->association('Permissions')
             ->find()->where(['Permissions.aco_foreign_key' => $resource->id])->toArray();
         $this->assertEmpty($permissions);
+        // No secrets in db.
+        $secrets = $this->Resources->association('Secrets')
+            ->find()->where(['Secrets.resource_id' => $resource->id])->toArray();
+        $this->assertEmpty($secrets);
     }
 
     public function testSoftDeleteErrorNotValidUserIdParameter()

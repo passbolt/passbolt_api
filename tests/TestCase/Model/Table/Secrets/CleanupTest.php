@@ -26,7 +26,8 @@ class CleanupTest extends AppTestCase
     public $Secrets;
     public $Groups;
     public $fixtures = [
-        'app.Base/users', 'app.Alt0/permissions', 'app.Base/resources', 'app.Base/Secrets'
+        'app.Base/users', 'app.Base/groups_users', 'app.Base/groups', 'app.Base/permissions',
+        'app.Base/resources', 'app.Base/secrets'
     ];
     public $options;
 
@@ -69,6 +70,16 @@ class CleanupTest extends AppTestCase
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedResources', $originalCount);
     }
 
+    public function testCleanupSecretsSoftDeletedUsersSuccess()
+    {
+        $originalCount = $this->Secrets->find()->count();
+        $sec = $this->Secrets->newEntity(self::getDummySecret([
+            'resource_id' => UuidFactory::uuid('resource.id.jquery'),
+            'user_id' => UuidFactory::uuid('user.id.sofia')]), $this->options);
+        $this->Secrets->save($sec, ['checkRules' => false]);
+        $this->runCleanupChecks('Secrets', 'cleanupSoftDeletedUsers', $originalCount);
+    }
+
     public function testCleanupSecretsHardDeletedUsersSuccess()
     {
         $originalCount = $this->Secrets->find()->count();
@@ -77,5 +88,15 @@ class CleanupTest extends AppTestCase
             'user_id' => UuidFactory::uuid('user.id.nope')]), $this->options);
         $this->Secrets->save($sec, ['checkRules' => false]);
         $this->runCleanupChecks('Secrets', 'cleanupHardDeletedUsers', $originalCount);
+    }
+
+    public function testCleanupSecretsHardDeletedPermissionsSuccess()
+    {
+        $originalCount = $this->Secrets->find()->count();
+        $sec = $this->Secrets->newEntity(self::getDummySecret([
+            'resource_id' => UuidFactory::uuid('resource.id.apache'),
+            'user_id' => UuidFactory::uuid('user.id.frances')]), $this->options);
+        $this->Secrets->save($sec, ['checkRules' => false]);
+        $this->runCleanupChecks('Secrets', 'cleanupHardDeletedPermissions', $originalCount);
     }
 }

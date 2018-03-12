@@ -34,8 +34,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     public function testRecoverCompleteSuccess()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1';
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
         $data = [
             'authenticationtoken' => [
                 'token' => $t->token
@@ -55,8 +55,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     public function testRecoverCompleteApiV1Success()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
-        $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1';
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
+        $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json';
+        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
         $data = [
             'AuthenticationToken' => [
                 'token' => $t->token
@@ -71,7 +71,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteInvalidUserIdError()
     {
-        $url = '/setup/recover/complete/nope.json?api-version=v1';
+        $url = '/setup/recover/complete/nope.json';
         $data = [];
         $this->postJson($url, $data);
         $this->assertError(400, 'The user id is not valid.');
@@ -79,7 +79,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteInvalidUserTokenError()
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.nope') . '.json?api-version=v1';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
         $data = [];
         $this->postJson($url, $data);
         $this->assertError(400, 'The user does not exist');
@@ -87,7 +87,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteInvalidAuthenticationTokenError()
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
 
         $fails = [
             'empty array' => [
@@ -131,9 +131,9 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     public function testRecoverCompleteInvalidGpgkeyError()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json?api-version=v1';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
 
-        $armoredKey = file_get_contents(ROOT . '/plugins/PassboltTestData/config/gpg/ada_public.key');
+        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
         $fails = [
             'empty array' => [
@@ -175,14 +175,14 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
 
     public function testRecoverCompleteDeletedUserError()
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json?api-version=v1';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }
 
     public function testRecoverCompleteInactiveUserError()
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json?api-version=v1';
+        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }
