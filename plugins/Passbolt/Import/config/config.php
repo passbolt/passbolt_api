@@ -2,7 +2,7 @@
 return [
     'passbolt' => [
         'plugins' => [
-            'Import' => [
+            'import' => [
                 'version' => '0.0.1',
                 'config' => [
                     'format' => [
