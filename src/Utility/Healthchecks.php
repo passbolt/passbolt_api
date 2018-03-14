@@ -195,7 +195,7 @@ class Healthchecks
         // Do not use default connection when test are running
         // Otherwise tables may be dropped
         $connectionName = 'default';
-        if (Configure::read('passbolt.test.isRunning')) {
+        if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
             $connectionName = 'test';
         }
 
