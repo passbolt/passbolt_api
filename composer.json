@@ -24,6 +24,16 @@
             "type": "vcs",
             "url": "https://github.com/passbolt/migrations.git",
             "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/passbolt/passbolt_selenium_api.git",
+            "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/passbolt/passbolt_test_data.git",
+            "no-api": true
         }
     ],
     "require": {
@@ -47,7 +57,9 @@
         "cakephp/bake": "~1.1",
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
-        "satooshi/php-coveralls": "~1.0"
+        "satooshi/php-coveralls": "~1.0",
+        "passbolt/passbolt_selenium_api": "dev-master",
+        "passbolt/passbolt_test_data": "dev-master"
     },
     "autoload": {
         "psr-4": {

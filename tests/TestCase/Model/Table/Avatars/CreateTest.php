@@ -39,8 +39,7 @@ class CreateTest extends AppTestCase
 
     private function _createAvatar($name = 'ada')
     {
-        $avatarsDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'config' . DS . 'img' . DS . 'avatar';
-        $userAvatarFullPath = $avatarsDirectory . DS . $name . '.png';
+        $userAvatarFullPath = PASSBOLT_TEST_DATA_AVATAR_PATH . DS . $name . '.png';
 
         $data = [
             'file' => [
