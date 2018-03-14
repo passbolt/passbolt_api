@@ -163,7 +163,10 @@ if (!Configure::read('App.fullBaseUrl')) {
 }
 
 // Define constant PASSBOLT_IS_CONFIGURED based on database configuration status.
-if (Configure::read('Datasources.default')) {
+if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
+    define('PASSBOLT_IS_CONFIGURED', 1);
+}
+else if (Configure::read('Datasources.default')) {
     if (empty(Configure::read('Datasources.default.username'))
         && empty(Configure::read('Datasources.default.password'))
         && empty(Configure::read('Datasources.default.database'))
