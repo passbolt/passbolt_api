@@ -19,6 +19,8 @@ use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
 class DatabaseController extends WebInstallerController
 {
+	const MY_CONFIG_KEY = 'database';
+
     // Database configuration form.
     protected $databaseConfigurationForm = null;
 
@@ -42,35 +44,37 @@ class DatabaseController extends WebInstallerController
      */
     public function index()
     {
-        if (!empty($this->request->getData())) {
-            $this->_validateData($this->request->getData());
+	    $data = $this->request->getData();
+        if (!empty($data)) {
+	        try {
+		        $this->_validateData($data);
+	        } catch(Exception $e) {
+		        return $this->_error($e->getMessage());
+	        }
 
             try {
-                $this->databaseConfigurationForm->testConnection($this->request->getData());
+                $this->databaseConfigurationForm->testConnection($data);
             } catch (Exception $e) {
                 return $this->_error($e->getMessage());
             }
 
-            $session = $this->request->getSession();
-
             // Depending on the database content, check if this is a new passbolt instance,
             // or if we are reconfiguring an existing one (there already tables and  users in the db).
             try {
-                $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($this->request->getData());
-            } catch (\Exception $e) {
+                $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($data);
+            } catch (Exception $e) {
                 return $this->_error($e->getMessage());
             }
 
-            $session->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
+            // Save in session whether the database has existing admins.
+	        $this->request->getSession()->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
 
-            // Database is valid, store information in the session.
-            $session->write(self::CONFIG_KEY . '.database', $this->request->getData());
+            $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
 
             return $this->_success();
         }
 
-        // Pre-populate form if data already exist in the session.
-        $this->request->data = $this->request->getSession()->read(self::CONFIG_KEY . '.database');
+        $this->_loadSavedConfiguration(self::MY_CONFIG_KEY);
 
         $this->render($this->stepInfo['template']);
     }
@@ -86,7 +90,7 @@ class DatabaseController extends WebInstallerController
         $this->set('databaseConfigurationForm', $this->databaseConfigurationForm);
 
         if (!$confIsValid) {
-            return $this->_error(__('The data entered are not correct'));
+	        throw new Exception(__('The data entered are not correct'));
         }
     }
 }

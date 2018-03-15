@@ -21,6 +21,8 @@ use Passbolt\WebInstaller\Form\GpgKeyImportForm;
 
 class GpgKeyImportController extends WebInstallerController
 {
+	const MY_CONFIG_KEY = 'gpg';
+
     // Gpg lib.
     public $Gpg = null;
 
@@ -49,13 +51,21 @@ class GpgKeyImportController extends WebInstallerController
      */
     public function index()
     {
-        if (!empty($this->request->getData())) {
-            $data = $this->request->getData();
-            $this->_validateData($data);
-            $data['fingerprint'] = $this->_importKeyIntoKeyring($data['armored_key']);
-            $this->_checkEncryptDecrypt($data['armored_key']);
-            $this->_exportArmoredKeysIntoConfig($data['fingerprint']);
-            $this->_saveConfiguration($data);
+	    $data = $this->request->getData();
+        if (!empty($data)) {
+	        try {
+		        $this->_validateData($data);
+		        $data['fingerprint'] = $this->_importKeyIntoKeyring($data['armored_key']);
+		        $this->_checkEncryptDecrypt($data['armored_key']);
+		        $this->_exportArmoredKeysIntoConfig($data['fingerprint']);
+		        $this->_saveConfiguration(self::MY_CONFIG_KEY, [
+			        'fingerprint' => $data['fingerprint'],
+			        'public' => Configure::read('passbolt.gpg.serverKey.public'),
+			        'private' => Configure::read('passbolt.gpg.serverKey.private')
+		        ]);
+	        } catch(Exception $e) {
+		        return $this->_error($e->getMessage());
+	        }
 
             return $this->_success();
         }
@@ -73,7 +83,7 @@ class GpgKeyImportController extends WebInstallerController
         try {
             $fingerprint = $this->Gpg->importKeyIntoKeyring($armoredKey);
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+	        throw new Exception($e->getMessage());
         }
 
         return $fingerprint;
@@ -89,25 +99,10 @@ class GpgKeyImportController extends WebInstallerController
         try {
             $this->GpgKeyImportForm->exportArmoredKeys($fingerprint);
         } catch (Exception $e) {
-            return $this->_error($e->getMessage());
+	        throw new Exception($e->getMessage());
         }
 
         return true;
-    }
-
-    /**
-     * Save configuration.
-     * @param array $data request data
-     * @return void
-     */
-    protected function _saveConfiguration($data)
-    {
-        $session = $this->request->getSession();
-        $session->write(self::CONFIG_KEY . '.gpg', [
-            'fingerprint' => $data['fingerprint'],
-            'public' => Configure::read('passbolt.gpg.serverKey.public'),
-            'private' => Configure::read('passbolt.gpg.serverKey.private')
-        ]);
     }
 
     /**
@@ -122,16 +117,16 @@ class GpgKeyImportController extends WebInstallerController
         $this->set('gpgKeyImportForm', $gpgKeyImportForm);
 
         if (!$confIsValid) {
-            return $this->_error(__('This is not a valid GPG key'));
+	        throw new Exception(__('This is not a valid GPG key'));
         }
 
         $keyInfo = $this->_getAndAssertGpgkey($data['armored_key']);
         if ($keyInfo === false) {
-            return $this->_error(__('This is not a valid GPG key'));
+	        throw new Exception(__('This is not a valid GPG key'));
         }
 
         if ($keyInfo['expires'] !== null) {
-            return $this->_error(__('GPG keys with expiry date are currently not supported. Please use another key without expiry date.'));
+	        throw new Exception(__('GPG keys with expiry date are currently not supported. Please use another key without expiry date.'));
         }
 
         return $keyInfo['fingerprint'];
@@ -152,13 +147,13 @@ class GpgKeyImportController extends WebInstallerController
             $this->Gpg->setDecryptKey($armoredKey);
             $decryptedMessage = $this->Gpg->decrypt($encryptedMessage, '', true);
         } catch (Exception $e) {
-            return $this->_error(__('This key cannot be used by passbolt. Please note that passbolt does not support GPG key with master passphrase. Error message: {0}', [$e->getMessage()]));
+	        throw new Exception(__('This key cannot be used by passbolt. Please note that passbolt does not support GPG key with master passphrase. Error message: {0}', [$e->getMessage()]));
         } catch (\Exception $e) {
-            return $this->_error(__('This key cannot be used by passbolt. Please note that passbolt does not support GPG key with master passphrase. Error message: {0}', [$e->getMessage()]));
+	        throw new Exception(__('This key cannot be used by passbolt. Please note that passbolt does not support GPG key with master passphrase. Error message: {0}', [$e->getMessage()]));
         }
 
         if ($messageToEncrypt !== $decryptedMessage) {
-            return $this->_error(__('Encrypt / decrypt operation returned an incorrect result. The key does not seem to be valid.'));
+	        throw new Exception(__('Encrypt / decrypt operation returned an incorrect result. The key does not seem to be valid.'));
         }
     }
 

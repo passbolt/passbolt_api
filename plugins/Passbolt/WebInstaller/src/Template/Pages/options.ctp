@@ -16,6 +16,7 @@ use Cake\Routing\Router;
                     <div class="row">
                         <div class="col12">
                             <h3><?= __('Options'); ?></h3>
+                            <?= $this->Flash->render() ?>
                             <?php
                             echo $this->Form->input('full_base_url',
                                 [
@@ -24,7 +25,7 @@ use Cake\Routing\Router;
                                     'label' => __('Full base url'),
                                     'class' => 'required fluid',
                                     'templates' => [
-                                        'inputContainer' => '<div class="input text">{{content}}<div class="message">' . __('This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed, such as links in emails. No trailing slash.') . '</div></div>',
+                                        'inputContainer' => '<div class="input text required">{{content}}<div class="message">' . __('This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash.') . '</div></div>',
                                     ]
                                 ]
                             );

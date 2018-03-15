@@ -23,6 +23,8 @@ class GpgKeyGenerateController extends WebInstallerController
     // GPG key generate form.
     protected $gpgKeyGenerateForm = null;
 
+	const MY_CONFIG_KEY = 'gpg';
+
     /**
      * Initialize.
      * @return void
@@ -45,35 +47,24 @@ class GpgKeyGenerateController extends WebInstallerController
     public function index()
     {
         if (!empty($this->request->getData())) {
-            $this->_validateData($this->request->getData());
             try {
+	            $this->_validateData($this->request->getData());
                 $fingerprint = $this->gpgKeyGenerateForm->generateKey($this->request->getData());
                 $this->gpgKeyGenerateForm->exportArmoredKeys($fingerprint);
             } catch (Exception $e) {
                 return $this->_error($e->getMessage());
             }
 
-            $this->_saveConfiguration(['fingerprint' => $fingerprint]);
+            $this->_saveConfiguration(self::MY_CONFIG_KEY, [
+	            'fingerprint' => $fingerprint,
+	            'public' => Configure::read('passbolt.gpg.serverKey.public'),
+	            'private' => Configure::read('passbolt.gpg.serverKey.private')
+            ]);
 
             return $this->_success();
         }
 
         $this->render($this->stepInfo['template']);
-    }
-
-    /**
-     * Save configuration.
-     * @param array $data request data
-     * @return void
-     */
-    protected function _saveConfiguration($data)
-    {
-        $session = $this->request->getSession();
-        $session->write(self::CONFIG_KEY . '.gpg', [
-            'fingerprint' => $data['fingerprint'],
-            'public' => Configure::read('passbolt.gpg.serverKey.public'),
-            'private' => Configure::read('passbolt.gpg.serverKey.private')
-        ]);
     }
 
     /**
@@ -87,7 +78,7 @@ class GpgKeyGenerateController extends WebInstallerController
         $this->set('gpgKeyGenerateForm', $this->gpgKeyGenerateForm);
 
         if (!$confIsValid) {
-            return $this->_error(__('The data entered are not correct'));
+	        throw new Exception(__('The data entered are not correct'));
         }
     }
 }

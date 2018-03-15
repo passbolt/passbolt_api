@@ -285,7 +285,7 @@ if (Configure::read('passbolt.gpg.putenv')) {
 }
 
 // Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
+define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.web-installer')));
 
 /*
  * Set process user constant

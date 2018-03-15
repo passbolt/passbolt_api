@@ -79,6 +79,7 @@ class WebInstallerController extends Controller
             // Redirect to start page if not already there.
             $isStartPage = $this->request->controller == 'SystemCheck' && $this->request->action == 'index';
             if (!$isStartPage) {
+	            $this->Flash->error(__('The session has expired. Please start the configuration again.'));
                 return $this->redirect('install');
             }
         }
@@ -95,6 +96,28 @@ class WebInstallerController extends Controller
         $this->set('stepInfo', $this->stepInfo);
     }
 
+	/**
+	 * Save data in session for the corresponding key.
+	 * @param $key
+	 * @param $data
+	 */
+    protected function _saveConfiguration($key, $data) {
+	    $session = $this->request->getSession();
+	    $session->write(self::CONFIG_KEY . '.' . $key, $data);
+    }
+
+	/**
+	 * Load a previously saved configuration. (in session).
+	 * @param $key
+	 */
+    protected function _loadSavedConfiguration($key) {
+	    $session = $this->request->getSession();
+	    $savedConfiguration = $this->request->getSession()->read(self::CONFIG_KEY . '.' . $key);
+	    if (!empty($savedConfiguration)) {
+		    $this->request->data = $this->request->getSession()->read(self::CONFIG_KEY . '.' . $key);
+	    }
+    }
+
     /**
      * Error handler.
      * @param string $message error message
@@ -104,7 +127,6 @@ class WebInstallerController extends Controller
     {
         $this->Flash->error($message);
         $this->render($this->stepInfo['template']);
-        $this->response->send();
     }
 
     /**

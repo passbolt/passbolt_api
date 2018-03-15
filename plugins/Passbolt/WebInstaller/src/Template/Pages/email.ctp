@@ -115,7 +115,9 @@ $this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
                             <?php else: ?>
                         <div class="message error">
                             <?= __('Email could not be sent:') ?>
-                            <strong><?= $test_email_error ?></strong><br/>
+                            <strong><?= $test_email_error ?></strong>
+                            <?php if(!empty($test_email_trace)): ?>
+                            <br/>
                             <a href="#" class="see-trace"><?= __('See trace') ?></a>
                             <div class="trace hidden">
                                 <?php
@@ -129,6 +131,7 @@ $this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
                                     }
                                 ?>
                             </div>
+                            <?php endif; ?>
                         </div>
                             <?php endif; ?>
                     <?php endif; ?>

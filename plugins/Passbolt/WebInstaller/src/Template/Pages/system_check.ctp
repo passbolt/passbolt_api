@@ -26,6 +26,7 @@ $healtcheck = new HealthcheckHtmlHelper();
                     <?php
                     endif;
                     ?>
+                    <?= $this->Flash->render() ?>
                     <?php
                     if ($data['system_ok']) {
                         echo '<div class="message success">' . __( 'Environment is configured correctly.' ) . '</div>';

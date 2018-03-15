@@ -14,11 +14,14 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use Cake\Core\Exception\Exception;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Form\OptionsConfigurationForm;
 
 class OptionController extends WebInstallerController
 {
+	const MY_CONFIG_KEY = 'options';
+
     /**
      * Initialize.
      * @return void
@@ -37,19 +40,27 @@ class OptionController extends WebInstallerController
      */
     public function index()
     {
-        if (empty($this->request->getData())) {
+	    $data = $this->request->getData();
+        if (empty($data)) {
             // Set default values.
             $this->request->data['full_base_url'] = trim(Router::url('/', true), '/');
             $this->set(['force_ssl' => $this->request->is('ssl') === true ? 1 : 0]);
         } else {
-            $this->_validateData($this->request->getData());
-            $this->_saveConfiguration($this->request->getData());
+	        // Remove trailing slash in case it exists in full_base_url.
+	        $data['full_base_url'] = trim($data['full_base_url'], '/');
+
+	        try {
+		        $this->_validateData($data);
+	        } catch(Exception $e) {
+		        return $this->_error($e->getMessage());
+	        }
+
+            $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
 
             return $this->_success();
         }
 
-        // Pre-populate form if data already exist in the session.
-        $this->request->data = $this->request->getSession()->read(self::CONFIG_KEY . '.options');
+        $this->_loadSavedConfiguration(self::MY_CONFIG_KEY);
 
         $this->render($this->stepInfo['template']);
     }
@@ -61,23 +72,13 @@ class OptionController extends WebInstallerController
      */
     protected function _validateData($data)
     {
+	    // Validate data.
         $optionsConfigurationForm = new OptionsConfigurationForm();
         $confIsValid = $optionsConfigurationForm->execute($data);
         $this->set('optionsConfigurationForm', $optionsConfigurationForm);
 
         if (!$confIsValid) {
-            return $this->_error(__('The data entered are not correct'));
+	        throw new Exception(__('The data entered are not correct'));
         }
-    }
-
-    /**
-     * Save configuration.
-     * @param array $data request data
-     * @return void
-     */
-    protected function _saveConfiguration($data)
-    {
-        $session = $this->request->getSession();
-        $session->write(self::CONFIG_KEY . '.options', $data);
     }
 }

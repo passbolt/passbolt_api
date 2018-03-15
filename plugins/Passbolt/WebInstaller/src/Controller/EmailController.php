@@ -14,11 +14,14 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use Cake\Core\Exception\Exception;
 use Cake\Mailer\Email;
 use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
+	const MY_CONFIG_KEY = 'email';
+
     public $components = ['Flash'];
 
     /**
@@ -63,18 +66,24 @@ class EmailController extends WebInstallerController
      */
     public function index()
     {
-        if (!empty($this->request->getData())) {
-            $data = $this->request->getData();
-            $this->_validateData($data);
+	    $data = $this->request->getData();
+        if (!empty($data)) {
+	        try {
+		        $this->_validateData($data);
+	        } catch(Exception $e) {
+		        return $this->_error($e->getMessage());
+	        }
+
             if (isset($data['send_test_email'])) {
                 $this->_sendTestEmail($data);
+	            return $this->render($this->stepInfo['template']);
             } else {
-                $this->_saveEmailConfiguration($data);
+	            $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
+	            return $this->_success();
             }
         }
 
-        // Pre-populate form if data already exist in the session.
-        $this->request->data = $this->request->getSession()->read(self::CONFIG_KEY . '.email');
+        $this->_loadSavedConfiguration(self::MY_CONFIG_KEY);
 
         $this->render($this->stepInfo['template']);
     }
@@ -90,22 +99,8 @@ class EmailController extends WebInstallerController
         $this->set('emailConfigurationForm', $this->emailConfigurationForm);
 
         if (!$confIsValid) {
-            return $this->_error(__('The data entered are not correct'));
+	        throw new Exception(__('The data entered are not correct'));
         }
-    }
-
-    /**
-     * Save email configuration.
-     * @param array $data request data
-     * @return \Cake\Http\Response|null
-     */
-    protected function _saveEmailConfiguration($data)
-    {
-        // Email configuration is valid, store information in the session.
-        $session = $this->request->getSession();
-        $session->write(self::CONFIG_KEY . '.email', $this->request->getData());
-
-        return $this->_success();
     }
 
     /**
@@ -165,8 +160,8 @@ class EmailController extends WebInstallerController
      */
     protected function _getDefaultMessage()
     {
-        $message = "Congratulations!\n" .
-            "If you receive this email, it means that your passbolt smtp configuration is working fine.";
+        $message = __("Congratulations!") . "\n" .
+            __("If you receive this email, it means that your passbolt smtp configuration is working fine.");
 
         return $message;
     }
