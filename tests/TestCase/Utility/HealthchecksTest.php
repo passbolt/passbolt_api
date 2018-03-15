@@ -20,10 +20,6 @@ use Cake\Core\Configure;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
-    public function setUp()
-    {
-        Configure::write('passbolt.test.isRunning', true);
-    }
 
     public function testHealthcheckApplication()
     {

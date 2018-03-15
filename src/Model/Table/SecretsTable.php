@@ -17,6 +17,7 @@ namespace App\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
@@ -44,6 +45,7 @@ use Cake\Validation\Validator;
 class SecretsTable extends Table
 {
 
+    use PermissionsCleanupTrait;
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
     use UsersCleanupTrait;

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4836fa21e8dbbb567c760d98e637931a",
+    "content-hash": "3400885901aeb39bd76db2660a101f2d",
     "packages": [
         {
             "name": "aura/intl",
@@ -3077,6 +3077,115 @@
             "time": "2017-12-26T14:43:21+00:00"
         },
         {
+            "name": "passbolt/passbolt_selenium_api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/passbolt/passbolt_selenium_api.git",
+                "reference": "56ee08b09c45c193fa58fc52d581eeaf4d3ce29c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/passbolt/passbolt_selenium_api/zipball/56ee08b09c45c193fa58fc52d581eeaf4d3ce29c",
+                "reference": "56ee08b09c45c193fa58fc52d581eeaf4d3ce29c",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7|^6.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "PassboltSeleniumApi\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PassboltSeleniumApi\\Test\\": "tests",
+                    "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+                }
+            },
+            "license": [
+                "AGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Passbolt Team",
+                    "homepage": "https://www.passbolt.com/credits"
+                }
+            ],
+            "description": "Passbolt selenium testing helper endpoints",
+            "homepage": "https://www.passbolt.com",
+            "keywords": [
+                "passbolt",
+                "password",
+                "selenium"
+            ],
+            "support": {
+                "bugs": "https://github.com/passbolt/passbolt/issues",
+                "help": "https://www.passbolt.com/help",
+                "source": "https://github.com/passbolt/passbolt"
+            },
+            "time": "2018-03-09T06:05:03+00:00"
+        },
+        {
+            "name": "passbolt/passbolt_test_data",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/passbolt/passbolt_test_data.git",
+                "reference": "def253029363bfd88b0368b56fc0ab99495ba5c6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/def253029363bfd88b0368b56fc0ab99495ba5c6",
+                "reference": "def253029363bfd88b0368b56fc0ab99495ba5c6",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^3.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7|^6.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "PassboltTestData\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PassboltTestData\\Test\\": "tests",
+                    "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+                }
+            },
+            "license": [
+                "AGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Passbolt Team",
+                    "homepage": "https://www.passbolt.com/credits"
+                }
+            ],
+            "description": "Passbolt data test plugin.",
+            "homepage": "https://www.passbolt.com",
+            "keywords": [
+                "passbolt",
+                "password"
+            ],
+            "support": {
+                "bugs": "https://github.com/passbolt/passbolt/issues",
+                "help": "https://www.passbolt.com/help",
+                "source": "https://github.com/passbolt/passbolt"
+            },
+            "time": "2018-03-10T08:03:23+00:00"
+        },
+        {
             "name": "phar-io/manifest",
             "version": "1.0.1",
             "source": {
@@ -5204,7 +5313,9 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "ezyang/htmlpurifier": 20,
-        "psy/psysh": 0
+        "psy/psysh": 0,
+        "passbolt/passbolt_selenium_api": 20,
+        "passbolt/passbolt_test_data": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

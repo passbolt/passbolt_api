@@ -94,21 +94,6 @@ try {
     }
 }
 
-// Define constant PASSBOLT_IS_CONFIGURED based on database configuration status.
-if (Configure::read('Datasources.default')) {
-    if (empty(Configure::read('Datasources.default.username'))
-        && empty(Configure::read('Datasources.default.password'))
-        && empty(Configure::read('Datasources.default.database'))
-    ) {
-        define('PASSBOLT_IS_CONFIGURED', 0);
-    } else {
-        define('PASSBOLT_IS_CONFIGURED', 1);
-    }
-}
-
-// Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
-
 /*
  * Load an environment local configuration file.
  * You can use a file like app_local.php to provide local overrides to your
@@ -175,6 +160,21 @@ if (!Configure::read('App.fullBaseUrl')) {
         Configure::write('App.fullBaseUrl', 'http' . $s . '://' . $httpHost);
     }
     unset($httpHost, $s);
+}
+
+// Define constant PASSBOLT_IS_CONFIGURED based on database configuration status.
+if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
+    define('PASSBOLT_IS_CONFIGURED', 1);
+}
+else if (Configure::read('Datasources.default')) {
+    if (empty(Configure::read('Datasources.default.username'))
+        && empty(Configure::read('Datasources.default.password'))
+        && empty(Configure::read('Datasources.default.database'))
+    ) {
+        define('PASSBOLT_IS_CONFIGURED', 0);
+    } else {
+        define('PASSBOLT_IS_CONFIGURED', 1);
+    }
 }
 
 Cache::setConfig(Configure::consume('Cache'));
@@ -283,6 +283,9 @@ Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
 if (Configure::read('passbolt.gpg.putenv')) {
     putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
+
+// Is passbolt pro active?
+define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
 
 /*
  * Set process user constant
