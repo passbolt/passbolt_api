@@ -282,6 +282,9 @@ if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
 // Load Passbolt import plugin.
 Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
 
+// Load Passbolt export plugin.
+Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+
 /*
  * Gpg Config
  */
