@@ -64,7 +64,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
-            "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src"
+            "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
+            "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src"
         }
     },
     "autoload-dev": {

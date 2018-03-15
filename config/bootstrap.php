@@ -285,6 +285,9 @@ Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
 // Load Passbolt export plugin.
 Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
 
+// Load Passbolt Web Installer plugin. (Passbolt pro)
+Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+
 /*
  * Gpg Config
  */
@@ -293,7 +296,7 @@ if (Configure::read('passbolt.gpg.putenv')) {
 }
 
 // Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
+define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.web-installer')));
 
 /*
  * Set process user constant
