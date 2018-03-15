@@ -21,12 +21,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens'];
 
-    public function setUp()
-    {
-        Configure::write('passbolt.test.isRunning', true);
-        parent::setUp();
-    }
-
     public function testHealthcheckIndexOk()
     {
         $this->get('/healthcheck');
