@@ -19,7 +19,7 @@ use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
 class DatabaseController extends WebInstallerController
 {
-	const MY_CONFIG_KEY = 'database';
+    const MY_CONFIG_KEY = 'database';
 
     // Database configuration form.
     protected $databaseConfigurationForm = null;
@@ -44,13 +44,13 @@ class DatabaseController extends WebInstallerController
      */
     public function index()
     {
-	    $data = $this->request->getData();
+        $data = $this->request->getData();
         if (!empty($data)) {
-	        try {
-		        $this->_validateData($data);
-	        } catch(Exception $e) {
-		        return $this->_error($e->getMessage());
-	        }
+            try {
+                $this->_validateData($data);
+            } catch (Exception $e) {
+                return $this->_error($e->getMessage());
+            }
 
             try {
                 $this->databaseConfigurationForm->testConnection($data);
@@ -67,7 +67,7 @@ class DatabaseController extends WebInstallerController
             }
 
             // Save in session whether the database has existing admins.
-	        $this->request->getSession()->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
+            $this->request->getSession()->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
 
             $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
 
@@ -90,7 +90,7 @@ class DatabaseController extends WebInstallerController
         $this->set('databaseConfigurationForm', $this->databaseConfigurationForm);
 
         if (!$confIsValid) {
-	        throw new Exception(__('The data entered are not correct'));
+            throw new Exception(__('The data entered are not correct'));
         }
     }
 }

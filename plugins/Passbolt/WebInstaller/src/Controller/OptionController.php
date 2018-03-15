@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Form\OptionsConfigurationForm;
 
 class OptionController extends WebInstallerController
 {
-	const MY_CONFIG_KEY = 'options';
+    const MY_CONFIG_KEY = 'options';
 
     /**
      * Initialize.
@@ -40,20 +40,20 @@ class OptionController extends WebInstallerController
      */
     public function index()
     {
-	    $data = $this->request->getData();
+        $data = $this->request->getData();
         if (empty($data)) {
             // Set default values.
             $this->request->data['full_base_url'] = trim(Router::url('/', true), '/');
             $this->set(['force_ssl' => $this->request->is('ssl') === true ? 1 : 0]);
         } else {
-	        // Remove trailing slash in case it exists in full_base_url.
-	        $data['full_base_url'] = trim($data['full_base_url'], '/');
+            // Remove trailing slash in case it exists in full_base_url.
+            $data['full_base_url'] = trim($data['full_base_url'], '/');
 
-	        try {
-		        $this->_validateData($data);
-	        } catch(Exception $e) {
-		        return $this->_error($e->getMessage());
-	        }
+            try {
+                $this->_validateData($data);
+            } catch (Exception $e) {
+                return $this->_error($e->getMessage());
+            }
 
             $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
 
@@ -72,13 +72,13 @@ class OptionController extends WebInstallerController
      */
     protected function _validateData($data)
     {
-	    // Validate data.
+        // Validate data.
         $optionsConfigurationForm = new OptionsConfigurationForm();
         $confIsValid = $optionsConfigurationForm->execute($data);
         $this->set('optionsConfigurationForm', $optionsConfigurationForm);
 
         if (!$confIsValid) {
-	        throw new Exception(__('The data entered are not correct'));
+            throw new Exception(__('The data entered are not correct'));
         }
     }
 }

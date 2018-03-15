@@ -20,7 +20,7 @@ use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
-	const MY_CONFIG_KEY = 'email';
+    const MY_CONFIG_KEY = 'email';
 
     public $components = ['Flash'];
 
@@ -62,24 +62,26 @@ class EmailController extends WebInstallerController
 
     /**
      * Index
-     * @return void
+     * @return mixed
      */
     public function index()
     {
-	    $data = $this->request->getData();
+        $data = $this->request->getData();
         if (!empty($data)) {
-	        try {
-		        $this->_validateData($data);
-	        } catch(Exception $e) {
-		        return $this->_error($e->getMessage());
-	        }
+            try {
+                $this->_validateData($data);
+            } catch (Exception $e) {
+                return $this->_error($e->getMessage());
+            }
 
             if (isset($data['send_test_email'])) {
                 $this->_sendTestEmail($data);
-	            return $this->render($this->stepInfo['template']);
+
+                return $this->render($this->stepInfo['template']);
             } else {
-	            $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
-	            return $this->_success();
+                $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
+
+                return $this->_success();
             }
         }
 
@@ -99,7 +101,7 @@ class EmailController extends WebInstallerController
         $this->set('emailConfigurationForm', $this->emailConfigurationForm);
 
         if (!$confIsValid) {
-	        throw new Exception(__('The data entered are not correct'));
+            throw new Exception(__('The data entered are not correct'));
         }
     }
 

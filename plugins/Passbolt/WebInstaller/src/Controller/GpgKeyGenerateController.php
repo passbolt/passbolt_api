@@ -23,7 +23,7 @@ class GpgKeyGenerateController extends WebInstallerController
     // GPG key generate form.
     protected $gpgKeyGenerateForm = null;
 
-	const MY_CONFIG_KEY = 'gpg';
+    const MY_CONFIG_KEY = 'gpg';
 
     /**
      * Initialize.
@@ -48,7 +48,7 @@ class GpgKeyGenerateController extends WebInstallerController
     {
         if (!empty($this->request->getData())) {
             try {
-	            $this->_validateData($this->request->getData());
+                $this->_validateData($this->request->getData());
                 $fingerprint = $this->gpgKeyGenerateForm->generateKey($this->request->getData());
                 $this->gpgKeyGenerateForm->exportArmoredKeys($fingerprint);
             } catch (Exception $e) {
@@ -56,9 +56,9 @@ class GpgKeyGenerateController extends WebInstallerController
             }
 
             $this->_saveConfiguration(self::MY_CONFIG_KEY, [
-	            'fingerprint' => $fingerprint,
-	            'public' => Configure::read('passbolt.gpg.serverKey.public'),
-	            'private' => Configure::read('passbolt.gpg.serverKey.private')
+                'fingerprint' => $fingerprint,
+                'public' => Configure::read('passbolt.gpg.serverKey.public'),
+                'private' => Configure::read('passbolt.gpg.serverKey.private')
             ]);
 
             return $this->_success();
@@ -78,7 +78,7 @@ class GpgKeyGenerateController extends WebInstallerController
         $this->set('gpgKeyGenerateForm', $this->gpgKeyGenerateForm);
 
         if (!$confIsValid) {
-	        throw new Exception(__('The data entered are not correct'));
+            throw new Exception(__('The data entered are not correct'));
         }
     }
 }
