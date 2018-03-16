@@ -203,7 +203,7 @@ hcciUFw5
         $data['Resource'] = $dataV2;
         $data['Secret'] = $dataV2['secrets'];
         unset($data['Resource']['secrets']);
-        $this->putJson("/resources/$resourceId.json", $data);
+        $this->putJson("/resources/$resourceId.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // Check the server response.
@@ -259,7 +259,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/resources/$resourceId.json");
+        $this->putJson("/resources/$resourceId.json?api-version=v1");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
@@ -267,7 +267,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->putJson("/resources/$resourceId.json");
+        $this->putJson("/resources/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -277,7 +277,7 @@ hcciUFw5
         $resourceId = UuidFactory::uuid('resource.id.jquery');
         $resource = $this->Resources->get($resourceId);
         $data = $this->_getDummyPostData($resource);
-        $this->putJson("/resources/$resourceId.json", $data);
+        $this->putJson("/resources/$resourceId.json?api-version=v1", $data);
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -293,7 +293,7 @@ hcciUFw5
         foreach ($testCases as $testCase) {
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
-            $this->putJson("/resources/$resourceId.json");
+            $this->putJson("/resources/$resourceId.json?api-version=v1");
             $this->assertError(404, 'The resource does not exist.');
         }
     }
@@ -303,7 +303,7 @@ hcciUFw5
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resource = $this->Resources->get($resourceId);
         $data = $this->_getDummyPostData($resource);
-        $this->putJson("/resources/$resourceId.json", $data);
+        $this->putJson("/resources/$resourceId.json?api-version=v1", $data);
         $this->assertAuthenticationError();
     }
 }

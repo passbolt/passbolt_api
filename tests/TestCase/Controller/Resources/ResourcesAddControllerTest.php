@@ -144,7 +144,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->authenticateAs('ada');
         $userId = UuidFactory::uuid('user.id.ada');
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson("/resources.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // Check the server response.
@@ -221,7 +221,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('ada');
-            $this->postJson("/resources.json", $case['data']);
+            $this->postJson("/resources.json?api-version=v1", $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
@@ -232,7 +232,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testResourcesAddErrorNotAuthenticated()
     {
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson("/resources.json?api-version=v1", $data);
         $this->assertAuthenticationError();
     }
 }

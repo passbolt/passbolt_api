@@ -42,7 +42,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -88,7 +88,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     public function testContainApiV1Success()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
+        $urlParameter = 'api-version=v1&contain[group]=1&contain[user]=1&contain[user.profile]=1';
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->getJson("/permissions/resource/$resourceId.json?$urlParameter");
         $this->assertSuccess();
@@ -132,7 +132,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     public function testErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
         $this->assertAuthenticationError();
     }
 
@@ -140,7 +140,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
         $this->assertError(400, 'The id is not valid for model Resource');
     }
 
@@ -148,7 +148,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->getJson("/permissions/resource/$resourceId.json");
+        $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 

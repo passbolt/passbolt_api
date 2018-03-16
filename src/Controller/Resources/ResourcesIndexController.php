@@ -16,6 +16,7 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
 
 class ResourcesIndexController extends AppController
 {
@@ -33,8 +34,12 @@ class ResourcesIndexController extends AppController
             'contain' => ['creator', 'favorite', 'modifier', 'permission', 'secret'],
             'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me'],
             'order' => ['Resource.modified']
-
         ];
+
+        if (Configure::read('passbolt.plugins.tags')) {
+            $whitelist['contain'][] = 'tag';
+            $whitelist['filter'][] = 'has-tag';
+        }
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resources.

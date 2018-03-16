@@ -31,6 +31,7 @@ use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
 
 abstract class AppIntegrationTestCase extends IntegrationTestCase
@@ -79,6 +80,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
     {
         parent::setUp();
         $this->initAvatarEvents();
+        Configure::write('passbolt.plugins', []);
     }
 
     /**
@@ -181,14 +183,13 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
      *
      * @param string|array $url The URL to request.
      * @return void
-     * @throws \Exception when the result of the request is not a valid json.
      */
     public function getJson($url)
     {
         $this->get($url);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            throw new \Exception('The result of the request is not a valid json.');
+            \PHPUnit_Framework_TestCase::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
@@ -204,14 +205,13 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
      * @param string|array $url The URL to request.
      * @param array $data The data for the request.
      * @return void
-     * @throws \Exception when the result of the request is not a valid json.
      */
     public function postJson($url, $data = [])
     {
         $this->post($url, $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            throw new \Exception('The result of the request is not a valid json.');
+            \PHPUnit_Framework_TestCase::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;

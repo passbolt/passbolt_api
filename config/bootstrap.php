@@ -267,12 +267,26 @@ Plugin::load('Burzum/FileStorage');
 require_once (CONFIG . DS . 'file_storage.php');
 
 /*
+ * Enable Tag plugin
+ */
+Plugin::load('Passbolt/Tags', ['bootstrap' => true, 'routes' => true]);
+
+/*
  * Only try to load selenium helper in development mode
  */
 if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
     Plugin::load('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
+
+// Load Passbolt import plugin.
+Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+
+// Load Passbolt export plugin.
+Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+
+// Load Passbolt Web Installer plugin. (Passbolt pro)
+Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
 
 /*
  * Gpg Config
@@ -282,7 +296,7 @@ if (Configure::read('passbolt.gpg.putenv')) {
 }
 
 // Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
+define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.web-installer')));
 
 /*
  * Set process user constant
