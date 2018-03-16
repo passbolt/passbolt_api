@@ -28,8 +28,7 @@ class V200MigrateKeyField extends AbstractMigration
         // It can cause issues if the name is not escaped
 
         $this->table('gpgkeys')
-            ->renameColumn('key','armored_key')
+            ->renameColumn('key', 'armored_key')
             ->save();
-
     }
 }
