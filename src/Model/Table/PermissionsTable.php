@@ -669,9 +669,15 @@ class PermissionsTable extends Table
             // Update or Delete case.
             if (isset($change['id'])) {
                 // Retrieve the permission a change is requested for.
-                $permissionKey = array_search($change['id'], array_column($entities, 'id'));
+                $permissionKey = null;
+                foreach ($entities as $key => $entity) {
+                    if ($entity['id'] == $change['id']) {
+                        $permissionKey = $key;
+                        break;
+                    }
+                }
                 // The permission does not belong to the resource.
-                if ($permissionKey === false) {
+                if (is_null($permissionKey)) {
                     $errors = ['id' => [
                         'permission_exists' => __('The permission does not exist.', $change['id'])
                     ]];

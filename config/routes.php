@@ -29,8 +29,7 @@ if (!PASSBOLT_IS_CONFIGURED) {
         $routes->connect('/**', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'notConfigured'])
             ->setMethods(['GET', 'POST']);
     });
-}
-else {
+} else {
     /**
      * Shorthands and legacy redirect
      */
@@ -295,7 +294,6 @@ else {
         $routes->connect('/validateAccount/:userId', ['prefix' => 'Setup', 'controller' => 'SetupComplete', 'action' => 'complete'])
             ->setPass(['userId'])
             ->setMethods(['PUT', 'POST']);
-
     });
 
     /**
@@ -345,7 +343,6 @@ else {
             ->setMethods(['PUT', 'POST']);
     });
 }
-
 
 /**
  * Load all plugin routes. See the Plugin documentation on

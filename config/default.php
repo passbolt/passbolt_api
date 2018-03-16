@@ -31,6 +31,8 @@ return [
      *
      */
     'passbolt' => [
+        // Edition.
+        'edition' => 'ce',
 
         // Authentication & Authorisation.
         'auth' => [
