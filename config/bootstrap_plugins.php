@@ -17,3 +17,8 @@ use Cake\Core\Plugin;
 /**
  * Insert below all passbolt plugins.
  */
+
+// Add passbolt pro main plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Pro')) {
+    Plugin::load('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
+}
