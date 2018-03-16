@@ -64,6 +64,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
+            "Passbolt\\Pro\\": "./plugins/Passbolt/Pro/src",
             "PassboltTestData\\": "./plugins/PassboltTestData/src",
             "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src"
         }
