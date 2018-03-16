@@ -1,11 +1,11 @@
 <?php
 return [
-	'passbolt' => [
-		'edition' => 'pro',
-		'plugins' => [
-			'pro' => [
-				'version' => '2.0.0',
-			],
-		],
-	],
+    'passbolt' => [
+        'edition' => 'pro',
+        'plugins' => [
+            'pro' => [
+                'version' => '2.0.0',
+            ],
+        ],
+    ],
 ];
