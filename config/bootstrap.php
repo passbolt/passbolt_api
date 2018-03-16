@@ -294,6 +294,6 @@ define('PROCESS_USER', $user['name']);
 /*
  * Enable passbolt pro if present
  */
-if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Pro')) {
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
     Plugin::load('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
 }

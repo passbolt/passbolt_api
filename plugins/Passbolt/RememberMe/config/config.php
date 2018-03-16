@@ -2,8 +2,8 @@
 return [
     'passbolt' => [
         'plugins' => [
-            'remember_me' => [
-                'version' => '1.0.0',
+            'rememberMe' => [
+                'version' => '2.0.0',
                 'options' => [
                     '300' => __('5 minutes'),
                     '900' => __('15 minutes'),
