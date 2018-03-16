@@ -287,8 +287,9 @@ $uid = posix_getuid();
 $user = posix_getpwuid($uid);
 define('PROCESS_USER', $user['name']);
 
-if (file_exists(__DIR__ . '/bootstrap_pro.php')) {
-    require __DIR__ . '/bootstrap_pro.php';
-} else {
-    define('PASSBOLT_PRO', false);
+if (file_exists(__DIR__ . '/bootstrap_plugins.php')) {
+    require __DIR__ . '/bootstrap_plugins.php';
 }
+
+// Are we running passbolt pro?
+define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
