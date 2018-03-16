@@ -281,12 +281,15 @@ if (Configure::read('passbolt.gpg.putenv')) {
     putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
 
-// Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.WebInstaller')));
-
 /*
  * Set process user constant
  */
 $uid = posix_getuid();
 $user = posix_getpwuid($uid);
 define('PROCESS_USER', $user['name']);
+
+if (file_exists(__DIR__ . '/bootstrap_pro.php')) {
+	require __DIR__ . '/bootstrap_pro.php';
+} else {
+	define('PASSBOLT_PRO', false);
+}
