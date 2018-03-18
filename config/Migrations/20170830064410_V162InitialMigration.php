@@ -54,7 +54,7 @@ class V162InitialMigration extends AbstractMigration
             $latestMigrationName = 'Migration_1_6_1';
             $schemaMigrationResult = $this->query("SELECT * FROM schema_migrations WHERE class='$latestMigrationName'");
             $schemaMigrationRows = $schemaMigrationResult->fetchAll();
-            if (!count($schemaMigrationRows)){
+            if (!count($schemaMigrationRows)) {
                 throw new Exception('Can not upgrade. Please upgrade to the latest 1.x version first and retry. See https://help.passbolt.com/hosting/update.');
             }
         }
@@ -68,6 +68,7 @@ class V162InitialMigration extends AbstractMigration
             foreach ($tables as $table) {
                 $this->execute('ALTER TABLE ' . $table . ' COLLATE utf8mb4_unicode_ci');
             }
+
             return;
         }
 
@@ -998,5 +999,4 @@ class V162InitialMigration extends AbstractMigration
         ];
         $this->insert('roles', $rolesData);
     }
-
 }

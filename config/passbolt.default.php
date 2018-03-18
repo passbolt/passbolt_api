@@ -115,13 +115,13 @@ return [
         ],
     ],
 
-    /**
-     * DEMO CONFIGURATION EXAMPLE
-     *
-     * Uncomment the lines below if you want to try passbolt quickly.
-     * and if you are not concerned about the security of your installation.
-     * (Don't forget to comment the default config above).
-     */
+/**
+ * DEMO CONFIGURATION EXAMPLE
+ *
+ * Uncomment the lines below if you want to try passbolt quickly.
+ * and if you are not concerned about the security of your installation.
+ * (Don't forget to comment the default config above).
+ */
 //    'debug' => true,
 //    'passbolt' => [
 //        'registration' => [
