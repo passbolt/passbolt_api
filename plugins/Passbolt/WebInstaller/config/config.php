@@ -15,7 +15,7 @@
 return [
     'passbolt' => [
         'plugins' => [
-            'web-installer' => [
+            'webInstaller' => [
                 'version' => '2.0.0',
             ]
         ]
