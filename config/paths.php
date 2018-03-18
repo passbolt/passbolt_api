@@ -82,6 +82,11 @@ define('LOGS', ROOT . DS . 'logs' . DS);
 define('CACHE', TMP . 'cache' . DS);
 
 /**
+ * Path to the plugins directory.
+ */
+define('PLUGINS', ROOT . DS . 'plugins' . DS);
+
+/**
  * The absolute path to the "cake" directory, WITHOUT a trailing DS.
  *
  * CakePHP should always be installed with composer, so look there.
