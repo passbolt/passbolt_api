@@ -29,11 +29,11 @@ class V200MigrateForeignIdField extends AbstractMigration
         // foreign_key
 
         $this->table('favorites')
-            ->renameColumn('foreign_id','foreign_key')
+            ->renameColumn('foreign_id', 'foreign_key')
             ->save();
 
         $this->table('comments')
-            ->renameColumn('foreign_id','foreign_key')
+            ->renameColumn('foreign_id', 'foreign_key')
             ->save();
     }
 }
