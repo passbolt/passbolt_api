@@ -42,3 +42,7 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Export')) {
     Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
 }
 
+// Add remember me plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
+    Plugin::load('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
+}
