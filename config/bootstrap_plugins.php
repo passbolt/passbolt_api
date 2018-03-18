@@ -17,3 +17,7 @@ use Cake\Core\Plugin;
 /**
  * Insert below all passbolt plugins.
  */
+// Add export plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Export')) {
+    Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+}
