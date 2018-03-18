@@ -17,3 +17,7 @@ use Cake\Core\Plugin;
 /**
  * Insert below all passbolt plugins.
  */
+// Add remember me plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Import')) {
+    Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+}
