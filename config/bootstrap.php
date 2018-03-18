@@ -273,9 +273,6 @@ if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
     Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
 }
 
-// Load Passbolt Web Installer plugin. (Passbolt pro)
-Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
-
 /*
  * Gpg Config
  */
