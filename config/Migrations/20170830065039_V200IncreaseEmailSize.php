@@ -25,7 +25,7 @@ class V200IncreaseEmailSize extends AbstractMigration
     public function up()
     {
         $this->table('users')
-            ->changeColumn('username', 'string', array('limit' => 254))
+            ->changeColumn('username', 'string', ['limit' => 254])
             ->update();
     }
 }

@@ -89,7 +89,7 @@ try {
     Configure::load('version', 'default', true);
 } catch (\Exception $e) {
     // let cli handle issues
-    if(!$isCli) {
+    if (!$isCli) {
         exit($e->getMessage() . "\n");
     }
 }
@@ -165,8 +165,7 @@ if (!Configure::read('App.fullBaseUrl')) {
 // Define constant PASSBOLT_IS_CONFIGURED based on database configuration status.
 if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
     define('PASSBOLT_IS_CONFIGURED', 1);
-}
-else if (Configure::read('Datasources.default')) {
+} elseif (Configure::read('Datasources.default')) {
     if (empty(Configure::read('Datasources.default.username'))
         && empty(Configure::read('Datasources.default.password'))
         && empty(Configure::read('Datasources.default.database'))
@@ -264,7 +263,7 @@ Plugin::load('EmailQueue');
  * Enable FileStorage plugin
  */
 Plugin::load('Burzum/FileStorage');
-require_once (CONFIG . DS . 'file_storage.php');
+require_once(CONFIG . DS . 'file_storage.php');
 
 /*
  * Only try to load selenium helper in development mode
@@ -284,12 +283,16 @@ if (Configure::read('passbolt.gpg.putenv')) {
     putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
 }
 
-// Is passbolt pro active?
-define('PASSBOLT_PRO', !empty(Configure::read('passbolt.plugins.web-installer')));
-
 /*
  * Set process user constant
  */
 $uid = posix_getuid();
 $user = posix_getpwuid($uid);
 define('PROCESS_USER', $user['name']);
+
+if (file_exists(__DIR__ . '/bootstrap_plugins.php')) {
+    require __DIR__ . '/bootstrap_plugins.php';
+}
+
+// Are we running passbolt pro?
+define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');

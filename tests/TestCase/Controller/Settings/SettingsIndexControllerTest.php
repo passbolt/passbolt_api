@@ -28,11 +28,15 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertGreaterThan(1, count((array)$this->_responseJsonBody->app));
+        $this->assertTrue(isset($this->_responseJsonBody->app->version));
     }
 
     public function testSettingsIndexErrorNotAuthenticated()
     {
-        $this->getJson('/settings.json');
-        $this->assertAuthenticationError();
+        $this->getJson('/settings.json?api-version=2');
+        $this->assertSuccess();
+        $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
+        $this->assertFalse(isset($this->_responseJsonBody->app->version));
+        $this->assertTrue(isset($this->_responseJsonBody->app->url));
     }
 }
