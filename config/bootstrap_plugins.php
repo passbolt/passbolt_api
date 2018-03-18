@@ -21,3 +21,8 @@ use Cake\Core\Plugin;
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Tags')) {
     Plugin::load('Passbolt/Tags', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add import plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Import')) {
+    Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+}
