@@ -26,3 +26,8 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Tags')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Import')) {
     Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add export plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Export')) {
+    Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+}
