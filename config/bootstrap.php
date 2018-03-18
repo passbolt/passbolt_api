@@ -266,11 +266,6 @@ Plugin::load('Burzum/FileStorage');
 require_once(CONFIG . DS . 'file_storage.php');
 
 /*
- * Enable Tag plugin
- */
-Plugin::load('Passbolt/Tags', ['bootstrap' => true, 'routes' => true]);
-
-/*
  * Only try to load selenium helper in development mode
  */
 if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {

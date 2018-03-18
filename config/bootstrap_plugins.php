@@ -17,3 +17,7 @@ use Cake\Core\Plugin;
 /**
  * Insert below all passbolt plugins.
  */
+// Add tags plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Tags')) {
+    Plugin::load('Passbolt/Tags', ['bootstrap' => true, 'routes' => true]);
+}
