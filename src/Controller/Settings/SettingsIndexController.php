@@ -20,9 +20,18 @@ use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 class SettingsIndexController extends AppController
 {
+    /**
+     * Configuration white list while accessing the entry point as anonymous.
+     * @var array
+     */
+    protected $pluginConfigurationWhiteList = [
+        'rememberMe.options'
+    ];
+
     /**
      * Before filter
      *
@@ -103,6 +112,17 @@ class SettingsIndexController extends AppController
                     'plugins' => array_fill_keys(array_keys(Configure::read('passbolt.plugins')), []),
                 ],
             ];
+
+            // Add white listed plugin options.
+            foreach ($this->pluginConfigurationWhiteList as $path) {
+                if (!empty(Configure::read('passbolt.plugins.' . $path))) {
+                    $settings['passbolt']['plugins'] = Hash::insert(
+                        $settings['passbolt']['plugins'],
+                        $path,
+                        Configure::read('passbolt.plugins.' . $path)
+                    );
+                }
+            }
         }
 
         return $settings;
