@@ -183,6 +183,10 @@ class AppController extends Controller {
 		$this->response->header('X-GPGAuth-Logout-URL', '/auth/logout');
 		$this->response->header('X-GPGAuth-Verify-URL', '/auth/verify');
 		$this->response->header('X-GPGAuth-Pubkey-URL', '/auth/verify');
+		$allowedHeaders = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
+			'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
+			'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
+		$this->response->header('Access-Control-Expose-Headers', $allowedHeaders);
 	}
 
 /**
