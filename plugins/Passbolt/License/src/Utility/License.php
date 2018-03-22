@@ -115,7 +115,12 @@ class License
     protected function _verifySignature($licenseSigned)
     {
         $licenseInfo = null;
-        $licensePublicKey = file_get_contents(Configure::read('passbolt.plugins.license.licenseKey.public'));
+        $file = Configure::read('passbolt.plugins.license.licenseKey.public');
+
+        if (!file_exists($file)) {
+            throw new \Exception(__('License not found in {0}', $file));
+        }
+        $licensePublicKey = file_get_contents($file);
         $fingerprint = $this->_gpg->importKeyIntoKeyring($licensePublicKey);
         try {
             $this->_gpg->verify($licenseSigned, $fingerprint, $licenseInfo);

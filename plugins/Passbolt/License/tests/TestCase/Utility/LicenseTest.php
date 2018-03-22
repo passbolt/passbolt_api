@@ -24,20 +24,21 @@ class LicenseTest extends AppTestCase
 
     public function setUp()
     {
-        Configure::write('passbolt.plugins.license.licenseKey.public', PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $licenseDevPublicKey = __DIR__ . DS . '..' . DS . '..' . DS . 'data' . DS . 'gpg' . DS . 'license_dev_public.key';
+        Configure::write('passbolt.plugins.license.licenseKey.public', $licenseDevPublicKey);
         parent::setUp();
     }
 
     protected function _getDummyLicense(string $scenario = '')
     {
-        $testDataPath = __DIR__ . '/../../data/';
+        $testDataPath = __DIR__ . '/../../data/license/';
 
         return file_get_contents($testDataPath . $scenario);
     }
 
     public function testSuccessValidate()
     {
-        $licenseStr = $this->_getDummyLicense('license_issuer_ada');
+        $licenseStr = $this->_getDummyLicense('license_dev');
         $license = new License($licenseStr);
         try {
             $license->validate();
@@ -68,7 +69,7 @@ class LicenseTest extends AppTestCase
 
     public function testErrorValidate_InvalidLicenseIssuer()
     {
-        $licenseStr = $this->_getDummyLicense('license_issuer_betty');
+        $licenseStr = $this->_getDummyLicense('license_issuer_ada');
         $license = new License($licenseStr);
         try {
             $license->validate();

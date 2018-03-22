@@ -62,6 +62,11 @@ class MigrateTask extends AppShell
         } else {
         }
 
+        // Normal mode
+        if (!$this->_licenseCheck()) {
+            return false;
+        }
+
         // Migration task
         $this->out(' ' . __('Running migration scripts.'));
         $this->hr();
@@ -86,6 +91,27 @@ class MigrateTask extends AppShell
             }
 
             return $success;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check the license is valid.
+     * Dispatch to plugin Passbolt/license.license_check
+     *
+     * @return bool status
+     */
+    protected function _licenseCheck()
+    {
+        if (Configure::read('passbolt.plugins.license')) {
+            $cmd = $this->_formatCmd('passbolt license_check');
+            $code = $this->dispatchShell($cmd);
+            if ($code === self::CODE_SUCCESS) {
+                return true;
+            } else {
+                return false;
+            }
         }
 
         return true;

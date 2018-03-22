@@ -110,6 +110,9 @@ class InstallTask extends AppShell
         }
 
         // Normal mode
+        if (!$this->_licenseCheck()) {
+            return false;
+        }
         if (!$this->_healthchecks()) {
             return false;
         }
@@ -138,6 +141,27 @@ class InstallTask extends AppShell
         $this->out('');
         $this->_success(__('Passbolt installation success! Enjoy! ☮'));
         $this->out('');
+
+        return true;
+    }
+
+    /**
+     * Check the license is valid.
+     * Dispatch to plugin Passbolt/license.license_check
+     *
+     * @return bool status
+     */
+    protected function _licenseCheck()
+    {
+        if (Configure::read('passbolt.plugins.license')) {
+            $cmd = $this->_formatCmd('passbolt license_check');
+            $code = $this->dispatchShell($cmd);
+            if ($code === self::CODE_SUCCESS) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
         return true;
     }
