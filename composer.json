@@ -67,16 +67,14 @@
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
-            "PassboltTestData\\": "./plugins/PassboltTestData/src",
-            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src"
+            "Passbolt\\License\\": "./plugins/Passbolt/License/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
-            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
-            "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests"
+            "Passbolt\\License\\Test\\": "./plugins/Passbolt/License/tests"
         }
     },
     "scripts": {

@@ -30,6 +30,7 @@ class PassboltShell extends AppShell
         'Migrate',
         'MysqlExport',
         'MysqlImport',
+        'Passbolt/License.LicenseCheck',
         'PassboltTestData.Data',
         'PassboltTestData.fixturize',
         'RegisterUser',
@@ -98,6 +99,13 @@ class PassboltShell extends AppShell
             'help' => __d('cake_console', 'Init the GnuPG keyring.'),
             'parser' => $this->KeyringInit->getOptionParser(),
         ]);
+
+        if (Configure::read('passbolt.plugins.license')) {
+            $parser->addSubcommand('license_check', [
+                'help' => __d('cake_console', 'Check the license.'),
+                'parser' => $this->LicenseCheck->getOptionParser(),
+            ]);
+        }
 
         $parser->addSubcommand('migrate', [
             'help' => __d('cake_console', 'Run database migrations.'),

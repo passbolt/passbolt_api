@@ -263,6 +263,38 @@ class Gpg
     }
 
     /**
+     * Check if an ASCII armored signed message is parsable
+     *
+     * @param  string $armored ASCII armored signed message
+     * @return bool
+     */
+    public function isParsableArmoredSignedMessageRule($armored)
+    {
+        // First, we try to get the marker of the gpg signed message.
+        try {
+            $marker = $this->getGpgMarker($armored);
+        } catch (Exception $e) {
+            // If we can't extract the marker, we consider it's not a valid signed message.
+            return false;
+        }
+
+        // The marker is not the expected one
+        if ($marker !== 'PGP SIGNED MESSAGE') {
+            return false;
+        }
+
+        // Try to unarmor the message.
+        $unarmored = OpenPGP::unarmor($armored, $marker);
+        // If we don't manage to unarmor the signed message, we consider it's not a valid one.
+        if ($unarmored == false) {
+            return false;
+        }
+
+        // All tests pass, return true.
+        return true;
+    }
+
+    /**
      * Check if a message is valid.
      *
      * To do this, we try to unarmor the message. If the operation is successful, then we consider that
@@ -506,5 +538,22 @@ class Gpg
 
         // Return decrypted text.
         return $decrypted;
+    }
+
+    /**
+     * Verify a signed message.
+     *
+     * @param string $armored The armored signed message to verify.
+     * @param string $fingerprint The fingerprint of the key to verify for.
+     * @param mixed $plainText (optional) The plain text. If this optional parameter is passed, it is filled with the plain text.
+     * @return void
+     * @throws \Exception If the armored signed message cannot be verified.
+     */
+    public function verify($armored, $fingerprint, &$plainText = null)
+    {
+        $signature = $this->_gpg->verify($armored, false, $plainText);
+        if ($signature[0]['fingerprint'] !== $fingerprint) {
+            throw new \Exception(__('The message cannot be verified.'));
+        }
     }
 }

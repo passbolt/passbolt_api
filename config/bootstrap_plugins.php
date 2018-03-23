@@ -46,3 +46,8 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Export')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
     Plugin::load('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
 }
+
+// Add license plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
+    Plugin::load('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
+}
