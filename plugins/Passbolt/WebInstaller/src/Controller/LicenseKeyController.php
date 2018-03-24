@@ -14,6 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use Passbolt\License\Utility\License;
 use Passbolt\WebInstaller\Form\LicenseKeyForm;
 
 class LicenseKeyController extends WebInstallerController
@@ -37,15 +38,21 @@ class LicenseKeyController extends WebInstallerController
     public function index()
     {
         if (!empty($this->request->getData())) {
+            $data = $this->request->getData();
             $licenseKeyForm = new LicenseKeyForm();
-            $dataIsValid = $licenseKeyForm->execute($this->request->getData());
+            $dataIsValid = $licenseKeyForm->execute($data);
             $this->set('licenseKeyForm', $licenseKeyForm);
 
             if (!$dataIsValid) {
+                $errors = $licenseKeyForm->errors();
+                if (isset($errors['license_key'])) {
+                    return $this->_error(array_pop($errors['license_key']));
+                }
+
                 return $this->_error(__('The data entered are not correct'));
             }
 
-            return $this->_checkLicense();
+            return $this->_checkLicense($data['license_key']);
         }
 
         $this->render($this->stepInfo['template']);
@@ -53,11 +60,18 @@ class LicenseKeyController extends WebInstallerController
 
     /**
      * Check that the license provided is valid.
-     * @return void
+     * @param string $licenseStr The license
+     * @return mixed
      */
-    protected function _checkLicense()
+    protected function _checkLicense(string $licenseStr = '')
     {
-        // TODO: check license and manage errors.
-        $this->_success();
+        $license = new License($licenseStr);
+        try {
+            $license->validate();
+        } catch (\Exception $e) {
+            return $this->_error($e->getMessage());
+        }
+
+        return $this->_success();
     }
 }

@@ -17,6 +17,7 @@ namespace Passbolt\WebInstaller\Form;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Passbolt\License\Utility\License;
 
 class LicenseKeyForm extends Form
 {
@@ -41,11 +42,31 @@ class LicenseKeyForm extends Form
         $validator
             ->requirePresence('license_key', 'create', __('A license key is required.'))
             ->notEmpty('license_key', __('A license key is required.'))
-            ->ascii('license_key', __('The license_key is a valid ascii text.'));
-
-        // TODO add key validation.
+            ->add('license_key', ['custom' => [
+                'rule' => [$this, 'isValidLicenseFormat'],
+                'message' => __('The license format is not valid.')
+            ]]);
 
         return $validator;
+    }
+
+    /**
+     * Check if a license is in a valid format.
+     *
+     * @param string $value The license
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isValidLicenseFormat(string $value, array $context = null)
+    {
+        $license = new License($value);
+        try {
+            $license->getArmoredSignedLicense();
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

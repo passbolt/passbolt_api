@@ -14,6 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
@@ -31,7 +32,11 @@ class DatabaseController extends WebInstallerController
     public function initialize()
     {
         parent::initialize();
-        $this->stepInfo['previous'] = 'install/license_key';
+        if (Configure::read('passbolt.plugins.license')) {
+            $this->stepInfo['previous'] = 'install/license_key';
+        } else {
+            $this->stepInfo['previous'] = 'install';
+        }
         $this->stepInfo['next'] = 'install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
 
