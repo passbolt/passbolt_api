@@ -498,7 +498,8 @@ class HealthcheckTask extends AppShell
      * @param array $checks existing results
      * @return void
      */
-    public function assertGpgEnv($checks = null) {
+    public function assertGpgEnv($checks = null)
+    {
         $this->assert(
             $checks['gpg']['lib'],
             __('PHP GPG Module is installed and loaded.'),

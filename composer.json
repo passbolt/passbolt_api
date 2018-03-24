@@ -64,16 +64,13 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
-            "PassboltTestData\\": "./plugins/PassboltTestData/src",
-            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "App\\Test\\": "tests",
-            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
-            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests"
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     },
     "scripts": {
