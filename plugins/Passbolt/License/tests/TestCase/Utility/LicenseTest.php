@@ -15,41 +15,32 @@
 
 namespace Passbolt\License\Test\TestCase\Utility;
 
-use App\Test\Lib\AppTestCase;
-use Cake\Core\Configure;
+use App\Utility\UuidFactory;
+use Passbolt\License\Test\Lib\LicenseTestCase;
 use Passbolt\License\Utility\License;
 
-class LicenseTest extends AppTestCase
+class LicenseTest extends LicenseTestCase
 {
 
-    public function setUp()
-    {
-        $licenseDevPublicKey = __DIR__ . DS . '..' . DS . '..' . DS . 'data' . DS . 'gpg' . DS . 'license_dev_public.key';
-        Configure::write('passbolt.plugins.license.licenseKey.public', $licenseDevPublicKey);
-        parent::setUp();
-    }
-
-    protected function _getDummyLicense(string $scenario = '')
-    {
-        $testDataPath = __DIR__ . '/../../data/license/';
-
-        return file_get_contents($testDataPath . $scenario);
-    }
-
-    public function testSuccessValidate()
+    public function testSuccessGetInfo()
     {
         $licenseStr = $this->_getDummyLicense('license_dev');
         $license = new License($licenseStr);
         try {
-            $license->validate();
+            $licenseInfo = $license->getInfo();
         } catch (\Exception $e) {
-            $this->fail('The license does not validate');
+            return $this->fail('The license does not validate: ' . $e->getMessage());
         }
 
-        return $this->assertTrue(true);
+        $this->assertEquals(UuidFactory::uuid('license.id.passbolt-dev'), $licenseInfo['id']);
+        $this->assertEquals(UuidFactory::uuid('customer.id.passbolt-dev'), $licenseInfo['customer_id']);
+        $this->assertEquals(35, $licenseInfo['users']);
+        $this->assertEquals(UuidFactory::uuid('plan.id.passbolt-dev'), $licenseInfo['plan_id']);
+        $this->assertEquals('2019-03-19', $licenseInfo['expiry']);
+        $this->assertEquals('2018-03-20', $licenseInfo['created']);
     }
 
-    public function testErrorValidate_InvalidFormat()
+    public function testErrorGetInfo_InvalidFormat()
     {
         $licensesStr = [
             'empty license' => '',
@@ -60,22 +51,34 @@ class LicenseTest extends AppTestCase
         foreach ($licensesStr as $licenseStr) {
             $license = new License($licenseStr);
             try {
-                $license->validate();
+                $license->getInfo();
             } catch (\Exception $e) {
                 $this->assertEquals('The license format is not valid.', $e->getMessage());
             }
         }
     }
 
-    public function testErrorValidate_InvalidLicenseIssuer()
+    public function testErrorGetInfo_InvalidLicenseIssuer()
     {
         $licenseStr = $this->_getDummyLicense('license_issuer_ada');
         $license = new License($licenseStr);
         try {
-            $license->validate();
+            $license->getInfo();
         } catch (\Exception $e) {
             $this->assertEquals('The license cannot be verified.', $e->getMessage());
         }
+    }
+
+    public function testSuccessValidate()
+    {
+        $licenseStr = $this->_getDummyLicense('license_dev');
+        $license = new License($licenseStr);
+        try {
+            $license->validate();
+        } catch (\Exception $e) {
+            $this->assertTrue(false);
+        }
+        $this->assertTrue(true);
     }
 
     public function testErrorValidate_ExpiredLicense()

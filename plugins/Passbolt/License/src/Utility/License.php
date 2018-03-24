@@ -47,9 +47,11 @@ class License
     }
 
     /**
-     * Check if the key is valid.
+     * Check if the license is valid.
      * @return bool
-     * @throws \Exception If the key info cannot be retrieved
+     * @throws \Exception If the license format is not valid
+     * @throws \Exception If the gpg public license key cannot be imported into the keyring
+     * @throws \Exception If the license cannot be verified
      * @throws \Exception If the license is expired
      */
     public function validate()
@@ -65,8 +67,11 @@ class License
     }
 
     /**
-     * Extract the license key info
-     * @return array The license key info. On failure, this function returns FALSE.
+     * Extract the license info
+     * @return array The license info. On failure, this function returns FALSE.
+     * @throws \Exception If the license format is not valid
+     * @throws \Exception If the gpg public license key cannot be imported into the keyring
+     * @throws \Exception If the license cannot be verified
      */
     public function getInfo()
     {
@@ -80,47 +85,58 @@ class License
     /**
      * Parse the license.
      *
-     * @return array The license key info. On failure, this function returns FALSE.
+     * @return array The license info. On failure, this function returns FALSE.
      * @throws \Exception If the license format is not valid
      */
     protected function _parse()
     {
-        $licenseSigned = base64_decode($this->_license);
-        if (!$licenseSigned) {
-            throw new \Exception(__('The license format is not valid.'));
-        }
-
-        $isSignedMessage = $this->_gpg->isParsableArmoredSignedMessageRule($licenseSigned);
-        if (!$isSignedMessage) {
-            throw new \Exception(__('The license format is not valid.'));
-        }
-
-        $licenseInfoStr = $this->_verifySignature($licenseSigned);
+        $armoredSignedLicense = $this->getArmoredSignedLicense();
+        $licenseInfoStr = $this->_verifySignature($armoredSignedLicense);
         $licenseInfo = \json_decode($licenseInfoStr, true);
         if (is_null($licenseInfo)) {
-            throw new \Exception(__('The license format is not valid.'));
+            throw new \Exception(__('The license cannot be verified.'));
         }
 
         return $licenseInfo;
     }
 
     /**
+     * Get the armored license.
+     *
+     * @return string The armored signed license
+     * @throws \Exception If the license format is not valid
+     */
+    public function getArmoredSignedLicense()
+    {
+        $armoredSignedLicense = base64_decode($this->_license);
+        if (!$armoredSignedLicense) {
+            throw new \Exception(__('The license format is not valid.'));
+        }
+
+        $isSignedMessage = $this->_gpg->isParsableArmoredSignedMessageRule($armoredSignedLicense);
+        if (!$isSignedMessage) {
+            throw new \Exception(__('The license format is not valid.'));
+        }
+
+        return $armoredSignedLicense;
+    }
+
+    /**
      * Verify the license signature
      *
      * @param string $licenseSigned The signed license to verify.
-     * @return array The license key info.
+     * @return array The license info.
      * @throws \Exception If the gpg public license key cannot be imported into the keyring
      * @throws \Exception If the license cannot be verified
      */
     protected function _verifySignature($licenseSigned)
     {
         $licenseInfo = null;
-        $file = Configure::read('passbolt.plugins.license.licenseKey.public');
-
-        if (!file_exists($file)) {
-            throw new \Exception(__('License not found in {0}', $file));
+        $filePublicKey = Configure::read('passbolt.plugins.license.licenseKey.public');
+        if (!file_exists($filePublicKey)) {
+            throw new \Exception(__('The license cannot be verified.'));
         }
-        $licensePublicKey = file_get_contents($file);
+        $licensePublicKey = file_get_contents($filePublicKey);
         $fingerprint = $this->_gpg->importKeyIntoKeyring($licensePublicKey);
         try {
             $this->_gpg->verify($licenseSigned, $fingerprint, $licenseInfo);
