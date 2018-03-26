@@ -65,14 +65,6 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
         $armoredSignedMessages = [
             'empty message' => '',
             'no gpg signed mark' => '---- invalid format ----',
-            'corrupted signature' => '-----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA512
-
-Signed message
------BEGIN PGP SIGNATURE-----
-
-iQJFBAEBCgAvFiEEA/YOlY9MspcjrN92E1O1sV2bBU8FAlqzd94RHGFkYUBwYXNz
------END PGP SIGNATURE-----',
         ];
 
         foreach ($armoredSignedMessages as $message) {

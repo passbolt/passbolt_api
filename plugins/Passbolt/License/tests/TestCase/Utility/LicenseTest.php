@@ -36,8 +36,8 @@ class LicenseTest extends LicenseTestCase
         $this->assertEquals(UuidFactory::uuid('customer.id.passbolt-dev'), $licenseInfo['customer_id']);
         $this->assertEquals(35, $licenseInfo['users']);
         $this->assertEquals(UuidFactory::uuid('plan.id.passbolt-dev'), $licenseInfo['plan_id']);
-        $this->assertEquals('2019-03-19', $licenseInfo['expiry']);
-        $this->assertEquals('2018-03-20', $licenseInfo['created']);
+        $this->assertEquals('2019-03-25', $licenseInfo['expiry']);
+        $this->assertEquals('2018-03-26', $licenseInfo['created']);
     }
 
     public function testErrorGetInfo_InvalidFormat()

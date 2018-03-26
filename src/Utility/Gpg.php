@@ -283,13 +283,6 @@ class Gpg
             return false;
         }
 
-        // Try to unarmor the message.
-        $unarmored = OpenPGP::unarmor($armored, $marker);
-        // If we don't manage to unarmor the signed message, we consider it's not a valid one.
-        if ($unarmored == false) {
-            return false;
-        }
-
         // All tests pass, return true.
         return true;
     }
