@@ -53,11 +53,11 @@ $listener = new ImageProcessingListener();
 EventManager::instance()->on($listener);
 
 StorageUtils::generateHashes();
-StorageManager::setConfig('Local', array(
+StorageManager::setConfig('Local', [
     'adapterOptions' => [
         Configure::read('ImageStorage.basePath'),
         true,
     ],
     'adapterClass' => '\Gaufrette\Adapter\Local',
     'class' => '\Gaufrette\Filesystem'
-));
+]);

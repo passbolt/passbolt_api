@@ -52,13 +52,14 @@ class V200MigrateFileStorageTable extends AbstractMigration
         // Transform "ProfileAvatar" into "Avatar" in existing db data.
         $FileStorage = TableRegistry::get('FileStorage');
         $avatars = $FileStorage->find()->all();
-        foreach($avatars as $key => $avatar) {
+        foreach ($avatars as $key => $avatar) {
             $avatar = $FileStorage->patchEntity(
                 $avatar,
                 [
                     'model' => 'Avatar',
                     'path' => str_replace('ProfileAvatar', 'Avatar', $avatar->path)
-                ]);
+                ]
+            );
             $FileStorage->save($avatar);
         }
     }

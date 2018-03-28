@@ -16,11 +16,36 @@
 namespace App\Controller\Settings;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 
 class SettingsIndexController extends AppController
 {
+    /**
+     * Configuration white list while accessing the entry point as anonymous.
+     * @var array
+     */
+    protected $pluginConfigurationWhiteList = [
+        'rememberMe.options'
+    ];
+
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->loadModel('Users');
+        $this->Auth->allow('index');
+
+        return parent::beforeFilter($event);
+    }
+
     /**
      * Settings Index action
      *
@@ -28,6 +53,7 @@ class SettingsIndexController extends AppController
      */
     public function index()
     {
+        $role = $this->User->role();
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => ['header']
@@ -35,7 +61,7 @@ class SettingsIndexController extends AppController
         $options = $this->QueryString->get($whitelist);
         $withHeader = isset($options['contain']['header']) && $options['contain']['header'] === false ? false : true;
 
-        $settings = $this->_getSettings();
+        $settings = $this->_getSettings($role);
 
         if ($withHeader == false) {
             $this->set($settings);
@@ -49,28 +75,55 @@ class SettingsIndexController extends AppController
     /**
      * Get the list of settings that should be displayed publicly.
      *
+     * @param string $role role of the user accessing the settings.
+     *
      * @return array
      */
-    protected function _getSettings()
+    protected function _getSettings(string $role)
     {
-        // Build settings array.
-        $settings = [
-            'app' => [
-                'version' => [
-                    'number' => Configure::read('passbolt.version'),
-                    'name' => Configure::read('passbolt.name')
+        if ($role !== Role::GUEST) {
+            // Build settings array.
+            $settings = [
+                'app' => [
+                    'version' => [
+                        'number' => Configure::read('passbolt.version'),
+                        'name' => Configure::read('passbolt.name')
+                    ],
+                    'url' => Router::url('/', true),
+                    'debug' => Configure::read('debug') ? 1 : 0,
+                    'server_timezone' => date_default_timezone_get(),
+                    'image_storage' => [
+                        'public_path' => Configure::read('ImageStorage.publicPath')
+                    ],
                 ],
-                'url' => Router::url('/', true),
-                'debug' => Configure::read('debug') ? 1 : 0,
-                'server_timezone' => date_default_timezone_get(),
-                'image_storage' => [
-                    'public_path' => Configure::read('ImageStorage.publicPath')
+                'passbolt' => [
+                    'edition' => Configure::read('passbolt.edition'),
+                    'plugins' => Configure::read('passbolt.plugins'),
                 ],
-            ],
-            'passbolt' => [
-                'plugins' => Configure::read('passbolt.plugins')
-            ],
-        ];
+            ];
+        } else {
+            // If user is Guest.
+            $settings = [
+                'app' => [
+                    'url' => Router::url('/', true),
+                ],
+                'passbolt' => [
+                    'edition' => Configure::read('passbolt.edition'),
+                    'plugins' => array_fill_keys(array_keys(Configure::read('passbolt.plugins')), []),
+                ],
+            ];
+
+            // Add white listed plugin options.
+            foreach ($this->pluginConfigurationWhiteList as $path) {
+                if (!empty(Configure::read('passbolt.plugins.' . $path))) {
+                    $settings['passbolt']['plugins'] = Hash::insert(
+                        $settings['passbolt']['plugins'],
+                        $path,
+                        Configure::read('passbolt.plugins.' . $path)
+                    );
+                }
+            }
+        }
 
         return $settings;
     }
