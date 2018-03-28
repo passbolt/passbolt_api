@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.6.10] - 2018-03-28
+### Fixed
+- PASSBOLT-2777: Fix preflight issue with chrome and custom GPG headers
+
 ## [1.6.9] - 2018-01-12
 ### Fixed
 - PASSBOLT-2599: PR#209: Expose the 'client' variable in the default email conf
@@ -333,7 +337,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - LU: Logged in user
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.10...HEAD
+[1.6.10]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v1.6.10
 [1.6.9]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...v1.6.9
 [1.6.5]: https://github.com/passbolt/passbolt_api/compare/v1.6.4...v1.6.5
 [1.6.4]: https://github.com/passbolt/passbolt_api/compare/v1.6.3...v1.6.4
