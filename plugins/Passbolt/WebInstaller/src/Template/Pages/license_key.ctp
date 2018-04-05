@@ -3,7 +3,7 @@ use Cake\Routing\Router;
 $this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBottom']);
 ?>
-<?= $this->element('header', ['title' => __('Passbolt pro activation.')]) ?>
+<?= $this->element('header', ['title' => __('Passbolt Pro activation.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
@@ -17,7 +17,7 @@ $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBott
                 <div class="col7">
                         <div class="row">
                             <div class="col12">
-                                <h3><?= __('Copy paste your passbolt pro license key here'); ?></h3>
+                                <h3><?= __('Copy paste your Passbolt Pro subscription key here'); ?></h3>
                                 <?= $this->Flash->render() ?>
                                 <div class="input textarea gpgkey">
                                     <?= $this->Form->textarea('license_key', ['class' => ['key-content']]); ?>

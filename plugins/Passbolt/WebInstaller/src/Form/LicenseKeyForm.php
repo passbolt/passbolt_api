@@ -40,8 +40,8 @@ class LicenseKeyForm extends Form
     protected function _buildValidator(Validator $validator)
     {
         $validator
-            ->requirePresence('license_key', 'create', __('A license key is required.'))
-            ->notEmpty('license_key', __('A license key is required.'))
+            ->requirePresence('license_key', 'create', __('A subscription key is required.'))
+            ->notEmpty('license_key', __('A subscription key is required.'))
             ->add('license_key', ['custom' => [
                 'rule' => [$this, 'isValidLicenseFormat'],
                 'message' => __('The license format is not valid.')

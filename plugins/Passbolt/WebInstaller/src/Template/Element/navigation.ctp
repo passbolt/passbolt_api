@@ -3,7 +3,7 @@ $hasAdmin = $this->Session->read('Passbolt.Config.hasExistingAdmin');
 if ($hasAdmin === true || $hasAdmin === null) {
     $sections = [
         'system_check'  => __('System check'),
-        'license_key'   => __('License key'),
+        'license_key'   => __('Subscription key'),
         'database'      => __('Database'),
         'server_keys'   => __('Server keys'),
         'emails'        => __('Emails'),
@@ -15,7 +15,7 @@ if ($hasAdmin === true || $hasAdmin === null) {
 else {
     $sections = [
         'system_check'  => __('System check'),
-        'license_key'   => __('License key'),
+        'license_key'   => __('Subscription key'),
         'database'      => __('Database'),
         'server_keys'   => __('Server keys'),
         'emails'        => __('Emails'),
