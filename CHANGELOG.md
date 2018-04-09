@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - GITHUB-239: Fix unsafe mode logic
 - GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
+- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
 
 ## [2.0.0] - 2018-04-09
 ### Added
@@ -431,8 +432,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...HEAD
-[2.0.1]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...v2.0.1
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
 [2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
 [2.0.0-rc2]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc1...v2.0.0-rc2
 [2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
