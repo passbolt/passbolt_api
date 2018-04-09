@@ -152,7 +152,7 @@ class DatabaseConfigurationForm extends Form
         }
 
         // Database already exist, check whether the schema is valid, and how many admins are there.
-        $expected = Healthchecks::getSchemaTables();
+        $expected = Healthchecks::getSchemaTables(1);
         foreach ($expected as $expectedTableName) {
             if (!in_array($expectedTableName, $tables)) {
                 throw new Exception(__('The database schema does not match the one expected'));
