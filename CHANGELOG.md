@@ -3,11 +3,13 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.0.0] - 2018-04-09
 ### Added
 - PASSBOLT-2725: Implement start page when passbolt is not configured
 - PASSBOLT-2740: Update <3 link and add unsafe mode warning
 - PASSBOLT-2697: Add passbolt migrate shell with backup option prior migration
-- PASSBOLT-2803: Make the privacy policy footer link configurable by the passbolt admin
+- PASSBOLT-2803: Make the privacy policy footer link configurable in the settings
 - PASSBOLT-2720 Move dev dependencies out of the passbolt_api repo
 - PASSBOLT-2511: passbolt pro bootstrap is moved in a separate folder
 
@@ -25,7 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2744: Favorites delete on group user delete
 - PASSBOLT-2743: Favorites delete on permissions update
 - PASSBOLT-2705: Increase coverage, ensure all users who lost access to a resource have no a secret in db for this resource
-- PASSBOLT-2735: Display a specific message if a sidebar section has not content to display.
+- PASSBOLT-2735: Display a specific message if a sidebar section has not content to display
 - PASSBOLT-2664: Change cakephpConfig into settings entry point and adjusted app-js to work with it
 
 ## [2.0.0-rc2] - 2018-02-20
@@ -424,7 +426,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
 [2.0.0-rc2]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc1...v2.0.0-rc2
 [2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
 [1.6.9]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...v1.6.9

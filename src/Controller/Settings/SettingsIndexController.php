@@ -98,7 +98,7 @@ class SettingsIndexController extends AppController
                 ],
                 'passbolt' => [
                     'edition' => Configure::read('passbolt.edition'),
-                    'plugins' => Configure::read('passbolt.plugins'),
+                    'plugins' => Configure::read('passbolt.plugins', []),
                 ],
             ];
         } else {
@@ -109,7 +109,7 @@ class SettingsIndexController extends AppController
                 ],
                 'passbolt' => [
                     'edition' => Configure::read('passbolt.edition'),
-                    'plugins' => array_fill_keys(array_keys(Configure::read('passbolt.plugins')), []),
+                    'plugins' => array_fill_keys(array_keys(Configure::read('passbolt.plugins'), []), []),
                 ],
             ];
 
