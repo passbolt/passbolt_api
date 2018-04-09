@@ -127,6 +127,13 @@ return [
             ],
         ],
 
+        // Legal
+        'legal' => [
+            'privacy_policy' => [
+                'url' => env('PASSBOLT_LEGAL_PRIVACYPOLICYURL', '')
+            ]
+        ],
+
         // Wich plugins are enabled
         'plugins' => [
 
