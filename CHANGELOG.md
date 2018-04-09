@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- GITHUB-2803: Make the privacy policy footer link configurable by the passbolt admin
 - GITHUB-229: Fix passbolt can not run in a subdirectory
 - PASSBOLT-2697: Add passbolt migrate shell with backup option prior migration
 - COMMUNITY-533: Fix plaintext should be initialized prior verification
@@ -32,7 +33,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1741: Fixed set license to AGPL-3.0-or-later for composer compatibility
 - PASSBOLT-2589: Fixed App-js should check request response code from the http response header and not from the body header
 - PASSBOLT-2533: Fixed resource name, username, uri, description min length should be 1 char not 3
-- PASSBOLT-2660: Fixed remove flash message from login layout	
+- PASSBOLT-2660: Fixed remove flash message from login layout
 
 ## [2.0.0-rc1] - 2018-01-12
 ### Security
