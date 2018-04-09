@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.1] - 2018-04-09
+### Improved
+- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
+
 ## [2.0.0] - 2018-04-09
 ### Added
 - PASSBOLT-2725: Implement start page when passbolt is not configured
