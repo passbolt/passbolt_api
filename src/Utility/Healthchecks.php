@@ -421,6 +421,7 @@ class Healthchecks
                 $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
 
                 try {
+                    $plaintext = "";
                     $info = $_gpg->verify($encryptedMessage2, false, $plaintext);
                     if ($info !== false && isset($info['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info['fingerprint']) {
                         $checks['gpg']['canVerify'] = true;
@@ -532,24 +533,23 @@ class Healthchecks
     }
 
     /**
-     * Get schema tables list. (as in v2).
-     * @return array
+     * Get schema tables list. (per version number).
+     * @param int $version passbolt major version number.
+     * @return array list of tables.
      */
-    public static function getSchemaTables()
+    public static function getSchemaTables($version = 2)
     {
-        return [
+        // List of tables for passbolt v1.
+        $tables = [
             'authentication_tokens',
-            'burzum_file_storage_phinxlog',
             'comments',
             'email_queue',
-            'email_queue_phinxlog',
             'favorites',
             'file_storage',
             'gpgkeys',
             'groups',
             'groups_users',
             'permissions',
-            'phinxlog',
             'profiles',
             'resources',
             'roles',
@@ -557,5 +557,16 @@ class Healthchecks
             'user_agents',
             'users',
         ];
+
+        // Extra tables for passbolt v2.
+        if ($version == 2) {
+            $tables = array_merge($tables, [
+                'burzum_file_storage_phinxlog',
+                'email_queue_phinxlog',
+                'phinxlog',
+            ]);
+        }
+
+        return $tables;
     }
 }
