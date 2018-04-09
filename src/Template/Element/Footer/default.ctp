@@ -14,15 +14,18 @@
  */
 use Cake\Core\Configure;
 $version = Configure::read('passbolt.version');
+$privacyPolicyUrl = Configure::read('passbolt.legal.privacy_policy.url');
 ?>
 <footer>
     <div class="footer">
         <ul class="footer-links">
-<?php if (Configure::read('debug') || Configure::read('passbolt.ssl.force')) : ?>
+<?php if (Configure::read('debug') || !Configure::read('passbolt.ssl.force')) : ?>
             <li class="error message"><a href="https://help.passbolt.com/faq/hosting/why-unsafe" title="terms of service">Unsafe mode</a></li>
 <?php endif; ?>
             <li><a href="https://www.passbolt.com/terms" title="terms of service"><?= __('Terms'); ?></a></li>
-            <li><a href="https://www.passbolt.com/privacy"><?= __('Privacy'); ?></a></li>
+<?php if (!empty($privacyPolicyUrl)) : ?>
+            <li><a href="<?php echo $privacyPolicyUrl ?>"><?= __('Privacy'); ?></a></li>
+<?php endif; ?>
             <li><a href="https://www.passbolt.com/credits"><?= __('Credits'); ?></a></li>
             <li id="version">
                 <a href="https://www.passbolt.com/credits" class="tooltip-left" data-tooltip="<?= $version; ?>">
