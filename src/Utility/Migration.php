@@ -74,11 +74,11 @@ class Migration
             } catch (Exception $e) {
                 throw new Exception(__('Could not connect to github repository'));
             }
-            $tags = (json_decode($results->body));
-            if (!isset($tags[0]) || !property_exists($tags[0], 'name')) {
+            $tags = json_decode($results->body, true);
+            if (!isset($tags[0]) || !isset($tags[0]['name'])) {
                 throw new Exception(__('Could not read tag information on github repository'));
             }
-            $remoteTagName = $tags[0]->name;
+            $remoteTagName = $tags[0]['name'];
             Configure::write('passbolt.remote.version', $remoteTagName);
         }
 
