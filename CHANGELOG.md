@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- PASSBOLT-2768: Remove call to action from login page
+
+## [2.0.1] - 2018-04-09
+### Improved
+- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
 
 ## [2.0.0] - 2018-04-09
 ### Added
