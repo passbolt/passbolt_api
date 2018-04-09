@@ -421,6 +421,7 @@ class Healthchecks
                 $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
 
                 try {
+                    $plaintext = "";
                     $info = $_gpg->verify($encryptedMessage2, false, $plaintext);
                     if ($info !== false && isset($info['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info['fingerprint']) {
                         $checks['gpg']['canVerify'] = true;
