@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 - PASSBOLT-2768: Remove call to action from login page
 
+## [2.0.1] - 2018-04-09
+### Fixed
+- GITHUB-239: Fix unsafe mode logic
+- GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
+- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
+
+## [2.0.0] - 2018-04-09
 ### Added
 - PASSBOLT-2725: Implement start page when passbolt is not configured
 - PASSBOLT-2740: Update <3 link and add unsafe mode warning
@@ -14,9 +21,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2511: passbolt pro bootstrap is moved in a separate folder
 
 ### Fixed
-- GITHUB-239: Fix unsafe mode logic
-- GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
-- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
 - GITHUB-229: Fix passbolt can not run in a subdirectory
 - COMMUNITY-533: Fix plaintext should be initialized prior verification
 - PASSBOLT-2776: Fix: As AN, settings entry point should be able to have plugins settings whitelisted
@@ -429,7 +433,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
 [2.0.0-rc2]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc1...v2.0.0-rc2
 [2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
 [1.6.9]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...v1.6.9
