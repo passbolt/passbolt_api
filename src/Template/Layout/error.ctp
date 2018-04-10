@@ -15,7 +15,7 @@
 use Cake\Core\Configure;
 ?>
 <!DOCTYPE html>
-<html class="passbolt no-js no-passboltplugin alpha version" lang="en">
+<html class="passbolt no-js no-passboltplugin version" lang="en">
 <head>
     <?= $this->Html->charset() ?>
 
