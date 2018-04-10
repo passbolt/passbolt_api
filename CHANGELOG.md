@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.1] - 2018-04-09
+### Fixed
+- GITHUB-239: Fix unsafe mode logic
+- GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
+- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
+
 ## [2.0.0] - 2018-04-09
 ### Added
 - PASSBOLT-2725: Implement start page when passbolt is not configured
