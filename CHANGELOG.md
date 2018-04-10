@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - PASSBOLT-2714: Implement the export feature
 - PASSBOLT-2716: Implement the import feature
+- PASSBOLT-2777: License check as console task
+- PASSBOLT-2732: Implement the License system
 
 ### Improved
 - PASSBOLT-2768: Remove call to action from login page
