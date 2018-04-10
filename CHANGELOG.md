@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-2656 Implement the tags feature
 
 ## [2.0.1] - 2018-04-09
 ### Fixed
