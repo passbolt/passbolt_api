@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-2716: Implement the import feature
 
 ## [2.0.1] - 2018-04-09
 ### Fixed
