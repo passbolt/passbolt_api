@@ -6,7 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2768: Remove call to action from login page
 
 ## [2.0.1] - 2018-04-09
-### Improved
+### Fixed
+- GITHUB-239: Fix unsafe mode logic
+- GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
 - PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
 
 ## [2.0.0] - 2018-04-09
