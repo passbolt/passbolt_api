@@ -9,7 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2777: License check as console task
 - PASSBOLT-2732: Implement the License system
 - PASSBOLT-2709: Implement the remember me feature
-- PASSBOLT-2656 Implement the tags feature
+- PASSBOLT-2656: Implement the tags feature
+- PASSBOLT-2694: Implement the webinstaller feature
 
 ### Improved
 - PASSBOLT-2768: Remove call to action from login page
@@ -28,7 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2740: Update <3 link and add unsafe mode warning
 - PASSBOLT-2697: Add passbolt migrate shell with backup option prior migration
 - PASSBOLT-2803: Make the privacy policy footer link configurable in the settings
-- PASSBOLT-2720 Move dev dependencies out of the passbolt_api repo
+- PASSBOLT-2720: Move dev dependencies out of the passbolt_api repo
 - PASSBOLT-2511: passbolt pro bootstrap is moved in a separate folder
 
 ### Fixed
