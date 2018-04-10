@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - PASSBOLT-2714: Implement the export feature
+- PASSBOLT-2716: Implement the import feature
 
 ### Improved
 - PASSBOLT-2768: Remove call to action from login page
