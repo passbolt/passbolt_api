@@ -3,8 +3,38 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
-- GITHUB-229: Fix passbolt can not run in a subdirectory
+
+## [2.0.1] - 2018-04-09
+### Fixed
+- GITHUB-239: Fix unsafe mode logic
+- GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
+- PASSBOLT-2511: Improve healthcheck tables list so that tables are listed per major version number
+
+## [2.0.0] - 2018-04-09
+### Added
+- PASSBOLT-2725: Implement start page when passbolt is not configured
+- PASSBOLT-2740: Update <3 link and add unsafe mode warning
 - PASSBOLT-2697: Add passbolt migrate shell with backup option prior migration
+- PASSBOLT-2803: Make the privacy policy footer link configurable in the settings
+- PASSBOLT-2720 Move dev dependencies out of the passbolt_api repo
+- PASSBOLT-2511: passbolt pro bootstrap is moved in a separate folder
+
+### Fixed
+- GITHUB-229: Fix passbolt can not run in a subdirectory
+- COMMUNITY-533: Fix plaintext should be initialized prior verification
+- PASSBOLT-2776: Fix: As AN, settings entry point should be able to have plugins settings whitelisted
+- PASSBOLT-2762: Fix unexpected error on resource share
+- PASSBOLT-2754: Change the way to define if passbolt is installed while running the unit tests
+- PASSBOLT-2571: Delete secrets when a password is soft deleted
+- PASSBOLT-2688: Fix healtcheck warning if the development plugin passbolt_test_data is not loaded
+- PASSBOLT-2711: Delete orphans secrets
+- PASSBOLT-2678: Edit Appjs API calls to use version number
+- PASSBOLT-2694: Improve GPG lib to handle private keys validation
+- PASSBOLT-2744: Favorites delete on group user delete
+- PASSBOLT-2743: Favorites delete on permissions update
+- PASSBOLT-2705: Increase coverage, ensure all users who lost access to a resource have no a secret in db for this resource
+- PASSBOLT-2735: Display a specific message if a sidebar section has not content to display
+- PASSBOLT-2664: Change cakephpConfig into settings entry point and adjusted app-js to work with it
 
 ## [2.0.0-rc2] - 2018-02-20
 ### Added
@@ -31,7 +61,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1741: Fixed set license to AGPL-3.0-or-later for composer compatibility
 - PASSBOLT-2589: Fixed App-js should check request response code from the http response header and not from the body header
 - PASSBOLT-2533: Fixed resource name, username, uri, description min length should be 1 char not 3
-- PASSBOLT-2660: Fixed remove flash message from login layout	
+- PASSBOLT-2660: Fixed remove flash message from login layout
 
 ## [2.0.0-rc1] - 2018-01-12
 ### Security
@@ -402,7 +432,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
+[2.0.0-rc2]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc1...v2.0.0-rc2
 [2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
 [1.6.9]: https://github.com/passbolt/passbolt_api/compare/v1.6.5...v1.6.9
 [1.6.5]: https://github.com/passbolt/passbolt_api/compare/v1.6.4...v1.6.5

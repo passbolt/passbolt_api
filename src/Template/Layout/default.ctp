@@ -16,7 +16,7 @@ use Cake\Core\Configure;
 $role = 'TODO';
 ?>
 <!doctype html>
-<html class="passbolt no-js alpha version launching no-passboltplugin <?= $role; ?>" lang="en">
+<html class="passbolt no-js version launching no-passboltplugin <?= $role; ?>" lang="en">
 <head>
     <?= $this->Html->charset() ?>
 
