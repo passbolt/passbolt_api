@@ -41,7 +41,7 @@ class GpgAuthSignMiddleware
             $gpg->setsignmode(\gnupg::SIG_MODE_DETACH);
             $signed = $gpg->sign($body);
 
-            $response = $response->withHeader(self::HTTP_HEADER_GPG_SIG_BODY, urlencode($signed));
+            $response = $response->withHeader(self::HTTP_HEADER_GPG_SIG_BODY, quotemeta(urlencode($signed)));
         }
 
         return $response;
