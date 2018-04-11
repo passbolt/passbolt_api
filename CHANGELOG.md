@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [2.0.2] - 2018-04-10
+## [2.0.1] - 2018-04-11
 ### Added
 - PASSBOLT-2714: Implement the export feature
 - PASSBOLT-2716: Implement the import feature
@@ -19,7 +19,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2511: Improve passbolt Pro bootstrap
 - PASSBOLT-2511: Add pro plugins into bootstrap_plugins
 
-## [2.0.1] - 2018-04-09
 ### Fixed
 - GITHUB-239: Fix unsafe mode logic
 - GITHUB-240: Make sure unconfigured 'passbolt.plugins' doesn't break the extension
