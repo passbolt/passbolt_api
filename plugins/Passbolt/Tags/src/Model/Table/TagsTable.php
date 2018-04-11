@@ -247,8 +247,8 @@ class TagsTable extends Table
         $currentIds = array_keys($currentTags);
         $requestIds = array_keys($requestedTags);
         $changes = [
-            'deleted' => array_diff_assoc($currentIds, $requestIds),
-            'created' => array_diff_assoc($requestIds, $currentIds),
+            'deleted' => array_diff($currentIds, $requestIds),
+            'created' => array_diff($requestIds, $currentIds),
             'unchanged' => array_intersect($requestIds, $currentIds)
         ];
         $tags = [];
