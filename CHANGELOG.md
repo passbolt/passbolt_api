@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2806: Force database columns charset and collation
 - PASSBOLT-2781: Increase length of resource uri field in model validation
 - PASSBOLT-2696: Fix regression: placeholders in registration form are missing
+- GITHUB-242: Add Auto-Submitted header to the email notifications
 
 ## [2.0.1] - 2018-04-09
 ### Fixed
