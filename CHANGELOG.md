@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-2806: Force database columns charset and collation
+- PASSBOLT-2781: Increase length of resource uri field in model validation
+- PASSBOLT-2696: Fix regression: placeholders in registration form are missing
+- GITHUB-242: Add Auto-Submitted header to the email notifications
+- PASSBOLT-2791: Fix providing a string instead of an array in Email.From configuration generates a warning in SendTestEmailTask.php
 
 ## [2.0.1] - 2018-04-11
 ### Added

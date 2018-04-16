@@ -123,7 +123,7 @@ class ResourcesTable extends Table
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
-            ->maxLength('uri', 255, __('The uri length should be maximum {0} characters.', 255))
+            ->maxLength('uri', 1024, __('The uri length should be maximum {0} characters.', 1024))
             ->allowEmpty('uri');
 
         $validator

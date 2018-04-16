@@ -91,6 +91,26 @@ class SendTestEmailTask extends AppShell
     }
 
     /**
+     * Get email from config and return it as a human readable string.
+     * The Email from parameter in the config can take either a string or an array. The purpose
+     * of this function is to provided a standardized way to display the from field.
+     * @return array|string
+     */
+    protected static function _getEmailFromAsString()
+    {
+        $config = Email::getConfig('default');
+        $from = isset($config['from']) ? $config['from'] : '';
+        if (is_array($from)) {
+            $emailFrom = key($from);
+            $nameFrom = $from[$emailFrom];
+
+            return "$nameFrom <$emailFrom>";
+        } else {
+            return $from;
+        }
+    }
+
+    /**
      * Display configuration options.
      * @return void
      */
@@ -107,11 +127,7 @@ class SendTestEmailTask extends AppShell
         $this->out(__('Password: {0}', '*********'));
         $this->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
         $this->out($this->nl(0));
-        $this->out(__(
-            'Sending email from: {0} ({1})',
-            key(Email::getConfig('default')['from']),
-            Email::getConfig('default')['from'][key(Email::getConfig('default')['from'])]
-        ));
+        $this->out(__('Sending email from: {0}', self::_getEmailFromAsString()));
         $this->out(__('Sending email to: {0}', $this->_getRecipient()));
         $this->hr();
     }
