@@ -3,12 +3,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.0.2] - 2018-04-16
+### Improved
+- GITHUB-242: Add Auto-Submitted header to the email notifications
+
 ### Fixed
 - PASSBOLT-2806: Force database columns charset and collation
 - PASSBOLT-2781: Increase length of resource uri field in model validation
 - PASSBOLT-2696: Fix regression: placeholders in registration form are missing
-- GITHUB-242: Add Auto-Submitted header to the email notifications
-- PASSBOLT-2791: Fix providing a string instead of an array in Email.From configuration generates a warning in SendTestEmailTask.php
+- PASSBOLT-2791: Fix providing a string instead of an array in Email. From configuration generates a warning in SendTestEmailTask.php
 
 ## [2.0.1] - 2018-04-09
 ### Fixed
@@ -438,7 +442,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
 [2.0.0-rc2]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc1...v2.0.0-rc2
 [2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
