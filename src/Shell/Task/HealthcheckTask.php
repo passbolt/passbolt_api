@@ -191,9 +191,9 @@ class HealthcheckTask extends AppShell
             [
                 __('Ensure the temporary directory and its content are writable by the user the webserver user.'),
                 __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'tmp',
-                'sudo chmod 775 $(find ' . ROOT . 'tmp -type d)',
-                'sudo chmod 664 $(find ' . ROOT . 'tmp -type f)',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . DS . 'tmp',
+                'sudo chmod 775 $(find ' . ROOT . DS . 'tmp -type d)',
+                'sudo chmod 664 $(find ' . ROOT . DS . 'tmp -type f)',
             ]
         );
         $this->assert(
@@ -203,9 +203,9 @@ class HealthcheckTask extends AppShell
             [
                 __('Ensure the public image directory and its content are writable by the webserver user.'),
                 __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . IMAGES . 'public',
-                'sudo chmod 775 $(find ' . IMAGES . 'public -type d)',
-                'sudo chmod 664 $(find ' . IMAGES . 'public -type f)',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . IMAGES . DS . 'public',
+                'sudo chmod 775 $(find ' . IMAGES . DS . 'public -type d)',
+                'sudo chmod 664 $(find ' . IMAGES . DS . 'public -type f)',
             ]
         );
         $this->assert(
@@ -215,9 +215,9 @@ class HealthcheckTask extends AppShell
             [
                 __('Ensure the logs directory and its content are writable by the user the webserver user.'),
                 __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'logs',
-                'sudo chmod 775 $(find ' . ROOT . 'logs -type d)',
-                'sudo chmod 664 $(find ' . ROOT . 'logs -type f)',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . DS . 'logs',
+                'sudo chmod 775 $(find ' . ROOT . DS . 'logs -type d)',
+                'sudo chmod 664 $(find ' . ROOT . DS . 'logs -type f)',
             ]
         );
         $this->assert(
