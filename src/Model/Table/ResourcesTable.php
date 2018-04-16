@@ -112,12 +112,12 @@ class ResourcesTable extends Table
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
-            ->maxLength('username', 64, __('The username length should be maximum {0} characters.', 3, 64))
+            ->maxLength('username', 64, __('The username length should be maximum {0} characters.', 64))
             ->allowEmpty('username');
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
-            ->maxLength('uri', 255, __('The uri length should be maximum {0} characters.', 3, 255))
+            ->maxLength('uri', 1024, __('The uri length should be maximum {0} characters.', 1024))
             ->allowEmpty('uri');
 
         $validator
