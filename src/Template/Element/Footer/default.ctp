@@ -19,7 +19,7 @@ $privacyPolicyUrl = Configure::read('passbolt.legal.privacy_policy.url');
 <footer>
     <div class="footer">
         <ul class="footer-links">
-<?php if (Configure::read('debug') || !Configure::read('passbolt.ssl.force')) : ?>
+<?php if (!$safeMode) : ?>
             <li class="error message"><a href="https://help.passbolt.com/faq/hosting/why-unsafe" title="terms of service">Unsafe mode</a></li>
 <?php endif; ?>
             <li><a href="https://www.passbolt.com/terms" title="terms of service"><?= __('Terms'); ?></a></li>
