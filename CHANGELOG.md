@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+- PASSBOLT-2848: Fix unsafe mode and ssl offloading
 - PASSBOLT-2806: Force database columns charset and collation
 - PASSBOLT-2781: Increase length of resource uri field in model validation
 - PASSBOLT-2696: Fix regression: placeholders in registration form are missing
