@@ -3,13 +3,14 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-2848: Fix unsafe mode and ssl offloading
 
 ## [2.0.2] - 2018-04-17
 ### Improved
 - GITHUB-242: Add Auto-Submitted header to the email notifications
 
 ### Fixed
-- PASSBOLT-2848: Fix unsafe mode and ssl offloading
 - PASSBOLT-2806: Force database columns charset and collation
 - PASSBOLT-2781: Increase length of resource uri field in model validation
 - PASSBOLT-2696: Fix regression: placeholders in registration form are missing
