@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
+- PASSBOLT-2849: Fix issue ResourcesTable::_filterByPermissionType and MariaDB 5.5
 - PASSBOLT-2848: Fix unsafe mode and ssl offloading
 
 ## [2.0.2] - 2018-04-17
