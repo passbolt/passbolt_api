@@ -4,13 +4,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.3] - 2018-04-20
+### Fixed
+- PASSBOLT-2849: Fix issue ResourcesTable::_filterByPermissionType and MariaDB 5.5
+- PASSBOLT-2848: Fix unsafe mode and ssl offloading
+
 ## [2.0.2] - 2018-04-16
 ### Improved
 - GITHUB-242: Add Auto-Submitted header to the email notifications
 
 ### Fixed
-- PASSBOLT-2849: Fix issue ResourcesTable::_filterByPermissionType and MariaDB 5.5
-- PASSBOLT-2848: Fix unsafe mode and ssl offloading
 - PASSBOLT-2806: Force database columns charset and collation
 - PASSBOLT-2781: Increase length of resource uri field in model validation
 - PASSBOLT-2696: Fix regression: placeholders in registration form are missing
@@ -444,7 +447,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.3
 [2.0.2]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
