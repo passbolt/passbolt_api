@@ -54,6 +54,7 @@ class CreateTest extends AppTestCase
                 'foreign_model' => true,
                 'content' => true,
                 'created_by' => true,
+                'modified_by' => true,
             ]
         ];
 
