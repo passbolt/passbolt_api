@@ -3137,12 +3137,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt_test_data.git",
-                "reference": "def253029363bfd88b0368b56fc0ab99495ba5c6"
+                "reference": "39d612cdbca0a173a0c5c899329df5d4f81aa79d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/def253029363bfd88b0368b56fc0ab99495ba5c6",
-                "reference": "def253029363bfd88b0368b56fc0ab99495ba5c6",
+                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/39d612cdbca0a173a0c5c899329df5d4f81aa79d",
+                "reference": "39d612cdbca0a173a0c5c899329df5d4f81aa79d",
                 "shasum": ""
             },
             "require": {

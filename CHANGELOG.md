@@ -6,6 +6,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - PASSBOLT-2694: Implement the webinstaller feature
 
+### Fixed
+- GITHUB-247: Fix secrets are not deleted when deleting a group or a user
+- PASSBOLT-2849: Fix issue ResourcesTable::_filterByPermissionType and MariaDB 5.5
+- PASSBOLT-2848: Fix unsafe mode and ssl offloading
+- PASSBOLT-2806: Force database columns charset and collation
+- PASSBOLT-2781: Increase length of resource uri field in model validation
+- PASSBOLT-2696: Fix regression: placeholders in registration form are missing
+- GITHUB-242: Add Auto-Submitted header to the email notifications
+- PASSBOLT-2791: Fix providing a string instead of an array in Email.From configuration generates a warning in SendTestEmailTask.php
+
+
 ## [2.0.1] - 2018-04-09
 ### Fixed
 - GITHUB-239: Fix unsafe mode logic

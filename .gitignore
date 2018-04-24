@@ -5,6 +5,7 @@
 /config/Migrations/schema-dump-default.lock
 /config/gpg/serverkey.asc
 /config/gpg/serverkey_private.asc
+/config/license
 
 # Dependencies #
 ################
