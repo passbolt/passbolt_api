@@ -15,19 +15,32 @@
 
 namespace App\Test\TestCase\Model\Table\Users;
 
-use App\Model\Entity\Role;
-use App\Model\Table\UsersTable;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
+use App\Test\Lib\Model\FormatValidationTrait;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use PassboltTestData\Lib\PermissionMatrix;
 
 class SaveTest extends AppTestCase
 {
-    public $Resources;
+    use FormatValidationTrait;
+
+    public $Users;
 
     public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
+
+    protected function getEntityDefaultOptions()
+    {
+        return [
+            'validate' => 'default',
+            'accessibleFields' => [
+                'username' => true,
+                'role_id' => true,
+                'deleted' => true,
+                'active' => true,
+                'profile' => true
+            ]
+        ];
+    }
 
     public function setUp()
     {
@@ -35,19 +48,34 @@ class SaveTest extends AppTestCase
         $this->Users = TableRegistry::get('Users');
     }
 
-    public function testSaveCreateSuccess()
+    public function testUsersSaveCreateSuccess()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testSaveUpdateSuccess()
+    public function testUsersSaveUpdateSuccess()
     {
         $this->markTestIncomplete('Not implemented yet.');
     }
 
-    public function testSaveValidationError()
+    public function testUsersSaveValidationEmailError()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        Configure::write('passbolt.email.validate.mx', true);
+        $user = self::getDummyUser();
+        $testCases = [
+            'email' => self::getEmailTestCases(true)
+        ];
+        $this->assertFieldFormatValidation($this->Users, 'username', $user, self::getEntityDefaultOptions(), $testCases);
+    }
+
+    public function testUsersSaveValidationEmailNoMxError()
+    {
+        Configure::write('passbolt.email.validate.mx', false);
+        $user = self::getDummyUser();
+        $testCases = [
+            'email' => self::getEmailTestCases(false)
+        ];
+        $this->assertFieldFormatValidation($this->Users, 'username', $user, self::getEntityDefaultOptions(), $testCases);
     }
 
     public function testSaveCheckRulesError()
