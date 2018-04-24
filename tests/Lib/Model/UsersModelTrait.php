@@ -14,8 +14,36 @@
  */
 namespace App\Test\Lib\Model;
 
+use App\Utility\UuidFactory;
+
 trait UsersModelTrait
 {
+    /**
+     * Get a dummy resource with test data.
+     * The comment returned passes a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array Comment data
+     */
+    public static function getDummyUser($data = [])
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $entityContent = [
+            'name' => UuidFactory::uuid('user.id.dummy'),
+            'username' => 'dummy@passbolt.com',
+            'role_id' => UuidFactory::uuid('role.id.user'),
+            'deleted' => false,
+            'active' => false,
+            'profile' => [
+                'first_name' => 'dummy',
+                'last_name' => 'content'
+            ]
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
     /**
      * Asserts that an object has all the attributes a user should have.
      *

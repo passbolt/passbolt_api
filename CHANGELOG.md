@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2694: Implement the webinstaller feature
 
 ### Fixed
+- COMMUNITY-599: Make email MX validation optional and not enabled by default
 - GITHUB-247: Fix secrets are not deleted when deleting a group or a user
 - PASSBOLT-2849: Fix issue ResourcesTable::_filterByPermissionType and MariaDB 5.5
 - PASSBOLT-2848: Fix unsafe mode and ssl offloading
