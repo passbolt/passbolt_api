@@ -831,9 +831,7 @@ class UsersTable extends Table
         $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true);
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
-            $Resources->updateAll(['deleted' => true], [
-                'id IN' => $resourceIds
-            ]);
+            $Resources->softDeleteAll($resourceIds);
         }
 
         // We do not want empty groups
@@ -843,13 +841,17 @@ class UsersTable extends Table
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
-            $this->Permissions->deleteAll(['aco_foreign_key IN' => $groupsId]);
+            $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);
         }
 
         // Delete all group memberships
         // Delete all permissions
         $this->GroupsUsers->deleteAll(['user_id' => $user->id]);
         $this->Permissions->deleteAll(['aro_foreign_key' => $user->id]);
+
+        // Delete all secrets
+        $Secrets = TableRegistry::get('Secrets');
+        $Secrets->deleteAll(['user_id' => $user->id]);
 
         // Delete all favorites
         $Favorites = TableRegistry::get('Favorites');
