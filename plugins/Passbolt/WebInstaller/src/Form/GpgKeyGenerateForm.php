@@ -53,7 +53,7 @@ class GpgKeyGenerateForm extends Form
             ->requirePresence('email', 'create', __('A key email is required.'))
             ->notEmpty('email', __('A key email is required.'))
             ->utf8('email', __('The key email is not a valid utf8 string.'))
-            ->email('email', __('The key email is not a valid email address'));
+            ->email('email', Configure::read('passbolt.email.validate.mx'), __('The key email is not a valid email address'));
 
         $validator
             ->allowEmpty('comment')
