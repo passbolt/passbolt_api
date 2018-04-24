@@ -54,6 +54,11 @@ class DataTask extends Shell
         $shellTtasks = $this->_getShellTasks();
 
         foreach ($shellTtasks as $shellTask) {
+            if(Configure::read('passbolt.edition') === 'ce') {
+                if (strpos($shellTask, 'PassboltTestData.Pro') !== false) {
+                    continue;
+                }
+            }
             $task = $this->Tasks->load($shellTask);
             $task->params['quiet'] = isset($this->params['quiet']) && $this->params['quiet'] == 1 ? 1 : 0;
             $task->params['connection'] = isset($this->params['connection']) ? $this->params['connection'] : 'default';
