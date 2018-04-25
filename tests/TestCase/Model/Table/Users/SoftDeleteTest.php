@@ -27,10 +27,11 @@ class SoftDeleteTest extends AppTestCase
     public $Permissions;
     public $Resources;
     public $Users;
+    public $Secrets;
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/favorites',
-        'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/resources',
+        'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/resources', 'app.Base/secrets',
         'app.Alt0/groups_users', 'app.Alt0/permissions'
     ];
 
@@ -42,6 +43,7 @@ class SoftDeleteTest extends AppTestCase
         $this->GroupsUsers = TableRegistry::get('GroupsUsers');
         $this->Resources = TableRegistry::get('Resources');
         $this->Groups = TableRegistry::get('Groups');
+        $this->Secrets = TableRegistry::get('Secrets');
     }
 
     public function testUsersSoftDeleteSimpleSuccess()
@@ -65,6 +67,13 @@ class SoftDeleteTest extends AppTestCase
                 'aco_foreign_key' => UuidFactory::uuid('resource.id.bower')
             ])->all();
         $this->assertEquals(count($permissions), 3);
+
+        // There should not be any secrets
+        $secrets = $this->Secrets->find()
+            ->select()->where([
+                ['user_id' => $user->id]
+            ])->all();
+        $this->assertEquals(count($secrets), 0);
     }
 
     public function testUsersSoftDeleteCheckAllRulesError()
@@ -200,5 +209,12 @@ class SoftDeleteTest extends AppTestCase
         // Check Favorites are gone
         $favorites = $Favorites->find()->where(['user_id' => $user->id])->all()->toArray();
         $this->assertEmpty($favorites);
+
+        // There should not be any secrets
+        $secrets = $this->Secrets->find()
+            ->select()->where([
+                ['user_id' => $user->id]
+            ])->all();
+        $this->assertEquals(count($secrets), 0);
     }
 }

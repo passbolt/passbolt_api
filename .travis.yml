@@ -52,6 +52,15 @@ matrix:
         - sudo mysql_upgrade
         - sudo service mysql restart
 
+    # PHP 7.0 - MARIADB 5.5
+    - php: 7.0
+      env: PHPUNIT=1 DB=mariadb DB_VERSION=5.5
+      addons: &php7_addon
+        mariadb: '5.5'
+        apt:
+          packages:
+            - *common_pkg
+
     # PHP 7.0 - MARIADB 10.1
     - php: 7.0
       env: PHPUNIT=1 DB=mariadb DB_VERSION=10.1

@@ -113,7 +113,7 @@ class UsersTable extends Table
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmpty('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email('username', true, __('The username should be a valid email address.'));
+            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
 
         $validator
             ->boolean('active')
@@ -169,7 +169,7 @@ class UsersTable extends Table
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmpty('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
-            ->email('username', true, __('The username should be a valid email address.'));
+            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
 
         return $validator;
     }
@@ -375,7 +375,7 @@ class UsersTable extends Table
      */
     public function findRecover(string $username, array $options = [])
     {
-        if (!Validation::email($username)) {
+        if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
             throw new \InvalidArgumentException(__('The username should be a valid email.'));
         }
         // show active first and do not count deleted ones
@@ -837,13 +837,17 @@ class UsersTable extends Table
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
-            $this->Permissions->deleteAll(['aco_foreign_key IN' => $groupsId]);
+            $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);
         }
 
         // Delete all group memberships
         // Delete all permissions
         $this->GroupsUsers->deleteAll(['user_id' => $user->id]);
         $this->Permissions->deleteAll(['aro_foreign_key' => $user->id]);
+
+        // Delete all secrets
+        $Secrets = TableRegistry::get('Secrets');
+        $Secrets->deleteAll(['user_id' => $user->id]);
 
         // Delete all favorites
         $Favorites = TableRegistry::get('Favorites');

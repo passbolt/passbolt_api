@@ -17,6 +17,7 @@ namespace App\Controller;
 use App\Controller\Events\EmailNotificationsListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Utility\Text;
@@ -78,6 +79,21 @@ class AppController extends Controller
             $this->response = $this->response
                 ->withHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
         }
+    }
+
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $safeMode = !Configure::read('debug');
+        $safeMode = $safeMode && preg_match('/^https/', Configure::read('App.fullBaseUrl'));
+        $this->set('safeMode', $safeMode);
+
+        return parent::beforeFilter($event);
     }
 
     /**

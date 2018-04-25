@@ -444,9 +444,13 @@ class GroupsTable extends Table
         }
 
         // Delete all group memberships
-        // Delete all permissions
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);
+
+        // Delete all permissions
+        // Delete all the secrets that lost permissions in the process
         $Permissions->deleteAll(['aro_foreign_key' => $group->id]);
+        $Secrets = TableRegistry::get('Secrets');
+        $Secrets->cleanupHardDeletedPermissions();
 
         // Mark group as deleted
         $group->deleted = true;
