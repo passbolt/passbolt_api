@@ -971,4 +971,28 @@ class ResourcesTable extends Table
             'user_id IN' => $usersId
         ]);
     }
+
+    /**
+     * Soft delete a list of resources by Ids
+     *
+     * @param string $resourceIds uuid of Resources
+     * @param bool $cascade true
+     * @return void
+     */
+    public function softDeleteAll($resourceIds, $cascade = true)
+    {
+        $Resources = TableRegistry::get('Resources');
+        $Resources->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
+
+        if ($cascade) {
+            $Favorites = TableRegistry::get('Favorites');
+            $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
+
+            $Secrets = TableRegistry::get('Secrets');
+            $Secrets->deleteAll(['resource_id IN' => $resourceIds]);
+
+            $Permissions = TableRegistry::get('Permissions');
+            $Permissions->deleteAll(['aco_foreign_key IN' => $resourceIds]);
+        }
+    }
 }
