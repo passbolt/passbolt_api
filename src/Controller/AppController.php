@@ -165,8 +165,7 @@ class AppController extends Controller
         // render a legacy JSON view by default
         if ($this->request->is('json')) {
             $apiVersion = $this->request->getQuery('api-version');
-            // @TODO if !isset apiVersion v2 should be assumed
-            if (!isset($apiVersion) || $apiVersion === 'v1' || $apiVersion === '1') {
+            if (!isset($apiVersion) || $apiVersion === 'v1') {
                 $this->viewBuilder()->setClassName('LegacyJson');
             }
         } elseif (!Configure::read('debug')) {

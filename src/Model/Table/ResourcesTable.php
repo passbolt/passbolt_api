@@ -972,32 +972,6 @@ class ResourcesTable extends Table
     }
 
     /**
-     * Soft delete a list of given resources by ids
-     * Also delete associated data
-     *
-     * @param array $resourceIds array of uuids
-     * @return int number of affected rows
-     */
-    public function softDeleteAll(array $resourceIds)
-    {
-        $rowCount = $this->updateAll(['deleted' => true], [
-            'id IN' => $resourceIds
-        ]);
-
-        $Favorites = TableRegistry::get('Favorites');
-        $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
-
-        if (Configure::read('passbolt.plugins.tags')) {
-            $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
-            $ResourcesTags->deleteAll(['resource_id IN' => $resourceIds]);
-            $Tags = TableRegistry::get('Passbolt/Tags.Tags');
-            $Tags->deleteAllUnusedTags();
-        }
-
-        return $rowCount;
-    }
-
-    /**
      * Remove the resource associated data for the users who lost access to the resource.
      *
      * @param string $resourceId The resource identifier the users lost the access to
@@ -1048,6 +1022,13 @@ class ResourcesTable extends Table
 
             $Permissions = TableRegistry::get('Permissions');
             $Permissions->deleteAll(['aco_foreign_key IN' => $resourceIds]);
+
+            if (Configure::read('passbolt.plugins.tags')) {
+                $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+                $ResourcesTags->deleteAll(['resource_id IN' => $resourceIds]);
+                $Tags = TableRegistry::get('Passbolt/Tags.Tags');
+                $Tags->deleteAllUnusedTags();
+            }
         }
     }
 }
