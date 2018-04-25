@@ -14,8 +14,6 @@
  */
 namespace App\Utility;
 
-use Aura\Intl\Exception;
-
 class PassboltText
 {
     /**

@@ -59,7 +59,7 @@ class FindIndexTest extends AppTestCase
     }
 
     /**
-     * @throws \Aura\Intl\Exception
+     * @throws \Exception
      */
     public function testFilterHasNotPermission()
     {
