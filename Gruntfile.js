@@ -125,7 +125,9 @@ module.exports = function(grunt) {
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/ChromeWebStore.png',
-            'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png'
+            'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png',
+            // Themes preview
+            'themes/*.png',
           ],
           dest: paths.webroot + 'img',
           expand: true
@@ -134,6 +136,12 @@ module.exports = function(grunt) {
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
           src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
           dest: paths.webroot + 'css/themes/default',
+          expand: true
+        }, {
+          // CSS
+          cwd: path.node_modules_styleguide + 'build/css/themes/midgar',
+          src: ['api_main.min.css'],
+          dest: path.webroot + 'css/themes/midgar',
           expand: true
         }]
       }
