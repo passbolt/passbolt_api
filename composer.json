@@ -65,14 +65,16 @@
         "psr-4": {
             "App\\": "src",
             "PassboltTestData\\": "./plugins/PassboltTestData/src",
-            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src"
+            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src",
+            "Passbolt\\UsersSettings\\": "./plugins/Passbolt/UsersSettings/src"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
-            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests"
+            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
+            "Passbolt\\UsersSettings\\Test\\": "./plugins/Passbolt/UsersSettings/tests"
         }
     },
     "scripts": {
@@ -80,10 +82,10 @@
             "App\\Console\\Installer::postInstall"
         ],
         "install-dev": [
-          "@composer install --dev",
-          "npm install",
-          "./node_modules/.bin/grunt appjs-update",
-          "./node_modules/.bin/grunt styleguide-update"
+            "@composer install --dev",
+            "npm install",
+            "./node_modules/.bin/grunt appjs-update",
+            "./node_modules/.bin/grunt styleguide-update"
         ],
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",

@@ -17,3 +17,7 @@ use Cake\Core\Plugin;
 /**
  * Insert below all passbolt plugins.
  */
+// Add UsersSettings plugin if present
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'UsersSettings')) {
+    Plugin::load('Passbolt/UsersSettings', ['bootstrap' => false, 'routes' => true]);
+}
