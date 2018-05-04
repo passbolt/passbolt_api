@@ -56,7 +56,8 @@ class AppController extends Controller
                 'prefix' => 'Auth',
                 'controller' => 'AuthLogin',
                 'action' => 'loginGet',
-                '_method' => 'GET'
+                '_method' => 'GET',
+                'plugin' => null
             ],
         ]);
 
