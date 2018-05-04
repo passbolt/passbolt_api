@@ -38,11 +38,11 @@ return [
                         'PassboltTestData.Base/FavoritesData',
                         'PassboltTestData.Base/CommentsData',
                         'PassboltTestData.Security/XssCommentsData',
-                        'PassboltTestData.Pro/AccountSettings',
-                        'PassboltTestData.Pro/TagsData',
-                        'PassboltTestData.Pro/ResourcesTagsData',
                         'PassboltTestData.Base/SecretsData',
                         'PassboltTestData.Base/EmailQueueData',
+                        'PassboltTestData.Pro/AccountSettingsData',
+                        'PassboltTestData.Pro/TagsData',
+                        'PassboltTestData.Pro/ResourcesTagsData',
                     ]
                 ],
                 'fixturize' => [
