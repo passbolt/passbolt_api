@@ -318,8 +318,8 @@ class QueryStringComponent extends Component
             if (!Validation::utf8($keyword)) {
                 throw new Exception(__('"{0}" is not a valid search filter. It is not a UTF8 string.', $keyword));
             }
-            if (!Validation::lengthBetween($keyword, 3, 64)) {
-                throw new Exception(__('"{0}" is not a valid search filter. It should be between 3 and 64 char in length.', $keyword));
+            if (!Validation::lengthBetween($keyword, 1, 64)) {
+                throw new Exception(__('"{0}" is not a valid search filter. It should be between 1 and 64 char in length.', $keyword));
             }
         }
 
