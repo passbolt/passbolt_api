@@ -246,9 +246,6 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     public function testUsersIndexFilterByInvalidSearchError()
     {
         $this->authenticateAs('ada');
-        // too short
-        $this->getJson('/users.json?filter[search]=a');
-        $this->assertError('400');
         // too long
         $lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
         $this->getJson('/users.json?filter[search]=' . $lorem);
