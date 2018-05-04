@@ -59,15 +59,19 @@ class DataTask extends Shell
                     continue;
                 }
             }
-            $task = $this->Tasks->load($shellTask);
-            $task->params['quiet'] = isset($this->params['quiet']) && $this->params['quiet'] == 1 ? 1 : 0;
-            $task->params['connection'] = isset($this->params['connection']) ? $this->params['connection'] : 'default';
-            if (method_exists($task, "beforeExecute")) {
-                $task->beforeExecute();
-            }
-            $task->execute();
-            if (method_exists($task, "afterExecute")) {
-                $task->afterExecute();
+            try {
+                $task = $this->Tasks->load($shellTask);
+                $task->params['quiet'] = isset($this->params['quiet']) && $this->params['quiet'] == 1 ? 1 : 0;
+                $task->params['connection'] = isset($this->params['connection']) ? $this->params['connection'] : 'default';
+                if (method_exists($task, "beforeExecute")) {
+                    $task->beforeExecute();
+                }
+                $task->execute();
+                if (method_exists($task, "afterExecute")) {
+                    $task->afterExecute();
+                }
+            } catch(\Exception $exception) {
+                $this->out(__('Could not load task {0}, skipping.', $shellTask));
             }
         }
 
