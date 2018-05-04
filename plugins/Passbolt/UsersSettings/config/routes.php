@@ -18,6 +18,6 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/UsersSettings', ['path' => '/users/settings'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/themes', ['prefix' => 'Themes', 'controller' => 'ThemesIndex', 'action' => 'index'])
+    $routes->connect('/themes', ['controller' => 'ThemesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 });
