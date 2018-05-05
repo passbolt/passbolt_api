@@ -187,7 +187,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
         $this->get($url);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            \PHPUnit_Framework_TestCase::fail('The result of the request is not a valid json.');
+            \PHPUnit_Framework_Assert::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
@@ -209,7 +209,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
         $this->post($url, $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            \PHPUnit_Framework_TestCase::fail('The result of the request is not a valid json.');
+            \PHPUnit_Framework_Assert::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
@@ -231,7 +231,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
         $this->put($url, $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            \PHPUnit_Framework_TestCase::fail('The result of the request is not a valid json.');
+            \PHPUnit_Framework_Assert::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
@@ -252,7 +252,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
         $this->delete($url);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            \PHPUnit_Framework_TestCase::fail('The result of the request is not a valid json.');
+            \PHPUnit_Framework_Assert::fail('The result of the request is not a valid json.');
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;
