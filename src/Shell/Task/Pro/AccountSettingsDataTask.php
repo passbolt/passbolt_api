@@ -29,8 +29,8 @@ class AccountSettingsDataTask extends DataTask
     public function getData()
     {
         $settings[] = [
-            'id' => UuidFactory::uuid('account.settings.carol.theme'),
-            'user_id' => UuidFactory::uuid('user.id.carol'),
+            'id' => UuidFactory::uuid('account.settings.ping.theme'),
+            'user_id' => UuidFactory::uuid('user.id.ping'),
             'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
             'property' => 'theme',
             'value' => 'midgar'
