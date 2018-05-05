@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller\Groups;
+namespace App\Test\TestCase\Controller\Comments;
 
 use App\Model\Entity\Role;
 use App\Model\Table\CommentsTable;
