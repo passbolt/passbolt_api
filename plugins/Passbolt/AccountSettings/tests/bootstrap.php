@@ -1,6 +1,6 @@
 <?php
 /**
- * Test suite bootstrap for Passbolt/UsersSettings.
+ * Test suite bootstrap for Passbolt/AccountSettings.
  *
  * This function is used to find the location of CakePHP whether CakePHP
  * has been installed as a dependency of the plugin, or the plugin is itself

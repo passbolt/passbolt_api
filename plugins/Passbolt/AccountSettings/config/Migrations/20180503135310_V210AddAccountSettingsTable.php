@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V210AddUsersSettingsTable extends AbstractMigration
+class V210AddAccountSettingsTable extends AbstractMigration
 {
     /**
      * Up
@@ -25,13 +25,18 @@ class V210AddUsersSettingsTable extends AbstractMigration
      */
     public function up()
     {
-        $this->table('users_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+        $this->table('account_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
             ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
             ->addColumn('user_id', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+            ])
+            ->addColumn('property_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -46,7 +51,7 @@ class V210AddUsersSettingsTable extends AbstractMigration
                 'limit' => 256,
                 'null' => false,
             ])
-            ->addIndex(['user_id'])
+            ->addIndex(['user_id', 'property_id'])
             ->create();
     }
 }

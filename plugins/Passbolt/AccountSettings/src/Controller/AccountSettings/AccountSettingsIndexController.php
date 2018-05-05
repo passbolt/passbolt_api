@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.1.0
  */
-namespace Passbolt\UsersSettings\Controller;
+namespace Passbolt\AccountSettings\Controller\AccountSettings;
 
 use App\Controller\AppController;
 use Cake\Filesystem\Folder;
@@ -21,17 +21,17 @@ use Cake\Log\Log;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Routing\Router;
 
-class UsersSettingsIndexController extends AppController
+class AccountSettingsIndexController extends AppController
 {
     /**
-     * UsersSettings Index action
+     * AccountSettings Index action
      *
      * @return void
      */
     public function index()
     {
-        $this->loadModel('Passbolt/UsersSettings.UsersSettings');
-        $response = $this->UsersSettings->findIndex($this->User->id());
+        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
+        $response = $this->AccountSettings->findIndex($this->User->id());
         $this->success(__('The operation was successful.'), $response);
     }
 }

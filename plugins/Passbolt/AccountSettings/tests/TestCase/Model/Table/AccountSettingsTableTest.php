@@ -1,22 +1,22 @@
 <?php
-namespace Passbolt\UsersSettings\Test\TestCase\Model\Table;
+namespace Passbolt\AccountSettings\Test\TestCase\Model\Table;
 
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use Passbolt\UsersSettings\Model\Table\UsersSettingsTable;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 /**
- * Passbolt\UsersSettings\Model\Table\UsersSettingsTable Test Case
+ * Passbolt\AccountSettings\Model\Table\AccountSettingsTable Test Case
  */
-class UsersSettingsTableTest extends TestCase
+class AccountSettingsTableTest extends TestCase
 {
 
     /**
      * Test subject
      *
-     * @var \Passbolt\UsersSettings\Model\Table\UsersSettingsTable
+     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
-    public $UsersSettings;
+    public $AccountSettings;
 
     /**
      * Fixtures
@@ -24,8 +24,8 @@ class UsersSettingsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.passbolt/users_settings.users_settings',
-        'plugin.passbolt/users_settings.users'
+        'app.Base/users',
+        'plugin.passbolt/account_settings.account_settings'
     ];
 
     /**
@@ -36,8 +36,8 @@ class UsersSettingsTableTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('UsersSettings') ? [] : ['className' => UsersSettingsTable::class];
-        $this->UsersSettings = TableRegistry::get('UsersSettings', $config);
+        $config = TableRegistry::exists('AccountSettings') ? [] : ['className' => AccountSettingsTable::class];
+        $this->AccountSettings = TableRegistry::get('AccountSettings', $config);
     }
 
     /**
@@ -47,7 +47,7 @@ class UsersSettingsTableTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->UsersSettings);
+        unset($this->AccountSettings);
 
         parent::tearDown();
     }
