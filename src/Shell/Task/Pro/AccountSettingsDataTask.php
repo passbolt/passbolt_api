@@ -31,14 +31,14 @@ class AccountSettingsDataTask extends DataTask
         $settings[] = [
             'id' => UuidFactory::uuid('account.settings.carol.theme'),
             'user_id' => UuidFactory::uuid('user.id.carol'),
-            'property_id' => UuidFactory::uuid('theme'),
+            'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
             'property' => 'theme',
             'value' => 'midgar'
         ];
         $settings[] = [
             'id' => UuidFactory::uuid('account.settings.betty.theme'),
             'user_id' => UuidFactory::uuid('user.id.betty'),
-            'property_id' => UuidFactory::uuid('theme'),
+            'property_id' => UuidFactory::uuid('account.settings.property.id.theme'),
             'property' => 'theme',
             'value' => 'default'
         ];
