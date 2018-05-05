@@ -17,6 +17,7 @@ namespace App\Controller\Pages;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 class HomeController extends AppController
 {
@@ -64,6 +65,7 @@ class HomeController extends AppController
             ->setTemplatePath('/Home')
             ->setTemplate('home');
 
+        $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));
         $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
 

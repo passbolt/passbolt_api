@@ -14,4 +14,4 @@
  */
 use Cake\Core\Configure;
 
-Configure::load('Passbolt/UsersSettings.config', 'default', true);
+Configure::load('Passbolt/AccountSettings.config', 'default', true);

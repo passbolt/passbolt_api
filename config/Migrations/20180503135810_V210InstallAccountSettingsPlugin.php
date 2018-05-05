@@ -10,14 +10,25 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.1.0
+ * @since         2.0.0
  */
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
 
-Router::plugin('Passbolt/UsersSettings', ['path' => '/users/settings'], function (RouteBuilder $routes) {
-    $routes->setExtensions(['json']);
+use Migrations\AbstractMigration;
+use Migrations\Migrations;
 
-    $routes->connect('/themes', ['controller' => 'ThemesIndex', 'action' => 'index'])
-        ->setMethods(['GET']);
-});
+class V210InstallAccountSettingsPlugin extends AbstractMigration
+{
+    /**
+     * Up
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $migrations = new Migrations([
+            'connection' => 'default',
+            'plugin' => 'Passbolt/AccountSettings',
+        ]);
+        $migrations->migrate();
+    }
+}

@@ -10,25 +10,25 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.1.0
  */
+namespace Passbolt\AccountSettings\Controller\Themes;
 
-use Migrations\AbstractMigration;
-use Migrations\Migrations;
+use App\Controller\AppController;
+use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
-class V210InstallUsersSettingsPlugin extends AbstractMigration
+class ThemesIndexController extends AppController
 {
     /**
-     * Up
+     * Themes Index action
      *
      * @return void
      */
-    public function up()
+    public function index()
     {
-        $migrations = new Migrations([
-            'connection' => 'default',
-            'plugin' => 'Passbolt/UsersSettings',
-        ]);
-        $migrations->migrate();
+        $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+        $themes = $AccountSettings->findAllThemes();
+        $this->success(__('The operation was successful.'), $themes);
     }
 }

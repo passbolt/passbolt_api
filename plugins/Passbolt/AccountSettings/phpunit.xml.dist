@@ -13,7 +13,7 @@
 
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
-        <testsuite name="Passbolt/UsersSettings">
+        <testsuite name="Passbolt/AccountSettings">
             <directory>./tests/TestCase/</directory>
         </testsuite>
     </testsuites>

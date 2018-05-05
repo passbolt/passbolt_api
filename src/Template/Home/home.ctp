@@ -15,7 +15,9 @@
 use Cake\Core\Configure;
 
 $this->assign('title', $title);
-$this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
+$version = Configure::read('passbolt.version');
+$themePath = "themes/$theme/api_main.min.css?v=$version";
+$this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
