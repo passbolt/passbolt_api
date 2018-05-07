@@ -146,7 +146,7 @@ class GpgAuthenticate extends BaseAuthenticate
                 $this->_response = $this->_response->withHeader('X-GPGAuth-Verify-Response', $nonce);
             }
         } catch (Exception $e) {
-            return $this->_error(__('Decryption failed'));
+            return $this->_error(__('Decryption failed.'));
         }
 
         return true;
@@ -178,7 +178,7 @@ class GpgAuthenticate extends BaseAuthenticate
         $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
         $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id);
         if (!isset($authenticationToken->token)) {
-            return $this->_error(__('Failed to create token'));
+            return $this->_error(__('Failed to create token.'));
         }
 
         // encrypt and sign and send
@@ -201,7 +201,7 @@ class GpgAuthenticate extends BaseAuthenticate
         //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
         $this->_response = $this->_response->withHeader('X-GPGAuth-Progress', 'stage2');
         if (!($this->_checkNonce($this->_data['user_token_result']))) {
-            return $this->_error(__('The user token result is not a valid UUID'));
+            return $this->_error(__('The user token result is not a valid UUID.'));
         }
 
         // extract the UUID to get the database records
@@ -263,7 +263,7 @@ class GpgAuthenticate extends BaseAuthenticate
         // load base configuration
         $this->_config = Configure::read('passbolt.gpg');
         if (!isset($this->_config['serverKey']['fingerprint'])) {
-            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete'));
+            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
         }
         $keyid = $this->_config['serverKey']['fingerprint'];
 
@@ -272,12 +272,12 @@ class GpgAuthenticate extends BaseAuthenticate
         $info = $this->_gpg->keyinfo($keyid);
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
         if (empty($info)) {
-            throw new InternalErrorException(__('The GPG Server key defined in the config is not found in the gpg keyring'));
+            throw new InternalErrorException(__('The OpenPGP server key defined in the config could not be found in the GnuPG keyring.'));
         }
 
         // set the key to be used for decrypting
         if (!$this->_gpg->adddecryptkey($keyid, $this->_config['serverKey']['passphrase'])) {
-            throw new InternalErrorException(__('The GPG Server key defined in the config cannot be used to decrypt'));
+            throw new InternalErrorException(__('The OpenPGP server key defined in the config cannot be used to decrypt.'));
         }
     }
 
@@ -293,12 +293,12 @@ class GpgAuthenticate extends BaseAuthenticate
         $info = $this->_gpg->keyinfo($keyid);
         if (empty($info)) {
             if (!$this->_gpg->import($this->_user->gpgkey->armored_key)) {
-                throw new InternalErrorException(__('The GnuPG key for the user could not be imported'));
+                throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
             }
             // check that the imported key match the fingerprint
             $info = $this->_gpg->keyinfo($keyid);
             if (empty($info)) {
-                throw new InternalErrorException(__('The GnuPG key for the user is not available or not working'));
+                throw new InternalErrorException(__('GnuPGP does not return any information for the OpenPGP key of the user.'));
             }
         }
         $this->_gpg->addencryptkey($keyid);
@@ -378,20 +378,20 @@ class GpgAuthenticate extends BaseAuthenticate
         $result = explode('|', $nonce);
         $errorMsg = __('Invalid verify token format, ');
         if (count($result) != 4) {
-            return $this->_error($errorMsg . __('sections missing or wrong delimiters'));
+            return $this->_error($errorMsg . __('sections are missing or using wrong delimiters.'));
         }
         list($version, $length, $uuid, $version2) = $result;
         if ($version != $version2) {
-            return $this->_error($errorMsg . __('version numbers do not match'));
+            return $this->_error($errorMsg . __('the version numbers do not match.'));
         }
         if ($version != 'gpgauthv1.3.0') {
-            return $this->_error($errorMsg . __('wrong version number'));
+            return $this->_error($errorMsg . __('wrong version number.'));
         }
         if ($version != Validation::uuid($uuid)) {
-            return $this->_error($errorMsg . __('not a UUID'));
+            return $this->_error($errorMsg . __('it is not a UUID.'));
         }
         if ($length != 36) {
-            return $this->_error($errorMsg . __('wrong token data length'));
+            return $this->_error($errorMsg . __('using wrong token data length.'));
         }
 
         return true;
