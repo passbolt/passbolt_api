@@ -2,7 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.0.5] - 2018-05-07
+### Fixed
+- PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
+- PASSBOLT-2826: Upgrade styleguide to v2.1.0
+- PASSBOLT-2812: Rebuild fixtures with updated public keys
+
 ## [2.0.4] - 2018-04-25
 ### Fixed
 - COMMUNITY-599: Make email MX validation optional and not enabled by default
@@ -451,8 +456,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...HEAD
-[2.0.3]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.3
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...HEAD
+[2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.4
+[2.0.3]: https://github.com/passbolt/passbolt_api/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
@@ -485,3 +491,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.0.7]: https://github.com/passbolt/passbolt_api/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/passbolt/passbolt_api/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt_api/compare/6a92766...v1.0.5
+- PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
+- PASSBOLT-2826: Upgrade styleguide to v2.1.0
+- PASSBOLT-2812: Rebuild fixtures with updated public keys
