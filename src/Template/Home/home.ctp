@@ -14,7 +14,7 @@
  */
 
 $this->assign('title', $title);
-$this->Html->css('main.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_main.min', ['block' => 'css', 'fullBase' => true]);
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');

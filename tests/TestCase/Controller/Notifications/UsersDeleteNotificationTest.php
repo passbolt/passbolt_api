@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Test\TestCase\Controller\Users;
+namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;

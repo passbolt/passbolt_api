@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 $this->assign('title',	__('Account recovery started!'));
-$this->Html->css('login.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_login.min', ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'recover thank-you');
 ?>
 <div class="grid">

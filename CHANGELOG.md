@@ -3,8 +3,16 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
+- PASSBOLT-2826: Upgrade styleguide to v2.1.0
+- PASSBOLT-2812: Rebuild fixtures with updated public keys
+
 ## [2.0.4] - 2018-04-25
+### Improved
 - COMMUNITY-599: Make email MX validation optional and not enabled by default
+
+### Fixed
 - GITHUB-247: Fix secrets are not deleted when deleting a group or a user
 
 ## [2.0.3] - 2018-04-20
@@ -495,3 +503,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.0.7]: https://github.com/passbolt/passbolt_api/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/passbolt/passbolt_api/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt_api/compare/6a92766...v1.0.5
+### Fixed
+- PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
+- PASSBOLT-2826: Upgrade styleguide to v2.1.0
+- PASSBOLT-2812: Rebuild fixtures with updated public keys

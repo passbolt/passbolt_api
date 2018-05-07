@@ -103,13 +103,14 @@ module.exports = function(grunt) {
             // Passbolt logos
             'logo/icon-20_white.png', 'logo/icon-20_grey.png', 'logo/icon-20.png',
             'logo/icon-48_white.png', 'logo/icon-48.png',
-            'logo/logo.png', 'logo/logo@2x.png',
+            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg',
             // Image for inputs and controls
-            'controls/password-dots.png',
+            'controls/dot_white.svg',
+            'controls/dot_red.svg',
+            'controls/dot_black.svg',
             'controls/infinite-bar.gif',
             'controls/loading.gif',
             'controls/overlay-opacity-50.png',
-            'controls/tree-ctrl.png',
             // Background images for error pages for ex
             'illustrations/nest.png',
             'illustrations/birds6_850.png',
@@ -122,10 +123,10 @@ module.exports = function(grunt) {
           dest: path.webroot + 'img',
           expand: true
         }, {
-          // Less
-          cwd: path.node_modules_styleguide + 'build/css',
-          src: ['devel.min.css', 'login.min.css', 'main.min.css', 'check.min.css', 'setup.min.css'],
-          dest: path.webroot + 'css',
+          // CSS
+          cwd: path.node_modules_styleguide + 'build/css/themes/default',
+          src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
+          dest: path.webroot + 'css/themes/default',
           expand: true
         }]
       }
