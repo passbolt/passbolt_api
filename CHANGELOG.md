@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.7] - 2018-05-09
+### Fixed
+- Fix missing css on error pages and add version numbers to CSS and JS files calls to prevent caching
+- Fix do not enable debugKit when debug is set to true
+
 ## [2.0.5] - 2018-05-08
 ### Fixed
 - PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
@@ -457,6 +462,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AD: Admin
 
 [Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...HEAD
+[2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
+[2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/passbolt/passbolt_api/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...v2.0.2
