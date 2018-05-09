@@ -13,8 +13,10 @@
  * @since         2.0.0
  */
 use Cake\Routing\Router;
+use Cake\Core\Configure;
+
 $this->assign('title',	__('Register'));
-$this->Html->css('login.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'register');
 $formContext = [
     'context' => [

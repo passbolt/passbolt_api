@@ -2,9 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.0.7] - 2018-05-09
+### Fixed
+- Fix missing css on error pages and add version numbers to CSS and JS files calls to prevent caching
+- Fix do not enable debugKit when debug is set to true
+
+## [2.0.5] - 2018-05-08
+### Fixed
+- PASSBOLT-2764: Fix Groups autocomplete does not work with less than 3 characters
+- PASSBOLT-2826: Upgrade styleguide to v2.1.0
+- PASSBOLT-2812: Rebuild fixtures with updated public keys
+
 ## [2.0.4] - 2018-04-25
+### Improved
 - COMMUNITY-599: Make email MX validation optional and not enabled by default
+
+### Fixed
 - GITHUB-247: Fix secrets are not deleted when deleting a group or a user
 
 ## [2.0.3] - 2018-04-20
