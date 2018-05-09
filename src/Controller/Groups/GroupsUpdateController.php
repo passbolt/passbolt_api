@@ -354,7 +354,7 @@ class GroupsUpdateController extends AppController
                 $group->id,
                 $groupsUsersPatchOptions
             );
-            $group->dirty('groups_users', true);
+            $group->setDirty('groups_users', true);
         } catch (ValidationRuleException $e) {
             $group->setError('groups_users', $e->getErrors());
         }

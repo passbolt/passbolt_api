@@ -46,11 +46,11 @@ $formContext = [
 
                 <fieldset>
                     <legend><?= __('Please enter your username and password'); ?></legend>
-                    <?= $this->Form->control('profile.first_name'); ?>
+                    <?= $this->Form->control('profile.first_name', ['placeholder' => __('First name')]); ?>
 
-                    <?= $this->Form->control('profile.last_name'); ?>
+                    <?= $this->Form->control('profile.last_name', ['placeholder' => __('Last name')]); ?>
 
-                    <?= $this->Form->control('username'); ?>
+                    <?= $this->Form->control('username', ['placeholder' => __('mail@domain.com')]); ?>
 
                     <p>
                         <input type="checkbox" name="disclaimer" id="disclaimer" value="value" required="required">

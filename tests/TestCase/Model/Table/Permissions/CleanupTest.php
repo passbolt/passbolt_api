@@ -30,7 +30,7 @@ class CleanupTest extends AppTestCase
     public $options;
 
     public $fixtures = [
-        'app.Base/groups', 'app.Base/users', 'app.Base/groups_users',
+        'app.Base/groups', 'app.Base/users', 'app.Alt0/groups_users',
         'app.Alt0/permissions', 'app.Base/resources'
     ];
 

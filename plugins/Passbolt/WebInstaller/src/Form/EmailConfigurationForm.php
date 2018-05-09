@@ -14,7 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Form;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Configure;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -55,7 +55,7 @@ class EmailConfigurationForm extends Form
             ->requirePresence('sender_email', 'create', __('A sender email is required.'))
             ->notEmpty('sender_email', __('A sender email is required.'))
             ->utf8('sender_email', __('The sender email is not a valid utf8 string.'))
-            ->email('sender_email', __('The sender email is not a valid email address'));
+            ->email('sender_email', Configure::read('passbolt.email.validate.mx'), __('The sender email is not a valid email address'));
 
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
@@ -84,7 +84,7 @@ class EmailConfigurationForm extends Form
             ->utf8('password', __('The host is not a valid utf8 string.'));
 
         $validator
-            ->email('test_email_to', __('The test email should be a valid email address.'));
+            ->email('test_email_to', Configure::read('passbolt.email.validate.mx'), __('The test email should be a valid email address.'));
 
         return $validator;
     }
