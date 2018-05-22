@@ -49,6 +49,7 @@
         "lorenzo/cakephp-email-queue": "^3.1",
         "burzum/file-storage": "1.2.1",
         "burzum/cakephp-imagine-plugin": "2.1.1",
+        "pear/crypt_gpg": "1.6.2",
         "ezyang/htmlpurifier": "dev-master"
     },
     "require-dev": {

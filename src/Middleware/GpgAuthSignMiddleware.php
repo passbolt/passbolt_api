@@ -33,13 +33,12 @@ class GpgAuthSignMiddleware
         // Sign the successfull json responses
         if ($response->statusCode() === 200 && $request->is('json')) {
             $body = (string)$response->getBody();
-            $gpg = new \gnupg();
-            $gpg->addsignkey(
+            $gpg = new \Crypt_GPG();
+            $gpg->addSignKey(
                 Configure::read('passbolt.gpg.serverKey.fingerprint'),
                 Configure::read('passbolt.gpg.serverKey.passphrase')
             );
-            $gpg->setsignmode(\gnupg::SIG_MODE_DETACH);
-            $signed = $gpg->sign($body);
+            $signed = $gpg->sign($body, \Crypt_GPG::SIGN_MODE_DETACHED);
 
             $response = $response->withHeader(self::HTTP_HEADER_GPG_SIG_BODY, quotemeta(urlencode($signed)));
         }

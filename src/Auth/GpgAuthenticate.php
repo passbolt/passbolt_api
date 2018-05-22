@@ -169,7 +169,7 @@ class GpgAuthenticate extends BaseAuthenticate
         } catch (Exception $e) {
             return $this->_error($e->getMessage());
         }
-        $this->_gpg->addsignkey(
+        $this->_gpg->addSignKey(
             $this->_config['serverKey']['fingerprint'],
             $this->_config['serverKey']['passphrase']
         );
@@ -183,7 +183,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // encrypt and sign and send
         $token = 'gpgauthv1.3.0|36|' . $authenticationToken->token . '|gpgauthv1.3.0';
-        $msg = $this->_gpg->encryptsign($token);
+        $msg = $this->_gpg->encryptAndSign($token);
         $msg = quotemeta(urlencode($msg));
         $this->_response = $this->_response->withHeader('X-GPGAuth-User-Auth-Token', $msg);
 
@@ -268,15 +268,13 @@ class GpgAuthenticate extends BaseAuthenticate
         $keyid = $this->_config['serverKey']['fingerprint'];
 
         // check if the default key is set and available in gpg
-        $this->_gpg = new \gnupg();
-        $info = $this->_gpg->keyinfo($keyid);
-        $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-        if (empty($info)) {
+        $this->_gpg = new \Crypt_GPG();
+        if (empty($this->_checkKeyAvailability($keyid))) {
             throw new InternalErrorException(__('The OpenPGP server key defined in the config could not be found in the GnuPG keyring.'));
         }
 
         // set the key to be used for decrypting
-        if (!$this->_gpg->adddecryptkey($keyid, $this->_config['serverKey']['passphrase'])) {
+        if (!$this->_gpg->addDecryptKey($keyid, $this->_config['serverKey']['passphrase'])) {
             throw new InternalErrorException(__('The OpenPGP server key defined in the config cannot be used to decrypt.'));
         }
     }
@@ -290,18 +288,16 @@ class GpgAuthenticate extends BaseAuthenticate
      */
     private function _initUserKey(string $keyid)
     {
-        $info = $this->_gpg->keyinfo($keyid);
-        if (empty($info)) {
-            if (!$this->_gpg->import($this->_user->gpgkey->armored_key)) {
+        if (empty($this->_checkKeyAvailability($keyid))) {
+            if (!$this->_gpg->importKey($this->_user->gpgkey->armored_key)) {
                 throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
             }
             // check that the imported key match the fingerprint
-            $info = $this->_gpg->keyinfo($keyid);
-            if (empty($info)) {
+            if (empty($this->_checkKeyAvailability($keyid))) {
                 throw new InternalErrorException(__('GnuPGP does not return any information for the OpenPGP key of the user.'));
             }
         }
-        $this->_gpg->addencryptkey($keyid);
+        $this->_gpg->addEncryptKey($keyid);
     }
 
     /**
@@ -337,6 +333,20 @@ class GpgAuthenticate extends BaseAuthenticate
         }
 
         return $user;
+    }
+
+    /**
+     * Check from key fingerprint if key is present in keyring
+     * @param string $keyid key id
+     * @return array
+     */
+    private function _checkKeyAvailability($keyid)
+    {
+        $keys = array_filter($this->_gpg->getKeys(), function($key) use ($keyid) {
+            return $key->getPrimaryKey()->getFingerPrint() === strtoupper($keyid);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $keys;
     }
 
     /**

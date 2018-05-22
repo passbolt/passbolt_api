@@ -81,11 +81,10 @@ class Gpg
      */
     public function __construct()
     {
-        if (!extension_loaded('gnupg')) {
-            throw new Exception('PHP Gnupg library is not installed.');
+        if (!class_exists('Crypt_GPG')) {
+             throw new Exception('Crypt_GPG is not installed.', E_USER_ERROR);
         }
-        $this->_gpg = new \gnupg();
-        $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
+        $this->_gpg = new \Crypt_GPG();
     }
 
     /**
@@ -389,13 +388,16 @@ class Gpg
     /**
      * Get key information from keyring
      *
-     * @param string $fingerprint key fingerpint
+     * @param string $fingerprint key fingerprint
      * @return mixed
      */
     public function getKeyInfoFromKeyring($fingerprint)
     {
-        // Return info read from the keyring.
-        return $this->_gpg->keyinfo($fingerprint);
+	$keys = array_filter($this->_gpg->getKeys(), function($key) use ($fingerprint) {
+            return $key->getPrimaryKey()->getFingerPrint() === strtoupper($fingerprint);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $keys;
     }
 
     /**
@@ -407,7 +409,7 @@ class Gpg
      */
     public function importKeyIntoKeyring($armoredKey)
     {
-        $import = $this->_gpg->import($armoredKey);
+        $import = $this->_gpg->importKey($armoredKey);
         if (!is_array($import)) {
             throw new Exception('Could not import the key.');
         }
@@ -424,7 +426,7 @@ class Gpg
      */
     public function removeKeyFromKeyring($fingerprint)
     {
-        $deleting = $this->_gpg->deletekey($fingerprint, true);
+        $deleting = $this->_gpg->deleteKey($fingerprint, true);
         if (!$deleting) {
             throw new Exception('Could not delete the key.');
         }
@@ -446,7 +448,7 @@ class Gpg
         }
 
         // Add encrypt key.
-        $this->_gpg->addencryptkey($this->encryptKeyInfo['fingerprint']);
+        $this->_gpg->addEncryptKey($this->encryptKeyInfo['fingerprint']);
 
         // If user wants to sign the message.
         if ($sign === true) {
@@ -455,9 +457,9 @@ class Gpg
                 throw new Exception('No sign key has been added.');
             }
             // Add sign key.
-            $this->_gpg->addsignkey($this->signKeyInfo['fingerprint']);
+            $this->_gpg->addSignKey($this->signKeyInfo['fingerprint']);
             // Encrypt message.
-            $encryptedText = $this->_gpg->encryptsign($text);
+            $encryptedText = $this->_gpg->encryptAndSign($text);
         } else {
             // Else, if user didn't request signing.
             // Encrypt message.
@@ -494,14 +496,14 @@ class Gpg
         }
 
         // Add decrypt key.
-        $this->_gpg->adddecryptkey($this->decryptKeyInfo['fingerprint'], $passphrase);
+        $this->_gpg->addDecryptKey($this->decryptKeyInfo['fingerprint'], $passphrase);
 
         if ($verifySignature === false) {
             // Decrypt the text.
             $decrypted = $this->_gpg->decrypt($text);
         } else {
             // Decrypt text with signature verification.
-            $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
+            $signatureInfo = $this->_gpg->decryptAndVerify($text, $decrypted);
         }
 
         // Return decrypted text.
