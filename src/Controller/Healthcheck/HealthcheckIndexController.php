@@ -53,7 +53,8 @@ class HealthcheckIndexController extends AppController
         }
         $this->viewBuilder()
             ->setLayout('login')
-            ->setTemplatePath('Healthcheck');
+            ->setTemplatePath('Healthcheck')
+            ->setTemplate('index');
         $checks = Healthchecks::all();
         $checks = array_merge($this->__webChecks(), $checks);
         $this->success(__('All checks ran successfully!'), $checks);
