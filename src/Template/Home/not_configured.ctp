@@ -13,8 +13,11 @@
  * @since         2.0.0
  */
 use Cake\Routing\Router;
+use Cake\Core\Configure;
+
 $this->assign('title',	__('Passbolt is not configured.'));
-$this->Html->css('setup.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_setup.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
+
 $this->assign('page_classes', 'start');
 ?>
 <?php echo $this->element('Navigation/empty'); ?>

@@ -18,6 +18,7 @@ namespace App\Utility;
 use Cake\Core\Exception\Exception;
 use \OpenPGP as OpenPGP;
 use \OpenPGP_Message as OpenPGP_Message;
+use \OpenPGP_PublicKeyPacket as OpenPGP_PublicKeyPacket;
 
 /**
  * Gpg wrapper utility
@@ -339,21 +340,18 @@ class Gpg
         );
 
         // Get the message.
-        $msg = \OpenPGP_Message::parse($keyUnarmored);
+        $msg = OpenPGP_Message::parse($keyUnarmored);
 
         // Parse public key.
-        $publicKey = \OpenPGP_PublicKeyPacket::parse($keyUnarmored);
+        $publicKey = OpenPGP_PublicKeyPacket::parse($keyUnarmored);
 
         // Get Packets for public key.
         $publicKeyPacket = $msg->packets[0];
 
         // If the packet is not a valid publicKey Packet, then we can't retrieve the uid.
-        if (!$publicKeyPacket instanceof \OpenPGP_PublicKeyPacket) {
+        if (!$publicKeyPacket instanceof OpenPGP_PublicKeyPacket) {
             throw new Exception('Invalid key');
         }
-
-        // Get self signatures.
-        $selfSignatures = $publicKeyPacket->self_signatures($msg);
 
         // Get userId.
         $userIds = [];
@@ -365,11 +363,14 @@ class Gpg
             }
         }
 
-        $type = '';
-        $bits = '';
-        if (count($selfSignatures) > 0) {
-            $type = $selfSignatures[0]->key_algorithm_name();
-            $bits = OpenPGP::bitlength($selfSignatures[0]->data[0]);
+        // Retrieve algorithm type.
+        $type = OpenPGP_PublicKeyPacket::$algorithms[$publicKeyPacket->algorithm];
+
+        // Retrieve key size.
+        $bits = 0;
+        if (isset(OpenPGP_PublicKeyPacket::$key_fields[$publicKeyPacket->algorithm])) {
+            $keyFirstElt = OpenPGP_PublicKeyPacket::$key_fields[$publicKeyPacket->algorithm][0];
+            $bits = OpenPGP::bitlength($publicKeyPacket->key[$keyFirstElt]);
         }
 
         // Build key information array.

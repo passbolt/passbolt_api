@@ -74,7 +74,8 @@ class EmailNotificationsListener implements EventListenerInterface
             'template' => $template,
             'subject' => Purifier::clean($subject),
             'format' => 'html',
-            'config' => 'default'
+            'config' => 'default',
+            'headers' => ['Auto-Submitted' => 'auto-generated']
         ];
         EmailQueue::enqueue($to, $data, $options);
     }

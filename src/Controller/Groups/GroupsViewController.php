@@ -40,13 +40,16 @@ class GroupsViewController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['modifier', 'modifier.profile', 'user', 'group_user', 'group_user.user.profile']
+            'contain' => ['modifier', 'modifier.profile', 'user', 'group_user', 'group_user.user', 'group_user.user.profile', 'group_user.user.gpgkey', 'my_group_user']
         ];
         $options = $this->QueryString->get($whitelist);
+        if (isset($options['contain']['my_group_user'])) {
+            $options['my_user_id'] = $this->User->id();
+        }
 
         // Default v1 options.
         $defaultV1Options = [
-            'contain' => ['group_user' => 1, 'group_user.user.profile' => 1]
+            'contain' => ['group_user' => 1, 'group_user.user' => 1, 'group_user.user.profile' => 1, 'group_user.user.gpgkey' => 1]
         ];
         $options = array_merge_recursive($options, $defaultV1Options);
 
