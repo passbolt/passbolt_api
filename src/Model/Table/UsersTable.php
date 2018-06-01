@@ -20,10 +20,7 @@ use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
-use App\Model\Table\AvatarsTable;
-use Aura\Intl\Exception;
-use Cake\Collection\CollectionInterface;
-use Cake\Datasource\EntityInterface;
+use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -32,7 +29,6 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Psr\Log\InvalidArgumentException;
 
 /**
  * Users Model
@@ -117,7 +113,7 @@ class UsersTable extends Table
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmpty('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email('username', true, __('The username should be a valid email address.'));
+            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
 
         $validator
             ->boolean('active')
@@ -173,7 +169,7 @@ class UsersTable extends Table
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmpty('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum 254 characters.'))
-            ->email('username', true, __('The username should be a valid email address.'));
+            ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
 
         return $validator;
     }
@@ -358,7 +354,7 @@ class UsersTable extends Table
     {
         // Options must contain an id
         if (!isset($options['fingerprint'])) {
-            throw new Exception(__('User table findAuth should have a fingerprint id set in options.'));
+            throw new \Exception(__('User table findAuth should have a fingerprint id set in options.'));
         }
 
         // auth query is always done as guest
@@ -379,7 +375,7 @@ class UsersTable extends Table
      */
     public function findRecover(string $username, array $options = [])
     {
-        if (!Validation::email($username)) {
+        if (!Validation::email($username, Configure::read('passbolt.email.validate.mx'))) {
             throw new \InvalidArgumentException(__('The username should be a valid email.'));
         }
         // show active first and do not count deleted ones
@@ -831,9 +827,7 @@ class UsersTable extends Table
         $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true);
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
-            $Resources->updateAll(['deleted' => true], [
-                'id IN' => $resourceIds
-            ]);
+            $Resources->softDeleteAll($resourceIds);
         }
 
         // We do not want empty groups
@@ -843,13 +837,17 @@ class UsersTable extends Table
         $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
-            $this->Permissions->deleteAll(['aco_foreign_key IN' => $groupsId]);
+            $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);
         }
 
         // Delete all group memberships
         // Delete all permissions
         $this->GroupsUsers->deleteAll(['user_id' => $user->id]);
         $this->Permissions->deleteAll(['aro_foreign_key' => $user->id]);
+
+        // Delete all secrets
+        $Secrets = TableRegistry::get('Secrets');
+        $Secrets->deleteAll(['user_id' => $user->id]);
 
         // Delete all favorites
         $Favorites = TableRegistry::get('Favorites');
