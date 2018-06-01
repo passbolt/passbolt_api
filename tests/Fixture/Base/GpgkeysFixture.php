@@ -44,15 +44,17 @@ class GpgkeysFixture extends TestFixture
     // @codingStandardsIgnoreEnd
 
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-        [
-            'id' => '04481719-5d9d-5e22-880a-a6b9270601d2',
-            'user_id' => 'f848277c-5398-58f8-a82a-72397af2d450',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+    public function init()
+    {
+        $this->records = [
+            [
+                'id' => '04481719-5d9d-5e22-880a-a6b9270601d2',
+                'user_id' => 'f848277c-5398-58f8-a82a-72397af2d450',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
@@ -106,79 +108,74 @@ GkkO+pcgU1wQ
 =Zopv
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4096,
-            'uid' => 'Ada Lovelace <ada@passbolt.com>',
-            'key_id' => '5D9B054F',
-            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
-            'type' => 'RSA',
-            'expires' => '2019-08-09 12:48:31',
-            'key_created' => '2015-08-09 12:48:31',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => '118fd79b-b683-5595-98d5-fe622c679711',
-            'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Ada Lovelace <ada@passbolt.com>',
+                'key_id' => '5D9B054F',
+                'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+                'type' => 'RSA',
+                'expires' => '2019-08-09 12:48:31',
+                'key_created' => '2015-08-09 12:48:31',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => '118fd79b-b683-5595-98d5-fe622c679711',
+                'user_id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: GPGTools - https://gpgtools.org
 
 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
-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
-okxFArA=
-=xqxT
+x+WKvP8Eidtb0+brOQPebl+oDq7c9SgXKWkfABEBAAG0IElyZW5lIEdyZWlmIDxp
+cmVuZUBwYXNzYm9sdC5jb20+iQE3BBMBCgAhBQJZkvYUAhsDBQsJCAcDBRUKCQgL
+BRYCAwEAAh4BAheAAAoJEFIHxWR0/o0x/MIH/RdKE6q+gAkD3WG52vCQxgDk/8hY
+pTRjKKaEHknTzGzjC7tF0PtWrXo6LYYyvMdRB7sQyGLQl/qMo+MzsNa2oHKF7ujE
+10WO6uqqBf+ePw7Odqllh542pYpoMAg76eOPbXItM50ZgHXJZeFin5s9c14ATyai
+hRQRjoDII2WLGm/ZbVgjBjQvZ9A4o2nLJ91pxZxav2pIR3EIWZxYa33uOkzvYQT4
+vQ1lqrksOqorXj8pFqj6HZRFU2Gq8IbhZqE6EZk62CfDBknuZl+88mZ4yfRHwtsx
+sWev+GpS0s6XMfI4cbT68oRCoXMZxv0aiPnli4hOP0vUFxe59WXdBVz/yUS0Jkly
+ZW5lIEdyZWlmIDxpcmVuZS5ncmVpZkBwYXNzYm9sdC5jb20+iQE6BBMBCgAkAhsD
+BQsJCAcDBRUKCQgLBRYCAwEAAh4BAheABQJZkvYVAhkBAAoJEFIHxWR0/o0xG0AH
+/06LUmgQR8ZJCmCeCZnJ9UuLvcCs7oh2CrQHWSGsy263MA3SPXwmoDWWyEwy4rgA
+VNiYYGqRJYBt6OqiHvk0q2I+Qg9O92c1rL0qnTp5LWgrX1wtZTxBPQNd8YDuyWK8
+LQ7kwzEi0zkLgNwvhv0cJaLjHidGWlWaN9uqUlJjHTI4dXLKIKKSIiYP6rHQWpF/
+7Q9D5Ftd5Y6sfXdBud04H7AUWib1Tv3PZ82+WgKgwssc00SMTjMCFe3m1skcRwYT
+Qu2zQCslG0ipfvKHOxJwC8Hz3l8E8zH55NBPRqM+qOnLRu9KL7OSupnYf8bpOfhU
+9CRe1a/xIQgpmFG4PXPwAoe5AQ0EV0WnswEIAKp2ZNBEqWlCVnxdb/cfsUOiLzsS
+yjoRCxeZXs6C3PS4ZmIVn07v3ij14xCFjTAMQChmTDfquo5HV4sSd6mtUcBOXx+E
+9D4rZQ4oweFSa5zF1xZ4rXGNU00OT59UOEkSvGHCsRGGPmtdSIX59131RCbITcHu
+sF51vIq4duRR351c9tjHBWWRmeZQHmV3Ysmh+GSEYR2DK+1YtlptxGvZE7UbmsnV
+0NAGqmRmIkOvz1ycfLcZ27O272jEBBUsU6CgulTbPscJtkAR2eyeStLJQuK+CUp/
+vGxIOWMiYO82iTyKs7Lm59X4gVq5A8J2QEY1g9e9Ywhy7MixJm2p05awMXEAEQEA
+AYkBHwQYAQoACQUCV0WnswIbDAAKCRBSB8VkdP6NMapPB/9/SdVnB9tk3Paw5cQA
+mRxjpNFkj4KH3EsARO5/st2+X9bUOsdvRjofOfgp3IL/aN5pPciW/oJ4bQVa2612
+dFZwPfPEQwOhXE7Ebumxjzy+4Uu3OxgxMg/K1Ju6liP5+46FVeE2ylQ1nqS2RrD4
+csnx5Uk5BhWlF7umI6Y0e6SstTgpNb71+B2DIFg7MBYmfInnhWBuVlzauEzQksVC
+6mpHsoj6S9KxvblsJSmEI2MAaVoAIcU+1dnX2PJ9zRnovR6U9wugJwOOMQfzOnMf
+w5Kyiy+4Plc5hbT7k+cnx50EPBCFlm9nP0dVemvD64PDjbWxVxY9w1gDgeYfdaJM
+RQKw
+=8Nu4
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 2048,
-            'uid' => 'Irene Greif <irene.greif@passbolt.com>',
-            'key_id' => '74FE8D31',
-            'fingerprint' => 'FDC7DF9AB0C61C33B2D871C25207C56474FE8D31',
-            'type' => 'RSA',
-            'expires' => null,
-            'key_created' => '2016-05-25 13:25:07',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => '1d3d0565-f075-50d4-b58a-cbb82700e79b',
-            'user_id' => '640ebc06-5ec1-5322-a1ae-6120ed2f3a74',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 2045,
+                'uid' => 'Irene Greif <irene@passbolt.com>',
+                'key_id' => '74FE8D31',
+                'fingerprint' => 'FDC7DF9AB0C61C33B2D871C25207C56474FE8D31',
+                'type' => 'RSA',
+                'expires' => null,
+                'key_created' => '2016-05-25 13:25:07',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => '1d3d0565-f075-50d4-b58a-cbb82700e79b',
+                'user_id' => '640ebc06-5ec1-5322-a1ae-6120ed2f3a74',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWVH5gBEADl3Pyvzhciv/+1k9PL+c+Yr5sasPXJmoJwQwBnvbJEgrVVEPj6
@@ -230,21 +227,21 @@ FaQo3PIOX88jvldpsfW+9RErL/h4/1+obFGwUXoo90/mHeHtl8KaKDQ02/UFYHgd
 t8bJrYvwZzYi
 =Wbeg
 -----END PGP PUBLIC KEY BLOCK-----',
-            'bits' => 4096,
-            'uid' => 'Carol Shaw <carol@passbolt.com>',
-            'key_id' => '82945D3E',
-            'fingerprint' => '57DE7D79ABE733A235EB1F84CDF8FC8682945D3E',
-            'type' => 'RSA',
-            'expires' => '2019-07-02 11:25:12',
-            'key_created' => '2015-07-02 11:25:12',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => '2111bdd2-b19c-55a1-94ae-13e9ae67c1e9',
-            'user_id' => '8d04cf98-716b-5f6d-9fe8-c130f8992646',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Carol Shaw <carol@passbolt.com>',
+                'key_id' => '82945D3E',
+                'fingerprint' => '57DE7D79ABE733A235EB1F84CDF8FC8682945D3E',
+                'type' => 'RSA',
+                'expires' => '2019-07-02 11:25:12',
+                'key_created' => '2015-07-02 11:25:12',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => '2111bdd2-b19c-55a1-94ae-13e9ae67c1e9',
+                'user_id' => '8d04cf98-716b-5f6d-9fe8-c130f8992646',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWaTMBEADRzy5PKpWKGNnNJO5JpaV1050Tmjmo+zXOth6Ta/cZ+1kgeBun
@@ -297,21 +294,22 @@ VX5VSIUYQFVe
 =UUaB
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4096,
-            'uid' => 'Hedy Lamarr <hedy@passbolt.com>',
-            'key_id' => 'A812A61E',
-            'fingerprint' => 'ED39FA1D15C0B2A81359A872928088DAA812A61E',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:51:31',
-            'key_created' => '2015-07-03 10:51:31',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => '596201e6-8d3b-54b9-84e6-3ed6ef99113d',
-            'user_id' => '1e73e104-d53e-579d-a0c4-e9aeaca76c56',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Hedy Lamarr <hedy@passbolt.com>',
+                'key_id' => 'A812A61E',
+                'fingerprint' => 'ED39FA1D15C0B2A81359A872928088DAA812A61E',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:51:31',
+                'key_created' => '2015-07-03 10:51:31',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => '596201e6-8d3b-54b9-84e6-3ed6ef99113d',
+                'user_id' => '1e73e104-d53e-579d-a0c4-e9aeaca76c56',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWanIBEADEXgN8jBKhjQJhvuRhKL/iiqtNetH2Y1UL4ObPjVz5Sk6E2oKQ
 B8eVotWDa4Hp65P3wJDnO29wwKXCSOwYsvIMp/q6hDvUzdf/toYWWiZSVRn2nG36
@@ -324,84 +322,60 @@ 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
-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
-Fn/GZBrkylomqJXBaNog7cM=
-=V86G
+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
+ylomqJXBaNog7cM=
+=PkGo
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4094,
-            'uid' => 'Lynn Jolitz <lynn@passbolt.com>',
-            'key_id' => '8EA58CFC',
-            'fingerprint' => 'B5D364ECDAB5B3F79C6879B85F64D13E8EA58CFC',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:56:50',
-            'key_created' => '2015-07-03 10:56:50',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => '82eaeed6-32a9-5e56-af93-6bc362a9d62b',
-            'user_id' => '887422c0-bef6-59a7-bbda-84c253ee0848',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Lynne Jolitz <lynne@passbolt.com>',
+                'key_id' => '8EA58CFC',
+                'fingerprint' => 'B5D364ECDAB5B3F79C6879B85F64D13E8EA58CFC',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:56:50',
+                'key_created' => '2015-07-03 10:56:50',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => '82eaeed6-32a9-5e56-af93-6bc362a9d62b',
+                'user_id' => '887422c0-bef6-59a7-bbda-84c253ee0848',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWaH8BEADaNmNDTAuy9QRsdFTV1yJSbI6u5GYuDWV6TS7isEFxj+BIvgAc
@@ -454,21 +428,21 @@ BzXzQTAO+Vo1Nkyf7B8=
 =vRc1
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4095,
-            'uid' => 'Frances Allen <frances@passbolt.com>',
-            'key_id' => '477FB14C',
-            'fingerprint' => '98DA33350692F21BD5F83A17E8DC5617477FB14C',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:48:31',
-            'key_created' => '2015-07-03 10:48:31',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => '91d8a7fd-3ab3-5e98-a4a5-0d8694ff23b9',
-            'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4095,
+                'uid' => 'Frances Allen <frances@passbolt.com>',
+                'key_id' => '477FB14C',
+                'fingerprint' => '98DA33350692F21BD5F83A17E8DC5617477FB14C',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:48:31',
+                'key_created' => '2015-07-03 10:48:31',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => '91d8a7fd-3ab3-5e98-a4a5-0d8694ff23b9',
+                'user_id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFY06pcBEADjYRuq05Zatu4qYtXmexbrwtUdakNJJHPlWxcusohdTLUmSXrt
@@ -520,21 +494,21 @@ dpjWjDJgJn4x7Nv9VHqJuGQX6WPUYQ94lBm4EH/OahytnF6FIKWS0LmG+GNlbh2o
 /egdKpXSkvk7uOW9taOksqsB76FR
 =lYGs
 -----END PGP PUBLIC KEY BLOCK-----',
-            'bits' => 4096,
-            'uid' => 'Passbolt Default Admin <admin@passbolt.com>',
-            'key_id' => 'D06426D3',
-            'fingerprint' => '0C1D1761110D1E33C9006D1A5B1B332ED06426D3',
-            'type' => 'RSA',
-            'expires' => '2019-10-31 16:21:43',
-            'key_created' => '2015-10-31 16:21:43',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'a1dd3f22-30b1-51f1-a22d-5aeeb00fee1e',
-            'user_id' => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Passbolt Default Admin <admin@passbolt.com>',
+                'key_id' => 'D06426D3',
+                'fingerprint' => '0C1D1761110D1E33C9006D1A5B1B332ED06426D3',
+                'type' => 'RSA',
+                'expires' => '2019-10-31 16:21:43',
+                'key_created' => '2015-10-31 16:21:43',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'a1dd3f22-30b1-51f1-a22d-5aeeb00fee1e',
+                'user_id' => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQENBFi6+SUBCADM9AAyXMBp32rNl4Hz2KqIsBYO7Fi9zFANzSM2jBCEuZVAE0pw
@@ -565,21 +539,21 @@ erR4fuZF//Io+VikJe6mKufSflOpCDYfSOscdAA9
 =q+Sl
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 2047,
-            'uid' => 'Wang Xiaoyun <wang@passbolt.com>',
-            'key_id' => 'FC079531',
-            'fingerprint' => '28C3C228F27C892A0583AF534750015BFC079531',
-            'type' => 'RSA',
-            'expires' => null,
-            'key_created' => '2017-03-04 17:28:05',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'b2581347-f1e0-5296-99af-baee3240dcf6',
-            'user_id' => '8d038399-ecac-55b4-8ad3-b7f0650de2a2',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 2047,
+                'uid' => 'Wang Xiaoyun <wang@passbolt.com>',
+                'key_id' => 'FC079531',
+                'fingerprint' => '28C3C228F27C892A0583AF534750015BFC079531',
+                'type' => 'RSA',
+                'expires' => null,
+                'key_created' => '2017-03-04 17:28:05',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'b2581347-f1e0-5296-99af-baee3240dcf6',
+                'user_id' => '8d038399-ecac-55b4-8ad3-b7f0650de2a2',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFdIFF0BEAC9+7iwspiQR6NZWIBhuZQcHbYCses59ByTEgKU1E5ZQTFLmBXj
@@ -632,21 +606,21 @@ w9E+yhN8gIA=
 =qtKg
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4095,
-            'uid' => 'Orna Berry <orna@passbolt.com>',
-            'key_id' => '397EEAB6',
-            'fingerprint' => 'E2E98DCC84FB41F69603C346EA62E0B3397EEAB6',
-            'type' => 'RSA',
-            'expires' => '2020-05-27 09:33:17',
-            'key_created' => '2016-05-27 09:33:17',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'b3cdb8ae-c5ab-52e6-a394-8cd800bfaed6',
-            'user_id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4095,
+                'uid' => 'Orna Berry <orna@passbolt.com>',
+                'key_id' => '397EEAB6',
+                'fingerprint' => 'E2E98DCC84FB41F69603C346EA62E0B3397EEAB6',
+                'type' => 'RSA',
+                'expires' => '2020-05-27 09:33:17',
+                'key_created' => '2016-05-27 09:33:17',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'b3cdb8ae-c5ab-52e6-a394-8cd800bfaed6',
+                'user_id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQENBFi6+KABCACr10aZS+MSkQAuyducjLJ5Pb9rShxlmIXClTYry2RaoeOe7Pp3
@@ -677,21 +651,21 @@ wlPmpnNFp1iLbkFM2+/gVSR+9Ty2DNFPgRAov58Cb+oQ
 =eX9A
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 2046,
-            'uid' => 'Thelma Estrin <thelma@passbolt.com>',
-            'key_id' => '1787E54D',
-            'fingerprint' => '522E59EAC81C5D8470C45077A711A0731787E54D',
-            'type' => 'RSA',
-            'expires' => null,
-            'key_created' => '2017-03-04 17:25:52',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'b4ac2e2f-2764-51e6-82c9-2066943733ff',
-            'user_id' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 2046,
+                'uid' => 'Thelma Estrin <thelma@passbolt.com>',
+                'key_id' => '1787E54D',
+                'fingerprint' => '522E59EAC81C5D8470C45077A711A0731787E54D',
+                'type' => 'RSA',
+                'expires' => null,
+                'key_created' => '2017-03-04 17:25:52',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'b4ac2e2f-2764-51e6-82c9-2066943733ff',
+                'user_id' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWVIFEBEADNf9iYgEVVxHAQ06XTEtx2kpm9jW4kiwBUeJxDEWnUPACEW0Qn
@@ -743,21 +717,21 @@ mbHV78dsJueHFaKlnDG3OJ9ixdzluGbhYZWI3A3Z5mui9id0QUqffCCK6+t7NQbG
 gJf4InpB2dxOL4K2Z7c=
 =W+0N
 -----END PGP PUBLIC KEY BLOCK-----',
-            'bits' => 4094,
-            'uid' => 'Betty Holberton <betty@passbolt.com>',
-            'key_id' => 'E61D7009',
-            'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
-            'type' => 'RSA',
-            'expires' => '2019-07-02 11:28:17',
-            'key_created' => '2015-07-02 11:28:17',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'c4834439-b383-58bc-8386-a2e475d85318',
-            'user_id' => 'e1ebc592-b90d-5e22-9f40-50e52911673b',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4094,
+                'uid' => 'Betty Holberton <betty@passbolt.com>',
+                'key_id' => 'E61D7009',
+                'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
+                'type' => 'RSA',
+                'expires' => '2019-07-02 11:28:17',
+                'key_created' => '2015-07-02 11:28:17',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'c4834439-b383-58bc-8386-a2e475d85318',
+                'user_id' => 'e1ebc592-b90d-5e22-9f40-50e52911673b',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWatoBEADG8gXYLlFBwO0iHkhAjWNByPdIDvsWvhZFCgFTQcVAjEr/VY3n
@@ -810,21 +784,21 @@ FyrePavJQtK671fw1z4/fW1wo8dxNvEAyTpPjK8kPAZoZj2gLHefQlLghACUsSmL
 =GnKL
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4096,
-            'uid' => 'Marlyn Wescoff <marlyn@passbolt.com>',
-            'key_id' => '0735B1C0',
-            'fingerprint' => 'E4400EE5E49B86B96FB7D7F48BB0AD490735B1C0',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:58:34',
-            'key_created' => '2015-07-03 10:58:34',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'cf85775a-cfb0-5ad5-90b2-ecfde355f7de',
-            'user_id' => '0da907bd-5c57-5acc-ba39-c6ebe091f613',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Marlyn Wescoff <marlyn@passbolt.com>',
+                'key_id' => '0735B1C0',
+                'fingerprint' => 'E4400EE5E49B86B96FB7D7F48BB0AD490735B1C0',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:58:34',
+                'key_created' => '2015-07-03 10:58:34',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'cf85775a-cfb0-5ad5-90b2-ecfde355f7de',
+                'user_id' => '0da907bd-5c57-5acc-ba39-c6ebe091f613',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWaeEBEADO1XF9WVHK56igXdIkeu/4ifu7Mrbpte4ieyjEXtwzQ33u6T+o
@@ -877,21 +851,21 @@ lHRL/q8pHZye
 =2YrD
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4096,
-            'uid' => 'Jean Bartik <jean@passbolt.com>',
-            'key_id' => '24AA1193',
-            'fingerprint' => '8F758E3BDD8445361A8A6AD073BAC28524AA1193',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:54:25',
-            'key_created' => '2015-07-03 10:54:25',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'd7c9f849-71ba-5940-a3ca-ab26472c06fb',
-            'user_id' => '620de627-8f07-5427-9149-e2c43219c5aa',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Jean Bartik <jean@passbolt.com>',
+                'key_id' => '24AA1193',
+                'fingerprint' => '8F758E3BDD8445361A8A6AD073BAC28524AA1193',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:54:25',
+                'key_created' => '2015-07-03 10:54:25',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'd7c9f849-71ba-5940-a3ca-ab26472c06fb',
+                'user_id' => '620de627-8f07-5427-9149-e2c43219c5aa',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWaLEBEADEw/przig4P+MKh4qmtZaSHgOew9REKcjxnVH+sCLxyDej81xQ
@@ -944,21 +918,21 @@ a09IIZln6LLZOig=
 =jibv
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4095,
-            'uid' => 'Grace Hopper <grace@passbolt.com>',
-            'key_id' => '9BC6A569',
-            'fingerprint' => '63452C7A0AE6FAE8C8C309640BD9E2409BC6A569',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:49:21',
-            'key_created' => '2015-07-03 10:49:21',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'da315c73-bf77-5aa6-8f10-faa47a579f15',
-            'user_id' => '32d29702-85e2-539d-98ac-6abfa7aadf01',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4095,
+                'uid' => 'Grace Hopper <grace@passbolt.com>',
+                'key_id' => '9BC6A569',
+                'fingerprint' => '63452C7A0AE6FAE8C8C309640BD9E2409BC6A569',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:49:21',
+                'key_created' => '2015-07-03 10:49:21',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'da315c73-bf77-5aa6-8f10-faa47a579f15',
+                'user_id' => '32d29702-85e2-539d-98ac-6abfa7aadf01',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWajsBEADWPdKeeKFC/L1XFEplL+Aj7jW20YHdjQhnk8w1O6VnGhe4tfZS
@@ -1011,21 +985,21 @@ b7c81OKzWqN3kkNCTtycnemmZRE=
 =f88E
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4095,
-            'uid' => 'Kathleen Antonelli <kathleen@passbolt.com>',
-            'key_id' => 'A73AE279',
-            'fingerprint' => '14D07AFFDE916BC904F17AFB4D203642A73AE279',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:55:55',
-            'key_created' => '2015-07-03 10:55:55',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'e0a978e1-fa74-5cf1-803d-25818671e886',
-            'user_id' => 'f7e9754a-2f64-5cdd-8ba2-178b33383505',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4095,
+                'uid' => 'Kathleen Antonelli <kathleen@passbolt.com>',
+                'key_id' => 'A73AE279',
+                'fingerprint' => '14D07AFFDE916BC904F17AFB4D203642A73AE279',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:55:55',
+                'key_created' => '2015-07-03 10:55:55',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'e0a978e1-fa74-5cf1-803d-25818671e886',
+                'user_id' => 'f7e9754a-2f64-5cdd-8ba2-178b33383505',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQENBFi69+MBCAC01FHt73wQwudYIPpD6XUtJXOoRWIMnLYFiBy4Y4VSpzySrtr4
@@ -1056,21 +1030,21 @@ cOv3QJcgi02rfOMbtFrfHqeEPITCru9nZg==
 =Aszm
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 2046,
-            'uid' => 'Ping Fu <ping@passbolt.com>',
-            'key_id' => 'BAD54A8A',
-            'fingerprint' => 'AABF40FA29BA54073E8BB956ACE65E16BAD54A8A',
-            'type' => 'RSA',
-            'expires' => null,
-            'key_created' => '2017-03-04 17:22:43',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'e152cd5e-f4fb-593c-aebc-9b06a434cb39',
-            'user_id' => 'e7fa0375-61df-5dbc-9e42-e0d363bd0ecf',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 2046,
+                'uid' => 'Ping Fu <ping@passbolt.com>',
+                'key_id' => 'BAD54A8A',
+                'fingerprint' => 'AABF40FA29BA54073E8BB956ACE65E16BAD54A8A',
+                'type' => 'RSA',
+                'expires' => null,
+                'key_created' => '2017-03-04 17:22:43',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'e152cd5e-f4fb-593c-aebc-9b06a434cb39',
+                'user_id' => 'e7fa0375-61df-5dbc-9e42-e0d363bd0ecf',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
@@ -1101,21 +1075,21 @@ X9fv56KCnrIdY4NZx8iYqEmjMOZ/FRz9fpwxWapqn+V7eQl7mpSybNEt3gevuTmc
 /RFZsK5btBeTdj8jzgg83/jvsasJnTLgAoOdSv2j
 =1k/p
 -----END PGP PUBLIC KEY BLOCK-----',
-            'bits' => 2048,
-            'uid' => 'Nancy Nancy <nancy@passbolt.com>',
-            'key_id' => '9E7FA152',
-            'fingerprint' => '459B102D43F683E7EFC523610EC547AD9E7FA152',
-            'type' => 'RSA',
-            'expires' => null,
-            'key_created' => '2016-05-25 12:00:08',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'e290ed74-a470-5903-8e80-ee25c16fe47f',
-            'user_id' => '1ebc0060-9274-5451-aa12-ad0f31bc29dd',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 2048,
+                'uid' => 'Nancy Nancy <nancy@passbolt.com>',
+                'key_id' => '9E7FA152',
+                'fingerprint' => '459B102D43F683E7EFC523610EC547AD9E7FA152',
+                'type' => 'RSA',
+                'expires' => null,
+                'key_created' => '2016-05-25 12:00:08',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'e290ed74-a470-5903-8e80-ee25c16fe47f',
+                'user_id' => '1ebc0060-9274-5451-aa12-ad0f31bc29dd',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWWaD8BEADyuAZQc9tus+HALpNvNg562pQAtf0KiTVwE0zaPjojkJcWdhdU
@@ -1168,21 +1142,21 @@ VhJINUw1ojbw3d8=
 =5xjf
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4096,
-            'uid' => 'Edith Clarke <edith@passbolt.com>',
-            'key_id' => '9E67396C',
-            'fingerprint' => 'D5FDE007B7B4B9816ECE25F61D67BAA69E67396C',
-            'type' => 'RSA',
-            'expires' => '2019-07-03 10:47:27',
-            'key_created' => '2015-07-03 10:47:27',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'e6ed0cb7-b31d-5b82-85fa-41d74abb6cd0',
-            'user_id' => '610b4c1c-3c08-5451-a163-5b2adba8a5cd',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Edith Clarke <edith@passbolt.com>',
+                'key_id' => '9E67396C',
+                'fingerprint' => 'D5FDE007B7B4B9816ECE25F61D67BAA69E67396C',
+                'type' => 'RSA',
+                'expires' => '2019-07-03 10:47:27',
+                'key_created' => '2015-07-03 10:47:27',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'e6ed0cb7-b31d-5b82-85fa-41d74abb6cd0',
+                'user_id' => '610b4c1c-3c08-5451-a163-5b2adba8a5cd',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFdIFIwBEADIQgFd5rFlsju9Zc527dF+fqvLLNs+qolEFFsNZqo2XMbQqMxj
@@ -1235,21 +1209,21 @@ eUNE1fxScsE6UBlfdvKJapc=
 =s/2R
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4096,
-            'uid' => 'Sofia Kovalevskaya <sofia@passbolt.com>',
-            'key_id' => '08D8B763',
-            'fingerprint' => '252B91CB28A96C6D67E8FC139020576F08D8B763',
-            'type' => 'RSA',
-            'expires' => '2020-05-27 09:34:04',
-            'key_created' => '2016-05-27 09:34:04',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'f0df9afb-2f0a-5273-aa1e-1f625f2920a0',
-            'user_id' => '54c6278e-f824-5fda-91ff-3e946b18d994',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4096,
+                'uid' => 'Sofia Kovalevskaya <sofia@passbolt.com>',
+                'key_id' => '08D8B763',
+                'fingerprint' => '252B91CB28A96C6D67E8FC139020576F08D8B763',
+                'type' => 'RSA',
+                'expires' => '2020-05-27 09:34:04',
+                'key_created' => '2016-05-27 09:34:04',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'f0df9afb-2f0a-5273-aa1e-1f625f2920a0',
+                'user_id' => '54c6278e-f824-5fda-91ff-3e946b18d994',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQINBFWVJ3EBEADbUrPtSQprUnUAxYb9qJiDO+nhzQAbVOiz7cc34xYLyjwIzlgn
@@ -1302,21 +1276,21 @@ LhhailjVzD+qRWUEbzscp1Ih
 =WyEV
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 4095,
-            'uid' => 'Dame \'Steve\' Shirley <dame@passbolt.com>',
-            'key_id' => '959CF1D0',
-            'fingerprint' => '03E6535C52AFD7544C555829DD8E26DB959CF1D0',
-            'type' => 'RSA',
-            'expires' => '2019-07-02 11:58:41',
-            'key_created' => '2015-07-02 11:58:41',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'f2b76b3a-892a-5b4d-9b27-2c051d4d6f4a',
-            'user_id' => '5302c3cb-5d33-53b1-82cd-57df36e13acc',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 4095,
+                'uid' => 'Dame \'Steve\' Shirley <dame@passbolt.com>',
+                'key_id' => '959CF1D0',
+                'fingerprint' => '03E6535C52AFD7544C555829DD8E26DB959CF1D0',
+                'type' => 'RSA',
+                'expires' => '2019-07-02 11:58:41',
+                'key_created' => '2015-07-02 11:58:41',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'f2b76b3a-892a-5b4d-9b27-2c051d4d6f4a',
+                'user_id' => '5302c3cb-5d33-53b1-82cd-57df36e13acc',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
 mQENBFi6+NoBCADDDLnrYnzqJJCCPRtsMy27QNnb13eD69xv15D5vHWzXjl0HoNb
@@ -1347,21 +1321,21 @@ C1bPERQcYXABssLYtGmFVdoC3DLBcCY+tjrJRz7DXtpo
 =Z4Om
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'bits' => 2046,
-            'uid' => 'Ursula Martin <ursula@passbolt.com>',
-            'key_id' => '12894874',
-            'fingerprint' => 'DD6A88103741A623F8AB8F43403E0E4A12894874',
-            'type' => 'RSA',
-            'expires' => null,
-            'key_created' => '2017-03-04 17:26:50',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-        [
-            'id' => 'fc8d6501-9391-5cd4-ad17-f46df3443d6f',
-            'user_id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+                'bits' => 2046,
+                'uid' => 'Ursula Martin <ursula@passbolt.com>',
+                'key_id' => '12894874',
+                'fingerprint' => 'DD6A88103741A623F8AB8F43403E0E4A12894874',
+                'type' => 'RSA',
+                'expires' => null,
+                'key_created' => '2017-03-04 17:26:50',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+            [
+                'id' => 'fc8d6501-9391-5cd4-ad17-f46df3443d6f',
+                'user_id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
+                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG/MacGPG2 v2.0.22 (Darwin)
 Comment: GPGTools - https://gpgtools.org
 
@@ -1392,16 +1366,18 @@ Kqusl1GcnrNFuDDtDwZS1G+3T8Y8ZH8tRnTwrSeO3I7hw/cdzCEDg4isqFw371vz
 UghWsISL244Umc6ZmTufAs+7/6sNNzFAb5SzwVmpLla1x3jth4bwLcJTGFq/vw==
 =GG/Z
 -----END PGP PUBLIC KEY BLOCK-----',
-            'bits' => 2048,
-            'uid' => 'Passbolt PGP <passbolt@passbolt.com>',
-            'key_id' => '5FD2D92C',
-            'fingerprint' => '120F87DDE5A438DE89826D464F8194025FD2D92C',
-            'type' => 'RSA',
-            'expires' => '2018-11-19 14:03:51',
-            'key_created' => '2014-11-19 14:03:51',
-            'deleted' => false,
-            'created' => '2018-02-27 12:01:42',
-            'modified' => '2018-02-27 12:01:42'
-        ],
-    ];
+                'bits' => 2048,
+                'uid' => 'Passbolt PGP <passbolt@passbolt.com>',
+                'key_id' => '5FD2D92C',
+                'fingerprint' => '120F87DDE5A438DE89826D464F8194025FD2D92C',
+                'type' => 'RSA',
+                'expires' => '2018-11-19 14:03:51',
+                'key_created' => '2014-11-19 14:03:51',
+                'deleted' => false,
+                'created' => '2018-05-01 05:25:35',
+                'modified' => '2018-05-01 05:25:35'
+            ],
+        ];
+        parent::init();
+    }
 }

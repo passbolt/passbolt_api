@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Model\Table\Permissions;
+namespace App\Test\TestCase\Model\Table\GroupsUsers;
 
 use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;

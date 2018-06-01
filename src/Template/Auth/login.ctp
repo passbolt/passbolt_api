@@ -21,7 +21,7 @@ if (Configure::read('passbolt.registration.public') === true) {
     $pageClass .= ' public-registration';
 }
 $this->assign('pageClass', $pageClass);
-$this->Html->css('login.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 
 // Only Firefox and Chrome are officially supported right now.
 $pluginCheckTemplate = 'Public/Auth/unsupported';

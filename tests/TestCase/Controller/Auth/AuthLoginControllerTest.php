@@ -87,7 +87,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $data = $this->_getBodyAsString();
         $expect = 'An Internal Error Has Occurred';
         $this->assertContains($expect, $data);
-        $expect = 'The GPG Server key defined in the config is not found in the gpg keyring';
+        $expect = 'The OpenPGP server key defined in the config could not be found in the GnuPG keyring.';
         $this->assertContains($expect, $data);
     }
 
@@ -255,7 +255,7 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertTrue(isset($headers['X-GPGAuth-Progress']), 'The progress indicator should be set in the headers');
         $this->assertEquals($headers['X-GPGAuth-Progress'], 'stage0', 'The progress indicator should be set to stage1');
         $this->assertTrue(isset($headers['X-GPGAuth-Debug']), 'A debug message should be set in the headers');
-        $this->assertEquals($headers['X-GPGAuth-Debug'], 'Decryption failed');
+        $this->assertEquals($headers['X-GPGAuth-Debug'], 'Decryption failed.');
     }
 
     /**
