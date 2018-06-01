@@ -21,8 +21,8 @@ use Cake\Core\Configure;
 
     <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
-
-    <?= $this->Html->css('main.min.css') ?>
+    <?= $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]); ?>
+<?= $this->fetch('css') ?>
 </head>
 <body>
 <div id="container" class="error page <?= $this->fetch('pageClass') ?>">
