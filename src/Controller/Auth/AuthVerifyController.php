@@ -48,7 +48,7 @@ class AuthVerifyController extends AppController
             $msg = __('The public key information was not found in config.');
             throw new InternalErrorException($msg);
         }
-        $file = new File(Configure::read('passbolt.gpg.serverKey.public'));
+        $file = new File('../'.Configure::read('passbolt.gpg.serverKey.public'));
         if (!$file->exists()) {
             throw new InternalErrorException(__('The public key for this passbolt instance was not found.'));
         }
