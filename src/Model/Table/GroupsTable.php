@@ -67,6 +67,9 @@ class GroupsTable extends Table
         $this->hasMany('GroupsUsers', [
             'saveStrategy' => 'replace'
         ]);
+        $this->hasOne('MyGroupUser', [
+            'className' => 'GroupsUsers'
+        ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aro_foreign_key'
         ]);
@@ -201,14 +204,31 @@ class GroupsTable extends Table
             $query->contain('Users');
         }
 
+        // If contains user_group_user.
+        if (isset($options['contain']['my_group_user'])) {
+            $query->contain('MyGroupUser', function ($q) use ($options) {
+                return $q->where(['MyGroupUser.user_id' => $options['my_user_id']]);
+            });
+        }
+
         // If contains group_user.
         if (isset($options['contain']['group_user'])) {
             $query->contain('GroupsUsers');
         }
 
+        // If contains group_user user.
+        if (isset($options['contain']['group_user.user'])) {
+            $query->contain('GroupsUsers.Users');
+        }
+
         // If contains user profile.
         if (isset($options['contain']['group_user.user.profile'])) {
             $query->contain('GroupsUsers.Users.Profiles');
+        }
+
+        // If contains user gpgkey.
+        if (isset($options['contain']['group_user.user.gpgkey'])) {
+            $query->contain('GroupsUsers.Users.Gpgkeys');
         }
 
         // If contains user_count.

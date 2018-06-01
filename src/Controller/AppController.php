@@ -182,4 +182,18 @@ class AppController extends Controller
             }
         }
     }
+
+    /**
+     * Get the request api version.
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        $apiVersion = $this->request->getQuery('api-version');
+        if (!isset($apiVersion) || $apiVersion === 'v1') {
+            return 'v1';
+        }
+
+        return $apiVersion;
+    }
 }

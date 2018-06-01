@@ -127,11 +127,9 @@ class UsersEditController extends AppController
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
         $data = $this->_formatRequestData();
+        $data['id'] = $id;
         if (empty($data) || count($data) < 2) {
             throw new BadRequestException(__('Some user data must be provided.'));
-        }
-        if ($id !== $data['id']) {
-            throw new BadRequestException(__('The user ids in the url and post data do not match.'));
         }
 
         // API v2 additional checks and error (was silent before)

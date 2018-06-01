@@ -218,7 +218,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
-            $this->assertNotNull($error);
+            $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
         }
     }
 
