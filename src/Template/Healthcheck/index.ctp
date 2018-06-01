@@ -13,10 +13,10 @@
  * @since         2.0.0
  */
 use App\View\Helper\HealthcheckHtmlHelper;
+use Cake\Core\Configure;
 
 $this->assign('title',	__('Health checks'));
-$this->Html->css('main.min', ['block' => 'css', 'fullBase' => true]);
-$this->Html->css('check.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'status');
 
 $healtcheck = new HealthcheckHtmlHelper();

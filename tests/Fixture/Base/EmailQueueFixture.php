@@ -54,10 +54,14 @@ class EmailQueueFixture extends TestFixture
     // @codingStandardsIgnoreEnd
 
     /**
-     * Records
+     * Init method
      *
-     * @var array
+     * @return void
      */
-    public $records = [
-    ];
+    public function init()
+    {
+        $this->records = [
+        ];
+        parent::init();
+    }
 }

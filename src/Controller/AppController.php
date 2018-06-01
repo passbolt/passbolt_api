@@ -56,7 +56,8 @@ class AppController extends Controller
                 'prefix' => 'Auth',
                 'controller' => 'AuthLogin',
                 'action' => 'loginGet',
-                '_method' => 'GET'
+                '_method' => 'GET',
+                'plugin' => null
             ],
         ]);
 
@@ -180,5 +181,19 @@ class AppController extends Controller
                 throw new NotFoundException(__('Page not found.'));
             }
         }
+    }
+
+    /**
+     * Get the request api version.
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        $apiVersion = $this->request->getQuery('api-version');
+        if (!isset($apiVersion) || $apiVersion === 'v1') {
+            return 'v1';
+        }
+
+        return $apiVersion;
     }
 }
