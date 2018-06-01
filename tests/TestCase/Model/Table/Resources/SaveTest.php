@@ -107,8 +107,8 @@ class SaveTest extends AppTestCase
     public function testValidationUri()
     {
         $testCases = [
-            'utf8' => self::getUtf8TestCases(255),
-            'maxLength' => self::getMaxLengthTestCases(255),
+            'utf8' => self::getUtf8TestCases(1024),
+            'maxLength' => self::getMaxLengthTestCases(1024),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Resources, 'uri', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);

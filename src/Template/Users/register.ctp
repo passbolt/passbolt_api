@@ -13,8 +13,10 @@
  * @since         2.0.0
  */
 use Cake\Routing\Router;
+use Cake\Core\Configure;
+
 $this->assign('title',	__('Register'));
-$this->Html->css('login.min', ['block' => 'css', 'fullBase' => true]);
+$this->Html->css('themes/default/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'register');
 $formContext = [
     'context' => [
@@ -46,11 +48,11 @@ $formContext = [
 
                 <fieldset>
                     <legend><?= __('Please enter your username and password'); ?></legend>
-                    <?= $this->Form->control('profile.first_name'); ?>
+                    <?= $this->Form->control('profile.first_name', ['placeholder' => __('First name')]); ?>
 
-                    <?= $this->Form->control('profile.last_name'); ?>
+                    <?= $this->Form->control('profile.last_name', ['placeholder' => __('Last name')]); ?>
 
-                    <?= $this->Form->control('username'); ?>
+                    <?= $this->Form->control('username', ['placeholder' => __('mail@domain.com')]); ?>
 
                     <p>
                         <input type="checkbox" name="disclaimer" id="disclaimer" value="value" required="required">
