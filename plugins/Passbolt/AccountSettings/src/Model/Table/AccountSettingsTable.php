@@ -263,6 +263,7 @@ class AccountSettingsTable extends Table
             $imagePreviewFile = new File($imagePreviewFilePath);
             if ($cssFile->exists() && $imagePreviewFile->exists()) {
                 $response[] = [
+                    'id' => UuidFactory::uuid('theme.id.' . $dir),
                     'name' => $dir,
                     'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true)
                 ];
