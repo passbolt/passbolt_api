@@ -1,23 +1,37 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+
 namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Filesystem\Folder;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Filesystem\File;
+use Cake\Filesystem\Folder;
 use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Routing\Router;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
-use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * AccountSettings Model
@@ -106,7 +120,7 @@ class AccountSettingsTable extends Table
      */
     public function isValidProperty(string $value, array $context = null)
     {
-        return (in_array($value,AccountSetting::SUPPORTED_PROPERTIES));
+        return (in_array($value, AccountSetting::SUPPORTED_PROPERTIES));
     }
 
     /**
@@ -155,6 +169,7 @@ class AccountSettingsTable extends Table
      * Find all the settings for a given user
      *
      * @param string $userId uuid
+     * @param string $property The name of the property to get
      * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
@@ -165,6 +180,7 @@ class AccountSettingsTable extends Table
         }
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
+
         return $this->find()
             ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();
@@ -180,19 +196,20 @@ class AccountSettingsTable extends Table
     {
         try {
             $theme = $this->getFirstPropertyOrFail($userId, 'theme');
-        } catch(RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) {
             return null;
         }
         $theme = $theme->toArray();
+
         return $theme['value'];
     }
 
     /**
      * Create (or update) an account setting
      *
-     * @param $userId
-     * @param $property
-     * @param $value
+     * @param string $userId uuid
+     * @param string $property The property name
+     * @param mixed $value The property value
      * @return AccountSetting
      */
     public function createOrUpdateSetting($userId, $property, $value)
@@ -218,13 +235,17 @@ class AccountSettingsTable extends Table
         if (!$this->save($settingItem)) {
             throw new InternalErrorException(__('Could not save the setting, please try again later.'));
         }
+
         return $settingItem;
     }
 
     /**
      * Return the list of valid themes
+     *
+     * @return array
      */
-    public function findAllThemes() {
+    public function findAllThemes()
+    {
         $defaultCssFileName = Configure::read('passbolt.plugins.accountSettings.themes.css');
         $themesPath = WWW_ROOT . 'css' . DS . 'themes';
 
@@ -234,7 +255,7 @@ class AccountSettingsTable extends Table
             throw new InternalErrorException(__('No themes installed.'));
         }
         $response = [];
-        foreach($files[0] as $dir) {
+        foreach ($files[0] as $dir) {
             $cssFilePath = $themesPath . DS . $dir . DS . $defaultCssFileName;
             $defaultPreviewImageName = $dir . '.png';
             $imagePreviewFilePath = IMAGES . DS . 'themes' . DS . $defaultPreviewImageName;
@@ -250,6 +271,7 @@ class AccountSettingsTable extends Table
                 Log::error($msg);
             }
         }
+
         return $response;
     }
 }

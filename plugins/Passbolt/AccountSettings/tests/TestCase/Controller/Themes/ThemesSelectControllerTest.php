@@ -15,11 +15,12 @@
 
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountSettings\Test\Lib\AccountSettingsPluginIntegrationTestCase;
 
-class ThemesSelectControllerTest extends AppIntegrationTestCase
+class ThemesSelectControllerTest extends AccountSettingsPluginIntegrationTestCase
 {
     public $AccountSettings;
 
