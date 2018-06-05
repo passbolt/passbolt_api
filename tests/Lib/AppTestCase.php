@@ -27,6 +27,7 @@ use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
 class AppTestCase extends TestCase
@@ -56,6 +57,7 @@ class AppTestCase extends TestCase
     {
         parent::setUp();
         $this->initAvatarEvents();
+        Configure::write('passbolt.plugins', []);
     }
 
     /**

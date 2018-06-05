@@ -12,20 +12,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use Cake\Core\Configure;
 
 $this->assign('title', $title);
-$themeCss = 'themes/' . $theme . '/api_main.min';
-$this->Html->css('themes/' . $theme .'/api_main.min', ['block' => 'css', 'fullBase' => true]);
+$version = Configure::read('passbolt.version');
+$themePath = "themes/$theme/api_main.min.css?v=$version";
+$this->Html->css($themePath, ['block' => 'css', 'fullBase' => true, 'id' => 'js_css_theme']);
 
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
     // Load the javascript application.
-    echo $this->html->script('/js/app/steal.production.js', ['fullBase' => true]);
+    echo $this->Html->script('/js/app/steal.production.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true]);
 
     // If debug, connect to browserSync service.
     // @see Grunt task appjs-watch
     if($jsBuildMode === 'development') :
-        echo $this->html->script('http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.13', [
+        echo $this->Html->script('http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.13', [
             'async' => 'async',
             'id' => '__bs_script__'
         ]);

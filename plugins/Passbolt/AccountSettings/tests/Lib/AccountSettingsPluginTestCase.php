@@ -10,23 +10,26 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.1.0
+ * @since         2.0.0
  */
-namespace Passbolt\AccountSettings\Controller\AccountSettings;
 
-use App\Controller\AppController;
+namespace Passbolt\AccountSettings\Test\Lib;
 
-class AccountSettingsIndexController extends AppController
+use App\Test\Lib\AppTestCase;
+use Cake\Core\Configure;
+
+abstract class AccountSettingsPluginTestCase extends AppTestCase
 {
+
     /**
-     * AccountSettings Index action
+     * setUp method
      *
      * @return void
      */
-    public function index()
+    public function setUp()
     {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-        $response = $this->AccountSettings->findIndex($this->User->id());
-        $this->success(__('The operation was successful.'), $response);
+        parent::setUp();
+        $config = require(PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'Config' . DS . 'config.php');
+        Configure::write($config);
     }
 }
