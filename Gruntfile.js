@@ -132,22 +132,16 @@ module.exports = function(grunt) {
           dest: paths.webroot + 'img',
           expand: true
         }, {
-          // CSS
+          // Default css theme
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
           src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
-          // CSS
-          cwd: path.node_modules_styleguide + 'build/css/themes/midgar',
+          // Default css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
           src: ['api_main.min.css'],
-          dest: path.webroot + 'css/themes/midgar',
-          expand: true
-        }, {
-          // CSS
-          cwd: path.node_modules_styleguide + 'build/css/themes/midgar',
-          src: ['api_main.min.css'],
-          dest: path.webroot + 'css/themes/midgar',
+          dest: paths.webroot + 'css/themes/midgar',
           expand: true
         }]
       }
