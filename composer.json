@@ -59,7 +59,7 @@
         "cakephp/cakephp-codesniffer": "^3.0",
         "satooshi/php-coveralls": "~1.0",
         "passbolt/passbolt_selenium_api": "dev-master",
-        "passbolt/passbolt_test_data": "^2.0.1"
+        "passbolt/passbolt_test_data": "^2.0.6"
     },
     "autoload": {
         "psr-4": {
@@ -68,6 +68,9 @@
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\License\\": "./plugins/Passbolt/License/src"
+            "PassboltTestData\\": "./plugins/PassboltTestData/src",
+            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src",
+            "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src"
         }
     },
     "autoload-dev": {
@@ -75,7 +78,9 @@
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\License\\Test\\": "./plugins/Passbolt/License/tests",
-            "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests"
+            "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
+            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
+            "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests"
         }
     },
     "scripts": {

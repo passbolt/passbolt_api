@@ -45,10 +45,7 @@ class Application extends BaseApplication
             ->add(RoutingMiddleware::class)
 
             // Apply GPG Auth headers
-            ->add(GpgAuthHeadersMiddleware::class)
-
-            // Apply GPG signatures
-            ->add(GpgAuthSignMiddleware::class);
+            ->add(GpgAuthHeadersMiddleware::class);
 
         /*
          * Additional security headers

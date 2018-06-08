@@ -16,6 +16,8 @@ namespace App\Controller\Component;
 
 use App\Model\Entity\Role;
 use Cake\Controller\Component;
+use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use UserAgentParser\Provider\DonatjUAParser;
 
 class UserComponent extends Component
@@ -95,5 +97,26 @@ class UserComponent extends Component
         }
 
         return $this->_userAgent;
+    }
+
+    /**
+     * Get the user theme
+     *
+     * @return string
+     */
+    public function theme()
+    {
+        $defaultTheme = 'default';
+        if (Configure::read('passbolt.plugins.accountSettings')) {
+            $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+            $theme = $AccountSettings->getTheme($this->id());
+            if (!$theme) {
+                $theme = $defaultTheme;
+            }
+
+            return $theme;
+        }
+
+        return $defaultTheme;
     }
 }

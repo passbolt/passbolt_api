@@ -51,3 +51,8 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
     Plugin::load('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
 }
+
+// Add AccountSettings plugin if present
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'AccountSettings')) {
+    Plugin::load('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
+}

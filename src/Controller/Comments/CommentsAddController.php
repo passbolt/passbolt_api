@@ -85,14 +85,16 @@ class CommentsAddController extends AppController
      */
     protected function _buildAndValidateCommentEntity(string $foreignKey = null)
     {
+        $data = $this->_formatRequestData();
+
         // Build entity and perform basic check.
         $comment = $this->Comments->newEntity(
             [
                 'user_id' => $this->User->id(),
                 'foreign_key' => $foreignKey,
                 'foreign_model' => 'Resource',
-                'parent_id' => Hash::get($this->request->getData(), 'Comment.parent_id'),
-                'content' => Hash::get($this->request->getData(), 'Comment.content'),
+                'parent_id' => Hash::get($data, 'parent_id'),
+                'content' => Hash::get($data, 'content'),
                 'created_by' => $this->User->id(),
                 'modified_by' => $this->User->id(),
             ],
@@ -112,6 +114,28 @@ class CommentsAddController extends AppController
         $this->_handleValidationErrors($comment);
 
         return $comment;
+    }
+
+    /**
+     * Format request data formatted for API v1 to API v2 format
+     *
+     * @return array data
+     */
+    protected function _formatRequestData()
+    {
+        $output = [];
+        $data = $this->request->getData();
+
+        // API v2 additional checks and error (was silent before)
+        if ($this->getApiVersion() == 'v2') {
+            $output = $data;
+        } else {
+            if (isset($data['Comment'])) {
+                $output = $data['Comment'];
+            }
+        }
+
+        return $output;
     }
 
     /**

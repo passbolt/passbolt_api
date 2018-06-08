@@ -1,0 +1,23 @@
+{
+    "name": "Passbolt/AccountSettings",
+    "description": "Passbolt/AccountSettings plugin for CakePHP",
+    "type": "cakephp-plugin",
+    "license": "MIT",
+    "require": {
+        "cakephp/cakephp": "^3.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7|^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Passbolt\\AccountSettings\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Passbolt\\AccountSettings\\Test\\": "tests",
+            "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
+        }
+    }
+}
