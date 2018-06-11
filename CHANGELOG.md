@@ -9,7 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2869: Fix GPG wrapper not being able to recognize type and bit length
 - PASSBOLT-1917: Migrate appjs to canjs 3.x
 - PASSBOLT-2622: Push the js app repository to github
-- 
+
+## [2.0.8] - 2018-05-09
+### Fixed
+- Fix css loaded are incorrect in webinstaller
+
 ## [2.0.7] - 2018-05-09
 ### Fixed
 - Fix missing css on error pages and add version numbers to CSS and JS files calls to prevent caching
@@ -486,6 +490,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AD: Admin
 
 [Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
+[2.0.8]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.0.8
+[2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
+[2.0.5]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
+[2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.4
+[2.0.3]: https://github.com/passbolt/passbolt_api/compare/v2.0.2...v2.0.3
+[2.0.2]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc2...v2.0.0
 [2.0.0-rc2]: https://github.com/passbolt/passbolt_api/compare/v2.0.0-rc1...v2.0.0-rc2
 [2.0.0-rc1]: https://github.com/passbolt/passbolt_api/compare/v1.6.9...v2.0.0-rc1
@@ -516,3 +527,4 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.0.7]: https://github.com/passbolt/passbolt_api/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/passbolt/passbolt_api/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt_api/compare/6a92766...v1.0.5
+
