@@ -15,9 +15,11 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\ForbiddenException;
 
 class UsersRecoverController extends AppController
 {
@@ -45,6 +47,11 @@ class UsersRecoverController extends AppController
      */
     public function recoverGet()
     {
+        // Do not allow logged in user to recover
+        if ($this->User->role() !== Role::GUEST) {
+            $this->Auth->logout();
+        }
+
         $this->viewBuilder()
             ->setTemplatePath('/Users')
             ->setLayout('login')
@@ -64,6 +71,11 @@ class UsersRecoverController extends AppController
      */
     public function recoverPost()
     {
+        // Do not allow logged in user to recover
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guest are allowed to recover an account. Please logout first.'));
+        }
+
         $user = $this->Users->newEntity();
         try {
             $this->_assertValidation();
