@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2891: Appjs - Fix group edit users tooltips
 - PASSBOLT-2884: Appjs - Update header left menu. Remove home and add help
 - PASSBOLT-2885: Appjs - Update user settings menus
+- PASSBOLT-2895: Appjs - Fix/homogenize notifications
 
 ## [2.0.8] - 2018-05-09
 ### Fixed
