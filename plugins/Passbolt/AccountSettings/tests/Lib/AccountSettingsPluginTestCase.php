@@ -29,7 +29,7 @@ abstract class AccountSettingsPluginTestCase extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = require(PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'Config' . DS . 'config.php');
+        $config = require(PLUGINS . 'Passbolt' . DS . 'AccountSettings' . DS . 'config' . DS . 'config.php');
         Configure::write($config);
     }
 }
