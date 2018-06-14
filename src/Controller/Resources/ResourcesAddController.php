@@ -121,13 +121,19 @@ class ResourcesAddController extends AppController
      */
     protected function _formatRequestData()
     {
-        $data = $this->request->getData();
         $output = [];
-        if (isset($data['Resource'])) {
-            $output = array_merge($output, $data['Resource']);
-        }
-        if (isset($data['Secret'])) {
-            $output['secrets'] = $data['Secret'];
+        $data = $this->request->getData();
+
+        // API v2 additional checks and error (was silent before)
+        if ($this->getApiVersion() == 'v2') {
+            $output = $data;
+        } else {
+            if (isset($data['Resource'])) {
+                $output = $data['Resource'];
+            }
+            if (isset($data['Secret'])) {
+                $output['secrets'] = $data['Secret'];
+            }
         }
 
         return $output;

@@ -622,14 +622,14 @@ class HealthcheckTask extends AppShell
             );
             $this->assert(
                 $checks['gpg']['canSign'],
-                __('The public key can be used to sign a message.'),
-                __('The public key cannot be used to sign a message'),
+                __('The private key can be used to sign a message.'),
+                __('The private key cannot be used to sign a message'),
                 $tip
             );
             $this->assert(
                 $checks['gpg']['canEncryptSign'],
-                __('The public key can be used to encrypt and sign a message.'),
-                __('The public key cannot be used to encrypt and sign a message')
+                __('The public and private keys can be used to encrypt and sign a message.'),
+                __('The public and private keys cannot be used to encrypt and sign a message')
             );
             $this->assert(
                 $checks['gpg']['canDecrypt'],

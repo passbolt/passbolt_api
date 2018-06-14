@@ -11,6 +11,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+var path = require('path');
+
 /**
  * This Gruntfile provides tasks and commands to build and distribute the project
  *
@@ -22,7 +24,7 @@ module.exports = function(grunt) {
    * Path shortcuts
    * @type object
    */
-  var path = {
+  var paths = {
     node_modules: 'node_modules/',
     node_modules_appjs: 'node_modules/passbolt-appjs/',
     node_modules_styleguide: 'node_modules/passbolt-styleguide/',
@@ -41,7 +43,11 @@ module.exports = function(grunt) {
   /**
    * Load baseline NPM tasks
    */
-  grunt.loadNpmTasks('grunt-browser-sync');
+  var root = path.resolve('node_modules');
+  var pkgfile = path.join(root, 'grunt-browser-sync', 'package.json');
+  if (grunt.file.exists(pkgfile)) {
+    grunt.loadNpmTasks('grunt-browser-sync');
+  }
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
@@ -49,7 +55,8 @@ module.exports = function(grunt) {
    * Register project specific grunt tasks
    */
   grunt.registerTask('appjs-update', 'copy:appjs');
-  grunt.registerTask('appjs-watch', ['browserSync:passbolt', 'watch:node-modules-appjs']);
+  grunt.registerTask('appjs-watch', ['watch:node-modules-appjs']);
+  grunt.registerTask('appjs-watch-browser-sync', ['browserSync:appjs', 'watch:node-modules-appjs']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
 
   /**
@@ -59,9 +66,9 @@ module.exports = function(grunt) {
     pkg: pkg,
 
     browserSync: {
-      passbolt: {
+      appjs: {
         bsFiles: {
-          src: path.js + 'app/**/*'
+          src: paths.js + 'app/**/*'
         },
         options: {
           localOnly: true,
@@ -75,28 +82,28 @@ module.exports = function(grunt) {
     copy: {
       appjs: {
         files: [{
-          cwd: path.node_modules_appjs + 'dist',
-          src: ['steal.production.js', 'bundles/passbolt.js'],
-          dest: path.js + 'app',
+          cwd: paths.node_modules_appjs + 'dist',
+          src: ['steal.production.js', 'bundles/passbolt-appjs/passbolt.js'],
+          dest: paths.js + 'app',
           expand: true
         }]
       },
       styleguide: {
         files: [{
           // Fonts
-          cwd: path.node_modules_styleguide + 'src/fonts',
+          cwd: paths.node_modules_styleguide + 'src/fonts',
           src: '*',
-          dest: path.webroot + 'fonts',
+          dest: paths.webroot + 'fonts',
           expand: true
         }, {
           // Images for webroots (favicons, etc.)
-          cwd: path.node_modules_styleguide + 'src/img/webroot',
+          cwd: paths.node_modules_styleguide + 'src/img/webroot',
           src: '*',
-          dest: path.webroot,
+          dest: paths.webroot,
           expand: true
         }, {
           // Images
-          cwd: path.node_modules_styleguide + 'src/img',
+          cwd: paths.node_modules_styleguide + 'src/img',
           src: [
             // Default Avatars
             'avatar/**',
@@ -109,10 +116,11 @@ module.exports = function(grunt) {
             'controls/dot_red.svg',
             'controls/dot_black.svg',
             'controls/infinite-bar.gif',
-            'controls/loading.gif',
+            'controls/loading_light.svg',
+            'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
             // Background images for error pages for ex
-            'illustrations/nest.png',
+            'background/rocket.svg',
             'illustrations/birds6_850.png',
             'illustrations/birds3_850.png',
             // Login page 3rd party logo
@@ -120,13 +128,13 @@ module.exports = function(grunt) {
             'third_party/ChromeWebStore.png',
             'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png'
           ],
-          dest: path.webroot + 'img',
+          dest: paths.webroot + 'img',
           expand: true
         }, {
           // CSS
-          cwd: path.node_modules_styleguide + 'build/css/themes/default',
+          cwd: paths.node_modules_styleguide + 'build/css/themes/default',
           src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
-          dest: path.webroot + 'css/themes/default',
+          dest: paths.webroot + 'css/themes/default',
           expand: true
         }]
       }
@@ -134,7 +142,7 @@ module.exports = function(grunt) {
 
     watch: {
       'node-modules-appjs': {
-        files: [path.node_modules_appjs + 'dist/**/*'],
+        files: [paths.node_modules_appjs + 'dist/**/*'],
         tasks: ['appjs-update']
       }
     }

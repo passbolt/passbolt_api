@@ -2,6 +2,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+## [2.1.0] - 2018-06-14
+### Added
+- PASSBOLT-2878: Integrate dark theme
+- PASSBOLT-2861: Make username clickable for copy to clipboard
+
+### Fixed
+- GITHUB-101: Fix the readme should point to the documentation for how to upgrade passbolt
+- PASSBOLT-2682: Fix healthcheck entry point when logged in as admin and debug is false
+- PASSBOLT-2869: Fix GPG wrapper should recognize the correct type and bit length
+- PASSBOLT-1917: Migrate to canjs 3.x
+- PASSBOLT-2883: Fix logout link should not prevent event propagation
+- PASSBOLT-2886: Fix fingerprint tooltips in user group management dialog
+- PASSBOLT-2894: Fix missing div breaking elipsis on long url in password workspace
+- PASSBOLT-2891: Fix group edit users tooltips
+- PASSBOLT-2884: Update header left menu. Remove home and add help.
+- PASSBOLT-2885: Update user settings menus
+- PASSBOLT-2895: Fix notifications homogeneity
+- PASSBOLT-1337: Fix a logged in user should not be allowed to login or recover
+- PASSBOLT-1337: Remove gpg json sign middleware
+- PASSBOLT-1337: Wordsmithing healthcheck GPG feedback
+
 ## [2.0.7] - 2018-05-09
 ### Fixed
 - Fix missing css on error pages and add version numbers to CSS and JS files calls to prevent caching
@@ -461,7 +484,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.1.0
 [2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
 [2.0.5]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.4
