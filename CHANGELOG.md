@@ -1,4 +1,10 @@
+# Change Log
+All notable changes to this project will be documented in this file.
+This project adheres to [Semantic Versioning](http://semver.org/).
+
 ## [Unreleased]
+
+## [2.1.0] - 2018-06-14
 ### Added
 - PASSBOLT-2878: Add default theme
 - PASSBOLT-2861: Add copy username to clipboard on click
@@ -498,7 +504,8 @@
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.8...v2.1.0
 [2.0.8]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.0.8
 [2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
 [2.0.5]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
