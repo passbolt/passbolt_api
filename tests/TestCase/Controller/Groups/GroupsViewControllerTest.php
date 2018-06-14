@@ -20,7 +20,7 @@ use App\Utility\UuidFactory;
 
 class GroupsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/profiles'];
+    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/gpgkeys', 'app.Base/permissions'];
 
     public function testSuccess()
     {
@@ -35,6 +35,8 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         // Not expected content.
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody);
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody);
+        $this->assertObjectNotHasAttribute('group_user', $this->_responseJsonBody);
+        $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody);
     }
 
     public function testApiV1Success()
@@ -56,7 +58,12 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[modifier.profile]=1&contain[user]=1&&contain[group_user]=1&contain[group_user.user.profile]=1';
+        $urlParameter = 'contain[modifier]=1';
+        $urlParameter .= '&contain[modifier.profile]=1';
+        $urlParameter .= '&contain[user]=1';
+        $urlParameter .= '&contain[group_user]=1';
+        $urlParameter .= '&contain[group_user.user.profile]=1';
+        $urlParameter .= '&contain[my_group_user]=1';
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
         $this->assertSuccess();
@@ -75,6 +82,17 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('user', $this->_responseJsonBody->groups_users[0]);
         $this->assertObjectHasAttribute('profile', $this->_responseJsonBody->groups_users[0]->user);
         $this->assertProfileAttributes($this->_responseJsonBody->groups_users[0]->user->profile);
+        $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
+        $this->assertNull($this->_responseJsonBody->my_group_user);
+
+        // Check that the my_group_user attribute is not null for a group the user is member of
+        $this->authenticateAs('hedy');
+        $groupId = UuidFactory::uuid('group.id.board');
+        $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+        $this->assertNotNull($this->_responseJsonBody);
+        $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
+        $this->assertGroupUserAttributes($this->_responseJsonBody->my_group_user);
     }
 
     public function testContainApiV1SSuccess()
