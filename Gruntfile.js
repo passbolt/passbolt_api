@@ -110,7 +110,7 @@ module.exports = function(grunt) {
             // Passbolt logos
             'logo/icon-20_white.png', 'logo/icon-20_grey.png', 'logo/icon-20.png',
             'logo/icon-48_white.png', 'logo/icon-48.png',
-            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg',
+            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg', 'logo/logo_white.png',
             // Image for inputs and controls
             'controls/dot_white.svg',
             'controls/dot_red.svg',
