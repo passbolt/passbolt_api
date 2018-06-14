@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.1.0] - 2018-06-14
 ### Added
 - PASSBOLT-2878: Integrate dark theme
 - PASSBOLT-2861: Make username clickable for copy to clipboard
@@ -482,9 +484,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...HEAD
-[2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
-[2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.1.0
+[2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
+[2.0.5]: https://github.com/passbolt/passbolt_api/compare/v2.0.4...v2.0.5
 [2.0.4]: https://github.com/passbolt/passbolt_api/compare/v2.0.3...v2.0.4
 [2.0.3]: https://github.com/passbolt/passbolt_api/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/passbolt/passbolt_api/compare/v2.0.1...v2.0.2
