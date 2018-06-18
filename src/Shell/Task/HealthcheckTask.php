@@ -570,21 +570,23 @@ class HealthcheckTask extends AppShell
             );
         }
         $this->assert(
-            $checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'],
+            $checks['gpg']['gpgKeyPublic'] && $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPublicBlock'],
             __('The public key file is defined in config/passbolt.php and readable.'),
             __('The public key file is not defined in config/passbolt.php or not readable.'),
             [
                 __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in config/passbolt.php.'),
+                __('Ensure there is a public key armored block in the key file.'),
                 __('Ensure the public key defined in config/passbolt.php exists and is accessible by the webserver user.'),
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
             ]
         );
         $this->assert(
-            $checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'],
+            $checks['gpg']['gpgKeyPrivate'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKeyPrivateBlock'],
             __('The private key file is defined in config/passbolt.php and readable.'),
-            __('The public key file is not defined in config/passbolt.php or not readable.'),
+            __('The private key file is not defined in config/passbolt.php or not readable.'),
             [
                 __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in config/passbolt.php.'),
+                __('Ensure there is a private key armored block in the key file.'),
                 __('Ensure the private key defined in config/passbolt.php exists and is accessible by the webserver user.'),
                 __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
             ]
