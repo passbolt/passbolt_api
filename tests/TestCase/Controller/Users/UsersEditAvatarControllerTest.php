@@ -72,6 +72,15 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertTrue(file_exists(Configure::read('ImageStorage.basePath') . DS . $ireneAvatar->first()->path));
     }
 
+    public function tesUsersEditAvatarMissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('irene');
+        $userId = UuidFactory::uuid('user.id.irene');
+        $this->post("/users/$userId.json?api-version=v2");
+        $this->assertResponseCode(403);
+    }
+
     public function testUsersEditAvatarWrongFileFormat()
     {
         $filesDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'data';
