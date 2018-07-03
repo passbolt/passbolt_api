@@ -85,6 +85,15 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($nowTime - $modifiedTime < 1000);
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('irene', Role::USER);
+        $commentId = UuidFactory::uuid('comment.id.apache-1');
+        $this->put("/comments/$commentId.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
     public function testUpdateErrorInvalidCommentId()
     {
         $this->authenticateAs('irene', Role::USER);

@@ -14,8 +14,8 @@
  */
 namespace App;
 
+use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
-use App\Middleware\GpgAuthSignMiddleware;
 use Cake\Core\Configure;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
@@ -47,8 +47,8 @@ class Application extends BaseApplication
             // Apply GPG Auth headers
             ->add(GpgAuthHeadersMiddleware::class)
 
-            // Apply GPG signatures
-            ->add(GpgAuthSignMiddleware::class);
+            // Apply csrf protection
+            ->add(new CsrfProtectionMiddleware());
 
         /*
          * Additional security headers
