@@ -10,6 +10,13 @@ return [
                         'csv',
                     ]
                 ],
+                'security' => [
+                    'csrfProtection' => [
+                        'unlockedActions' => [
+                            'ResourcesAdd' => ['add']
+                        ]
+                    ]
+                ],
             ]
         ]
     ]
