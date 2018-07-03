@@ -4,7 +4,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Fixed
-- PASSBOLT-2906 Enable CSRF protection
+- PASSBOLT-2906: Enable CSRF protection
+- PASSBOLT-2906: Disable the ResourceAdd entry point CSRF protection to allow the plugin to use it with the import feature
 
 ## [2.1.0] - 2018-06-14
 ### Added
