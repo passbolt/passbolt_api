@@ -68,8 +68,6 @@
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\License\\": "./plugins/Passbolt/License/src",
-            "PassboltTestData\\": "./plugins/PassboltTestData/src",
-            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src",
             "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src"
         }
     },

@@ -51,6 +51,15 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->markTestIncomplete();
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('dame');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->post("/favorites/resource/$resourceId.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
     public function testAddErrorNotValidId()
     {
         $this->authenticateAs('dame');

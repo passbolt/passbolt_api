@@ -34,6 +34,15 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertempty($deletedComment);
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('irene');
+        $commentId = UuidFactory::uuid('comment.id.apache-1');
+        $this->delete("/comments/$commentId.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
     public function testDeleteErrorNotValidId()
     {
         $this->authenticateAs('irene');

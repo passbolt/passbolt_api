@@ -25,7 +25,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/groups', 'app.Base/users', 'app.Base/groups_users', 'app.Base/profiles', 'app.Base/roles',
-        'app.Base/email_queue', 'app.Base/avatars'
+        'app.Base/email_queue', 'app.Base/avatars', 'app.Base/gpgkeys'
     ];
 
     public function testGroupsUsersAddNotificationDisabled()
