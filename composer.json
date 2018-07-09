@@ -49,7 +49,8 @@
         "lorenzo/cakephp-email-queue": "^3.1",
         "burzum/file-storage": "1.2.1",
         "burzum/cakephp-imagine-plugin": "2.1.1",
-        "ezyang/htmlpurifier": "dev-master"
+        "ezyang/htmlpurifier": "dev-master",
+        "ldaptools/ldaptools": "^0.25.2"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -64,8 +65,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
-            "PassboltTestData\\": "./plugins/PassboltTestData/src",
-            "PassboltSeleniumApi\\": "./plugins/PassboltSeleniumApi/src"
+            "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src"
         }
     },
     "autoload-dev": {

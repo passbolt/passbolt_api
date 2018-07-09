@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d0a4b265864e4d793fbd95f83bf51cc9",
-    "content-hash": "babae6d83e64627d2ecbd9f20d7fb9f1",
+    "hash": "fe93961ef59abd9dae86fff4fe821a77",
+    "content-hash": "a3820daada3deac795dd2ade2ad63fa2",
     "packages": [
         {
             "name": "aura/intl",
@@ -428,6 +428,51 @@
             ],
             "description": "A composer installer for CakePHP 3.0+ plugins.",
             "time": "2017-12-24 21:09:29"
+        },
+        {
+            "name": "chadsikorra/php-simple-enum",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChadSikorra/php-simple-enum.git",
+                "reference": "781f87ae9f4cc75fb2edab6517c6471c0181e93b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChadSikorra/php-simple-enum/zipball/781f87ae9f4cc75fb2edab6517c6471c0181e93b",
+                "reference": "781f87ae9f4cc75fb2edab6517c6471c0181e93b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~1.0",
+                "phpspec/phpspec": "~3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Enums\\": "src/Enums"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chad Sikorra",
+                    "email": "Chad.Sikorra@gmail.com",
+                    "homepage": "http://www.chadsikorra.com"
+                }
+            ],
+            "description": "Provides a simple enum and flag enum for PHP.",
+            "homepage": "https://github.com/ChadSikorra/php-simple-enum",
+            "keywords": [
+                "enum"
+            ],
+            "time": "2017-05-28 16:20:11"
         },
         {
             "name": "donatj/phpuseragentparser",
@@ -853,6 +898,67 @@
                 "media"
             ],
             "time": "2018-03-26 12:19:49"
+        },
+        {
+            "name": "ldaptools/ldaptools",
+            "version": "v0.25.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ldaptools/ldaptools.git",
+                "reference": "18ec773284cdbf5f22cadeb1d85bcaf46c05df39"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ldaptools/ldaptools/zipball/18ec773284cdbf5f22cadeb1d85bcaf46c05df39",
+                "reference": "18ec773284cdbf5f22cadeb1d85bcaf46c05df39",
+                "shasum": ""
+            },
+            "require": {
+                "chadsikorra/php-simple-enum": "^1.0.0",
+                "ext-ldap": "*",
+                "php": ">=5.6",
+                "ramsey/uuid": ">=3.0",
+                "symfony/event-dispatcher": ">=2.0",
+                "symfony/yaml": ">=2.0"
+            },
+            "require-dev": {
+                "doctrine/cache": "~1.0",
+                "friendsofphp/php-cs-fixer": "~1.0",
+                "phpspec/phpspec": "~3.0",
+                "tedivm/stash": ">=0.14.1"
+            },
+            "suggest": {
+                "doctrine/cache": "Provides the cache_type 'doctrine' to help increase performance.",
+                "ext-intl": "Better UTF-8 handling.",
+                "ext-mbstring": "Better UTF-8 handling.",
+                "tedivm/stash": "Provides the cache_type 'stash' to help increase performance."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LdapTools\\": "src/LdapTools"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chad Sikorra",
+                    "email": "Chad.Sikorra@gmail.com",
+                    "homepage": "http://www.chadsikorra.com"
+                }
+            ],
+            "description": "LdapTools is a feature-rich LDAP library for PHP 5.6+.",
+            "homepage": "http://www.phpldaptools.com",
+            "keywords": [
+                "Microsoft Exchange",
+                "active directory",
+                "ldap",
+                "openldap"
+            ],
+            "time": "2017-11-04 15:04:31"
         },
         {
             "name": "lorenzo/cakephp-email-queue",
@@ -1566,6 +1672,66 @@
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
             "time": "2018-04-30 16:53:52"
+        },
+        {
+            "name": "symfony/event-dispatcher",
+            "version": "v2.8.39",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/event-dispatcher.git",
+                "reference": "9b69aad7d4c086dc94ebade2d5eb9145da5dac8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9b69aad7d4c086dc94ebade2d5eb9145da5dac8c",
+                "reference": "9b69aad7d4c086dc94ebade2d5eb9145da5dac8c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "^2.0.5|~3.0.0",
+                "symfony/dependency-injection": "~2.6|~3.0.0",
+                "symfony/expression-language": "~2.6|~3.0.0",
+                "symfony/stopwatch": "~2.3|~3.0.0"
+            },
+            "suggest": {
+                "symfony/dependency-injection": "",
+                "symfony/http-kernel": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\EventDispatcher\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony EventDispatcher Component",
+            "homepage": "https://symfony.com",
+            "time": "2018-04-06 07:35:03"
         },
         {
             "name": "symfony/filesystem",
@@ -4024,6 +4190,7 @@
                 "github",
                 "test"
             ],
+            "abandoned": "php-coveralls/php-coveralls",
             "time": "2017-12-06 23:17:56"
         },
         {
@@ -4776,66 +4943,6 @@
                 "standards"
             ],
             "time": "2018-02-20 21:35:23"
-        },
-        {
-            "name": "symfony/event-dispatcher",
-            "version": "v2.8.39",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "9b69aad7d4c086dc94ebade2d5eb9145da5dac8c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/9b69aad7d4c086dc94ebade2d5eb9145da5dac8c",
-                "reference": "9b69aad7d4c086dc94ebade2d5eb9145da5dac8c",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9"
-            },
-            "require-dev": {
-                "psr/log": "~1.0",
-                "symfony/config": "^2.0.5|~3.0.0",
-                "symfony/dependency-injection": "~2.6|~3.0.0",
-                "symfony/expression-language": "~2.6|~3.0.0",
-                "symfony/stopwatch": "~2.3|~3.0.0"
-            },
-            "suggest": {
-                "symfony/dependency-injection": "",
-                "symfony/http-kernel": ""
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\EventDispatcher\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Symfony EventDispatcher Component",
-            "homepage": "https://symfony.com",
-            "time": "2018-04-06 07:35:03"
         },
         {
             "name": "symfony/finder",
