@@ -71,7 +71,7 @@ trait UsersEmailTrait
         }
 
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($adminId);
+        $admin = $Users->findFirstForEmail($adminId);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_admin';
         $data = ['body' => ['user' => $user, 'token' => $token, 'admin' => $admin], 'title' => $subject];
@@ -97,7 +97,7 @@ trait UsersEmailTrait
         }
 
         $Users = TableRegistry::get('Users');
-        $deletedBy = $Users->getForEmail($deletedById);
+        $deletedBy = $Users->findFirstForEmail($deletedById);
         $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
         $template = 'GM/user_delete';
 

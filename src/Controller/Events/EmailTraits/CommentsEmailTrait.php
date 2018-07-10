@@ -56,7 +56,7 @@ trait CommentsEmailTrait
         }
 
         $Resources = TableRegistry::get('Resources');
-        $creator = $Users->getForEmail($comment->created_by);
+        $creator = $Users->findFirstForEmail($comment->created_by);
         $resource = $Resources->get($comment->foreign_key);
 
         foreach ($users as $user) {

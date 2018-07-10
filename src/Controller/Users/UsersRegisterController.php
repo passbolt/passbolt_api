@@ -123,7 +123,7 @@ class UsersRegisterController extends AppController
         }
 
         // Create an event to build email with token
-        $this->_notifyUser($this->Users->getForEmail($user->id), $token);
+        $this->_notifyUser($this->Users->findFirstForEmail($user->id), $token);
 
         return $user;
     }
