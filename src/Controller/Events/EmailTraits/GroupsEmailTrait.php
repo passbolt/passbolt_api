@@ -47,7 +47,7 @@ trait GroupsEmailTrait
             return;
         }
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($group->created_by);
+        $admin = $Users->findFirstForEmail($group->created_by);
 
         $userIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $userIds])->all();
@@ -80,7 +80,7 @@ trait GroupsEmailTrait
         }
 
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($deletedBy);
+        $admin = $Users->findFirstForEmail($deletedBy);
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $usersIds])->all();
         $userNames = Hash::combine($userNames->toArray(), '{n}.id', '{n}.username');
@@ -118,7 +118,7 @@ trait GroupsEmailTrait
     ) {
         // Get the details of whoever did the changes
         $Users = TableRegistry::get('Users');
-        $modifiedBy = $Users->getForEmail($modifiedById);
+        $modifiedBy = $Users->findFirstForEmail($modifiedById);
 
         $this->sendAddUserGroupUpdateEmail($event, $group, $addedGroupsUsers, $modifiedBy);
         $this->sendUpdateMembershipGroupUpdateEmail($event, $group, $updatedGroupsUsers, $modifiedBy);

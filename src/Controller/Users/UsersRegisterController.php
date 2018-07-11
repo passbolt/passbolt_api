@@ -39,12 +39,11 @@ class UsersRegisterController extends AppController
             $this->Auth->allow('registerGet');
             $this->Auth->allow('registerPost');
         } else {
-            throw new NotFoundException(__('Registration is not opened to public. Please contact your administrator.'));
+            $msg = __('Registration is not opened to public. Please contact your administrator.');
+            throw new NotFoundException($msg);
         };
 
         $this->loadModel('Users');
-        $this->loadModel('AuthenticationTokens');
-
         return parent::beforeFilter($event);
     }
 
@@ -84,113 +83,35 @@ class UsersRegisterController extends AppController
             throw new ForbiddenException(__('Only guest are allowed to register.'));
         }
 
-        // By default users see the register form again
-        // if something goes wrong they can try again
+        $data = $this->_formatRequestData();
+        $user = $this->Users->register($data);
+
+        // Handle validation error display
+        if (!empty($user->getErrors())) {
+            if ($this->request->is('json')) {
+                // JSON request uses default exception handler
+                throw new ValidationRuleException(__('Could not validate user data.'),
+                    $user->getErrors(), $this->Users
+                );
+            } else {
+                // By default users see the register form again
+                // if something goes wrong they can try again
+                $this->set('user', $user);
+                $this->viewBuilder()
+                    ->setTemplatePath('/Users')
+                    ->setLayout('login')
+                    ->setTemplate('register');
+            }
+            return;
+        }
+
+        // Display thank you page or user
         $this->viewBuilder()
             ->setTemplatePath('/Users')
             ->setLayout('login')
-            ->setTemplate('register');
+            ->setTemplate('register_thank_you');
 
-        $user = $this->_registerUser();
-        if ($user !== false) {
-            // Display thank you page or user
-            $this->viewBuilder()->setTemplate('register_thank_you');
-            $this->success(__('The operation was successful.'), $user);
-        }
-    }
-
-    /**
-     * Register a user
-     *
-     * @return mixed user or false if could not register the user
-     */
-    protected function _registerUser()
-    {
-        $user = $this->_buildAndValidateUser();
-        if ($this->_assertValidationError($user)) {
-            return false;
-        }
-
-        // Save user and create authentication token in one transaction
-        // rollback if an exception is thrown
-        $token = null;
-        $this->Users->getConnection()->transactional(function () use ($user, &$token) {
-            $this->_saveUser($user);
-            $token = $this->AuthenticationTokens->generate($user->id);
-        });
-        if ($this->_assertValidationError($user)) {
-            return false;
-        }
-
-        // Create an event to build email with token
-        $this->_notifyUser($this->Users->getForEmail($user->id), $token);
-
-        return $user;
-    }
-
-    /**
-     * Notify the user
-     *
-     * @param object $user User entity
-     * @param object $token Token entity
-     * @return void
-     */
-    protected function _notifyUser($user, $token)
-    {
-        $event = new Event('UsersRegisterController.registerPost.success', $this, [
-            'user' => $user, 'token' => $token
-        ]);
-        $this->getEventManager()->dispatch($event);
-    }
-
-    /**
-     * Manage validation errors
-     *
-     * @throws ValidationException if the user could not be validated
-     * @param \Cake\Datasource\EntityInterface $user user
-     * @return bool
-     */
-    protected function _assertValidationError($user)
-    {
-        // If validation fails and request is json return the validation errors
-        // Otherwise render the registration form with the errors
-        if ($user->getErrors()) {
-            if ($this->request->is('json')) {
-                throw new ValidationRuleException(
-                    __('Could not validate user data.'),
-                    $user->getErrors(),
-                    $this->Users
-                );
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Build and validate user entity from user input
-     *
-     * @return \Cake\Datasource\EntityInterface $user user entity
-     */
-    protected function _buildAndValidateUser()
-    {
-        // Build entity and perform basic check
-        $data = $this->_formatRequestData();
-        // Force deleted to false. If not set, cakephp will interpret it as null
-        // which causes isUnique build rule not to work when looking for duplicate entries.
-        $data['deleted'] = false;
-        $user = $this->Users->buildEntity($data, $this->User->role());
-        $this->set('user', $user);
-
-        // No need to check rules if basic validation fails
-        if ($user->getErrors()) {
-            return $user;
-        }
-        $this->Users->checkRules($user);
-
-        return $user;
+        $this->success(__('The operation was successful.'), $user);
     }
 
     /**
@@ -204,9 +125,8 @@ class UsersRegisterController extends AppController
     protected function _formatRequestData()
     {
         $data = $this->request->getData();
-
+        $result = null;
         if (isset($data['User'])) {
-            $result = null;
             if (!empty($data)) {
                 foreach ($data['User'] as $property => $value) {
                     $result[$property] = $value;
@@ -215,26 +135,11 @@ class UsersRegisterController extends AppController
                     $result['profile'][$property] = $value;
                 }
             }
-
-            return $result;
+        } else {
+            $result = $data;
         }
 
-        return $data;
+        return $result;
     }
 
-    /**
-     * Save a user entity
-     *
-     * @throws InternalErrorException if user could not be saved
-     * @param \Cake\Datasource\EntityInterface $user user entity
-     * @return void
-     */
-    protected function _saveUser($user)
-    {
-        $result = $this->Users->save($user, ['checkRules' => false, 'atomic' => false]);
-        $this->set('user', $user);
-        if (!$result) {
-            throw new InternalErrorException(__('The user could not be saved.'));
-        }
-    }
 }
