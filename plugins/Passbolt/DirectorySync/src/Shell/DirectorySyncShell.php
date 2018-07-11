@@ -23,6 +23,7 @@ class DirectorySyncShell extends AppShell
     public $tasks = [
         'Passbolt/DirectorySync.All',
         'Passbolt/DirectorySync.Users',
+        'Passbolt/DirectorySync.Groups',
     ];
 
     /**
@@ -45,6 +46,10 @@ class DirectorySyncShell extends AppShell
         $parser->addSubcommand('users', [
             'help' => __d('cake_console', 'Synchronize users'),
             'parser' => $this->Users->getOptionParser(),
+        ]);
+        $parser->addSubcommand('groups', [
+            'help' => __d('cake_console', 'Synchronize groups'),
+            'parser' => $this->Groups->getOptionParser(),
         ]);
 
         return $parser;

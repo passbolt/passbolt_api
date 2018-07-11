@@ -33,6 +33,7 @@ class LdapDirectory implements DirectoryInterface
      * @throws \Exception if connection cannot be established
      */
     function __construct() {
+        var_dump('test');
         $config = Configure::read('passbolt.plugins.directorySync.ldap');
         $config = (new Configuration())->loadFromArray($config);
         $this->ldap = new LdapManager($config);
@@ -84,13 +85,16 @@ class LdapDirectory implements DirectoryInterface
 
         foreach ($groups as $group) {
             $this->groups[$group->getDn()] = [
-                'id' => $group->getGuid(),
-                'external_id' => $group->getDn(),
                 'name' => $group->getName(),
-                'created' => $group->created,
-                'modified' => $group->modified,
-                'members' => $group->getMembers(),
-                'groups' => $group->getGroups()
+                'directory' => [
+                    'id' => $group->getGuid(),
+                    'external_id' => $group->getDn(),
+                    'created' => $group->created,
+                    'modified' => $group->modified,
+                    'members' => $group->getMembers(),
+                    'groups' => $group->getGroups()
+                ],
+
             ];
         }
         return $this->groups;
