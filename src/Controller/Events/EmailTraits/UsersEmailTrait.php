@@ -43,12 +43,30 @@ trait UsersEmailTrait
      * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
      * @return void
      */
+    public function sendRegisteredEmail(Event $event, User $user, AuthenticationToken $token, string $adminId = null)
+    {
+        if (!isset($adminId)) {
+            $this->sendSelfRegisteredEmail($event, $user, $token);
+        } else {
+            $this->sendAdminRegisteredEmail($event, $user, $token, $adminId);
+        }
+    }
+
+    /**
+     * Send Register Email
+     *
+     * @param Event $event event
+     * @param \App\Model\Entity\User $user user to send the mail to
+     * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
+     * @return void
+     */
     public function sendSelfRegisteredEmail(Event $event, User $user, AuthenticationToken $token)
     {
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
         }
-
+        $Users = TableRegistry::get('Users');
+        $user = $Users->findFirstForEmail($user->id);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_self';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];

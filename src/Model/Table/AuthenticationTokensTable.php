@@ -247,4 +247,24 @@ class AuthenticationTokensTable extends Table
 
         return $token;
     }
+
+    /**
+     * Get a token entity using a user id
+     *
+     * @param string $userId uuid
+     * @throws \InvalidArgumentException is the token is not a valid uuid
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function getByUserId(string $userId)
+    {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+        $token = $this->find('all')
+            ->where(['user_id' => $userId, 'active' => true ])
+            ->order(['created' => 'DESC'])
+            ->first();
+
+        return $token;
+    }
 }

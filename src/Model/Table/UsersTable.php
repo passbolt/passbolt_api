@@ -21,6 +21,7 @@ use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
+use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
@@ -29,6 +30,11 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+
+// TODO MOVE OUT
+use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
+use Cake\Event\Event;
 
 /**
  * Users Model
@@ -210,26 +216,6 @@ class UsersTable extends Table
     }
 
     /**
-     * Event fired before request data is converted into entities
-     * Set user to inactive and not deleted on register
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        // Do not allow the user to set these flags during registration
-        if (isset($options['validate']) && $options['validate'] === 'register') {
-            // Only admin can set the user role on registration
-            if (!isset($data['role_id']) || $options['currentUserRole'] !== Role::ADMIN) {
-                $data['role_id'] = $this->Roles->getIdByName(Role::USER);
-            }
-        }
-    }
-
-    /**
      * Add last_logged_in contain element.
      * Basically, add a placeholder to the entity that will be treated
      * in a virtual field in the User entity.
@@ -258,13 +244,8 @@ class UsersTable extends Table
      * @throws \InvalidArgumentException if role name is not valid
      * @return \App\Model\Entity\User
      */
-    public function buildEntity(array $data, string $roleName)
+    public function buildEntity(array $data)
     {
-        if (!$this->Roles->isValidRoleName($roleName)) {
-            $msg = __('The role name should be from the list of allowed role names');
-            throw new \InvalidArgumentException($msg);
-        }
-
         return $this->newEntity(
             $data,
             [
@@ -273,7 +254,7 @@ class UsersTable extends Table
                     'username' => true,
                     'deleted' => true,
                     'profile' => true,
-                    'role_id' => true, // Overridded in beforMarshal if current user is not admin
+                    'role_id' => true,
                 ],
                 'associated' => [
                     'Profiles' => [
@@ -283,8 +264,7 @@ class UsersTable extends Table
                             'last_name' => true
                         ]
                     ]
-                ],
-                'currentUserRole' => $roleName
+                ]
             ]
         );
     }
@@ -349,8 +329,7 @@ class UsersTable extends Table
                             'Avatars'
                         ]
                     ]
-                ],
-                'currentUserRole' => $roleName
+                ]
             ]);
 
         return $entity;
@@ -419,5 +398,59 @@ class UsersTable extends Table
         }
 
         return true;
+    }
+
+    /**
+     * Register a user
+     * @param array $data
+     * @param UserAccessControl $control who is doing this
+     * @return User
+     * @throws \Exception
+     */
+    public function register($data, UserAccessControl $control = null)
+    {
+        // if role id is empty make it a user
+        // Only admins are allowed to set the role
+        if (!isset($data['role_id']) || !isset($control) || !$control->isAdmin()) {
+            $data['role_id'] = $this->Roles->getIdByName(Role::USER);
+        }
+
+        // Force deleted to false. If not set, cakephp will interpret it as null
+        // which causes isUnique build rule not to work when looking for duplicate entries.
+        $data['deleted'] = false;
+
+        // Check validation rules
+        // Example username is not a valid email
+        $user = $this->buildEntity($data);
+        if (!empty($user->getErrors())) {
+            return $user;
+        }
+
+        // Check business roles
+        // Example username is already taken
+        $this->checkRules($user);
+        if (!empty($user->getErrors())) {
+            return $user;
+        }
+
+        // Check for internal error on save
+        // Can happen if database becomes unresponsive
+        $user = $this->save($user, ['checkRules' => false]);
+        if (!$user) {
+            throw new InternalErrorException(__('The user could not be saved.'));
+        }
+
+        // Generate an authentication token
+        $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $token = $AuthenticationTokens->generate($user->id);
+
+        // Generate event data
+        $eventData = ['user' => $user, 'token' => $token];
+        if (isset($control) && !is_null($control->userId())) {
+            $eventData['adminId'] = $control->userId();
+        }
+        $event = new Event('Model.Users.afterRegister.success', $this, $eventData);
+        $this->getEventManager()->dispatch($event);
+        return $user;
     }
 }

@@ -442,4 +442,23 @@ trait UsersFindersTrait
         return $user;
     }
 
+    /**
+     * Get a user info for an email notification context
+     *
+     * @return object User
+     */
+    public function findFirstAdmin()
+    {
+        $user = $this->find()
+            ->where([
+                'Users.deleted' => false,
+                'Users.active' => true,
+                'Roles.name' => Role::ADMIN
+            ])
+            ->order(['Users.created' => 'ASC'])
+            ->contain(['Roles'])
+            ->first();
+
+        return $user;
+    }
 }
