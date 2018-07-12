@@ -23,12 +23,17 @@ class AppExceptionRenderer extends ExceptionRenderer
      * Renders the response for the exception.
      * If the exception contains an error attribute, set it as controller view variable.
      *
-     * @see App\Controller\ErrorController
+     * @see \App\Controller\ErrorController
      * @return \Cake\Http\Response The response to be sent.
      */
     public function render()
     {
-        if (get_class($this->error) === 'App\Error\Exception\ValidationRuleException') {
+        $class = get_class($this->error);
+        $exceptionWithErrorSet = [
+            'App\Error\Exception\CustomValidationException',
+            'App\Error\Exception\ValidationException'
+        ];
+        if (in_array($class, $exceptionWithErrorSet)) {
             $this->controller->set(['body' => $this->error]);
         }
 

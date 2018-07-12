@@ -14,6 +14,7 @@
  */
 namespace App\Model\Table;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -403,9 +404,10 @@ class UsersTable extends Table
     /**
      * Register a user
      * @param array $data
-     * @param UserAccessControl $control who is doing this
-     * @return User
-     * @throws \Exception
+     * @param UserAccessControl $control who is requesting the registration
+     * @throws InternalErrorException if there was an issue during the save
+     * @throws ValidationException if the user data do not validate
+     * @return User entity
      */
     public function register($data, UserAccessControl $control = null)
     {
@@ -420,21 +422,18 @@ class UsersTable extends Table
         $data['deleted'] = false;
 
         // Check validation rules
-        // Example username is not a valid email
         $user = $this->buildEntity($data);
         if (!empty($user->getErrors())) {
-            return $user;
+            throw new ValidationException(__('Could not validate user data.'), $user, $this);
         }
 
-        // Check business roles
-        // Example username is already taken
+        // Check business rules
         $this->checkRules($user);
         if (!empty($user->getErrors())) {
-            return $user;
+            throw new ValidationException(__('Could not validate user data.'), $user, $this);
         }
 
         // Check for internal error on save
-        // Can happen if database becomes unresponsive
         $user = $this->save($user, ['checkRules' => false]);
         if (!$user) {
             throw new InternalErrorException(__('The user could not be saved.'));

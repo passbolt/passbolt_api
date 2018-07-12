@@ -15,6 +15,7 @@
 namespace App\Shell\Task;
 
 use App\Controller\Events\EmailNotificationsListener;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
@@ -121,17 +122,14 @@ class RegisterUserTask extends AppShell
             $data = $this->_getUserData();
             try {
                 $user = $this->Users->register($data, $accessControl);
-            } catch(InternalErrorException $exception) {
-                $this->out(__('Something went wrong when trying to save the user, please try again later.'));
-                continue;
-            };
-            if (!empty($user->getErrors())) {
-                $this->out(__('Validation failed for the following user data:'));
-                $this->_displayValidationError($user->getErrors());
-            } else {
                 $result = true;
                 break;
-            }
+            } catch(ValidationException $exception) {
+                $this->out(__('Validation failed for the following user data:'));
+                $this->_displayValidationError($exception->getErrors());
+            } catch(InternalErrorException $exception) {
+                $this->out(__('Something went wrong when trying to save the user, please try again.'));
+            };
         }
 
         if (!$result) {

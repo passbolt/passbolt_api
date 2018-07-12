@@ -15,7 +15,7 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
@@ -37,6 +37,7 @@ class UsersAddController extends UsersRegisterController
     /**
      * User add action (admin only)
      *
+     * @throws ValidationException if user data does not validate
      * @return void
      */
     public function addPost()
@@ -46,17 +47,6 @@ class UsersAddController extends UsersRegisterController
         }
         $data = $this->_formatRequestData();
         $user = $this->Users->register($data, $this->User->getAccessControl());
-
-        // Handle validation error display
-        if (!empty($user->getErrors())) {
-            throw new ValidationRuleException(
-                __('Could not validate user data.'),
-                $user->getErrors(),
-                $this->Users
-            );
-        }
-
-        // Return success response with full user data
         $user = $this->Users->findView($user->id, Role::ADMIN)->first();
         $msg = __('The user was successfully added. This user now need to complete the setup.');
         $this->success($msg, $user);
