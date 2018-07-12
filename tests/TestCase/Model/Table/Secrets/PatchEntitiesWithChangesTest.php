@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
@@ -77,7 +77,7 @@ hcciUFw5
         // Patch the resource secrets.
         try {
             $resource->secrets = $this->Secrets->patchEntitiesWithChanges($resource->id, $resource->secrets, $data);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -112,7 +112,7 @@ hcciUFw5
         // Patch the resource secrets.
         try {
             $resource->secrets = $this->Secrets->patchEntitiesWithChanges($resource->id, $resource->secrets, [], $data);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -184,7 +184,7 @@ hcciUFw5
                     Hash::get($case, 'add', []),
                     Hash::get($case, 'delete', [])
                 );
-            } catch (ValidationRuleException $e) {
+            } catch (CustomValidationException $e) {
                 $this->assertEntityError($e, $case['errorField']);
             }
         }

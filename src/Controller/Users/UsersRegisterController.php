@@ -15,14 +15,14 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
+use Aura\Intl\Exception;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
-use JsonSchema\Exception\ValidationException;
 
 class UsersRegisterController extends AppController
 {
@@ -84,34 +84,27 @@ class UsersRegisterController extends AppController
         }
 
         $data = $this->_formatRequestData();
-        $user = $this->Users->register($data);
-
-        // Handle validation error display
-        if (!empty($user->getErrors())) {
+        try {
+            $user = $this->Users->register($data);
+            $this->viewBuilder()
+                ->setTemplatePath('/Users')
+                ->setLayout('login')
+                ->setTemplate('register_thank_you');
+            $this->success(__('The operation was successful.'), $user);
+        } catch(ValidationException $exception) {
             if ($this->request->is('json')) {
-                // JSON request uses default exception handler
-                throw new ValidationRuleException(__('Could not validate user data.'),
-                    $user->getErrors(), $this->Users
-                );
-            } else {
-                // By default users see the register form again
-                // if something goes wrong they can try again
-                $this->set('user', $user);
-                $this->viewBuilder()
-                    ->setTemplatePath('/Users')
-                    ->setLayout('login')
-                    ->setTemplate('register');
+                throw $exception;
             }
-            return;
+            // By default users see the register form again
+            // if something goes wrong they can try again
+            $this->set('user', $exception->getEntity());
+            $this->viewBuilder()
+                ->setTemplatePath('/Users')
+                ->setLayout('login')
+                ->setTemplate('register');
+        } catch(InternalErrorException $exception) {
+            throw $exception;
         }
-
-        // Display thank you page or user
-        $this->viewBuilder()
-            ->setTemplatePath('/Users')
-            ->setLayout('login')
-            ->setTemplate('register_thank_you');
-
-        $this->success(__('The operation was successful.'), $user);
     }
 
     /**

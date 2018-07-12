@@ -15,7 +15,6 @@
 
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
-use App\Error\Exception\ValidationRuleException;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;

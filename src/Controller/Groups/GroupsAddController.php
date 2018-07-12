@@ -16,9 +16,7 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
-use App\Model\Entity\Role;
-use App\Utility\UuidFactory;
+use App\Error\Exception\ValidationException;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
@@ -31,6 +29,7 @@ class GroupsAddController extends AppController
      *
      * @throws InternalErrorException If an unexpected error occurred when saving the group
      * @throws ForbiddenException If the user is not an admin
+     * @throws ValidationException if the group validation failed
      * @return void
      */
     public function addPost()
@@ -120,13 +119,14 @@ class GroupsAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $group Group
+     * @throws ValidationException if the group validation failed
      * @return void
      */
     protected function _handleValidationError($group)
     {
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
+            throw new ValidationException(__('Could not validate group data.'), $group, $this->Groups);
         }
     }
 

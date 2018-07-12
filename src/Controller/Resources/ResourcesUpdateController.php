@@ -16,7 +16,7 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -152,7 +152,7 @@ class ResourcesUpdateController extends AppController
      *
      * @param \Cake\Datasource\EntityInterface $resource entity
      * @throws NotFoundException
-     * @throws ValidationRuleException
+     * @throws ValidationException
      * @return void
      */
     protected function _handleValidationError($resource)
@@ -164,7 +164,7 @@ class ResourcesUpdateController extends AppController
                 throw new NotFoundException(__('The resource does not exist.'));
             }
 
-            throw new ValidationRuleException(__('Could not validate resource data.'), $errors, $this->Resources);
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
     }
 

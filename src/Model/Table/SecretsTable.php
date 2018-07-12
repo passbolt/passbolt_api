@@ -15,7 +15,7 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
@@ -180,9 +180,9 @@ class SecretsTable extends Table
      * @param array $entities The list of secrets entities to patch
      * @param array $add The list of secrets to add
      * @param array $delete The list of user identifies for whom the secrets must be deleted
-     * @throw ValidationRuleException If a user identifier for whom a secret has to deleted is not found in the list
+     * @throw CustomValidationException If a user identifier for whom a secret has to deleted is not found in the list
      *   of secrets
-     * @throw ValidationRuleException If a secret to add does not validate when calling newEntity
+     * @throw CustomValidationException If a secret to add does not validate when calling newEntity
      * @return array The list of secrets entities patched with the changes
      */
     public function patchEntitiesWithChanges(string $resourceId, array $entities, array $add = [], array $delete = [])
@@ -193,7 +193,7 @@ class SecretsTable extends Table
             // The user_id does not have a secret.
             if ($secretKey === false) {
                 $errors = ['secret_exists' => __('There is no secret to delete for the user {0}.', $userId)];
-                throw new ValidationRuleException(__('Validation error.'), $errors);
+                throw new CustomValidationException(__('Validation error.'), $errors);
             }
             array_splice($entities, $secretKey, 1);
         }
@@ -212,7 +212,7 @@ class SecretsTable extends Table
             $secret = $this->newEntity($secret, $options);
             $errors = $secret->getErrors();
             if (!empty($errors)) {
-                throw new ValidationRuleException(__('Validation error.'), [$addKey => $errors]);
+                throw new CustomValidationException(__('Validation error.'), [$addKey => $errors]);
             }
             $entities[] = $secret;
         }

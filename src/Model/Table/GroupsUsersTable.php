@@ -14,7 +14,7 @@
  */
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;
@@ -405,9 +405,9 @@ class GroupsUsersTable extends Table
      *      'delete' => true,
      *  ]
      *
-     * @throw ValidationRuleException If a change try to modify a group user that is not in the list of groups users
-     * @throw ValidationRuleException If a change does not validate when calling patchEntity
-     * @throw ValidationRuleException If a change does not validate when calling newEntity
+     * @throw CustomValidationException If a change try to modify a group user that is not in the list of groups users
+     * @throw CustomValidationException If a change does not validate when calling patchEntity
+     * @throw CustomValidationException If a change does not validate when calling newEntity
      * @return array The list of groups users entities patched with the changes
      */
     public function patchEntitiesWithChanges($entities = [], $changes = [], $groupId = null, array $options = [])
@@ -433,7 +433,7 @@ class GroupsUsersTable extends Table
                     $errors = ['id' => [
                         'group_user_exists' => __('The membership does not exist.', $change['id'])
                     ]];
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
 
                 // Delete case.
@@ -445,7 +445,7 @@ class GroupsUsersTable extends Table
                     $this->patchEntity($entities[$groupUserKey], $change, $options);
                     $errors = $entities[$groupUserKey]->getErrors();
                     if (!empty($errors)) {
-                        throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                        throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                     }
                 }
             } elseif ($canAdd) {
@@ -462,7 +462,7 @@ class GroupsUsersTable extends Table
                 $groupUser = $this->newEntity($change, $options);
                 $errors = $groupUser->getErrors();
                 if (!empty($errors)) {
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
                 $entities[] = $groupUser;
             }
