@@ -241,7 +241,6 @@ class UsersTable extends Table
      * Return a user entity
      *
      * @param array $data the request data
-     * @param string $roleName the role of the user building the entity
      * @throws \InvalidArgumentException if role name is not valid
      * @return \App\Model\Entity\User
      */
@@ -409,7 +408,7 @@ class UsersTable extends Table
      * @throws ValidationException if the user data do not validate
      * @return User entity
      */
-    public function register($data, UserAccessControl $control = null)
+    public function register(array $data, UserAccessControl $control = null)
     {
         // if role id is empty make it a user
         // Only admins are allowed to set the role

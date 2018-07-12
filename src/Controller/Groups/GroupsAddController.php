@@ -25,11 +25,25 @@ use Cake\Utility\Hash;
 class GroupsAddController extends AppController
 {
     /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $this->loadModel('Groups');
+        $this->loadModel('Users');
+        return AppController::beforeFilter($event);
+    }
+
+    /**
      * Group Add action
      *
      * @throws InternalErrorException If an unexpected error occurred when saving the group
      * @throws ForbiddenException If the user is not an admin
      * @throws ValidationException if the group validation failed
+     * @throws InternalErrorException if the group can't be saved for some reason
      * @return void
      */
     public function addPost()
@@ -38,59 +52,13 @@ class GroupsAddController extends AppController
             throw new ForbiddenException();
         }
 
-        $this->loadModel('Groups');
-
-        // Build and validate the entity
-        $group = $this->_buildAndValidateGroupEntity();
-
-        // Save the entity
-        $result = $this->Groups->save($group);
-        if (!$result) {
-            $this->_handleValidationError($group);
-            throw new InternalErrorException(__('Could not add the group. Please try again later'));
-        }
-        $this->_notifyUsers($group);
-
-        $this->success(__('The group has been added successfully.'), $result);
-    }
-
-    /**
-     * Build the group entity from user input
-     *
-     * @return \Cake\Datasource\EntityInterface $group group entity
-     */
-    protected function _buildAndValidateGroupEntity()
-    {
         $data = $this->_formatRequestData();
-        $data['created_by'] = $this->User->id();
-        $data['modified_by'] = $this->User->id();
-        $data['deleted'] = false;
+        $group = $this->Groups->create($data, $this->User->getAccessControl());
 
-        // Build entity and perform basic check
-        $group = $this->Groups->newEntity($data, [
-            'accessibleFields' => [
-                'name' => true,
-                'created_by' => true,
-                'modified_by' => true,
-                'groups_users' => true,
-                'deleted' => true
-            ],
-            'associated' => [
-                'GroupsUsers' => [
-                    'validate' => 'saveGroup',
-                    'accessibleFields' => [
-                        'user_id' => true,
-                        'is_admin' => true
-                    ]
-                ],
-            ]
-        ]);
-
-        // Handle validation errors if any at this stage.
-        $this->_handleValidationError($group);
-
-        return $group;
+        $msg = __('The group has been added successfully.');
+        $this->success($msg, $group);
     }
+
 
     /**
      * Format request data formatted for API v1 to API v2 format
@@ -113,34 +81,5 @@ class GroupsAddController extends AppController
         }
 
         return $output;
-    }
-
-    /**
-     * Manage validation errors.
-     *
-     * @param \Cake\Datasource\EntityInterface $group Group
-     * @throws ValidationException if the group validation failed
-     * @return void
-     */
-    protected function _handleValidationError($group)
-    {
-        $errors = $group->getErrors();
-        if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate group data.'), $group, $this->Groups);
-        }
-    }
-
-    /**
-     * Notify the users they have been added to the group
-     *
-     * @param \App\Model\Entity\Group $group Goup
-     * @return void
-     */
-    protected function _notifyUsers($group)
-    {
-        $event = new Event('GroupsAddController.addPost.success', $this, [
-            'group' => $group
-        ]);
-        $this->getEventManager()->dispatch($event);
     }
 }

@@ -44,7 +44,7 @@ class EmailNotificationsListener implements EventListenerInterface
     {
         return [
             'CommentAddController.addPost.success' => 'sendCommentAddEmail',
-            'GroupsAddController.addPost.success' => 'sendGroupUserAddEmail',
+            'Model.Groups.create.success' => 'sendGroupUserAddEmail',
             'GroupsDeleteController.delete.success' => 'sendGroupDeleteEmail',
             'GroupsUpdateController.update.success' => 'sendGroupUpdateEmail',
             'UsersDeleteController.delete.success' => 'sendUserDeleteEmail',
