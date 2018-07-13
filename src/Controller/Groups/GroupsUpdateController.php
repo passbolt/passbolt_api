@@ -16,7 +16,7 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -54,7 +54,7 @@ class GroupsUpdateController extends AppController
      * @param string $id The identifier of the group to update.
      * @throws InternalErrorException If an unexpected error occurred when saving the group
      * @throws ForbiddenException If the user is not an admin
-     * @throws ValidationRuleException If an error occurred when patching or saving the group
+     * @throws ValidationException If an error occurred when patching or saving the group
      * @return void
      */
     public function dryRun($id)
@@ -93,7 +93,7 @@ class GroupsUpdateController extends AppController
      * @param string $id The identifier of the group to update.
      * @throws InternalErrorException If an unexpected error occurred when saving the group
      * @throws ForbiddenException If the user is not an admin
-     * @throws ValidationRuleException If an error occurred when patching or saving the group
+     * @throws ValidationException If an error occurred when patching or saving the group
      * @return void
      */
     public function update($id)
@@ -249,8 +249,8 @@ class GroupsUpdateController extends AppController
      * @throws ForbiddenException if current group is not an admin
      * @throws BadRequestException if the group uuid id invalid
      * @throws NotFoundException if the group does not exist or is already deleted
-     * @throws ValidationRuleException if the group is sole manager of a group
-     * @throws ValidationRuleException if the group is sole owner of a shared resource
+     * @throws ValidationException if the group is sole manager of a group
+     * @throws ValidationException if the group is sole owner of a shared resource
      * @return \App\Model\Entity\Group $group entity
      */
     protected function _validateRequestParameter($id)
@@ -313,7 +313,7 @@ class GroupsUpdateController extends AppController
      *
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $data The user input
-     * @throws ValidationRuleException If an error occurred when patching the entity.
+     * @throws ValidationException If an error occurred when patching the entity.
      * @return \App\Model\Entity\Group
      */
     protected function _patchAndValidateGroupEntity(\App\Model\Entity\Group $group, array $data)
@@ -355,7 +355,7 @@ class GroupsUpdateController extends AppController
                 $groupsUsersPatchOptions
             );
             $group->setDirty('groups_users', true);
-        } catch (ValidationRuleException $e) {
+        } catch (ValidationException $e) {
             $group->setError('groups_users', $e->getErrors());
         }
 
@@ -407,7 +407,7 @@ class GroupsUpdateController extends AppController
                     Hash::get($change, 'remove', [])
                 );
                 $resource->setDirty('secrets', true);
-            } catch (ValidationRuleException $e) {
+            } catch (ValidationException $e) {
                 $group->setError('secrets', $e->getErrors());
                 $this->_handleValidationError($group);
             }
@@ -448,7 +448,7 @@ class GroupsUpdateController extends AppController
      *
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $resources The resources that are updated along with the group.
-     * @throw ValidationRuleException If a validation rule did not validate
+     * @throw ValidationException If a validation rule did not validate
      * @return void
      */
     protected function _handleValidationError(\App\Model\Entity\Group $group, array $resources = [])
@@ -456,12 +456,12 @@ class GroupsUpdateController extends AppController
         // If an error occurred on the group.
         $errors = $group->getErrors();
         if (!empty($errors)) {
-            throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Groups);
+            throw new ValidationException(__('Could not validate group data.'), $group, $this->Groups);
         }
         // If an error occurred on the resources.
         foreach ($resources as $resource) {
             $errors = $resource->getErrors();
-            throw new ValidationRuleException(__('Could not validate group data.'), $errors, $this->Resources);
+            throw new ValidationException(__('Could not validate group data.'), $group, $this->Resources);
         }
     }
 

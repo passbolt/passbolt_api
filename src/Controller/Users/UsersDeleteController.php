@@ -15,7 +15,7 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use Cake\Datasource\ResultSetInterface;
@@ -87,8 +87,8 @@ class UsersDeleteController extends AppController
      * @throws BadRequestException if the user uuid id invalid
      * @throws BadRequestException if the user tries to delete themselves
      * @throws NotFoundException if the user does not exist or is already deleted
-     * @throws ValidationRuleException if the user is sole manager of a group
-     * @throws ValidationRuleException if the user is sole owner of a shared resource
+     * @throws CustomValidationException if the user is sole manager of a group
+     * @throws CustomValidationException if the user is sole owner of a shared resource
      * @return object $user entity
      */
     protected function _validateRequestData($id)
@@ -120,21 +120,21 @@ class UsersDeleteController extends AppController
                 $groupIds = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($id);
                 $body = $this->Groups->findAllByIds($groupIds);
                 $msg .= $errors['id']['soleManagerOfNonEmptyGroup'];
-                throw new ValidationRuleException($msg, $body, $this->Groups);
+                throw new CustomValidationException($msg, $body, $this->Groups);
             }
 
             if (isset($errors['id']['soleOwnerOfSharedResource'])) {
                 $resourceIds = $this->Permissions->findSharedResourcesUserIsSoleOwner($id);
                 $body = $this->Resources->findAllByIds($id, $resourceIds);
                 $msg .= $errors['id']['soleOwnerOfSharedResource'];
-                throw new ValidationRuleException($msg, $body, $this->Resources);
+                throw new CustomValidationException($msg, $body, $this->Resources);
             }
 
             if (isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource'])) {
                 $resourceIds = $this->Permissions->findSharedResourcesSoleGroupManagerIsSoleOwner($id);
                 $body = $this->Resources->findAllByIds($id, $resourceIds);
                 $msg .= $errors['id']['soleManagerOfGroupOwnerOfSharedResource'];
-                throw new ValidationRuleException($msg, $body, $this->Resources);
+                throw new CustomValidationException($msg, $body, $this->Resources);
             }
         }
 

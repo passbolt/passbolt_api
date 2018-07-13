@@ -51,7 +51,7 @@ trait ShareEmailTrait
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
             $Users = TableRegistry::get('Users');
-            $owner = $Users->getForEmail($ownerId);
+            $owner = $Users->findFirstForEmail($ownerId);
             $this->sendNewShareEmail($event, $resource, $changes['secrets'], $userIds, $owner);
         }
     }

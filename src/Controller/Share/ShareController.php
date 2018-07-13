@@ -16,7 +16,7 @@
 namespace App\Controller\Share;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -37,7 +37,7 @@ class ShareController extends AppController
      * @throws NotFoundException if the resource does not exist
      * @throws NotFoundException if the resource is soft deleted
      * @throws NotFoundException if the user does not have access to the resource
-     * @throws ValidationRuleException if the provided changes do not validate
+     * @throws ValidationException if the provided changes do not validate
      * @return void
      */
     public function dryRun($resourceId)
@@ -68,7 +68,7 @@ class ShareController extends AppController
      * @throws NotFoundException if the resource does not exist
      * @throws NotFoundException if the resource is soft deleted
      * @throws NotFoundException if the user does not have access to the resource
-     * @throws ValidationRuleException if the provided changes do not validate
+     * @throws ValidationException if the provided changes do not validate
      * @throws InternalErrorException if something else went wrong during the save
      * @return void
      */
@@ -153,14 +153,14 @@ class ShareController extends AppController
      *
      * @param \Cake\Datasource\EntityInterface $resource The resource to share
      * @throws NotFoundException
-     * @throws ValidationRuleException
+     * @throws ValidationException
      * @return void
      */
     protected function _handleValidationError($resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
-            throw new ValidationRuleException(__('Could not validate resource data.'), $errors, $this->Resources);
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
     }
 

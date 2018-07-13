@@ -16,7 +16,7 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Controller\Component\QueryStringComponent;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
@@ -45,11 +45,11 @@ class UsersEditController extends AppController
         }
         $user = $this->Users->editEntity($user, $data, $this->User->role());
         if ($user->getErrors()) {
-            throw new ValidationRuleException(__('Could not validate user data.'), $user->getErrors(), $this->Users);
+            throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $this->Users->checkRules($user);
         if ($user->getErrors()) {
-            throw new ValidationRuleException(__('Could not validate user data.'), $user->getErrors(), $this->Users);
+            throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
 
         // Save
