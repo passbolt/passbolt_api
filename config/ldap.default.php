@@ -104,6 +104,12 @@ return [
                             // unreachable/down. Default: 1
                             //'connect_timeout' => 5,
                         ]
+                    ],
+                    'rules' => [
+                        'groups' => [
+                            // The default admin is the group manager that will be assigned to a newly created group.
+                            'defaultAdmin' => 'ada@passbolt.com',
+                        ]
                     ]
                 ]
             ]

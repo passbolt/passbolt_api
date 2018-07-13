@@ -14,8 +14,11 @@
  */
 namespace Passbolt\DirectorySync\Shell\Task;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Shell\AppShell;
+use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 
 class GroupsTask extends AppShell
@@ -32,6 +35,7 @@ class GroupsTask extends AppShell
     {
         parent::initialize();
         $this->loadModel('Groups');
+        $this->loadModel('Users');
     }
 
     /**
@@ -68,11 +72,57 @@ class GroupsTask extends AppShell
             $this->abort($exception->getMessage());
             return false;
         }
+
         $groups = $directory->getGroups();
+        $defaultGroupAdmin = $this->getDefaultGroupAdmin();
+
+        // Get first admin.
+        // TODO: find a solution. It should not be this user that creates groups.
+        // Should we have a ldap user ????
+        $firstAdmin = $this->Users->findFirstAdmin();
+
         foreach($groups as $id => $data) {
-            $group = $this->Groups->buildEntity($data, Role::ADMIN);
+            $data['groups_users'] = [
+                [
+                    'user_id' => $defaultGroupAdmin->id,
+                    'is_admin' => true,
+                ]
+            ];
+            try {
+                $groupSaved = $this->Groups->create($data, new UserAccessControl(Role::ADMIN, $firstAdmin->id));
+            } catch (ValidationException $e) {
+                $this->err("Group {$data['name']} could not be saved: " . $e->getMessage());
+                $entity = $e->getEntity();
+                $this->err($entity->getErrors());
+            }
+
+            if ($groupSaved) {
+                $this->info("Group {$data['name']} has been saved");
+            }
         }
         return true;
+    }
+
+    /**
+     * Get default group administrator
+     */
+    public function getDefaultGroupAdmin() {
+        $groupAdmin = Configure::read('passbolt.plugins.ldap.groups.defaultAdmin');
+        if (!empty($groupAdmin)) {
+            // Get groupAdmin from database.
+            $groupAdmin = $this->Users->find()
+                ->where([
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                    'Users.username' => $groupAdmin
+                ]);
+            if (!empty($groupAdmin)) {
+                return $groupAdmin;
+            }
+        }
+
+        // If can't find corresponding config user, return first admin.
+        return $this->Users->findFirstAdmin();
     }
 
     /**
