@@ -33,7 +33,6 @@ class LdapDirectory implements DirectoryInterface
      * @throws \Exception if connection cannot be established
      */
     function __construct() {
-        var_dump('test');
         $config = Configure::read('passbolt.plugins.directorySync.ldap');
         $config = (new Configuration())->loadFromArray($config);
         $this->ldap = new LdapManager($config);

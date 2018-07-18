@@ -82,11 +82,9 @@ class GroupsTask extends AppShell
         $firstAdmin = $this->Users->findFirstAdmin();
 
         foreach($groups as $id => $data) {
-            $data['groups_users'] = [
-                [
-                    'user_id' => $defaultGroupAdmin->id,
-                    'is_admin' => true,
-                ]
+            $data['groups_users'][] = [
+                'user_id' => $defaultGroupAdmin->id,
+                'is_admin' => true,
             ];
             try {
                 $groupSaved = $this->Groups->create($data, new UserAccessControl(Role::ADMIN, $firstAdmin->id));
