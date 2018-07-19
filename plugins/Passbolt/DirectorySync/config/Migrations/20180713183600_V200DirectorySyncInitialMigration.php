@@ -29,7 +29,7 @@ class V200DirectorySyncInitialMigration extends AbstractMigration
      */
     public function up()
     {
-        $this->table('directory_sync_entities', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+        $this->table('directory_entries', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
              ->addColumn('id', 'char', [
                  'default' => null,
                  'limit' => 36,
@@ -40,10 +40,25 @@ class V200DirectorySyncInitialMigration extends AbstractMigration
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('foreign_id', 'string', [
+            ->addColumn('foreign_key', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
+            ])
+            ->addColumn('directory_name', 'string', [
+                'default' => null,
+                'limit' => 256,
+                'null' => false,
+            ])
+            ->addColumn('directory_created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('directory_modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
             ])
             ->addColumn('status', 'string', [
                 'default' => null,
@@ -63,7 +78,8 @@ class V200DirectorySyncInitialMigration extends AbstractMigration
              ->addIndex([
                  'id',
                  'foreign_model',
-                 'foreign_id',
+                 'foreign_key',
+                 'directory_name'
              ])
              ->create();
     }

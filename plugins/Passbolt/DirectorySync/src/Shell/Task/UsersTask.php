@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Shell\AppShell;
+use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use App\Model\Entity\Role;
 
@@ -65,25 +66,13 @@ class UsersTask extends AppShell
     public function main()
     {
         try {
-            $directory = DirectoryFactory::get();
+            $action = new UserSyncAction();
+            $action->execute();
         } catch(\Exception $exception) {
             $this->abort($exception->getMessage());
             return false;
         }
-        $users = $directory->getUsers();
-        foreach($users as $id => $data) {
-            $user = $this->Users->buildEntity($data, Role::ADMIN);
-            $errors = $user->getErrors();
-            $this->out($id);
-            if ($errors) {
-                $this->_displayValidationError($errors);
-                $this->out();
-            } else {
-                $this->out('Can be added');
-                $this->out();
-                // $this->Users->save($user)
-            }
-        }
+
         return true;
     }
 

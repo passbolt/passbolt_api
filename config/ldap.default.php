@@ -3,6 +3,8 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
+                // The default admin is the group manager that will be assigned to a newly created group.
+                //'adminUser' => 'ada@passbolt.com',
                 'ldap' => [
                     //'general' => [
                     // Optional: When using the LdapManager and there are multiple domains configured,
@@ -105,12 +107,6 @@ return [
                             //'connect_timeout' => 5,
                         ]
                     ],
-                    'rules' => [
-                        'groups' => [
-                            // The default admin is the group manager that will be assigned to a newly created group.
-                            'defaultAdmin' => 'ada@passbolt.com',
-                        ]
-                    ]
                 ]
             ]
         ]

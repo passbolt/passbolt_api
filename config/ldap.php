@@ -3,6 +3,10 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
+//                'test' => 'Default',
+
+                // The default admin is the group manager that will be assigned to a newly created group.
+                'adminUser' => 'ada@passbolt.com',
                 'ldap' => [
                     'domains' => [
                         'passbolt.local' => [

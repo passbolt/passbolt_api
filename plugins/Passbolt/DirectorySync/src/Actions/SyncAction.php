@@ -12,27 +12,23 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
-
-use Cake\Core\Configure;
-use Passbolt\DirectorySync\Test\IntegrationFixtures\TestDirectory;
+namespace Passbolt\DirectorySync\Actions;
+use Passbolt\DirectorySync\Utility\DirectoryFactory;
 
 /**
  * Directory factory class
  * @package App\Utility
  */
-class DirectoryFactory
+class SyncAction
 {
+    protected $directory;
+
     /**
-     * @throws \Exception
+     * SyncAction constructor.
+     * @throws \Exception if no directory configuration is present
      */
-    static function get() {
-        if (Configure::read('passbolt.plugins.directorySync.test')) {
-            return new TestDirectory(Configure::read('passbolt.plugins.directorySync.test'));
-        }
-        if (Configure::read('passbolt.plugins.directorySync.ldap')) {
-            return new LdapDirectory();
-        }
-        throw new \Exception('Directory sync plugin is not enabled.');
+    public function __construct()
+    {
+        $this->directory = DirectoryFactory::get();
     }
 }

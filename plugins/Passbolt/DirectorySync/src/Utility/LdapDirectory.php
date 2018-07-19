@@ -54,17 +54,17 @@ class LdapDirectory implements DirectoryInterface
             ->getResult();
 
         foreach ($users as $user) {
-            $this->users[$user->getDn()] = [
-                'username' => $user->getEmailAddress(),
-                'profile' => [
-                    'first_name' => $user->getFirstname(),
-                    'last_name' => $user->getLastname(),
-                ],
-                'directory' => [
-                    'id' => $user->getGuid(),
-                    'name' => $user->getDn(),
-                    'created' => $user->created,
-                    'modified' => $user->modified,
+            $this->users[] = [
+                'id' => $user->getGuid(),
+                'directory_name' => $user->getDn(),
+                'directory_created' => $user->created,
+                'directory_modified' => $user->modified,
+                'user' => [
+                    'username' => $user->getEmailAddress(),
+                    'profile' => [
+                        'first_name' => $user->getFirstname(),
+                        'last_name' => $user->getLastname(),
+                    ]
                 ]
             ];
         }
@@ -83,17 +83,16 @@ class LdapDirectory implements DirectoryInterface
             ->getResult();
 
         foreach ($groups as $group) {
-            $this->groups[$group->getDn()] = [
-                'name' => $group->getName(),
-                'directory' => [
-                    'id' => $group->getGuid(),
-                    'external_id' => $group->getDn(),
-                    'created' => $group->created,
-                    'modified' => $group->modified,
-                    'members' => $group->getMembers(),
-                    'groups' => $group->getGroups()
-                ],
-
+            $this->groups[] = [
+                'id' => $group->getGuid(),
+                'directory_name' => $group->getDn(),
+                'directory_created' => $group->created,
+                'directory_modified' => $group->modified,
+                'group' => [
+                    'name' => $group->getName(),
+                    'groups' => $group->getGroups(),
+                    'users' => $group->getMembers(),
+                ]
             ];
         }
         return $this->groups;

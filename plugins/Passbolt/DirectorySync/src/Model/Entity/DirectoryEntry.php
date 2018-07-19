@@ -13,21 +13,24 @@
  * @since         2.0.0
  */
 
-namespace App\Model\Entity;
+namespace Passbolt\DirectorySync\Model\Entity;
 
 use Cake\ORM\Entity;
 
 /**
- * DirectorySyncEntity Entity
+ * DirectoryEntry Entity
  *
  * @property string $id
  * @property string $foreign_model
- * @property string $foreign_id
+ * @property string $foreign_key
+ * @property string $directory_name distinguished name
+ * @property \Cake\I18n\FrozenTime $directory_created
+ * @property \Cake\I18n\FrozenTime $directory_modified
  * @property string $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  */
-class DirectorySyncEntity extends Entity
+class DirectoryEntry extends Entity
 {
 
     /**
@@ -41,9 +44,16 @@ class DirectorySyncEntity extends Entity
      */
     protected $_accessible = [
         'foreign_model' => false,
-        'foreign_id' => false,
+        'foreign_key' => false,
+        'directory_name' => false,
+        'directory_created' => false,
+        'directory_modified' => false,
         'status' => false,
         'created' => false,
         'modified' => false
     ];
+
+    const STATUS_IGNORE = 'ignore';
+    const STATUS_ERROR = 'error';
+    const STATUS_SUCCESS = 'success';
 }
