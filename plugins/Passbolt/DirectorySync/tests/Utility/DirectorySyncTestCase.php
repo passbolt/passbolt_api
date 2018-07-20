@@ -106,7 +106,20 @@ class DirectorySyncTestCase extends TestCase
 
     private function saveMockDirectoryEntry($data)
     {
-        $entry = $this->action->DirectoryEntries->newEntity($data, ['validate' => false]);
+        $entry = $this->action->DirectoryEntries->newEntity($data, [
+            'validate' => true,
+            'accessibleFields' => [
+                'id' => true,
+                'foreign_model' => true,
+                'foreign_key' => true,
+                'directory_name' => true,
+                'directory_created' => true,
+                'directory_modified' => true,
+                'status' => true,
+                'created' => true,
+                'modified' => true
+            ]
+        ]);
         $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
     }
 

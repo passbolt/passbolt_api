@@ -26,6 +26,8 @@ class UserSyncActionTest extends DirectorySyncTestCase
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com');
         $this->mockDirectoryEntryUser('ada', 'lovelace', DirectoryEntry::STATUS_SUCCESS);
         $this->action->execute();
-        // asserts...
+        $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
+        $this->assertEquals(count($syncEntry), 1);
+        $this->assertEquals($syncEntry[0]['status'], DirectoryEntry::STATUS_SUCCESS);
     }
 }
