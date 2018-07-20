@@ -3,8 +3,11 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
+                // The user that will perform operations for the directory.
+                // 'defaultUser' => 'email@domain.com',
                 // The default admin is the group manager that will be assigned to a newly created group.
-                //'adminUser' => 'ada@passbolt.com',
+                // If not specified, the first admin user found will be used.
+                // 'defaultGroupAdminUser' => 'email@domain.com',
                 'ldap' => [
                     //'general' => [
                     // Optional: When using the LdapManager and there are multiple domains configured,

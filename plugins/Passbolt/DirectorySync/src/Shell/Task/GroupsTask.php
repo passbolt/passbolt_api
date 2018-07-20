@@ -105,7 +105,7 @@ class GroupsTask extends AppShell
      * Get default group administrator
      */
     public function getDefaultGroupAdmin() {
-        $groupAdmin = Configure::read('passbolt.plugins.directorySync.adminUser');
+        $groupAdmin = Configure::read('passbolt.plugins.directorySync.defaultGroupAdminUser');
         if (!empty($groupAdmin)) {
             // Get groupAdmin from database.
             $groupAdmin = $this->Users->find()
