@@ -48,19 +48,20 @@ class DirectoryEntriesFixture extends TestFixture
      */
     public function init()
     {
-        $this->records = [
-            [
-                'id' => UuidFactory::uuid('ldap.user.id.ada'),
-                'foreign_model' => 'Users',
-                'foreign_key' => UuidFactory::uuid('user.id.ada'),
-                'directory_name' => 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
-                'directory_created' => '2018-07-20 06:31:57',
-                'directory_modified' => '2018-07-20 06:31:57',
-                'status' => DirectoryEntry::STATUS_SUCCESS,
-                'created' => '2018-07-20 06:31:57',
-                'modified' => '2018-07-20 06:31:57'
-            ],
-        ];
+        // create entries in tests and not bellow or create another Fixture set
+        //        $this->records = [
+        //            [
+        //                'id' => UuidFactory::uuid('ldap.user.id.ada'),
+        //                'foreign_model' => 'Users',
+        //                'foreign_key' => UuidFactory::uuid('user.id.ada'),
+        //                'directory_name' => 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
+        //                'directory_created' => '2018-07-20 06:31:57',
+        //                'directory_modified' => '2018-07-20 06:31:57',
+        //                'status' => DirectoryEntry::STATUS_SUCCESS,
+        //                'created' => '2018-07-20 06:31:57',
+        //                'modified' => '2018-07-20 06:31:57'
+        //            ],
+        //        ];
         parent::init();
     }
 }

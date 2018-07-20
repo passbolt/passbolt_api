@@ -43,6 +43,10 @@ class UserSyncAction extends SyncAction
      */
     public function execute() {
         $directoryEntries = $this->directory->getUsers();
+        if (!isset($directoryEntries) || empty($directoryEntries)) {
+            // Directory is empty nothing to do
+            return;
+        }
 
         // Find all the entities
         $syncedEntries = $this->DirectoryEntries->find()
@@ -54,10 +58,6 @@ class UserSyncAction extends SyncAction
 
         $ignoredEntries = Hash::extract($syncedEntries, '{n}[status='. DirectoryEntry::STATUS_IGNORE.'].id');
 
-        if (!isset($directoryEntries)) {
-            // Directory is empty nothing to do
-            return;
-        }
         foreach($directoryEntries as $i => $data) {
             if (in_array($data['id'], $ignoredEntries)) {
                 // entry is marked as to be ignored
