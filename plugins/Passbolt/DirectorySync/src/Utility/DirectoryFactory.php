@@ -15,7 +15,7 @@
 namespace Passbolt\DirectorySync\Utility;
 
 use Cake\Core\Configure;
-use Passbolt\DirectorySync\Test\IntegrationFixtures\TestDirectory;
+use Passbolt\DirectorySync\Test\Utility\TestDirectory;
 
 /**
  * Directory factory class
@@ -28,7 +28,7 @@ class DirectoryFactory
      */
     static function get() {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
-            return new TestDirectory(Configure::read('passbolt.plugins.directorySync.test'));
+            return new TestDirectory();
         }
         if (Configure::read('passbolt.plugins.directorySync.ldap')) {
             return new LdapDirectory();

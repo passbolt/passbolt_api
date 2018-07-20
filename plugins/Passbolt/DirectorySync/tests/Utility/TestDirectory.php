@@ -12,9 +12,10 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Test\IntegrationFixtures;
+namespace Passbolt\DirectorySync\Test\Utility;
 
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
+use Cake\Core\Configure;
 
 /**
  * IntegrationFixture
@@ -28,15 +29,21 @@ class TestDirectory implements DirectoryInterface
     /**
      * Constructor
      *
-     * @param string $scenario
      * @throws \Exception if the scenario cannot be found
      * @return void
      */
-    public function __construct($scenario = 'Default')
+    public function __construct()
     {
-        $this->path = dirname(__FILE__) . DS . stripslashes($scenario);
-        if(!is_dir($this->path)) {
-            throw new \Exception(__('The test scenario could not be found in fixtures at: {0}', $this->path));
+        $scenario = Configure::read('passbolt.plugins.directorySync.test');
+        if (isset($scenario) && is_string($scenario)) {
+            $this->path = dirname(__FILE__) . DS . stripslashes($scenario);
+            if(!is_dir($this->path)) {
+                throw new \Exception(__('The test scenario could not be found in fixtures at: {0}', $this->path));
+            }
+        } else {
+            // the test should populate them with setters
+            $this->users = [];
+            $this->groups = [];
         }
     }
 
@@ -62,6 +69,20 @@ class TestDirectory implements DirectoryInterface
             $this->users = $this->read('Users');
         }
         return $this->users;
+    }
+
+    /**
+     * @param $users
+     */
+    public function setUsers($users) {
+        $this->users = $users;
+    }
+
+    /**
+     * @param $groups
+     */
+    public function setGroups($groups) {
+        $this->users = $groups;
     }
 
     /**

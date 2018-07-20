@@ -36,7 +36,6 @@ class UserSyncAction extends SyncAction
     public function __construct() {
         parent::__construct();
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
     }
 
     /**
@@ -45,11 +44,6 @@ class UserSyncAction extends SyncAction
     public function execute() {
         $directoryEntries = $this->directory->getUsers();
 
-        if (!isset($directoryEntries)) {
-            // Directory is empty nothing to do
-            return;
-        }
-
         // Find all the entities
         $syncedEntries = $this->DirectoryEntries->find()
             ->select()
@@ -57,8 +51,13 @@ class UserSyncAction extends SyncAction
             ->contain('Users')
             ->all()
             ->toArray();
+
         $ignoredEntries = Hash::extract($syncedEntries, '{n}[status='. DirectoryEntry::STATUS_IGNORE.'].id');
 
+        if (!isset($directoryEntries)) {
+            // Directory is empty nothing to do
+            return;
+        }
         foreach($directoryEntries as $i => $data) {
             if (in_array($data['id'], $ignoredEntries)) {
                 // entry is marked as to be ignored
@@ -84,4 +83,5 @@ class UserSyncAction extends SyncAction
             }
         }
     }
+
 }
