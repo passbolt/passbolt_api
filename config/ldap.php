@@ -3,7 +3,7 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
-//                'test' => 'Default',
+               'test' => true,
 
                 // The user that will perform operations for the directory.
                 'defaultUser' => 'admin@passbolt.com',

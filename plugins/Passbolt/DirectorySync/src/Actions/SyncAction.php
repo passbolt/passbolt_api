@@ -13,7 +13,9 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Actions;
+
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
+use Cake\ORM\TableRegistry;
 
 /**
  * Directory factory class
@@ -22,6 +24,7 @@ use Passbolt\DirectorySync\Utility\DirectoryFactory;
 class SyncAction
 {
     protected $directory;
+    public $DirectoryEntries;
 
     /**
      * SyncAction constructor.
@@ -30,5 +33,14 @@ class SyncAction
     public function __construct()
     {
         $this->directory = DirectoryFactory::get();
+        $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
+    }
+
+    /**
+     * @return \Passbolt\DirectorySync\Utility\DirectoryInterface
+     */
+    public function getDirectory()
+    {
+        return $this->directory;
     }
 }
