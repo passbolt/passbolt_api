@@ -16,6 +16,7 @@ namespace Passbolt\DirectorySync\Test\Utility;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\I18n\FrozenTime;
 
@@ -27,11 +28,6 @@ class DirectorySyncTestCase extends TestCase
      * @var \Passbolt\DirectorySync\Actions\SyncAction
      */
     protected $action;
-
-    public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users',
-        'plugin.passbolt/directorySync.base/directoryEntries'
-    ];
 
     public function setUp()
     {
@@ -75,6 +71,20 @@ class DirectorySyncTestCase extends TestCase
         return $user;
     }
 
+    protected function mockDirectoryIgnore($id, $model)
+    {
+        if (!isset($created)) {
+            $created = '2018-07-20 06:31:57';
+        }
+        $entry = [
+            'id' => $id,
+            'foreign_model' => ucfirst($model),
+            'created' => $created
+        ];
+        $this->saveMockSyncIgnore($entry);
+        return $entry;
+    }
+
     protected function mockDirectoryEntryUser($fname, $lastname, $status, $dirCreated = null, $dirModified = null, $created = null, $modified = null)
     {
         if (!isset($dirCreated)) {
@@ -107,7 +117,7 @@ class DirectorySyncTestCase extends TestCase
     private function saveMockDirectoryEntry($data)
     {
         $entry = $this->action->DirectoryEntries->newEntity($data, [
-            'validate' => true,
+            'validate' => false,
             'accessibleFields' => [
                 'id' => true,
                 'foreign_model' => true,
@@ -128,5 +138,30 @@ class DirectorySyncTestCase extends TestCase
         $users = $this->action->getDirectory()->getUsers();
         $users[] = $user;
         $this->action->getDirectory()->setUsers($users);
+    }
+
+    private function saveMockSyncIgnore($data)
+    {
+        $ignore = $this->action->DirectoryEntries->DirectoryIgnore->newEntity($data, ['validate' => false]);
+        $this->action->DirectoryEntries->DirectoryIgnore->save($ignore, ['checkRules' => false]);
+    }
+
+    public function assertDirectoryEntryEmpty()
+    {
+        $de = $this->action->DirectoryEntries->find()->all()->toArray();
+        $this->assertEmpty($de, __('Directory Entries should be empty, {0} found', count($de)));
+    }
+
+    public function assertDirectoryIgnoreEmpty()
+    {
+        $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->all()->toArray();
+        $this->assertEmpty($di, __('Directory ignore list should be empty, {0} found', count($di)));
+    }
+
+    public function assertUserExist($id, $where = null)
+    {
+        $where['id'] = $id;
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $this->assertEquals(count($Users->find()->where($where)->all()->toArray()), 1);
     }
 }

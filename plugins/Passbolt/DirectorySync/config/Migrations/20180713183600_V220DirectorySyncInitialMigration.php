@@ -15,7 +15,7 @@
 // @codingStandardsIgnoreStart
 use Migrations\AbstractMigration;
 
-class V200DirectorySyncInitialMigration extends AbstractMigration
+class V220DirectorySyncInitialMigration extends AbstractMigration
 {
 
     protected function init() {
@@ -43,7 +43,7 @@ class V200DirectorySyncInitialMigration extends AbstractMigration
             ->addColumn('foreign_key', 'char', [
                 'default' => null,
                 'limit' => 36,
-                'null' => false,
+                'null' => true,
             ])
             ->addColumn('directory_name', 'string', [
                 'default' => null,

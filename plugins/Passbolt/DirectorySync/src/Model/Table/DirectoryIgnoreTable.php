@@ -16,29 +16,28 @@ namespace Passbolt\DirectorySync\Model\Table;
 
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * DirectoryEntries Model
+ * DirectoryIgnore Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $DirectoryIgnore
  *
- * @method DirectoryEntry get($primaryKey, $options = [])
- * @method DirectoryEntry newEntity($data = null, array $options = [])
- * @method DirectoryEntry[] newEntities(array $data, array $options = [])
- * @method DirectoryEntry|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method DirectoryEntry patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method DirectoryEntry[] patchEntities($entities, array $data, array $options = [])
- * @method DirectoryEntry findOrCreate($search, callable $callback = null, $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore newEntity($data = null, array $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore[] patchEntities($entities, array $data, array $options = [])
+ * @method \App\Model\Entity\DirectoryIgnore findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class DirectoryEntriesTable extends Table
+class DirectoryIgnore extends Table
 {
     use TableCleanupTrait;
     use UsersCleanupTrait;
@@ -53,33 +52,10 @@ class DirectoryEntriesTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('directory_entries');
+        $this->setTable('directory_ignore');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-
         $this->addBehavior('Timestamp');
-
-        $this->hasOne('DirectoryIgnore', [
-            'className' => 'DirectoryIgnore',
-            'bindingKey' => 'id',
-            'foreignKey' => 'id',
-            // Delete ignore entries on directory entry delete
-            'dependent' => true,
-        ]);
-
-        $this->hasOne('Users', [
-            'dependent' => false,
-            'className' => 'Users',
-            'bindingKey' => 'foreign_key',
-            'foreignKey' => 'id'
-        ]);
-
-//        $this->hasOne('Groups', [
-//            'className' => 'Groups',
-//            'bindingKey' => 'foreign_key',
-//            'foreignKey' => 'id'
-//        ]);
-
     }
 
     /**
@@ -93,16 +69,11 @@ class DirectoryEntriesTable extends Table
         $validator
             ->scalar('id')
             ->uuid('id')
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->scalar('foreign_key')
-            ->uuid('foreign_key')
-            ->allowEmpty('foreign_key');
+            ->requirePresence('id');
 
         $validator
             ->scalar('foreign_model')
-            ->requirePresence('foreign_model', 'create');
+            ->requirePresence('foreign_model');
 
         return $validator;
     }
@@ -119,19 +90,4 @@ class DirectoryEntriesTable extends Table
         return $rules;
     }
 
-    /**
-     * @param DirectoryEntry $entity
-     * @param $status
-     * @return bool
-     */
-    public function updateStatus(DirectoryEntry $entity, $status)
-    {
-        $entity = $this->get($entity->id);
-        $this->patchEntity($entity, ['status' => $status], [
-            'fieldList' => ['status'],
-            'accessibleFields' => ['status' => true],
-            'associated' => []
-        ]);
-        return $this->save($entity);
-    }
 }
