@@ -8,6 +8,20 @@ return [
                 // The default admin is the group manager that will be assigned to a newly created group.
                 // If not specified, the first admin user found will be used.
                 // 'defaultGroupAdminUser' => 'email@domain.com',
+                //
+                // Optional: disable one or more sync tasks
+                //'jobs' => [
+                //    'users' => [
+                //        'create' => true,
+                //        'update' => true,
+                //        'delete' => true,
+                //   ],
+                //    'groups' => [
+                //        'create' => true,
+                //        'update' => true,
+                //        'delete' => true,
+                //    ],
+                //],
                 'ldap' => [
                     //'general' => [
                     // Optional: When using the LdapManager and there are multiple domains configured,
