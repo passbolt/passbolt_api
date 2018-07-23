@@ -82,7 +82,7 @@ class TestDirectory implements DirectoryInterface
      * @param $groups
      */
     public function setGroups($groups) {
-        $this->users = $groups;
+        $this->groups = $groups;
     }
 
     /**

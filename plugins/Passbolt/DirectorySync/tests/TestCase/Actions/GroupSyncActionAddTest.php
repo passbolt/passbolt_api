@@ -21,26 +21,26 @@ use Passbolt\DirectorySync\Actions\GroupSyncAction;
 
 class GroupSyncActionTest extends DirectorySyncTestCase
 {
+    public $fixtures = [
+        'app.Base/users', 'app.Base/groups', 'app.Base/secrets',  'app.Base/roles',
+        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
+        'app.Base/favorites', 'app.Base/email_queue',
+        'plugin.passbolt/directorySync.base/directoryEntries',
+        'plugin.passbolt/directorySync.base/directoryIgnore',
+    ];
+
     /**
      * Scenario: Group was added in passbolt and not in ldap
      * Expected result: Do nothing
      */
-    public function testGroupSync_Case00_02()
+    public function testGroupSync_Case00_02_Null_Null_Ok()
     {
-        // Ada (active), Ruth (inactive) and Sofia (deleted) are in passbolt
         $this->action = new GroupSyncAction();
-        $groupIds = [
-            UuidFactory::uuid('group.id.operations'),
-        ];
-        $users = $this->action->Groups->find()->where(['id IN' => $groupIds])->all()->toArray();
-//        $this->assertEquals(count($users), 3);
-//
-//        // Directory data is empty
-//        $this->action->getDirectory()->setUsers([]);
-//
-//        // Nothing should happen
-//        $this->action->execute();
-//        $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
-//        $this->assertEquals(count($syncEntry), 0);
+        $this->action->getDirectory()->setGroups([]);
+
+        // Nothing should happen
+        $this->action->execute();
+        $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
+        $this->assertEquals(count($syncEntry), 0);
     }
 }

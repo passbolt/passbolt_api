@@ -14,6 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Model\Table;
 
+use App\Error\Exception\ValidationException;
+use Cake\Network\Exception\InternalErrorException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
@@ -120,6 +122,26 @@ class DirectoryEntriesTable extends Table
     }
 
     /**
+     * Return a DirectoryEntry entity.
+     * @param array $data
+     *
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
+     */
+    public function buildEntity(array $data) {
+        return $this->newEntity($data, [
+            'accessibleFields' => [
+                'id' => true,
+                'foreign_model' => true,
+                'foreign_key' => true,
+                'directory_name' => true,
+                'directory_created' => true,
+                'directory_modified' => true,
+                'status' => true,
+            ],
+        ]);
+    }
+
+    /**
      * @param DirectoryEntry $entity
      * @param $status
      * @return bool
@@ -133,5 +155,34 @@ class DirectoryEntriesTable extends Table
             'associated' => []
         ]);
         return $this->save($entity);
+    }
+
+    /**
+     * Create a new directory entry.
+     * @param $data
+     *
+     * @return bool|DirectoryEntry
+     */
+    public function create($data)
+    {
+        // Check validation rules.
+        $directoryEntry = $this->buildEntity($data);
+        if (!empty($directoryEntry ->getErrors())) {
+            throw new ValidationException(__('Could not validate directoryEntry.'), $directoryEntry, $this);
+        }
+
+        $de = $this->save($directoryEntry);
+
+        // Check for validation errors. (associated models too).
+        if (!empty($directoryEntry->getErrors())) {
+            throw new ValidationException(__('Could not validate directoryEntry data.'), $directoryEntry, $this);
+        }
+
+        // Check for errors while saving.
+        if (!$de) {
+            throw new InternalErrorException(__('The directoryEntry could not be saved.'));
+        }
+
+        return $de;
     }
 }
