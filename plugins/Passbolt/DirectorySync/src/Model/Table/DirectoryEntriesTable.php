@@ -60,11 +60,11 @@ class DirectoryEntriesTable extends Table
             'foreignKey' => 'id'
         ]);
 
-//        $this->hasOne('Groups', [
-//            'className' => 'Groups',
-//            'bindingKey' => 'foreign_key',
-//            'foreignKey' => 'id'
-//        ]);
+        $this->hasOne('Groups', [
+            'className' => 'Groups',
+            'bindingKey' => 'foreign_key',
+            'foreignKey' => 'id'
+        ]);
 
     }
 
