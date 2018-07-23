@@ -17,11 +17,14 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
+use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
+use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncActionDeleteTest extends DirectorySyncTestCase
 {
+    use AssertUsersTrait;
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/secrets',
@@ -41,7 +44,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case00_03_Null_Null_Any()
+    public function testDirectorySyncUserDelete_Case00_03_Null_Null_Any()
     {
         $this->action = new UserSyncAction();
         $this->action->getDirectory()->setUsers([]);
@@ -62,7 +65,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case04_Null_Null_Ignore()
+    public function testDirectorySyncUserDelete_Case04_Null_Null_Ignore()
     {
         $this->action = new UserSyncAction();
         $this->action->getDirectory()->setUsers([]);
@@ -84,13 +87,13 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case05_07_Null_Any_Null()
+    public function testDirectorySyncUserDelete_Case05_07_Null_Any_Null()
     {
         $this->action = new UserSyncAction();
         $this->action->getDirectory()->setUsers([]);
         $this->mockDirectoryEntryUser('not', 'present', DirectoryEntry::STATUS_SUCCESS);
-        $this->mockDirectoryEntryUser('also', 'absent', DirectoryEntry::STATUS_ERROR);
-        $this->mockDirectoryEntryUser('mia', 'mia', DirectoryEntry::STATUS_ERROR);
+        $this->mockDirectoryEntryUser('also', 'absent', SyncAction::ERROR);
+        $this->mockDirectoryEntryUser('mia', 'mia', SyncAction::ERROR);
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
         $this->action->execute();
         $this->assertDirectoryEntryEmpty();
@@ -105,14 +108,16 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case09_User_deletable_Retry_Success()
+    public function testDirectorySyncUserDelete_Case09_User_deletable_Retry_Success()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryUserData('frances', 'allen', 'frances@passbolt.com');
-        $this->mockDirectoryEntryUser('frances', 'allen', DirectoryEntry::STATUS_ERROR);
-        $this->action->execute();
+        $this->mockDirectoryEntryUser('frances', 'allen', SyncAction::ERROR);
+        $reports = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::SUCCESS);
     }
 
     /**
@@ -123,14 +128,16 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case10_User_Not_deletable_Retry_Error()
+    public function testDirectorySyncUserDelete_Case10_User_Not_deletable_Retry_Error()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com');
-        $this->mockDirectoryEntryUser('ada', 'lovelace', DirectoryEntry::STATUS_ERROR);
-        $this->action->execute();
+        $this->mockDirectoryEntryUser('ada', 'lovelace', SyncAction::ERROR);
+        $reports = $this->action->execute();
         $this->assertDirectoryEntryEmpty();
         $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::ERROR);
     }
 
     /**
@@ -141,13 +148,15 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case11_User_Not_deletable()
+    public function testDirectorySyncUserDelete_Case11_User_Not_deletable()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com');
         $this->mockDirectoryEntryUser('ada', 'lovelace', DirectoryEntry::STATUS_SUCCESS);
-        $this->action->execute();
-        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_ERROR);
+        $reports = $this->action->execute();
+        $this->assertOneDirectoryEntry(SyncAction::ERROR);
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::ERROR);
     }
 
     /**
@@ -158,7 +167,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case12_User_deletable()
+    public function testDirectorySyncUserDelete_Case12_User_deletable()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryUserData('frances', 'allen', 'frances@passbolt.com');
@@ -177,7 +186,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case13_User_deletable_No_Delete_Job()
+    public function testDirectorySyncUserDelete_Case13_User_deletable_No_Delete_Job()
     {
         Configure::write('passbolt.plugins.directorySync.jobs.users.delete', false);
         $this->action = new UserSyncAction();
@@ -196,7 +205,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case14_Null_Ignore_Inactive()
+    public function testDirectorySyncUserDelete_Case14_Null_Ignore_Inactive()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), 'DirectoryEntry');
@@ -214,10 +223,10 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case15_Null_Error_Inactive()
+    public function testDirectorySyncUserDelete_Case15_Null_Error_Inactive()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser('ruth', 'teitelbaum', DirectoryEntry::STATUS_ERROR);
+        $this->mockDirectoryEntryUser('ruth', 'teitelbaum', SyncAction::ERROR);
         $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => true, 'active' => false]);
         $this->assertDirectoryEntryEmpty();
@@ -231,7 +240,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case16_Null_Success_Inactive()
+    public function testDirectorySyncUserDelete_Case16_Null_Success_Inactive()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryEntryUser('ruth', 'teitelbaum', DirectoryEntry::STATUS_SUCCESS);
@@ -248,7 +257,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case17_Null_Ignore_Deleted()
+    public function testDirectorySyncUserDelete_Case17_Null_Ignore_Deleted()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
@@ -266,10 +275,10 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case18_Null_Error_Deleted()
+    public function testDirectorySyncUserDelete_Case18_Null_Error_Deleted()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', DirectoryEntry::STATUS_ERROR);
+        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', SyncAction::ERROR);
         $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
@@ -283,7 +292,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case19_Null_Success_Deleted()
+    public function testDirectorySyncUserDelete_Case19_Null_Success_Deleted()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', DirectoryEntry::STATUS_SUCCESS);
@@ -300,11 +309,11 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case20_Null_Success_Ignore()
+    public function testDirectorySyncUserDelete_Case20_Null_Success_Ignore()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), 'User');
-        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', DirectoryEntry::STATUS_ERROR);
+        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', SyncAction::ERROR);
         $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
@@ -318,7 +327,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case21_Null_Ignore_Ignore()
+    public function testDirectorySyncUserDelete_Case21_Null_Ignore_Ignore()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
@@ -332,7 +341,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), 'User');
-        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', DirectoryEntry::STATUS_ERROR);
+        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', SyncAction::ERROR);
         $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
@@ -346,13 +355,15 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testUserSyncDelete_Case22_Null_Error_Ignore()
+    public function testDirectorySyncUserDelete_Case22_Null_Error_Ignore()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), 'User');
-        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', DirectoryEntry::STATUS_ERROR);
-        $this->action->execute();
+        $this->mockDirectoryEntryUser('sofia', 'kovalevskaya', SyncAction::ERROR);
+        $reports = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::IGNORE);
     }
 }

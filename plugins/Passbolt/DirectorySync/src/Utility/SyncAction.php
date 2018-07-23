@@ -12,9 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Actions;
+namespace Passbolt\DirectorySync\Utility;
 
-use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -24,7 +23,18 @@ use Cake\ORM\TableRegistry;
 class SyncAction
 {
     protected $directory;
+    public $summary;
     public $DirectoryEntries;
+
+    const CREATE = 'create';
+    const DELETE = 'delete';
+    const UPDATE = 'update';
+    const SUCCESS = 'success';
+    const ERROR = 'error';
+    const IGNORE = 'ignore';
+    const GROUPS = 'Groups';
+    const USERS = 'Users';
+    const MEMBERS = 'GroupsUsers';
 
     /**
      * SyncAction constructor.
@@ -34,6 +44,7 @@ class SyncAction
     {
         $this->directory = DirectoryFactory::get();
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
+        $this->summary = [];
     }
 
     /**
@@ -42,5 +53,25 @@ class SyncAction
     public function getDirectory()
     {
         return $this->directory;
+    }
+
+    /**
+     * Report back on a sync action
+     *
+     * @param ActionReport $report
+     */
+    public function addReport(ActionReport $report)
+    {
+        $this->summary[] = $report;
+    }
+
+    /**
+     * Get the summary of all action reports
+     *
+     * @return array
+     */
+    public function getSummary()
+    {
+        return $this->summary;
     }
 }

@@ -19,6 +19,8 @@ use Cake\ORM\TableRegistry;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncAction extends SyncAction
 {
@@ -43,7 +45,19 @@ class UserSyncAction extends SyncAction
         $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('DirectoryIgnore');
         $this->directoryData = $this->directory->getUsers();
 
-        // users to ignore
+    }
+
+    /**
+     * Things to do after the constructor and before the sync job
+     */
+    public function beforeExecute()
+    {
+        $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
+            ->select(['id'])
+            ->where(['foreign_model' => 'DirectoryEntry'])
+            ->all()
+            ->toArray(), '{n}.id');
+
         $this->usersToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
             ->where(['foreign_model' => 'User'])
@@ -52,114 +66,124 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     *
+     * Perform a user sync
+     * - Delete all users that can be deleted
+     * - Create all users that can be created
+     * - Generate report for admin
      */
     public function execute() {
+        $this->beforeExecute();
         if (Configure::read('passbolt.plugins.directorySync.jobs.users.delete')) {
-            $this->processDeletedEntries();
+            $this->processEntriesToDelete();
         }
-        return;
-
-        // Find all the entries to ignore
-        $ignoredDirectoryEntryIds = Hash::extract($this->DirectoryIgnore->find()
-            ->select(['id'])
-            ->where(['foreign_model' => 'DirectoryEntry'])
-            ->all()
-            ->toArray(), '{n}.id');
-
-        // Find all the users to ignore
-
-
-        // Make list of entries that are not ignored
-        $notIgnoredEntries = [];
-        foreach ($directoryIds as $i => $id) {
-            if (!in_array($id, $ignoredDirectoryEntryIds)) {
-                $notIgnoredEntries[] = $id;
-            }
+        if (Configure::read('passbolt.plugins.directorySync.jobs.users.create')) {
+            $this->processEntriesToCreate();
         }
-
-        // Find all the entries that are and are not already synced
-        $syncedEntries = $this->DirectoryEntries->find()
-            ->select(['id', 'status'])
-            ->where(['DirectoryEntries.id IN' => $notIgnoredEntries])
-            ->contain(['Users'])
-            ->all()
-            ->toArray();
-        $syncedEntriesId = Hash::extract($syncedEntries, '{n}.id');
-        $notSyncedEntriesId = [];
-        foreach ($syncedEntriesId as $i => $id) {
-            if(!in_array($id, $syncedEntries)) {
-                $notSyncedEntriesId[] = $id;
-            }
-        }
-
-        foreach ($directoryEntries as $i => $entry) {
-            if (in_array($ignoredDirectoryEntryIds, $entry['id'])) {
-                // Nothing to do
-
-            }
-            if (in_array($syncedEntriesId, $entry['id'])) {
-
-            }
-        }
+        return $this->getSummary();
     }
 
-    function processDeletedEntries()
+    function processEntriesToDelete()
     {
         // Find all the directory entries previously stored
         // that are not in the directory anymore
         $query = $this->DirectoryEntries->find()
             ->select()
-            ->contain(['Users', 'DirectoryIgnore']);
+            ->contain(['Users']);
         if (!empty($this->entries)) {
             $directoryIds = Hash::extract($this->directoryData, '{n}.id');
             $query = $query->where(['DirectoryEntries.id NOT IN' => $directoryIds]);
         }
         $result = $query->all();
         foreach ($result as $entry) {
-            if (isset($entry->directory_ignore)) {
-                // The directory entry is marked as to be ignored
+            if (in_array($entry->id, $this->entriesToIgnore) ||
+                $entry->user === null || in_array($entry->user->id, $this->usersToIgnore) || $entry->user->deleted) {
+                // The directory entry is marked as to be ignored or
+                // The user was already hard deleted or
+                // The user was marked as to be ignored or
+                // The user was already soft deleted
                 $this->DirectoryEntries->delete($entry);
-                continue;
-            }
-            if ($entry->user === null) {
-                // The user was hard deleted in passbolt and ldap
-                $this->DirectoryEntries->delete($entry);
-                continue;
-            }
-            if (in_array($entry->user->id, $this->usersToIgnore)) {
-                // The user was marked as to be ignored
-                $this->DirectoryEntries->delete($entry);
-                continue;
-            }
-            if ($entry->user->deleted) {
-                // The user is already deleted
-                $this->DirectoryEntries->delete($entry);
+                $this->addReport(new ActionReport(
+                    self::USERS, self::DELETE, self::IGNORE,
+                    $entry
+                ));
                 continue;
             }
             if (!$this->Users->checkRules($entry->user, RulesChecker::DELETE)) {
                 // The user cannot be deleted
-                // if the last try was already an error
-                if ($entry->status === DirectoryEntry::STATUS_ERROR) {
+                if ($entry->status === self::ERROR) {
+                    // if the last try was already an error
                     // Do not retry more
                     $this->DirectoryEntries->delete($entry);
                 } else {
-                    $this->DirectoryEntries->updateStatus($entry, DirectoryEntry::STATUS_ERROR);
+                    // Mark entry as error to allow future retry
+                    $this->DirectoryEntries->updateStatus($entry, self::ERROR);
                 }
-                // TODO tell admin to handle delete manually
+                $this->addReport(new ActionReport(
+                    self::USERS, self::DELETE, self::ERROR,
+                    $entry
+                ));
                 continue;
             }
 
             // User can be deleted
             $success = $this->Users->softDelete($entry->user);
             if (!$success) {
-                // TODO tell admin to handle delete manually
-                $this->DirectoryEntries->updateStatus($entry, DirectoryEntry::STATUS_ERROR);
+                $this->DirectoryEntries->updateStatus($entry, self::ERROR);
+                $this->addReport(new ActionReport(
+                    self::USERS, self::DELETE, self::ERROR,
+                    $entry
+                ));
             } else {
-                // TODO Tell admin user was deleted
                 $this->DirectoryEntries->delete($entry);
+                $this->addReport(new ActionReport(
+                    self::USERS, self::DELETE, self::SUCCESS,
+                    $entry
+                ));
             }
 
+        }
+    }
+
+    function processEntriesToCreate()
+    {
+        if (empty($this->directoryData)) {
+            // Directory is empty, nothing to add
+            return;
+        }
+        foreach ($this->directoryData as $entry) {
+            // If the entry is marked as to be ignored
+            if (in_array($entry->id, $this->entriesToIgnore)) {
+                // Remove directory entry if entry should be ignored
+                // Keep reference in ignore table
+                $this->DirectoryEntries->delete($entry);
+                $this->addReport(new ActionReport(
+                    self::USERS, self::CREATE, self::IGNORE,
+                    $entry
+                ));
+                continue;
+            }
+
+            // Find if directory entries exist
+            $entryExist = $this->DirectoryEntries->find()
+                ->select()
+                ->contain(['Users'])
+                ->where(['DirectoryEntries.id IN' => $entry->id])
+                ->all()
+                ->toArray();
+
+            // the directory entry is not already present in passbolt
+            if (!isset($entryExist) || empty($entryExist)) {
+                // check if the user already exist in passbolt
+                $userExist = $this->Users->find()
+                    ->select(['id', 'active', 'deleted'])
+                    ->where(['username' => $entry->username])
+                    ->all()
+                    ->toArray();
+
+                if (!isset($userExist) || empty($userExist)) {
+
+                }
+             }
         }
     }
 }
