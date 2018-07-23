@@ -39,7 +39,10 @@ class GroupSyncActionTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
 
         // Nothing should happen
-        $this->action->execute();
+        $res = $this->action->execute();
+        $this->assertEmpty($res['create']);
+        $this->assertEmpty($res['error']);
+
         $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
         $this->assertEquals(count($syncEntry), 0);
     }

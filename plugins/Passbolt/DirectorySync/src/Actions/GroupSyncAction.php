@@ -118,7 +118,10 @@ class GroupSyncAction extends SyncAction
 
         $added = $this->processCreatedEntries();
 
-        return true;
+        return [
+            'create' => $added['added'],
+            'error' => $added['error'],
+        ];
     }
 
     public function processCreatedEntries() {
