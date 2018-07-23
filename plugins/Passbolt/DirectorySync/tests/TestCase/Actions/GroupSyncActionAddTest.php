@@ -32,8 +32,12 @@ class GroupSyncActionTest extends DirectorySyncTestCase
     /**
      * Scenario: Group was added in passbolt and not in ldap
      * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
      */
-    public function testGroupSync_Case00_02_Null_Null_Ok()
+    public function testDirectorySyncGroup_Case00_02_Null_Null_Ok()
     {
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
