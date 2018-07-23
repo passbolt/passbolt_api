@@ -19,6 +19,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\I18n\FrozenTime;
+use Cake\Utility\Hash;
 
 class DirectorySyncTestCase extends TestCase
 {
@@ -152,6 +153,13 @@ class DirectorySyncTestCase extends TestCase
         $this->assertEmpty($de, __('Directory Entries should be empty, {0} found', count($de)));
     }
 
+    public function assertOneDirectoryEntry($status)
+    {
+        $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
+        $this->assertEquals(count($syncEntry), 1);
+        $this->assertEquals($syncEntry[0]['status'], $status);
+    }
+
     public function assertDirectoryIgnoreEmpty()
     {
         $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->all()->toArray();
@@ -162,6 +170,7 @@ class DirectorySyncTestCase extends TestCase
     {
         $where['id'] = $id;
         $Users = TableRegistry::getTableLocator()->get('Users');
-        $this->assertEquals(count($Users->find()->where($where)->all()->toArray()), 1);
+        $results = $Users->find()->where($where)->all()->toArray();
+        $this->assertEquals(count($results), 1);
     }
 }

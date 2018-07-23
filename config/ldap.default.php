@@ -4,7 +4,21 @@ return [
         'plugins' => [
             'directorySync' => [
                 // The default admin is the group manager that will be assigned to a newly created group.
-                //'adminUser' => 'ada@passbolt.com',
+                //'adminUser' => 'your@email.com',
+                //
+                // Optional: disable one or more sync tasks
+                //'jobs' => [
+                //    'users' => [
+                //        'create' => true,
+                //        'update' => true,
+                //        'delete' => true,
+                //   ],
+                //    'groups' => [
+                //        'create' => true,
+                //        'update' => true,
+                //        'delete' => true,
+                //    ],
+                //],
                 'ldap' => [
                     //'general' => [
                     // Optional: When using the LdapManager and there are multiple domains configured,

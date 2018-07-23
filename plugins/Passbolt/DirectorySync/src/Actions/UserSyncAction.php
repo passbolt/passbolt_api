@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Actions;
 
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
@@ -54,8 +55,9 @@ class UserSyncAction extends SyncAction
      *
      */
     public function execute() {
-        // Process entries not in directory
-        $this->processDeletedEntries();
+        if (Configure::read('passbolt.plugins.directorySync.jobs.users.delete')) {
+            $this->processDeletedEntries();
+        }
         return;
 
         // Find all the entries to ignore
@@ -115,18 +117,23 @@ class UserSyncAction extends SyncAction
         }
         $result = $query->all();
         foreach ($result as $entry) {
+            if (isset($entry->directory_ignore)) {
+                // The directory entry is marked as to be ignored
+                $this->DirectoryEntries->delete($entry);
+                continue;
+            }
             if ($entry->user === null) {
                 // The user was hard deleted in passbolt and ldap
                 $this->DirectoryEntries->delete($entry);
                 continue;
             }
             if (in_array($entry->user->id, $this->usersToIgnore)) {
-                // The user was marked as to be ignored, do nothing
+                // The user was marked as to be ignored
                 $this->DirectoryEntries->delete($entry);
                 continue;
             }
             if ($entry->user->deleted) {
-                // The user is already deleted, do nothing
+                // The user is already deleted
                 $this->DirectoryEntries->delete($entry);
                 continue;
             }
