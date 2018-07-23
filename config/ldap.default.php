@@ -3,7 +3,7 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
-                // The user that will perform operations for the directory.
+                // The admin user that will perform operations for the directory.
                 // 'defaultUser' => 'email@domain.com',
                 // The default admin is the group manager that will be assigned to a newly created group.
                 // If not specified, the first admin user found will be used.
