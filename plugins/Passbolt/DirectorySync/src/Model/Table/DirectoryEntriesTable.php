@@ -15,13 +15,15 @@
 namespace Passbolt\DirectorySync\Model\Table;
 
 use App\Error\Exception\ValidationException;
-use Cake\Network\Exception\InternalErrorException;
+use App\Model\Entity\User;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 
 /**
  * DirectoryEntries Model
@@ -142,6 +144,8 @@ class DirectoryEntriesTable extends Table
     }
 
     /**
+     * Update the status
+     *
      * @param DirectoryEntry $entity
      * @param $status
      * @return bool
@@ -158,9 +162,27 @@ class DirectoryEntriesTable extends Table
     }
 
     /**
-     * Create a new directory entry.
-     * @param $data
+     * Update the user id
      *
+     * @param DirectoryEntry $entity
+     * @param string $userId uuid
+     * @return bool
+     */
+    public function updateUserId(DirectoryEntry $entity, $userId)
+    {
+        $entity = $this->get($entity->id);
+        $this->patchEntity($entity, ['user_id' => $userId], [
+            'fieldList' => ['user_id'],
+            'accessibleFields' => ['user_id' => true],
+            'associated' => []
+        ]);
+        return $this->save($entity);
+    }
+
+    /**
+     * Create a new directory entry.
+     *
+     * @param $data
      * @return bool|DirectoryEntry
      */
     public function create($data)
@@ -184,5 +206,48 @@ class DirectoryEntriesTable extends Table
         }
 
         return $de;
+    }
+
+    /**
+     * Update a directory entries status if it exist or create one
+     *
+     * @param $data
+     * @param $status
+     * @param null $entry
+     * @return Entity
+     */
+    public function updateStatusOrCreate(array $data, string $status, string $model, DirectoryEntry $entry = null)
+    {
+        if (isset($entry)) {
+            if ($entry->status !== $status) {
+                $entry = $this->updateStatus($entry, $status);
+            }
+            return $entry;
+        } else {
+            $entry = $data;
+            //unset($deData['user']);
+            $entry['foreign_model'] = $model;
+            $entry['foreign_key'] = null;
+            $entry['status'] = $status;
+            return $this->DirectoryEntries->create($entry);
+        }
+    }
+
+    /**
+     * Find all the directory entries previously stored
+     * that are not in the directory anymore
+     *
+     * @return string $model name
+     * @return mixed
+     */
+    public function lookupEntriesForDeletion(string $model, array $directoryIds = null)
+    {
+        $query = $this->find()
+            ->select()
+            ->contain([$model]);
+        if (!empty($this->entries)) {
+            $query = $query->where(['DirectoryEntries.id NOT IN' => $directoryIds]);
+        }
+        return $query->all();
     }
 }

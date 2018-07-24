@@ -15,11 +15,13 @@
 namespace Passbolt\DirectorySync\Actions;
 
 use Cake\Core\Configure;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
+use Passbolt\DirectorySync\Actions\Traits\UserSyncDeleteTrait;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncAction extends SyncAction
@@ -34,6 +36,9 @@ class UserSyncAction extends SyncAction
      */
     public $directoryData;
 
+    use UserSyncDeleteTrait;
+    use UserSyncAddTrait;
+
     /**
      * UserSyncAction constructor.
      *
@@ -42,9 +47,7 @@ class UserSyncAction extends SyncAction
     public function __construct() {
         parent::__construct();
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('DirectoryIgnore');
         $this->directoryData = $this->directory->getUsers();
-
     }
 
     /**
@@ -82,108 +85,121 @@ class UserSyncAction extends SyncAction
         return $this->getSummary();
     }
 
+    /**
+     * Handle the user deletion job
+     *
+     * Find all the directory entries that have been deleted and try to delete the associated users
+     * If they are not already deleted, or marked as to be ignored
+     *
+     * @return void
+     */
     function processEntriesToDelete()
     {
-        // Find all the directory entries previously stored
-        // that are not in the directory anymore
-        $query = $this->DirectoryEntries->find()
-            ->select()
-            ->contain(['Users']);
-        if (!empty($this->entries)) {
-            $directoryIds = Hash::extract($this->directoryData, '{n}.id');
-            $query = $query->where(['DirectoryEntries.id NOT IN' => $directoryIds]);
-        }
-        $result = $query->all();
-        foreach ($result as $entry) {
-            if (in_array($entry->id, $this->entriesToIgnore) ||
-                $entry->user === null || in_array($entry->user->id, $this->usersToIgnore) || $entry->user->deleted) {
-                // The directory entry is marked as to be ignored or
-                // The user was already hard deleted or
-                // The user was marked as to be ignored or
-                // The user was already soft deleted
-                $this->DirectoryEntries->delete($entry);
-                $this->addReport(new ActionReport(
-                    self::USERS, self::DELETE, self::IGNORE,
-                    $entry
-                ));
+        $entriesId = Hash::extract($this->directoryData, '{n}.id');
+        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::USERS, $entriesId);
+        foreach ($entries as $entry) {
+            // The directory entry or user is marked as to be ignored
+            if (in_array($entry->id, $this->entriesToIgnore) || ($entry->user !== null && in_array($entry->user->id, $this->usersToIgnore))) {
+                $this->handleDeletedIgnoredEntry($entry);
                 continue;
             }
+
+            // The user was already hard or soft deleted
+            if ($entry->user === null || $entry->user->deleted) {
+                $this->handleDeletedEntry($entry);
+                continue;
+            }
+
+            // The user cannot be deleted (for example: it is the sole owner of shared passwords)
             if (!$this->Users->checkRules($entry->user, RulesChecker::DELETE)) {
-                // The user cannot be deleted
-                if ($entry->status === self::ERROR) {
-                    // if the last try was already an error
-                    // Do not retry more
-                    $this->DirectoryEntries->delete($entry);
-                } else {
-                    // Mark entry as error to allow future retry
-                    $this->DirectoryEntries->updateStatus($entry, self::ERROR);
-                }
-                $this->addReport(new ActionReport(
-                    self::USERS, self::DELETE, self::ERROR,
-                    $entry
-                ));
+                $this->handleNotPossibleDelete($entry);
                 continue;
             }
 
             // User can be deleted
-            $success = $this->Users->softDelete($entry->user);
-            if (!$success) {
-                $this->DirectoryEntries->updateStatus($entry, self::ERROR);
-                $this->addReport(new ActionReport(
-                    self::USERS, self::DELETE, self::ERROR,
-                    $entry
-                ));
-            } else {
-                $this->DirectoryEntries->delete($entry);
-                $this->addReport(new ActionReport(
-                    self::USERS, self::DELETE, self::SUCCESS,
-                    $entry
-                ));
+            try {
+                if (!$this->Users->softDelete($entry->user)) {
+                    $this->handleSuccessfulDelete($entry);
+                } else {
+                    $this->handleErrorDelete($entry);
+                }
+            } catch(InternalErrorException $exception) {
+                // TODO discuss format ErrorReport() ?
+                $this->handleErrorDelete($entry);
             }
-
         }
     }
 
+    /**
+     * Handle the user creation job
+     *
+     * @return void
+     */
     function processEntriesToCreate()
     {
         if (empty($this->directoryData)) {
             // Directory is empty, nothing to add
             return;
         }
-        foreach ($this->directoryData as $entry) {
-            // If the entry is marked as to be ignored
-            if (in_array($entry->id, $this->entriesToIgnore)) {
-                // Remove directory entry if entry should be ignored
-                // Keep reference in ignore table
-                $this->DirectoryEntries->delete($entry);
-                $this->addReport(new ActionReport(
-                    self::USERS, self::CREATE, self::IGNORE,
-                    $entry
-                ));
+        foreach ($this->directoryData as $data) {
+            // Try to find directory entries and user
+            $entry = $this->getEntryFromData($data);
+            $existingUser = $this->getUserFromData($data);
+
+            // If directory entry or user are marked as to be ignored
+            if (in_array($data->id, $this->entriesToIgnore) ||
+                (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore))) {
+                $this->handleAddIgnore($data, $entry);
                 continue;
             }
 
-            // Find if directory entries exist
-            $entryExist = $this->DirectoryEntries->find()
-                ->select()
-                ->contain(['Users'])
-                ->where(['DirectoryEntries.id IN' => $entry->id])
-                ->all()
-                ->toArray();
+            // If the user does not exist
+            // Or it was deleted and then created again in the directory
+            if (!isset($existingUser) || ($existingUser->deleted && ($existingUser->modified < $data->created))) {
+                $this->handleAdd($data, $entry);
+                continue;
+            }
 
-            // the directory entry is not already present in passbolt
-            if (!isset($entryExist) || empty($entryExist)) {
-                // check if the user already exist in passbolt
-                $userExist = $this->Users->find()
-                    ->select(['id', 'active', 'deleted'])
-                    ->where(['username' => $entry->username])
-                    ->all()
-                    ->toArray();
+            // If the user already exist
+            if (isset($existingUser) && !$existingUser->deleted) {
+                $this->handleAddExist($data, $entry, $existingUser);
+                continue;
+            }
 
-                if (!isset($userExist) || empty($userExist)) {
-
-                }
-             }
+            // The user already exist and is deleted
+            //   and the creation date in ldap is prior the deletion in passbolt
+            // Delete the old directory entry and ignore
+            $this->handleAddDeleted($entry, $existingUser);
         }
+    }
+
+    /**
+     * @param $data
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    protected function getUserFromData($data) {
+        $existingUser = $this->Users->find()
+            ->select(['id', 'active', 'deleted'])
+            ->where(['username' => $data->user->username])
+            ->order(['Users.modified' => 'DESC'])
+            ->first();
+        if (!isset($existingUser) || empty($existingUser)) {
+            $existingUser = null;
+        }
+        return $existingUser;
+    }
+
+    /**
+     * @param $data
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    protected function getEntryFromData($data)
+    {
+        $entry = null;
+        try {
+            $entry = $this->DirectoryEntries->get($data->id, ['contain' => ['Users']]);
+        } catch(NotFoundException $exception) {
+        }
+        return $entry;
     }
 }

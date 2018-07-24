@@ -33,7 +33,7 @@ class ActionReport
      * @param string $model Users, Groups, GroupsUsers
      * @param string $action SyncAction::CREATE, SyncAction::DELETE, SyncAction::UPDATE
      * @param string $status SyncAction::SUCCESS, SyncAction::ERROR, SyncAction::IGNORE
-     * @param object $data Entity, Exception
+     * @param mixed $data Array or Entity, Exception
      * @throws InvalidArgumentException
      */
     public function __construct(string $model, string $action, string $status, $data)
@@ -84,7 +84,7 @@ class ActionReport
      */
     static public function isValidStatus(string $status)
     {
-        return ($status === SyncAction::SUCCESS || $status === SyncAction::ERROR || $status === SyncAction::IGNORE);
+        return ($status === SyncAction::SUCCESS || $status === SyncAction::ERROR || $status === SyncAction::IGNORE || $status === SyncAction::SYNC);
     }
 
     /**

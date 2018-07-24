@@ -16,7 +16,6 @@ namespace Passbolt\DirectorySync\Model\Table;
 
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -27,17 +26,17 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
  *
- * @method \App\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
- * @method \App\Model\Entity\DirectoryIgnore newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\DirectoryIgnore|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\DirectoryIgnore[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\DirectoryIgnore findOrCreate($search, callable $callback = null, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity($data = null, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] patchEntities($entities, array $data, array $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class DirectoryIgnore extends Table
+class DirectoryIgnoreTable extends Table
 {
     use TableCleanupTrait;
     use UsersCleanupTrait;
@@ -90,4 +89,18 @@ class DirectoryIgnore extends Table
         return $rules;
     }
 
+    /**
+     * @param $data
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
+     */
+    public function create($data)
+    {
+        $entity = $this->newEntity($data, [
+            'accessibleFields' => [
+                'id' => true,
+                'foreign_model' => true
+            ]
+        ]);
+        return $this->save($entity);
+    }
 }

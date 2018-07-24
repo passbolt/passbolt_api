@@ -25,13 +25,17 @@ class SyncAction
     protected $directory;
     public $summary;
     public $DirectoryEntries;
+    public $DirectoryIgnore;
 
     const CREATE = 'create';
     const DELETE = 'delete';
     const UPDATE = 'update';
+
     const SUCCESS = 'success';
     const ERROR = 'error';
     const IGNORE = 'ignore';
+    const SYNC = 'synced';
+
     const GROUPS = 'Groups';
     const USERS = 'Users';
     const MEMBERS = 'GroupsUsers';
@@ -44,6 +48,7 @@ class SyncAction
     {
         $this->directory = DirectoryFactory::get();
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
+        $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
         $this->summary = [];
     }
 
@@ -66,7 +71,7 @@ class SyncAction
     }
 
     /**
-     * Get the summary of all action reports
+     * Get the summary of all reports
      *
      * @return array
      */
