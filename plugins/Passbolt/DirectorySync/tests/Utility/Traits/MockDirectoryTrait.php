@@ -24,7 +24,71 @@ trait MockDirectoryTrait
         return $entry;
     }
 
-    protected function mockDirectoryEntryUser($fname, $lastname, $status, $dirCreated = null, $dirModified = null, $created = null, $modified = null)
+    protected function mockDirectoryEntryUser($data, $status) {
+        if (!isset($data['fname'])) {
+            throw new InvalidArgumentException('A mocked directory entry should have at least a first name');
+        }
+        if (!isset($data['lname'])) {
+            $data['lname'] = null;
+        }
+        if (!isset($data['dirCreated'])) {
+            $data['dirCreated'] = '2018-07-20 06:31:57';
+        }
+        if (!isset($data['dirModified'])) {
+            $data['dirModified'] = '2018-07-20 06:31:57';
+        }
+        if (!isset($data['created'])) {
+            $data['created'] = '2018-07-20 06:31:57';
+        }
+        if (!isset($data['modified'])) {
+            $data['modified'] = '2018-07-20 06:31:57';
+        }
+        if (!isset($data['dn'])) {
+            $data['dn'] = 'CN='. ucfirst($data['fname']);
+            if (isset($data['lname'])) {
+                $data['dn'] .= ' ' . ucfirst($data['lname']);
+            }
+            $data['dn'] .= ',OU=PassboltUsers,DC=passbolt,DC=local';
+        }
+        if (!isset($data['foreign_key'])) {
+            $data['foreign_key'] = UuidFactory::uuid('user.id.' . $data['fname']);
+        }
+        if ($data['foreign_key'] === 'null') {
+            $data['foreign_key'] = null;
+        }
+        $entry = [
+            'id' => UuidFactory::uuid('ldap.user.id.' . $data['fname']),
+            'foreign_model' => 'Users',
+            'foreign_key' => $data['foreign_key'],
+            'directory_name' => $data['dn'],
+            'directory_created' => $data['dirCreated'],
+            'directory_modified' => $data['dirModified'],
+            'status' => $status,
+            'created' => $data['created'],
+            'modified' => $data['modified']
+        ];
+        $entry = $this->action->DirectoryEntries->newEntity($entry, [
+            'validate' => false,
+            'accessibleFields' => [
+                'id' => true,
+                'foreign_model' => true,
+                'foreign_key' => true,
+                'directory_name' => true,
+                'directory_created' => true,
+                'directory_modified' => true,
+                'status' => true,
+                'created' => true,
+                'modified' => true
+            ]
+        ]);
+        $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
+        if (!$save) {
+            throw new InvalidArgumentException('Could not save directory entry for mock');
+        }
+        return $entry;
+    }
+
+    protected function mockDirectoryEntryUser_old($fname, $lastname, $status, $dirCreated = null, $dirModified = null, $created = null, $modified = null)
     {
         if (!isset($dirCreated)) {
             $dirCreated = '2018-07-20 06:31:57';

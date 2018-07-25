@@ -11,7 +11,7 @@ trait AssertReportTrait
      */
     public function assertReportStatus(ActionReport $report, string $status)
     {
-        $this->assertEquals($report->getStatus(), $status);
+        $this->assertEquals($status, $report->getStatus());
     }
 
     /**
@@ -20,7 +20,7 @@ trait AssertReportTrait
      */
     public function assertReportModel(ActionReport $report, string $model)
     {
-        $this->assertEquals($report->getModel(), $model);
+        $this->assertEquals($model, $report->getModel());
     }
 
     /**
@@ -29,7 +29,7 @@ trait AssertReportTrait
      */
     public function assertReportAction(ActionReport $report, string $model)
     {
-        $this->assertEquals($report->getAction(), $model);
+        $this->assertEquals($model,$report->getAction());
     }
 
     /**

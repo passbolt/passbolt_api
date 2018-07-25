@@ -15,10 +15,7 @@
 namespace Passbolt\DirectorySync\Actions;
 
 use Cake\Core\Configure;
-use Cake\Datasource\Exception\InvalidPrimaryKeyException;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
@@ -64,7 +61,7 @@ class UserSyncAction extends SyncAction
 
         $this->usersToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
-            ->where(['foreign_model' => 'User'])
+            ->where(['foreign_model' => SyncAction::USERS])
             ->all()
             ->toArray(), '{n}.id');
         $this->directoryData = $this->directory->getUsers();
@@ -154,7 +151,7 @@ class UserSyncAction extends SyncAction
 
             // If the user does not exist
             // Or it was deleted and then created again in the directory
-            if (!isset($existingUser) || ($existingUser->deleted && ($existingUser->modified < $data['directory_created']))) {
+            if (!isset($existingUser) || ($existingUser->deleted && $data['directory_created']->gte($existingUser->modified))) {
                 $this->handleAdd($data, $entry);
                 continue;
             }

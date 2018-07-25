@@ -101,6 +101,7 @@ class DirectoryIgnoreTable extends Table
                 'foreign_model' => true
             ]
         ]);
-        return $this->save($entity);
+        $this->save($entity);
+        return $entity;
     }
 }
