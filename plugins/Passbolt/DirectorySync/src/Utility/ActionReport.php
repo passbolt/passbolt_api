@@ -66,6 +66,24 @@ class ActionReport
     }
 
     /**
+     * Model getter
+     *
+     * @return string
+     */
+    public function getModel() {
+        return $this->model;
+    }
+
+    /**
+     * Action getter
+     *
+     * @return string
+     */
+    public function getAction() {
+        return $this->action;
+    }
+
+    /**
      * Action validator
      *
      * @param string $action
@@ -106,6 +124,6 @@ class ActionReport
      */
     static public function isValidData($data)
     {
-        return is_object($data);
+        return is_object($data) || is_array($data);
     }
 }

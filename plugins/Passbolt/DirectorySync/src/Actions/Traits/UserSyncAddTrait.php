@@ -52,7 +52,7 @@ trait UserSyncAddTrait {
         if (isset($entry) && $status === self::ERROR && $entry->status === self::ERROR) {
             // Second error in 2 sync, delete sync entry and ignore user
             $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $user->id, 'model' => self::USERS]);
+            $this->DirectoryIgnore->create(['id' => $entry->id, 'model' => 'DirectoryEntry']);
             $status = self::IGNORE;
         } else {
             $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $entry);
@@ -68,7 +68,7 @@ trait UserSyncAddTrait {
     function handleAddExist(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
         // Link the records
-        if (isset($entry) && !isset($entry->user_id) || ($entry->user_id !== $existingUser->id)) {
+        if (isset($entry) && (!isset($entry->user_id) || ($entry->user_id !== $existingUser->id))) {
             $this->DirectoryEntries->updateUserId($entry, $existingUser->id);
         }
         $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $entry);
@@ -76,11 +76,19 @@ trait UserSyncAddTrait {
     }
 
     /**
+     * @param array $data
      * @param DirectoryEntry $entry
+     * @param User $existingUser
      */
-    function handleAddDeleted(DirectoryEntry $entry, User $existingUser)
+    function handleAddDeleted(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
-        $this->DirectoryEntries->delete($entry);
-        $this->DirectoryIgnore->create(['id' => $existingUser->id, 'model' => self::USERS]);
+        if (!isset($entry)) {
+            $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::USERS, $entry);
+            $this->addReport(new ActionReport(self::USERS, self::CREATE, self::ERROR, $data));
+        } else {
+            $this->DirectoryEntries->delete($entry);
+            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'model' => self::USERS]);
+            $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $data));
+        }
     }
 }

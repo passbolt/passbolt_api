@@ -229,7 +229,7 @@ class DirectoryEntriesTable extends Table
             $entry['foreign_model'] = $model;
             $entry['foreign_key'] = null;
             $entry['status'] = $status;
-            return $this->DirectoryEntries->create($entry);
+            return $this->create($entry);
         }
     }
 
@@ -245,7 +245,7 @@ class DirectoryEntriesTable extends Table
         $query = $this->find()
             ->select()
             ->contain([$model]);
-        if (!empty($this->entries)) {
+        if (!empty($directoryIds)) {
             $query = $query->where(['DirectoryEntries.id NOT IN' => $directoryIds]);
         }
         return $query->all();

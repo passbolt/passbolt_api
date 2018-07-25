@@ -15,6 +15,8 @@
 namespace Passbolt\DirectorySync\Actions;
 
 use Cake\Core\Configure;
+use Cake\Datasource\Exception\InvalidPrimaryKeyException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -47,7 +49,6 @@ class UserSyncAction extends SyncAction
     public function __construct() {
         parent::__construct();
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->directoryData = $this->directory->getUsers();
     }
 
     /**
@@ -66,6 +67,7 @@ class UserSyncAction extends SyncAction
             ->where(['foreign_model' => 'User'])
             ->all()
             ->toArray(), '{n}.id');
+        $this->directoryData = $this->directory->getUsers();
     }
 
     /**
@@ -97,6 +99,7 @@ class UserSyncAction extends SyncAction
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::USERS, $entriesId);
+
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
             if (in_array($entry->id, $this->entriesToIgnore) || ($entry->user !== null && in_array($entry->user->id, $this->usersToIgnore))) {
@@ -137,17 +140,13 @@ class UserSyncAction extends SyncAction
      */
     function processEntriesToCreate()
     {
-        if (empty($this->directoryData)) {
-            // Directory is empty, nothing to add
-            return;
-        }
         foreach ($this->directoryData as $data) {
             // Try to find directory entries and user
             $entry = $this->getEntryFromData($data);
             $existingUser = $this->getUserFromData($data);
 
             // If directory entry or user are marked as to be ignored
-            if (in_array($data->id, $this->entriesToIgnore) ||
+            if (in_array($data['id'], $this->entriesToIgnore) ||
                 (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore))) {
                 $this->handleAddIgnore($data, $entry);
                 continue;
@@ -155,7 +154,7 @@ class UserSyncAction extends SyncAction
 
             // If the user does not exist
             // Or it was deleted and then created again in the directory
-            if (!isset($existingUser) || ($existingUser->deleted && ($existingUser->modified < $data->created))) {
+            if (!isset($existingUser) || ($existingUser->deleted && ($existingUser->modified < $data['directory_created']))) {
                 $this->handleAdd($data, $entry);
                 continue;
             }
@@ -169,7 +168,7 @@ class UserSyncAction extends SyncAction
             // The user already exist and is deleted
             //   and the creation date in ldap is prior the deletion in passbolt
             // Delete the old directory entry and ignore
-            $this->handleAddDeleted($entry, $existingUser);
+            $this->handleAddDeleted($data, $entry, $existingUser);
         }
     }
 
@@ -179,8 +178,8 @@ class UserSyncAction extends SyncAction
      */
     protected function getUserFromData($data) {
         $existingUser = $this->Users->find()
-            ->select(['id', 'active', 'deleted'])
-            ->where(['username' => $data->user->username])
+            ->select(['id', 'active', 'deleted', 'created', 'modified'])
+            ->where(['username' => $data['user']['username']])
             ->order(['Users.modified' => 'DESC'])
             ->first();
         if (!isset($existingUser) || empty($existingUser)) {
@@ -197,8 +196,8 @@ class UserSyncAction extends SyncAction
     {
         $entry = null;
         try {
-            $entry = $this->DirectoryEntries->get($data->id, ['contain' => ['Users']]);
-        } catch(NotFoundException $exception) {
+            $entry = $this->DirectoryEntries->get($data['id'], ['contain' => ['Users']]);
+        } catch(\Exception $exception) {
         }
         return $entry;
     }
