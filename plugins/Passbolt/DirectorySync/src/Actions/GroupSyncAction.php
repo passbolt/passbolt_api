@@ -15,13 +15,19 @@
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Group;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Model\Entity\DirectoryIgnore;
+use Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable;
+use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\ErrorReport;
 use Passbolt\DirectorySync\Utility\SyncAction;
+
 
 class GroupSyncAction extends SyncAction
 {
@@ -74,22 +80,23 @@ class GroupSyncAction extends SyncAction
         parent::__construct();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('DirectoryIgnore');
-        $this->directoryData = $this->directory->getGroups();
+    }
 
+    public function beforeExecute()
+    {
         // Find all groups to ignore.
         $this->groupIdsToIgnore = Hash::extract($this->DirectoryIgnore->find()
-           ->select(['id'])
-           ->where(['foreign_model' => 'Group'])
-           ->all()
-           ->toArray(), '{n}.id');
+          ->select(['id'])
+          ->where(['foreign_model' => SyncAction::GROUPS])
+          ->all()
+          ->toArray(), '{n}.id');
 
         // Find all the entries to ignore.
         $this->directoryIdsToIgnore = Hash::extract($this->DirectoryIgnore->find()
-            ->select(['id'])
-            ->where(['foreign_model' => 'DirectoryEntry'])
-            ->all()
-            ->toArray(), '{n}.id');
+          ->select(['id'])
+          ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRY])
+          ->all()
+          ->toArray(), '{n}.id');
 
         $this->defaultAdmin = $this->getDefaultAdmin();
         if (empty($this->defaultAdmin)) {
@@ -101,12 +108,15 @@ class GroupSyncAction extends SyncAction
             throw new \Exception('Configuration issue. A default group admin user cannot be found.');
         }
 
+        $this->directoryData = $this->directory->getGroups();
     }
 
     /**
      * Execute groups sync.
      */
     public function execute() {
+        $this->beforeExecute();
+
 //        if (Configure::read('passbolt.plugins.directorySync.jobs.groups.delete')) {
 //            $this->processDeletedEntries();
 //        }
@@ -117,71 +127,179 @@ class GroupSyncAction extends SyncAction
             return;
         }
 
-        $added = $this->processCreatedEntries();
-
-        return [
-            'create' => $added['added'],
-            'error' => $added['error'],
-        ];
+        $this->processCreatedEntries();
+        return $this->summary;
     }
 
     public function processCreatedEntries() {
         // Find all the entries
         $syncedEntries = $this->DirectoryEntries->find()
             ->select()
-            ->where(['DirectoryEntries.foreign_model' => 'Group'])
+            ->where(['DirectoryEntries.foreign_model' => 'Groups'])
+            ->contain(['Groups'])
             ->all()
             ->toArray();
-
-        $res = [
-            'added' => [],
-            'errors' => [],
-        ];
+        $syncedEntryIds = Hash::extract($syncedEntries, '{n}.id');
 
         foreach($this->directoryData as $i => $data) {
-            // TODO: add condition, if it is in the array but doesn't have an id saved?
+            // If similar group can be retrieved.
+            $existingGroup = $this->getGroupFromData($data);
+            $entry = $this->getEntryFromData($data);
 
-            $isSynced = in_array($data['id'], $syncedEntries);
-            if (!$isSynced) {
-                $data['group'] = $this->manageGroupUsers($data['group']);
+            // TODO: case where entry exists and is associated to a group, but the actual group returned by getGroupFromData is different.
 
-                try {
-                    $g = $this->Groups->create($data['group'], new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id));
-                    $res['added'][] = $g;
-                    pr ("added {$data['group']['name']}");
-                } catch(ValidationException $exception) {
-                    pr("Group {$data['group']['name']} could not be saved: " . $exception->getMessage());
-                    $entity = $exception->getEntity();
-                    $res['errors'][] = $entity;
-                    pr($entity->getErrors());
-                } catch (\Exception $exception) {
-                    pr($exception->getMessage());
-                    $res['errors'] = $exception->getMessage();
-                }
+            if(isset($existingGroup) && $this->isGroupIgnored($existingGroup)) {
+//                if (isset($entry)) {
+//                    $this->DirectoryEntries->delete($entry);
+//                }
+//                $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, $existingGroup));
+                $this->handleAddIgnore($data, $entry, $existingGroup);
+                continue;
+            }
 
-                if (!empty ($g)) {
-                    $directoryEntry = [
-                        'id' => $data['id'],
-                        'foreign_model' => 'Group',
-                        'foreign_key' => $g->id,
-                        'directory_name' => $data['directory_name'],
-                        'directory_created' => $data['directory_created']->date,
-                        'directory_modified' => $data['directory_modified']->date,
-                        'status' => DirectoryEntry::STATUS_SUCCESS,
-                    ];
-                    try {
-                        $this->DirectoryEntries->create($directoryEntry);
-                    }catch(ValidationException $exception) {
-                        $entity = $exception->getEntity();
-                        pr($entity->getErrors());
-                    } catch(\Exception $e) {
-                        pr($exception->getMessage());
-                    }
-                }
+            if($this->isDirectoryEntryIgnored($data['id'])) {
+                $this->handleAddIgnore($data, $entry, $existingGroup);
+                continue;
+            }
+
+            if (isset($existingGroup) && $existingGroup->deleted == true) {
+                $this->handleAddDeleted($data, $entry, $existingGroup);
+                continue;
+            }
+
+            if (isset($existingGroup) && ((isset($entry) && ($entry->status == SELF::ERROR)) || !isset($entry))) {
+                $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::GROUPS, $existingGroup, $entry);
+                $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::SYNC, $existingGroup));
+                continue;
+            }
+
+            if (!isset($existingGroup)) {
+                $this->handleAdd($data, $entry);
+                continue;
             }
         }
+    }
 
-        return $res;
+    public function handleAddIgnore($data, $entry, $existingGroup) {
+        if (isset($entry)) {
+            $this->DirectoryEntries->delete($entry);
+        }
+        if (isset($existingGroup) && !$this->isGroupIgnored($existingGroup)) {
+            $this->DirectoryIgnore->create(['id' => $existingGroup->id, 'foreign_model' => self::GROUPS]);
+        }
+        $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, isset($existingGroup) ? $existingGroup : $data));
+    }
+
+    public function handleAddDeleted($data, $entry, $existingGroup) {
+        // Check if ignored.
+        if ($data['directory_created']->lt($existingGroup->modified)) {
+            $this->handleAddIgnore($data, $entry, $existingGroup);
+        } else {
+            $this->handleAdd($data, $entry);
+        }
+    }
+
+    public function handleAdd($data, $entry) {
+//        if (isset($entry) && $entry->status == self::SUCCESS) {
+//            return;
+//        }
+
+        if ($this->isDirectoryEntryIgnored($data['id'])) {
+            if (isset($entry)) { $this->DirectoryEntries->delete($entry); }
+            // TODO: cannot add this report because no entry exists anymore.
+            //$this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, $data));
+            return;
+        }
+
+        $g = $this->createGroup($data['group']);
+        if ($g)  {
+            $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::GROUPS, $g, $entry);
+        } else {
+            $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, null, $entry);
+        }
+    }
+
+    private function isDirectoryEntryIgnored(string $id) {
+        return in_array($id, $this->directoryIdsToIgnore);
+    }
+
+    private function isGroupIgnored(Group $group) {
+        return in_array($group->id, $this->groupIdsToIgnore);
+    }
+
+    /**
+     * Get group from data.
+     * @param $data
+     *
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function getGroupFromData(array $data) {
+        $existingGroup = $this->Groups->find()
+            ->select(['id', 'deleted', 'created', 'modified'])
+            ->where(['name' => $data['group']['name']])
+            ->order(['Groups.modified' => 'DESC'])
+            ->first();
+        if (!isset($existingGroup) || empty($existingGroup)) {
+            $existingGroup = null;
+        }
+        return $existingGroup;
+    }
+
+    /**
+     * @param $data
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    protected function getEntryFromData(array $data)
+    {
+        $entry = null;
+        try {
+            $entry = $this->DirectoryEntries->get($data['id'], ['contain' => ['Groups']]);
+        } catch(\Exception $exception) {
+        }
+        return $entry;
+    }
+
+    /**
+     * Create a group and log report.
+     * @param $group
+     *
+     * @return bool
+     */
+    public function createGroup($group) {
+        $group = $this->manageGroupUsers($group);
+        try {
+            $g = $this->Groups->create($group, new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id));
+            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::SUCCESS, $g));
+            return $g;
+        } catch(ValidationException $exception) {
+            $this->addReport(new ErrorReport(self::GROUPS, self::CREATE, $exception));
+            return false;
+        } catch (\Exception $exception) {
+            $this->addReport(new ErrorReport(self::GROUPS, self::CREATE, $exception));
+            return false;
+        }
+    }
+
+    /**
+     * Create directory entry for given directory data and group.
+     *
+     * @param array $directoryData
+     * @param Group|null $group
+     * @param string $status
+     *
+     * @return mixed
+     */
+    public function createDirectoryEntry(array $directoryData, Group $group = null, string $status = DirectoryEntry::STATUS_SUCCESS) {
+        $directoryEntry = [
+            'id' => $directoryData['id'],
+            'foreign_model' => 'Groups',
+            'foreign_key' => ($group == null ? null : $group->id),
+            'directory_name' => $directoryData['directory_name'],
+            'directory_created' => $directoryData['directory_created'],
+            'directory_modified' => $directoryData['directory_modified'],
+            'status' => $status,
+        ];
+        return $this->DirectoryEntries->create($directoryEntry);
     }
 
     // Dummy function for now. Will be improved later.

@@ -17,10 +17,33 @@ trait AssertDirectoryTrait
         $this->assertEquals($syncEntry[0]['status'], $status);
     }
 
+    public function assertDirectoryEntryExist($id, $where = [])
+    {
+        $where['id'] = $id;
+        $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
+        $this->assertEquals(count($syncEntry), 1);
+    }
+
     public function assertDirectoryIgnoreEmpty()
     {
         $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->all()->toArray();
         $this->assertEmpty($di, __('Directory ignore list should be empty, {0} found', count($di)));
+    }
+
+    public function assertDirectoryIgnoreNotEmpty()
+    {
+        $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->all()->toArray();
+        $this->assertTrue(count($di) > 0, __('Directory ignore list should not be empty'));
+    }
+
+    public function assertDirectoryIgnoreContains($model, $id)
+    {
+        $di = $this->action->DirectoryEntries->DirectoryIgnore
+            ->find()
+            ->where(['foreign_model' => $model, 'id' => $id])
+            ->all()
+            ->toArray();
+        $this->assertNotEmpty($di);
     }
 
     public function assertUserExist($id, $where = null)
