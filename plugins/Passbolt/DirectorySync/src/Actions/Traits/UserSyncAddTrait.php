@@ -28,9 +28,10 @@ trait UserSyncAddTrait {
      */
     function handleAddIgnore(array $data, DirectoryEntry $entry = null)
     {
-        // Delete dir entry if any, no need to keep ignored entries
         if (isset($entry)) {
+            // Delete dir entry if any, no need to keep ignored entries
             $this->DirectoryEntries->delete($entry);
+            $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => 'DirectoryEntry']);
         }
         $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $data));
     }
@@ -41,22 +42,17 @@ trait UserSyncAddTrait {
      */
     function handleAdd(array $data, DirectoryEntry $entry = null)
     {
+        $user = null;
         try {
             $user = $this->Users->register($data);
             $status = self::SUCCESS;
         } catch(ValidationException $exception) {
             $status = self::ERROR;
         } catch (InternalErrorException $exception) {
+            $status = self::ERROR;
             $data = $exception; // TODO discuss format ErrorReport() ?
         }
-        if (isset($entry) && $status === self::ERROR && $entry->status === self::ERROR) {
-            // Second error in 2 sync, delete sync entry and ignore user
-            $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $entry->id, 'model' => 'DirectoryEntry']);
-            $status = self::IGNORE;
-        } else {
-            $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $entry);
-        }
+        $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
         $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $data));
     }
 
@@ -71,7 +67,7 @@ trait UserSyncAddTrait {
         if (isset($entry) && (!isset($entry->user_id) || ($entry->user_id !== $existingUser->id))) {
             $this->DirectoryEntries->updateUserId($entry, $existingUser->id);
         }
-        $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $entry);
+        $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $existingUser, $entry);
         $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $data));
     }
 
@@ -83,11 +79,11 @@ trait UserSyncAddTrait {
     function handleAddDeleted(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
         if (!isset($entry)) {
-            $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::USERS, $entry);
+            $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::USERS, $existingUser, $entry);
             $this->addReport(new ActionReport(self::USERS, self::CREATE, self::ERROR, $data));
         } else {
             $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'model' => self::USERS]);
+            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'foreign_model' => self::USERS]);
             $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $data));
         }
     }

@@ -22,6 +22,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 
@@ -229,12 +230,12 @@ class DirectoryEntriesTable extends Table
     /**
      * Update a directory entries status if it exist or create one
      *
-     * @param $data
-     * @param $status
-     * @param $model
-     * @param $entity
-     * @param null $entry
-     * @return Entity
+     * @param array $data
+     * @param string $status
+     * @param string $model
+     * @param Entity|null $entity
+     * @param DirectoryEntry|null $entry
+     * @return array|bool|DirectoryEntry
      */
     public function updateStatusOrCreate(array $data, string $status, string $model, Entity $entity = null, DirectoryEntry $entry = null)
     {
@@ -251,7 +252,11 @@ class DirectoryEntriesTable extends Table
             $entry = $data;
             //unset($deData['user']);
             $entry['foreign_model'] = $model;
-            $entry['foreign_key'] = $entity === null ? null : $entity->id;
+            if (isset($entity) && Validation::uuid($entity->id)) {
+                $entry['foreign_key'] = $entity->id;
+            } else {
+                $entry['foreign_key'] = null;
+            }
             $entry['status'] = $status;
             return $this->create($entry);
         }
