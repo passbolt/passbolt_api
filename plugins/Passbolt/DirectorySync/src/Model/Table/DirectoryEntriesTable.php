@@ -213,10 +213,12 @@ class DirectoryEntriesTable extends Table
      *
      * @param $data
      * @param $status
+     * @param $model
+     * @param $entity
      * @param null $entry
      * @return Entity
      */
-    public function updateStatusOrCreate(array $data, string $status, string $model, DirectoryEntry $entry = null)
+    public function updateStatusOrCreate(array $data, string $status, string $model, Entity $entity = null, DirectoryEntry $entry = null)
     {
         if (isset($entry)) {
             if ($entry->status !== $status) {
@@ -227,7 +229,7 @@ class DirectoryEntriesTable extends Table
             $entry = $data;
             //unset($deData['user']);
             $entry['foreign_model'] = $model;
-            $entry['foreign_key'] = null;
+            $entry['foreign_key'] = $entity === null ? null : $entity->id;
             $entry['status'] = $status;
             return $this->create($entry);
         }
