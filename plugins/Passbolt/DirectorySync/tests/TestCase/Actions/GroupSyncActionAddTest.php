@@ -80,7 +80,8 @@ class GroupSyncActionTest extends DirectorySyncTestCase
 
         $group = $this->assertGroupExist(null, ['name' => 'newFromLdap', 'deleted' => false]);
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
-        $this->assertDirectoryEntryExist($groupData['id'], [
+        $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
             'foreign_model' => 'Groups',
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
@@ -111,7 +112,8 @@ class GroupSyncActionTest extends DirectorySyncTestCase
 
         $group = $this->assertGroupExist(null, ['name' => 'testgroup', 'deleted' => false]);
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
-        $this->assertDirectoryEntryExist($groupData['id'], [
+        $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
             'foreign_model' => 'Groups',
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
@@ -143,7 +145,8 @@ class GroupSyncActionTest extends DirectorySyncTestCase
 
         $group = $this->assertGroupExist(null, ['name' => 'marketing', 'deleted' => false]);
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
-        $this->assertDirectoryEntryExist($groupData['id'], [
+        $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
             'foreign_model' => 'Groups',
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
@@ -175,7 +178,8 @@ class GroupSyncActionTest extends DirectorySyncTestCase
 
         $group = $this->assertGroupExist(null, ['name' => 'deleted', 'deleted' => false]);
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
-        $this->assertDirectoryEntryExist($groupData['id'], [
+        $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
             'foreign_model' => 'Groups',
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
@@ -238,7 +242,8 @@ class GroupSyncActionTest extends DirectorySyncTestCase
         $group = $this->assertGroupExist(null, ['name' => 'deleted', 'deleted' => false]);
         // The directory entry should have been updated.
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
-        $this->assertDirectoryEntryExist($groupData['id'], [
+        $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
             'foreign_model' => 'Groups',
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
@@ -304,7 +309,8 @@ class GroupSyncActionTest extends DirectorySyncTestCase
         $group = $this->assertGroupExist(null, ['name' => 'deleted', 'deleted' => false]);
         // The directory entry should have been updated.
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
-        $this->assertDirectoryEntryExist($groupData['id'], [
+        $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
             'foreign_model' => 'Groups',
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
@@ -413,7 +419,7 @@ class GroupSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $this->assertReportAction($reports[0], SyncAction::CREATE);
         $this->assertReportStatus($reports[0], SyncAction::SYNC);
-        $this->assertDirectoryEntryExist($groupData['id'], ['status' => SyncAction::SUCCESS]);
+        $this->assertDirectoryEntryExists(['id' => $groupData['id'], 'status' => SyncAction::SUCCESS]);
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
     }
 
