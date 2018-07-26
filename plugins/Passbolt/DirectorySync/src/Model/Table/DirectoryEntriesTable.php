@@ -48,6 +48,8 @@ class DirectoryEntriesTable extends Table
     use TableCleanupTrait;
     use UsersCleanupTrait;
 
+    const DN_MAX_LENGTH = 255;
+
     /**
      * Initialize method
      *
@@ -99,6 +101,12 @@ class DirectoryEntriesTable extends Table
             ->scalar('id')
             ->uuid('id')
             ->allowEmpty('id', 'create');
+
+        $validator
+            ->utf8('directory_name', __('The directory name is not a valid utf8 string.'))
+            ->lengthBetween('directory_name', [0, self::DN_MAX_LENGTH], __('The directory_name length should be maximum {0} characters.', self::DN_MAX_LENGTH))
+            ->requirePresence('directory_name', 'create', __('A directory_name is required.'))
+            ->notEmpty('directory_name', __('The directory_name cannot be empty.'));
 
         $validator
             ->scalar('foreign_key')
@@ -188,6 +196,10 @@ class DirectoryEntriesTable extends Table
      */
     public function create($data)
     {
+        if (strlen($data['directory_name']) > SELF::DN_MAX_LENGTH) {
+            $data['directory_name'] = substr($data['directory_name'], 0, SELF::DN_MAX_LENGTH - 1);
+        }
+
         // Check validation rules.
         $directoryEntry = $this->buildEntity($data);
         if (!empty($directoryEntry ->getErrors())) {
