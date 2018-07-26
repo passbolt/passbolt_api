@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Test\Utility;
 
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
@@ -36,6 +37,7 @@ class DirectorySyncTestCase extends TestCase
     public function setUp()
     {
         $this->originalConfig = Configure::read('passbolt.plugin.directorySync');
+        $this->Groups = TableRegistry::get('Groups');
         Configure::write('passbolt.plugin.directorySync.test', true);
         parent::setUp();
     }

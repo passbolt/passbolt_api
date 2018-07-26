@@ -54,7 +54,7 @@ class TestDirectory implements DirectoryInterface
     public function getGroups()
     {
         if (!isset($this->groups)) {
-            $this->users = $this->read('Groups');
+            $this->groups = $this->read('Groups');
         }
         return $this->groups;
     }

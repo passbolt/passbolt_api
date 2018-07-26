@@ -166,10 +166,10 @@ class DirectoryEntriesTable extends Table
      * Update the foreign key
      *
      * @param DirectoryEntry $entity
-     * @param string $userId uuid
+     * @param string $foreignKey uuid
      * @return bool
      */
-    public function updateForeignKey(DirectoryEntry $entity, string $foreignKey)
+    public function updateForeignKey(DirectoryEntry $entity, string $foreignKey = null)
     {
         $entity = $this->get($entity->id);
         $this->patchEntity($entity, ['foreign_key' => $foreignKey], [
@@ -225,8 +225,9 @@ class DirectoryEntriesTable extends Table
             if ($entry->status !== $status) {
                 $entry = $this->updateStatus($entry, $status);
             }
-            if (isset($entity) && $entry->foreign_key !== $entity->id) {
-                $this->updateForeignKey($entry, $entity->id);
+            $entityForeignKey = (isset($entity) ? $entity->id : null);
+            if ($entry->foreign_key !== $entityForeignKey) {
+                $entry = $this->updateForeignKey($entry, $entityForeignKey);
             }
             return $entry;
         } else {
