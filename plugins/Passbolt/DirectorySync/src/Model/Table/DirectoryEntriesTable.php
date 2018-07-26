@@ -163,18 +163,18 @@ class DirectoryEntriesTable extends Table
     }
 
     /**
-     * Update the user id
+     * Update the foreign key
      *
      * @param DirectoryEntry $entity
      * @param string $userId uuid
      * @return bool
      */
-    public function updateUserId(DirectoryEntry $entity, $userId)
+    public function updateForeignKey(DirectoryEntry $entity, string $foreignKey)
     {
         $entity = $this->get($entity->id);
-        $this->patchEntity($entity, ['user_id' => $userId], [
-            'fieldList' => ['user_id'],
-            'accessibleFields' => ['user_id' => true],
+        $this->patchEntity($entity, ['foreign_key' => $foreignKey], [
+            'fieldList' => ['foreign_key'],
+            'accessibleFields' => ['foreign_key' => true],
             'associated' => []
         ]);
         return $this->save($entity);
@@ -224,6 +224,9 @@ class DirectoryEntriesTable extends Table
         if (isset($entry)) {
             if ($entry->status !== $status) {
                 $entry = $this->updateStatus($entry, $status);
+            }
+            if (isset($entity) && $entry->foreign_key !== $entity->id) {
+                $this->updateForeignKey($entry, $entity->id);
             }
             return $entry;
         } else {

@@ -84,6 +84,15 @@ class ActionReport
     }
 
     /**
+     * Action getter
+     *
+     * @return mixed
+     */
+    public function getData() {
+        return $this->data;
+    }
+
+    /**
      * Action validator
      *
      * @param string $action

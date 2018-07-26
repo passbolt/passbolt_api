@@ -15,10 +15,13 @@
 namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Model\Entity\User;
+use Cake\ORM\Entity;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
+use Passbolt\DirectorySync\Utility\SyncAction;
+use Twig\Error\SyntaxError;
 
 trait UserSyncAddTrait {
 
@@ -40,20 +43,68 @@ trait UserSyncAddTrait {
      * @param array $data
      * @param DirectoryEntry|null $entry
      */
-    function handleAdd(array $data, DirectoryEntry $entry = null)
+    function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
         $user = null;
+        $reportData = $data;
         try {
-            $user = $this->Users->register($data);
+            $user = $this->Users->register($data['user']);
             $status = self::SUCCESS;
+            $reportData = $user;
         } catch(ValidationException $exception) {
+            $reportData = $exception->getEntity();
             $status = self::ERROR;
         } catch (InternalErrorException $exception) {
             $status = self::ERROR;
-            $data = $exception; // TODO discuss format ErrorReport() ?
         }
+
         $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $data));
+        $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $reportData));
+    }
+
+    /**
+     * @param array $data
+     * @param DirectoryEntry|null $entry
+     */
+    function handleAddExistDeleted(array $data, DirectoryEntry $entry = null, User $existingUser)
+    {
+        // if the user was created in ldap and then deleted in passbolt
+        // do not try to recreate
+        if ($data['directory_created']->lte($existingUser->modified)) {
+            if (isset($entry)) {
+                $this->DirectoryEntries->delete($entry);
+            }
+            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'foreign_model' => self::USERS]);
+            $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $existingUser));
+            return;
+        }
+
+        // if the user was delete in passbolt and then created in ldap
+        // try to recreate
+        $user = null;
+        $reportData = $data;
+        try {
+            $user = $this->Users->register($data['user']);
+            $status = self::SUCCESS;
+            $reportData = $user;
+        } catch(ValidationException $exception) {
+            $reportData = $exception->getEntity();
+            $status = self::ERROR;
+        } catch (InternalErrorException $exception) {
+            $status = self::ERROR;
+        }
+        // if it doesn't work, then ignore user
+        if ($status === self::ERROR) {
+            $status = self::IGNORE;
+            if (isset($entry)) {
+                $this->DirectoryEntries->delete($entry);
+            }
+            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'foreign_model' => self::USERS]);
+        } else {
+            $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
+        }
+
+        $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $reportData));
     }
 
     /**
@@ -63,12 +114,11 @@ trait UserSyncAddTrait {
      */
     function handleAddExist(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
-        // Link the records
-        if (isset($entry) && (!isset($entry->user_id) || ($entry->user_id !== $existingUser->id))) {
-            $this->DirectoryEntries->updateUserId($entry, $existingUser->id);
+        if (isset($entry) && (!isset($entry->foreign_key) || ($entry->foreign_key !== $existingUser->id))) {
+            $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
         }
-        $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $existingUser, $entry);
         $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $data));
+        $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $existingUser, $entry);
     }
 
     /**

@@ -151,21 +151,19 @@ class UserSyncAction extends SyncAction
 
             // If the user does not exist
             // Or it was deleted and then created again in the directory
-            if (!isset($existingUser) || ($existingUser->deleted && $data['directory_created']->gte($existingUser->modified))) {
-                $this->handleAdd($data, $entry);
+            if (!isset($existingUser)) {
+                $this->handleAddNew($data, $entry, $existingUser);
                 continue;
             }
 
-            // If the user already exist
-            if (isset($existingUser) && !$existingUser->deleted) {
-                $this->handleAddExist($data, $entry, $existingUser);
+            // If the user exist but is already deleted
+            if (isset($existingUser) && $existingUser->deleted) {
+                $this->handleAddExistDeleted($data, $entry, $existingUser);
                 continue;
             }
 
-            // The user already exist and is deleted
-            //   and the creation date in ldap is prior the deletion in passbolt
-            // Delete the old directory entry and ignore
-            $this->handleAddDeleted($data, $entry, $existingUser);
+            // If the user already exist and is not deleted
+            $this->handleAddExist($data, $entry, $existingUser);
         }
     }
 
