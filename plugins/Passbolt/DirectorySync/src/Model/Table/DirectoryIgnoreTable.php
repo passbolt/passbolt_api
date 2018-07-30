@@ -19,6 +19,7 @@ use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Inflector;
 
 /**
  * DirectoryIgnore Model
@@ -39,7 +40,6 @@ use Cake\Validation\Validator;
 class DirectoryIgnoreTable extends Table
 {
     use TableCleanupTrait;
-    use UsersCleanupTrait;
 
     /**
      * Initialize method
@@ -55,6 +55,25 @@ class DirectoryIgnoreTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
+
+        $this->hasOne('Users', [
+            'dependent' => false,
+            'className' => 'Users',
+            'bindingKey' => 'id',
+            'foreignKey' => 'id'
+        ]);
+
+        $this->hasOne('Groups', [
+            'className' => 'Groups',
+            'bindingKey' => 'id',
+            'foreignKey' => 'id'
+        ]);
+
+        $this->hasOne('DirectoryEntries', [
+            'className' => 'DirectoryEntries',
+            'bindingKey' => 'id',
+            'foreignKey' => 'id'
+        ]);
     }
 
     /**
@@ -102,6 +121,73 @@ class DirectoryIgnoreTable extends Table
             ]
         ]);
         $this->save($entity);
+
         return $entity;
+    }
+
+    /**
+     * Delete all association records where associated users entities are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedUsers($dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith('Users')
+            ->where(function ($exp, $q) {
+                return $exp
+                    ->isNull('Users' . '.id')
+                    ->eq('DirectoryIgnore.foreign_model', 'Users');
+            });
+
+        return $this->cleanupHardDeleted('Users', $dryRun, $query);
+    }
+
+    /**
+     * Delete all association records where associated groups entities are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedGroups($dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith('Groups')
+            ->where(function ($exp, $q) {
+                return $exp
+                    ->isNull('Users' . '.id')
+                    ->eq('DirectoryIgnore.foreign_model', 'Groups');
+            });
+
+        return $this->cleanupHardDeleted('Groups', $dryRun, $query);
+    }
+
+    /**
+     * Cleanup hard deleted entries
+     *
+     * @param array|null $entryIds
+     * @param bool $dryRun
+     * @return number
+     */
+    public function cleanupHardDeletedDirectoryEntries(array $entryIds = null, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id']);
+
+        if (isset($entryIds) && !empty($entryIds)) {
+            $query = $query->where(['DirectoryEntries.id NOT IN' => $entryIds]);
+        }
+        $query = $query
+            ->leftJoinWith('DirectoryEntries')
+            ->where(function ($exp, $q) {
+                return $exp
+                    ->isNull('DirectoryEntries' . '.id')
+                    ->eq('DirectoryIgnore.foreign_model', 'DirectoryEntry');
+            });
+
+        return $this->cleanupHardDeleted('Users', $dryRun, $query);
     }
 }

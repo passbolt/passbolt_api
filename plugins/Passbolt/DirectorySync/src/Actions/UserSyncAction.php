@@ -96,6 +96,8 @@ class UserSyncAction extends SyncAction
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::USERS, $entriesId);
+        $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
+        $this->DirectoryIgnore->cleanupHardDeletedUsers();
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
@@ -140,7 +142,11 @@ class UserSyncAction extends SyncAction
         foreach ($this->directoryData as $data) {
             // Try to find directory entries and user
             $entry = $this->getEntryFromData($data);
-            $existingUser = $this->getUserFromData($data);
+            if (!isset($entry->user)) {
+                $existingUser = $this->getUserFromData($data);
+            } else {
+                $existingUser = $entry->user;
+            }
 
             // If directory entry or user are marked as to be ignored
             if (in_array($data['id'], $this->entriesToIgnore) ||
@@ -172,6 +178,7 @@ class UserSyncAction extends SyncAction
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     protected function getUserFromData($data) {
+
         $existingUser = $this->Users->find()
             ->select(['id', 'active', 'deleted', 'created', 'modified'])
             ->where(['username' => $data['user']['username']])

@@ -16,6 +16,22 @@ trait AssertReportTrait
 
     /**
      * @param ActionReport $report
+     * @param string $type data class or type name
+     */
+    public function assertReportDataType(ActionReport $report, string $type)
+    {
+        if ($type === 'array') {
+            $this->assertEquals(true, is_array($report->getData()));
+        } else {
+            $fullname = get_class($report->getData());
+            $length = strlen($type);
+            $endswith = $length === 0 || (substr($fullname, -$length) === $type);
+            $this->assertEquals(true, $endswith);
+        }
+    }
+
+    /**
+     * @param ActionReport $report
      * @param string $model
      */
     public function assertReportModel(ActionReport $report, string $model)
@@ -29,7 +45,7 @@ trait AssertReportTrait
      */
     public function assertReportAction(ActionReport $report, string $model)
     {
-        $this->assertEquals($model,$report->getAction());
+        $this->assertEquals($model, $report->getAction());
     }
 
     /**
@@ -38,8 +54,14 @@ trait AssertReportTrait
      */
     public function assertReport(ActionReport $report, array $data)
     {
-        $this->assertReportStatus($report, $data['status']);
-        $this->assertReportModel($report, $data['model']);
-        $this->assertReportAction($report, $data['action']);
+        if (isset($data['status'])) {
+            $this->assertReportStatus($report, $data['status']);
+        }
+        if (isset($data['model'])) {
+            $this->assertReportModel($report, $data['model']);
+        }
+        if (isset($data['action'])) {
+            $this->assertReportAction($report, $data['action']);
+        }
     }
 }

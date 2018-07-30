@@ -21,10 +21,17 @@ trait UserSyncDeleteTrait {
     /**
      * @param DirectoryEntry $entry
      */
+    protected function handleUserIgnoreOrphans(DirectoryEntry $entry)
+    {
+
+    }
+
+    /**
+     * @param DirectoryEntry $entry
+     */
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::IGNORE, $entry));
     }
 
     /**
