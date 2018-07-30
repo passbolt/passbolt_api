@@ -19,8 +19,11 @@ use App\Model\Entity\Group;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Datasource\RulesChecker;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Model\Entity\DirectoryIgnore;
 use Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable;
@@ -31,6 +34,8 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 
 class GroupSyncAction extends SyncAction
 {
+    use GroupSyncDeleteTrait;
+
     /**
      * @var \Cake\ORM\Table
      */
@@ -116,30 +121,66 @@ class GroupSyncAction extends SyncAction
      */
     public function execute() {
         $this->beforeExecute();
+        if (Configure::read('passbolt.plugins.directorySync.jobs.groups.delete')) {
+            $this->processEntriesToDelete();
+        }
+        if (Configure::read('passbolt.plugins.directorySync.jobs.groups.create')) {
+            $this->processEntriesToCreate();
+        }
+        return $this->summary;
+    }
 
-//        if (Configure::read('passbolt.plugins.directorySync.jobs.groups.delete')) {
-//            $this->processDeletedEntries();
-//        }
-//        return;
+    /**
+     * Handle the user deletion job
+     *
+     * Find all the directory entries that have been deleted and try to delete the associated users
+     * If they are not already deleted, or marked as to be ignored
+     *
+     * @return void
+     */
+    function processEntriesToDelete()
+    {
+        $entriesId = Hash::extract($this->directoryData, '{n}.id');
+        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::GROUPS, $entriesId);
 
+        foreach ($entries as $entry) {
+            // The directory entry or user is marked as to be ignored
+            if (in_array($entry->id, $this->directoryIdsToIgnore) || ($entry->group !== null && in_array($entry->group->id, $this->groupIdsToIgnore))) {
+                $this->handleDeletedIgnoredEntry($entry);
+                continue;
+            }
+
+            // The user was already hard or soft deleted
+            if ($entry->group === null || $entry->group->deleted) {
+                $this->handleDeletedEntry($entry);
+                continue;
+            }
+
+            // The group cannot be deleted (example: it is the sole owner of some passwords).
+            if (!$this->Groups->checkRules($entry->group, RulesChecker::DELETE)) {
+                $this->handleNotPossibleDelete($entry);
+                continue;
+            }
+
+            // Group can be deleted
+            try {
+                if (!$this->Groups->softDelete($entry->group)) {
+                    $this->handleSuccessfulDelete($entry);
+                } else {
+                    $this->handleErrorDelete($entry);
+                }
+            } catch(InternalErrorException $exception) {
+                // TODO discuss format ErrorReport() ?
+                $this->handleErrorDelete($entry);
+            }
+        }
+    }
+
+    public function processEntriesToCreate() {
         if (!isset($this->directoryData) || empty($this->directoryData)) {
             // Directory is empty nothing to do
             return;
         }
-
-        $this->processCreatedEntries();
-        return $this->summary;
-    }
-
-    public function processCreatedEntries() {
-        // Find all the entries
-        $syncedEntries = $this->DirectoryEntries->find()
-            ->select()
-            ->where(['DirectoryEntries.foreign_model' => 'Groups'])
-            ->contain(['Groups'])
-            ->all()
-            ->toArray();
-        $syncedEntryIds = Hash::extract($syncedEntries, '{n}.id');
 
         foreach($this->directoryData as $i => $data) {
             // If similar group can be retrieved.
@@ -149,10 +190,6 @@ class GroupSyncAction extends SyncAction
             // TODO: case where entry exists and is associated to a group, but the actual group returned by getGroupFromData is different.
 
             if(isset($existingGroup) && $this->isGroupIgnored($existingGroup)) {
-//                if (isset($entry)) {
-//                    $this->DirectoryEntries->delete($entry);
-//                }
-//                $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, $existingGroup));
                 $this->handleAddIgnore($data, $entry, $existingGroup);
                 continue;
             }
@@ -172,6 +209,11 @@ class GroupSyncAction extends SyncAction
                 $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::SYNC, $existingGroup));
                 continue;
             }
+
+//            if (!isset($existingGroup) && isset($entry) && $entry->status == SELF::SUCCESS) {
+//                $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, $existingGroup, $entry);
+//                $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::ERROR, $entry));
+//            }
 
             if (!isset($existingGroup)) {
                 $this->handleAdd($data, $entry);
@@ -200,10 +242,6 @@ class GroupSyncAction extends SyncAction
     }
 
     public function handleAdd($data, $entry) {
-//        if (isset($entry) && $entry->status == self::SUCCESS) {
-//            return;
-//        }
-
         if ($this->isDirectoryEntryIgnored($data['id'])) {
             if (isset($entry)) { $this->DirectoryEntries->delete($entry); }
             // TODO: cannot add this report because no entry exists anymore.

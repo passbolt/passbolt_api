@@ -23,7 +23,7 @@ use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Cake\ORM\TableRegistry;
 
-class GroupSyncActionTest extends DirectorySyncTestCase
+class GroupSyncActionAddTest extends DirectorySyncTestCase
 {
     use AssertGroupsTrait;
 
@@ -86,6 +86,84 @@ class GroupSyncActionTest extends DirectorySyncTestCase
             'foreign_key' => $group['id'],
             'status' => SyncAction::SUCCESS
         ]);
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario: Group was added in ldap, but has invalid name
+     * Expected result: Entry should be marked as error
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case33_Invalid_Null_Null()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupName = str_repeat("group", 256);
+        $groupData = $this->mockDirectoryGroupData($groupName);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::ERROR);
+
+        $this->assertGroupNotExist(null, ['name' => $groupName]);
+        $this->assertOneDirectoryEntry(SyncAction::ERROR);
+        $entry = $this->assertDirectoryEntryExists([
+            'id' => $groupData['id'],
+            'foreign_model' => SyncAction::GROUPS,
+            'foreign_key IS' => NULL,
+            'status' => SyncAction::ERROR
+        ]);
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario:
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case35_Invalid_Null_Ignore()
+    {
+        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupData = $this->mockDirectoryGroupData('marketing'); // is invalid coz already exists.
+        $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = ['action' => SyncAction::CREATE, 'model' => SyncAction::GROUPS, 'status' => SyncAction::IGNORE];
+        $this->assertReport($reports[0], $expectedReport);
+
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario:
+     * Expected result: Keep error status (loop on error)
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case37_Invalid_Error_Null()
+    {
+        $groupName = str_repeat('group', 256);
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $this->mockDirectoryGroupData($groupName); // is invalid coz name is too long
+        $this->mockDirectoryEntryGroup($groupName, SyncAction::ERROR);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = ['action' => SyncAction::CREATE, 'model' => SyncAction::GROUPS, 'status' => SyncAction::ERROR];
+        $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreEmpty();
     }
 
@@ -565,5 +643,26 @@ class GroupSyncActionTest extends DirectorySyncTestCase
 
         // The directory entry should have been removed
         $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: Previous group creation worked but group was hard deleted in passbolt
+     * Expected result: Try to add the group again, then success
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case25_Ok_Success_Null()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupData = $this->mockDirectoryGroupData('newgroup');
+        $this->mockDirectoryEntryGroup('newgroup', SyncAction::SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.newgroup'));
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportAction($reports[0], SyncAction::CREATE);
+        $this->assertReportStatus($reports[0], SyncAction::SUCCESS);
+        $this->assertGroupExist(null, ['name' => 'newgroup', 'deleted' => false]);
     }
 }

@@ -180,7 +180,7 @@ trait MockDirectoryTrait
             'id' => UuidFactory::uuid('ldap.group.id.' . $name),
             'foreign_model' => 'Groups',
             'foreign_key' => $foreignKey !== null ? $foreignKey : $defaultForeignKey,
-            'directory_name' => 'CN='. ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local',
+            'directory_name' => substr('CN='. ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local', 0, 255),
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
             'status' => $status,

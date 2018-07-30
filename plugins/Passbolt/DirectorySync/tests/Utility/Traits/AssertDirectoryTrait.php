@@ -36,12 +36,13 @@ trait AssertDirectoryTrait
 
     /**
      * @param array $where
-     * @return void
+     * @return entry
      */
     public function assertDirectoryEntryExists(array $where)
     {
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
+        return $syncEntry;
     }
 
     /**
