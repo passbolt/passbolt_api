@@ -21,7 +21,7 @@ use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
 
-class DirectorySyncTestCase extends TestCase
+abstract class DirectorySyncTestCase extends TestCase
 {
     private $originalConfig;
 

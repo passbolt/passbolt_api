@@ -35,8 +35,38 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     ];
 
     /**
-     * Scenario: User is active in passbolt and not present in the directory
-     * Scenario: User is not active in passbolt and not present in the directory
+     * Scenario: No data anywhere
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case01_Null_Null_Null()
+    {
+        $this->assertTrue(true, true); // there is no spoon.
+    }
+
+    /**
+     * Scenario: User is OK (active or inactive) in passbolt and not present in the directory
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case02_Null_Null_OK()
+    {
+        $this->action = new UserSyncAction();
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertUserExist(UuidFactory::uuid('user.id.ada'), ['deleted' => false, 'active' => true]);
+        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
+    }
+
+    /**
      * Scenario: User is deleted in passbolt and not present in the directory
      * Expected result: Do nothing
      *
@@ -44,151 +74,126 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case00_03_Null_Null_Any()
+    public function testDirectorySyncUserDelete_Case03_Null_Null_Deleted()
     {
         $this->action = new UserSyncAction();
         $report = $this->action->execute();
         $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
-        $this->assertUserExist(UuidFactory::uuid('user.id.ada'), ['deleted' => false, 'active' => true]);
-        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
+        $this->assertDirectoryIgnoreEmpty();
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
     }
 
     /**
-     * Scenario: User is active in passbolt and marked to be ignored and not present in the directory
-     * Scenario: User is not active in passbolt and marked to be ignored and not present in the directory
-     * Scenario: User is deleted in passbolt and marked to be ignored and not present in the directory
-     * Expected result: Do nothing
+     * Scenario: User was hard deleted manually and some associated data are still present
+     * Expected result: Cleanup
      *
      * @group DirectorySync
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case04_Null_Null_Ignore()
+    public function testDirectorySyncUserDelete_Case04a_Null_Null_Null_with_orphan_ignore()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.ada'), SyncAction::USERS);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.ruth'), SyncAction::USERS);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), SyncAction::USERS);
-        $this->action->execute();
-        $this->assertDirectoryEntryEmpty();
-        $this->assertUserExist(UuidFactory::uuid('user.id.ada'), ['deleted' => false, 'active' => true]);
-        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
-        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
-    }
-
-    /**
-     * Scenario: User is marked as to be ignored and is not present in ldap
-     * Expected result: Do nothing
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case05_07_Null_Any_Null()
-    {
-        $this->action = new UserSyncAction();
-
-        $this->mockDirectoryEntryUser(['fname' => 'not present'], DirectoryEntry::STATUS_SUCCESS);
-        $this->mockDirectoryEntryUser(['fname' => 'absent'], SyncAction::ERROR);
-        $this->mockDirectoryEntryUser(['fname' => 'mia'], SyncAction::ERROR);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
-        $this->action->execute();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.mia'), SyncAction::USERS);
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
     }
 
     /**
-     * Scenario: The user was deleted in LDAP and could not be previously deleted in passbolt
-     * Expected result: user is deleted
+     * Scenario: User is active|inactive in passbolt and marked to be ignored and not present in the directory
+     * Expected result: Do nothing
      *
      * @group DirectorySync
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case09_User_deletable_Retry_Success()
+    public function testDirectorySyncUserDelete_Case04b_Null_Null_Ignore()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen'], SyncAction::ERROR);
-        $reports = $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => true]);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.ada'), SyncAction::USERS);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.ruth'), SyncAction::USERS);
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
-        $this->assertEquals(count($reports), 1);
-        $this->assertReportStatus($reports[0], SyncAction::SUCCESS);
+        $this->assertUserExist(UuidFactory::uuid('user.id.ada'), ['deleted' => false, 'active' => true]);
+        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
     }
 
     /**
-     * Scenario: The user was deleted in LDAP and could not be previously deleted in passbolt
-     * Expected result: raise an error and delete directory entry but not the user
+     * Scenario: User is not active in passbolt and marked to be ignored and not present in the directory
+     * Expected result: Do nothing
      *
      * @group DirectorySync
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case10_User_Not_deletable_Retry_Error()
+    public function testDirectorySyncUserDelete_Case04c_Null_Null_Ignore()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'lovelace'], SyncAction::ERROR);
-        $reports = $this->action->execute();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), SyncAction::USERS);
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
-        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
-        $this->assertEquals(count($reports), 1);
-        $this->assertReportStatus($reports[0], SyncAction::ERROR);
+        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
     }
 
     /**
-     * Scenario: the user is active in passbolt and not present in the directory and not deletable
-     * Expected result: raise an error and user is not deleted
+     * Scenario:
+     * Expected result: Do nothing
      *
      * @group DirectorySync
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case11_User_Not_deletable()
+    public function testDirectorySyncUserDelete_Case05a_Null_Ignore_Null_Orphan()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'lovelace'], SyncAction::SUCCESS);
-        $reports = $this->action->execute();
-        $this->assertOneDirectoryEntry(SyncAction::ERROR);
-        $this->assertEquals(count($reports), 1);
-        $this->assertReportStatus($reports[0], SyncAction::ERROR);
-    }
-
-    /**
-     * Scenario: the user is active in passbolt and not present in the directory and can be deleted
-     * Expected result: user is deleted
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case12_User_deletable()
-    {
-        $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen'], SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => true]);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
+        $report = $this->action->execute();
         $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertEmpty($report);
     }
 
     /**
-     * Scenario: the user is active in passbolt and not present in the directory and can be deleted
-     *            and the plugin configuration is set to ignore deleted users
-     * Expected result: nothing
+     * Scenario:
+     * Expected result: Do nothing
      *
      * @group DirectorySync
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case13_User_deletable_No_Delete_Job()
+    public function testDirectorySyncUserDelete_Case05b_Null_Ignore_Null()
     {
-        Configure::write('passbolt.plugins.directorySync.jobs.users.delete', false);
         $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen'], SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
-        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_SUCCESS);
+        $this->mockDirectoryEntryUser(['fname' => 'mia'], SyncAction::ERROR);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario:
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case05c_Null_Ignore_Null()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'mia'], SyncAction::SUCCESS);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
     }
 
     /**
@@ -199,117 +204,32 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case14_Null_Ignore_Inactive()
+    public function testDirectorySyncUserDelete_Case06a_Null_Ignore_OK()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), 'DirectoryEntry');
-        $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::SUCCESS);
-        $this->action->execute();
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertDirectoryEntryEmpty();
     }
 
     /**
-     * Scenario: the user is deleted in the directory and user is inactive and there was a previous error in sync
-     * Expected result: delete user and directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case15_Null_Error_Inactive()
-    {
-        $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::ERROR);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => true, 'active' => false]);
-        $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: the user is deleted in the directory and user is inactive
-     * Expected result: delete user and directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case16_Null_Success_Inactive()
-    {
-        $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => true, 'active' => false]);
-        $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: The user is deleted in directory and passbolt and user was marked as to be ignored
+     * Scenario:
      * Expected result: delete directory entry
      *
      * @group DirectorySync
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case17_Null_Ignore_Deleted()
+    public function testDirectorySyncUserDelete_Case06b_Null_Ignore_OK()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
-        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
-        $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: The user is deleted in directory and manually deleted in passbolt between sync after an error
-     * Expected result: delete directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case18_Null_Error_Deleted()
-    {
-        $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::ERROR);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
-        $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: The user is deleted in directory and already deleted in passbolt between sync
-     * Expected result: delete directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case19_Null_Success_Deleted()
-    {
-        $this->action = new UserSyncAction();
-        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
-        $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: The user is deleted in directory and user is marked as to be ignored
-     * Expected result: delete directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncUser
-     * @group DirectorySyncUserDelete
-     */
-    public function testDirectorySyncUserDelete_Case20_Null_Success_Ignore()
-    {
-        $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), SyncAction::USERS);
-        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::ERROR);
-        $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), 'DirectoryEntry');
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
+        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertDirectoryEntryEmpty();
     }
 
@@ -321,7 +241,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case21_Null_Ignore_Ignore()
+    public function testDirectorySyncUserDelete_Case07_Null_Ignore_Ignore()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
@@ -342,6 +262,97 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     }
 
     /**
+     * Scenario: The user is deleted in directory and passbolt and user was marked as to be ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case08_Null_Ignore_Deleted()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
+        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
+        $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario:
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case09_Null_Error_Null()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'absent'], SyncAction::ERROR);
+        $report = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertReport($report[0], ['status' => SyncAction::SYNC, 'type' => 'DirectoryEntry']);
+    }
+
+    /**
+     * Scenario: The user was deleted in LDAP and could not be previously deleted in passbolt
+     * Expected result: user is deleted
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case10_Null_Error_OK()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen'], SyncAction::ERROR);
+        $reports = $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => true]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::SUCCESS);
+    }
+
+    /**
+     * Scenario: the user is deleted in the directory and user is inactive and there was a previous error in sync
+     * Expected result: delete user and directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case10_Null_Error_OK_Inactive()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::ERROR);
+        $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => true, 'active' => false]);
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: The user was deleted in LDAP and could not be previously deleted in passbolt
+     * Expected result: raise an error and delete directory entry but not the user
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case10a_Null_Error_Ok_not_deletable()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'lovelace'], SyncAction::ERROR);
+        $reports = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::ERROR);
+    }
+
+    /**
      * Scenario: User is deleted in directory, previous sync was an error and user is marked to be ignored
      * Expected result: delete directory entry
      *
@@ -349,15 +360,175 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncUser
      * @group DirectorySyncUserDelete
      */
-    public function testDirectorySyncUserDelete_Case22_Null_Error_Ignore()
+    public function testDirectorySyncUserDelete_Case11a_Null_Error_Ignore()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), SyncAction::USERS);
+        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
+    }
+
+    /**
+     * Scenario: User is deleted in directory, previous sync was an error and user is marked to be ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case11b_Null_Error_Ignore()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), SyncAction::USERS);
+        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
+    }
+
+    /**
+     * Scenario: The user is deleted in directory and manually deleted in passbolt between sync after an error
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case12_Null_Error_Deleted()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::ERROR);
+        $report = $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: User is marked as to be ignored and is not present in ldap
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case13_Null_Success_Null()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'not present'], DirectoryEntry::STATUS_SUCCESS);
+        $report = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertReport($report[0], ['status' => SyncAction::SYNC, 'type' => 'DirectoryEntry']);
+    }
+
+    /**
+     * Scenario: the user is active in passbolt and not present in the directory and not deletable
+     * Expected result: raise an error and user is not deleted
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case14_Null_Success_OK_not_deletable()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'lovelace'], SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertOneDirectoryEntry(SyncAction::ERROR);
+        $this->assertEquals(count($reports), 1);
+        $this->assertReportStatus($reports[0], SyncAction::ERROR);
+    }
+
+    /**
+     * Scenario: the user is active in passbolt and not present in the directory and can be deleted
+     * Expected result: user is deleted
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case14_Null_Success_OK_deletable()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen'], SyncAction::SUCCESS);
+        $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => true]);
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: the user is active in passbolt and not present in the directory and can be deleted
+     *            and the plugin configuration is set to ignore deleted users
+     * Expected result: nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case14_Null_Success_OK_deletable_no_delete_job()
+    {
+        Configure::write('passbolt.plugins.directorySync.jobs.users.delete', false);
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen'], SyncAction::SUCCESS);
+        $report = $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
+        $this->assertEmpty($report);
+        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_SUCCESS);
+    }
+
+    /**
+     * Scenario: the user is deleted in the directory and user is inactive
+     * Expected result: delete user and directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case14_Null_Success_OK_Inactive()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::SUCCESS);
+        $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => true, 'active' => false]);
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: The user is deleted in directory and user is marked as to be ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case15_Null_Success_Ignore()
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), SyncAction::USERS);
         $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::ERROR);
-        $reports = $this->action->execute();
+        $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
-        $this->assertEquals(count($reports), 1);
-        $this->assertReportStatus($reports[0], SyncAction::IGNORE);
+    }
+
+    /**
+     * Scenario: The user is deleted in directory and already deleted in passbolt between sync
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncUserDelete_Case16_Null_Success_Deleted()
+    {
+        $this->action = new UserSyncAction();
+        $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
+        $this->action->execute();
+        $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
+        $this->assertDirectoryEntryEmpty();
     }
 }
