@@ -35,30 +35,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         'plugin.passbolt/directorySync.base/directoryIgnore',
     ];
 
-    /**
-     * Scenario: Group does not exist in ldap nor in passbolt
-     * Scenario: Group exist in passbolt and not in ldap
-     * Scenario: Group was deleted in passbolt and is not present in ldap
-     * Scenario: Group is marked as to be ignored and is not present in ldap
-     *
-     * Expected result: Do nothing
-     *
-     * @group DirectorySync
-     * @group DirectorySyncGroup
-     * @group DirectorySyncGroupAdd
-     */
-    public function testDirectorySyncGroup_Case01_04_Null_Null_Any()
-    {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
-
-        // Nothing should happen
-        $reports = $this->action->execute();
-        $this->assertEmpty($reports);
-
-        $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
-        $this->assertEquals(count($syncEntry), 0);
-    }
 
     /**
      * Scenario: Group was added in ldap
@@ -159,6 +135,45 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryGroupData($groupName); // is invalid coz name is too long
         $this->mockDirectoryEntryGroup($groupName, SyncAction::ERROR);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = ['action' => SyncAction::CREATE, 'model' => SyncAction::GROUPS, 'status' => SyncAction::ERROR];
+        $this->assertReport($reports[0], $expectedReport);
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario: Group creation failed initially and was fixed manually.
+     * Expected result: Mark as
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case38_Invalid_Error_Ok()
+    {
+        // TODO: fix this one.
+        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+
+        $groupName = str_repeat('group', 256);
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+
+        // Create a ldap data object that has same id as marketing entry, but a new invalid name.
+        $groupData = [
+            'id' => UuidFactory::uuid('ldap.group.id.marketing'),
+            'directory_name' => 'CN=' . ucfirst($groupName) . ',OU=PassboltUsers,DC=passbolt,DC=local',
+            'directory_created' => new FrozenTime(),
+            'directory_modified' => new FrozenTime(),
+            'group' => [
+                'name' => strtolower($groupName),
+                'groups' => [],
+                'users' => [],
+            ]
+        ];
+        $this->saveMockDirectoryGroupData($groupData);
+        $this->mockDirectoryEntryGroup('marketing', SyncAction::ERROR, null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);

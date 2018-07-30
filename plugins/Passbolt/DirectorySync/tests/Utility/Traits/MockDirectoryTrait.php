@@ -210,7 +210,7 @@ trait MockDirectoryTrait
         $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
     }
 
-    private function saveMockDirectoryGroupData($group)
+    public function saveMockDirectoryGroupData($group)
     {
         $groups = $this->action->getDirectory()->getGroups();
         $groups[] = $group;
