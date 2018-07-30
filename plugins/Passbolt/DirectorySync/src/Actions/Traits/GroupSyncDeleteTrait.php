@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Actions\Traits;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\SyncAction;
 
 trait GroupSyncDeleteTrait {
 
@@ -24,7 +25,9 @@ trait GroupSyncDeleteTrait {
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::IGNORE, $entry));
+        if (isset($entry->group) && !empty($entry->group) && $entry->group->deleted == false) {
+            $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::IGNORE, $entry));
+        }
     }
 
     /**
@@ -33,7 +36,9 @@ trait GroupSyncDeleteTrait {
     protected function handleDeletedEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::SYNC, $entry));
+        if (isset($entry->group) && $entry->group->deleted && $entry->status !== self::SUCCESS) {
+            $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::SYNC, $entry));
+        }
     }
 
     /**
@@ -41,11 +46,7 @@ trait GroupSyncDeleteTrait {
      */
     protected function handleNotPossibleDelete(DirectoryEntry $entry)
     {
-        // if the last try was already an error, do not retry more
-        if ($entry->status === self::ERROR) {
-            $this->DirectoryEntries->delete($entry);
-        } else {
-            // otherwise mark entry as error to allow future retry
+        if ($entry->status !== self::ERROR) {
             $this->DirectoryEntries->updateStatus($entry, self::ERROR);
         }
         $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry));

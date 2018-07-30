@@ -18,6 +18,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
+use Passbolt\DirectorySync\Model\Entity\DirectoryIgnore;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Utility\SyncAction;
@@ -27,12 +28,45 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     use AssertGroupsTrait;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/secrets',  'app.Base/roles', 'app.Base/resources',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-        'app.Base/favorites', 'app.Base/email_queue',
+        'app.Base/users',
+        'app.Base/groups',
+        'app.Base/secrets',
+        'app.Base/roles',
+        'app.Base/resources',
+        'app.Alt0/groups_users',
+        'app.Alt0/permissions',
+        'app.Base/avatars',
+        'app.Base/favorites',
+        'app.Base/email_queue',
         'plugin.passbolt/directorySync.base/directoryEntries',
         'plugin.passbolt/directorySync.base/directoryIgnore',
     ];
+
+    /**
+     * Test that orphans ignored are cleaned up
+     */
+    public function testCleanupOrphanIgnore()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), SyncAction::GROUPS);
+        $report = $this->action->execute();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertEmpty($report);
+    }
+
+    /**
+     * Test that orphans ignored are cleaned up
+     */
+    public function testCleanupOrphanDirectoryEntry()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryEntryGroup('groupdoesnotexist', DirectoryEntry::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('groupreallydoesnotexist', DirectoryEntry::STATUS_ERROR);
+        $report = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($report);
+    }
 
     /**
      * Scenario: Group doesn't exist in passbolt nor in the directory and there is no entry
@@ -49,7 +83,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         // Case2: Ok group is the group "marketing"
         // Case3: Deleted group is the group "deleted"
         $this->action = new GroupSyncAction();
-        $report = $this->action->execute();
+        $report       = $this->action->execute();
         $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
@@ -68,7 +102,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncGroupDelete_Case04a_Null_Null_Null_Ignore()
     {
         $this->action = new GroupSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), SyncAction::GROUPS);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), SyncAction::GROUPS);
         $report = $this->action->execute();
         $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
@@ -78,57 +112,132 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     }
 
     /**
-     * Scenario: Group is not in ldap and does not exist, but has an entry that is marked as ignored
+     * Scenario:
+     * Expected result: do nothing at all
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case04b_04c_Null_Null_Any_Ignore()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), SyncAction::GROUPS);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.deleted'), SyncAction::GROUPS);
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreContains(SyncAction::GROUPS, UuidFactory::uuid('group.id.marketing'));
+        $this->assertDirectoryIgnoreContains(SyncAction::GROUPS, UuidFactory::uuid('group.id.deleted'));
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
+    }
+
+    /**
+     * Scenario:
      * Expected result: Delete entry, delete ignore
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case05_Null_Any_Null_SyncIgnore()
+    public function testDirectorySyncGroupDelete_Case05a_05b_05c_Null_Any_Ignore_Null_Null()
     {
         $this->action = new GroupSyncAction();
 
         $this->mockDirectoryEntryGroup('groupdoesnotexist', DirectoryEntry::STATUS_SUCCESS);
         $this->mockDirectoryEntryGroup('groupisreallynotthere', SyncAction::ERROR);
-        $this->mockDirectoryEntryGroup('groupisignored', SyncAction::ERROR);
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), 'DirectoryEntry');
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.groupisignored'), 'DirectoryEntry');
-        $this->action->execute();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('groupdoesnotexist'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('groupisreallynotthere'), 'DirectoryEntry');
+        $report = $this->action->execute();
+        $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
     }
 
     /**
-     * Scenario: Group is not in ldap and does not exist, but has an entry
-     * Expected result: Delete entry
+     * Scenario:
+     * Expected result: Delete entry, delete ignore
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case13_09_05_Null_Any_Null()
+    public function testDirectorySyncGroupDelete_Case06a_06b_06c_Null_Any_Ignore_Ok_Null()
     {
         $this->action = new GroupSyncAction();
 
-        $this->mockDirectoryEntryGroup('groupdoesnotexist', DirectoryEntry::STATUS_SUCCESS);
-        $this->mockDirectoryEntryGroup('groupisreallynotthere', SyncAction::ERROR);
-        $this->mockDirectoryEntryGroup('groupisignored', SyncAction::ERROR);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.groupisignored'), 'DirectoryEntry');
-        $this->action->execute();
+        $this->mockDirectoryEntryGroup('marketing', DirectoryEntry::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('sales', DirectoryEntry::STATUS_ERROR);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.sales'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('groupisreallynotthere'), 'DirectoryEntry');
+        $reports = $this->action->execute();
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->assertGroupExist(UuidFactory::uuid('group.id.sales'), ['deleted' => false]);
+
+        $this->assertEquals(count($reports), 2);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+        $this->assertReport($reports[1], $expectedReport);
     }
+
+    public function testDirectorySyncGroupDelete_Case07a_07b_07c_Null_Any_Ignore_Deleted_Null() {
+        // Is already tested by testCleanupOrphanIgnore()
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Scenario: The group is deleted in directory and passbolt and entry was marked as to be ignored
+     * Expected result: delete directory entry, no report
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case08a_08b_08c_Null_Any_Ignore_Deleted_Null()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), 'DirectoryEntry');
+        $this->mockDirectoryEntryGroup('deleted', SyncAction::SUCCESS);
+        $report = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertEmpty($report);
+    }
+
+    /**
+     * Scenario:
+     * Expected result:
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case09_Null_Error_Null_Null_Null() {
+        // Already tested by testCleanupOrphanDirectoryEntry.
+        $this->assertTrue(true);
+    }
+
 
     /**
      * Scenario: The group was deleted in LDAP and could not be previously deleted in passbolt
-     * Expected result: group should be deleted
+     * Expected result: group should be deleted with a report
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case10_Group_deletable_Retry_Success()
+    public function testDirectorySyncGroupDelete_Case10a_Null_Error_Null_Ok_Null()
     {
         $this->action = new GroupSyncAction();
         $this->mockDirectoryEntryGroup('marketing', SyncAction::ERROR);
@@ -136,7 +245,12 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
         $this->assertEquals(count($reports), 1);
-        $this->assertReportStatus($reports[0], SyncAction::SUCCESS);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::SUCCESS
+        ];
+        $this->assertReport($reports[0], $expectedReport);
     }
 
     /**
@@ -147,96 +261,66 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case10_Group_Not_deletable_Retry_Error()
+    public function testDirectorySyncGroupDelete_Case10b_Null_Error_Null_NotDeletable_Null()
     {
         $this->action = new GroupSyncAction();
         $this->mockDirectoryEntryGroup('accounting', SyncAction::ERROR);
         $reports = $this->action->execute();
-        $this->assertDirectoryEntryEmpty();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
-        $this->assertEquals(count($reports), 1);
-        $this->assertReportStatus($reports[0], SyncAction::ERROR);
-    }
-
-
-    /**
-     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
-     *            and the plugin configuration is set to ignore deleted groups
-     * Expected result: nothing
-     *
-     * @group DirectorySync
-     * @group DirectorySyncGroup
-     * @group DirectorySyncGroupDelete
-     */
-    public function testDirectorySyncGroupDelete_Case14_Group_deletable_config_ignore()
-    {
-        Configure::write('passbolt.plugins.directorySync.jobs.groups.delete', false);
-        $this->action = new GroupSyncAction();
-        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_SUCCESS);
-    }
-
-    /**
-     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
-     *            and the plugin configuration is set to ignore deleted groups
-     * Expected result: nothing
-     *
-     * @group DirectorySync
-     * @group DirectorySyncGroup
-     * @group DirectorySyncGroupDelete
-     */
-    public function testDirectorySyncGroupDelete_Case14_Group_deletable_config_ok()
-    {
-        $this->action = new GroupSyncAction();
-        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-        $reports = $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => true]);
-        $this->assertDirectoryEntryEmpty();
-        $this->assertEquals(count($reports), 1);
-        $this->assertReportAction($reports[0], SyncAction::DELETE);
-        $this->assertReportStatus($reports[0], SyncAction::SUCCESS);
-    }
-
-    /**
-     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
-     *            and the plugin configuration is set to ignore deleted groups
-     * Expected result: nothing
-     *
-     * @group DirectorySync
-     * @group DirectorySyncGroup
-     * @group DirectorySyncGroupDelete
-     */
-    public function testDirectorySyncGroupDelete_Case14_Group_not_deletable()
-    {
-        $this->action = new GroupSyncAction();
-        $this->mockDirectoryEntryGroup('accounting', SyncAction::SUCCESS);
-        $reports = $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
         $this->assertOneDirectoryEntry(SyncAction::ERROR);
+        $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
         $this->assertEquals(count($reports), 1);
-        $this->assertReportAction($reports[0], SyncAction::DELETE);
-        $this->assertReportStatus($reports[0], SyncAction::ERROR);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::ERROR
+        ];
+        $this->assertReport($reports[0], $expectedReport);
     }
 
-
     /**
-     * Scenario: The group is deleted in directory and passbolt and entry was marked as to be ignored
-     * Expected result: delete directory entry
+     * Scenario: The group exists in directory and marked as to be ignored after an error
+     * Expected result: delete directory entry, one ignored report.
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case8_Null_Ignore_Deleted()
+    public function testDirectorySyncGroupDelete_Case11a_Null_Error_Null_Ok_Ignore()
     {
         $this->action = new GroupSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), 'DirectoryEntry');
-        $this->mockDirectoryEntryGroup('deleted', SyncAction::SUCCESS);
-        $this->action->execute();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), SyncAction::GROUPS);
+        $this->mockDirectoryEntryGroup('marketing', SyncAction::ERROR);
+        $reports = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+        // TODO: discuss with remy (left a comment in doc)
+        $this->markAsRisky();
+    }
+
+    /**
+     * Scenario: The group is deleted in directory and marked as to be ignored after an error
+     * Expected result: delete directory entry, no reports.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case11b_Null_Error_Null_Deleted_Ignore()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.deleted'), SyncAction::GROUPS);
+        $this->mockDirectoryEntryGroup('deleted', SyncAction::ERROR);
+        $reports = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
     }
 
     /**
@@ -247,30 +331,115 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case12_Null_Error_Deleted()
+    public function testDirectorySyncGroupDelete_Case12_Null_Error_Null_Deleted_Null()
     {
         $this->action = new GroupSyncAction();
         $this->mockDirectoryEntryGroup('deleted', SyncAction::ERROR);
-        $this->action->execute();
+        $reports = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::SYNC
+        ];
+        $this->assertReport($reports[0], $expectedReport);
     }
 
     /**
-     * Scenario: The group is deleted in directory and manually deleted in passbolt between sync after a success
+     * Scenario: The group is deleted in directory and manually deleted in passbolt between sync after an error
      * Expected result: delete directory entry
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
+     *
+     * TODO
      */
-    public function testDirectorySyncGroupDelete_Case16_Null_Success_Deleted()
+    public function testDirectorySyncGroupDelete_Case13_Null_Success_Null_Null_Null()
+    {
+//        $this->action = new GroupSyncAction();
+//        $this->mockDirectoryEntryGroup('donotexist', SyncAction::SUCCESS);
+//        $reports = $this->action->execute();
+//        $this->assertDirectoryEntryEmpty();
+//        $this->assertEquals(count($reports), 1);
+//        $expectedReport = [
+//            'action' => SyncAction::DELETE,
+//            'model'  => SyncAction::GROUPS,
+//            'status' => SyncAction::SYNC
+//        ];
+//        $this->assertReport($reports[0], $expectedReport);
+    }
+
+
+//    /**
+//     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
+//     *            and the plugin configuration is set to ignore deleted groups
+//     * Expected result: nothing
+//     *
+//     * @group DirectorySync
+//     * @group DirectorySyncGroup
+//     * @group DirectorySyncGroupDelete
+//     */
+//    public function testDirectorySyncGroupDelete_Case14_Group_deletable_config_ignore()
+//    {
+//        Configure::write('passbolt.plugins.directorySync.jobs.groups.delete', false);
+//        $this->action = new GroupSyncAction();
+//        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
+//        $this->action->execute();
+//        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+//        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_SUCCESS);
+//    }
+//
+    /**
+     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
+     *            and the plugin configuration is set to ignore deleted groups
+     * Expected result: nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case14a_Null_Success_Null_Ok_Null()
     {
         $this->action = new GroupSyncAction();
-        $this->mockDirectoryEntryGroup('deleted', SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
+        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::SUCCESS
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+    }
+
+    /**
+     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
+     *            and the plugin configuration is set to ignore deleted groups
+     * Expected result: nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case14b_Null_Success_Null_NoDeletable_Null()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryEntryGroup('accounting', SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
+        $this->assertOneDirectoryEntry(SyncAction::ERROR);
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::ERROR
+        ];
+        $this->assertReport($reports[0], $expectedReport);
     }
 
     /**
@@ -281,68 +450,39 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case15_Null_Success_Ignore()
+    public function testDirectorySyncGroupDelete_Case15_Null_Success_Null_OkOrDeleted_Ignore()
     {
         $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), 'DirectoryEntry');
         $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-        $this->action->execute();
+        $reports = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::DELETE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedReport);
     }
 
+
     /**
-     * Scenario: The group is deleted in directory and marked as to be ignored after an error
+     * Scenario: The group is deleted in directory and manually deleted in passbolt between sync after a success
      * Expected result: delete directory entry
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case11_Null_Error_Ignore()
+    public function testDirectorySyncGroupDelete_Case16_Null_Success_Null_Deleted_Null()
     {
         $this->action = new GroupSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), 'DirectoryEntry');
-        $this->mockDirectoryEntryGroup('marketing', SyncAction::ERROR);
-        $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->mockDirectoryEntryGroup('deleted', SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: Group is deleted in directory and both directory entry and group are marked to be ignored
-     * Expected result: delete directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncGroup
-     * @group DirectorySyncGroupDelete
-     */
-    public function testDirectorySyncGroupDelete_Case7_Null_Ignore_Ignore()
-    {
-        $this->action = new GroupSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), 'DirectoryEntry');
-        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), SyncAction::GROUPS);
-        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
-    }
-
-    /**
-     * Scenario: Group is deleted in directory and directory entry is marked to be ignored
-     * Expected result: delete directory entry
-     *
-     * @group DirectorySync
-     * @group DirectorySyncGroup
-     * @group DirectorySyncGroupDelete
-     */
-    public function testDirectorySyncGroupDelete_Case6_Null_Ignore_Ok()
-    {
-        $this->action = new GroupSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), SyncAction::GROUPS);
-        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-        $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
     }
 }

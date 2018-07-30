@@ -138,6 +138,8 @@ class GroupSyncAction extends SyncAction
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::GROUPS, $entriesId);
+        $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
+        $this->DirectoryIgnore->cleanupHardDeletedGroups();
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
@@ -146,7 +148,7 @@ class GroupSyncAction extends SyncAction
                 continue;
             }
 
-            // The user was already hard or soft deleted
+            // The group was already hard or soft deleted
             if ($entry->group === null || $entry->group->deleted) {
                 $this->handleDeletedEntry($entry);
                 continue;

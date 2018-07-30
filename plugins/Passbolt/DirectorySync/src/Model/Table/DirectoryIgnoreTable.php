@@ -158,7 +158,7 @@ class DirectoryIgnoreTable extends Table
             ->leftJoinWith('Groups')
             ->where(function ($exp, $q) {
                 return $exp
-                    ->isNull('Users' . '.id')
+                    ->isNull('Groups' . '.id')
                     ->eq('DirectoryIgnore.foreign_model', 'Groups');
             });
 
@@ -188,6 +188,6 @@ class DirectoryIgnoreTable extends Table
                     ->eq('DirectoryIgnore.foreign_model', 'DirectoryEntry');
             });
 
-        return $this->cleanupHardDeleted('Users', $dryRun, $query);
+        return $this->cleanupHardDeleted('DirectoryEntry', $dryRun, $query);
     }
 }
