@@ -26,9 +26,9 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
     use AssertUsersTrait;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
+        'app.Base/users', 'app.Base/profiles', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
         'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-        'app.Base/favorites', 'app.Base/email_queue',
+        'app.Base/favorites', 'app.Base/email_queue', 'app.Base/authentication_tokens',
         'plugin.passbolt/directorySync.base/directoryEntries',
         'plugin.passbolt/directorySync.base/directoryIgnore'
     ];

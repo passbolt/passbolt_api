@@ -177,7 +177,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
-        $expectedReport = ['action' => SyncAction::CREATE, 'model' => SyncAction::GROUPS, 'status' => SyncAction::ERROR];
+        $expectedReport = ['action' => SyncAction::CREATE, 'model' => SyncAction::GROUPS, 'status' => SyncAction::SYNC];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreEmpty();
     }
