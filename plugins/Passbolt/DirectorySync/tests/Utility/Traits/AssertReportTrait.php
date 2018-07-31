@@ -26,7 +26,7 @@ trait AssertReportTrait
             $fullname = get_class($report->getData());
             $length = strlen($type);
             $endswith = $length === 0 || (substr($fullname, -$length) === $type);
-            $this->assertEquals(true, $endswith);
+            $this->assertEquals(true, $endswith, __('Failed to check that type {0} is in {1}', $type, $fullname));
         }
     }
 
@@ -63,5 +63,24 @@ trait AssertReportTrait
         if (isset($data['action'])) {
             $this->assertReportAction($report, $data['action']);
         }
+        if (isset($data['type'])) {
+            $this->assertReportDataType($report, $data['type']);
+        }
+    }
+
+    /**
+     * @param array $reports
+     */
+    public function assertReportEmpty(array $reports)
+    {
+        $this->assertEquals(0, count($reports), 'The report should be empty.');
+    }
+
+    /**
+     * @param array $reports
+     */
+    public function assertReportNotEmpty(array $reports)
+    {
+        $this->assertEquals(true, count($reports) >= 1, 'The report should not be empty.');
     }
 }

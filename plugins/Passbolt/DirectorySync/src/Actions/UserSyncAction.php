@@ -121,9 +121,9 @@ class UserSyncAction extends SyncAction
             // User can be deleted
             try {
                 if (!$this->Users->softDelete($entry->user)) {
-                    $this->handleSuccessfulDelete($entry);
-                } else {
                     $this->handleErrorDelete($entry);
+                } else {
+                    $this->handleSuccessfulDelete($entry);
                 }
             } catch(InternalErrorException $exception) {
                 // TODO discuss format ErrorReport() ?

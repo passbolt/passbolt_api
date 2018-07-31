@@ -51,7 +51,7 @@ trait AssertDirectoryTrait
     public function assertDirectoryIgnoreEmpty()
     {
         $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->all()->toArray();
-        $this->assertEmpty($di, __('Directory ignore list should be empty, {0} found', count($di)));
+        $this->assertEmpty($di, __('Directory ignore list should be empty, {0} found. {1}', count($di)));
     }
 
     /**
