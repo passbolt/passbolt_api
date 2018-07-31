@@ -23,6 +23,9 @@ trait AssertReportTrait
         if ($type === 'array') {
             $this->assertEquals(true, is_array($report->getData()));
         } else {
+            if (is_array($report->getData())) {
+                $this->fail('The report type should not be an array.');
+            }
             $fullname = get_class($report->getData());
             $length = strlen($type);
             $endswith = $length === 0 || (substr($fullname, -$length) === $type);

@@ -149,9 +149,10 @@ class UserSyncAction extends SyncAction
             }
 
             // If directory entry or user are marked as to be ignored
-            if (in_array($data['id'], $this->entriesToIgnore) ||
-                (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore))) {
-                $this->handleAddIgnore($data, $entry);
+            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
+            $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore));
+            if ($ignoreEntry || $ignoreUser) {
+                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser);
                 continue;
             }
 

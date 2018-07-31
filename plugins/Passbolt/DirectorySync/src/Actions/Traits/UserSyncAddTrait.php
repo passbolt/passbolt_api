@@ -15,26 +15,32 @@
 namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Model\Entity\User;
-use Cake\ORM\Entity;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Utility\SyncAction;
-use Twig\Error\SyntaxError;
 
 trait UserSyncAddTrait {
 
     /**
      * @param array $data
      * @param DirectoryEntry|null $entry
+     * @param User|null $existingUser
+     * @param bool $ignoreUser
      */
-    function handleAddIgnore(array $data, DirectoryEntry $entry = null)
+    function handleAddIgnore(array $data, DirectoryEntry $entry = null, User $existingUser = null, bool $ignoreUser)
     {
         if (isset($entry)) {
             // Delete dir entry if any, no need to keep ignored entries
             $this->DirectoryEntries->delete($entry);
             $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => 'DirectoryEntry']);
+        }
+        if (!isset($entry) && isset($existingUser) && $ignoreUser && !$existingUser->deleted) {
+            return; // case19a/35
+        }
+        if (isset($entry) && $entry->status == SyncAction::SUCCESS && $ignoreUser && !$existingUser->deleted) {
+            return; // case27a
         }
         $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $data));
     }
@@ -117,7 +123,7 @@ trait UserSyncAddTrait {
         if (isset($entry) && (!isset($entry->foreign_key) || ($entry->foreign_key !== $existingUser->id))) {
             $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
         }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $data));
+        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $existingUser));
         $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $existingUser, $entry);
     }
 
