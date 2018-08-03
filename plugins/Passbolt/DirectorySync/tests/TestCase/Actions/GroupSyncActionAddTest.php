@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
@@ -454,7 +454,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
-        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
 
         $reports = $this->action->execute();
@@ -482,14 +482,14 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted');
-        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $this->assertReportStatus($reports[0], SyncAction::IGNORE);
 
         $this->assertDirectoryIgnoreContains(SyncAction::GROUPS, $group->id);
-        $this->assertDirectoryIgnoreContains(SyncAction::DIRECTORY_ENTRY, $groupData['id']);
+        $this->assertDirectoryIgnoreContains(SyncAction::DIRECTORY_ENTRIES, $groupData['id']);
     }
 
     /**
@@ -553,7 +553,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing');
-        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -650,7 +650,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing');
         $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
-        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);

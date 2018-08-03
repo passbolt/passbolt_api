@@ -39,7 +39,7 @@ class SyncAction
     const GROUPS = 'Groups';
     const USERS = 'Users';
     const MEMBERS = 'GroupsUsers';
-    const DIRECTORY_ENTRY = 'DirectoryEntry';
+    const DIRECTORY_ENTRIES = 'DirectoryEntries';
 
     /**
      * SyncAction constructor.

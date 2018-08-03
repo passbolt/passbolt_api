@@ -14,12 +14,15 @@
  */
 namespace Passbolt\DirectorySync\Model\Table;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
-use App\Model\Traits\Cleanup\UsersCleanupTrait;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cake\Utility\Inflector;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
 /**
  * DirectoryIgnore Model
@@ -91,7 +94,10 @@ class DirectoryIgnoreTable extends Table
 
         $validator
             ->scalar('foreign_model')
-            ->requirePresence('foreign_model');
+            ->requirePresence('foreign_model')
+            ->inList('foreign_model', [
+                'Users', 'Groups', 'DirectoryEntries'
+            ]);
 
         return $validator;
     }
@@ -105,6 +111,24 @@ class DirectoryIgnoreTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->add(
+            function ($entity, $options) {
+                if ($entity->foreign_model !== 'DirectoryEntries') {
+                    $model = TableRegistry::getTableLocator()->get($entity->foreign_model);
+                    try {
+                        $model->get($entity->id);
+                    } catch (RecordNotFoundException $exception) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            'AssociatedRecordExists',
+            [
+                'errorField' => 'id',
+                'message' => __('The associated record could not be found')
+            ]
+        );
         return $rules;
     }
 
@@ -112,7 +136,7 @@ class DirectoryIgnoreTable extends Table
      * @param $data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      */
-    public function create($data)
+    public function create(array $data)
     {
         $entity = $this->newEntity($data, [
             'accessibleFields' => [
@@ -126,12 +150,50 @@ class DirectoryIgnoreTable extends Table
     }
 
     /**
+     * @param string $foreignModel
+     * @param string $foreignKey
+     * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     */
+    public function createOrFail(string $foreignModel, string $foreignKey)
+    {
+        try {
+            $entry = $this->get($foreignKey);
+        } catch(RecordNotFoundException $exception) {}
+        if (isset($entry)) {
+            throw new BadRequestException(__('This record is already marked as to be ignored.'));
+        }
+
+        $ignore = $this->newEntity(
+            [
+                'id' => $foreignKey,
+                'foreign_model' => $foreignModel
+            ], [
+                'accessibleFields' => [
+                    'id' => true,
+                    'foreign_model' => true
+                ]]
+        );
+        if ($ignore->getErrors()) {
+            throw new ValidationException(__('This is not a valid record to ignore.'), $ignore, $this);
+        }
+        $this->checkRules($ignore);
+        if ($ignore->getErrors()) {
+            throw new ValidationException(__('This is not a valid record to ignore.'), $ignore, $this);
+        }
+        if (!$this->save($ignore, ['checkrules' => false])) {
+            throw new InternalErrorException(__('Could not ignore the record. Please try again later.'));
+        }
+
+        return $ignore;
+    }
+
+    /**
      * Delete all association records where associated users entities are deleted
      *
      * @param bool $dryRun false
      * @return number of affected records
      */
-    public function cleanupHardDeletedUsers($dryRun = false)
+    public function cleanupHardDeletedUsers(bool $dryRun = false)
     {
         $query = $this->query()
             ->select(['id'])
@@ -151,7 +213,7 @@ class DirectoryIgnoreTable extends Table
      * @param bool $dryRun false
      * @return number of affected records
      */
-    public function cleanupHardDeletedGroups($dryRun = false)
+    public function cleanupHardDeletedGroups(bool $dryRun = false)
     {
         $query = $this->query()
             ->select(['id'])
@@ -172,7 +234,7 @@ class DirectoryIgnoreTable extends Table
      * @param bool $dryRun
      * @return number
      */
-    public function cleanupHardDeletedDirectoryEntries(array $entryIds = null, $dryRun = false)
+    public function cleanupHardDeletedDirectoryEntries(array $entryIds = null, bool $dryRun = false)
     {
         $query = $this->query()
             ->select(['id']);
@@ -185,9 +247,9 @@ class DirectoryIgnoreTable extends Table
             ->where(function ($exp, $q) {
                 return $exp
                     ->isNull('DirectoryEntries' . '.id')
-                    ->eq('DirectoryIgnore.foreign_model', 'DirectoryEntry');
+                    ->eq('DirectoryIgnore.foreign_model', 'DirectoryEntries');
             });
 
-        return $this->cleanupHardDeleted('DirectoryEntry', $dryRun, $query);
+        return $this->cleanupHardDeleted('DirectoryEntries', $dryRun, $query);
     }
 }

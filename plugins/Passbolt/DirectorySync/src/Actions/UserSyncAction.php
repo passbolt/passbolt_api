@@ -55,7 +55,7 @@ class UserSyncAction extends SyncAction
     {
         $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
-            ->where(['foreign_model' => 'DirectoryEntry'])
+            ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
             ->all()
             ->toArray(), '{n}.id');
 
