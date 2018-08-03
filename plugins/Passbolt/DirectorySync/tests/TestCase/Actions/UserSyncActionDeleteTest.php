@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
@@ -151,7 +151,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case05a_Null_Ignore_Null_Orphan()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), SyncAction::DIRECTORY_ENTRIES);
         $report = $this->action->execute();
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
@@ -170,7 +170,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryEntryUser(['fname' => 'mia'], SyncAction::ERROR);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), SyncAction::DIRECTORY_ENTRIES);
         $report = $this->action->execute();
         $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
@@ -189,7 +189,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     {
         $this->action = new UserSyncAction();
         $this->mockDirectoryEntryUser(['fname' => 'mia'], SyncAction::SUCCESS);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.mia'), SyncAction::DIRECTORY_ENTRIES);
         $report = $this->action->execute();
         $this->assertEmpty($report);
         $this->assertDirectoryEntryEmpty();
@@ -207,7 +207,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case06a_Null_Ignore_OK()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), SyncAction::DIRECTORY_ENTRIES);
         $report = $this->action->execute();
         $this->assertEmpty($report);
         $this->assertDirectoryIgnoreEmpty();
@@ -226,13 +226,13 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case06b_Null_Ignore_OK()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::ERROR);
         $report = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertDirectoryEntryEmpty();
         $this->assertReportNotEmpty($report);
-        $this->assertReport($report[0], ['status' => SyncAction::IGNORE, 'type' => 'DirectoryEntry']);
+        $this->assertReport($report[0], ['status' => SyncAction::IGNORE, 'type' => SyncAction::DIRECTORY_ENTRIES]);
     }
 
     /**
@@ -246,13 +246,13 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case06c_Null_Ignore_OK()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ruth'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'teitelbaum'], SyncAction::SUCCESS);
         $report = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertDirectoryEntryEmpty();
         $this->assertReportNotEmpty($report);
-        $this->assertReport($report[0], ['status' => SyncAction::IGNORE, 'type' => 'DirectoryEntry']);
+        $this->assertReport($report[0], ['status' => SyncAction::IGNORE, 'type' => SyncAction::DIRECTORY_ENTRIES]);
     }
 
     /**
@@ -266,7 +266,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case07a_Null_Ignore_Ignore()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.nope'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.nope'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.nope'), SyncAction::USERS);
         $report = $this->action->execute();
         $this->assertReportEmpty($report);
@@ -285,7 +285,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case07b_Null_Ignore_Ignore()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.nope'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.nope'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.nope'), SyncAction::USERS);
         $this->mockDirectoryEntryUser(['fname' => 'nope', 'lname' => 'nope'], SyncAction::ERROR);
         $report = $this->action->execute();
@@ -305,7 +305,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case07c_Null_Ignore_Ignore()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.nope'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.nope'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.nope'), SyncAction::USERS);
         $this->mockDirectoryEntryUser(['fname' => 'nope', 'lname' => 'nope'], SyncAction::SUCCESS);
         $report = $this->action->execute();
@@ -325,7 +325,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case08a_Null_Ignore_Deleted()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), SyncAction::DIRECTORY_ENTRIES);
         $report = $this->action->execute();
         $this->assertReportEmpty($report);
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
@@ -343,7 +343,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case08b_Null_Ignore_Deleted()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::ERROR);
         $report = $this->action->execute();
         $this->assertReportEmpty($report);
@@ -362,7 +362,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
     public function testDirectorySyncUserDelete_Case08c_Null_Ignore_Deleted()
     {
         $this->action = new UserSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), 'DirectoryEntry');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'kovalevskaya'], SyncAction::SUCCESS);
         $report = $this->action->execute();
         $this->assertReportEmpty($report);
@@ -463,7 +463,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $reports = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertReportNotEmpty($reports);
-        $expectedReport = ['action' => SyncAction::DELETE, 'model' => SyncAction::USERS, 'status' => SyncAction::IGNORE, 'type' => 'DirectoryEntry'];
+        $expectedReport = ['action' => SyncAction::DELETE, 'model' => SyncAction::USERS, 'status' => SyncAction::IGNORE, 'type' => SyncAction::DIRECTORY_ENTRIES];
         $this->assertReport($reports[0], $expectedReport);
     }
 
@@ -502,7 +502,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
         $this->assertReportNotEmpty($reports);
-        $expectedReport = ['action' => SyncAction::DELETE, 'model' => SyncAction::USERS, 'status' => SyncAction::SYNC, 'type' => 'DirectoryEntry'];
+        $expectedReport = ['action' => SyncAction::DELETE, 'model' => SyncAction::USERS, 'status' => SyncAction::SYNC, 'type' => SyncAction::DIRECTORY_ENTRIES];
         $this->assertReport($reports[0], $expectedReport);
     }
 
@@ -619,7 +619,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $reports = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertReportNotEmpty($reports);
-        $expectedReport = ['action' => SyncAction::DELETE, 'model' => SyncAction::USERS, 'status' => SyncAction::IGNORE, 'type' => 'DirectoryEntry'];
+        $expectedReport = ['action' => SyncAction::DELETE, 'model' => SyncAction::USERS, 'status' => SyncAction::IGNORE, 'type' => SyncAction::DIRECTORY_ENTRIES];
         $this->assertReport($reports[0], $expectedReport);
     }
 

@@ -95,7 +95,7 @@ class GroupSyncAction extends SyncAction
         // Find all the entries to ignore.
         $this->directoryIdsToIgnore = Hash::extract($this->DirectoryIgnore->find()
           ->select(['id'])
-          ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRY])
+          ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
           ->all()
           ->toArray(), '{n}.id');
 

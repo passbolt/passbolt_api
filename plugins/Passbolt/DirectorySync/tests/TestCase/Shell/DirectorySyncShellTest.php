@@ -13,6 +13,7 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Shell;
+
 use Cake\Console\Shell;
 use Cake\TestSuite\ConsoleIntegrationTestCase;
 

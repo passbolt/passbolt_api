@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
@@ -34,7 +34,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         'plugin.passbolt/directorySync.base/directoryEntries',
         'plugin.passbolt/directorySync.base/directoryIgnore',
     ];
-
 
     /**
      * Scenario: Group was added in ldap
@@ -736,7 +735,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
-        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
 
         $reports = $this->action->execute();
@@ -765,7 +764,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
-        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryGroup('newgroup', SyncAction::ERROR);
 
         $reports = $this->action->execute();
@@ -794,7 +793,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
-        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryGroup('newgroup', SyncAction::SUCCESS);
 
         $reports = $this->action->execute();
@@ -825,7 +824,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryEntryGroup('newgroup', SyncAction::SUCCESS);
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.newgroup'), SyncAction::GROUPS);
-        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
 
@@ -859,7 +858,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $groupData = $this->mockDirectoryGroupData('marketing');
         $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
         $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
-        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEmpty($reports);
@@ -882,7 +881,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing');
-        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEmpty($reports);
@@ -906,13 +905,13 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted');
-        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $this->assertReportStatus($reports[0], SyncAction::IGNORE);
 
-        $this->assertDirectoryIgnoreContains(SyncAction::DIRECTORY_ENTRY, $groupData['id']);
+        $this->assertDirectoryIgnoreContains(SyncAction::DIRECTORY_ENTRIES, $groupData['id']);
     }
 
     /**
@@ -961,6 +960,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case34_Invalid_Null_Null_Ok_Null()
     {
         // can't test
+        $this->markTestSkipped();
     }
 
     /**
@@ -998,6 +998,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case36a_Invalid_Null_Null_DeletedBefore_Null()
     {
         // Can't test.
+        $this->markTestSkipped();
     }
 
     /**
@@ -1011,6 +1012,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case36b_Invalid_Null_Null_DeletedAfter_Null()
     {
         // Can't test.
+        $this->markTestSkipped();
     }
 
     /**
@@ -1395,7 +1397,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
 
         $this->mockDirectoryGroupData('newgroup', ['cn' => $invalidGroupName]);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.newgroup'), SyncAction::DIRECTORY_ENTRY);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.newgroup'), SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);

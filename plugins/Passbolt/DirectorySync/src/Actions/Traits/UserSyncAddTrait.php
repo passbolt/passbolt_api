@@ -34,7 +34,7 @@ trait UserSyncAddTrait {
         if (isset($entry)) {
             // Delete dir entry if any & recreate ignore ref if needed
             $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => SyncAction::DIRECTORY_ENTRY]);
+            $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => SyncAction::DIRECTORY_ENTRIES]);
         }
 
         // do not overly report ignored record when there is nothing to do

@@ -16,12 +16,12 @@ namespace Passbolt\DirectorySync\Test\Utility;
 
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
+use App\Test\Lib\AppIntegrationTestCase;
 
-abstract class DirectorySyncTestCase extends TestCase
+abstract class DirectorySyncTestCase extends AppIntegrationTestCase
 {
     private $originalConfig;
 
