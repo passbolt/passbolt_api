@@ -15,7 +15,7 @@
 // @codingStandardsIgnoreStart
 use Migrations\AbstractMigration;
 
-class V220DirectorySyncIgnoreMigration extends AbstractMigration
+class V220DirectoryRelationsInitialMigration extends AbstractMigration
 {
 
     protected function init() {
@@ -29,7 +29,7 @@ class V220DirectorySyncIgnoreMigration extends AbstractMigration
      */
     public function up()
     {
-        $this->table('directory_ignore', [
+        $this->table('directory_relations', [
                 'id' => false, 'primary_key' => ['id'],
                 'collation' => 'utf8mb4_unicode_ci']
              )
@@ -38,11 +38,16 @@ class V220DirectorySyncIgnoreMigration extends AbstractMigration
                  'limit' => 36,
                  'null' => false,
              ])
-             ->addColumn('foreign_model', 'string', [
-                 'default' => null,
-                 'limit' => 36,
-                 'null' => false,
+             ->addColumn('parent_key', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => true,
              ])
+            ->addColumn('child_key', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => true,
+            ])
              ->addColumn('created', 'datetime', [
                  'default' => null,
                  'limit' => null,
@@ -50,7 +55,8 @@ class V220DirectorySyncIgnoreMigration extends AbstractMigration
              ])
              ->addIndex([
                  'id',
-                 'foreign_model',
+                 'parent_key',
+                 'child_key',
              ])
              ->create();
     }

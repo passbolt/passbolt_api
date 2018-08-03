@@ -15,7 +15,7 @@
 // @codingStandardsIgnoreStart
 use Migrations\AbstractMigration;
 
-class V220DirectorySyncInitialMigration extends AbstractMigration
+class V220DirectoryEntriesInitialMigration extends AbstractMigration
 {
 
     protected function init() {
