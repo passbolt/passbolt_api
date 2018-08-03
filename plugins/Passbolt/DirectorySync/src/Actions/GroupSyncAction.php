@@ -163,9 +163,9 @@ class GroupSyncAction extends SyncAction
             // Group can be deleted
             try {
                 if (!$this->Groups->softDelete($entry->group)) {
-                    $this->handleSuccessfulDelete($entry);
-                } else {
                     $this->handleErrorDelete($entry);
+                } else {
+                    $this->handleSuccessfulDelete($entry);
                 }
             } catch(InternalErrorException $exception) {
                 // TODO discuss format ErrorReport() ?

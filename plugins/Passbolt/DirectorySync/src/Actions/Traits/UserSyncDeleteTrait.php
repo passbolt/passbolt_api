@@ -21,17 +21,12 @@ trait UserSyncDeleteTrait {
     /**
      * @param DirectoryEntry $entry
      */
-    protected function handleUserIgnoreOrphans(DirectoryEntry $entry)
-    {
-
-    }
-
-    /**
-     * @param DirectoryEntry $entry
-     */
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
+        if (isset($entry->user) && !empty($entry->user) && !$entry->user->deleted) {
+            $this->addReport(new ActionReport(self::USERS, self::DELETE, self::IGNORE, $entry));
+        }
     }
 
     /**
@@ -40,7 +35,9 @@ trait UserSyncDeleteTrait {
     protected function handleDeletedEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::SYNC, $entry));
+        if (isset($entry->user) && $entry->user->deleted && $entry->status !== self::SUCCESS) {
+            $this->addReport(new ActionReport(self::USERS, self::DELETE, self::SYNC, $entry));
+        }
     }
 
     /**
@@ -55,7 +52,7 @@ trait UserSyncDeleteTrait {
             // otherwise mark entry as error to allow future retry
             $this->DirectoryEntries->updateStatus($entry, self::ERROR);
         }
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::ERROR, $entry));
+        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::ERROR, $entry->user));
     }
 
     /**
@@ -63,8 +60,8 @@ trait UserSyncDeleteTrait {
      */
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
     {
-        $this->DirectoryEntries->updateStatus($entry, self::ERROR);
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::ERROR, $entry));
+        $this->DirectoryEntries->delete($entry);
+        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::SUCCESS, $entry->user));
     }
 
     /**
@@ -72,7 +69,7 @@ trait UserSyncDeleteTrait {
      */
     protected function handleErrorDelete(DirectoryEntry $entry)
     {
-        $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::SUCCESS, $entry));
+        $this->DirectoryEntries->updateStatus($entry, self::ERROR);
+        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::ERROR, $entry));
     }
 }

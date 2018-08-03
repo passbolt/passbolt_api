@@ -95,9 +95,9 @@ class UserSyncAction extends SyncAction
     function processEntriesToDelete()
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
+        $this->DirectoryIgnore->cleanupHardDeletedUsers();
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::USERS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-        $this->DirectoryIgnore->cleanupHardDeletedUsers();
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
@@ -121,9 +121,9 @@ class UserSyncAction extends SyncAction
             // User can be deleted
             try {
                 if (!$this->Users->softDelete($entry->user)) {
-                    $this->handleSuccessfulDelete($entry);
-                } else {
                     $this->handleErrorDelete($entry);
+                } else {
+                    $this->handleSuccessfulDelete($entry);
                 }
             } catch(InternalErrorException $exception) {
                 // TODO discuss format ErrorReport() ?
@@ -149,9 +149,10 @@ class UserSyncAction extends SyncAction
             }
 
             // If directory entry or user are marked as to be ignored
-            if (in_array($data['id'], $this->entriesToIgnore) ||
-                (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore))) {
-                $this->handleAddIgnore($data, $entry);
+            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
+            $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore));
+            if ($ignoreEntry || $ignoreUser) {
+                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser, $ignoreEntry);
                 continue;
             }
 

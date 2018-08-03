@@ -15,28 +15,46 @@
 namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Model\Entity\User;
-use Cake\ORM\Entity;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Utility\SyncAction;
-use Twig\Error\SyntaxError;
 
 trait UserSyncAddTrait {
 
     /**
      * @param array $data
      * @param DirectoryEntry|null $entry
+     * @param User|null $existingUser
+     * @param bool $ignoreUser
      */
-    function handleAddIgnore(array $data, DirectoryEntry $entry = null)
+    function handleAddIgnore(array $data, DirectoryEntry $entry = null, User $existingUser = null, bool $ignoreUser, bool $ignoreEntry)
     {
         if (isset($entry)) {
-            // Delete dir entry if any, no need to keep ignored entries
+            // Delete dir entry if any & recreate ignore ref if needed
             $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => 'DirectoryEntry']);
+            $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => SyncAction::DIRECTORY_ENTRY]);
         }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $data));
+
+        // do not overly report ignored record when there is nothing to do
+        // ref. specs cases 19a, 26, 27a, 30b, 35
+        if (isset($existingUser) && !$existingUser->deleted) {
+            if ($ignoreUser && (!isset($entry) || $entry->status === SyncAction::SUCCESS)) {
+                return;
+            }
+            if ($ignoreEntry) {
+                return;
+            }
+        }
+        if ($ignoreUser) {
+            $reportData = $existingUser;
+        } elseif (isset($entry)) {
+            $reportData = $entry;
+        } else {
+            $reportData = $data;
+        }
+        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $reportData));
     }
 
     /**
@@ -58,7 +76,10 @@ trait UserSyncAddTrait {
             $status = self::ERROR;
         }
 
-        $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
+        $dirEntry = $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
+        if ($status === self::ERROR) {
+            $reportData = $dirEntry;
+        }
         $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $reportData));
     }
 
@@ -88,14 +109,15 @@ trait UserSyncAddTrait {
             $status = self::SUCCESS;
             $reportData = $user;
         } catch(ValidationException $exception) {
-            $reportData = $exception->getEntity();
+            if (isset($entry)) {
+                $reportData = $entry; //$exception->getEntity();
+            }
             $status = self::ERROR;
         } catch (InternalErrorException $exception) {
             $status = self::ERROR;
         }
         // if it doesn't work, then ignore user
         if ($status === self::ERROR) {
-            $status = self::IGNORE;
             if (isset($entry)) {
                 $this->DirectoryEntries->delete($entry);
             }
@@ -103,7 +125,6 @@ trait UserSyncAddTrait {
         } else {
             $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
         }
-
         $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $reportData));
     }
 
@@ -117,8 +138,11 @@ trait UserSyncAddTrait {
         if (isset($entry) && (!isset($entry->foreign_key) || ($entry->foreign_key !== $existingUser->id))) {
             $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
         }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $data));
         $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $existingUser, $entry);
+        if (isset($entry) && $entry->status === SyncAction::SUCCESS && !$existingUser->deleted) {
+            return; // ref specs case26, do not overly report already successfully synced users
+        }
+        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $existingUser));
     }
 
     /**

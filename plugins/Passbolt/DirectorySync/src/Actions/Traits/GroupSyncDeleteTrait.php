@@ -49,7 +49,7 @@ trait GroupSyncDeleteTrait {
         if ($entry->status !== self::ERROR) {
             $this->DirectoryEntries->updateStatus($entry, self::ERROR);
         }
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry));
+        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry->group));
     }
 
     /**
@@ -57,8 +57,8 @@ trait GroupSyncDeleteTrait {
      */
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
     {
-        $this->DirectoryEntries->updateStatus($entry, self::ERROR);
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry));
+        $this->DirectoryEntries->delete($entry);
+        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::SUCCESS, $entry->group));
     }
 
     /**
@@ -66,7 +66,7 @@ trait GroupSyncDeleteTrait {
      */
     protected function handleErrorDelete(DirectoryEntry $entry)
     {
-        $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::SUCCESS, $entry));
+        $this->DirectoryEntries->updateStatus($entry, self::ERROR);
+        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry));
     }
 }

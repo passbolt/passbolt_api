@@ -228,7 +228,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertTrue(true);
     }
 
-
     /**
      * Scenario: The group was deleted in LDAP and could not be previously deleted in passbolt
      * Expected result: group should be deleted with a report
@@ -438,7 +437,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         ];
         $this->assertReport($reports[0], $expectedReport);
     }
-
 
     /**
      * Scenario: The group is deleted in directory and manually deleted in passbolt between sync after a success
