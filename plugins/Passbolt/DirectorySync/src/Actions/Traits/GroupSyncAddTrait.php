@@ -33,12 +33,27 @@ trait GroupSyncAddTrait {
      */
     public function handleAddIgnore(array $data, DirectoryEntry $entry = null, Group $existingGroup = null) {
         if (isset($entry)) {
-            $this->DirectoryEntries->delete($entry);
+            if ($entry->status == self::SUCCESS && isset($existingGroup) && !$this->isGroupIgnored($existingGroup)) {
+                $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, null, $entry);
+            }
+            else {
+                $this->DirectoryEntries->delete($entry, ['cascadeCallbacks' => false]);
+            }
         }
         if (isset($existingGroup) && !$this->isGroupIgnored($existingGroup)) {
             $this->DirectoryIgnore->create(['id' => $existingGroup->id, 'foreign_model' => self::GROUPS]);
         }
-        $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, isset($existingGroup) ? $existingGroup : $data));
+
+        // Conditions for reporting
+        if (isset($existingGroup) && $existingGroup->deleted || isset($entry) && $entry->status == self::ERROR) {
+            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, isset($existingGroup) ? $existingGroup : $data));
+        }
+        elseif (!isset($existingGroup) && !isset($entry)) {
+            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, $data));
+        }
+        elseif (!isset($existingGroup) && isset($entry)) {
+            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, $entry));
+        }
     }
 
     /**
@@ -64,8 +79,7 @@ trait GroupSyncAddTrait {
     public function handleAdd(array $data, DirectoryEntry $entry = null) {
         if ($this->isDirectoryEntryIgnored($data['id'])) {
             if (isset($entry)) { $this->DirectoryEntries->delete($entry); }
-            // TODO: cannot add this report because no entry exists anymore.
-            //$this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, $data));
+            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, $data));
             return;
         }
 

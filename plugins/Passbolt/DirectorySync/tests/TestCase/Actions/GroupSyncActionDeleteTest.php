@@ -354,44 +354,16 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
-     *
-     * TODO
      */
     public function testDirectorySyncGroupDelete_Case13_Null_Success_Null_Null_Null()
     {
-//        $this->action = new GroupSyncAction();
-//        $this->mockDirectoryEntryGroup('donotexist', SyncAction::SUCCESS);
-//        $reports = $this->action->execute();
-//        $this->assertDirectoryEntryEmpty();
-//        $this->assertEquals(count($reports), 1);
-//        $expectedReport = [
-//            'action' => SyncAction::DELETE,
-//            'model'  => SyncAction::GROUPS,
-//            'status' => SyncAction::SYNC
-//        ];
-//        $this->assertReport($reports[0], $expectedReport);
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryEntryGroup('donotexist', SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
     }
 
-
-//    /**
-//     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
-//     *            and the plugin configuration is set to ignore deleted groups
-//     * Expected result: nothing
-//     *
-//     * @group DirectorySync
-//     * @group DirectorySyncGroup
-//     * @group DirectorySyncGroupDelete
-//     */
-//    public function testDirectorySyncGroupDelete_Case14_Group_deletable_config_ignore()
-//    {
-//        Configure::write('passbolt.plugins.directorySync.jobs.groups.delete', false);
-//        $this->action = new GroupSyncAction();
-//        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-//        $this->action->execute();
-//        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-//        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_SUCCESS);
-//    }
-//
     /**
      * Scenario: the group exists in passbolt, not present in the directory and can be deleted
      *            and the plugin configuration is set to ignore deleted groups

@@ -244,7 +244,6 @@ class DirectoryEntriesTable extends Table
             return $entry;
         } else {
             $entry = $data;
-            //unset($deData['user']);
             $entry['foreign_model'] = $model;
             if (isset($entity) && Validation::uuid($entity->id)) {
                 $entry['foreign_key'] = $entity->id;
