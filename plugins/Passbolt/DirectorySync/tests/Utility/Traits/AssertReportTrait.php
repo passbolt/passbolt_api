@@ -1,6 +1,7 @@
 <?php
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
+use Cake\Utility\Inflector;
 use Passbolt\DirectorySync\Utility\ActionReport;
 
 trait AssertReportTrait
@@ -26,6 +27,7 @@ trait AssertReportTrait
             if (is_array($report->getData())) {
                 $this->fail('The report type should not be an array.');
             }
+            $type = Inflector::singularize($type);
             $fullname = get_class($report->getData());
             $length = strlen($type);
             $endswith = $length === 0 || (substr($fullname, -$length) === $type);

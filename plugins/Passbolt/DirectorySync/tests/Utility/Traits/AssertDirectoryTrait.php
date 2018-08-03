@@ -74,6 +74,16 @@ trait AssertDirectoryTrait
     }
 
     /**
+     * @param array $where
+     * @return void
+     */
+    public function assertDirectoryIgnoreDoesNotExist(array $where = [])
+    {
+        $di = $this->action->DirectoryEntries->DirectoryIgnore->find()->where($where)->all()->toArray();
+        $this->assertEmpty($di, __('Directory ignore list should not be empty.'));
+    }
+
+    /**
      * @param $model
      * @param $id
      */

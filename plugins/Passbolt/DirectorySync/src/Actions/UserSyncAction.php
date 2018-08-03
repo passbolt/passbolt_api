@@ -95,9 +95,9 @@ class UserSyncAction extends SyncAction
     function processEntriesToDelete()
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
+        $this->DirectoryIgnore->cleanupHardDeletedUsers();
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::USERS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-        $this->DirectoryIgnore->cleanupHardDeletedUsers();
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
@@ -152,7 +152,7 @@ class UserSyncAction extends SyncAction
             $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
             $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore));
             if ($ignoreEntry || $ignoreUser) {
-                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser);
+                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser, $ignoreEntry);
                 continue;
             }
 
