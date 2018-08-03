@@ -137,9 +137,9 @@ class GroupSyncAction extends SyncAction
     function processEntriesToDelete()
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
+        $this->DirectoryIgnore->cleanupHardDeletedGroups();
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::GROUPS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-        $this->DirectoryIgnore->cleanupHardDeletedGroups();
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored

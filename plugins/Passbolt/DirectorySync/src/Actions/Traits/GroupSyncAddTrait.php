@@ -37,7 +37,8 @@ trait GroupSyncAddTrait {
                 $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, null, $entry);
             }
             else {
-                $this->DirectoryEntries->delete($entry, ['cascadeCallbacks' => false]);
+                $this->DirectoryEntries->delete($entry);
+                $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => self::DIRECTORY_ENTRY]);
             }
         }
         if (isset($existingGroup) && !$this->isGroupIgnored($existingGroup)) {

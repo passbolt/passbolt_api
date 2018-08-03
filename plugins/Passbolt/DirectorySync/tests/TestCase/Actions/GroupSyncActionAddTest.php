@@ -110,15 +110,16 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case19a_Ok_Null_Null_Ok_Ignore()
     {
-//        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-//
-//        $this->action = new GroupSyncAction();
-//        $this->action->getDirectory()->setGroups([]);
-//        $groupData = $this->mockDirectoryGroupData('marketing');
-//        $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
-//
-//        $reports = $this->action->execute();
-//        $this->assertEmpty($reports);
+        $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
+
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupData = $this->mockDirectoryGroupData('marketing');
+        $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
+
+        $reports = $this->action->execute();
+        $this->assertEmpty($reports);
+        $this->assertDirectoryEntryEmpty();
     }
 
     /**
@@ -761,23 +762,23 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case29b_Ok_Error_Ignore_Null_Null()
     {
-//        $this->action = new GroupSyncAction();
-//        $this->action->getDirectory()->setGroups([]);
-//        $groupData = $this->mockDirectoryGroupData('newgroup');
-//        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
-//        $entry = $this->mockDirectoryEntryGroup('newgroup', SyncAction::ERROR);
-//
-//        $reports = $this->action->execute();
-//        $this->assertEquals(count($reports), 1);
-//        $expectedReport = [
-//            'action' => SyncAction::CREATE,
-//            'model'  => SyncAction::GROUPS,
-//            'status' => SyncAction::IGNORE
-//        ];
-//        $this->assertReport($reports[0], $expectedReport);
-//
-//        $this->assertDirectoryEntryEmpty();
-//        $this->assertDirectoryIgnoreNotEmpty();
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupData = $this->mockDirectoryGroupData('newgroup');
+        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryEntryGroup('newgroup', SyncAction::ERROR);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::CREATE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
     }
 
     /**
@@ -790,23 +791,23 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case29c_Ok_Success_Ignore_Null_Null()
     {
-//        $this->action = new GroupSyncAction();
-//        $this->action->getDirectory()->setGroups([]);
-//        $groupData = $this->mockDirectoryGroupData('newgroup');
-//        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
-//        $entry = $this->mockDirectoryEntryGroup('newgroup', SyncAction::SUCCESS);
-//
-//        $reports = $this->action->execute();
-//        $this->assertEquals(count($reports), 1);
-//        $expectedReport = [
-//            'action' => SyncAction::CREATE,
-//            'model'  => SyncAction::GROUPS,
-//            'status' => SyncAction::IGNORE
-//        ];
-//        $this->assertReport($reports[0], $expectedReport);
-//
-//        $this->assertDirectoryEntryEmpty();
-//        $this->assertDirectoryIgnoreNotEmpty();
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupData = $this->mockDirectoryGroupData('newgroup');
+        $this->mockDirectoryIgnore($groupData['id'], 'DirectoryEntry');
+        $this->mockDirectoryEntryGroup('newgroup', SyncAction::SUCCESS);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::CREATE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
     }
 
     /**
@@ -817,7 +818,39 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupAdd
      */
-    public function testDirectorySyncGroup_Case30b_Ok_Any_Ignore_Ok_Ignore()
+    public function testDirectorySyncGroup_Case30a_Ok_Success_Ignore_Null_Ignore()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $groupData = $this->mockDirectoryGroupData('newgroup');
+        $this->mockDirectoryEntryGroup('newgroup', SyncAction::SUCCESS);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.newgroup'), SyncAction::GROUPS);
+        $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRY);
+
+        $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
+
+        $reports = $this->action->execute();
+        $this->assertEquals(count($reports), 1);
+        $expectedReport = [
+            'action' => SyncAction::CREATE,
+            'model'  => SyncAction::GROUPS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+        $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
+        $this->assertDirectoryIgnoreDoesNotExist(['id' => UuidFactory::uuid('group.id.newgroup')]);
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: A group was synced and then marked as ignored, and the corresponding entry is also ignored.
+     * Expected result: The corresponding entry should be removed and the group ignored
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case30b_Ok_Error_Ignore_Ok_Ignore()
     {
         $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
 
