@@ -147,23 +147,20 @@ trait MockDirectoryTrait
         return $entry;
     }
 
-    protected function mockDirectoryGroupData($name = null, $groupUsers = [], $created = null, $modified = null)
+    protected function mockDirectoryGroupData($name = null, $options = [])
     {
-        if (!isset($created)) {
-            $created = '2018-07-09 03:56:42.000000';
-        }
-        if (!isset($modified)) {
-            $modified = '2018-07-09 03:56:42.000000';
-        }
-        $id = 'ldap.group.id.' . strtolower($name);
-        $dn = 'CN=' . ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local';
+        $created = isset($options['created']) ? $options['created'] : '2018-07-09 03:56:42.000000';
+        $modified = isset($options['modified']) ? $options['modified'] : '2018-07-09 03:56:42.000000';
+        $id = isset($options['id']) ? $options['id'] : ('ldap.group.id.' . strtolower($name));
+        $cn = isset($options['cn']) ? $options['cn'] : $name;
+        $dn = isset($options['dn']) ? $options['dn'] : 'CN=' . ucfirst($cn) . ',OU=PassboltUsers,DC=passbolt,DC=local';
         $group = [
             'id' => UuidFactory::uuid($id),
             'directory_name' => $dn,
             'directory_created' => new FrozenTime($created),
             'directory_modified' => new FrozenTime($modified),
             'group' => [
-                'name' => strtolower($name),
+                'name' => strtolower($cn),
                 'groups' => [],
                 'users' => [],
             ]

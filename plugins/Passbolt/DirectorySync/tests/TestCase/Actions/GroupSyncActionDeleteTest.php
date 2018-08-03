@@ -353,44 +353,16 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
-     *
-     * TODO
      */
     public function testDirectorySyncGroupDelete_Case13_Null_Success_Null_Null_Null()
     {
-//        $this->action = new GroupSyncAction();
-//        $this->mockDirectoryEntryGroup('donotexist', SyncAction::SUCCESS);
-//        $reports = $this->action->execute();
-//        $this->assertDirectoryEntryEmpty();
-//        $this->assertEquals(count($reports), 1);
-//        $expectedReport = [
-//            'action' => SyncAction::DELETE,
-//            'model'  => SyncAction::GROUPS,
-//            'status' => SyncAction::SYNC
-//        ];
-//        $this->assertReport($reports[0], $expectedReport);
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryEntryGroup('donotexist', SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
     }
 
-
-//    /**
-//     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
-//     *            and the plugin configuration is set to ignore deleted groups
-//     * Expected result: nothing
-//     *
-//     * @group DirectorySync
-//     * @group DirectorySyncGroup
-//     * @group DirectorySyncGroupDelete
-//     */
-//    public function testDirectorySyncGroupDelete_Case14_Group_deletable_config_ignore()
-//    {
-//        Configure::write('passbolt.plugins.directorySync.jobs.groups.delete', false);
-//        $this->action = new GroupSyncAction();
-//        $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
-//        $this->action->execute();
-//        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-//        $this->assertOneDirectoryEntry(DirectoryEntry::STATUS_SUCCESS);
-//    }
-//
     /**
      * Scenario: the group exists in passbolt, not present in the directory and can be deleted
      *            and the plugin configuration is set to ignore deleted groups
@@ -442,14 +414,14 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     }
 
     /**
-     * Scenario: The group is deleted in directory and marked as to be ignored
+     * Scenario: The group is deleted in directory and correspond to a group marked as ignored
      * Expected result: delete directory entry
      *
      * @group DirectorySync
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case15_Null_Success_Null_OkOrDeleted_Ignore()
+    public function testDirectorySyncGroupDelete_Case15a_Null_Success_Null_Ok_Ignore()
     {
         $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), SyncAction::DIRECTORY_ENTRIES);
@@ -464,6 +436,26 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
             'status' => SyncAction::IGNORE
         ];
         $this->assertReport($reports[0], $expectedReport);
+    }
+
+    /**
+     * Scenario: The group is deleted in directory and correspond to a deleted group marked as ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case15b_Null_Success_Null_Deleted_Ignore()
+    {
+        $this->action = new GroupSyncAction();
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), SyncAction::DIRECTORY_ENTRIES);
+        $this->mockDirectoryEntryGroup('deleted', SyncAction::SUCCESS);
+        $reports = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
+        $this->assertGroupNotExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => false]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertEmpty($reports);
     }
 
     /**
