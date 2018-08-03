@@ -1059,10 +1059,8 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
 
-        $groupData = $this->mockDirectoryGroupData('marketing', ['cn' => $groupName]);
-
+        $this->mockDirectoryGroupData('marketing', ['cn' => $groupName]);
         $this->mockDirectoryIgnore($group->id, 'Groups');
-        $this->saveMockDirectoryGroupData($groupData);
         $this->mockDirectoryEntryGroup('marketing', SyncAction::ERROR, null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
