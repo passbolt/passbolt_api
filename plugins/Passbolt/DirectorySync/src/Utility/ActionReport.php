@@ -122,7 +122,7 @@ class ActionReport
      */
     static public function isValidModel(string $model)
     {
-        return ($model === SyncAction::USERS || $model === SyncAction::GROUPS || $model === SyncAction::MEMBERS);
+        return ($model === SyncAction::USERS || $model === SyncAction::GROUPS || $model === SyncAction::GROUPS_USERS || $model === SyncAction::MEMBERS);
     }
 
     /**

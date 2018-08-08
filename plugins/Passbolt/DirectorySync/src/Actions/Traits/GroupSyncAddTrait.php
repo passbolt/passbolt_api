@@ -19,6 +19,8 @@ use App\Model\Entity\Group;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
+use LdapTools\Query\LdapQueryBuilder;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\ErrorReport;
@@ -112,6 +114,7 @@ trait GroupSyncAddTrait {
             return false;
         }
     }
+
 
     /**
      * Get default group administrator

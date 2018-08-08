@@ -162,7 +162,7 @@ trait MockDirectoryTrait
             'group' => [
                 'name' => strtolower($cn),
                 'groups' => [],
-                'users' => [],
+                'users' => isset($options['group_users']) ? $options['group_users'] : [],
             ]
         ];
         $this->saveMockDirectoryGroupData($group);
@@ -199,6 +199,16 @@ trait MockDirectoryTrait
         ];
         $this->saveMockDirectoryEntry($entry);
         return $entry;
+    }
+
+    public function mockDirectoryRelationGroupUser($groupAlias, $userAlias) {
+        $relation = [
+            'id' => UuidFactory::uuid("group_user.id.$groupAlias-$userAlias"),
+            'parent_key' => UuidFactory::uuid('ldap.group.id.' . $groupAlias),
+            'child_key' => UuidFactory::uuid('ldap.user.id.' . $userAlias),
+        ];
+        return $this->action->DirectoryRelations->create($relation);
+
     }
 
     private function saveMockDirectoryEntry($data)

@@ -266,6 +266,7 @@ class DirectoryEntriesTable extends Table
     {
         $query = $this->find()
             ->select()
+            ->where(['foreign_model' => $model])
             ->contain([$model]);
         if (!empty($directoryIds)) {
             $query = $query->where(['DirectoryEntries.id NOT IN' => $directoryIds]);

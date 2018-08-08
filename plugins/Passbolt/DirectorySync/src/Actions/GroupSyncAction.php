@@ -22,6 +22,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
+use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\SyncAction;
@@ -31,6 +32,7 @@ class GroupSyncAction extends SyncAction
 {
     use GroupSyncDeleteTrait;
     use GroupSyncAddTrait;
+    use GroupUsersSyncTrait;
 
     /**
      * @var \Cake\ORM\Table
@@ -140,6 +142,7 @@ class GroupSyncAction extends SyncAction
         $this->DirectoryIgnore->cleanupHardDeletedGroups();
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::GROUPS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
+        $this->DirectoryRelations->cleanupHardDeletedUserGroups();
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
@@ -206,10 +209,11 @@ class GroupSyncAction extends SyncAction
                 continue;
             }
 
-//            if (!isset($existingGroup) && isset($entry) && $entry->status == SELF::SUCCESS) {
-//                $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, $existingGroup, $entry);
-//                $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::ERROR, $entry));
-//            }
+            if (isset($existingGroup) && isset($entry)) {
+                // Edit group users case.
+                $this->handleGroupUsersEdit($data, $entry, $existingGroup);
+                continue;
+            }
 
             if (!isset($existingGroup)) {
                 $this->handleAdd($data, $entry);
