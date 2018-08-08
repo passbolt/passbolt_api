@@ -81,10 +81,18 @@ return [
             ],
             'large' => [
                 'install' => [
-                    'count' => 300,
+                    'count' => [
+                        'resources' => 5000,
+                        'users' => 5000
+                    ],
                     'shellTasks' => [
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Large/UsersData',
+                        'PassboltTestData.Large/ProfilesData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Large/ResourcesData',
+                        'PassboltTestData.Large/PermissionsData',
+                        'PassboltTestData.Large/SecretsData',
                     ]
                 ],
                 'fixturize' => [
