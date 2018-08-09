@@ -55,4 +55,6 @@ class DirectoryEntry extends Entity
 
     const STATUS_ERROR = 'error';
     const STATUS_SUCCESS = 'success';
+    const FOREIGN_MODEL_GROUPS = 'Groups';
+    const FOREIGN_MODEL_USERS = 'Users';
 }

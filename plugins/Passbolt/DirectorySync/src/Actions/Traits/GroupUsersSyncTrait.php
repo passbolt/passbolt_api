@@ -26,10 +26,11 @@ use LdapTools\Query\LdapQueryBuilder;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\ErrorReport;
+use Passbolt\DirectorySync\Utility\SyncAction;
 
 trait GroupUsersSyncTrait {
 
-    protected function findGroupUsersForGroup($existingGroup) {
+    protected function findGroupWithGroupUsers($existingGroup) {
         $group = $this->Groups
             ->find()
             ->where(['id' => $existingGroup->id])
@@ -63,7 +64,7 @@ trait GroupUsersSyncTrait {
     }
 
     protected function retrieveUsersToAdd($data, $existingGroup) {
-        $group = $this->findGroupUsersForGroup($existingGroup);
+        $group = $this->findGroupWithGroupUsers($existingGroup);
         $dbUserIdsInGroup = Hash::extract($group['groups_users'], '{n}.user_id');
 
         if (!empty($data['group']['users'])) {
@@ -115,51 +116,90 @@ trait GroupUsersSyncTrait {
         return $toRemove;
     }
 
-    public function handleGroupUsersEdit($data, $entry, $existingGroup) {
-        if ($entry->status !== DirectoryEntry::STATUS_SUCCESS) {
-            return;
-        }
+    public function handleGroupUsersDeleted($entry) {
+        return $this->DirectoryRelations->deleteAll(['parent_key' => $entry->id]);
+    }
 
+    public function handleGroupCreateDefaultGroupUser($group) {
+        // Add default group manager
+        $group['groups_users'][] = [
+            'user_id' => $this->defaultGroupAdmin->id,
+            'is_admin' => true,
+        ];
+
+        return $group;
+    }
+
+    public function handleGroupUsersAfterGroupCreate($data, $group) {
+        // TODO: remove default group manager from list of users if already present.
+
+        //var_dump($data['group']['users']);
+        $toAdd = $this->retrieveUsersToAdd($data, $group);
+        $this->addGroupUsers($group, $toAdd);
+
+//        foreach($group->groups_users as $group_user) {
+//            $this->DirectoryRelations->createFromGroupUser($group_user);
+//        }
+    }
+
+    protected function addGroupUsers($group, $userIdsToAdd) {
         $GroupUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $Groups = TableRegistry::getTableLocator()->get('Groups');
 
-        $group = $this->findGroupUsersForGroup($existingGroup);
-        $groupUsers = $group['groups_users'];
-
-
-        // TODO: cleanup of directoryRelations.
-
-        $toAdd = $this->retrieveUsersToAdd($data, $existingGroup);
-        $toRemove = $this->retrieveUsersToRemove($data);
-
-        // Important: First we add, then we remove.
-
-        // Check if group has access to passwords already.
-        // If not, we can freely add users.
-
-        // If group has access to passwords, we simply send notifications to the admin.
-        // TODO: how not to send the email notification several times?
-
-        // Delete members one at a time.
-        foreach($toRemove as $groupUserId) {
+        foreach($userIdsToAdd as $userId) {
             try {
                 $newGroupUsers = $GroupUsers->patchEntitiesWithChanges(
-                    $groupUsers,
-                    [['id' => $groupUserId, 'delete' => true]],
-                    $existingGroup->id,
-                    ['allowedOperations' => ['delete' => true]]
+                    $group['groups_users'],
+                    [['user_id' => $userId, 'is_admin' => false]],
+                    $group->id,
+                    ['allowedOperations' => ['add' => true]]
                 );
-                $existingGroup->groups_users = $newGroupUsers;
-                $existingGroup->setDirty('groups_users', true);
+                $group->groups_users = $newGroupUsers;
+                $group->setDirty('groups_users', true);
             } catch (ValidationException $e) {
-                var_dump('validation error');
+                $this->addReport(new ErrorReport(self::GROUPS_USERS, self::CREATE, $group));
             }
 
-            $saveResult = $Groups->save($existingGroup);
+            $saveResult = $Groups->save($group);
             if (!$saveResult) {
-                var_dump('Could not save');
-                // TODO: check different  possible errors and customize error message.
-                $this->addReport(new ErrorReport(self::GROUPS_USERS, self::DELETE, $existingGroup));
+                $this->addReport(new ActionReport(self::GROUPS_USERS, self::CREATE, self::IGNORE, $group));
+                continue;
+            }
+
+            // Add relations for each new group.
+            foreach($saveResult->groups_users as $groupUser) {
+                if ($groupUser->user_id == $userId) {
+                    $this->DirectoryRelations->createFromGroupUser($groupUser);
+                    $this->addReport(new ActionReport(self::GROUPS_USERS, self::CREATE, self::SUCCESS, $groupUser));
+                    break;
+                }
+            }
+        }
+    }
+
+    protected function removeGroupUsers($group, $userIdsToRemove)
+    {
+        $GroupUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $Groups = TableRegistry::getTableLocator()->get('Groups');
+
+        foreach($userIdsToRemove as $groupUserId) {
+            try {
+                $newGroupUsers = $GroupUsers->patchEntitiesWithChanges(
+                    $group['groups_users'],
+                    [['id' => $groupUserId, 'delete' => true]],
+                    $group->id,
+                    ['allowedOperations' => ['delete' => true]]
+                );
+                $group->groups_users = $newGroupUsers;
+                $group->setDirty('groups_users', true);
+            } catch (ValidationException $e) {
+                $this->addReport(new ActionReport(self::GROUPS_USERS, self::CREATE, self::IGNORE, $group));
+                continue;
+            }
+
+            $saveResult = $Groups->save($group);
+            if (!$saveResult) {
+                $this->addReport(new ErrorReport(self::GROUPS_USERS, self::DELETE, $group));
                 continue;
             }
 
@@ -168,9 +208,31 @@ trait GroupUsersSyncTrait {
             $this->DirectoryRelations->delete($directoryRelation);
 
             // Send report.
-            $this->addReport(new ActionReport(self::GROUPS_USERS, self::DELETE, self::SUCCESS, $existingGroup));
+            $this->addReport(new ActionReport(self::GROUPS_USERS, self::DELETE, self::SUCCESS, $group));
+        }
+    }
+
+    public function handleGroupUsersEdit($data, $entry, $existingGroup) {
+        if ($entry->status !== DirectoryEntry::STATUS_SUCCESS) {
+            return;
         }
 
+        $group = $this->findGroupWithGroupUsers($existingGroup);
+        $toAdd = $this->retrieveUsersToAdd($data, $existingGroup);
+        $toRemove = $this->retrieveUsersToRemove($data);
+
+        // First we add, then we remove.
+        if (!empty($toAdd)) {
+            // Check if group has access to passwords already.
+            // If not, we can freely add users.
+            $this->addGroupUsers($group, $toAdd);
+
+            // Else, we need to send notifications.
+        }
+
+        if (!empty($toRemove)) {
+            $this->removeGroupUsers($group, $toRemove);
+        }
     }
 
 }

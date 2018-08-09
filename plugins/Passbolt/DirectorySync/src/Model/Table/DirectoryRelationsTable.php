@@ -24,6 +24,7 @@ use Cake\Validation\Validator;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 
 class DirectoryRelationsTable extends Table
 {
@@ -105,6 +106,36 @@ class DirectoryRelationsTable extends Table
         $records = Hash::extract($orphans->toArray(), '{n}.id');
         if (count($records) > 0) {
             return $this->deleteAll(['id IN' => $records]);
+        }
+    }
+
+    public function createFromGroupUser($groupUser) {
+        $DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
+        $groupEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => DirectoryEntry::FOREIGN_MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])->first();
+        $userEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => DirectoryEntry::FOREIGN_MODEL_USERS, 'foreign_key' => $groupUser->user_id])->first();
+
+        if (!$groupEntry || !$userEntry) {
+            throw new \Exception('Relation creation error: Could not retrieve corresponding entries');
+        }
+
+        $relation = [
+            'id' => $groupUser->id,
+            'parent_key' => $groupEntry->id,
+            'child_key' => $userEntry->id,
+        ];
+        return $this->createOrUpdate($relation);
+    }
+
+    public function createOrUpdate(array $data) {
+        $r = $this->find()->select(['id'])->where(['id' => $data['id']])->first();
+        if (!$r) {
+            return $this->create($data);
+        }
+
+        else {
+            unset($data['id']);
+            $this->patchEntity($r, $data);
+            return $this->save($r);
         }
     }
 

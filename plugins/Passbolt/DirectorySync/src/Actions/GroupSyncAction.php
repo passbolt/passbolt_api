@@ -129,9 +129,9 @@ class GroupSyncAction extends SyncAction
     }
 
     /**
-     * Handle the user deletion job
+     * Handle the group deletion job
      *
-     * Find all the directory entries that have been deleted and try to delete the associated users
+     * Find all the directory entries that have been deleted and try to delete the associated groups
      * If they are not already deleted, or marked as to be ignored
      *
      * @return void
@@ -169,6 +169,7 @@ class GroupSyncAction extends SyncAction
                     $this->handleErrorDelete($entry);
                 } else {
                     $this->handleSuccessfulDelete($entry);
+                    $this->handleGroupUsersDeleted($entry);
                 }
             } catch(InternalErrorException $exception) {
                 // TODO discuss format ErrorReport() ?

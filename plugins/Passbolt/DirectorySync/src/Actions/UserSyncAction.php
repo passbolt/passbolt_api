@@ -19,6 +19,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
+use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncDeleteTrait;
 use Passbolt\DirectorySync\Utility\SyncAction;
@@ -37,6 +38,7 @@ class UserSyncAction extends SyncAction
 
     use UserSyncDeleteTrait;
     use UserSyncAddTrait;
+    use GroupUsersSyncTrait;
 
     /**
      * UserSyncAction constructor.
@@ -124,6 +126,7 @@ class UserSyncAction extends SyncAction
                     $this->handleErrorDelete($entry);
                 } else {
                     $this->handleSuccessfulDelete($entry);
+                    $this->handleGroupUsersDeleted($entry);
                 }
             } catch(InternalErrorException $exception) {
                 // TODO discuss format ErrorReport() ?

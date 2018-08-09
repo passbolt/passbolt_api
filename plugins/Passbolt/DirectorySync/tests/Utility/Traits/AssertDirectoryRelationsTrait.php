@@ -25,4 +25,11 @@ trait AssertDirectoryRelationsTrait
         $results = $Relations->find()->where($where)->all()->toArray();
         $this->assertEmpty($results);
     }
+
+    public function assertDirectoryRelationEmpty()
+    {
+        $Relations = TableRegistry::getTableLocator()->get('DirectoryRelations');
+        $results = $Relations->find()->all()->toArray();
+        $this->assertEmpty($results);
+    }
 }

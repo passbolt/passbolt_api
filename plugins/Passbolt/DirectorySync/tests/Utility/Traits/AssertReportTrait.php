@@ -58,6 +58,17 @@ trait AssertReportTrait
     }
 
     /**
+     * @param array $reports
+     * @param string $model
+     */
+    public function assertNoReportsForModel(array $reports, string $model)
+    {
+        foreach($reports as $report) {
+            $this->assertNotEquals($model, $report->getModel());
+        }
+    }
+
+    /**
      * @param ActionReport $report
      * @param string $model
      */

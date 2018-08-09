@@ -38,6 +38,7 @@ abstract class DirectorySyncTestCase extends AppIntegrationTestCase
     {
         $this->originalConfig = Configure::read('passbolt.plugin.directorySync');
         $this->Groups = TableRegistry::get('Groups');
+        $this->Users = TableRegistry::get('Users');
         $this->DirectoryEntries = TableRegistry::get('DirectoryEntries');
         Configure::write('passbolt.plugin.directorySync.test', true);
         parent::setUp();

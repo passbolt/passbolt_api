@@ -89,6 +89,7 @@ trait GroupSyncAddTrait {
         $g = $this->createGroup($data['group']);
         if ($g)  {
             $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::GROUPS, $g, $entry);
+            $this->handleGroupUsersAfterGroupCreate($data, $g);
         } else {
             $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, null, $entry);
         }
@@ -101,7 +102,7 @@ trait GroupSyncAddTrait {
      * @return bool
      */
     public function createGroup(array $group) {
-        $group = $this->manageGroupUsers($group);
+        $group = $this->handleGroupCreateDefaultGroupUser($group);
         try {
             $g = $this->Groups->create($group, new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id));
             $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::SUCCESS, $g));
@@ -165,14 +166,5 @@ trait GroupSyncAddTrait {
 
         // If can't find corresponding config user, return first admin.
         return $this->Users->findFirstAdmin();
-    }
-
-    // Dummy function for now. Will be improved later.
-    public function manageGroupUsers(array $group) {
-        $group['groups_users'][] = [
-            'user_id' => $this->defaultGroupAdmin->id,
-            'is_admin' => true,
-        ];
-        return $group;
     }
 }
