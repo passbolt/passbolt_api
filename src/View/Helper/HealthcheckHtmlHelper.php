@@ -18,7 +18,7 @@ use App\Shell\Task\HealthcheckTask;
 
 /**
  * HealthcheckHtmlHelper
- * Shenanigans to reuse outputs from app/Console/HealtcheckTask.php
+ * Shenanigans to reuse outputs from app/Console/healthcheckTask.php
  */
 class HealthcheckHtmlHelper extends HealthcheckTask
 {
