@@ -27,7 +27,8 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/resources', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars'
+        'app.Base/resources', 'app.Base/secrets', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
+        'app.Base/email_queue'
     ];
 
     public function setUp()
@@ -46,6 +47,15 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $group = $this->Groups->get($groupId);
         $this->assertFalse($group->deleted);
+    }
+
+    public function testGroupsDeleteDryRunError_MissingCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->delete('/groups/' . $groupId . '/dry-run.json?api-version=v1');
+        $this->assertResponseCode(403);
     }
 
     public function testGroupsDeleteDryRunError()

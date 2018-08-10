@@ -187,6 +187,13 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEquals($data['Secret'][0]['data'], $resource->Secret[0]->data);
     }
 
+    public function testErrorCsrfToken()
+    {
+        // Should be protected by a CSRF token.
+        // The plugin use this entry point along with the import feature to import resources.
+        $this->markTestIncomplete();
+    }
+
     public function testResourcesAddValidationErrors()
     {
         $responseCode = 400;

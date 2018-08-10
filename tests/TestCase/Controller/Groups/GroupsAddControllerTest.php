@@ -34,6 +34,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->disableCsrfToken();
         $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
         $this->Groups = TableRegistry::get('Groups', $config);
     }

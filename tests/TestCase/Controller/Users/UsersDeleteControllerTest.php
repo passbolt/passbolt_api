@@ -27,7 +27,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/resources',
+        'app.Base/resources', 'app.Base/secrets',
         'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
     ];
 
@@ -47,6 +47,15 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $frances = $this->Users->get($francesId);
         $this->assertFalse($frances->deleted);
+    }
+
+    public function tesUsersDeleteDryRunMissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $adaId = UuidFactory::uuid('user.id.ada');
+        $this->delete("/users/$adaId/dry-run.json?api-version=v1");
+        $this->assertResponseCode(403);
     }
 
     public function testUsersDeleteDryRunError()
@@ -69,6 +78,15 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $frances = $this->Users->get($francesId);
         $this->assertTrue($frances->deleted);
+    }
+
+    public function tesUsersDeleteMissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $adaId = UuidFactory::uuid('user.id.ada');
+        $this->deleteJson("/users/$adaId.json?api-version=v1");
+        $this->assertResponseCode(403);
     }
 
     public function testUsersDeleteNotLoggedInError()

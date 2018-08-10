@@ -28,9 +28,10 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 
     public function setUp()
     {
+        parent::setUp();
+        $this->disableCsrfToken();
         $this->Groups = TableRegistry::get('Groups');
         $this->Resources = TableRegistry::get('Resources');
-        parent::setUp();
     }
 
     /*
