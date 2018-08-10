@@ -157,7 +157,18 @@ return [
 
         // Security.
         'security' => [
-            'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN)
+            'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN),
+            'csrfProtection' => [
+                'active' => true,
+                'unlockedActions' => [
+                    'AuthLogin' => ['loginPost'],
+                    'GroupsAdd' => ['addPost'],
+                    'GroupsUpdate' => ['dryRun', 'update'],
+                    'RecoverComplete' => ['complete'],
+                    'SetupComplete' => ['complete'],
+                    'Share' => ['dryRun'],
+                ]
+            ]
         ],
 
         // Should the app be SSL / HTTPS only.

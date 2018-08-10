@@ -24,7 +24,8 @@ use Cake\Utility\Hash;
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'
+        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/profiles', 'app.Base/gpgkeys',
+        'app.Base/secrets', 'app.Base/permissions', 'app.Base/roles', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
     ];
 
     public function setUp()
@@ -40,6 +41,15 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertSuccess();
+    }
+
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->delete("/resources/$resourceId.json?api-version=v2");
+        $this->assertResponseCode(403);
     }
 
     public function testResourcesDeleteErrorResourceIsSoftDeleted()

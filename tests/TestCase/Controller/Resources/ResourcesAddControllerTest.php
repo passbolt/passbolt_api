@@ -187,6 +187,13 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEquals($data['Secret'][0]['data'], $resource->Secret[0]->data);
     }
 
+    public function testErrorCsrfToken()
+    {
+        // Should be protected by a CSRF token.
+        // The plugin use this entry point along with the import feature to import resources.
+        $this->markTestIncomplete();
+    }
+
     public function testResourcesAddValidationErrors()
     {
         $responseCode = 400;
@@ -214,7 +221,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('ada');
-            $this->postJson("/resources.json", $case['data']);
+            $this->postJson("/resources.json?api-version=v1", $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
@@ -225,7 +232,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testResourcesAddErrorNotAuthenticated()
     {
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson("/resources.json?api-version=v2", $data);
         $this->assertAuthenticationError();
     }
 }

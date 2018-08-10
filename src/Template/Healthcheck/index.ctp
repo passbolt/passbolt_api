@@ -19,14 +19,14 @@ $this->assign('title',	__('Health checks'));
 $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'status');
 
-$healtcheck = new HealthcheckHtmlHelper();
+$healthcheck = new HealthcheckHtmlHelper();
 ?>
 <div class="grid grid-responsive-12">
     <div class="row">
         <div class="col8">
             <h2><?php echo __('Passbolt API Status') ?></h2>
             <?php
-            $healtcheck->assertEnvironment($body);
+            $healthcheck->assertEnvironment($body);
             ?>
             <!-- if the javascript does not load this message will be shown -->
             <div id="url-rewriting-warning" class="message error">
@@ -41,11 +41,11 @@ $healtcheck = new HealthcheckHtmlHelper();
             endif;
             ?>
             <?php
-            $healtcheck->assertConfigFiles($body);
-            $healtcheck->assertCore($body);
-            $healtcheck->assertDatabase($body);
-            $healtcheck->assertGpg($body);
-            $healtcheck->assertApplication($body);
+            $healthcheck->assertConfigFiles($body);
+            $healthcheck->assertCore($body);
+            $healthcheck->assertDatabase($body);
+            $healthcheck->assertGpg($body);
+            $healthcheck->assertApplication($body);
             ?>
         </div>
         <div class="col4 last" style="margin-top:2.8em;">
