@@ -26,6 +26,8 @@ use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Cake\ORM\TableRegistry;
 
+// TODO: add config for groupUsers (create, delete) + tests
+
 class GroupUserSyncActionAddTest extends DirectorySyncTestCase
 {
     use AssertGroupsTrait;
@@ -597,11 +599,4 @@ class GroupUserSyncActionAddTest extends DirectorySyncTestCase
             'child_key' => UuidFactory::uuid('ldap.user.id.nancy'),
         ]);
     }
-
-    // Case where group is edited and a user is added.
-
-    // case where group is edited with new users:
-    //  => case where a user is added to group with passwords.
-
-    // TODO: add config for groupUsers.
 }
