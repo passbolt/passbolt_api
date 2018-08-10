@@ -16,8 +16,9 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
-use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
 trait UserSyncDeleteTrait {
@@ -41,7 +42,7 @@ trait UserSyncDeleteTrait {
             $this->addReport(new ActionReport(
                 __('The passbolt user {0} was not deleted because it is marked as to be ignored.',
                     $entry->user->username),
-                self::USERS, self::DELETE, self::IGNORE, $reportData));
+                Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $reportData));
         }
     }
 
@@ -54,7 +55,7 @@ trait UserSyncDeleteTrait {
         if (isset($entry->user) && $entry->user->deleted) {
             $this->addReport(new ActionReport(
                 __('The directory user {0} was already deleted in passbolt.', $entry->user->username),
-                self::USERS, self::DELETE, self::SYNC, $entry->user));
+                Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_SYNC, $entry->user));
         }
     }
 
@@ -72,7 +73,7 @@ trait UserSyncDeleteTrait {
                 $entry->user->username);
         }
         $data = new SyncError($entry, new ValidationException($msg, $entry->user));
-        $this->addReport(new ActionReport($msg,self::USERS, self::DELETE, self::ERROR, $data));
+        $this->addReport(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
     }
 
     /**
@@ -83,7 +84,7 @@ trait UserSyncDeleteTrait {
         $this->DirectoryEntries->delete($entry);
         $this->addReport(new ActionReport(
             __('The user {0} was successfully deleted.', $entry->user->username),
-            self::USERS, self::DELETE, self::SUCCESS, $entry->user));
+            Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $entry->user));
     }
 
     /**
@@ -96,6 +97,6 @@ trait UserSyncDeleteTrait {
         $this->addReport(new ActionReport(
             __('The user {0} could not be deleted because of an internal error. Please try again later.',
                 $entry->user->username),
-            self::USERS, self::DELETE, self::ERROR, $data));
+            Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
     }
 }

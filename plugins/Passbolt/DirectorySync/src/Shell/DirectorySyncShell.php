@@ -25,6 +25,8 @@ class DirectorySyncShell extends AppShell
         'Passbolt/DirectorySync.Users',
         'Passbolt/DirectorySync.Groups',
         'Passbolt/DirectorySync.IgnoreList',
+        'Passbolt/DirectorySync.IgnoreCreate',
+        'Passbolt/DirectorySync.IgnoreDelete',
     ];
 
     /**
@@ -53,8 +55,16 @@ class DirectorySyncShell extends AppShell
             'parser' => $this->Groups->getOptionParser(),
         ]);
         $parser->addSubcommand('ignore-list', [
-            'help' => __d('cake_console', 'View, add, remove records ignored from synchronization process.'),
+            'help' => __d('cake_console', 'List all the ignored record during the directory synchronization process.'),
             'parser' => $this->IgnoreList->getOptionParser(),
+        ]);
+        $parser->addSubcommand('ignore-create', [
+            'help' => __d('cake_console', 'Start ignoring a record during the directory synchronization process.'),
+            'parser' => $this->IgnoreCreate->getOptionParser(),
+        ]);
+        $parser->addSubcommand('ignore-delete', [
+            'help' => __d('cake_console', 'Stop ignoring a record during the directory synchronization process.'),
+            'parser' => $this->IgnoreDelete->getOptionParser(),
         ]);
 
         return $parser;

@@ -15,7 +15,6 @@
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 use Cake\I18n\FrozenTime;
 use App\Utility\UuidFactory;
-use Psr\Log\InvalidArgumentException;
 
 trait MockDirectoryTrait
 {
@@ -32,7 +31,7 @@ trait MockDirectoryTrait
         $ignore = $this->action->DirectoryEntries->DirectoryIgnore->newEntity($entry, ['validate' => false]);
         $save = $this->action->DirectoryEntries->DirectoryIgnore->save($ignore, ['checkRules' => false]);
         if (!$save) {
-            throw new InvalidArgumentException('Could not save directory sync ignore for mock');
+            throw new \InvalidArgumentException('Could not save directory sync ignore for mock');
         }
         return $entry;
     }
@@ -40,7 +39,7 @@ trait MockDirectoryTrait
 
     protected function mockDirectoryEntryUser($data, $status) {
         if (!isset($data['fname'])) {
-            throw new InvalidArgumentException('A mocked directory entry should have at least a first name');
+            throw new \InvalidArgumentException('A mocked directory entry should have at least a first name');
         }
         if (!isset($data['lname'])) {
             $data['lname'] = null;
@@ -97,7 +96,7 @@ trait MockDirectoryTrait
         ]);
         $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
         if (!$save) {
-            throw new InvalidArgumentException('Could not save directory entry for mock');
+            throw new \InvalidArgumentException('Could not save directory entry for mock');
         }
         return $entry;
     }
@@ -143,7 +142,7 @@ trait MockDirectoryTrait
         ]);
         $save = $this->action->DirectoryEntries->save($entry, ['checkRules' => false]);
         if (!$save) {
-            throw new InvalidArgumentException('Could not save directory entry for mock');
+            throw new \InvalidArgumentException('Could not save directory entry for mock');
         }
         return $entry;
     }

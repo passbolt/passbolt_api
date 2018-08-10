@@ -16,11 +16,13 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
-use Passbolt\DirectorySync\Utility\SyncAction;
+use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 abstract class SyncTask extends AppShell
 {
-    protected  $model;
+    protected $model;
+    protected $pad = 10;
 
     protected function _displayReports($reports)
     {
@@ -28,18 +30,18 @@ abstract class SyncTask extends AppShell
         $this->out($this->model);
         $this->hr();
         $this->out(__('To create:'));
-        $created = $reports->getByAction(SyncAction::CREATE);
+        $created = $reports->getByAction(Alias::ACTION_CREATE);
         if (!count($created)) {
-            $this->success( str_pad('[success]', 10) . __('No new item to create.'));
+            $this->success( str_pad('[success]', $this->pad) . __('No new item to create.'));
         }
         foreach ($created as $i => $report) {
             $this->_displayReport($report);
         }
         $this->out();
         $this->out(__('To delete:'));
-        $deleted = $reports->getByAction(SyncAction::DELETE);
+        $deleted = $reports->getByAction(Alias::ACTION_DELETE);
         if (!count($deleted)) {
-            $this->success(str_pad('[success]', 10)  . __('No new item to delete'));
+            $this->success(str_pad('[success]', $this->pad)  . __('No new item to delete'));
         }
         foreach ($deleted as $i => $report) {
             $this->_displayReport($report);
@@ -48,27 +50,32 @@ abstract class SyncTask extends AppShell
     }
 
     protected function _displayReport($report) {
-        $msg = str_pad('[' . $report->getStatus() . ']', 10);
+        $msg = str_pad('[' . $report->getStatus() . ']', $this->pad);
         $msg .= $report->getMessage();
         $data = $report->getData();
         switch($report->getStatus()) {
-            case SyncAction::ERROR:
+            case Alias::STATUS_ERROR:
                 $this->err($msg);
-                $exception = $data->getException();
-                if (isset($exception) && $data instanceof ValidationException) {
-                    $this->_displayValidationError($data->getErrors());
-                }
-                $entry = $data->getEntity();
-                if (isset($entry)) {
-                    $this->out(str_pad('', 10) . __('To ignore this error in the next sync please run'));
-                    $this->out(str_pad('', 10) . "./bin/cake directory_sync ignore $entry->id --model=$this->model");
+                if ($data instanceof SyncError) {
+                    $exception = $data->getException();
+                    if ($exception instanceof ValidationException) {
+                        $this->_displayValidationError($exception->getErrors());
+                        $id = $exception->getEntity()->id;
+                        $model = $this->model;
+                    } else {
+                        $id = $data->getEntity()->id;
+                        $model = 'DirectoryEntries';
+                    }
+
+                    $this->out(str_pad('', $this->pad) . __('To ignore this error in the next sync please run'));
+                    $this->out(str_pad('', $this->pad) . "./bin/cake directory_sync ignore-create --id=$id --model=$model");
                 }
                 break;
-            case SyncAction::SYNC:
-            case SyncAction::SUCCESS:
+            case Alias::STATUS_SYNC:
+            case Alias::STATUS_SUCCESS:
                 $this->success($msg);
                 break;
-            case SyncAction::IGNORE:
+            case Alias::STATUS_IGNORE:
                 $this->warn($msg);
                 break;
         }
@@ -88,7 +95,7 @@ abstract class SyncTask extends AppShell
                     $this->_displayValidationError($error);
                     break;
                 } else {
-                    $message = str_pad('', 10) . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message;
+                    $message = str_pad('', $this->pad) . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message;
                     $this->err($message);
                 }
             }

@@ -14,10 +14,13 @@
  */
 namespace Passbolt\DirectorySync\Shell\Task;
 
+use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
-use Passbolt\DirectorySync\Actions\GroupSyncAction;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
 
-class GroupsTask extends SyncTask
+class IgnoreDeleteTask extends AppShell
 {
     /**
      * Initializes the Shell
@@ -30,8 +33,6 @@ class GroupsTask extends SyncTask
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('Groups');
-        $this->loadModel('Users');
     }
 
     /**
@@ -46,12 +47,16 @@ class GroupsTask extends SyncTask
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->setDescription(__('Sync groups'))
-            ->addOption('dry-run', [
-                'help' => 'Don\'t save the changes',
+        $parser->setDescription(__('Stop ignoring a record.'))
+            ->addOption('id', [
+                'help' => 'The record UUID.',
                 'default' => 'true',
-                'boolean' => true,
+            ])
+            ->addOption('model', [
+                'help' => 'The model name (Users, Groups, DirectoryEntries).',
+                'default' => 'true',
             ]);
+
         return $parser;
     }
 
@@ -62,15 +67,25 @@ class GroupsTask extends SyncTask
      */
     public function main()
     {
+        $foreignModel = $this->param('model');
+        $foreignKey = $this->param('id');
+
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            $this->err(__('The record model is not valid.'));
+        }
         try {
-            $this->model = 'Groups';
-            $action = new GroupSyncAction();
-            $reports = $action->execute();
-            $this->_displayReports($reports);
-        } catch(\Exception $exception) {
-            $this->abort($exception->getMessage());
+            $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
+            $ignored = $DirectoryIgnore->get($foreignKey);
+            if ($ignored->foreign_model !== $foreignModel) {
+                throw new RecordNotFoundException(__('The record could not be found.'));
+            }
+            $DirectoryIgnore->delete($ignored);
+            $this->success(__('The record will stop being ignored in the next directory synchronization.'));
+            return true;
+        } catch(RecordNotFoundException $exception) {
+            $this->err($exception->getMessage());
             return false;
         }
-        return true;
     }
+
 }

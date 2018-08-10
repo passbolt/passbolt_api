@@ -70,7 +70,6 @@ class IgnoreListTask extends AppShell
             ->toArray();
         $records[] = ['Model', 'Name', 'Created', 'ID'];
         foreach ($di as $i => $record) {
-            pr($record);
             switch ($record->foreign_model) {
                 case 'Users':
                     $name = $record->user->username;
@@ -78,9 +77,9 @@ class IgnoreListTask extends AppShell
                 case 'Groups':
                     $name = $record->group->name;
                     break;
-                case 'DirectoryEntry':
-                    if (isset($record->DirectoryEntry->cn)) {
-                        $name = $record->directory_entry->cn;
+                case 'DirectoryEntries':
+                    if (isset($record->directory_entry->directory_name)) {
+                        $name = $record->directory_entry->directory_name;
                     } else {
                         $name = $record->id;
                     }
@@ -96,7 +95,8 @@ class IgnoreListTask extends AppShell
         $io->helper('Table')->output($records);
         $this->out();
         $this->out('[help] you can stop ignoring records with the following command.');
-        $this->out('       ./bin/cake directory_sync ignore-add [ID]');
+        $this->out('       ./bin/cake directory_sync ignore-create [ID]');
+        $this->out();
         return true;
     }
 

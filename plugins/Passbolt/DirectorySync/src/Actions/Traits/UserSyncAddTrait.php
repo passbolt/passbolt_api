@@ -22,6 +22,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\SyncError;
+use Passbolt\DirectorySync\Utility\Alias;
 
 trait UserSyncAddTrait {
 
@@ -46,7 +47,7 @@ trait UserSyncAddTrait {
                 $data['username']);
             $reportData = $this->DirectoryIgnore->get($existingUser->id);
         }
-        $this->addReport(new ActionReport($msg,self::USERS, self::CREATE, self::IGNORE, $reportData));
+        $this->addReport(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
     }
 
     /**
@@ -55,13 +56,13 @@ trait UserSyncAddTrait {
      */
     function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
-        $status = self::ERROR;
+        $status = Alias::STATUS_ERROR;
         $reportData = null;
         try {
             $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
             $reportData = $user = $this->Users->register($data['user'], $accessControl);
             $this->DirectoryEntries->updateForeignKey($entry, $user->id);
-            $status = self::SUCCESS;
+            $status = Alias::STATUS_SUCCESS;
             $msg = __('The user {0} was successfully added to passbolt.', $data['user']['username']);
         } catch(ValidationException $exception) {
             $reportData = new SyncError($entry, $exception);
@@ -72,7 +73,7 @@ trait UserSyncAddTrait {
             $msg = __('The user {0} could not be added because of an internal error. Please try again later.',
                 $data['user']['username']);
         }
-        $this->addReport(new ActionReport($msg, self::USERS, self::CREATE, $status, $reportData));
+        $this->addReport(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -84,9 +85,9 @@ trait UserSyncAddTrait {
     {
         // if the user was created in ldap and then deleted in passbolt
         // do not try to recreate
-        $status = self::ERROR;
+        $status = Alias::STATUS_ERROR;
         if ($data['directory_created']->lt($existingUser->modified)) {
-            $reportData = new SyncError($existingUser, null);
+            $reportData = new SyncError($entry, null);
             $msg = __('The previously deleted user {0} was not re-added to passbolt.', $existingUser->username);
         } else {
             // if the user was delete in passbolt and then created in ldap
@@ -96,17 +97,17 @@ trait UserSyncAddTrait {
                 $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
                 $reportData = $user = $this->Users->register($data['user'], $accessControl);
                 $this->DirectoryEntries->updateForeignKey($entry, $user->id);
-                $status = self::SUCCESS;
+                $status = Alias::STATUS_SUCCESS;
                 $msg = __('The previously deleted user {0} was re-added to passbolt.', $existingUser->username);
             } catch(ValidationException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __('The deleted user {0} could not be re-added to passbolt because of validation errors.', $existingUser->username);
             } catch (InternalErrorException $exception) {
-                $reportData = new SyncError(null, $exception);
+                $reportData = new SyncError($entry, $exception);
                 $msg = __('The deleted user {0} could not be re-added to passbolt because of an internal error.', $existingUser->username);
             }
         }
-        $this->addReport(new ActionReport($msg, self::USERS, self::CREATE, $status, $reportData));
+        $this->addReport(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -121,7 +122,7 @@ trait UserSyncAddTrait {
             $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
             $this->addReport(new ActionReport(
                 __('The user {0} was mapped with an existing user in passbolt.', $existingUser->username),
-                self::USERS, self::CREATE, self::SYNC, $existingUser));
+                Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingUser));
         }
     }
 }

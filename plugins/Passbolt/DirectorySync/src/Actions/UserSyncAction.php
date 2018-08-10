@@ -20,6 +20,7 @@ use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncDeleteTrait;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncAction extends SyncAction
@@ -53,13 +54,13 @@ class UserSyncAction extends SyncAction
 
         $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
-            ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
+            ->where(['foreign_model' => Alias::MODEL_DIRECTORY_ENTRIES])
             ->all()
             ->toArray(), '{n}.id');
 
         $this->usersToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
-            ->where(['foreign_model' => SyncAction::USERS])
+            ->where(['foreign_model' => Alias::MODEL_USERS])
             ->all()
             ->toArray(), '{n}.id');
         $this->directoryData = $this->directory->getUsers();
@@ -98,7 +99,7 @@ class UserSyncAction extends SyncAction
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
         $this->DirectoryIgnore->cleanupHardDeletedUsers();
-        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::USERS, $entriesId);
+        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(Alias::MODEL_USERS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
 
         foreach ($entries as $entry) {
@@ -145,7 +146,7 @@ class UserSyncAction extends SyncAction
     {
         foreach ($this->directoryData as $data) {
             // Find and patch or create directory entries
-            $entry = $this->DirectoryEntries->updateOrCreate($data, self::USERS);
+            $entry = $this->DirectoryEntries->updateOrCreate($data, Alias::MODEL_USERS);
             if ($entry === false) {
                 continue;
             }

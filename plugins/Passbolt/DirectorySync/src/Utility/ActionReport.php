@@ -15,8 +15,8 @@
 namespace Passbolt\DirectorySync\Utility;
 
 use Cake\I18n\FrozenTime;
-use Cake\ORM\Entity;
-use Psr\Log\InvalidArgumentException;
+use http\Exception\InvalidArgumentException;
+use Passbolt\DirectorySync\Utility\Alias;
 
 /**
  * Directory factory class
@@ -35,24 +35,24 @@ class ActionReport implements \Serializable
      *
      * @param string $message
      * @param string $model Users, Groups, GroupsUsers
-     * @param string $action SyncAction::CREATE, SyncAction::DELETE, SyncAction::UPDATE
-     * @param string $status SyncAction::SUCCESS, SyncAction::ERROR, SyncAction::IGNORE
+     * @param string $action see Alias::ACTION_*
+     * @param string $status see Alias::STATUS_*
      * @param mixed $data Array or Entity, Exception
      * @throws InvalidArgumentException
      */
     public function __construct(string $message, string $model, string $action, string $status, $data)
     {
         if (!self::isValidModel($model)) {
-            throw new InvalidArgumentException(__('This is not a valid action report. Invalid Model.'));
+            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Model.'));
         }
         if (!self::isValidAction($action)) {
-            throw new InvalidArgumentException(__('This is not a valid action report. Invalid Action: {0}', $action));
+            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Action: {0}', $action));
         }
         if (!self::isValidStatus($status)) {
-            throw new InvalidArgumentException(__('This is not a valid action report. Invalid Status.'));
+            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Status.'));
         }
         if (!self::isValidData($data)) {
-            throw new InvalidArgumentException(__('This is not a valid action report. Invalid Data.'));
+            throw new \InvalidArgumentException(__('This is not a valid action report. Invalid Data.'));
         }
         $this->message = $message;
         $this->model = $model;
@@ -153,7 +153,7 @@ class ActionReport implements \Serializable
      */
     static public function isValidAction(string $action)
     {
-        return ($action === SyncAction::CREATE || $action === SyncAction::UPDATE || $action === SyncAction::DELETE);
+        return ($action === Alias::ACTION_CREATE || $action === Alias::ACTION_UPDATE || $action === Alias::ACTION_DELETE);
     }
 
     /**
@@ -164,7 +164,8 @@ class ActionReport implements \Serializable
      */
     static public function isValidStatus(string $status)
     {
-        return ($status === SyncAction::SUCCESS || $status === SyncAction::ERROR || $status === SyncAction::IGNORE || $status === SyncAction::SYNC);
+        return ($status === Alias::STATUS_SUCCESS || $status === Alias::STATUS_ERROR || $status === Alias::STATUS_IGNORE || $status === Alias::STATUS_SYNC);
+
     }
 
     /**
@@ -175,7 +176,7 @@ class ActionReport implements \Serializable
      */
     static public function isValidModel(string $model)
     {
-        return ($model === SyncAction::USERS || $model === SyncAction::GROUPS || $model === SyncAction::GROUPS_USERS || $model === SyncAction::MEMBERS);
+        return ($model === Alias::MODEL_USERS || $model === Alias::MODEL_GROUPS || $model === Alias::MODEL_GROUPS_USERS || $model === SyncAction::MEMBERS);
     }
 
     /**

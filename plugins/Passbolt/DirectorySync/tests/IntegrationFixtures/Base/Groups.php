@@ -34,44 +34,45 @@ return [
 
     // A new directory group that does not exist in passbolt
     [
-        'id' => UuidFactory::uuid('ldap.group.id.new'),
-        'directory_name' => 'CN=New,OU=PassboltUsers,DC=passbolt,DC=local',
+        'id' => UuidFactory::uuid('ldap.group.id.new4'),
+        'directory_name' => 'CN=New4,OU=PassboltUsers,DC=passbolt,DC=local',
         'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
         'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
         'group' => [
-            'name' => 'New',
+            'name' => 'New4',
             'groups' => [],
             'users' => [
                 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
+                'CN=Betty Holberton,OU=PassboltUsers,DC=passbolt,DC=local',
+                'CN=Steve Shirley,OU=PassboltUsers,DC=passbolt,DC=local'
             ],
         ],
     ],
-
     // A new directory group that already exist in passbolt
-    [
-        'id' => UuidFactory::uuid('ldap.group.id.developer'),
-        'directory_name' => 'CN=Developer,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'group' => [
-            'name' => 'Developer',
-            'groups' => [],
-            'users' => [
-                'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
-            ],
-        ],
-    ],
-
-    // A new directory group that does not exist but is empty
-    [
-        'id' => UuidFactory::uuid('ldap.group.id.empty'),
-        'directory_name' => 'CN=Empty,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'group' => [
-            'name' => 'Empty',
-            'groups' => [],
-            'users' => [],
-        ],
-    ],
+//    [
+//        'id' => UuidFactory::uuid('ldap.group.id.developer'),
+//        'directory_name' => 'CN=Developer,OU=PassboltUsers,DC=passbolt,DC=local',
+//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'group' => [
+//            'name' => 'Developer',
+//            'groups' => [],
+//            'users' => [
+//                'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
+//            ],
+//        ],
+//    ],
+//
+//    // A new directory group that does not exist but is empty
+//    [
+//        'id' => UuidFactory::uuid('ldap.group.id.empty'),
+//        'directory_name' => 'CN=Empty,OU=PassboltUsers,DC=passbolt,DC=local',
+//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'group' => [
+//            'name' => 'Empty',
+//            'groups' => [],
+//            'users' => [],
+//        ],
+//    ],
 ];

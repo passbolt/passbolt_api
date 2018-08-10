@@ -63,30 +63,6 @@ class SyncAction
     protected $summary;
 
     /**
-     * Actions
-     */
-    const CREATE = 'create';
-    const DELETE = 'delete';
-    const UPDATE = 'update';
-
-    /**
-     * Statuses
-     */
-    const SUCCESS = 'success';
-    const ERROR = 'error';
-    const IGNORE = 'ignore';
-    const SYNC = 'synced';
-
-    /**
-     * Models
-     */
-    const GROUPS = 'Groups';
-    const GROUPS_USERS = 'GroupsUsers';
-    const USERS = 'Users';
-    const MEMBERS = 'GroupsUsers';
-    const DIRECTORY_ENTRIES = 'DirectoryEntries';
-
-    /**
      * SyncAction constructor.
      * @throws \Exception if no directory configuration is present
      */

@@ -14,17 +14,12 @@
  */
 namespace Passbolt\DirectorySync\Model\Table;
 
-use App\Error\Exception\ValidationException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\Alias;
 
 class DirectoryRelationsTable extends Table
 {
@@ -118,8 +113,8 @@ class DirectoryRelationsTable extends Table
 
     public function createFromGroupUser($groupUser) {
         $DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
-        $groupEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => DirectoryEntry::FOREIGN_MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])->first();
-        $userEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => DirectoryEntry::FOREIGN_MODEL_USERS, 'foreign_key' => $groupUser->user_id])->first();
+        $groupEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])->first();
+        $userEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $groupUser->user_id])->first();
 
         if (!$groupEntry || !$userEntry) {
             throw new \Exception('Relation creation error: Could not retrieve corresponding entries');

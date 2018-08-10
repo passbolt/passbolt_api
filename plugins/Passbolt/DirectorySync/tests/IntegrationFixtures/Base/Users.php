@@ -20,8 +20,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.user.id.neil'),
         'directory_name' => 'CN=Neil Amstrong,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
         'user' => [
             'username' => 'neil@passbolt.com',
             'profile' => [
@@ -30,7 +30,20 @@ return [
             ]
         ],
     ],
-    // A user that exist and is not valid
+    // A user that already exist
+    [
+        'id' => UuidFactory::uuid('ldap.user.id.ada'),
+        'directory_name' => 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
+        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'user' => [
+            'username' => 'ada@passbolt.com',
+            'profile' => [
+                'first_name' => 'Ada',
+                'last_name' => 'Lovelace'
+            ]
+        ]
+    ],
     [
         'id' => UuidFactory::uuid('ldap.user.id.betty'),
         'directory_name' => 'CN=Betty Holberton,OU=PassboltUsers,DC=passbolt,DC=local',
@@ -40,52 +53,52 @@ return [
             'username' => 'betty@passbolt.com',
             'profile' => [
                 'first_name' => 'Betty',
-                'last_name' => null
+                'last_name' => 'Holberton'
             ]
         ]
     ],
     // A user that does not exist and is not valid
-    [
-        'id' => UuidFactory::uuid('ldap.user.id.nope'),
-        'directory_name' => 'CN=No First Name,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'user' => [
-            'username' => 'nope@passbolt.com',
-            'profile' => [
-                'first_name' => null,
-                'last_name' => 'No first name'
-            ]
-        ]
-    ],
+//    [
+//        'id' => UuidFactory::uuid('ldap.user.id.nope'),
+//        'directory_name' => 'CN=No First Name,OU=PassboltUsers,DC=passbolt,DC=local',
+//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'user' => [
+//            'username' => 'nope@passbolt.com',
+//            'profile' => [
+//                'first_name' => null,
+//                'last_name' => 'No first name'
+//            ]
+//        ]
+//    ],
     // A user that does not exist and is not valid
-    [
-        'id' => UuidFactory::uuid('ldap.user.id.nope2'),
-        'directory_name' => 'CN=No Email,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'user' => [
-            'username' => null,
-            'profile' => [
-                'first_name' => 'No',
-                'last_name' => 'Email'
-            ]
-        ]
-    ],
+//    [
+//        'id' => UuidFactory::uuid('ldap.user.id.nope2'),
+//        'directory_name' => 'CN=No Email,OU=PassboltUsers,DC=passbolt,DC=local',
+//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'user' => [
+//            'username' => null,
+//            'profile' => [
+//                'first_name' => 'No',
+//                'last_name' => 'Email'
+//            ]
+//        ]
+//    ],
     // A user that exist with a different name
-    [
-        'id' => UuidFactory::uuid('ldap.user.id.steve'),
-        'directory_name' => 'CN=Steve Shirley,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'user' => [
-            'username' => 'dame@passbolt.com',
-            'profile' => [
-                'first_name' => 'Steve',
-                'last_name' => 'Shirley'
-            ]
-        ]
-    ],
+//    [
+//        'id' => UuidFactory::uuid('ldap.user.id.steve'),
+//        'directory_name' => 'CN=Steve Shirley,OU=PassboltUsers,DC=passbolt,DC=local',
+//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'user' => [
+//            'username' => 'dame@passbolt.com',
+//            'profile' => [
+//                'first_name' => 'Steve',
+//                'last_name' => 'Shirley'
+//            ]
+//        ]
+//    ],
     // A user that exist but have been deleted in passbolt
     [
         'id' => UuidFactory::uuid('ldap.user.id.sofia'),

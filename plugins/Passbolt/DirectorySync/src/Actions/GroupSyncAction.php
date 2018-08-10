@@ -21,6 +21,7 @@ use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
 class GroupSyncAction extends SyncAction
@@ -60,13 +61,13 @@ class GroupSyncAction extends SyncAction
 
         $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
-            ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
+            ->where(['foreign_model' => Alias::MODEL_DIRECTORY_ENTRIES])
             ->all()
             ->toArray(), '{n}.id');
 
         $this->groupsToIgnore = Hash::extract($this->DirectoryIgnore->find()
           ->select(['id'])
-          ->where(['foreign_model' => SyncAction::GROUPS])
+          ->where(['foreign_model' => Alias::MODEL_GROUPS])
           ->all()
           ->toArray(), '{n}.id');
 
@@ -110,9 +111,9 @@ class GroupSyncAction extends SyncAction
     {
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
         $this->DirectoryIgnore->cleanupHardDeletedGroups();
-        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::GROUPS, $entriesId);
+        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(Alias::MODEL_GROUPS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-        $this->DirectoryRelations->cleanupHardDeletedUserGroups();
+        $this->DirectoryRelations->cleanupHardDeletedUserGroups($entriesId);
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
@@ -157,7 +158,7 @@ class GroupSyncAction extends SyncAction
     {
         foreach($this->directoryData as $i => $data) {
             // Find and patch or create directory entries
-            $entry = $this->DirectoryEntries->updateOrCreate($data, self::GROUPS);
+            $entry = $this->DirectoryEntries->updateOrCreate($data, Alias::MODEL_GROUPS);
             if ($entry === false) {
                 continue;
             }

@@ -15,13 +15,10 @@
 namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
-use App\Shell\AppShell;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;
-use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Utility\SyncAction;
+use Cake\Validation\Validation;
 
-class IgnoreAddTask extends AppShell
+class IgnoreCreateTask extends SyncTask
 {
     /**
      * Initializes the Shell
@@ -49,8 +46,12 @@ class IgnoreAddTask extends AppShell
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('Add a record as to be ignored.'))
-            ->addOption('--id', [
-                'help' => 'Don\'t save the changes',
+            ->addOption('id', [
+                'help' => 'The record UUID.',
+                'default' => 'true',
+            ])
+            ->addOption('model', [
+                'help' => 'The model name (Users, Groups, DirectoryEntries).',
                 'default' => 'true',
             ]);
 
@@ -64,10 +65,25 @@ class IgnoreAddTask extends AppShell
      */
     public function main()
     {
+        $this->pad = 0;
+        $foreignModel = $this->param('model');
+        $foreignKey = $this->param('id');
 
-        $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
-
-        return true;
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            $this->err(__('The record model is not valid.'));
+        }
+        try {
+            $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
+            $DirectoryIgnore->createOrFail($foreignModel, $foreignKey);
+            $this->success(__('The record will be ignored in the next directory synchronization.'));
+            return true;
+        } catch(ValidationException $exception) {
+            $this->err($exception->getMessage());
+            $this->_displayValidationError($exception->getEntity()->getErrors());
+            return false;
+        } catch(\Exception $exception) {
+            $this->err($exception->getMessage());
+            return false;
+        }
     }
-
 }

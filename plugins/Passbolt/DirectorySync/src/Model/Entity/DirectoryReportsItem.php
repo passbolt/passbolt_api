@@ -18,19 +18,6 @@ use Cake\ORM\Entity;
  */
 class DirectoryReportsItem extends Entity
 {
-    const STATUS_SUCCESS = 'success';
-    const STATUS_IGNORE = 'ignore';
-    const STATUS_ERROR = 'error';
-    const STATUS_SYNC = 'sync';
-
-    const MODEL_USERS = 'Users';
-    const MODEL_GROUPS = 'Groups';
-    const MODEL_DIRECTORY_ENTRIES = 'DirectoryEntries';
-
-    const ACTION_CREATE = 'create';
-    const ACTION_DELETE = 'delete';
-    const ACTION_UPDATE = 'update';
-
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

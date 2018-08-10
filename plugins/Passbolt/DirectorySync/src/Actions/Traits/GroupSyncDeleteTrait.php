@@ -18,6 +18,7 @@ use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
 trait GroupSyncDeleteTrait {
@@ -41,7 +42,7 @@ trait GroupSyncDeleteTrait {
             $this->addReport(new ActionReport(
                 __('The passbolt group {0} was not deleted because it is marked as to be ignored.',
                     $entry->group->name),
-                self::GROUPS, self::DELETE, self::IGNORE, $reportData));
+                Alias::MODEL_GROUPS, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $reportData));
         }
     }
 
@@ -54,7 +55,7 @@ trait GroupSyncDeleteTrait {
         if (isset($entry->group) && $entry->group->deleted) {
             $this->addReport(new ActionReport(
                 __('The directory user {0} was already deleted in passbolt.', $entry->group->name),
-                self::GROUPS, self::DELETE, self::SYNC, $entry->group));
+                Alias::MODEL_GROUPS, Alias::ACTION_DELETE, Alias::STATUS_SYNC, $entry->group));
         }
     }
 
@@ -69,7 +70,7 @@ trait GroupSyncDeleteTrait {
                 $entry->group->name);
         }
         $data = new SyncError($entry, new ValidationException($msg, $entry->group));
-        $this->addReport(new ActionReport($msg,self::GROUPS, self::DELETE, self::ERROR, $data));
+        $this->addReport(new ActionReport($msg,Alias::MODEL_GROUPS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
     }
 
     /**
@@ -79,8 +80,8 @@ trait GroupSyncDeleteTrait {
     {
         $this->DirectoryEntries->delete($entry);
         $this->addReport(new ActionReport(
-            __('The user {0} was successfully deleted.', $entry->group->name),
-            self::GROUPS, self::DELETE, self::SUCCESS, $entry->group));
+            __('The group {0} was successfully deleted.', $entry->group->name),
+            Alias::MODEL_GROUPS, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $entry->group));
     }
 
     /**
@@ -93,6 +94,6 @@ trait GroupSyncDeleteTrait {
         $this->addReport(new ActionReport(
             __('The group {0} could not be deleted because of an internal error. Please try again later.',
                 $entry->group->name),
-            self::GROUPS, self::DELETE, self::ERROR, $data));
+            Alias::MODEL_GROUPS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
     }
 }

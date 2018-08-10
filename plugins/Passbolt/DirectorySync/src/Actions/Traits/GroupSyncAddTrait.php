@@ -21,6 +21,7 @@ use App\Utility\UserAccessControl;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
 trait GroupSyncAddTrait {
@@ -46,7 +47,7 @@ trait GroupSyncAddTrait {
                 $data['name']);
             $reportData = $this->DirectoryIgnore->get($existingGroup->id);
         }
-        $this->addReport(new ActionReport($msg,self::GROUPS, self::CREATE, self::IGNORE, $reportData));
+        $this->addReport(new ActionReport($msg,Alias::MODEL_GROUPS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
     }
 
     /**
@@ -56,18 +57,19 @@ trait GroupSyncAddTrait {
      */
     public function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
-        $status = self::ERROR;
+        $status = Alias::STATUS_ERROR;
         $reportData = null;
         try {
             $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
-            $reportData = $group = $this->Groups->create($data, $accessControl);
-            $this->handleGroupUsersAfterGroupCreate($data, $group);
+            $group = $this->beforeCreateGroup($data['group']);
+            $reportData = $group = $this->Groups->create($group, $accessControl);
             $this->DirectoryEntries->updateForeignKey($entry, $group->id);
-            $status = self::SUCCESS;
+            $this->handleGroupUsersAfterGroupCreate($data, $group);
+            $status = Alias::STATUS_SUCCESS;
             $msg = __('The group {0} was successfully added to passbolt.', $data['group']['name']);
         } catch(ValidationException $exception) {
             $reportData = new SyncError($entry, $exception);
-            $status = self::ERROR;
+            $status = Alias::STATUS_ERROR;
             $name = isset($data['group']['name']) ? $data['group']['name'] : 'undefined';
             $msg = __('The group {0} could not be added because of data validation issues.', $name);
         } catch (InternalErrorException $exception) {
@@ -75,7 +77,7 @@ trait GroupSyncAddTrait {
             $msg = __('The group {0} could not be added because of an internal error. Please try again later.',
                 $data['group']['name']);
         }
-        $this->addReport(new ActionReport($msg, self::GROUPS, self::CREATE, $status, $reportData));
+        $this->addReport(new ActionReport($msg, Alias::MODEL_GROUPS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -87,30 +89,31 @@ trait GroupSyncAddTrait {
     public function handleAddDeleted(array $data, DirectoryEntry $entry  = null, Group $existingGroup = null) {
         // if the group was created in ldap and then deleted in passbolt
         // do not try to recreate
-        $status = self::ERROR;
+        $status = Alias::STATUS_ERROR;
         $reportData = null;
         if ($data['directory_created']->lt($existingGroup->modified)) {
-            $reportData = new SyncError($existingGroup, null);
+            $reportData = new SyncError($entry, null);
             $msg = __('The previously deleted group {0} was not re-added to passbolt.', $existingGroup->name);
         } else {
             // if the group was delete in passbolt and then created in ldap
             // try to recreate
             try {
                 $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
-                $reportData = $group = $this->Groups->create($data, $accessControl);
-                $this->handleGroupUsersAfterGroupCreate($data, $group);
+                $group = $this->beforeCreateGroup($data['group']);
+                $reportData = $group = $this->Groups->create($group, $accessControl);
                 $this->DirectoryEntries->updateForeignKey($entry, $group->id);
-                $status = self::SUCCESS;
+                $this->handleGroupUsersAfterGroupCreate($data, $group);
+                $status = Alias::STATUS_SUCCESS;
                 $msg = __('The previously deleted group {0} was re-added to passbolt.', $existingGroup->name);
             } catch(ValidationException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __('The deleted group {0} could not be re-added to passbolt because of validation errors.', $existingGroup->name);
             } catch (InternalErrorException $exception) {
-                $reportData = new SyncError(null, $exception);
+                $reportData = new SyncError($entry, $exception);
                 $msg = __('The deleted group {0} could not be re-added to passbolt because of an internal error.', $existingGroup->name);
             }
         }
-        $this->addReport(new ActionReport($msg, self::GROUPS, self::CREATE, $status, $reportData));
+        $this->addReport(new ActionReport($msg, Alias::MODEL_GROUPS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -125,8 +128,24 @@ trait GroupSyncAddTrait {
             $this->DirectoryEntries->updateForeignKey($entry, $existingGroup->id);
             $this->addReport(new ActionReport(
                 __('The group {0} was mapped with an existing group in passbolt.', $existingGroup->name),
-                self::GROUPS, self::CREATE, self::SYNC, $existingGroup));
+                Alias::MODEL_GROUPS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingGroup));
         }
         $this->handleGroupUsersEdit($data, $entry, $existingGroup);
+    }
+
+    /**
+     * Before creating a group add admin as default group manager
+     *
+     * @param array $group
+     * @return array
+     */
+    public function beforeCreateGroup(array $group) {
+        //
+        $group['groups_users'][] = [
+            'user_id' => $this->defaultGroupAdmin->id,
+            'is_admin' => true,
+        ];
+
+        return $group;
     }
 }
