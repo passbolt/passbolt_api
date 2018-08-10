@@ -83,6 +83,7 @@ class GroupSyncAction extends SyncAction
         parent::__construct();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     public function beforeExecute()
@@ -142,7 +143,7 @@ class GroupSyncAction extends SyncAction
         $this->DirectoryIgnore->cleanupHardDeletedGroups();
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::GROUPS, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-        $this->DirectoryRelations->cleanupHardDeletedUserGroups();
+        $this->DirectoryRelations->cleanupHardDeletedUserGroups($entriesId);
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
