@@ -82,6 +82,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
         parent::setUp();
         $this->initAvatarEvents();
         Configure::write('passbolt.plugins', []);
+        $this->enableCsrfToken();
     }
 
     /**
@@ -173,6 +174,16 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
             $data['role']['name'] = Role::ADMIN;
         }
         $this->session(['Auth' => ['User' => $data]]);
+    }
+
+    /**
+     * Calling this method will remove the CSRF token from the request.
+     *
+     * @return void
+     */
+    public function disableCsrfToken()
+    {
+        $this->_csrfToken = false;
     }
 
     /**

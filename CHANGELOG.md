@@ -1,7 +1,15 @@
 ## [Unreleased]
+### Added
+- PASSBOLT-2906: Enable CSRF protection
+- PASSBOLT-2940: Implement app-js primary routes
+
 ### Fixed
-- GITHUB-101: Fix the readme should point to the documentation for how to upgrade passbolt
-- PASSBOLT-2682: Fix healthcheck entry point when logged in as admin and debug is false
-- PASSBOLT-2869: Fix GPG wrapper not being able to recognize type and bit length
-- PASSBOLT-1917: Migrate appjs to canjs 3.x
-- PASSBOLT-2622: Push the js app repository to github
+- PASSBOLT-2805: Sort by date fix and sort by user first_name by default
+- PASSBOLT-2896: Fix filter by tag from the password details sidebar
+- PASSBOLT-2903: Fix logout link. It should target a full based url link
+- PASSBOLT-2926: Fix session timeout check
+- PASSBOLT-2927: Fix appjs ajax error handler
+- PASSBOLT-2941: Grid performance fix
+
+### Improved
+- PASSBOLT-2933: Upgrade to canjs 4

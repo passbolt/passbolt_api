@@ -24,7 +24,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/permissions',
-        'app.Base/groups_users', 'app.Base/groups', 'app.Base/favorites',
+        'app.Base/groups_users', 'app.Base/groups', 'app.Base/favorites', 'app.Base/secrets',
         'app.Base/authentication_tokens', 'app.Base/avatars', 'app.Base/email_queue'
     ];
 
@@ -157,6 +157,15 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
             $this->assertResponseError();
         }
+    }
+
+    public function testUsersRegisterPostError_MissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->post('/users/register');
+        $this->assertResponseCode(403);
+        $result = ($this->_getBodyAsString());
+        $this->assertContains('Missing CSRF token cookie', $result);
     }
 
     public function testUsersRegisterPostExistingDeletedUserWithSameUsername()

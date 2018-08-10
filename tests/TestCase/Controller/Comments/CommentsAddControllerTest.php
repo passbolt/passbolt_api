@@ -100,6 +100,15 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals($commentContent, $comment->content);
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->post("/comments/resource/$resourceId.json?api-version=v2");
+        $this->assertResponseCode(403);
+    }
+
     public function testErrorInvalidResourceId()
     {
         $this->authenticateAs('ada');
