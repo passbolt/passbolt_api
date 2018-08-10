@@ -342,6 +342,13 @@ if (!PASSBOLT_IS_CONFIGURED) {
             ->setPass(['userId'])
             ->setMethods(['PUT', 'POST']);
     });
+
+    /**
+     * Appjs routes
+     */
+    Router::scope('/app', function ($routes) {
+        $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view']);
+    });
 }
 
 /**
