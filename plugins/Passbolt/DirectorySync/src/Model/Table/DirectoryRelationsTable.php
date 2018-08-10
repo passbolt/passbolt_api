@@ -96,11 +96,18 @@ class DirectoryRelationsTable extends Table
      * An orphan directoryRelations is a directoryRelation that doesn't have a corresponding userGroup.
      * It means that userGroup has been deleted manually.
      */
-    public function cleanupHardDeletedUserGroups() {
+    public function cleanupHardDeletedUserGroups(array $entryIds) {
+        $conditions = [
+            'GroupUser.id IS NULL'
+        ];
+        if (!empty($entryIds)) {
+            $conditions['DirectoryRelations.parent_key NOT IN'] = $entryIds;
+        }
+
         $orphans = $this->find()
             ->select(['DirectoryRelations.id', 'GroupUser.id'])
             ->contain('GroupUser')
-            ->where(['GroupUser.id IS NULL'])
+            ->where($conditions)
             ->all();
 
         $records = Hash::extract($orphans->toArray(), '{n}.id');
@@ -137,6 +144,18 @@ class DirectoryRelationsTable extends Table
             $this->patchEntity($r, $data);
             return $this->save($r);
         }
+    }
+
+    /**
+     * Return a directory relation matching the groupUser provided.
+     * @param $groupUser
+     *
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function lookupByGroupUser($groupUser) {
+        return $this->find()
+            ->where(['id' => $groupUser->id])
+            ->first();
     }
 
     /**

@@ -37,6 +37,7 @@ trait MockDirectoryTrait
         return $entry;
     }
 
+
     protected function mockDirectoryEntryUser($data, $status) {
         if (!isset($data['fname'])) {
             throw new InvalidArgumentException('A mocked directory entry should have at least a first name');

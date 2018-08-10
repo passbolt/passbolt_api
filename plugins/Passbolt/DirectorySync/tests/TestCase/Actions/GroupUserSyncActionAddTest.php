@@ -26,6 +26,8 @@ use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Cake\ORM\TableRegistry;
 
+// TODO: add config for groupUsers (create, delete) + tests
+
 class GroupUserSyncActionAddTest extends DirectorySyncTestCase
 {
     use AssertGroupsTrait;
@@ -223,7 +225,7 @@ class GroupUserSyncActionAddTest extends DirectorySyncTestCase
         $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
 
         $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
-        $this->assertDirectoryRelationExist($groupUser->id);
+        $this->assertDirectoryRelationNotExist($groupUser->id);
     }
 
     /**
@@ -424,8 +426,177 @@ class GroupUserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertDirectoryRelationExist($groupUserFrances->id);
     }
 
-    // Case where group is edited and a user is added.
+    public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
+    {
+        // TODO.
+        // Should
+    }
 
-    // case where group is edited with new users:
-    //  => case where a user is added to group with passwords.
+    /**
+     * Scenario: A groupUser has been added to a group in ldap and already exist in passbolt
+     * Expected result: do nothing. ignore report.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_Case12_Ok_Ok_Null_CreatedBefore_Ok()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'nancy', 'lname' => 'nancy', 'foreign_key' => UuidFactory::uuid('user.id.nancy')], SyncAction::SUCCESS);
+        $groupEntry = $this->mockDirectoryEntryGroup('freelancer', SyncAction::SUCCESS);
+        $groupData = $this->mockDirectoryGroupData('freelancer', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+
+        // Define creation date.
+        $dateGroupModification = $groupData['directory_modified'];
+        $dateBeforeGroupModification = $dateGroupModification->subDays(1);
+
+
+        // Update corresponding GroupUser so it is created before.
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
+            $dateBeforeGroupModification->format('Y-m-d H:i:s'),
+            UuidFactory::uuid('group.id.freelancer'),
+            UuidFactory::uuid('user.id.nancy')
+        ]);
+
+
+        $reports = $this->action->execute();
+
+        $this->assertEquals(count($reports), 1);
+        $expectedUserGroupReport = [
+            'action' => SyncAction::CREATE,
+            'model'  => SyncAction::GROUPS_USERS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        // groupUser should exist, but not directory relation since the sync shouldn't have happened.
+        $groupUser = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.nancy')]);
+        $this->assertDirectoryRelationNotExist($groupUser->id);
+    }
+
+    /**
+     * Scenario: GroupAdmin added the user to a group in passbolt after it was requested from him.
+     * Expected result: create corresponding directoryRelation
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_Case13_Ok_Ok_Null_CreatedAfter_Ok()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'nancy', 'lname' => 'nancy', 'foreign_key' => UuidFactory::uuid('user.id.nancy')], SyncAction::SUCCESS);
+        $groupEntry = $this->mockDirectoryEntryGroup('freelancer', SyncAction::SUCCESS);
+        $groupData = $this->mockDirectoryGroupData('freelancer', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+
+        // Define creation date.
+        $dateGroupModification = $groupData['directory_modified'];
+        $dateAfterGroupModification = $dateGroupModification->addDays(1);
+
+
+        // Update corresponding GroupUser so it is created before.
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
+            $dateAfterGroupModification->format('Y-m-d H:i:s'),
+            UuidFactory::uuid('group.id.freelancer'),
+            UuidFactory::uuid('user.id.nancy')
+        ]);
+
+
+        $reports = $this->action->execute();
+
+        $this->assertEquals(count($reports), 1);
+        $expectedUserGroupReport = [
+            'action' => SyncAction::CREATE,
+            'model'  => SyncAction::GROUPS_USERS,
+            'status' => SyncAction::SUCCESS
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        // groupUser should exist, but not directory relation since the sync shouldn't have happened.
+        $groupUser = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.nancy')]);
+        $this->assertDirectoryRelationExist($groupUser->id);
+    }
+
+    /**
+     * Scenario: A groupUser exists in ldap and has already been synced, but has been deleted in passbolt.
+     * Expected result: do nothing, send ignore report
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_Case14_Ok_Ok_Ok_Null_Any()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'ada', 'foreign_key' => UuidFactory::uuid('user.id.ada')], SyncAction::SUCCESS);
+        $groupEntry = $this->mockDirectoryEntryGroup('freelancer', SyncAction::SUCCESS);
+        $groupData = $this->mockDirectoryGroupData('freelancer', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+        $this->mockDirectoryRelationGroupUser('freelancer', 'ada');
+
+        $reports = $this->action->execute();
+
+        //var_dump($reports);
+        $this->assertEquals(count($reports), 1);
+        $expectedUserGroupReport = [
+            'action' => SyncAction::CREATE,
+            'model'  => SyncAction::GROUPS_USERS,
+            'status' => SyncAction::IGNORE
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.ada')]);
+        $this->assertDirectoryRelationExist(null, [
+            'parent_key' => UuidFactory::uuid('ldap.group.id.freelancer'),
+            'child_key' => UuidFactory::uuid('ldap.user.id.ada'),
+        ]);
+    }
+
+    /**
+     * Scenario: A group user exists in ldap and has already been synced.
+     * Expected result: do nothing. No report.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_Case15_Ok_Ok_Ok_Ok_Any()
+    {
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'nancy', 'lname' => 'nancy', 'foreign_key' => UuidFactory::uuid('user.id.nancy')], SyncAction::SUCCESS);
+        $groupEntry = $this->mockDirectoryEntryGroup('freelancer', SyncAction::SUCCESS);
+        $groupData = $this->mockDirectoryGroupData('freelancer', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+        $this->mockDirectoryRelationGroupUser('freelancer', 'nancy');
+
+        $reports = $this->action->execute();
+
+        //var_dump($reports);
+        $this->assertEmpty($reports);
+        $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.nancy')]);
+        $this->assertDirectoryRelationExist(null, [
+            'parent_key' => UuidFactory::uuid('ldap.group.id.freelancer'),
+            'child_key' => UuidFactory::uuid('ldap.user.id.nancy'),
+        ]);
+    }
 }
