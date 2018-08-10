@@ -26,8 +26,7 @@ class GpgAuthHeadersMiddleware
     public function __invoke(RequestInterface $request, ResponseInterface $response, $next)
     {
         $response = $next($request, $response);
-        $allowedHeaders = GpgAuthenticate::HTTP_HEADERS_WHITELIST .
-            ',' . GpgAuthSignMiddleware::HTTP_HEADER_GPG_SIG_BODY;
+        $allowedHeaders = GpgAuthenticate::HTTP_HEADERS_WHITELIST;
 
         $response = $response
             ->withHeader('X-GPGAuth-Version', '1.3.0')

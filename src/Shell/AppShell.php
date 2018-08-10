@@ -37,7 +37,7 @@ class AppShell extends Shell
 
     /**
      * Some of the passbolt commands shouldn't be executed as root.
-     * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
+     * By instance it's the case of the healthcheck command that needs to be executed with the same user as your web server.
      *
      * @return bool true if user is root
      */

@@ -113,6 +113,14 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $this->post('/users.json?api-version=v1');
+        $this->assertResponseCode(403);
+    }
+
     public function testUsersAddCannotModifyNotAccessibleFields()
     {
         $this->authenticateAs('admin');

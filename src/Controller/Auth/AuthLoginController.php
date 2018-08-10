@@ -15,6 +15,7 @@
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use Cake\Event\Event;
 
 class AuthLoginController extends AppController
@@ -43,6 +44,11 @@ class AuthLoginController extends AppController
      */
     public function loginGet()
     {
+        // Do not allow logged in user to login again
+        if ($this->User->role() !== Role::GUEST) {
+            $this->redirect('/'); // user is already logged in
+        }
+
         $this->viewBuilder()
             ->setLayout('login')
             ->setTemplatePath('/Auth')

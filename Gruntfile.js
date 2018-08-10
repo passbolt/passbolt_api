@@ -116,10 +116,11 @@ module.exports = function(grunt) {
             'controls/dot_red.svg',
             'controls/dot_black.svg',
             'controls/infinite-bar.gif',
-            'controls/loading.gif',
+            'controls/loading_light.svg',
+            'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
             // Background images for error pages for ex
-            'illustrations/nest.png',
+            'background/rocket.svg',
             'illustrations/birds6_850.png',
             'illustrations/birds3_850.png',
             // Login page 3rd party logo
