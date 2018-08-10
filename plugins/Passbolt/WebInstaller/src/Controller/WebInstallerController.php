@@ -15,6 +15,7 @@
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
 
@@ -95,6 +96,35 @@ class WebInstallerController extends Controller
     {
         parent::beforeRender($event);
         $this->set('stepInfo', $this->stepInfo);
+        $this->set('navigationSections', $this->_getNavigationSections());
+    }
+
+    /**
+     * Return the navigation items.
+     * @return array
+     */
+    protected function _getNavigationSections()
+    {
+        $session = $this->request->getSession();
+        $pluginLicenseEnabled = !empty(Configure::read('passbolt.plugins.license'));
+        $hasAdmin = $session->read('Passbolt.Config.hasExistingAdmin');
+        $sections = [];
+
+        $sections['system_check'] = __('System check');
+        if ($pluginLicenseEnabled) {
+            $sections['license_key'] = __('Subscription key');
+        }
+        $sections['database'] = __('Database');
+        $sections['server_keys'] = __('Server keys');
+        $sections['emails'] = __('Emails');
+        $sections['options'] = __('Options');
+        $sections['installation'] = __('Installation');
+        if (!$hasAdmin) {
+            $sections['first_user'] = __('First user');
+        }
+        $sections['end'] = __('That\'s it!');
+
+        return $sections;
     }
 
     /**

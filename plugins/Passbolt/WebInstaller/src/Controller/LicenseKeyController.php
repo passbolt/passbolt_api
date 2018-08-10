@@ -37,7 +37,8 @@ class LicenseKeyController extends WebInstallerController
      */
     public function index()
     {
-        if (!empty($this->request->getData())) {
+        $data = $this->request->getData();
+        if (!empty($data)) {
             $data = $this->request->getData();
             $licenseKeyForm = new LicenseKeyForm();
             $dataIsValid = $licenseKeyForm->execute($data);
@@ -52,18 +53,18 @@ class LicenseKeyController extends WebInstallerController
                 return $this->_error(__('The data entered are not correct'));
             }
 
-            return $this->_checkLicense($data['license_key']);
+            return $this->_saveLicense($data['license_key']);
         }
 
         $this->render($this->stepInfo['template']);
     }
 
     /**
-     * Check that the license provided is valid.
+     * Save the the provided license if valid
      * @param string $licenseStr The license
      * @return mixed
      */
-    protected function _checkLicense(string $licenseStr = '')
+    protected function _saveLicense(string $licenseStr = '')
     {
         $license = new License($licenseStr);
         try {
@@ -71,6 +72,8 @@ class LicenseKeyController extends WebInstallerController
         } catch (\Exception $e) {
             return $this->_error($e->getMessage());
         }
+        $session = $this->request->getSession();
+        $session->write('Passbolt.License', $licenseStr);
 
         return $this->_success();
     }
