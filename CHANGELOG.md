@@ -14,6 +14,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2926: Fix session timeout check
 - PASSBOLT-2927: Fix appjs ajax error handler
 - PASSBOLT-2941: Grid performance fix
+- PASSBOLT-2906: Disable the ResourcesAdd entry point CSRF protection to allow the plugin to use it with the import feature
+- PASSBOLT-2906: Disable the ResourcesTagsAdd entry point CSRF protection to allow the plugin to use it with the import feature
 
 ### Improved
 - PASSBOLT-2933: Upgrade to canjs 4
