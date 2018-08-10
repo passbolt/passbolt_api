@@ -15,10 +15,8 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Model\Entity\DirectoryIgnore;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Utility\SyncAction;
@@ -52,7 +50,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), SyncAction::GROUPS);
         $report = $this->action->execute();
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertEmpty($report);
+        $this->assertReportEmpty($report);
     }
 
     /**
@@ -65,7 +63,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->mockDirectoryEntryGroup('groupreallydoesnotexist', DirectoryEntry::STATUS_ERROR);
         $report = $this->action->execute();
         $this->assertDirectoryEntryEmpty();
-        $this->assertEmpty($report);
+        $this->assertReportEmpty($report);
     }
 
     /**
@@ -83,8 +81,8 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         // Case2: Ok group is the group "marketing"
         // Case3: Deleted group is the group "deleted"
         $this->action = new GroupSyncAction();
-        $report       = $this->action->execute();
-        $this->assertEmpty($report);
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
@@ -104,7 +102,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), SyncAction::GROUPS);
         $report = $this->action->execute();
-        $this->assertEmpty($report);
+        $this->assertReportEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
@@ -125,7 +123,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), SyncAction::GROUPS);
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.deleted'), SyncAction::GROUPS);
         $report = $this->action->execute();
-        $this->assertEmpty($report);
+        $this->assertReportEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreContains(SyncAction::GROUPS, UuidFactory::uuid('group.id.marketing'));
         $this->assertDirectoryIgnoreContains(SyncAction::GROUPS, UuidFactory::uuid('group.id.deleted'));
@@ -151,7 +149,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore(UuidFactory::uuid('groupdoesnotexist'), SyncAction::DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('groupisreallynotthere'), SyncAction::DIRECTORY_ENTRIES);
         $report = $this->action->execute();
-        $this->assertEmpty($report);
+        $this->assertReportEmpty($report);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -178,7 +176,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertDirectoryIgnoreEmpty();
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
         $this->assertGroupExist(UuidFactory::uuid('group.id.sales'), ['deleted' => false]);
-
         $this->assertEquals(count($reports), 2);
         $expectedReport = [
             'action' => SyncAction::DELETE,
@@ -212,7 +209,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertEmpty($report);
+        $this->assertReportEmpty($report);
     }
 
     /**
@@ -299,7 +296,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
             'status' => SyncAction::IGNORE
         ];
         $this->assertReport($reports[0], $expectedReport);
-        // TODO: discuss with remy (left a comment in doc)
         $this->markAsRisky();
     }
 
@@ -319,7 +315,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $reports = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
     }
 
     /**
@@ -360,7 +356,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->mockDirectoryEntryGroup('donotexist', SyncAction::SUCCESS);
         $reports = $this->action->execute();
         $this->assertDirectoryEntryEmpty();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
     }
 
     /**
@@ -455,7 +451,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertGroupNotExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => false]);
         $this->assertDirectoryEntryEmpty();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
     }
 
     /**
@@ -473,6 +469,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $reports = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryEntryEmpty();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
     }
 }

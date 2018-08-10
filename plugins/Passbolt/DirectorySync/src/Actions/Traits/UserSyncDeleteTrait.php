@@ -13,8 +13,12 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
+
+use App\Error\Exception\ValidationException;
+use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 trait UserSyncDeleteTrait {
 
@@ -24,8 +28,20 @@ trait UserSyncDeleteTrait {
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        if (isset($entry->user) && !empty($entry->user) && !$entry->user->deleted) {
-            $this->addReport(new ActionReport(self::USERS, self::DELETE, self::IGNORE, $entry));
+    }
+
+    /**
+     * @param DirectoryEntry $entry
+     */
+    protected function handleDeletedIgnoredUser(DirectoryEntry $entry)
+    {
+        $this->DirectoryEntries->delete($entry);
+        if (!$entry->user->deleted) {
+            $reportData = $this->DirectoryIgnore->get($entry->user->id);
+            $this->addReport(new ActionReport(
+                __('The passbolt user {0} was not deleted because it is marked as to be ignored.',
+                    $entry->user->username),
+                self::USERS, self::DELETE, self::IGNORE, $reportData));
         }
     }
 
@@ -35,8 +51,10 @@ trait UserSyncDeleteTrait {
     protected function handleDeletedEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        if (isset($entry->user) && $entry->user->deleted && $entry->status !== self::SUCCESS) {
-            $this->addReport(new ActionReport(self::USERS, self::DELETE, self::SYNC, $entry));
+        if (isset($entry->user) && $entry->user->deleted) {
+            $this->addReport(new ActionReport(
+                __('The directory user {0} was already deleted in passbolt.', $entry->user->username),
+                self::USERS, self::DELETE, self::SYNC, $entry->user));
         }
     }
 
@@ -45,14 +63,16 @@ trait UserSyncDeleteTrait {
      */
     protected function handleNotPossibleDelete(DirectoryEntry $entry)
     {
-        // if the last try was already an error, do not retry more
-        if ($entry->status === self::ERROR) {
-            $this->DirectoryEntries->delete($entry);
+        $errors = $entry->user->getErrors();
+        if (isset($errors['id']['soleOwnerOfSharedResource'])) {
+            $msg = __('The user {0} could not be deleted because they are the only owner of one or more passwords.',
+                $entry->user->username);
         } else {
-            // otherwise mark entry as error to allow future retry
-            $this->DirectoryEntries->updateStatus($entry, self::ERROR);
+            $msg = __('The user {0} could not be deleted because they are the only manager of one or more groups.',
+                $entry->user->username);
         }
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::ERROR, $entry->user));
+        $data = new SyncError($entry, new ValidationException($msg, $entry->user));
+        $this->addReport(new ActionReport($msg,self::USERS, self::DELETE, self::ERROR, $data));
     }
 
     /**
@@ -61,15 +81,21 @@ trait UserSyncDeleteTrait {
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::SUCCESS, $entry->user));
+        $this->addReport(new ActionReport(
+            __('The user {0} was successfully deleted.', $entry->user->username),
+            self::USERS, self::DELETE, self::SUCCESS, $entry->user));
     }
 
     /**
      * @param DirectoryEntry $entry
+     * @param InternalErrorException $exception
      */
-    protected function handleErrorDelete(DirectoryEntry $entry)
+    protected function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
     {
-        $this->DirectoryEntries->updateStatus($entry, self::ERROR);
-        $this->addReport(new ActionReport(self::USERS, self::DELETE, self::ERROR, $entry));
+        $data = new SyncError($entry, $exception);
+        $this->addReport(new ActionReport(
+            __('The user {0} could not be deleted because of an internal error. Please try again later.',
+                $entry->user->username),
+            self::USERS, self::DELETE, self::ERROR, $data));
     }
 }

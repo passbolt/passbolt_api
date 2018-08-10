@@ -14,19 +14,14 @@
  */
 namespace Passbolt\DirectorySync\Actions;
 
-use App\Model\Entity\Group;
 use Cake\Core\Configure;
-use Cake\Datasource\RulesChecker;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\SyncAction;
-
 
 class GroupSyncAction extends SyncAction
 {
@@ -40,34 +35,9 @@ class GroupSyncAction extends SyncAction
     public $Groups;
 
     /**
-     * @var \Cake\ORM\Table
-     */
-    public $Users;
-
-    /**
      * @var array|mixed
      */
-    public $DirectoryIgnore;
-
-    /**
-     * @var array|mixed
-     */
-    public $directoryData;
-
-    /**
-     * @var array|mixed
-     */
-    public $groupIdsToIgnore;
-
-    /**
-     * @var array|mixed
-     */
-    public $directoryIdsToIgnore;
-
-    /**
-     * @var array|mixed
-     */
-    public $defaultAdmin;
+    public $groupsToIgnore;
 
     /**
      * @var array|mixed
@@ -82,33 +52,27 @@ class GroupSyncAction extends SyncAction
     public function __construct() {
         parent::__construct();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
     public function beforeExecute()
     {
-        // Find all groups to ignore.
-        $this->groupIdsToIgnore = Hash::extract($this->DirectoryIgnore->find()
+        parent::beforeExecute();
+
+        $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
+            ->select(['id'])
+            ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
+            ->all()
+            ->toArray(), '{n}.id');
+
+        $this->groupsToIgnore = Hash::extract($this->DirectoryIgnore->find()
           ->select(['id'])
           ->where(['foreign_model' => SyncAction::GROUPS])
           ->all()
           ->toArray(), '{n}.id');
 
-        // Find all the entries to ignore.
-        $this->directoryIdsToIgnore = Hash::extract($this->DirectoryIgnore->find()
-          ->select(['id'])
-          ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
-          ->all()
-          ->toArray(), '{n}.id');
-
-        $this->defaultAdmin = $this->getDefaultAdmin();
-        if (empty($this->defaultAdmin)) {
-            throw new \Exception('Configuration issue. A default admin user cannot be found.');
-        }
-
         $this->defaultGroupAdmin = $this->getDefaultGroupAdmin();
         if (empty($this->defaultGroupAdmin)) {
-            throw new \Exception('Configuration issue. A default group admin user cannot be found.');
+            $this->defaultGroupAdmin = $this->defaultAdmin;
         }
 
         $this->directoryData = $this->directory->getGroups();
@@ -116,6 +80,11 @@ class GroupSyncAction extends SyncAction
 
     /**
      * Execute groups sync.
+     * - Delete all groups that can be deleted
+     * - Create all groups that can be created
+     * - Generate report
+     *
+     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
      */
     public function execute() {
         $this->beforeExecute();
@@ -125,7 +94,8 @@ class GroupSyncAction extends SyncAction
         if (Configure::read('passbolt.plugins.directorySync.jobs.groups.create')) {
             $this->processEntriesToCreate();
         }
-        return $this->summary;
+        $this->afterExecute();
+        return $this->getSummary();
     }
 
     /**
@@ -146,8 +116,14 @@ class GroupSyncAction extends SyncAction
 
         foreach ($entries as $entry) {
             // The directory entry or user is marked as to be ignored
-            if (in_array($entry->id, $this->directoryIdsToIgnore) || ($entry->group !== null && in_array($entry->group->id, $this->groupIdsToIgnore))) {
+            if (in_array($entry->id, $this->entriesToIgnore)) {
                 $this->handleDeletedIgnoredEntry($entry);
+                continue;
+            }
+
+            // The directory entry or user is marked as to be ignored
+            if (isset($entry->group) && in_array($entry->group->id, $this->groupsToIgnore)) {
+                $this->handleDeletedIgnoredGroup($entry);
                 continue;
             }
 
@@ -157,98 +133,72 @@ class GroupSyncAction extends SyncAction
                 continue;
             }
 
-            // The group cannot be deleted (example: it is the sole owner of some passwords).
-            if (!$this->Groups->checkRules($entry->group, RulesChecker::DELETE)) {
-                $this->handleNotPossibleDelete($entry);
-                continue;
-            }
-
-            // Group can be deleted
             try {
                 if (!$this->Groups->softDelete($entry->group)) {
-                    $this->handleErrorDelete($entry);
+                    // The group cannot be deleted (for example: it is the sole owner of shared passwords)
+                    $this->handleNotPossibleDelete($entry);
                 } else {
+                    // Group was deleted
                     $this->handleSuccessfulDelete($entry);
                     $this->handleGroupUsersDeleted($entry);
                 }
             } catch(InternalErrorException $exception) {
-                // TODO discuss format ErrorReport() ?
-                $this->handleErrorDelete($entry);
+                $this->handleInternalErrorDelete($entry, $exception);
             }
         }
     }
 
-    public function processEntriesToCreate() {
-        if (!isset($this->directoryData) || empty($this->directoryData)) {
-            // Directory is empty nothing to do
-            return;
-        }
-
+    /**
+     * Handle the group creation job
+     *
+     * @return void
+     */
+    public function processEntriesToCreate()
+    {
         foreach($this->directoryData as $i => $data) {
-            // If similar group can be retrieved.
-            $entry = $this->getEntryFromData($data);
-            $existingGroup = $this->getGroupFromData($data, $entry);
-
-            if(isset($existingGroup) && $this->isGroupIgnored($existingGroup)) {
-                $this->handleAddIgnore($data, $entry, $existingGroup);
+            // Find and patch or create directory entries
+            $entry = $this->DirectoryEntries->updateOrCreate($data, self::GROUPS);
+            if ($entry === false) {
                 continue;
             }
-
-            if($this->isDirectoryEntryIgnored($data['id'])) {
-                $this->handleAddIgnore($data, $entry, $existingGroup);
-                continue;
+            if (!isset($entry->group)) {
+                $existingGroup = $this->getGroupFromData($data);
+            } else {
+                $existingGroup = $entry->group;
             }
 
-            if (isset($existingGroup) && $existingGroup->deleted == true) {
-                $this->handleAddDeleted($data, $entry, $existingGroup);
-                continue;
-            }
-
-            if (isset($existingGroup) && ((isset($entry) && ($entry->status == SELF::ERROR)) || !isset($entry))) {
-                $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::GROUPS, $existingGroup, $entry);
-                $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::SYNC, $existingGroup));
-                continue;
-            }
-
-            if (isset($existingGroup) && isset($entry)) {
-                // Edit group users case.
-                $this->handleGroupUsersEdit($data, $entry, $existingGroup);
+            // If directory entry or user are marked as to be ignored
+            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
+            $ignoreGroup = (isset($existingGroup) && in_array($existingGroup->id, $this->groupsToIgnore));
+            if($ignoreEntry || $ignoreGroup) {
+                $this->handleAddIgnore($data, $entry, $existingGroup, $ignoreGroup);
                 continue;
             }
 
             if (!isset($existingGroup)) {
-                $this->handleAdd($data, $entry);
+                $this->handleAddNew($data, $entry);
                 continue;
             }
+
+            if (isset($existingGroup) && $existingGroup->deleted) {
+                $this->handleAddDeleted($data, $entry, $existingGroup);
+                continue;
+            }
+
+            $this->handleAddExist($data, $entry, $existingGroup);
         }
-    }
-
-    private function isDirectoryEntryIgnored(string $id) {
-        return in_array($id, $this->directoryIdsToIgnore);
-    }
-
-    private function isGroupIgnored(Group $group) {
-        return in_array($group->id, $this->groupIdsToIgnore);
     }
 
     /**
      * Get group from data.
-     * @param array $data
-     * @param DirectoryEntry|null $entry
      *
+     * @param array $data
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function getGroupFromData(array $data, DirectoryEntry $entry = null) {
-        // We first check if there is a group associated to the entry.
-        if (isset($entry)) {
-            if (!empty($entry->group)) {
-                return $entry->group;
-            }
-        }
-
+    public function getGroupFromData(array $data) {
         // If not group already associated, find if there is a corresponding group in the database.
         $existingGroup = $this->Groups->find()
-            ->select(['id', 'deleted', 'created', 'modified'])
+            ->select(['id', 'name', 'deleted', 'created', 'modified'])
             ->where(['name' => $data['group']['name']])
             ->order(['Groups.modified' => 'DESC'])
             ->first();
@@ -259,38 +209,27 @@ class GroupSyncAction extends SyncAction
     }
 
     /**
-     * @param $data
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * Get default group administrator
+     *
+     * @return array|\Cake\Datasource\EntityInterface|mixed|null
      */
-    protected function getEntryFromData(array $data)
-    {
-        $entry = null;
-        try {
-            $entry = $this->DirectoryEntries->get($data['id'], ['contain' => ['Groups']]);
-        } catch(\Exception $exception) {
+    public function getDefaultGroupAdmin() {
+        $groupAdmin = Configure::read('passbolt.plugins.directorySync.defaultGroupAdminUser');
+        if (!empty($groupAdmin)) {
+            // Get groupAdmin from database.
+            $groupAdmin = $this->Users->find()
+                ->where([
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                    'Users.username' => $groupAdmin
+                ])
+                ->first();
+            if (!empty($groupAdmin)) {
+                return $groupAdmin;
+            }
         }
-        return $entry;
-    }
 
-    /**
-     * Create directory entry for given directory data and group.
-     *
-     * @param array $directoryData
-     * @param Group|null $group
-     * @param string $status
-     *
-     * @return mixed
-     */
-    public function createDirectoryEntry(array $directoryData, Group $group = null, string $status = DirectoryEntry::STATUS_SUCCESS) {
-        $directoryEntry = [
-            'id' => $directoryData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => ($group == null ? null : $group->id),
-            'directory_name' => $directoryData['directory_name'],
-            'directory_created' => $directoryData['directory_created'],
-            'directory_modified' => $directoryData['directory_modified'],
-            'status' => $status,
-        ];
-        return $this->DirectoryEntries->create($directoryEntry);
+        // If can't find corresponding config user, return first admin.
+        return $this->Users->findFirstAdmin();
     }
 }

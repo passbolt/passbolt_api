@@ -28,6 +28,65 @@ use Cake\Validation\Validation;
 class DirectoryIgnoreController extends AppController
 {
     /**
+     * Check if a record is ignored
+     *
+     * @param string $foreignModel
+     * @param string $foreignKey
+     * @throws ValidationException If the model name or id is not valid
+     * @throws ForbiddenException if the current user is not an admin
+     * @return void
+     */
+    public function toggle(string $foreignModel, string $foreignKey)
+    {
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
+        }
+
+        $foreignModel = $this->normalizeForeignModel($foreignModel);
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
+
+        $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+        try {
+            $ignored = $this->DirectoryIgnore->get($foreignKey);
+            $result = $this->DirectoryIgnore->delete($ignored);
+        } catch(RecordNotFoundException $exception) {
+
+        }
+        $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
+    }
+
+    /**
+     * Check if a record is ignored
+     *
+     * @param string $foreignModel
+     * @param string $foreignKey
+     * @throws ValidationException If the model name or id is not valid
+     * @throws ForbiddenException if the current user is not an admin
+     * @return void
+     */
+    public function view(string $foreignModel, string $foreignKey)
+    {
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
+        }
+
+        $foreignModel = $this->normalizeForeignModel($foreignModel);
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
+
+        $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+        try {
+        $ignored = $this->DirectoryIgnore->get($foreignKey);
+        } catch(RecordNotFoundException $exception) {
+            throw new NotFoundException(__('The record is currently not ignored as part of directory synchronization.'));
+        }
+        $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
+    }
+
+    /**
      * Mark a record as ignored.
      *
      * @param string $foreignModel
@@ -42,7 +101,9 @@ class DirectoryIgnoreController extends AppController
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
         $foreignModel = $this->normalizeForeignModel($foreignModel);
-
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
         $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
 
         try {

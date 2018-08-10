@@ -12,24 +12,20 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
+namespace App\Utility;
 
-/**
- * Error Report Class
- * @package App\Utility
- */
-class ErrorReport extends ActionReport
+use Migrations\AbstractMigration;
+
+class PluginMigration extends AbstractMigration
 {
     /**
-     * ErrorReport constructor.
+     * Up
      *
-     * @param string $model Users, Groups, GroupsUsers
-     * @param string $action SyncAction::CREATE, SyncAction::DELETE, SyncAction::UPDATE
-     * @param object $data Entity, Exception
-     * @throws InvalidArgumentException
+     * @return void
      */
-    public function __construct(string $model, string $action, $data)
-    {
-        parent::__construct($model, $action, SyncAction::ERROR, $data);
+    public function up() {
+        // Fake some schema change to force the missing migrations to marked as done
+        $this->table('fake_schema_migrations')->create();
+        $this->table('fake_schema_migrations')->drop();
     }
 }

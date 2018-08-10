@@ -16,11 +16,12 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
-class UsersTask extends SyncTask
+class IgnoreAddTask extends AppShell
 {
     /**
      * Initializes the Shell
@@ -33,9 +34,6 @@ class UsersTask extends SyncTask
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('Users');
-        $this->loadModel('Roles');
-        $this->loadModel('AuthenticationTokens');
     }
 
     /**
@@ -50,12 +48,12 @@ class UsersTask extends SyncTask
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->setDescription(__('Sync users'))
-            ->addOption('dry-run', [
+        $parser->setDescription(__('Add a record as to be ignored.'))
+            ->addOption('--id', [
                 'help' => 'Don\'t save the changes',
                 'default' => 'true',
-                'boolean' => true,
             ]);
+
         return $parser;
     }
 
@@ -66,15 +64,10 @@ class UsersTask extends SyncTask
      */
     public function main()
     {
-        try {
-            $this->model = 'Users';
-            $action = new UserSyncAction();
-            $reports = $action->execute();
-            $this->_displayReports($reports);
-        } catch(\Exception $exception) {
-            $this->abort($exception->getMessage());
-            return false;
-        }
+
+        $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
+
         return true;
     }
+
 }

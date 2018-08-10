@@ -14,7 +14,10 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
+use App\Model\Entity\Role;
 
 /**
  * Directory factory class
@@ -22,21 +25,61 @@ use Cake\ORM\TableRegistry;
  */
 class SyncAction
 {
+    protected $started;
+    protected $ended;
+
+    protected $defaultAdmin;
     protected $directory;
-    public $summary;
+
+    /**
+     * @var array|mixed
+     */
+    public $directoryData;
+
+    /**
+     * @var \Cake\ORM\Table
+     */
+    public $Users;
+
+    /**
+     * @var \Cake\ORM\Table
+     */
     public $DirectoryEntries;
+
+    /**
+     * @var array|mixed
+     */
+    public $entriesToIgnore;
+
+    /**
+     * @var \Cake\ORM\Table
+     */
     public $DirectoryIgnore;
     public $DirectoryRelations;
 
+    /**
+     * @var ActionReportCollection
+     */
+    protected $summary;
+
+    /**
+     * Actions
+     */
     const CREATE = 'create';
     const DELETE = 'delete';
     const UPDATE = 'update';
 
+    /**
+     * Statuses
+     */
     const SUCCESS = 'success';
     const ERROR = 'error';
     const IGNORE = 'ignore';
     const SYNC = 'synced';
 
+    /**
+     * Models
+     */
     const GROUPS = 'Groups';
     const GROUPS_USERS = 'GroupsUsers';
     const USERS = 'Users';
@@ -53,7 +96,28 @@ class SyncAction
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
         $this->DirectoryRelations = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryRelations');
-        $this->summary = [];
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->summary = new ActionReportCollection();
+        $this->defaultAdmin = $this->getDefaultAdmin();
+        if (empty($this->defaultAdmin)) {
+            throw new \Exception('Configuration issue. A default admin user cannot be found.');
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function beforeExecute()
+    {
+        $this->started = FrozenTime::now();
+    }
+
+    /**
+     * @return void
+     */
+    public function afterExecute()
+    {
+        $this->ended = FrozenTime::now();
     }
 
     /**
@@ -71,16 +135,41 @@ class SyncAction
      */
     public function addReport(ActionReport $report)
     {
-        $this->summary[] = $report;
+        $this->summary->add($report);
     }
 
     /**
      * Get the summary of all reports
      *
-     * @return array
+     * @return ActionReportCollection
      */
     public function getSummary()
     {
         return $this->summary;
+    }
+
+    /**
+     * Get default admin.
+     * @return array|\Cake\Datasource\EntityInterface|mixed|null
+     */
+    public function getDefaultAdmin() {
+        $defaultUser = Configure::read('passbolt.plugins.directorySync.defaultUser');
+        if (!empty($defaultUser)) {
+            // Get default user from database.
+            $defaultUser = $this->Users->find()
+                ->where([
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                    'Users.username' => $defaultUser,
+                    'Users.role_id' => $this->Users->Roles->getIdByName(Role::ADMIN),
+                ])
+                ->first();
+            if (!empty($defaultUser)) {
+                return $defaultUser;
+            }
+        }
+
+        // If can't find corresponding config user, return first admin.
+        return $this->Users->findFirstAdmin();
     }
 }

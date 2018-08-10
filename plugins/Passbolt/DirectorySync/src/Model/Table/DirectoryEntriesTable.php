@@ -15,9 +15,9 @@
 namespace Passbolt\DirectorySync\Model\Table;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\User;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 use Cake\ORM\RulesChecker;
@@ -82,6 +82,7 @@ class DirectoryEntriesTable extends Table
         ]);
 
         $this->hasOne('Groups', [
+            'dependent' => false,
             'className' => 'Groups',
             'bindingKey' => 'foreign_key',
             'foreignKey' => 'id'
@@ -157,7 +158,7 @@ class DirectoryEntriesTable extends Table
      *
      * @param DirectoryEntry $entity
      * @param $status
-     * @return bool
+     * @return DirectoryEntry|bool
      */
     public function updateStatus(DirectoryEntry $entity, $status)
     {
@@ -175,17 +176,35 @@ class DirectoryEntriesTable extends Table
      *
      * @param DirectoryEntry $entity
      * @param string $foreignKey uuid
-     * @return bool
+     * @return DirectoryEntry|bool
      */
     public function updateForeignKey(DirectoryEntry $entity, string $foreignKey = null)
     {
+        $entity->foreign_key = $foreignKey;
+        return $this->save($entity);
+    }
+
+    /**
+     * Update the foreign key
+     *
+     * @param DirectoryEntry $entity
+     * @param string $directoryName DN or equivalent
+     * @return DirectoryEntry|bool
+     */
+    public function updateDirectoryName(DirectoryEntry $entity, string $directoryName = null)
+    {
         $entity = $this->get($entity->id);
-        $this->patchEntity($entity, ['foreign_key' => $foreignKey], [
-            'fieldList' => ['foreign_key'],
-            'accessibleFields' => ['foreign_key' => true],
+        $this->patchEntity($entity, ['directory_name' => $directoryName], [
+            'fieldList' => ['directory_name'],
+            'accessibleFields' => ['directory_name' => true],
             'associated' => []
         ]);
-        return $this->save($entity);
+        $updatedEntity = $this->save($entity);
+        if (!$updatedEntity) {
+            return $entity;
+        } else {
+            return $updatedEntity;
+        }
     }
 
     /**
@@ -222,36 +241,29 @@ class DirectoryEntriesTable extends Table
     }
 
     /**
-     * Update a directory entries status if it exist or create one
+     * Find a directory entries if it exist or create one
+     * Will update the name if it changed in the directory (example: DN changed)
      *
      * @param array $data
-     * @param string $status
      * @param string $model
-     * @param Entity|null $entity
-     * @param DirectoryEntry|null $entry
      * @return array|bool|DirectoryEntry
      */
-    public function updateStatusOrCreate(array $data, string $status, string $model, Entity $entity = null, DirectoryEntry $entry = null)
+    public function updateOrCreate(array $data, string $model)
     {
-        if (isset($entry)) {
-            if ($entry->status !== $status) {
-                $entry = $this->updateStatus($entry, $status);
-            }
-            $entityForeignKey = (isset($entity) ? $entity->id : null);
-            if ($entry->foreign_key !== $entityForeignKey) {
-                $entry = $this->updateForeignKey($entry, $entityForeignKey);
+        try {
+            $entry = $this->get($data['id'], ['contain' => [$model]]);
+            if (is_string($data['directory_name']) && $entry->directory_name !== $data['directory_name']) {
+                if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
+                    $data['directory_name'] = substr($data['directory_name'], 0, SELF::DN_MAX_LENGTH - 1);
+                }
+                $entry->directory_name = $data['directory_name'];
+                return $this->save($entry);
             }
             return $entry;
-        } else {
-            $entry = $data;
-            $entry['foreign_model'] = $model;
-            if (isset($entity) && Validation::uuid($entity->id)) {
-                $entry['foreign_key'] = $entity->id;
-            } else {
-                $entry['foreign_key'] = null;
-            }
-            $entry['status'] = $status;
-            return $this->create($entry);
+        } catch(RecordNotFoundException $exception) {
+            $data['foreign_model'] = $model;
+            $data['foreign_key'] = null;
+            return $this->create($data);
         }
     }
 

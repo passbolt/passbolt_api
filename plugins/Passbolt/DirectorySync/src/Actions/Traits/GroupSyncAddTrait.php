@@ -18,45 +18,64 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
-use Cake\Utility\Hash;
-use LdapTools\Query\LdapQueryBuilder;
+use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
-use Passbolt\DirectorySync\Utility\ErrorReport;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 trait GroupSyncAddTrait {
 
     /**
      * Handle add when entry or group should be ignored.
+     *
      * @param array $data
      * @param DirectoryEntry|null $entry
      * @param Group|null $existingGroup
      */
-    public function handleAddIgnore(array $data, DirectoryEntry $entry = null, Group $existingGroup = null) {
-        if (isset($entry)) {
-            if ($entry->status == self::SUCCESS && isset($existingGroup) && !$this->isGroupIgnored($existingGroup)) {
-                $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, null, $entry);
-            }
-            else {
-                $this->DirectoryEntries->delete($entry);
-                $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => self::DIRECTORY_ENTRIES]);
-            }
+    public function handleAddIgnore(array $data, DirectoryEntry $entry = null, Group $existingGroup = null, bool $ignoreGroup) {
+        // do not overly report ignored record when there is nothing to do
+        if ((isset($existingGroup) && isset($entry->group) && !$existingGroup->deleted)) {
+            return;
         }
-        if (isset($existingGroup) && !$this->isGroupIgnored($existingGroup)) {
-            $this->DirectoryIgnore->create(['id' => $existingGroup->id, 'foreign_model' => self::GROUPS]);
+        if ($ignoreGroup) {
+            $msg = __('The group {0} was not synced because the passbolt user is marked to as be ignored.',
+                $existingGroup->name);
+            $reportData = $this->DirectoryIgnore->get($existingGroup->id);
+        } else {
+            $msg = __('The group {0} was not synced because the directory user is marked to as be ignored.',
+                $data['name']);
+            $reportData = $this->DirectoryIgnore->get($existingGroup->id);
         }
+        $this->addReport(new ActionReport($msg,self::GROUPS, self::CREATE, self::IGNORE, $reportData));
+    }
 
-        // Conditions for reporting
-        if (isset($existingGroup) && $existingGroup->deleted || isset($entry) && $entry->status == self::ERROR) {
-            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, isset($existingGroup) ? $existingGroup : $data));
+    /**
+     * Handle add in a normal context.
+     * @param array $data
+     * @param DirectoryEntry|null $entry
+     */
+    public function handleAddNew(array $data, DirectoryEntry $entry = null)
+    {
+        $status = self::ERROR;
+        $reportData = null;
+        try {
+            $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+            $reportData = $group = $this->Groups->create($data, $accessControl);
+            $this->handleGroupUsersAfterGroupCreate($data, $group);
+            $this->DirectoryEntries->updateForeignKey($entry, $group->id);
+            $status = self::SUCCESS;
+            $msg = __('The group {0} was successfully added to passbolt.', $data['group']['name']);
+        } catch(ValidationException $exception) {
+            $reportData = new SyncError($entry, $exception);
+            $status = self::ERROR;
+            $name = isset($data['group']['name']) ? $data['group']['name'] : 'undefined';
+            $msg = __('The group {0} could not be added because of data validation issues.', $name);
+        } catch (InternalErrorException $exception) {
+            $reportData = new SyncError($entry, $exception);
+            $msg = __('The group {0} could not be added because of an internal error. Please try again later.',
+                $data['group']['name']);
         }
-        elseif (!isset($existingGroup) && !isset($entry)) {
-            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, $data));
-        }
-        elseif (!isset($existingGroup) && isset($entry)) {
-            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::IGNORE, $entry));
-        }
+        $this->addReport(new ActionReport($msg, self::GROUPS, self::CREATE, $status, $reportData));
     }
 
     /**
@@ -66,105 +85,48 @@ trait GroupSyncAddTrait {
      * @param Group|null $existingGroup
      */
     public function handleAddDeleted(array $data, DirectoryEntry $entry  = null, Group $existingGroup = null) {
-        // Check if ignored.
+        // if the group was created in ldap and then deleted in passbolt
+        // do not try to recreate
+        $status = self::ERROR;
+        $reportData = null;
         if ($data['directory_created']->lt($existingGroup->modified)) {
-            $this->handleAddIgnore($data, $entry, $existingGroup);
+            $reportData = new SyncError($existingGroup, null);
+            $msg = __('The previously deleted group {0} was not re-added to passbolt.', $existingGroup->name);
         } else {
-            $this->handleAdd($data, $entry);
+            // if the group was delete in passbolt and then created in ldap
+            // try to recreate
+            try {
+                $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+                $reportData = $group = $this->Groups->create($data, $accessControl);
+                $this->handleGroupUsersAfterGroupCreate($data, $group);
+                $this->DirectoryEntries->updateForeignKey($entry, $group->id);
+                $status = self::SUCCESS;
+                $msg = __('The previously deleted group {0} was re-added to passbolt.', $existingGroup->name);
+            } catch(ValidationException $exception) {
+                $reportData = new SyncError($entry, $exception);
+                $msg = __('The deleted group {0} could not be re-added to passbolt because of validation errors.', $existingGroup->name);
+            } catch (InternalErrorException $exception) {
+                $reportData = new SyncError(null, $exception);
+                $msg = __('The deleted group {0} could not be re-added to passbolt because of an internal error.', $existingGroup->name);
+            }
         }
+        $this->addReport(new ActionReport($msg, self::GROUPS, self::CREATE, $status, $reportData));
     }
 
     /**
-     * Handle add in a normal context.
      * @param array $data
      * @param DirectoryEntry|null $entry
+     * @param Group $existingGroup
      */
-    public function handleAdd(array $data, DirectoryEntry $entry = null) {
-        if ($this->isDirectoryEntryIgnored($data['id'])) {
-            if (isset($entry)) { $this->DirectoryEntries->delete($entry); }
-            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, SELF::IGNORE, $data));
-            return;
+    function handleAddExist(array $data, DirectoryEntry $entry = null, Group $existingGroup)
+    {
+        // do not overly report already successfully synced groups
+        if (isset($entry) && !isset($entry->foreign_key)) {
+            $this->DirectoryEntries->updateForeignKey($entry, $existingGroup->id);
+            $this->addReport(new ActionReport(
+                __('The group {0} was mapped with an existing group in passbolt.', $existingGroup->name),
+                self::GROUPS, self::CREATE, self::SYNC, $existingGroup));
         }
-
-        $g = $this->createGroup($data['group']);
-        if ($g)  {
-            $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::GROUPS, $g, $entry);
-            $this->handleGroupUsersAfterGroupCreate($data, $g);
-        } else {
-            $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::GROUPS, null, $entry);
-        }
-    }
-
-    /**
-     * Create a group and log report.
-     * @param $group
-     *
-     * @return bool
-     */
-    public function createGroup(array $group) {
-        $group = $this->handleGroupCreateDefaultGroupUser($group);
-        try {
-            $g = $this->Groups->create($group, new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id));
-            $this->addReport(new ActionReport(self::GROUPS, self::CREATE, self::SUCCESS, $g));
-            return $g;
-        } catch(ValidationException $exception) {
-            $this->addReport(new ErrorReport(self::GROUPS, self::CREATE, $exception));
-            return false;
-        } catch (\Exception $exception) {
-            $this->addReport(new ErrorReport(self::GROUPS, self::CREATE, $exception));
-            return false;
-        }
-    }
-
-
-    /**
-     * Get default group administrator
-     * @return array|\Cake\Datasource\EntityInterface|mixed|null
-     */
-    public function getDefaultGroupAdmin() {
-        $groupAdmin = Configure::read('passbolt.plugins.directorySync.defaultGroupAdminUser');
-        if (!empty($groupAdmin)) {
-            // Get groupAdmin from database.
-            $groupAdmin =
-                $this->Users->find()
-                            ->where([
-                                'Users.deleted' => false,
-                                'Users.active' => true,
-                                'Users.username' => $groupAdmin
-                            ])
-                            ->first();
-            if (!empty($groupAdmin)) {
-                return $groupAdmin;
-            }
-        }
-
-        // If can't find corresponding config user, return first admin.
-        return $this->Users->findFirstAdmin();
-    }
-
-    /**
-     * Get default admin.
-     * @return array|\Cake\Datasource\EntityInterface|mixed|null
-     */
-    public function getDefaultAdmin() {
-        $defaultUser = Configure::read('passbolt.plugins.directorySync.defaultUser');
-        if (!empty($defaultUser)) {
-            // Get default user from database.
-            $defaultUser =
-                $this->Users->find()
-                            ->where([
-                                'Users.deleted' => false,
-                                'Users.active' => true,
-                                'Users.username' => $defaultUser,
-                                'Users.role_id' => $this->Users->Roles->getIdByName(Role::ADMIN),
-                            ])
-                            ->first();
-            if (!empty($defaultUser)) {
-                return $defaultUser;
-            }
-        }
-
-        // If can't find corresponding config user, return first admin.
-        return $this->Users->findFirstAdmin();
+        $this->handleGroupUsersEdit($data, $entry, $existingGroup);
     }
 }

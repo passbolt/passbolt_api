@@ -36,7 +36,7 @@ class TestDirectory implements DirectoryInterface
     {
         $scenario = Configure::read('passbolt.plugins.directorySync.test');
         if (isset($scenario) && is_string($scenario)) {
-            $this->path = dirname(__FILE__) . DS . stripslashes($scenario);
+            $this->path = dirname(__DIR__) . DS . 'IntegrationFixtures' . DS . stripslashes($scenario);
             if(!is_dir($this->path)) {
                 throw new \Exception(__('The test scenario could not be found in fixtures at: {0}', $this->path));
             }

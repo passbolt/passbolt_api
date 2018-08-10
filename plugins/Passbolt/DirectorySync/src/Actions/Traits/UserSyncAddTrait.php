@@ -14,12 +14,14 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
-use App\Model\Entity\User;
-use Passbolt\DirectorySync\Utility\ActionReport;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Utility\UserAccessControl;
 use Cake\Network\Exception\InternalErrorException;
-use Passbolt\DirectorySync\Utility\SyncAction;
+use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 trait UserSyncAddTrait {
 
@@ -29,32 +31,22 @@ trait UserSyncAddTrait {
      * @param User|null $existingUser
      * @param bool $ignoreUser
      */
-    function handleAddIgnore(array $data, DirectoryEntry $entry = null, User $existingUser = null, bool $ignoreUser, bool $ignoreEntry)
+    function handleAddIgnore(array $data, DirectoryEntry $entry = null, User $existingUser = null, bool $ignoreUser)
     {
-        if (isset($entry)) {
-            // Delete dir entry if any & recreate ignore ref if needed
-            $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $data['id'], 'foreign_model' => SyncAction::DIRECTORY_ENTRIES]);
-        }
-
         // do not overly report ignored record when there is nothing to do
-        // ref. specs cases 19a, 26, 27a, 30b, 35
-        if (isset($existingUser) && !$existingUser->deleted) {
-            if ($ignoreUser && (!isset($entry) || $entry->status === SyncAction::SUCCESS)) {
-                return;
-            }
-            if ($ignoreEntry) {
-                return;
-            }
+        if ((isset($existingUser) && isset($entry->user) && !$existingUser->deleted)) {
+            return;
         }
         if ($ignoreUser) {
-            $reportData = $existingUser;
-        } elseif (isset($entry)) {
-            $reportData = $entry;
+            $msg = __('The user {0} was not synced because the passbolt user is marked to as be ignored.',
+                $existingUser->username);
+            $reportData = $this->DirectoryIgnore->get($existingUser->id);
         } else {
-            $reportData = $data;
+            $msg = __('The user {0} was not synced because the directory user is marked to as be ignored.',
+                $data['username']);
+            $reportData = $this->DirectoryIgnore->get($existingUser->id);
         }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $reportData));
+        $this->addReport(new ActionReport($msg,self::USERS, self::CREATE, self::IGNORE, $reportData));
     }
 
     /**
@@ -63,69 +55,58 @@ trait UserSyncAddTrait {
      */
     function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
-        $user = null;
-        $reportData = $data;
+        $status = self::ERROR;
+        $reportData = null;
         try {
-            $user = $this->Users->register($data['user']);
+            $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+            $reportData = $user = $this->Users->register($data['user'], $accessControl);
+            $this->DirectoryEntries->updateForeignKey($entry, $user->id);
             $status = self::SUCCESS;
-            $reportData = $user;
+            $msg = __('The user {0} was successfully added to passbolt.', $data['user']['username']);
         } catch(ValidationException $exception) {
-            $reportData = $exception->getEntity();
-            $status = self::ERROR;
+            $reportData = new SyncError($entry, $exception);
+            $username = isset($data['user']['username']) ? $data['user']['username'] : 'undefined';
+            $msg = __('The user {0} could not be added because of data validation issues.', $username);
         } catch (InternalErrorException $exception) {
-            $status = self::ERROR;
+            $reportData = new SyncError($entry, $exception);
+            $msg = __('The user {0} could not be added because of an internal error. Please try again later.',
+                $data['user']['username']);
         }
-
-        $dirEntry = $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
-        if ($status === self::ERROR) {
-            $reportData = $dirEntry;
-        }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $reportData));
+        $this->addReport(new ActionReport($msg, self::USERS, self::CREATE, $status, $reportData));
     }
 
     /**
      * @param array $data
      * @param DirectoryEntry|null $entry
+     * @param User $existingUser
      */
-    function handleAddExistDeleted(array $data, DirectoryEntry $entry = null, User $existingUser)
+    function handleAddDeleted(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
         // if the user was created in ldap and then deleted in passbolt
         // do not try to recreate
-        if ($data['directory_created']->lte($existingUser->modified)) {
-            if (isset($entry)) {
-                $this->DirectoryEntries->delete($entry);
-            }
-            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'foreign_model' => self::USERS]);
-            $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $existingUser));
-            return;
-        }
-
-        // if the user was delete in passbolt and then created in ldap
-        // try to recreate
-        $user = null;
-        $reportData = $data;
-        try {
-            $user = $this->Users->register($data['user']);
-            $status = self::SUCCESS;
-            $reportData = $user;
-        } catch(ValidationException $exception) {
-            if (isset($entry)) {
-                $reportData = $entry; //$exception->getEntity();
-            }
-            $status = self::ERROR;
-        } catch (InternalErrorException $exception) {
-            $status = self::ERROR;
-        }
-        // if it doesn't work, then ignore user
-        if ($status === self::ERROR) {
-            if (isset($entry)) {
-                $this->DirectoryEntries->delete($entry);
-            }
-            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'foreign_model' => self::USERS]);
+        $status = self::ERROR;
+        if ($data['directory_created']->lt($existingUser->modified)) {
+            $reportData = new SyncError($existingUser, null);
+            $msg = __('The previously deleted user {0} was not re-added to passbolt.', $existingUser->username);
         } else {
-            $this->DirectoryEntries->updateStatusOrCreate($data, $status, self::USERS, $user, $entry);
+            // if the user was delete in passbolt and then created in ldap
+            // try to recreate
+            $user = null;
+            try {
+                $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+                $reportData = $user = $this->Users->register($data['user'], $accessControl);
+                $this->DirectoryEntries->updateForeignKey($entry, $user->id);
+                $status = self::SUCCESS;
+                $msg = __('The previously deleted user {0} was re-added to passbolt.', $existingUser->username);
+            } catch(ValidationException $exception) {
+                $reportData = new SyncError($entry, $exception);
+                $msg = __('The deleted user {0} could not be re-added to passbolt because of validation errors.', $existingUser->username);
+            } catch (InternalErrorException $exception) {
+                $reportData = new SyncError(null, $exception);
+                $msg = __('The deleted user {0} could not be re-added to passbolt because of an internal error.', $existingUser->username);
+            }
         }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, $status, $reportData));
+        $this->addReport(new ActionReport($msg, self::USERS, self::CREATE, $status, $reportData));
     }
 
     /**
@@ -135,30 +116,12 @@ trait UserSyncAddTrait {
      */
     function handleAddExist(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
-        if (isset($entry) && (!isset($entry->foreign_key) || ($entry->foreign_key !== $existingUser->id))) {
+        // do not overly report already successfully synced users
+        if (isset($entry) && !isset($entry->foreign_key)) {
             $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
-        }
-        $this->DirectoryEntries->updateStatusOrCreate($data, self::SUCCESS, self::USERS, $existingUser, $entry);
-        if (isset($entry) && $entry->status === SyncAction::SUCCESS && !$existingUser->deleted) {
-            return; // ref specs case26, do not overly report already successfully synced users
-        }
-        $this->addReport(new ActionReport(self::USERS, self::CREATE, self::SYNC, $existingUser));
-    }
-
-    /**
-     * @param array $data
-     * @param DirectoryEntry $entry
-     * @param User $existingUser
-     */
-    function handleAddDeleted(array $data, DirectoryEntry $entry = null, User $existingUser)
-    {
-        if (!isset($entry)) {
-            $this->DirectoryEntries->updateStatusOrCreate($data, self::ERROR, self::USERS, $existingUser, $entry);
-            $this->addReport(new ActionReport(self::USERS, self::CREATE, self::ERROR, $data));
-        } else {
-            $this->DirectoryEntries->delete($entry);
-            $this->DirectoryIgnore->create(['id' => $existingUser->id, 'foreign_model' => self::USERS]);
-            $this->addReport(new ActionReport(self::USERS, self::CREATE, self::IGNORE, $data));
+            $this->addReport(new ActionReport(
+                __('The user {0} was mapped with an existing user in passbolt.', $existingUser->username),
+                self::USERS, self::CREATE, self::SYNC, $existingUser));
         }
     }
 }

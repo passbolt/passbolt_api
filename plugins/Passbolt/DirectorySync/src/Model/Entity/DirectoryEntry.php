@@ -26,7 +26,6 @@ use Cake\ORM\Entity;
  * @property string $directory_name distinguished name
  * @property \Cake\I18n\FrozenTime $directory_created
  * @property \Cake\I18n\FrozenTime $directory_modified
- * @property string $status
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  */
@@ -48,13 +47,7 @@ class DirectoryEntry extends Entity
         'directory_name' => false,
         'directory_created' => false,
         'directory_modified' => false,
-        'status' => false,
         'created' => false,
         'modified' => false
     ];
-
-    const STATUS_ERROR = 'error';
-    const STATUS_SUCCESS = 'success';
-    const FOREIGN_MODEL_GROUPS = 'Groups';
-    const FOREIGN_MODEL_USERS = 'Users';
 }

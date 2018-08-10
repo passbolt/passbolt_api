@@ -42,7 +42,9 @@ class AllTask extends AppShell
     public function main()
     {
         $cmd = $this->_formatCmd('directory_sync users');
-        return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
-        return true;
+        $result = $this->dispatchShell($cmd);
+        $cmd2 = $this->_formatCmd('directory_sync groups');
+        $result2 = $this->dispatchShell($cmd2);
+        return ($result2 === self::CODE_SUCCESS && $result === self::CODE_SUCCESS);
     }
 }

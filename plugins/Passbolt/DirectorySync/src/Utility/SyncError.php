@@ -1,0 +1,57 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.2.0
+ */
+namespace Passbolt\DirectorySync\Utility;
+
+use Cake\I18n\FrozenTime;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
+use Cake\Core\Configure;
+use App\Model\Entity\Role;
+
+/**
+ * Directory factory class
+ * @package App\Utility
+ */
+class SyncError
+{
+    protected $entity;
+    protected $data;
+    protected $exception;
+
+    public function __construct(Entity $entity = null, \Exception $exception = null)
+    {
+        if (!isset($data) && !isset($entity) && !isset($exception)) {
+            throw new InternalErrorException(__('This is not a valid SyncError, no data provided'));
+        }
+        $this->entity = $entity;
+        $this->exception = $exception;
+    }
+
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    public function getException()
+    {
+        return $this->exception;
+    }
+
+    public function getData()
+    {
+        return $this->getData();
+    }
+}

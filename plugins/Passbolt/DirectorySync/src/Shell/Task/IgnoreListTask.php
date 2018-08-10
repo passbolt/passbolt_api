@@ -16,11 +16,12 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
-class UsersTask extends SyncTask
+class IgnoreListTask extends AppShell
 {
     /**
      * Initializes the Shell
@@ -33,9 +34,6 @@ class UsersTask extends SyncTask
     public function initialize()
     {
         parent::initialize();
-        $this->loadModel('Users');
-        $this->loadModel('Roles');
-        $this->loadModel('AuthenticationTokens');
     }
 
     /**
@@ -50,12 +48,8 @@ class UsersTask extends SyncTask
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->setDescription(__('Sync users'))
-            ->addOption('dry-run', [
-                'help' => 'Don\'t save the changes',
-                'default' => 'true',
-                'boolean' => true,
-            ]);
+        $parser->setDescription(__('List records ignored during directory synchronization process.'));
+
         return $parser;
     }
 
@@ -66,15 +60,44 @@ class UsersTask extends SyncTask
      */
     public function main()
     {
-        try {
-            $this->model = 'Users';
-            $action = new UserSyncAction();
-            $reports = $action->execute();
-            $this->_displayReports($reports);
-        } catch(\Exception $exception) {
-            $this->abort($exception->getMessage());
-            return false;
+        $io = $this->getIo();
+        // Output some data as a table.
+
+        $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
+        $di = $this->DirectoryIgnore->find()
+            ->select()
+            ->contain(['Users', 'Groups', 'DirectoryEntries'])
+            ->toArray();
+        $records[] = ['Model', 'Name', 'Created', 'ID'];
+        foreach ($di as $i => $record) {
+            pr($record);
+            switch ($record->foreign_model) {
+                case 'Users':
+                    $name = $record->user->username;
+                    break;
+                case 'Groups':
+                    $name = $record->group->name;
+                    break;
+                case 'DirectoryEntry':
+                    if (isset($record->DirectoryEntry->cn)) {
+                        $name = $record->directory_entry->cn;
+                    } else {
+                        $name = $record->id;
+                    }
+                    break;
+            }
+            $records[] = [$record->foreign_model, $name, $record->created->timeAgoInWords(), $record->id];
         }
+        if (count($records) === 1) {
+            $this->success(__('No record is being ignored. The next job will try to synchronize all records.'));
+            return true;
+        }
+
+        $io->helper('Table')->output($records);
+        $this->out();
+        $this->out('[help] you can stop ignoring records with the following command.');
+        $this->out('       ./bin/cake directory_sync ignore-add [ID]');
         return true;
     }
+
 }

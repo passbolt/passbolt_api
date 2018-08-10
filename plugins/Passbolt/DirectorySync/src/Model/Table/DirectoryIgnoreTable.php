@@ -29,6 +29,7 @@ use Cake\ORM\TableRegistry;
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $Groups
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasOne $DirectoryEntries
  *
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity($data = null, array $options = [])

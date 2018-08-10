@@ -14,29 +14,33 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use Cake\I18n\FrozenTime;
+use Cake\ORM\Entity;
 use Psr\Log\InvalidArgumentException;
 
 /**
  * Directory factory class
  * @package App\Utility
  */
-class ActionReport
+class ActionReport implements \Serializable
 {
     protected $model;
     protected $action;
     protected $status;
     protected $data;
+    protected $created;
 
     /**
      * ActionReport constructor.
      *
+     * @param string $message
      * @param string $model Users, Groups, GroupsUsers
      * @param string $action SyncAction::CREATE, SyncAction::DELETE, SyncAction::UPDATE
      * @param string $status SyncAction::SUCCESS, SyncAction::ERROR, SyncAction::IGNORE
      * @param mixed $data Array or Entity, Exception
      * @throws InvalidArgumentException
      */
-    public function __construct(string $model, string $action, string $status, $data)
+    public function __construct(string $message, string $model, string $action, string $status, $data)
     {
         if (!self::isValidModel($model)) {
             throw new InvalidArgumentException(__('This is not a valid action report. Invalid Model.'));
@@ -50,10 +54,50 @@ class ActionReport
         if (!self::isValidData($data)) {
             throw new InvalidArgumentException(__('This is not a valid action report. Invalid Data.'));
         }
+        $this->message = $message;
         $this->model = $model;
         $this->data = $data;
         $this->action = $action;
         $this->status = $status;
+        $this->created = FrozenTime::now();
+    }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize([
+            'message' => $this->message,
+            'model' => $this->model,
+            'data' => $this->data,
+            'action' => $this->action,
+            'status' => $this->status,
+            'created' => $this->created,
+            'version' => '2'
+        ]);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        foreach ($data as $key => $value) {
+            if (in_array($key, ['message', 'model', 'data', 'action', 'status', 'created'])) {
+                $this->{$key} = $value;
+            }
+        }
+    }
+
+    /**
+     * Status getter
+     *
+     * @return string
+     */
+    public function getMessage() {
+        return $this->message;
     }
 
     /**
@@ -90,6 +134,15 @@ class ActionReport
      */
     public function getData() {
         return $this->data;
+    }
+
+    /**
+     * Creation datetime getter
+     *
+     * @return mixed
+     */
+    public function getCreated() {
+        return $this->created;
     }
 
     /**

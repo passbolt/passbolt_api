@@ -16,8 +16,6 @@ namespace Passbolt\DirectorySync\Actions;
 
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
-use Cake\ORM\RulesChecker;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
@@ -26,28 +24,24 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncAction extends SyncAction
 {
-    /**
-     * @var \Cake\ORM\Table
-     */
-    public $Users;
-
-    /**
-     * @var array|mixed
-     */
-    public $directoryData;
 
     use UserSyncDeleteTrait;
     use UserSyncAddTrait;
     use GroupUsersSyncTrait;
 
     /**
+     * @var array|mixed
+     */
+    public $usersToIgnore;
+
+    /**
      * UserSyncAction constructor.
      *
      * @throws \Exception
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
@@ -55,6 +49,8 @@ class UserSyncAction extends SyncAction
      */
     public function beforeExecute()
     {
+        parent::beforeExecute();
+
         $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
             ->where(['foreign_model' => SyncAction::DIRECTORY_ENTRIES])
@@ -73,9 +69,12 @@ class UserSyncAction extends SyncAction
      * Perform a user sync
      * - Delete all users that can be deleted
      * - Create all users that can be created
-     * - Generate report for admin
+     * - Generate report
+     *
+     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
      */
-    public function execute() {
+    public function execute()
+    {
         $this->beforeExecute();
         if (Configure::read('passbolt.plugins.directorySync.jobs.users.delete')) {
             $this->processEntriesToDelete();
@@ -83,6 +82,7 @@ class UserSyncAction extends SyncAction
         if (Configure::read('passbolt.plugins.directorySync.jobs.users.create')) {
             $this->processEntriesToCreate();
         }
+        $this->afterExecute();
         return $this->getSummary();
     }
 
@@ -102,35 +102,36 @@ class UserSyncAction extends SyncAction
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
 
         foreach ($entries as $entry) {
-            // The directory entry or user is marked as to be ignored
-            if (in_array($entry->id, $this->entriesToIgnore) || ($entry->user !== null && in_array($entry->user->id, $this->usersToIgnore))) {
+            // The directory entry is marked as to be ignored
+            if (in_array($entry->id, $this->entriesToIgnore)) {
                 $this->handleDeletedIgnoredEntry($entry);
                 continue;
             }
 
+            // The user is marked as to be ignored
+            if (isset($entry->user) && in_array($entry->user->id, $this->usersToIgnore)) {
+                $this->handleDeletedIgnoredUser($entry);
+                continue;
+            }
+
             // The user was already hard or soft deleted
-            if ($entry->user === null || $entry->user->deleted) {
+            if (!isset($entry->user) || $entry->user->deleted) {
                 $this->handleDeletedEntry($entry);
                 continue;
             }
 
-            // The user cannot be deleted (for example: it is the sole owner of shared passwords)
-            if (!$this->Users->checkRules($entry->user, RulesChecker::DELETE)) {
-                $this->handleNotPossibleDelete($entry);
-                continue;
-            }
-
-            // User can be deleted
             try {
                 if (!$this->Users->softDelete($entry->user)) {
-                    $this->handleErrorDelete($entry);
+                    // The user cannot be deleted (for example: it is the sole owner of shared passwords)
+                    $this->handleNotPossibleDelete($entry);
                 } else {
+                    // User was deleted
                     $this->handleSuccessfulDelete($entry);
                     $this->handleGroupUsersDeleted($entry);
                 }
-            } catch(InternalErrorException $exception) {
-                // TODO discuss format ErrorReport() ?
-                $this->handleErrorDelete($entry);
+            } catch (InternalErrorException $exception) {
+                // The user cannot be deleted (for example: database service is down)
+                $this->handleInternalErrorDelete($entry, $exception);
             }
         }
     }
@@ -143,8 +144,11 @@ class UserSyncAction extends SyncAction
     function processEntriesToCreate()
     {
         foreach ($this->directoryData as $data) {
-            // Try to find directory entries and user
-            $entry = $this->getEntryFromData($data);
+            // Find and patch or create directory entries
+            $entry = $this->DirectoryEntries->updateOrCreate($data, self::USERS);
+            if ($entry === false) {
+                continue;
+            }
             if (!isset($entry->user)) {
                 $existingUser = $this->getUserFromData($data);
             } else {
@@ -155,20 +159,20 @@ class UserSyncAction extends SyncAction
             $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
             $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore));
             if ($ignoreEntry || $ignoreUser) {
-                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser, $ignoreEntry);
+                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser);
                 continue;
             }
 
             // If the user does not exist
             // Or it was deleted and then created again in the directory
             if (!isset($existingUser)) {
-                $this->handleAddNew($data, $entry, $existingUser);
+                $this->handleAddNew($data, $entry);
                 continue;
             }
 
             // If the user exist but is already deleted
             if (isset($existingUser) && $existingUser->deleted) {
-                $this->handleAddExistDeleted($data, $entry, $existingUser);
+                $this->handleAddDeleted($data, $entry, $existingUser);
                 continue;
             }
 
@@ -181,10 +185,10 @@ class UserSyncAction extends SyncAction
      * @param $data
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    protected function getUserFromData($data) {
-
+    protected function getUserFromData($data)
+    {
         $existingUser = $this->Users->find()
-            ->select(['id', 'active', 'deleted', 'created', 'modified'])
+            ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])
             ->where(['username' => $data['user']['username']])
             ->order(['Users.modified' => 'DESC'])
             ->first();
@@ -192,19 +196,5 @@ class UserSyncAction extends SyncAction
             $existingUser = null;
         }
         return $existingUser;
-    }
-
-    /**
-     * @param $data
-     * @return array|\Cake\Datasource\EntityInterface|null
-     */
-    protected function getEntryFromData($data)
-    {
-        $entry = null;
-        try {
-            $entry = $this->DirectoryEntries->get($data['id'], ['contain' => ['Users']]);
-        } catch(\Exception $exception) {
-        }
-        return $entry;
     }
 }

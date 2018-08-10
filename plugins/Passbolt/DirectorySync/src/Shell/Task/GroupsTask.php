@@ -14,10 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Shell\Task;
 
-
 use App\Shell\AppShell;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-
 
 class GroupsTask extends AppShell
 {
@@ -65,34 +63,14 @@ class GroupsTask extends AppShell
     public function main()
     {
         try {
+            $this->model = 'Groups';
             $action = new GroupSyncAction();
-            $action->execute();
+            $reports = $action->execute();
+            $this->_displayReports($reports);
         } catch(\Exception $exception) {
             $this->abort($exception->getMessage());
             return false;
         }
-
         return true;
-    }
-
-    /**
-     * Display the entity validation errors
-     *
-     * @param array $errors validation errors
-     * @return void
-     */
-    protected function _displayValidationError($errors)
-    {
-        foreach ($errors as $fieldname => $error) {
-            foreach ($error as $rule => $message) {
-                if (is_array($message)) {
-                    $this->_displayValidationError($error);
-                    break;
-                } else {
-                    $message = '- ' . ucfirst(str_replace('_', ' ', $fieldname)) . ': ' . $message;
-                    $this->out($message);
-                }
-            }
-        }
     }
 }

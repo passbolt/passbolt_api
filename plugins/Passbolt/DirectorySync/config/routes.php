@@ -18,6 +18,14 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
+    $routes->connect('/ignore/toggle/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'toggle'])
+        ->setPass(['foreign_model', 'foreign_key'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'view'])
+        ->setPass(['foreign_model', 'foreign_key'])
+        ->setMethods(['GET']);
+
     $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'add'])
         ->setPass(['foreign_model', 'foreign_key'])
         ->setMethods(['POST']);

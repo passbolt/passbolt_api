@@ -12,6 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
+use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
+
 return [
     // A new directory group that only contains a user that does not exist in passbolt
     // A new directory group that only contains a user that is not active in passbolt

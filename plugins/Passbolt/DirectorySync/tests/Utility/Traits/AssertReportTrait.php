@@ -16,6 +16,7 @@ namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use Cake\Utility\Inflector;
 use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\ActionReportCollection;
 
 trait AssertReportTrait
 {
@@ -98,18 +99,18 @@ trait AssertReportTrait
     }
 
     /**
-     * @param array $reports
+     * @param ActionReportCollection $reports
      */
-    public function assertReportEmpty(array $reports)
+    public function assertReportEmpty(ActionReportCollection $reports)
     {
-        $this->assertEquals(0, count($reports), 'The report should be empty.');
+        $this->assertEquals(true, $reports->isEmpty(), 'The report should be empty.');
     }
 
     /**
-     * @param array $reports
+     * @param ActionReportCollection $reports
      */
-    public function assertReportNotEmpty(array $reports)
+    public function assertReportNotEmpty(ActionReportCollection $reports)
     {
-        $this->assertEquals(true, count($reports) >= 1, 'The report should not be empty.');
+        $this->assertEquals(false, $reports->isEmpty(), 'The report should not be empty.');
     }
 }

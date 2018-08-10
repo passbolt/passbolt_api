@@ -117,7 +117,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
         $this->assertDirectoryEntryEmpty();
     }
 
@@ -553,7 +553,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS);
 
         $reports = $this->action->execute();
-        $this->assertEquals(count($reports), 0);
+        $this->assertReportEmpty($reports);
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -577,7 +577,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
         $this->assertDirectoryEntryEmpty();
     }
 
@@ -861,7 +861,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
         $this->assertDirectoryIgnoreNotEmpty();
         $this->assertDirectoryEntryEmpty();
     }
@@ -884,7 +884,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($groupData['id'], SyncAction::DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreNotEmpty();
 
@@ -981,7 +981,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($group->id, SyncAction::GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
 
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreNotEmpty();
@@ -1285,7 +1285,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryEntryGroup('marketing', SyncAction::SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.marketing'));
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
         $this->assertDirectoryIgnoreEmpty();
         $this->assertOneDirectoryEntry(SyncAction::SUCCESS);
     }
@@ -1309,7 +1309,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), SyncAction::GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertReportEmpty($reports);
         $this->assertDirectoryIgnoreNotEmpty();
         $this->assertDirectoryEntryEmpty();
     }

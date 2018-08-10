@@ -30,20 +30,6 @@ return [
             ]
         ],
     ],
-    // A user that exist in passbolt and is active
-    [
-        'id' => UuidFactory::uuid('ldap.user.id.ada'),
-        'directory_name' => 'CN=Ada Lovelace,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'user' => [
-            'username' => 'ada@passbolt.com',
-            'profile' => [
-                'first_name' => 'Ada',
-                'last_name' => 'Lovelace'
-            ]
-        ]
-    ],
     // A user that exist and is not valid
     [
         'id' => UuidFactory::uuid('ldap.user.id.betty'),
@@ -61,6 +47,20 @@ return [
     // A user that does not exist and is not valid
     [
         'id' => UuidFactory::uuid('ldap.user.id.nope'),
+        'directory_name' => 'CN=No First Name,OU=PassboltUsers,DC=passbolt,DC=local',
+        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'user' => [
+            'username' => 'nope@passbolt.com',
+            'profile' => [
+                'first_name' => null,
+                'last_name' => 'No first name'
+            ]
+        ]
+    ],
+    // A user that does not exist and is not valid
+    [
+        'id' => UuidFactory::uuid('ldap.user.id.nope2'),
         'directory_name' => 'CN=No Email,OU=PassboltUsers,DC=passbolt,DC=local',
         'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
         'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
@@ -100,18 +100,4 @@ return [
             ]
         ]
     ],
-    // A user that exist but is not active
-    [
-        'id' => UuidFactory::uuid('ldap.user.id.ruth'),
-        'directory_name' => 'CN=Ruth,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'user' => [
-            'username' => 'ruth@passbolt.com',
-            'profile' => [
-                'first_name' => 'Ruth',
-                'last_name' => 'Teitelbaum'
-            ]
-        ]
-    ]
 ];

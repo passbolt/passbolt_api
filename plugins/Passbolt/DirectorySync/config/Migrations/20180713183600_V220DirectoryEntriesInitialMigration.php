@@ -60,11 +60,6 @@ class V220DirectoryEntriesInitialMigration extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
-            ->addColumn('status', 'string', [
-                'default' => null,
-                'limit' => 36,
-                'null' => false,
-            ])
              ->addColumn('created', 'datetime', [
                  'default' => null,
                  'limit' => null,

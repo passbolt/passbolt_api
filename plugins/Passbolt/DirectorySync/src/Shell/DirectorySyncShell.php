@@ -24,6 +24,7 @@ class DirectorySyncShell extends AppShell
         'Passbolt/DirectorySync.All',
         'Passbolt/DirectorySync.Users',
         'Passbolt/DirectorySync.Groups',
+        'Passbolt/DirectorySync.IgnoreList',
     ];
 
     /**
@@ -50,6 +51,10 @@ class DirectorySyncShell extends AppShell
         $parser->addSubcommand('groups', [
             'help' => __d('cake_console', 'Synchronize groups'),
             'parser' => $this->Groups->getOptionParser(),
+        ]);
+        $parser->addSubcommand('ignore-list', [
+            'help' => __d('cake_console', 'View, add, remove records ignored from synchronization process.'),
+            'parser' => $this->IgnoreList->getOptionParser(),
         ]);
 
         return $parser;

@@ -13,9 +13,12 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
-use Passbolt\DirectorySync\Utility\ActionReport;
+
+use App\Error\Exception\ValidationException;
+use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Passbolt\DirectorySync\Utility\SyncAction;
+use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 trait GroupSyncDeleteTrait {
 
@@ -25,8 +28,20 @@ trait GroupSyncDeleteTrait {
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        if (isset($entry->group) && !empty($entry->group) && $entry->group->deleted == false) {
-            $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::IGNORE, $entry));
+    }
+
+    /**
+     * @param DirectoryEntry $entry
+     */
+    protected function handleDeletedIgnoredGroup(DirectoryEntry $entry)
+    {
+        $this->DirectoryEntries->delete($entry);
+        if (!$entry->group->deleted) {
+            $reportData = $this->DirectoryIgnore->get($entry->group->id);
+            $this->addReport(new ActionReport(
+                __('The passbolt group {0} was not deleted because it is marked as to be ignored.',
+                    $entry->group->name),
+                self::GROUPS, self::DELETE, self::IGNORE, $reportData));
         }
     }
 
@@ -36,8 +51,10 @@ trait GroupSyncDeleteTrait {
     protected function handleDeletedEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        if (isset($entry->group) && $entry->group->deleted && $entry->status !== self::SUCCESS) {
-            $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::SYNC, $entry));
+        if (isset($entry->group) && $entry->group->deleted) {
+            $this->addReport(new ActionReport(
+                __('The directory user {0} was already deleted in passbolt.', $entry->group->name),
+                self::GROUPS, self::DELETE, self::SYNC, $entry->group));
         }
     }
 
@@ -46,10 +63,13 @@ trait GroupSyncDeleteTrait {
      */
     protected function handleNotPossibleDelete(DirectoryEntry $entry)
     {
-        if ($entry->status !== self::ERROR) {
-            $this->DirectoryEntries->updateStatus($entry, self::ERROR);
+        $errors = $entry->group->getErrors();
+        if (isset($errors['id']['soleOwnerOfSharedResource'])) {
+            $msg = __('The group {0} could not be deleted because they are the only owner of one or more passwords.',
+                $entry->group->name);
         }
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry->group));
+        $data = new SyncError($entry, new ValidationException($msg, $entry->group));
+        $this->addReport(new ActionReport($msg,self::GROUPS, self::DELETE, self::ERROR, $data));
     }
 
     /**
@@ -58,15 +78,21 @@ trait GroupSyncDeleteTrait {
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::SUCCESS, $entry->group));
+        $this->addReport(new ActionReport(
+            __('The user {0} was successfully deleted.', $entry->group->name),
+            self::GROUPS, self::DELETE, self::SUCCESS, $entry->group));
     }
 
     /**
      * @param DirectoryEntry $entry
+     * @param InternalErrorException $exception
      */
-    protected function handleErrorDelete(DirectoryEntry $entry)
+    protected function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
     {
-        $this->DirectoryEntries->updateStatus($entry, self::ERROR);
-        $this->addReport(new ActionReport(self::GROUPS, self::DELETE, self::ERROR, $entry));
+        $data = new SyncError($entry, $exception);
+        $this->addReport(new ActionReport(
+            __('The group {0} could not be deleted because of an internal error. Please try again later.',
+                $entry->group->name),
+            self::GROUPS, self::DELETE, self::ERROR, $data));
     }
 }
