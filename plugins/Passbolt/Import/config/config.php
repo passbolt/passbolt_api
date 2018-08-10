@@ -13,7 +13,8 @@ return [
                 'security' => [
                     'csrfProtection' => [
                         'unlockedActions' => [
-                            'ResourcesAdd' => ['add']
+                            'ResourcesAdd' => ['add'],
+                            'ResourcesTagsAdd' => ['addPost']
                         ]
                     ]
                 ],
