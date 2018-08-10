@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2941: Grid performance fix
 - PASSBOLT-2906: Disable the ResourcesAdd entry point CSRF protection to allow the plugin to use it with the import feature
 - PASSBOLT-2906: Disable the ResourcesTagsAdd entry point CSRF protection to allow the plugin to use it with the import feature
+- PASSBOLT-2963: Persist the license in a file
 
 ### Improved
 - PASSBOLT-2933: Upgrade to canjs 4

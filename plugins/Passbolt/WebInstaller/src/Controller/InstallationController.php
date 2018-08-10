@@ -14,7 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Core\Configure;
 use Migrations\Migrations;
 
 class InstallationController extends WebInstallerController
@@ -41,6 +41,7 @@ class InstallationController extends WebInstallerController
     public function index()
     {
         $this->_writeConfigurationFile();
+        $this->_writeLicenseFile();
         $this->set(['redirectUrl' => $this->_getNextStepUrl()]);
         $this->render('Pages/installation');
     }
@@ -122,6 +123,20 @@ class InstallationController extends WebInstallerController
         $contents = $configView->render('/Config/passbolt', 'ajax');
         $contents = "<?php\n$contents";
         file_put_contents(CONFIG . 'passbolt.php', $contents);
+    }
+
+    /**
+     * Write the license file.
+     * @return void
+     */
+    protected function _writeLicenseFile()
+    {
+        if (!Configure::read('passbolt.plugins.license')) {
+            return;
+        }
+        $session = $this->request->getSession();
+        $content = $session->read('Passbolt.License');
+        file_put_contents(CONFIG . 'license', $content);
     }
 
     /**
