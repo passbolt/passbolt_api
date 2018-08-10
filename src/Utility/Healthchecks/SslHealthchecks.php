@@ -22,10 +22,10 @@ class SslHealthchecks
     /**
      * Run all SSL healthchecks
      *
-     * @param $checks
+     * @param array $checks List of checks
      * @return array
      */
-    public static function all($checks = null)
+    public static function all($checks = [])
     {
         $checks['ssl'] = [
             'peerValid' => false,
@@ -42,16 +42,18 @@ class SslHealthchecks
         $checks = self::peerValid($checks);
         $checks = self::hostValid($checks);
         $checks = self::notSelfSigned($checks);
+
         return $checks;
     }
 
     /**
      * Check if peer is valid
      *
-     * @param null $checks
-     * @return null
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function peerValid($checks = null) {
+    public static function peerValid($checks = [])
+    {
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
         try {
             $HttpSocket = new Client([
@@ -71,10 +73,10 @@ class SslHealthchecks
     /**
      * Check if the host is valid
      *
-     * @param null $checks
-     * @return null
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function hostValid($checks = null)
+    public static function hostValid($checks = [])
     {
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
         try {
@@ -88,16 +90,17 @@ class SslHealthchecks
         } catch (\Exception $e) {
             $checks['ssl']['info'] = $e->getMessage();
         }
+
         return $checks;
     }
 
     /**
      * Check that the certificate is not self signed
      *
-     * @param null $checks
-     * @return null
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function notSelfSigned($checks = null)
+    public static function notSelfSigned($checks = [])
     {
         $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
         try {
@@ -110,6 +113,7 @@ class SslHealthchecks
             $checks['ssl']['notSelfSigned'] = $response->isOk();
         } catch (\Exception $e) {
         }
+
         return $checks;
     }
 }

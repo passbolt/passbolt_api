@@ -27,12 +27,6 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         'app.Base/secrets', 'app.Base/permissions', 'app.Base/roles', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->disableCsrfToken();
-    }
-
     protected function _getDummyPostData($data = [])
     {
         $defaultData = [
@@ -227,7 +221,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('ada');
-            $this->postJson("/resources.json?api-version=v2", $case['data']);
+            $this->postJson("/resources.json?api-version=v1", $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);

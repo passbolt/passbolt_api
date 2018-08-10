@@ -14,20 +14,20 @@
  */
 namespace App\Utility\Healthchecks;
 
+use App\Utility\Gpg;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
-use App\Utility\Gpg;
 
 class GpgHealthchecks
 {
     /**
      * Run all healthchecks
      *
-     * @param $checks
+     * @param array $checks List of checks
      * @return array
      */
-    public static function all($checks = null)
+    public static function all($checks = [])
     {
         if (empty($checks)) {
             $checks = [];
@@ -51,35 +51,37 @@ class GpgHealthchecks
     /**
      * Check gpg php module is installed and enabled
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgLib($checks)
+    public static function gpgLib($checks = [])
     {
         $checks['gpg']['lib'] = (class_exists('gnupg'));
+
         return $checks;
     }
 
     /**
      * Check fingerprint is set
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgNotDefault($checks)
+    public static function gpgNotDefault($checks = [])
     {
         $checks['gpg']['gpgKey'] = (Configure::read('passbolt.gpg.serverKey.fingerprint') != null);
         $checks['gpg']['gpgKeyNotDefault'] = (Configure::read('passbolt.gpg.serverKey.fingerprint') != '2FC8945833C51946E937F9FED47B0811573EE67E');
+
         return $checks;
     }
 
     /**
      * Check gnupg home is set and usable
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgHome($checks)
+    public static function gpgHome($checks = [])
     {
         // If no keyring location has been set, use the default one ~/.gnupg.
         $gnupgHome = getenv('GNUPGHOME');
@@ -92,16 +94,17 @@ class GpgHealthchecks
         $checks['gpg']['info']['gpgHome'] = $gnupgHome;
         $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
         $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
+
         return $checks;
     }
 
     /**
      * Check key file exist and are readable
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgKeyFile($checks)
+    public static function gpgKeyFile($checks = [])
     {
         $checks['gpg']['gpgKeyPublic'] = (Configure::read('passbolt.gpg.serverKey.public') != null);
         $checks['gpg']['gpgKeyPublicReadable'] = is_readable(Configure::read('passbolt.gpg.serverKey.public'));
@@ -116,16 +119,17 @@ class GpgHealthchecks
             $privateKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
             $checks['gpg']['gpgKeyPrivateBlock'] = (strpos($privateKeydata, '-----BEGIN PGP PRIVATE KEY BLOCK-----') === 0);
         }
+
         return $checks;
     }
 
     /**
      * Check that the private key match the fingerprint
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgFingerprint($checks)
+    public static function gpgFingerprint($checks = [])
     {
         $checks['gpg']['gpgKeyPrivateFingerprint'] = false;
         $checks['gpg']['gpgKeyPublicFingerprint'] = false;
@@ -145,16 +149,17 @@ class GpgHealthchecks
             $Gpgkeys = TableRegistry::get('Gpgkeys');
             $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
+
         return $checks;
     }
 
     /**
      * Check that the server public/private keys are present in the keyring.
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgKeyInKeyring($checks)
+    public static function gpgKeyInKeyring($checks = [])
     {
         $checks['gpg']['gpgKeyPublicInKeyring'] = false;
         if ($checks['gpg']['gpgHome'] && Configure::read('passbolt.gpg.serverKey.fingerprint')) {
@@ -166,16 +171,17 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
     /**
      * Check if it can encrypt
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgCanEncrypt($checks)
+    public static function gpgCanEncrypt($checks = [])
     {
         $checks['gpg']['canEncrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -191,16 +197,17 @@ class GpgHealthchecks
             } catch (Exception $e) {
             }
         }
+
         return $checks;
     }
 
     /**
      * Check if it can encrypt and sign
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgCanEncryptSign($checks)
+    public static function gpgCanEncryptSign($checks = [])
     {
         $checks['gpg']['canEncryptSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -216,18 +223,18 @@ class GpgHealthchecks
                 }
             } catch (Exception $e) {
             }
-
         }
+
         return $checks;
     }
 
     /**
      * Check if it can decrypt
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgCanDecrypt($checks)
+    public static function gpgCanDecrypt($checks = [])
     {
         $checks['gpg']['canDecrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -247,17 +254,17 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
-
 
     /**
      * Check if it can decrypt and verify signature
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgCanDecryptVerify($checks)
+    public static function gpgCanDecryptVerify($checks = [])
     {
         $checks['gpg']['canDecryptVerify'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -275,16 +282,17 @@ class GpgHealthchecks
             } catch (Exception $e) {
             }
         }
+
         return $checks;
     }
 
     /**
      * Check if it can verify
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgCanSign($checks)
+    public static function gpgCanSign($checks = [])
     {
         $checks['gpg']['canSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
@@ -300,16 +308,17 @@ class GpgHealthchecks
             } catch (Exception $e) {
             }
         }
+
         return $checks;
     }
 
     /**
      * Check if it can verify
      *
-     * @param $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpgCanVerify($checks)
+    public static function gpgCanVerify($checks = [])
     {
         $checks['gpg']['canVerify'] = false;
         if ($checks['gpg']['canDecryptVerify']) {
@@ -338,6 +347,7 @@ class GpgHealthchecks
             } catch (Exception $e) {
             }
         }
+
         return $checks;
     }
 }
