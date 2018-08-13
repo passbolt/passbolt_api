@@ -25,7 +25,7 @@ use App\Model\Entity\Role;
  * Directory factory class
  * @package App\Utility
  */
-class SyncError
+class SyncError implements \Serializable
 {
     protected $entity;
     protected $data;
@@ -54,4 +54,30 @@ class SyncError
     {
         return $this->getData();
     }
+
+    /**
+     * @return string
+     */
+    public function serialize()
+    {
+        return serialize([
+            'entity' => serialize($this->entity),
+            // TODO add exception serialization
+            'version' => '2'
+        ]);
+    }
+
+    /**
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        foreach ($data as $key => $value) {
+            if (in_array($key, ['$entity'])) {
+                $this->{$key} = $value;
+            }
+        }
+    }
+
 }

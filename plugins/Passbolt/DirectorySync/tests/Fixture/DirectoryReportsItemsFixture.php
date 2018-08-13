@@ -36,25 +36,4 @@ class DirectoryReportsItemsFixture extends TestFixture
         ],
     ];
     // @codingStandardsIgnoreEnd
-
-    /**
-     * Init method
-     *
-     * @return void
-     */
-    public function init()
-    {
-        $this->records = [
-            [
-                'report_id' => 'cf504727-e867-4d2f-8b59-e355f38be352',
-                'id' => 'f6bc4706-f2df-4c1c-87e7-b379ac0dd8f2',
-                'status' => 'Lorem ipsum dolor sit amet',
-                'model' => 'Lorem ipsum dolor sit amet',
-                'action' => 'Lorem ipsum dolor sit amet',
-                'data' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-                'created' => '2018-08-09 13:40:16'
-            ],
-        ];
-        parent::init();
-    }
 }

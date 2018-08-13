@@ -29,8 +29,28 @@ abstract class DirectorySyncTestCase extends AppIntegrationTestCase
     use AssertDirectoryTrait;
     use AssertReportTrait;
 
+    public $fixtures = [
+        'app.Base/users',
+        'app.Base/profiles',
+        'app.Base/groups',
+        'app.Base/authentication_tokens',
+        'app.Base/secrets',
+        'app.Base/roles',
+        'app.Base/resources',
+        'app.Alt0/groups_users',
+        'app.Alt0/permissions',
+        'app.Base/avatars',
+        'app.Base/favorites',
+        'app.Base/email_queue',
+        'plugin.passbolt/directorySync.base/directoryEntries',
+        'plugin.passbolt/directorySync.base/directoryIgnore',
+        'plugin.passbolt/directorySync.base/directoryRelations',
+        'plugin.passbolt/directorySync.directoryReports',
+        'plugin.passbolt/directorySync.directoryReportsItems',
+    ];
+
     /**
-     * @var \Passbolt\DirectorySync\Actions\SyncAction
+     * @var \Passbolt\DirectorySync\Utility\SyncAction
      */
     protected $action;
 

@@ -15,25 +15,14 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
-use Passbolt\DirectorySync\Utility\SyncAction;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
-use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Utility\Alias;
 
 class GroupSyncActionAddTest extends DirectorySyncTestCase
 {
     use AssertGroupsTrait;
-
-    public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/secrets',  'app.Base/roles',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-        'app.Base/favorites', 'app.Base/email_queue',
-        'plugin.passbolt/directorySync.base/directoryEntries',
-        'plugin.passbolt/directorySync.base/directoryIgnore',
-    ];
 
     /**
      * Scenario: Group was added in ldap
@@ -59,12 +48,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $group = $this->assertGroupExist(null, ['name' => 'newFromLdap', 'deleted' => false]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group['id'],
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group['id']
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -87,8 +75,8 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
-        $this->assertDirectoryEntryExists(['id' => $groupData['id'], 'status' => Alias::STATUS_SUCCESS]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertDirectoryEntryExists(['id' => $groupData['id']]);
+        $this->assertOneDirectoryEntry();
 
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
@@ -117,8 +105,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
-        $this->assertDirectoryEntryEmpty();
+
     }
 
     /**
@@ -148,9 +135,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'status' => Alias::STATUS_IGNORE
         ];
         $this->assertReport($reports[0], $expectedReport);
-
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
     }
 
     /**
@@ -181,7 +166,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -213,12 +198,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $group = $this->assertGroupExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group['id'],
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group['id']
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -251,7 +235,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -270,7 +254,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $groupData = $this->mockDirectoryGroupData('testgroup');
 
         // Add directoryEntry for error
-        $this->mockDirectoryEntryGroup('testgroup', Alias::STATUS_ERROR, null, null, null, null, false);
+        $this->mockDirectoryEntryGroup('testgroup', null, null, null, null, false);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -282,12 +266,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $group = $this->assertGroupExist(null, ['name' => 'testgroup', 'deleted' => false]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group['id'],
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group['id']
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -307,7 +290,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $groupData = $this->mockDirectoryGroupData('marketing');
 
         // Add directoryEntry for error
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_ERROR, null, null, null, null, false);
+        $this->mockDirectoryEntryGroup('marketing', null, null, null, null, false);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -319,12 +302,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $group = $this->assertGroupExist(null, ['name' => 'marketing', 'deleted' => false]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group['id'],
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group['id']
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -344,7 +326,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryGroupData('marketing');
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup('marketing');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
@@ -355,7 +337,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'status' => Alias::STATUS_IGNORE
         ];
         $this->assertReport($reports[0], $expectedReport);
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -374,7 +356,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup('deleted');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
 
@@ -388,7 +370,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -408,7 +390,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup('deleted');
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateBeforeDeletion, 'modified' => $dateBeforeDeletion]);
 
         $reports = $this->action->execute();
@@ -421,7 +403,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -444,7 +426,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
 
         // Add directoryEntry for success.
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup('deleted');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -457,12 +439,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $group = $this->assertGroupExist(null, ['name' => 'deleted', 'deleted' => false]);
         // The directory entry should have been updated.
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group['id'],
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group['id']
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -486,7 +467,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateBeforeDeletion, 'modified' => $dateBeforeDeletion]);
 
         // Add directoryEntry for success.
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup('deleted');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -498,7 +479,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -515,7 +496,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
-        $this->mockDirectoryEntryGroup('newgroup', Alias::STATUS_SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.newgroup_old'));
+        $this->mockDirectoryEntryGroup('newgroup', null, null, null, null, UuidFactory::uuid('group.id.newgroup_old'));
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
@@ -529,9 +510,8 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group->id,
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group->id
         ]);
         $this->assertDirectoryIgnoreEmpty();
 
@@ -550,11 +530,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryGroupData('marketing');
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('marketing');
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryIgnoreEmpty();
     }
 
@@ -573,12 +553,12 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryGroupData('marketing');
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('marketing');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
-        $this->assertDirectoryEntryEmpty();
+
+        
     }
 
     /**
@@ -599,7 +579,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('deleted');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -611,7 +591,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -635,7 +615,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryGroupData('deleted', ['created' => $dateBeforeDeletion, 'modified' => $dateBeforeDeletion]);
 
         // Add directoryEntry for success.
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('deleted');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -647,7 +627,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -668,7 +648,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateBeforeDeletion, 'modified' => $dateBeforeDeletion]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('deleted');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -680,7 +660,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => 'deleted', 'deleted' => false]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_ERROR);
+        $this->assertOneDirectoryEntry();
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -701,7 +681,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('deleted');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -715,9 +695,8 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $group = $this->assertGroupExist(null, ['name' => 'deleted', 'deleted' => false]);
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
-            'foreign_model' => 'Groups',
-            'foreign_key' => $group->id,
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_model' => Alias::MODEL_GROUPS,
+            'foreign_key' => $group->id
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -747,7 +726,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         ];
         $this->assertReport($reports[0], $expectedReport);
 
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -765,7 +744,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryEntryGroup('newgroup', Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup('newgroup');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -776,7 +755,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         ];
         $this->assertReport($reports[0], $expectedReport);
 
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
     }
 
@@ -794,7 +773,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryEntryGroup('newgroup', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('newgroup');
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -805,7 +784,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         ];
         $this->assertReport($reports[0], $expectedReport);
 
-        $this->assertDirectoryEntryEmpty();
+        
         $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
     }
 
@@ -822,7 +801,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
-        $this->mockDirectoryEntryGroup('newgroup', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('newgroup');
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.newgroup'), Alias::MODEL_GROUPS);
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
 
@@ -838,7 +817,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreExist(['id' => $groupData['id']]);
         $this->assertDirectoryIgnoreDoesNotExist(['id' => UuidFactory::uuid('group.id.newgroup')]);
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -856,14 +835,14 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing');
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('marketing');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
+
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -884,8 +863,8 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
-        $this->assertDirectoryEntryEmpty();
+
+        
         $this->assertDirectoryIgnoreNotEmpty();
 
     }
@@ -939,12 +918,11 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
 
         $this->assertGroupNotExist(null, ['name' => $groupName]);
-        $this->assertOneDirectoryEntry(Alias::STATUS_ERROR);
+        $this->assertOneDirectoryEntry();
         $entry = $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
             'foreign_model' => Alias::MODEL_GROUPS,
-            'foreign_key IS' => NULL,
-            'status' => Alias::STATUS_ERROR
+            'foreign_key IS' => NULL
         ]);
         $this->assertDirectoryIgnoreEmpty();
     }
@@ -981,9 +959,9 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
 
-        $this->assertDirectoryEntryEmpty();
+
+        
         $this->assertDirectoryIgnoreNotEmpty();
     }
 
@@ -1029,7 +1007,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData($groupName); // is invalid coz name is too long
-        $this->mockDirectoryEntryGroup($groupName, Alias::STATUS_ERROR);
+        $this->mockDirectoryEntryGroup($groupName);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -1039,8 +1017,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $entry = $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
             'foreign_model' => Alias::MODEL_GROUPS,
-            'foreign_key IS' => NULL,
-            'status' => Alias::STATUS_ERROR
+            'foreign_key IS' => NULL
         ]);
     }
 
@@ -1062,7 +1039,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
 
         $groupData = $this->mockDirectoryGroupData('marketing', ['cn' => $groupName]);
         $this->saveMockDirectoryGroupData($groupData);
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_ERROR, null, null, null, null, $group->id);
+        $this->mockDirectoryEntryGroup('marketing', null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
@@ -1073,8 +1050,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertDirectoryEntryExists([
             'id' => $groupData['id'],
             'foreign_model' => Alias::MODEL_GROUPS,
-            'foreign_key IS' => $group->id,
-            'status' => Alias::STATUS_SUCCESS
+            'foreign_key IS' => $group->id
         ]);
     }
 
@@ -1095,15 +1071,15 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
 
         $this->mockDirectoryGroupData('marketing', ['cn' => $groupName]);
-        $this->mockDirectoryIgnore($group->id, 'Groups');
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_ERROR, null, null, null, null, $group->id);
+        $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
+        $this->mockDirectoryEntryGroup('marketing', null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1130,15 +1106,15 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'modified' => $dateAfterDeletion
         ]);
 
-        $this->mockDirectoryIgnore($group->id, 'Groups');
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR, null, null, null, null, $group->id);
+        $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
+        $this->mockDirectoryEntryGroup('deleted', null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1164,15 +1140,15 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'created' => $dateBeforeDeletion,
             'modified' => $dateBeforeDeletion
         ]);
-        $this->mockDirectoryIgnore($group->id, 'Groups');
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR, null, null, null, null, $group->id);
+        $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
+        $this->mockDirectoryEntryGroup('deleted',  null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1199,14 +1175,14 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'modified' => $dateAfterDeletion
         ]);
 
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR, null, null, null, null, $group->id);
+        $this->mockDirectoryEntryGroup('deleted', null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_ERROR];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertOneDirectoryEntry(Alias::STATUS_ERROR);
+        $this->assertOneDirectoryEntry();
     }
 
     /**
@@ -1232,14 +1208,14 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'created' => $dateBeforeDeletion,
             'modified' => $dateBeforeDeletion
         ]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_ERROR, null, null, null, null, $group->id);
+        $this->mockDirectoryEntryGroup('deleted', null, null, null, null, $group->id);
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1257,14 +1233,14 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
 
         $this->mockDirectoryGroupData('newgroup', ['cn' => $groupName]);
-        $this->mockDirectoryEntryGroup('newgroup', Alias::STATUS_SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.neverexisted'));
+        $this->mockDirectoryEntryGroup('newgroup', null, null, null, null, UuidFactory::uuid('group.id.neverexisted'));
 
         $reports = $this->action->execute();
         $this->assertEquals(count($reports), 1);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_ERROR];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertOneDirectoryEntry(Alias::STATUS_ERROR);
+        $this->assertOneDirectoryEntry();
     }
 
     /**
@@ -1282,12 +1258,12 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
 
         $this->mockDirectoryGroupData('marketing', ['cn' => $invalidGroupName]);
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.marketing'));
+        $this->mockDirectoryEntryGroup('marketing', null, null, null, null, UuidFactory::uuid('group.id.marketing'));
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
+
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertOneDirectoryEntry(Alias::STATUS_SUCCESS);
+        $this->assertOneDirectoryEntry();
     }
 
     /**
@@ -1305,13 +1281,13 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setGroups([]);
 
         $this->mockDirectoryGroupData('marketing', ['cn' => $invalidGroupName]);
-        $this->mockDirectoryEntryGroup('marketing', Alias::STATUS_SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.marketing'));
+        $this->mockDirectoryEntryGroup('marketing', null, null, null, null, UuidFactory::uuid('group.id.marketing'));
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
-        $this->assertReportEmpty($reports);
+
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1337,7 +1313,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'created' => $dateAfterDeletion,
             'modified' => $dateAfterDeletion
         ]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.deleted'));
+        $this->mockDirectoryEntryGroup('deleted', null, null, null, null, UuidFactory::uuid('group.id.deleted'));
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.deleted'), Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
@@ -1345,7 +1321,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1371,7 +1347,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
             'created' => $dateBeforeDeletion,
             'modified' => $dateBeforeDeletion
         ]);
-        $this->mockDirectoryEntryGroup('deleted', Alias::STATUS_SUCCESS, null, null, null, null, UuidFactory::uuid('group.id.deleted'));
+        $this->mockDirectoryEntryGroup('deleted', null, null, null, null, UuidFactory::uuid('group.id.deleted'));
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.deleted'), Alias::MODEL_GROUPS);
 
         $reports = $this->action->execute();
@@ -1379,7 +1355,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 
     /**
@@ -1404,6 +1380,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_GROUPS, 'status' => Alias::STATUS_IGNORE];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryIgnoreNotEmpty();
-        $this->assertDirectoryEntryEmpty();
+        
     }
 }

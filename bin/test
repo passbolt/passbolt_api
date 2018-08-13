@@ -9,5 +9,5 @@ FILTER="$1"
 if [[ -z "$FILTER" || "$FILTER" == "all" ]]; then
     sudo su -s /bin/bash -c "./vendor/bin/phpunit --stop-on-failure --stop-on-error" $USER
 else
-    sudo su -s /bin/bash -c "./vendor/bin/phpunit --filter=$FILTER --stop-on-failure --stop-on-error" $USER
+    sudo su -s /bin/bash -c "./vendor/bin/phpunit --filter=$FILTER --stop-on-error" $USER
 fi

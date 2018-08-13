@@ -13,8 +13,10 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
+
 use Cake\I18n\FrozenTime;
 use App\Utility\UuidFactory;
+use Passbolt\DirectorySync\Utility\Alias;
 
 trait MockDirectoryTrait
 {
@@ -37,7 +39,7 @@ trait MockDirectoryTrait
     }
 
 
-    protected function mockDirectoryEntryUser($data, $status) {
+    protected function mockDirectoryEntryUser($data) {
         if (!isset($data['fname'])) {
             throw new \InvalidArgumentException('A mocked directory entry should have at least a first name');
         }
@@ -76,7 +78,6 @@ trait MockDirectoryTrait
             'directory_name' => $data['dn'],
             'directory_created' => $data['dirCreated'],
             'directory_modified' => $data['dirModified'],
-            'status' => $status,
             'created' => $data['created'],
             'modified' => $data['modified']
         ];
@@ -89,7 +90,6 @@ trait MockDirectoryTrait
                 'directory_name' => true,
                 'directory_created' => true,
                 'directory_modified' => true,
-                'status' => true,
                 'created' => true,
                 'modified' => true
             ]
@@ -101,7 +101,7 @@ trait MockDirectoryTrait
         return $entry;
     }
 
-    protected function mockDirectoryEntryUser_old($fname, $lastname, $status, $dirCreated = null, $dirModified = null, $created = null, $modified = null)
+    protected function mockDirectoryEntryUser_old($fname, $lastname, $dirCreated = null, $dirModified = null, $created = null, $modified = null)
     {
         if (!isset($dirCreated)) {
             $dirCreated = '2018-07-20 06:31:57';
@@ -122,7 +122,6 @@ trait MockDirectoryTrait
             'directory_name' => 'CN='. ucfirst($fname) . ' ' . ucfirst($lastname) . ',OU=PassboltUsers,DC=passbolt,DC=local',
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
-            'status' => $status,
             'created' => $created,
             'modified' => $modified
         ];
@@ -135,7 +134,6 @@ trait MockDirectoryTrait
                 'directory_name' => true,
                 'directory_created' => true,
                 'directory_modified' => true,
-                'status' => true,
                 'created' => true,
                 'modified' => true
             ]
@@ -169,7 +167,7 @@ trait MockDirectoryTrait
         return $group;
     }
 
-    protected function mockDirectoryEntryGroup($name, $status, $dirCreated = null, $dirModified = null, $created = null, $modified = null, $foreignKey = null)
+    protected function mockDirectoryEntryGroup($name, $dirCreated = null, $dirModified = null, $created = null, $modified = null, $foreignKey = null)
     {
         if (!isset($dirCreated)) {
             $dirCreated = '2018-07-20 06:31:57';
@@ -188,12 +186,11 @@ trait MockDirectoryTrait
 
         $entry = [
             'id' => UuidFactory::uuid('ldap.group.id.' . $name),
-            'foreign_model' => 'Groups',
+            'foreign_model' => Alias::MODEL_GROUPS,
             'foreign_key' => $foreignKey !== null ? $foreignKey : $defaultForeignKey,
             'directory_name' => substr('CN='. ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local', 0, 255),
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
-            'status' => $status,
             'created' => $created,
             'modified' => $modified
         ];
@@ -222,7 +219,6 @@ trait MockDirectoryTrait
                 'directory_name' => true,
                 'directory_created' => true,
                 'directory_modified' => true,
-                'status' => true,
                 'created' => true,
                 'modified' => true
             ]

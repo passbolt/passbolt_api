@@ -39,13 +39,13 @@ trait GroupSyncAddTrait {
             return;
         }
         if ($ignoreGroup) {
-            $msg = __('The group {0} was not synced because the passbolt user is marked to as be ignored.',
+            $msg = __('The group {0} was not synced because the passbolt group is marked to as be ignored.',
                 $existingGroup->name);
             $reportData = $this->DirectoryIgnore->get($existingGroup->id);
         } else {
-            $msg = __('The group {0} was not synced because the directory user is marked to as be ignored.',
-                $data['name']);
-            $reportData = $this->DirectoryIgnore->get($existingGroup->id);
+            $msg = __('The group {0} was not synced because the directory group is marked to as be ignored.',
+                $data['group']['name']);
+            $reportData = $this->DirectoryIgnore->get($entry->id);
         }
         $this->addReportItem(new ActionReport($msg,Alias::MODEL_GROUPS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
     }

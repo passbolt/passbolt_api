@@ -43,7 +43,7 @@ trait UserSyncAddTrait {
             $reportData = $this->DirectoryIgnore->get($existingUser->id);
         } else {
             $msg = __('The user {0} was not synced because the directory user is marked to as be ignored.', $data['user']['username']);
-            $reportData = $this->DirectoryIgnore->get($existingUser->id);
+            $reportData = $this->DirectoryIgnore->get($entry->id);
         }
         $this->addReportItem(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
     }

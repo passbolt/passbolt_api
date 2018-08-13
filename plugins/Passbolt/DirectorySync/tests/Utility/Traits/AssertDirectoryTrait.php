@@ -27,14 +27,12 @@ trait AssertDirectoryTrait
     }
 
     /**
-     * @param string $status
      * @return void
      */
-    public function assertOneDirectoryEntry(string $status)
+    public function assertOneDirectoryEntry()
     {
         $syncEntry = $this->action->DirectoryEntries->find()->all()->toArray();
         $this->assertEquals(count($syncEntry), 1);
-        $this->assertEquals($syncEntry[0]['status'], $status);
     }
 
     /**
