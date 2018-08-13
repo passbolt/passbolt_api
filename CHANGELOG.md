@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.2.0] - 2018-08-13
 ### Added
 - PASSBOLT-2906: Enable CSRF protection
 - PASSBOLT-2940: Implement app-js primary routes
@@ -521,7 +523,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.8...v2.1.0
 [2.0.8]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.0.8
 [2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7

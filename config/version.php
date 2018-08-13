@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '2.1.1',
-        'name' => 'Loungin'
+        'version' => '2.2.0',
+        'name' => 'I Want To Break Free'
     ]
 ];
