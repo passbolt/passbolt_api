@@ -1,10 +1,13 @@
 <?php
 namespace Passbolt\DirectorySync\Model\Table;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
 
 /**
  * DirectoryReports Model
@@ -86,8 +89,43 @@ class DirectoryReportsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['parent_id'], 'ParentDirectoryReports'));
-
+        $rules->add(
+            function ($entity, $options) {
+                if ($entity->parent_id !== null) {
+                    $DirectoryReport = TableRegistry::getTableLocator()->get('DirectoryReports');
+                    try {
+                        $DirectoryReport->get($entity->parent_id);
+                    } catch(RecordNotFoundException $exception) {
+                        return false;
+                    }
+                }
+                return true;
+            },
+            'ParentDirectoryReports',
+            [
+                'errorField' => 'parent_id',
+                'message' => __('The associated record could not be found')
+            ]
+        );
         return $rules;
+    }
+
+    /**
+     * @param string $parentId UUID parent report id
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryReport
+     */
+    public function create(string $parentId = null)
+    {
+        $entity = $this->newEntity([
+            'parent_id' => $parentId,
+            'status' => DirectoryReport::STATUS_RUNNING
+        ], [
+            'accessibleFields' => [
+                'parent_id' => true,
+                'status' => true,
+            ]
+        ]);
+        $result = $this->save($entity);
+        return $result;
     }
 }

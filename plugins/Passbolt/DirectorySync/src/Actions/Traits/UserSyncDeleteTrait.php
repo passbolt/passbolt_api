@@ -39,7 +39,7 @@ trait UserSyncDeleteTrait {
         $this->DirectoryEntries->delete($entry);
         if (!$entry->user->deleted) {
             $reportData = $this->DirectoryIgnore->get($entry->user->id);
-            $this->addReport(new ActionReport(
+            $this->addReportItem(new ActionReport(
                 __('The passbolt user {0} was not deleted because it is marked as to be ignored.',
                     $entry->user->username),
                 Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $reportData));
@@ -53,7 +53,7 @@ trait UserSyncDeleteTrait {
     {
         $this->DirectoryEntries->delete($entry);
         if (isset($entry->user) && $entry->user->deleted) {
-            $this->addReport(new ActionReport(
+            $this->addReportItem(new ActionReport(
                 __('The directory user {0} was already deleted in passbolt.', $entry->user->username),
                 Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_SYNC, $entry->user));
         }
@@ -73,7 +73,7 @@ trait UserSyncDeleteTrait {
                 $entry->user->username);
         }
         $data = new SyncError($entry, new ValidationException($msg, $entry->user));
-        $this->addReport(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
+        $this->addReportItem(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
     }
 
     /**
@@ -82,7 +82,7 @@ trait UserSyncDeleteTrait {
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
-        $this->addReport(new ActionReport(
+        $this->addReportItem(new ActionReport(
             __('The user {0} was successfully deleted.', $entry->user->username),
             Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $entry->user));
     }
@@ -94,7 +94,7 @@ trait UserSyncDeleteTrait {
     protected function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
     {
         $data = new SyncError($entry, $exception);
-        $this->addReport(new ActionReport(
+        $this->addReportItem(new ActionReport(
             __('The user {0} could not be deleted because of an internal error. Please try again later.',
                 $entry->user->username),
             Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));

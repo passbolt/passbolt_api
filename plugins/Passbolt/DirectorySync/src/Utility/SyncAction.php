@@ -18,6 +18,8 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
 use App\Model\Entity\Role;
+use Cake\Validation\Validation;
+use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
 
 /**
  * Directory factory class
@@ -25,11 +27,25 @@ use App\Model\Entity\Role;
  */
 class SyncAction
 {
-    protected $started;
-    protected $ended;
+    /**
+     * @var string DirectoryReport uuid
+     */
+    protected $parentId;
 
+    /**
+     * @var array|\Cake\Datasource\EntityInterface|mixed|null
+     */
     protected $defaultAdmin;
+
+    /**
+     * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|LdapDirectory
+     */
     protected $directory;
+
+    /**
+     * @var array|mixed
+     */
+    public $entriesToIgnore;
 
     /**
      * @var array|mixed
@@ -45,15 +61,8 @@ class SyncAction
      * @var \Cake\ORM\Table
      */
     public $DirectoryEntries;
-
-    /**
-     * @var array|mixed
-     */
-    public $entriesToIgnore;
-
-    /**
-     * @var \Cake\ORM\Table
-     */
+    public $DirectoryReports;
+    public $DirectoryReportsItems;
     public $DirectoryIgnore;
     public $DirectoryRelations;
 
@@ -62,22 +71,29 @@ class SyncAction
      */
     protected $summary;
 
+    protected $report;
+
     /**
      * SyncAction constructor.
      * @throws \Exception if no directory configuration is present
      */
-    public function __construct()
+    public function __construct($parentId = null)
     {
         $this->directory = DirectoryFactory::get();
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
         $this->DirectoryRelations = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryRelations');
+        $this->DirectoryReports = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryReports');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->summary = new ActionReportCollection();
         $this->defaultAdmin = $this->getDefaultAdmin();
         if (empty($this->defaultAdmin)) {
             throw new \Exception('Configuration issue. A default admin user cannot be found.');
         }
+        if (isset($parentId) && !Validation::uuid($parentId)) {
+            throw new \Exception('The task parent Id is invalid, it should be a uuid.');
+        }
+        $this->parentId = $parentId;
     }
 
     /**
@@ -86,6 +102,7 @@ class SyncAction
     public function beforeExecute()
     {
         $this->started = FrozenTime::now();
+        $this->report = $this->DirectoryReports->create($this->parentId);
     }
 
     /**
@@ -94,6 +111,8 @@ class SyncAction
     public function afterExecute()
     {
         $this->ended = FrozenTime::now();
+        $this->report->status = DirectoryReport::STATUS_DONE;
+        $this->DirectoryReports->save($this->report);
     }
 
     /**
@@ -107,11 +126,12 @@ class SyncAction
     /**
      * Report back on a sync action
      *
-     * @param ActionReport $report
+     * @param ActionReport $reportItem
      */
-    public function addReport(ActionReport $report)
+    public function addReportItem(ActionReport $reportItem)
     {
-        $this->summary->add($report);
+        $this->summary->add($reportItem);
+        $this->DirectoryReports->DirectoryReportsItems->create($this->report->id, $reportItem);
     }
 
     /**

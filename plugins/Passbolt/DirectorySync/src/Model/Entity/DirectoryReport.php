@@ -31,11 +31,11 @@ class DirectoryReport extends Entity
      * @var array
      */
     protected $_accessible = [
-        'parent_id' => true,
-        'status' => true,
-        'created' => true,
-        'modified' => true,
-        'parent_directory_report' => true,
-        'child_directory_reports' => true
+        'parent_id' => false,
+        'status' => false,
+        'created' => false,
+        'modified' => false,
+        'parent_directory_report' => false,
+        'child_directory_reports' => false
     ];
 }

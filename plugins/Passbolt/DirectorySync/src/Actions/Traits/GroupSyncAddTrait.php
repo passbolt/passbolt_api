@@ -47,7 +47,7 @@ trait GroupSyncAddTrait {
                 $data['name']);
             $reportData = $this->DirectoryIgnore->get($existingGroup->id);
         }
-        $this->addReport(new ActionReport($msg,Alias::MODEL_GROUPS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
+        $this->addReportItem(new ActionReport($msg,Alias::MODEL_GROUPS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
     }
 
     /**
@@ -77,7 +77,7 @@ trait GroupSyncAddTrait {
             $msg = __('The group {0} could not be added because of an internal error. Please try again later.',
                 $data['group']['name']);
         }
-        $this->addReport(new ActionReport($msg, Alias::MODEL_GROUPS, Alias::ACTION_CREATE, $status, $reportData));
+        $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -113,7 +113,7 @@ trait GroupSyncAddTrait {
                 $msg = __('The deleted group {0} could not be re-added to passbolt because of an internal error.', $existingGroup->name);
             }
         }
-        $this->addReport(new ActionReport($msg, Alias::MODEL_GROUPS, Alias::ACTION_CREATE, $status, $reportData));
+        $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -126,7 +126,7 @@ trait GroupSyncAddTrait {
         // do not overly report already successfully synced groups
         if (isset($entry) && !isset($entry->foreign_key)) {
             $this->DirectoryEntries->updateForeignKey($entry, $existingGroup->id);
-            $this->addReport(new ActionReport(
+            $this->addReportItem(new ActionReport(
                 __('The group {0} was mapped with an existing group in passbolt.', $existingGroup->name),
                 Alias::MODEL_GROUPS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingGroup));
         }

@@ -28,12 +28,12 @@ class DirectoryReportsItem extends Entity
      * @var array
      */
     protected $_accessible = [
-        'report_id' => true,
-        'status' => true,
-        'model' => true,
-        'action' => true,
-        'data' => true,
-        'created' => true,
-        'report' => true
+        'report_id' => false,
+        'status' => false,
+        'model' => false,
+        'action' => false,
+        'data' => false,
+        'created' => false,
+        'report' => false
     ];
 }

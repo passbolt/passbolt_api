@@ -117,7 +117,7 @@ trait GroupUsersSyncTrait {
         foreach($data['group']['users'] as $userDn) {
             if (!isset($directoryGroupUserEntriesByDn[$userDn])) {
                 // If a DN was returned by the directory, but cannot be resolved with our entries, we notify the admin.
-//                $this->addReport(new ActionReport(
+//                $this->addReportItem(new ActionReport(
 //                    __('The user {0} could not be added to group {1} because there is no matching directory entry in passbolt.', $userDn, $group->name),
 //                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $userDn));
                 continue;
@@ -135,7 +135,7 @@ trait GroupUsersSyncTrait {
                 'child_key' => $directoryGroupUserEntriesByDn[$userDn]->id
             ]);
             if ($drExists) {
-                $this->addReport(new ActionReport(
+                $this->addReportItem(new ActionReport(
                     __('The user {0} is already a member of the group {1}', $userDn, $group->name),
                     Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $directoryGroupUserEntriesByDn[$userDn]));
                 continue;
@@ -187,14 +187,14 @@ trait GroupUsersSyncTrait {
                 $group->setDirty('groups_users', true);
             } catch (ValidationException $exception) {
                 $error = new SyncError($group, $exception);
-                $this->addReport(new ActionReport(
+                $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to the group {1} because of a validation error.', $userId, $group->name),
                     Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_ERROR, $error));
             }
 
             $saveResult = $Groups->save($group);
             if (!$saveResult) {
-                $this->addReport(new ActionReport(
+                $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to the group {1} because of a validation error.', $userId, $group->name),
                      Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $group));
                 continue;
@@ -204,7 +204,7 @@ trait GroupUsersSyncTrait {
             foreach($saveResult->groups_users as $groupUser) {
                 if ($groupUser->user_id == $userId) {
                     $this->DirectoryRelations->createFromGroupUser($groupUser);
-                    $this->addReport(new ActionReport(
+                    $this->addReportItem(new ActionReport(
                         __('The user {0} was successfully added to the group {1}.', $userId, $group->name),
                         Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SUCCESS, $groupUser));
                     break;
@@ -237,7 +237,7 @@ trait GroupUsersSyncTrait {
                 $group->setDirty('groups_users', true);
             } catch (ValidationException $exception) {
                 $error = new SyncError($group, $exception);
-                $this->addReport(new ActionReport(
+                $this->addReportItem(new ActionReport(
                     __('The user {0} could not be removed from the group {1} because some validation issues.', $groupUserId, $group->name),
                     Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $error));
                 continue;
@@ -245,7 +245,7 @@ trait GroupUsersSyncTrait {
 
             $saveResult = $Groups->save($group);
             if (!$saveResult) {
-                $this->addReport(new ActionReport(
+                $this->addReportItem(new ActionReport(
                     __('The user {0} could not be removed from the group {1} because some permissions need to be transferred first.', $groupUserId, $group->name),
                      Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $group));
                 continue;
@@ -256,7 +256,7 @@ trait GroupUsersSyncTrait {
             $this->DirectoryRelations->delete($directoryRelation);
 
             // Send report.
-            $this->addReport(new ActionReport(
+            $this->addReportItem(new ActionReport(
                 __('The user {0} was successfully removed from the group {1}.', $groupUserId, $group->name),
                  Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $group));
         }
@@ -265,7 +265,7 @@ trait GroupUsersSyncTrait {
     public function syncGroupUsers(Group $group, array $toSync) {
         foreach($toSync as $groupUser) {
             $directoryRelation = $this->DirectoryRelations->createFromGroupUser($groupUser);
-            $this->addReport(new ActionReport(
+            $this->addReportItem(new ActionReport(
                 __('The user {0} was successfully synced with the group {1}.', $groupUser->user->username, $group->name),
                 Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SUCCESS, $directoryRelation));
         }
@@ -293,7 +293,7 @@ trait GroupUsersSyncTrait {
                         $toSync[] = $groupUser;
                     } else {
                         // Send ignore report.
-                        $this->addReport(new ActionReport('TODO',
+                        $this->addReportItem(new ActionReport('TODO',
                             Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $directoryGroupUserEntriesByDn[$userDn]));
                     }
                 }

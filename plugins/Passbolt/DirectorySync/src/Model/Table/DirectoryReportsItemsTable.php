@@ -5,6 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Utility\ActionReport;
 
 /**
  * DirectoryReportsItems Model
@@ -93,8 +94,32 @@ class DirectoryReportsItemsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['report_id'], 'Reports'));
-
         return $rules;
+    }
+
+    /**
+     * @param string|null $reportId
+     * @param ActionReport $reportItem
+     * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem
+     */
+    public function create(string $reportId = null, ActionReport $reportItem)
+    {
+        $entity = $this->newEntity([
+            'report_id' => $reportId,
+            'status' => $reportItem->getStatus(),
+            'model' => $reportItem->getModel(),
+            'action' => $reportItem->getStatus(),
+            'data' => serialize($reportItem->getData()),
+        ], [
+            'accessibleFields' => [
+                'report_id' => true,
+                'status' => true,
+                'model' => true,
+                'action' => true,
+                'data' => true,
+            ]
+        ]);
+        $result = $this->save($entity);
+        return $result;
     }
 }

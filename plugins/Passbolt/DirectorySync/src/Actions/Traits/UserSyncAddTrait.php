@@ -39,15 +39,13 @@ trait UserSyncAddTrait {
             return;
         }
         if ($ignoreUser) {
-            $msg = __('The user {0} was not synced because the passbolt user is marked to as be ignored.',
-                $existingUser->username);
+            $msg = __('The user {0} was not synced because the passbolt user is marked to as be ignored.', $existingUser->username);
             $reportData = $this->DirectoryIgnore->get($existingUser->id);
         } else {
-            $msg = __('The user {0} was not synced because the directory user is marked to as be ignored.',
-                $data['username']);
+            $msg = __('The user {0} was not synced because the directory user is marked to as be ignored.', $data['user']['username']);
             $reportData = $this->DirectoryIgnore->get($existingUser->id);
         }
-        $this->addReport(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
+        $this->addReportItem(new ActionReport($msg,Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
     }
 
     /**
@@ -73,7 +71,7 @@ trait UserSyncAddTrait {
             $msg = __('The user {0} could not be added because of an internal error. Please try again later.',
                 $data['user']['username']);
         }
-        $this->addReport(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
+        $this->addReportItem(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -107,7 +105,7 @@ trait UserSyncAddTrait {
                 $msg = __('The deleted user {0} could not be re-added to passbolt because of an internal error.', $existingUser->username);
             }
         }
-        $this->addReport(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
+        $this->addReportItem(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
     }
 
     /**
@@ -120,7 +118,7 @@ trait UserSyncAddTrait {
         // do not overly report already successfully synced users
         if (isset($entry) && !isset($entry->foreign_key)) {
             $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
-            $this->addReport(new ActionReport(
+            $this->addReportItem(new ActionReport(
                 __('The user {0} was mapped with an existing user in passbolt.', $existingUser->username),
                 Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingUser));
         }

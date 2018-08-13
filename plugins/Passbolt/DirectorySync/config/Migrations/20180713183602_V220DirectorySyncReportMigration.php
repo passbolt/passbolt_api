@@ -41,7 +41,7 @@ class V220DirectorySyncReportMigration extends AbstractMigration
             ->addColumn('parent_id', 'char', [
                 'default' => null,
                 'limit' => 36,
-                'null' => false,
+                'null' => true,
             ])
             ->addColumn('status', 'string', [
                 'default' => null,
