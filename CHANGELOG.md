@@ -1,15 +1,7 @@
 ## [Unreleased]
-### Added
-- PASSBOLT-2906: Enable CSRF protection
-- PASSBOLT-2940: Implement app-js primary routes
-
 ### Fixed
-- PASSBOLT-2805: Sort by date fix and sort by user first_name by default
-- PASSBOLT-2896: Fix filter by tag from the password details sidebar
-- PASSBOLT-2903: Fix logout link. It should target a full based url link
-- PASSBOLT-2926: Fix session timeout check
-- PASSBOLT-2927: Fix appjs ajax error handler
-- PASSBOLT-2941: Grid performance fix
+- PASSBOLT-2965: Group filter link stays active after switching to a non group filter
+- Route rewriting of the appjs should take in account passbolt installed in a subirectory
 
 ### Improved
-- PASSBOLT-2933: Upgrade to canjs 4
+- PASSBOLT-2950: Display empty feedbacks content
