@@ -148,28 +148,27 @@ class DirectoryEntriesTable extends Table
                 'directory_name' => true,
                 'directory_created' => true,
                 'directory_modified' => true,
-                'status' => true,
             ],
         ]);
     }
 
-    /**
-     * Update the status
-     *
-     * @param DirectoryEntry $entity
-     * @param $status
-     * @return DirectoryEntry|bool
-     */
-    public function updateStatus(DirectoryEntry $entity, $status)
-    {
-        $entity = $this->get($entity->id);
-        $this->patchEntity($entity, ['status' => $status], [
-            'fieldList' => ['status'],
-            'accessibleFields' => ['status' => true],
-            'associated' => []
-        ]);
-        return $this->save($entity);
-    }
+//    /**
+//     * Update the status
+//     *
+//     * @param DirectoryEntry $entity
+//     * @param $status
+//     * @return DirectoryEntry|bool
+//     */
+//    public function updateStatus(DirectoryEntry $entity, $status)
+//    {
+//        $entity = $this->get($entity->id);
+//        $this->patchEntity($entity, ['status' => $status], [
+//            'fieldList' => ['status'],
+//            'accessibleFields' => ['status' => true],
+//            'associated' => []
+//        ]);
+//        return $this->save($entity);
+//    }
 
     /**
      * Update the foreign key

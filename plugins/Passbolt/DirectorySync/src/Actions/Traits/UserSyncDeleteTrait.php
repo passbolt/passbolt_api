@@ -29,6 +29,12 @@ trait UserSyncDeleteTrait {
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
         $this->DirectoryEntries->delete($entry);
+        if (!empty($entry->foreign_key) && isset($entry->user) && $entry->user->deleted == false) {
+            $this->addReportItem(new ActionReport(
+                __('The directory user {0} was not deleted because it is ignored.',
+                    $entry->user->username),
+                Alias::MODEL_USERS, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $entry));
+        }
     }
 
     /**

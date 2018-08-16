@@ -39,6 +39,11 @@ trait MockDirectoryTrait
     }
 
 
+    protected function mockOrphanDirectoryEntryUser($data) {
+        $data['foreign_key'] = 'null';
+        return $this->mockDirectoryEntryUser($data);
+    }
+
     protected function mockDirectoryEntryUser($data) {
         if (!isset($data['fname'])) {
             throw new \InvalidArgumentException('A mocked directory entry should have at least a first name');

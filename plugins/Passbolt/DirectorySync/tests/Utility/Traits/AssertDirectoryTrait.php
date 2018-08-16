@@ -57,6 +57,17 @@ trait AssertDirectoryTrait
     }
 
     /**
+     * @param array $where
+     * @return entry
+     */
+    public function assertDirectoryEntryNotExists(array $where)
+    {
+        $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
+        $this->assertEmpty($syncEntry);
+        return $syncEntry;
+    }
+
+    /**
      * @return void
      */
     public function assertDirectoryIgnoreEmpty()

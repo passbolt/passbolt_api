@@ -240,16 +240,17 @@ class DirectoryIgnoreTable extends Table
         $query = $this->query()
             ->select(['id']);
 
-        if (isset($entryIds) && !empty($entryIds)) {
-            $query = $query->where(['DirectoryEntries.id NOT IN' => $entryIds]);
-        }
         $query = $query
             ->leftJoinWith('DirectoryEntries')
             ->where(function ($exp, $q) {
                 return $exp
-                    ->isNull('DirectoryEntries' . '.id')
+                    ->isNull('DirectoryEntries.id')
                     ->eq('DirectoryIgnore.foreign_model', 'DirectoryEntries');
             });
+
+        if (isset($entryIds) && !empty($entryIds)) {
+            $query = $query->where(['DirectoryIgnore.id NOT IN' => $entryIds]);
+        }
 
         return $this->cleanupHardDeleted('DirectoryEntries', $dryRun, $query);
     }

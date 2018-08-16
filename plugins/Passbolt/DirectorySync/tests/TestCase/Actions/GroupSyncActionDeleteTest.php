@@ -25,12 +25,18 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
 {
     use AssertGroupsTrait;
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+    }
+
     /**
      * Test that orphans ignored are cleaned up
      */
     public function testCleanupOrphanIgnore()
     {
-        $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), Alias::MODEL_DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), Alias::MODEL_GROUPS);
         $report = $this->action->execute();
