@@ -49,7 +49,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      */
     public function testCleanupOrphanDirectoryEntry()
     {
-        $this->action = new GroupSyncAction();
         $this->mockDirectoryEntryGroup('groupdoesnotexist');
         $this->mockDirectoryEntryGroup('groupreallydoesnotexist');
         $report = $this->action->execute();
@@ -58,8 +57,40 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     }
 
     /**
-     * Scenario: Group doesn't exist in passbolt nor in the directory and there is no entry
+     * Scenario: No data anywhere
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case01_Null_Null_Null()
+    {
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertTrue(true, true); // there is no spoon.
+    }
+
+    /**
      * Scenario: Group exists in passbolt and not present in the directory and there is no entry
+     * Expected result: Do nothing
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case02_Null_Null_Any_NotIgnore()
+    {
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+    }
+
+    /**
      * Scenario: Group is deleted in passbolt and not present in the directory and there is no entry
      * Expected result: Do nothing
      *
@@ -67,16 +98,12 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case01_02_03_Null_Null_Any_NotIgnore()
+    public function testDirectorySyncGroupDelete_Case03_Null_Null_Any_NotIgnore()
     {
-        // Case2: Ok group is the group "marketing"
-        // Case3: Deleted group is the group "deleted"
-        $this->action = new GroupSyncAction();
         $report = $this->action->execute();
-
-
+        $this->assertReportEmpty($report);
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->assertDirectoryEntryEmpty();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
     }
 
@@ -90,11 +117,10 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroupDelete_Case04a_Null_Null_Null_Ignore()
     {
-        $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), Alias::MODEL_GROUPS);
         $report = $this->action->execute();
-
-
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
@@ -108,17 +134,31 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case04b_04c_Null_Null_Any_Ignore()
+    public function testDirectorySyncGroupDelete_Case04b_Null_Null_Any_Ignore()
     {
-        $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), Alias::MODEL_GROUPS);
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreContains(Alias::MODEL_GROUPS, UuidFactory::uuid('group.id.marketing'));
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+    }
+
+    /**
+     * Scenario:
+     * Expected result: do nothing at all
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case04c_Null_Null_Any_Ignore()
+    {
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.deleted'), Alias::MODEL_GROUPS);
         $report = $this->action->execute();
-
-
-        $this->assertDirectoryIgnoreContains(Alias::MODEL_GROUPS, UuidFactory::uuid('group.id.marketing'));
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreContains(Alias::MODEL_GROUPS, UuidFactory::uuid('group.id.deleted'));
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
     }
 
@@ -130,17 +170,13 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case05a_05b_05c_Null_Any_Ignore_Null_Null()
+    public function testDirectorySyncGroupDelete_Case05a_Null_Any_Ignore_Null_Null()
     {
-        $this->action = new GroupSyncAction();
-
-        $this->mockDirectoryEntryGroup('groupdoesnotexist');
-        $this->mockDirectoryEntryGroup('groupisreallynotthere');
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('groupdoesnotexist'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('groupisreallynotthere'), Alias::MODEL_DIRECTORY_ENTRIES);
         $report = $this->action->execute();
+        $this->assertReportEmpty($report);
         $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
     }
 
     /**
@@ -151,32 +187,144 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case06a_06b_06c_Null_Any_Ignore_Ok_Null()
+    public function testDirectorySyncGroupDelete_Case05b_Null_Any_Ignore_Null_Null()
     {
-        $this->action = new GroupSyncAction();
-
-        $this->mockDirectoryEntryGroup('marketing');
-        $this->mockDirectoryEntryGroup('sales');
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.sales'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryIgnore(UuidFactory::uuid('groupisreallynotthere'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $reports = $this->action->execute();
+        $this->mockOrphanDirectoryEntryGroup('nogroup');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.nogroup'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
         $this->assertDirectoryIgnoreEmpty();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
-        $this->assertGroupExist(UuidFactory::uuid('group.id.sales'), ['deleted' => false]);
-        $this->assertEquals(count($reports), 2);
-        $expectedReport = [
-            'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS,
-            'status' => Alias::STATUS_IGNORE
-        ];
-        $this->assertReport($reports[0], $expectedReport);
-        $this->assertReport($reports[1], $expectedReport);
+        $this->assertDirectoryEntryEmpty();
     }
 
-    public function testDirectorySyncGroupDelete_Case07a_07b_07c_Null_Any_Ignore_Deleted_Null() {
-        // Is already tested by testCleanupOrphanIgnore()
-        $this->assertTrue(true);
+    /**
+     * Scenario:
+     * Expected result: Delete entry, delete ignore
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case05c_Null_Any_Ignore_Null_Null()
+    {
+        $this->mockDirectoryEntryGroup('nogroup');
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.nogroup'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario: the group is deleted in the directory and marked as to be ignored in the directory
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case06a_Null_Null_Ignore_Ok_Null()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+    }
+
+    /**
+     * Scenario: the group is deleted in the directory and marked as to be ignored in the directory
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case06b_Null_NoAssoc_Ignore_Ok_Null()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockOrphanDirectoryEntryGroup('testgroup');
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+    }
+
+    /**
+     * Scenario: the group is deleted in the directory and marked as to be ignored in the directory
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case06c_Null_Ok_Ignore_Ok_Null()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.marketing'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockDirectoryEntryGroup('marketing');
+        $report = $this->action->execute();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->assertReportNotEmpty($report);
+        $this->assertReport($report[0], ['status' => Alias::STATUS_IGNORE, 'type' => Alias::MODEL_DIRECTORY_ENTRIES]);
+    }
+
+    /**
+     * Scenario: Group is deleted in directory and both directory entry and group are marked to be ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case07a_Null_Null_Ignore_Null_Ignore()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.nope'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.nope'), Alias::MODEL_GROUPS);
+        $report = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario: Group is deleted in directory and both directory entry and group are marked to be ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case07b_Null_NoAssoc_Ignore_Null_Ignore()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.nope'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.nope'), Alias::MODEL_GROUPS);
+        $this->mockOrphanDirectoryEntryGroup('nope');
+        $report = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
+    }
+
+    /**
+     * Scenario: Group is deleted in directory and both directory entry and group are marked to be ignored
+     * Expected result: delete directory entry
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserDelete
+     */
+    public function testDirectorySyncGroupDelete_Case07c_Null_Ok_Ignore_Null_Ignore()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.nope'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.nope'), Alias::MODEL_GROUPS);
+        $this->mockDirectoryEntryGroup('nope');
+        $report = $this->action->execute();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertReportEmpty($report);
+        $this->assertDirectoryIgnoreEmpty();
     }
 
     /**
@@ -187,16 +335,51 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case08a_08b_08c_Null_Any_Ignore_Deleted_Null()
+    public function testDirectorySyncGroupDelete_Case08a_Null_Null_Ignore_Deleted_Null()
     {
-        $this->action = new GroupSyncAction();
-        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), Alias::MODEL_DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $this->mockDirectoryEntryGroup('deleted');
         $report = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
+    }
 
+    /**
+     * Scenario: The group is deleted in directory and passbolt and entry was marked as to be ignored
+     * Expected result: delete directory entry, no report
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case08b_Null_NoAssoc_Ignore_Deleted_Null()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockOrphanDirectoryEntryGroup('deleted');
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
+    }
+
+    /**
+     * Scenario: The group is deleted in directory and passbolt and entry was marked as to be ignored
+     * Expected result: delete directory entry, no report
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupDelete
+     */
+    public function testDirectorySyncGroupDelete_Case08c_Null_Ok_Ignore_Deleted_Null()
+    {
+        $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), Alias::MODEL_DIRECTORY_ENTRIES);
+        $this->mockOrphanDirectoryEntryGroup('deleted');
+        $report = $this->action->execute();
+        $this->assertReportEmpty($report);
+        $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertDirectoryEntryEmpty();
     }
 
     /**

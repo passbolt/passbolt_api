@@ -172,6 +172,10 @@ trait MockDirectoryTrait
         return $group;
     }
 
+    protected function mockOrphanDirectoryEntryGroup($name, $dirCreated = null, $dirModified = null, $created = null, $modified = null) {
+        return $this->mockDirectoryEntryGroup($name, $dirCreated, $dirModified, $created, $modified, 'null');
+    }
+
     protected function mockDirectoryEntryGroup($name, $dirCreated = null, $dirModified = null, $created = null, $modified = null, $foreignKey = null)
     {
         if (!isset($dirCreated)) {
@@ -187,7 +191,7 @@ trait MockDirectoryTrait
             $modified = '2018-07-20 06:31:57';
         }
 
-        $defaultForeignKey = $foreignKey === false ? null : UuidFactory::uuid('group.id.' . $name);
+        $defaultForeignKey = $foreignKey === 'null' ? null : UuidFactory::uuid('group.id.' . $name);
 
         $entry = [
             'id' => UuidFactory::uuid('ldap.group.id.' . $name),

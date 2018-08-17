@@ -53,11 +53,7 @@ trait SyncTrait {
             ->all()
             ->toArray(), '{n}.id');
 
-        if ($modelType == Alias::MODEL_GROUPS) {
-            $this->directoryData = $this->directory->getGroups();
-        } else {
-            $this->directoryData = $this->directory->getUsers();
-        }
+        $this->directoryData = $this->directory->{'get'.Alias::MODEL_GROUPS}();
     }
 
     /**
@@ -70,7 +66,7 @@ trait SyncTrait {
      */
     function processEntriesToDelete()
     {
-        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower($this->entityType) . '.delete')) {
+        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.delete')) {
             return;
         }
 
@@ -78,37 +74,40 @@ trait SyncTrait {
         $this->DirectoryIgnore->cleanupHardDeletedEntities(SELF::ENTITY_TYPE);
         $entries = $this->DirectoryEntries->lookupEntriesForDeletion(SELF::ENTITY_TYPE, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
+        $this->DirectoryRelations->cleanupHardDeletedUserGroups($entriesId);
 
         foreach ($entries as $entry) {
+            $entity = $entry->getAssociatedEntity();
+
             // The directory entry is marked as to be ignored
             if (in_array($entry->id, $this->entriesToIgnore)) {
                 $this->handleDeletedIgnoredEntry($entry);
                 continue;
             }
 
-            // The user is marked as to be ignored
-            if (isset($entry->user) && in_array($entry->user->id, $this->entitiesToIgnore)) {
+            // The entity is marked as to be ignored
+            if (isset($entity) && in_array($entity->id, $this->entitiesToIgnore)) {
                 $this->handleDeletedIgnoredEntity($entry);
                 continue;
             }
 
             // The user was already hard or soft deleted
-            if (!isset($entry->user) || $entry->user->deleted) {
+            if (!isset($entity) || $entity->deleted) {
                 $this->handleDeletedEntry($entry);
                 continue;
             }
 
             try {
-                if (!$this->Users->softDelete($entry->user)) {
-                    // The user cannot be deleted (for example: it is the sole owner of shared passwords)
+                if (!$this->{self::ENTITY_TYPE}->softDelete($entity)) {
+                    // The entity cannot be deleted (for example: it is the sole owner of shared passwords)
                     $this->handleNotPossibleDelete($entry);
                 } else {
-                    // User was deleted
+                    // Entity was deleted
                     $this->handleSuccessfulDelete($entry);
-                    $this->handleGroupUsersDeleted($entry);
+                    //$this->handleGroupUsersDeleted($entry);
                 }
             } catch (InternalErrorException $exception) {
-                // The user cannot be deleted (for example: database service is down)
+                // The entity cannot be deleted (for example: database service is down)
                 $this->handleInternalErrorDelete($entry, $exception);
             }
         }

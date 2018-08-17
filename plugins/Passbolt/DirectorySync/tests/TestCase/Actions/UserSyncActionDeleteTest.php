@@ -228,6 +228,7 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $report = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
         $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
         $this->assertReportEmpty($report);
     }
 

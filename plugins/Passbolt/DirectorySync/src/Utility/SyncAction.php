@@ -81,6 +81,7 @@ class SyncAction
         $this->DirectoryRelations = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryRelations');
         $this->DirectoryReports = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryReports');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
         $this->summary = new ActionReportCollection();
         $this->defaultAdmin = $this->getDefaultAdmin();
         if (empty($this->defaultAdmin)) {

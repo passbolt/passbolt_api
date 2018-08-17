@@ -200,10 +200,10 @@ class DirectoryIgnoreTable extends Table
         $query = $this->query()
             ->select(['id'])
             ->leftJoinWith($entityType)
-            ->where(function ($exp, $q) {
+            ->where(function ($exp, $q)  use($entityType) {
                 return $exp
-                    ->isNull('Users' . '.id')
-                    ->eq('DirectoryIgnore.foreign_model', 'Users');
+                    ->isNull($entityType . '.id')
+                    ->eq('DirectoryIgnore.foreign_model', $entityType);
             });
 
         return $this->cleanupHardDeleted($entityType, $dryRun, $query);

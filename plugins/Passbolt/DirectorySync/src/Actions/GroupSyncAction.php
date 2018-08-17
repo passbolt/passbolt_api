@@ -21,14 +21,21 @@ use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
 class GroupSyncAction extends SyncAction
 {
-    use GroupSyncDeleteTrait;
+    use SyncTrait;
+    //use GroupSyncDeleteTrait;
     use GroupSyncAddTrait;
     use GroupUsersSyncTrait;
+
+    /**
+     * @var string entityType
+     */
+    const ENTITY_TYPE = Alias::MODEL_GROUPS;
 
     /**
      * @var \Cake\ORM\Table
@@ -52,31 +59,16 @@ class GroupSyncAction extends SyncAction
      */
     public function __construct() {
         parent::__construct();
-        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
     }
 
     public function beforeExecute()
     {
         parent::beforeExecute();
-
-        $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
-            ->select(['id'])
-            ->where(['foreign_model' => Alias::MODEL_DIRECTORY_ENTRIES])
-            ->all()
-            ->toArray(), '{n}.id');
-
-        $this->groupsToIgnore = Hash::extract($this->DirectoryIgnore->find()
-          ->select(['id'])
-          ->where(['foreign_model' => Alias::MODEL_GROUPS])
-          ->all()
-          ->toArray(), '{n}.id');
-
+        $this->initialize(self::ENTITY_TYPE);
         $this->defaultGroupAdmin = $this->getDefaultGroupAdmin();
         if (empty($this->defaultGroupAdmin)) {
             $this->defaultGroupAdmin = $this->defaultAdmin;
         }
-
-        $this->directoryData = $this->directory->getGroups();
     }
 
     /**
@@ -89,9 +81,7 @@ class GroupSyncAction extends SyncAction
      */
     public function execute() {
         $this->beforeExecute();
-        if (Configure::read('passbolt.plugins.directorySync.jobs.groups.delete')) {
-            $this->processEntriesToDelete();
-        }
+        $this->processEntriesToDelete();
         if (Configure::read('passbolt.plugins.directorySync.jobs.groups.create')) {
             $this->processEntriesToCreate();
         }
@@ -99,55 +89,55 @@ class GroupSyncAction extends SyncAction
         return $this->getSummary();
     }
 
-    /**
-     * Handle the group deletion job
-     *
-     * Find all the directory entries that have been deleted and try to delete the associated groups
-     * If they are not already deleted, or marked as to be ignored
-     *
-     * @return void
-     */
-    function processEntriesToDelete()
-    {
-        $entriesId = Hash::extract($this->directoryData, '{n}.id');
-        $this->DirectoryIgnore->cleanupHardDeletedGroups();
-        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(Alias::MODEL_GROUPS, $entriesId);
-        $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-        $this->DirectoryRelations->cleanupHardDeletedUserGroups($entriesId);
-
-        foreach ($entries as $entry) {
-            // The directory entry or user is marked as to be ignored
-            if (in_array($entry->id, $this->entriesToIgnore)) {
-                $this->handleDeletedIgnoredEntry($entry);
-                continue;
-            }
-
-            // The directory entry or user is marked as to be ignored
-            if (isset($entry->group) && in_array($entry->group->id, $this->groupsToIgnore)) {
-                $this->handleDeletedIgnoredGroup($entry);
-                continue;
-            }
-
-            // The group was already hard or soft deleted
-            if ($entry->group === null || $entry->group->deleted) {
-                $this->handleDeletedEntry($entry);
-                continue;
-            }
-
-            try {
-                if (!$this->Groups->softDelete($entry->group)) {
-                    // The group cannot be deleted (for example: it is the sole owner of shared passwords)
-                    $this->handleNotPossibleDelete($entry);
-                } else {
-                    // Group was deleted
-                    $this->handleSuccessfulDelete($entry);
-                    $this->handleGroupUsersDeleted($entry);
-                }
-            } catch(InternalErrorException $exception) {
-                $this->handleInternalErrorDelete($entry, $exception);
-            }
-        }
-    }
+//    /**
+//     * Handle the group deletion job
+//     *
+//     * Find all the directory entries that have been deleted and try to delete the associated groups
+//     * If they are not already deleted, or marked as to be ignored
+//     *
+//     * @return void
+//     */
+//    function processEntriesToDelete()
+//    {
+//        $entriesId = Hash::extract($this->directoryData, '{n}.id');
+//        $this->DirectoryIgnore->cleanupHardDeletedGroups();
+//        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(Alias::MODEL_GROUPS, $entriesId);
+//        $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
+//        $this->DirectoryRelations->cleanupHardDeletedUserGroups($entriesId);
+//
+//        foreach ($entries as $entry) {
+//            // The directory entry or user is marked as to be ignored
+//            if (in_array($entry->id, $this->entriesToIgnore)) {
+//                $this->handleDeletedIgnoredEntry($entry);
+//                continue;
+//            }
+//
+//            // The directory entry or user is marked as to be ignored
+//            if (isset($entry->group) && in_array($entry->group->id, $this->groupsToIgnore)) {
+//                $this->handleDeletedIgnoredGroup($entry);
+//                continue;
+//            }
+//
+//            // The group was already hard or soft deleted
+//            if ($entry->group === null || $entry->group->deleted) {
+//                $this->handleDeletedEntry($entry);
+//                continue;
+//            }
+//
+//            try {
+//                if (!$this->Groups->softDelete($entry->group)) {
+//                    // The group cannot be deleted (for example: it is the sole owner of shared passwords)
+//                    $this->handleNotPossibleDelete($entry);
+//                } else {
+//                    // Group was deleted
+//                    $this->handleSuccessfulDelete($entry);
+//                    $this->handleGroupUsersDeleted($entry);
+//                }
+//            } catch(InternalErrorException $exception) {
+//                $this->handleInternalErrorDelete($entry, $exception);
+//            }
+//        }
+//    }
 
     /**
      * Handle the group creation job
