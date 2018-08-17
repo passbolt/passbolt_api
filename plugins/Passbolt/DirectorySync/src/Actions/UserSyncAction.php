@@ -18,22 +18,21 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
-use Passbolt\DirectorySync\Actions\Traits\UserSyncDeleteTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncAction extends SyncAction
 {
-
-    use UserSyncDeleteTrait;
+    use SyncTrait;
     use UserSyncAddTrait;
     use GroupUsersSyncTrait;
 
     /**
-     * @var array|mixed
+     * @var string entityType
      */
-    public $usersToIgnore;
+    const ENTITY_TYPE = Alias::MODEL_USERS;
 
     /**
      * UserSyncAction constructor.
@@ -51,19 +50,7 @@ class UserSyncAction extends SyncAction
     public function beforeExecute()
     {
         parent::beforeExecute();
-
-        $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
-            ->select(['id'])
-            ->where(['foreign_model' => Alias::MODEL_DIRECTORY_ENTRIES])
-            ->all()
-            ->toArray(), '{n}.id');
-
-        $this->usersToIgnore = Hash::extract($this->DirectoryIgnore->find()
-            ->select(['id'])
-            ->where(['foreign_model' => Alias::MODEL_USERS])
-            ->all()
-            ->toArray(), '{n}.id');
-        $this->directoryData = $this->directory->getUsers();
+        $this->initialize(self::ENTITY_TYPE);
     }
 
     /**
@@ -77,64 +64,14 @@ class UserSyncAction extends SyncAction
     public function execute()
     {
         $this->beforeExecute();
-        if (Configure::read('passbolt.plugins.directorySync.jobs.users.delete')) {
-            $this->processEntriesToDelete();
-        }
+        $this->processEntriesToDelete();
+
         if (Configure::read('passbolt.plugins.directorySync.jobs.users.create')) {
             $this->processEntriesToCreate();
         }
+
         $this->afterExecute();
         return $this->getSummary();
-    }
-
-    /**
-     * Handle the user deletion job
-     *
-     * Find all the directory entries that have been deleted and try to delete the associated users
-     * If they are not already deleted, or marked as to be ignored
-     *
-     * @return void
-     */
-    function processEntriesToDelete()
-    {
-        $entriesId = Hash::extract($this->directoryData, '{n}.id');
-        $this->DirectoryIgnore->cleanupHardDeletedUsers();
-        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(Alias::MODEL_USERS, $entriesId);
-        $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
-
-        foreach ($entries as $entry) {
-            // The directory entry is marked as to be ignored
-            if (in_array($entry->id, $this->entriesToIgnore)) {
-                $this->handleDeletedIgnoredEntry($entry);
-                continue;
-            }
-
-            // The user is marked as to be ignored
-            if (isset($entry->user) && in_array($entry->user->id, $this->usersToIgnore)) {
-                $this->handleDeletedIgnoredUser($entry);
-                continue;
-            }
-
-            // The user was already hard or soft deleted
-            if (!isset($entry->user) || $entry->user->deleted) {
-                $this->handleDeletedEntry($entry);
-                continue;
-            }
-
-            try {
-                if (!$this->Users->softDelete($entry->user)) {
-                    // The user cannot be deleted (for example: it is the sole owner of shared passwords)
-                    $this->handleNotPossibleDelete($entry);
-                } else {
-                    // User was deleted
-                    $this->handleSuccessfulDelete($entry);
-                    $this->handleGroupUsersDeleted($entry);
-                }
-            } catch (InternalErrorException $exception) {
-                // The user cannot be deleted (for example: database service is down)
-                $this->handleInternalErrorDelete($entry, $exception);
-            }
-        }
     }
 
     /**
@@ -158,7 +95,7 @@ class UserSyncAction extends SyncAction
 
             // If directory entry or user are marked as to be ignored
             $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
-            $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->usersToIgnore));
+            $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->entitiesToIgnore));
             if ($ignoreEntry || $ignoreUser) {
                 $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser);
                 continue;

@@ -15,7 +15,10 @@
 
 namespace Passbolt\DirectorySync\Model\Entity;
 
+use App\Model\Entity\Group;
+use App\Model\Entity\User;
 use Cake\ORM\Entity;
+use Passbolt\DirectorySync\Utility\Alias;
 
 /**
  * DirectoryEntry Entity
@@ -50,4 +53,20 @@ class DirectoryEntry extends Entity
         'created' => false,
         'modified' => false
     ];
+
+    /**
+     * Get associated entity.
+     * @return Group|User|null
+     */
+    public function getAssociatedEntity() {
+        if ($this->foreign_model == Alias::MODEL_GROUPS && isset($this->group)) {
+            return $this->group;
+        }
+
+        if ($this->foreign_model == Alias::MODEL_USERS && isset($this->user)) {
+            return $this->user;
+        }
+
+        return null;
+    }
 }

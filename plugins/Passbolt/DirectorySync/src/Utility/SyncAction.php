@@ -20,6 +20,7 @@ use Cake\Core\Configure;
 use App\Model\Entity\Role;
 use Cake\Validation\Validation;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
+use Passbolt\DirectorySync\Model\Table\DirectoryEntriesTable;
 
 /**
  * Directory factory class
@@ -41,11 +42,6 @@ class SyncAction
      * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|LdapDirectory
      */
     protected $directory;
-
-    /**
-     * @var array|mixed
-     */
-    public $entriesToIgnore;
 
     /**
      * @var array|mixed

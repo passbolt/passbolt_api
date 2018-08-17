@@ -191,41 +191,22 @@ class DirectoryIgnoreTable extends Table
     /**
      * Delete all association records where associated users entities are deleted
      *
+     * @param string $entityType Users or Groups
      * @param bool $dryRun false
      * @return number of affected records
      */
-    public function cleanupHardDeletedUsers(bool $dryRun = false)
+    public function cleanupHardDeletedEntities(string $entityType, bool $dryRun = false)
     {
         $query = $this->query()
             ->select(['id'])
-            ->leftJoinWith('Users')
+            ->leftJoinWith($entityType)
             ->where(function ($exp, $q) {
                 return $exp
                     ->isNull('Users' . '.id')
                     ->eq('DirectoryIgnore.foreign_model', 'Users');
             });
 
-        return $this->cleanupHardDeleted('Users', $dryRun, $query);
-    }
-
-    /**
-     * Delete all association records where associated groups entities are deleted
-     *
-     * @param bool $dryRun false
-     * @return number of affected records
-     */
-    public function cleanupHardDeletedGroups(bool $dryRun = false)
-    {
-        $query = $this->query()
-            ->select(['id'])
-            ->leftJoinWith('Groups')
-            ->where(function ($exp, $q) {
-                return $exp
-                    ->isNull('Groups' . '.id')
-                    ->eq('DirectoryIgnore.foreign_model', 'Groups');
-            });
-
-        return $this->cleanupHardDeleted('Groups', $dryRun, $query);
+        return $this->cleanupHardDeleted($entityType, $dryRun, $query);
     }
 
     /**
