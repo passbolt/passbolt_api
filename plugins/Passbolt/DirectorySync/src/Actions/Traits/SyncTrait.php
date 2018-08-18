@@ -27,20 +27,23 @@ use App\Error\Exception\ValidationException;
 trait SyncTrait {
 
     /**
+     * Store entities (users or groups) to ignore.
      * @var array|mixed
      */
     public $entitiesToIgnore;
 
     /**
+     * Store directoryEntries to ignore.
      * @var array|mixed
      */
     public $entriesToIgnore;
 
-
+    /**
+     * Initialize data to perform the job.
+     * @param string $modelType type of model
+     */
     function initialize($modelType = Alias::MODEL_USERS)
     {
-        $this->entityType = Alias::MODEL_USERS;
-
         $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
             ->where(['foreign_model' => Alias::MODEL_DIRECTORY_ENTRIES])
@@ -53,11 +56,11 @@ trait SyncTrait {
             ->all()
             ->toArray(), '{n}.id');
 
-        $this->directoryData = $this->directory->{'get'.Alias::MODEL_GROUPS}();
+        $this->directoryData = $this->directory->{'get'.$modelType}();
     }
 
     /**
-     * Handle the user deletion job
+     * Handle the user/group deletion job
      *
      * Find all the directory entries that have been deleted and try to delete the associated users
      * If they are not already deleted, or marked as to be ignored
@@ -114,6 +117,7 @@ trait SyncTrait {
     }
 
     /**
+     * Handle ignored entries.
      * @param DirectoryEntry $entry
      */
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
@@ -130,6 +134,7 @@ trait SyncTrait {
     }
 
     /**
+     * Handle ignored entities.
      * @param DirectoryEntry $entry
      */
     protected function handleDeletedIgnoredEntity(DirectoryEntry $entry)
@@ -147,6 +152,7 @@ trait SyncTrait {
     }
 
     /**
+     * Handle deleted entity.
      * @param DirectoryEntry $entry
      */
     protected function handleDeletedEntry(DirectoryEntry $entry)
@@ -163,6 +169,7 @@ trait SyncTrait {
     }
 
     /**
+     * Handle delete when it's not possible to delete.
      * @param DirectoryEntry $entry
      */
     protected function handleNotPossibleDelete(DirectoryEntry $entry)
@@ -182,6 +189,7 @@ trait SyncTrait {
     }
 
     /**
+     * Handle a successful delete.
      * @param DirectoryEntry $entry
      */
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
@@ -196,6 +204,7 @@ trait SyncTrait {
     }
 
     /**
+     * Handle an internal error delete.
      * @param DirectoryEntry $entry
      * @param InternalErrorException $exception
      */

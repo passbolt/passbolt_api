@@ -54,9 +54,9 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * Perform a user sync
-     * - Delete all users that can be deleted
-     * - Create all users that can be created
+     * Perform a sync
+     * - Delete all users/groups that can be deleted
+     * - Create all users/groups that can be created
      * - Generate report
      *
      * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
@@ -75,7 +75,7 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * Handle the user creation job
+     * Handle the user/group creation job
      *
      * @return void
      */

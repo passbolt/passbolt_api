@@ -28,7 +28,6 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 class GroupSyncAction extends SyncAction
 {
     use SyncTrait;
-    //use GroupSyncDeleteTrait;
     use GroupSyncAddTrait;
     use GroupUsersSyncTrait;
 
