@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
+use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -23,6 +24,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\SyncError;
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\User;
 
 trait SyncTrait {
 
@@ -117,109 +119,91 @@ trait SyncTrait {
     }
 
     /**
-     * Handle ignored entries.
-     * @param DirectoryEntry $entry
+     * Handle the user/group creation job
+     *
+     * @return void
      */
-    protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
+    function processEntriesToCreate()
     {
-        $entity = $entry->getAssociatedEntity();
-        $this->DirectoryEntries->delete($entry);
-        if (!empty($entry->foreign_key) && isset($entity) && $entity->deleted == false) {
-            $this->addReportItem(new ActionReport(
-                __('The directory {0} {1} was not deleted because it is ignored.',
-                    Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($entity)),
-                self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $entry));
+        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+            return;
+        }
+
+        foreach ($this->directoryData as $data) {
+            // Find and patch (in case directory_name has changed), or create directory entries.
+            $entry = $this->DirectoryEntries->updateOrCreate($data, Alias::MODEL_USERS);
+            if ($entry === false) {
+                continue;
+            }
+            if (!isset($entry->user)) {
+                $existingUser = $this->getUserFromData($data);
+            } else {
+                $existingUser = $entry->user;
+            }
+
+            // If directory entry or user are marked as to be ignored
+            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
+            $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->entitiesToIgnore));
+            if ($ignoreEntry || $ignoreUser) {
+                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser);
+                continue;
+            }
+
+            // If the user does not exist
+            // Or it was deleted and then created again in the directory
+            if (!isset($existingUser)) {
+                $this->handleAddNew($data, $entry);
+                continue;
+            }
+
+            // If the user exist but is already deleted
+            if (isset($existingUser) && $existingUser->deleted) {
+                $this->handleAddDeleted($data, $entry, $existingUser);
+                continue;
+            }
+
+            // If the user already exist and is not deleted
+            $this->handleAddExist($data, $entry, $existingUser);
         }
     }
 
     /**
-     * Handle ignored entities.
-     * @param DirectoryEntry $entry
+     * @param array $data
+     * @param DirectoryEntry|null $entry
+     * @param User $existingUser
      */
-    protected function handleDeletedIgnoredEntity(DirectoryEntry $entry)
+    function handleAddExist(array $data, DirectoryEntry $entry = null, User $existingUser)
     {
-        $entity = $entry->getAssociatedEntity();
-        $this->DirectoryEntries->delete($entry);
-        if (!$entity->deleted) {
-            $reportData = $this->DirectoryIgnore->get($entity->id);
-            $this->addReportItem(new ActionReport(
-                __('The passbolt {0} {1} was not deleted because it is marked as to be ignored.',
-                    Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($entity)),
-                self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $reportData));
+        // Do not overly report already successfully synced users
+        if (isset($entry) && !isset($entry->foreign_key)) {
+            // If user in directory was created before the user in the db, we update the field and send report.
+            if ($data['directory_created']->lte($existingUser->created)) {
+                $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
+                $this->addReportItem(new ActionReport(
+                    __('The user {0} was mapped with an existing user in passbolt.', $existingUser->username),
+                    Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingUser));
+            } else {
+                // Else, if user in directory was created after user in db. We don't sync. There is an overlapse.
+                // Later on, we'll introduce a mechanism to fix this manually.
+                $msg =  __('The user {0} could not be mapped with an existing user in passbolt because it was created after.', $existingUser->username);
+                $data = new SyncError($entry, new \Exception($msg));
+                $this->addReportItem(new ActionReport(
+                   $msg,
+                    Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_ERROR, $data));
+            }
+
         }
     }
 
     /**
-     * Handle deleted entity.
-     * @param DirectoryEntry $entry
+     * Get entity name.
+     * For a user it will return the username
+     * For a group it will return the group name
+     * @param Entity $entity
+     *
+     * @return mixed
      */
-    protected function handleDeletedEntry(DirectoryEntry $entry)
-    {
-        $entity = $entry->getAssociatedEntity();
-        $this->DirectoryEntries->delete($entry);
-        if (isset($entity) && $entity->deleted) {
-            $this->addReportItem(new ActionReport(
-                __('The directory {0} {1} was already deleted in passbolt.',
-                    Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($entity)),
-                self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_SYNC, $entity));
-        }
-    }
-
-    /**
-     * Handle delete when it's not possible to delete.
-     * @param DirectoryEntry $entry
-     */
-    protected function handleNotPossibleDelete(DirectoryEntry $entry)
-    {
-        $entity = $entry->getAssociatedEntity();
-        $errors = $entity->getErrors();
-        if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-            $msg = __('The user {0} could not be deleted because they are the only owner of one or more passwords.',
-                $this->getEntityName($entity));
-        } else {
-            $msg = __('The {0} {1} could not be deleted because they are the only manager of one or more groups.',
-                Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($entity));
-        }
-        $data = new SyncError($entry, new ValidationException($msg, $entity));
-        $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
-    }
-
-    /**
-     * Handle a successful delete.
-     * @param DirectoryEntry $entry
-     */
-    protected function handleSuccessfulDelete(DirectoryEntry $entry)
-    {
-        $entity = $entry->getAssociatedEntity();
-        $this->DirectoryEntries->delete($entry);
-        $this->addReportItem(new ActionReport(
-            __('The {0} {1} was successfully deleted.',
-                Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($entity)),
-            self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $entity));
-    }
-
-    /**
-     * Handle an internal error delete.
-     * @param DirectoryEntry $entry
-     * @param InternalErrorException $exception
-     */
-    protected function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
-    {
-        $entity = $entry->getAssociatedEntity();
-        $data = new SyncError($entry, $exception);
-        $this->addReportItem(new ActionReport(
-            __('The {0} {1} could not be deleted because of an internal error. Please try again later.',
-                Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($entity)),
-            self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
-    }
-
-    protected function getEntityName($entity) {
+    protected function getEntityName(Entity $entity) {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return $entity->name;
         }

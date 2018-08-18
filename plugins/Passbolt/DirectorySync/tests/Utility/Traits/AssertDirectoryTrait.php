@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Utility\Alias;
 
 trait AssertDirectoryTrait
 {
@@ -51,6 +52,32 @@ trait AssertDirectoryTrait
      */
     public function assertDirectoryEntryExists(array $where)
     {
+        $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
+        $this->assertEquals(1, count($syncEntry));
+        return $syncEntry;
+    }
+
+    /**
+     * @param array $where
+     * @return entry
+     */
+    public function assertOrphanDirectoryEntryExists($id)
+    {
+        $syncEntry = $this->action->DirectoryEntries->find()->where(['id' => $id, 'foreign_key IS NULL'])->all()->toArray();
+        $this->assertEquals(1, count($syncEntry));
+        return $syncEntry;
+    }
+
+    /**
+     * @param array $where
+     * @return entry
+     */
+    public function assertDirectoryEntryExistsForUser($where)
+    {
+        $Users = TableRegistry::get('Users');
+        $u = $Users->find()->where($where)->first();
+
+        $where = ['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $u->id];
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
         return $syncEntry;

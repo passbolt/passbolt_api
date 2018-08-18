@@ -85,6 +85,7 @@ trait UserSyncAddTrait {
         // do not try to recreate
         $status = Alias::STATUS_ERROR;
         if ($data['directory_created']->lt($existingUser->modified)) {
+            $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, null);
             $msg = __('The previously deleted user {0} was not re-added to passbolt.', $existingUser->username);
         } else {
@@ -106,21 +107,5 @@ trait UserSyncAddTrait {
             }
         }
         $this->addReportItem(new ActionReport($msg, Alias::MODEL_USERS, Alias::ACTION_CREATE, $status, $reportData));
-    }
-
-    /**
-     * @param array $data
-     * @param DirectoryEntry|null $entry
-     * @param User $existingUser
-     */
-    function handleAddExist(array $data, DirectoryEntry $entry = null, User $existingUser)
-    {
-        // do not overly report already successfully synced users
-        if (isset($entry) && !isset($entry->foreign_key)) {
-            $this->DirectoryEntries->updateForeignKey($entry, $existingUser->id);
-            $this->addReportItem(new ActionReport(
-                __('The user {0} was mapped with an existing user in passbolt.', $existingUser->username),
-                Alias::MODEL_USERS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingUser));
-        }
     }
 }

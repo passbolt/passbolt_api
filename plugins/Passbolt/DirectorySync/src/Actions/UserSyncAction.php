@@ -18,6 +18,7 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -26,6 +27,7 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 class UserSyncAction extends SyncAction
 {
     use SyncTrait;
+    use SyncDeleteTrait;
     use UserSyncAddTrait;
     use GroupUsersSyncTrait;
 
@@ -65,58 +67,9 @@ class UserSyncAction extends SyncAction
     {
         $this->beforeExecute();
         $this->processEntriesToDelete();
-
-        if (Configure::read('passbolt.plugins.directorySync.jobs.users.create')) {
-            $this->processEntriesToCreate();
-        }
-
+        $this->processEntriesToCreate();
         $this->afterExecute();
         return $this->getSummary();
-    }
-
-    /**
-     * Handle the user/group creation job
-     *
-     * @return void
-     */
-    function processEntriesToCreate()
-    {
-        foreach ($this->directoryData as $data) {
-            // Find and patch or create directory entries
-            $entry = $this->DirectoryEntries->updateOrCreate($data, Alias::MODEL_USERS);
-            if ($entry === false) {
-                continue;
-            }
-            if (!isset($entry->user)) {
-                $existingUser = $this->getUserFromData($data);
-            } else {
-                $existingUser = $entry->user;
-            }
-
-            // If directory entry or user are marked as to be ignored
-            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
-            $ignoreUser = (isset($existingUser) && in_array($existingUser->id, $this->entitiesToIgnore));
-            if ($ignoreEntry || $ignoreUser) {
-                $this->handleAddIgnore($data, $entry, $existingUser, $ignoreUser);
-                continue;
-            }
-
-            // If the user does not exist
-            // Or it was deleted and then created again in the directory
-            if (!isset($existingUser)) {
-                $this->handleAddNew($data, $entry);
-                continue;
-            }
-
-            // If the user exist but is already deleted
-            if (isset($existingUser) && $existingUser->deleted) {
-                $this->handleAddDeleted($data, $entry, $existingUser);
-                continue;
-            }
-
-            // If the user already exist and is not deleted
-            $this->handleAddExist($data, $entry, $existingUser);
-        }
     }
 
     /**

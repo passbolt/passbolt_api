@@ -21,6 +21,7 @@ use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
@@ -28,6 +29,7 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 class GroupSyncAction extends SyncAction
 {
     use SyncTrait;
+    use SyncDeleteTrait;
     use GroupSyncAddTrait;
     use GroupUsersSyncTrait;
 
