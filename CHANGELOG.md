@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-## [2.2.0] - 2018-09-13
+## [2.2.0] - 2018-08-13
 ### Added
 - PASSBOLT-2906: Enable CSRF protection
 - PASSBOLT-2940: Implement app-js primary routes
