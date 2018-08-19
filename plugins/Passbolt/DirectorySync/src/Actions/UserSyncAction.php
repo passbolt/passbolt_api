@@ -18,17 +18,16 @@ use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
-use Passbolt\DirectorySync\Actions\Traits\UserSyncAddTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
-
 class UserSyncAction extends SyncAction
 {
     use SyncTrait;
     use SyncDeleteTrait;
-    use UserSyncAddTrait;
+    use SyncAddTrait;
     use GroupUsersSyncTrait;
 
     /**

@@ -191,12 +191,12 @@ trait MockDirectoryTrait
             $modified = '2018-07-20 06:31:57';
         }
 
-        $defaultForeignKey = $foreignKey === 'null' ? null : UuidFactory::uuid('group.id.' . $name);
+        $defaultForeignKey = UuidFactory::uuid('group.id.' . $name);
 
         $entry = [
             'id' => UuidFactory::uuid('ldap.group.id.' . $name),
             'foreign_model' => Alias::MODEL_GROUPS,
-            'foreign_key' => $foreignKey !== null ? $foreignKey : $defaultForeignKey,
+            'foreign_key' => $foreignKey === 'null' ? null : $defaultForeignKey,
             'directory_name' => substr('CN='. ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local', 0, 255),
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,

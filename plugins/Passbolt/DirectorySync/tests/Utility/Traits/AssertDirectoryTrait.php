@@ -87,6 +87,21 @@ trait AssertDirectoryTrait
      * @param array $where
      * @return entry
      */
+    public function assertDirectoryEntryExistsForGroup($where)
+    {
+        $Groups = TableRegistry::get('Groups');
+        $g = $Groups->find()->where($where)->first();
+
+        $where = ['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $g->id];
+        $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
+        $this->assertEquals(1, count($syncEntry));
+        return $syncEntry;
+    }
+
+    /**
+     * @param array $where
+     * @return entry
+     */
     public function assertDirectoryEntryNotExists(array $where)
     {
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();

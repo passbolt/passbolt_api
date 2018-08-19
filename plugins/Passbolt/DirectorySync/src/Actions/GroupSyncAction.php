@@ -19,7 +19,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupSyncAddTrait;
-use Passbolt\DirectorySync\Actions\Traits\GroupSyncDeleteTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
@@ -30,7 +30,8 @@ class GroupSyncAction extends SyncAction
 {
     use SyncTrait;
     use SyncDeleteTrait;
-    use GroupSyncAddTrait;
+    use SyncAddTrait;
+//    use GroupSyncAddTrait;
     use GroupUsersSyncTrait;
 
     /**
@@ -83,9 +84,7 @@ class GroupSyncAction extends SyncAction
     public function execute() {
         $this->beforeExecute();
         $this->processEntriesToDelete();
-        if (Configure::read('passbolt.plugins.directorySync.jobs.groups.create')) {
-            $this->processEntriesToCreate();
-        }
+        $this->processEntriesToCreate();
         $this->afterExecute();
         return $this->getSummary();
     }
@@ -140,46 +139,46 @@ class GroupSyncAction extends SyncAction
 //        }
 //    }
 
-    /**
-     * Handle the group creation job
-     *
-     * @return void
-     */
-    public function processEntriesToCreate()
-    {
-        foreach($this->directoryData as $i => $data) {
-            // Find and patch or create directory entries
-            $entry = $this->DirectoryEntries->updateOrCreate($data, Alias::MODEL_GROUPS);
-            if ($entry === false) {
-                continue;
-            }
-            if (!isset($entry->group)) {
-                $existingGroup = $this->getGroupFromData($data);
-            } else {
-                $existingGroup = $entry->group;
-            }
-
-            // If directory entry or user are marked as to be ignored
-            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
-            $ignoreGroup = (isset($existingGroup) && in_array($existingGroup->id, $this->groupsToIgnore));
-            if($ignoreEntry || $ignoreGroup) {
-                $this->handleAddIgnore($data, $entry, $existingGroup, $ignoreGroup);
-                continue;
-            }
-
-            if (!isset($existingGroup)) {
-                $this->handleAddNew($data, $entry);
-                continue;
-            }
-
-            if (isset($existingGroup) && $existingGroup->deleted) {
-                $this->handleAddDeleted($data, $entry, $existingGroup);
-                continue;
-            }
-
-            $this->handleAddExist($data, $entry, $existingGroup);
-        }
-    }
+//    /**
+//     * Handle the group creation job
+//     *
+//     * @return void
+//     */
+//    public function processEntriesToCreate()
+//    {
+//        foreach($this->directoryData as $i => $data) {
+//            // Find and patch or create directory entries
+//            $entry = $this->DirectoryEntries->updateOrCreate($data, Alias::MODEL_GROUPS);
+//            if ($entry === false) {
+//                continue;
+//            }
+//            if (!isset($entry->group)) {
+//                $existingGroup = $this->getGroupFromData($data);
+//            } else {
+//                $existingGroup = $entry->group;
+//            }
+//
+//            // If directory entry or user are marked as to be ignored
+//            $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
+//            $ignoreGroup = (isset($existingGroup) && in_array($existingGroup->id, $this->groupsToIgnore));
+//            if($ignoreEntry || $ignoreGroup) {
+//                $this->handleAddIgnore($data, $entry, $existingGroup, $ignoreGroup);
+//                continue;
+//            }
+//
+//            if (!isset($existingGroup)) {
+//                $this->handleAddNew($data, $entry);
+//                continue;
+//            }
+//
+//            if (isset($existingGroup) && $existingGroup->deleted) {
+//                $this->handleAddDeleted($data, $entry, $existingGroup);
+//                continue;
+//            }
+//
+//            $this->handleAddExist($data, $entry, $existingGroup);
+//        }
+//    }
 
     /**
      * Get group from data.
