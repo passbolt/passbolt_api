@@ -152,9 +152,7 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateAfterDeletion = $deletionDate->addDays(1);
 
-        $this->action = new GroupSyncAction();
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
-        $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
 
         $reports = $this->action->execute();
@@ -210,8 +208,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateAfterDeletion = $deletionDate->addDays(1);
 
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
 
         $reports = $this->action->execute();
@@ -400,8 +396,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateAfterDeletion = $deletionDate->addDays(1);
 
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryEntryGroup('deleted');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
@@ -466,8 +460,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateAfterDeletion = $deletionDate->addDays(1);
 
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
 
         // Add directoryEntry for success.
@@ -565,8 +557,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case26_Ok_Success_Null_Ok_Null()
     {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryGroupData('marketing');
         $this->mockDirectoryEntryGroup('marketing');
 
@@ -610,8 +600,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateAfterDeletion = $deletionDate->addDays(1);
 
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
         $this->mockDirectoryEntryGroup('deleted');
@@ -644,8 +632,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
         $this->mockDirectoryGroupData('deleted', ['created' => $dateBeforeDeletion, 'modified' => $dateBeforeDeletion]);
 
@@ -680,8 +666,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $deletionDate = $group->modified;
         $dateAfterDeletion = $deletionDate->addDays(1);
 
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted', ['created' => $dateAfterDeletion, 'modified' => $dateAfterDeletion]);
         $this->mockDirectoryEntryGroup('deleted');
 
@@ -744,8 +728,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case29a_Ok_Null_Ignore_Null_Null()
     {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
 
@@ -773,8 +755,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case29b_Ok_Error_Ignore_Null_Null()
     {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryGroup('newgroup');
@@ -802,8 +782,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case29c_Ok_Success_Ignore_Null_Null()
     {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryGroup('newgroup');
@@ -831,8 +809,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case30a_Ok_Success_Ignore_Null_Ignore()
     {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('newgroup');
         $this->mockDirectoryEntryGroup('newgroup');
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.newgroup'), Alias::MODEL_GROUPS);
@@ -864,9 +840,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case30b_Ok_Error_Ignore_Ok_Ignore()
     {
         $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing');
         $this->mockDirectoryEntryGroup('marketing');
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
@@ -889,9 +862,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case31_Ok_Any_Ignore_Ok_Null()
     {
         $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
 
@@ -913,9 +883,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case32_Any_Ok_Ignore_Deleted_Null()
     {
         $group = $this->Groups->find()->where(['name' => 'deleted', 'deleted' => true])->first();
-
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('deleted');
         $this->mockDirectoryIgnore($groupData['id'], Alias::MODEL_DIRECTORY_ENTRIES);
 
@@ -936,8 +903,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroup_Case33_Invalid_Null_Null_Null_Null()
     {
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupName = str_repeat("group", 256);
         $groupData = $this->mockDirectoryGroupData($groupName);
 
@@ -985,9 +950,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case35_Invalid_Null_Null_Ok_Ignore()
     {
         $group = $this->Groups->find()->where(['name' => 'marketing'])->first();
-
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData('marketing'); // is invalid coz already exists.
         $this->mockDirectoryIgnore($group->id, Alias::MODEL_GROUPS);
 
@@ -1037,8 +999,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case37_Invalid_Error_Null_Null_Null()
     {
         $groupName = str_repeat('group', 256);
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
         $groupData = $this->mockDirectoryGroupData($groupName); // is invalid coz name is too long
         $this->mockDirectoryEntryGroup($groupName);
 
@@ -1089,9 +1049,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case41_Invalid_Success_Null_Null_Null()
     {
         $groupName = str_repeat('group', 256);
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
-
         $this->mockDirectoryGroupData('newgroup', ['cn' => $groupName]);
         $this->mockDirectoryEntryGroup('newgroup', null, null, null, null, UuidFactory::uuid('group.id.neverexisted'));
 
@@ -1114,9 +1071,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case42_Invalid_Success_Null_Ok_Null()
     {
         $invalidGroupName = str_repeat('group', 256);
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
-
         $this->mockDirectoryGroupData('marketing', ['cn' => $invalidGroupName]);
         $this->mockDirectoryEntryGroup('marketing', null, null, null, null, UuidFactory::uuid('group.id.marketing'));
 
@@ -1137,9 +1091,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case43_Invalid_Success_Null_Ok_Ignore()
     {
         $invalidGroupName = str_repeat('group', 256);
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
-
         $this->mockDirectoryGroupData('marketing', ['cn' => $invalidGroupName]);
         $this->mockDirectoryEntryGroup('marketing', null, null, null, null, UuidFactory::uuid('group.id.marketing'));
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.marketing'), Alias::MODEL_GROUPS);
@@ -1197,9 +1148,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $dateBeforeDeletion = $deletionDate->subDays(1);
 
         $groupName = str_repeat('group', 256);
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
-
         $this->mockDirectoryGroupData('deleted', [
             'cn' => $groupName,
             'created' => $dateBeforeDeletion,
@@ -1227,9 +1175,6 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
     public function testDirectorySyncGroup_Case45_Invalid_Null_Ignore_Null_Null()
     {
         $invalidGroupName = str_repeat('group', 256);
-        $this->action = new GroupSyncAction();
-        $this->action->getDirectory()->setGroups([]);
-
         $this->mockDirectoryGroupData('newgroup', ['cn' => $invalidGroupName]);
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.newgroup'), Alias::MODEL_DIRECTORY_ENTRIES);
 
