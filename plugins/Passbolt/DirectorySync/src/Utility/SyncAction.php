@@ -56,6 +56,16 @@ class SyncAction
     /**
      * @var \Cake\ORM\Table
      */
+    public $Groups;
+
+    /**
+     * @var \Cake\ORM\Table
+     */
+    public $GroupsUsers;
+
+    /**
+     * @var \Cake\ORM\Table
+     */
     public $DirectoryEntries;
     public $DirectoryReports;
     public $DirectoryReportsItems;
@@ -82,6 +92,7 @@ class SyncAction
         $this->DirectoryReports = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryReports');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->summary = new ActionReportCollection();
         $this->defaultAdmin = $this->getDefaultAdmin();
         if (empty($this->defaultAdmin)) {
