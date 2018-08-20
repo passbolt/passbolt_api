@@ -1,9 +1,10 @@
 ## [Unreleased]
 ### Fixed
 - PASSBOLT-2965: Group filter link stays active after switching to a non group filter
-- Route rewriting of the appjs should take in account passbolt installed in a subirectory
-- Fix the loading bar stuck in the initialization state
+- Route rewriting of the appjs should take in account passbolt installed in a subdirectory
+- Fix the loading bar stuck in the initialization state in some cases
 
 ### Improved
 - PASSBOLT-2950: Display empty feedbacks content
-- PASSBOLT-2971 Reset the workspaces when a resource or a user is created
+- PASSBOLT-2971: Reset the workspaces filters when a resource or a user is created
+- PASSBOLT-2267: As an admin deleting a user I can transfer ownership of this user shared passwords to another user or a group that have read access.

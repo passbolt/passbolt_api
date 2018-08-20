@@ -257,11 +257,12 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
      * methods to check the response.
      *
      * @param string|array $url The URL to request.
+     * @param array $data The data for the request.
      * @return void
      */
-    public function deleteJson($url)
+    public function deleteJson($url, $data = [])
     {
-        $this->delete($url);
+        $this->_sendRequest($url, 'DELETE', $data);
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
             Assert::fail('The result of the request is not a valid json.');

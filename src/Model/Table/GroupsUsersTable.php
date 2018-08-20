@@ -208,7 +208,7 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return array of group uuid
+     * @return \Cake\ORM\Query
      */
     public function findGroupsWhereUserIsSoleManager(string $userId)
     {
@@ -216,39 +216,43 @@ class GroupsUsersTable extends Table
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        // SELECT group_id AS `group_id`,
-        //      (SUM(is_admin)) AS `count_admin`
-        // FROM groups_users
-        // WHERE group_id IN (
-        //      SELECT group_id
-        //      FROM groups_users
-        //      WHERE (user_id = $user_id AND is_admin=1)
-        // )
-        // GROUP BY group_id
-        // HAVING count_admin=1;
+        // R = All the groups where the user given as parameter is the sole manager
+        //
+        // Details:
+        // USER, the user given as parameter
+        // OTHER_USERS, all users that are not the USER
+        // GROUPS, all groups that have entries in the groups table
+        // GROUPS_USER_IS_MANAGER, all groups the user is manager
+        // GROUPS_OTHER_USER_ARE_MANAGER, all groups that have OTHER_USERS has manager (it can include the groups where the USER is manager)
+        // R = GROUPS_USER_IS_MANAGER - GROUPS_OTHER_USER_ARE_MANAGER, all groups that have only the USER has manager
 
-        $subquery = $this->find();
-        $subquery
-            ->select(['group_id'])
+        // (GROUPS_OTHER_USER_ARE_MANAGER)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id <> USER
+        // AND is_admin = true
+        $groupsOtherUsersAreManager = $this->find()
+            ->select(['group_id'])->distinct()
             ->where([
-                'user_id' => $userId,
+                'user_id <>' => $userId,
                 'is_admin' => true
             ]);
 
-        $query = $this->find();
-        $query
-            ->select([
-                'group_id' => 'group_id',
-                'count_admin' => $query->func()->sum('is_admin')
+        // (R)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id = USER
+        // AND is_admin = true
+        // AND group_id NOT IN (GROUPS_OTHER_USER_IS_MANAGER)
+        return $this->find()
+            ->select(['group_id'])
+            // GROUPS_USER_IS_MANAGER
+            ->where([
+                'user_id' => $userId,
+                'is_admin' => true
             ])
-            ->where(['group_id IN' => $subquery])
-            ->group('group_id')
-            ->having(['count_admin' => 1]);
-
-        $result = $query->all()->toArray();
-        $result = Hash::extract($result, '{n}.group_id');
-
-        return $result;
+            // GROUPS_USER_IS_MANAGER - GROUPS_OTHER_USER_ARE_MANAGER
+            ->where(['group_id NOT IN' => $groupsOtherUsersAreManager]);
     }
 
     /**

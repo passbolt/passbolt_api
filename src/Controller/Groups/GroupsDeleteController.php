@@ -107,10 +107,10 @@ class GroupsDeleteController extends AppController
             $msg = __('The group cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id);
-                $body = $this->Resources->findAllByIds($id, $resourceIds);
+                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id)->extract('aco_foreign_key')->toArray();
+                $body['resources']['sole_owner'] = $this->Resources->findAllByIds($id, $resourceIds);
                 $msg .= $errors['id']['soleOwnerOfSharedResource'];
-                throw new ValidationRuleException($msg, $body, $this->Resources);
+                throw new ValidationRuleException($msg, $body);
             }
         }
 
