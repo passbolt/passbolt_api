@@ -360,9 +360,9 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_No_Passwords()
     {
-        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')], Alias::STATUS_SUCCESS);
-        $groupEntry = $this->mockDirectoryEntryGroup('accounting');
-        $groupData = $this->mockDirectoryGroupData('accounting', [
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
+        $groupEntry = $this->mockDirectoryEntryGroup('marketing');
+        $groupData = $this->mockDirectoryGroupData('marketing', [
             'group_users' => [
                 $userEntry->directory_name
             ]
@@ -385,17 +385,46 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
 
         // Group user for default admin should not exist.
-        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->id]);
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => $defaultGroupAdmin->id]);
 
         // Frances should be in group users and directoryRelations.
-        $groupUserFrances = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
+        $groupUserFrances = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationExist($groupUserFrances->id);
     }
 
-    public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
+    public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
     {
-        // TODO.
-        // Should
+        // TODO: Test notification.
+
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
+        $groupEntry = $this->mockDirectoryEntryGroup('accounting');
+        $groupData = $this->mockDirectoryGroupData('accounting', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+
+        $reports = $this->action->execute();
+
+        $this->assertEquals(count($reports), 1);
+        $expectedUserGroupReport = [
+            'action' => Alias::ACTION_CREATE,
+            'model'  => Alias::MODEL_GROUPS_USERS,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_USERS
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        $defaultGroupAdmin = 'edith@passbolt.com';
+        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
+        // Get user.
+        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
+        // Group user for default admin should not exist.
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->id]);
+
+        // Frances should be in group users and directoryRelations.
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
+        $this->assertDirectoryRelationEmpty();
     }
 
     /**
@@ -453,8 +482,8 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
     public function testDirectorySyncGroupUser_Case13_Ok_Ok_Null_CreatedAfter_Ok()
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'nancy', 'lname' => 'nancy', 'foreign_key' => UuidFactory::uuid('user.id.nancy')], Alias::STATUS_SUCCESS);
-        $groupEntry = $this->mockDirectoryEntryGroup('freelancer');
-        $groupData = $this->mockDirectoryGroupData('freelancer', [
+        $groupEntry = $this->mockDirectoryEntryGroup('marketing');
+        $groupData = $this->mockDirectoryGroupData('marketing', [
             'group_users' => [
                 $userEntry->directory_name
             ]
@@ -468,7 +497,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $GroupsUsers = TableRegistry::get('GroupsUsers');
         $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
             $dateAfterGroupModification->format('Y-m-d H:i:s'),
-            UuidFactory::uuid('group.id.freelancer'),
+            UuidFactory::uuid('group.id.marketing'),
             UuidFactory::uuid('user.id.nancy')
         ]);
 
@@ -483,7 +512,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
         // groupUser should exist, but not directory relation since the sync shouldn't have happened.
-        $groupUser = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.nancy')]);
+        $groupUser = $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.nancy')]);
         $this->assertDirectoryRelationExist($groupUser->id);
     }
 

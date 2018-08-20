@@ -16,6 +16,7 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
@@ -61,18 +62,41 @@ trait GroupUsersSyncTrait {
         $toRemove = $this->retrieveUsersToRemove($data);
         $toSync = $this->retrieveUsersToSync($data, $group);
 
+        $Resources = TableRegistry::get('Resources');
+
         if (!empty($toAdd)) {
             // Check if group has access to passwords already.
-            // If not, we can freely add users.
-            $this->addGroupUsers($group, $toAdd);
+            $accessibleResources = $Resources->findAllByGroupAccess($group->id)->count();
+            if ($accessibleResources === 0) {
+                // If no password is shared with this group already, we can proceed.
+                $this->addGroupUsers($group, $toAdd);
+            } else {
+                // Else, we need to send notifications.
+                $this->requestAddGroupUsers($group, $toAdd);
 
-            // Else, we need to send notifications.
+            }
         }
         if (!empty($toRemove)) {
             $this->removeGroupUsers($group, $toRemove);
         }
         if (!empty($toSync)) {
             $this->syncGroupUsers($group, $toSync);
+        }
+    }
+
+    /**
+     * Request to add users into the group.
+     * @param Group $group
+     * @param array $userIdsToAdd
+     */
+    public function requestAddGroupUsers(Group $group, array $userIdsToAdd) {
+        // TODO : send notification.
+        foreach($userIdsToAdd as $userId) {
+            $u = $this->Users->get($userId);
+
+            $this->addReportItem(new ActionReport(
+                __('A request to add user {0} in group {1} was sent to the group manager.', $u->username, $group->name),
+                Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SUCCESS, $u));
         }
     }
 
