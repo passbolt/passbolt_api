@@ -37,9 +37,9 @@ trait SyncAddTrait {
      */
     function handleAddExist(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
     {
-        // Do not overly report already successfully synced users
+        // Do not overly report already successfully synced entities
         if (isset($entry) && !isset($entry->foreign_key)) {
-            // If user in directory was created before the user in the db, we update the field and send report.
+            // If entity in directory was created before the entity in the db, we update the field and send report.
             if ($data['directory_created']->lte($existingEntity->created)) {
                 $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
                 $this->addReportItem(new ActionReport(
@@ -48,7 +48,7 @@ trait SyncAddTrait {
                         $this->getEntityName($existingEntity)),
                     self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingEntity));
             } else {
-                // Else, if user in directory was created after user in db. We don't sync. There is an overlapse.
+                // Else, if entity in directory was created after entity in db. We don't sync. There is an overlapse.
                 // Later on, we'll introduce a mechanism to fix this manually.
                 $msg =  __('The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
@@ -74,15 +74,20 @@ trait SyncAddTrait {
      */
     function handleAddIgnore(array $data, DirectoryEntry $entry = null, Entity $existingEntity = null, bool $ignoreEntity)
     {
+        $associatedEntity = $entry->getAssociatedEntity();
         // do not overly report ignored record when there is nothing to do
-        if ((isset($existingEntity) && isset($entry->user) && !$existingEntity->deleted)) {
+        if ((isset($existingEntity) && isset($associatedEntity) && !$existingEntity->deleted)) {
             return;
         }
         if ($ignoreEntity) {
-            $msg = __('The {0} {1} was not synced because the passbolt user is marked to as be ignored.', Inflector::singularize(strtolower(self::ENTITY_TYPE)), $this->getEntityName($existingEntity));
+            $msg = __('The {0} {1} was not synced because the passbolt {0} is marked to as be ignored.',
+                Inflector::singularize(strtolower(self::ENTITY_TYPE)),
+                $this->getEntityName($existingEntity));
             $reportData = $this->DirectoryIgnore->get($existingEntity->id);
         } else {
-            $msg = __('The {0} {1} was not synced because the directory user is marked to as be ignored.', Inflector::singularize(strtolower(self::ENTITY_TYPE)), $this->getNameFromData($data));
+            $msg = __('The {0} {1} was not synced because the directory {0} is marked to as be ignored.',
+                Inflector::singularize(strtolower(self::ENTITY_TYPE)),
+                $this->getNameFromData($data));
             $reportData = $this->DirectoryIgnore->get($entry->id);
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
@@ -125,7 +130,7 @@ trait SyncAddTrait {
      */
     function handleAddDeleted(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
     {
-        // if the user was created in ldap and then deleted in passbolt
+        // if the entity was created in ldap and then deleted in passbolt
         // do not try to recreate
         $status = Alias::STATUS_ERROR;
         if ($data['directory_created']->lt($existingEntity->modified)) {
@@ -135,13 +140,15 @@ trait SyncAddTrait {
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
                 $this->getEntityName($existingEntity));
         } else {
-            // if the user was delete in passbolt and then created in ldap
+            // if the entity was delete in passbolt and then created in ldap
             // try to recreate
-            $user = null;
+            $entity = null;
             try {
-                $reportData = $user = $this->createEntity($data, $entry);
+                $reportData = $entity = $this->createEntity($data, $entry);
                 $status = Alias::STATUS_SUCCESS;
-                $msg = __('The previously deleted {0} {1} was re-added to passbolt.', Inflector::singularize(strtolower(self::ENTITY_TYPE)), $this->getEntityName($existingEntity));
+                $msg = __('The previously deleted {0} {1} was re-added to passbolt.',
+                    Inflector::singularize(strtolower(self::ENTITY_TYPE)),
+                    $this->getEntityName($existingEntity));
             } catch(ValidationException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __('The deleted {0} {1} could not be re-added to passbolt because of validation errors.',

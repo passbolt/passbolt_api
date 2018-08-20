@@ -99,7 +99,7 @@ trait SyncTrait {
                 continue;
             }
 
-            // The user was already hard or soft deleted
+            // The entity was already hard or soft deleted
             if (!isset($entity) || $entity->deleted) {
                 $this->handleDeletedEntry($entry);
                 continue;
@@ -135,16 +135,17 @@ trait SyncTrait {
         foreach ($this->directoryData as $data) {
             // Find and patch (in case directory_name has changed), or create directory entries.
             $entry = $this->DirectoryEntries->updateOrCreate($data, self::ENTITY_TYPE);
+            $associatedEntity = $entry->getAssociatedEntity();
             if ($entry === false) {
                 continue;
             }
-            if (!isset($entry->user)) {
+            if (!isset($associatedEntity)) {
                 $existingEntity = $this->getEntityFromData($data);
             } else {
-                $existingEntity = $entry->getAssociatedEntity();
+                $existingEntity = $associatedEntity;
             }
 
-            // If directory entry or user are marked as to be ignored
+            // If directory entry or entity are marked as to be ignored
             $ignoreEntry = in_array($data['id'], $this->entriesToIgnore);
             $ignoreUser = (isset($existingEntity) && in_array($existingEntity->id, $this->entitiesToIgnore));
             if ($ignoreEntry || $ignoreUser) {
@@ -152,20 +153,20 @@ trait SyncTrait {
                 continue;
             }
 
-            // If the user does not exist
+            // If the entity does not exist
             // Or it was deleted and then created again in the directory
             if (!isset($existingEntity)) {
                 $this->handleAddNew($data, $entry);
                 continue;
             }
 
-            // If the user exist but is already deleted
+            // If the entity exist but is already deleted
             if (isset($existingEntity) && $existingEntity->deleted) {
                 $this->handleAddDeleted($data, $entry, $existingEntity);
                 continue;
             }
 
-            // If the user already exist and is not deleted
+            // If the entity already exist and is not deleted
             $this->handleAddExist($data, $entry, $existingEntity);
         }
     }

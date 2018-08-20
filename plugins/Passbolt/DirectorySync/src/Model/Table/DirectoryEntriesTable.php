@@ -256,7 +256,8 @@ class DirectoryEntriesTable extends Table
                     $data['directory_name'] = substr($data['directory_name'], 0, SELF::DN_MAX_LENGTH - 1);
                 }
                 $entry->directory_name = $data['directory_name'];
-                return $this->save($entry);
+                $this->save($entry);
+
             }
             return $entry;
         } catch(RecordNotFoundException $exception) {
