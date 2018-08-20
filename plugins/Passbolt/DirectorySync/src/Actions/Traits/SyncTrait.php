@@ -112,7 +112,9 @@ trait SyncTrait {
                 } else {
                     // Entity was deleted
                     $this->handleSuccessfulDelete($entry);
-                    //$this->handleGroupUsersDeleted($entry);
+                    if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
+                        $this->handleGroupUsersDeleted($entry);
+                    }
                 }
             } catch (InternalErrorException $exception) {
                 // The entity cannot be deleted (for example: database service is down)

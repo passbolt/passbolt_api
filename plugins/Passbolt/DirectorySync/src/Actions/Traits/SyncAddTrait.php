@@ -121,6 +121,10 @@ trait SyncAddTrait {
                 $this->getNameFromData($data));
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, $status, $reportData));
+
+        if ($status == Alias::STATUS_SUCCESS && self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
+            $this->handleGroupUsersAfterGroupCreate($data, $entity);
+        }
     }
 
     /**
@@ -162,6 +166,10 @@ trait SyncAddTrait {
             }
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, $status, $reportData));
+
+        if ($status == Alias::STATUS_SUCCESS && self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
+            $this->handleGroupUsersAfterGroupCreate($data, $entity);
+        }
     }
 
     public function createEntity(array $data, DirectoryEntry $entry) {

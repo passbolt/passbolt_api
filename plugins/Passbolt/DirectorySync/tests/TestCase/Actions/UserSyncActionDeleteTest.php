@@ -518,14 +518,14 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncUserDelete_Case14a_Null_Success_OK_deletable()
     {
-        $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen']);
+        $this->mockDirectoryEntryUser(['fname' => 'thelma', 'lname' => 'estrin']);
         $reports = $this->action->execute();
-        $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => true]);
         $this->assertReportNotEmpty($reports);
         $expectedReport = ['action' => Alias::ACTION_DELETE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SUCCESS, 'type' => 'User'];
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
+        $this->assertUserExist(UuidFactory::uuid('user.id.thelma'), ['deleted' => true]);
     }
 
     /**

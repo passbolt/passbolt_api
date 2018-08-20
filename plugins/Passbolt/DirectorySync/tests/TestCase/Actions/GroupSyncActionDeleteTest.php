@@ -555,8 +555,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     }
 
     /**
-     * Scenario: the group exists in passbolt, not present in the directory and can be deleted
-     *            and the plugin configuration is set to ignore deleted groups
+     * Scenario:
      * Expected result: nothing
      *
      * @group DirectorySync
@@ -567,7 +566,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
     {
         $this->mockDirectoryEntryGroup('accounting');
         $reports = $this->action->execute();
-        $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
@@ -576,6 +574,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
             'type' => 'SyncError'
         ];
         $this->assertReport($reports[0], $expectedReport);
+        $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
         $this->assertOneDirectoryEntry();
         $this->assertDirectoryIgnoreEmpty();
     }
