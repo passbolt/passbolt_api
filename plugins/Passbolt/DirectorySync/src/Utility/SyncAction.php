@@ -14,13 +14,14 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use App\Controller\Events\EmailNotificationsListener;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
 use App\Model\Entity\Role;
 use Cake\Validation\Validation;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
-use Passbolt\DirectorySync\Model\Table\DirectoryEntriesTable;
 
 /**
  * Directory factory class
@@ -102,6 +103,10 @@ class SyncAction
             throw new \Exception('The task parent Id is invalid, it should be a uuid.');
         }
         $this->parentId = $parentId;
+
+        // Enable email notifications.
+        $emails = new EmailNotificationsListener();
+        EventManager::instance()->on($emails);
     }
 
     /**

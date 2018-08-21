@@ -392,10 +392,16 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertDirectoryRelationExist($groupUserFrances->id);
     }
 
+    /**
+     * Scenario: a groupUser has been added to a group with passwords in ldap, not yet added in passbolt
+     * Expected result: Send email notification to groupAdmins to add user.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
     public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
     {
-        // TODO: Test notification.
-
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $groupEntry = $this->mockDirectoryEntryGroup('accounting');
         $groupData = $this->mockDirectoryGroupData('accounting', [
@@ -425,6 +431,12 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         // Frances should be in group users and directoryRelations.
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationEmpty();
+
+        // Assert email notification
+        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
+        $this->assertResponseCode(200);
+        $this->assertResponseContains('requested you to add members to a group');
+        $this->assertResponseContains('Frances Allen (Member)');
     }
 
     /**

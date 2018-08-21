@@ -16,12 +16,15 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
+use App\Model\Entity\Role;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
+use App\Utility\UserAccessControl;
 
 trait GroupUsersSyncTrait {
 
@@ -90,14 +93,23 @@ trait GroupUsersSyncTrait {
      * @param array $userIdsToAdd
      */
     public function requestAddGroupUsers(Group $group, array $userIdsToAdd) {
-        // TODO : send notification.
         foreach($userIdsToAdd as $userId) {
             $u = $this->Users->get($userId);
-
             $this->addReportItem(new ActionReport(
                 __('A request to add user {0} in group {1} was sent to the group manager.', $u->username, $group->name),
                 Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SUCCESS, $u));
         }
+
+        // Send notification.
+        $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+        $groupUsers = [];
+        // Build group_users entity for the call.
+        foreach($userIdsToAdd as $userId) {
+            $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
+        }
+        $eventData = ['groupUsers' => $groupUsers, 'group' => $group, 'requester' => $accessControl];
+        $event = new Event('Model.Groups.requestGroupUsers.success', $this, $eventData);
+        $this->getEventManager()->dispatch($event);
     }
 
     /**
