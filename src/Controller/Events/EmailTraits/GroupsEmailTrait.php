@@ -318,6 +318,44 @@ trait GroupsEmailTrait
     }
 
     /**
+     * Send a group user add request to the group managers of a group.
+     * @param Event $event
+     *   - requester, the admin that requested the action
+     *   - group, the group on which to add groupUsers
+     *   - groupUsers, the list of groupUsers entity to request to add
+     */
+    public function sendGroupUsersRequestEmail(Event $event) {
+        $data = $event->getData();
+        $accessControl = $data['requester'];
+        $group = $data['group'];
+        $requestedGroupUsers = $data['groupUsers'];
+
+        foreach($requestedGroupUsers as $key => $groupUser) {
+            $requestedGroupUsers[$key]->user = $this->_getSummaryUser([$groupUser->user_id])[0];
+        }
+
+        // Get group managers of group.
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $adminGroupUsers = $GroupsUsers->find()->where(['group_id' => $group->id, 'is_admin' => true])->contain(['Users'])->all();
+
+        $Users = TableRegistry::get('Users');
+        $admin = $Users->findFirstForEmail($accessControl->userId());
+
+        $subject = __("{0} requested you to add members to {1}", $admin->profile->first_name, $group->name);
+        $template = 'GM/group_user_request';
+        $data = ['body' => [
+            'admin' => $admin,
+            'group' => $group,
+            'groupUsers' => $requestedGroupUsers,
+        ], 'title' => $subject];
+
+        // Send to all group managers.
+        foreach($adminGroupUsers as $adminGroupUser) {
+            $this->_send($adminGroupUser->user->username, $subject, $data, $template);
+        }
+    }
+
+    /**
      * Retrieve the information of a list of users that will be used in the summary email.
      *
      * @param array $usersIds The list of users to retrieve the information for.
