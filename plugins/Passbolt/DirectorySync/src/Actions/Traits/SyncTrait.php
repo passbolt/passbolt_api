@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -62,6 +63,23 @@ trait SyncTrait {
             ->toArray(), '{n}.id');
 
         $this->directoryData = $this->directory->{'get'.$modelType}();
+        $this->formatDirectoryData();
+    }
+
+    /**
+     * Format directoryData to be compatible with the expected format.
+     *
+     * Mainly modify the dates format to the expected format FrozenTime.
+     */
+    function formatDirectoryData() {
+        foreach($this->directoryData as $key => $data) {
+            if (get_class($data['directory_created']) !== 'FrozenTime') {
+                $this->directoryData[$key]['directory_created'] = new FrozenTime($data['directory_created']);
+            }
+            if (get_class($data['directory_modified']) !== 'FrozenTime') {
+                $this->directoryData[$key]['directory_modified'] = new FrozenTime($data['directory_modified']);
+            }
+        }
     }
 
     /**
