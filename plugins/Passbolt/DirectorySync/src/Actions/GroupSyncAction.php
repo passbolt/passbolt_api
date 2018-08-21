@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Actions;
 
 use Cake\Core\Configure;
+use Cake\Event\EventDispatcherTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
@@ -28,6 +29,7 @@ class GroupSyncAction extends SyncAction
     use SyncDeleteTrait;
     use SyncAddTrait;
     use GroupUsersSyncTrait;
+    use EventDispatcherTrait;
 
     /**
      * @var string entityType
