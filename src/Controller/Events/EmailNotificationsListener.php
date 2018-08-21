@@ -45,6 +45,7 @@ class EmailNotificationsListener implements EventListenerInterface
         return [
             'CommentAddController.addPost.success' => 'sendCommentAddEmail',
             'Model.Groups.create.success' => 'sendGroupUserAddEmail',
+            'Model.Groups.requestGroupUsers.success' => 'sendGroupUsersRequestEmail',
             'GroupsDeleteController.delete.success' => 'sendGroupDeleteEmail',
             'GroupsUpdateController.update.success' => 'sendGroupUpdateEmail',
             'UsersDeleteController.delete.success' => 'sendUserDeleteEmail',
@@ -54,7 +55,7 @@ class EmailNotificationsListener implements EventListenerInterface
             'ResourcesAddController.addPost.success' => 'sendResourceCreateEmail',
             'ResourcesDeleteController.delete.success' => 'sendResourceDeleteEmail',
             'ResourcesUpdateController.update.success' => 'sendResourceUpdateEmail',
-            'ShareController.share.success' => 'sendShareEmails'
+            'ShareController.share.success' => 'sendShareEmails',
         ];
     }
 

@@ -472,6 +472,27 @@ class GroupsUsersTable extends Table
     }
 
     /**
+     * Return a groupUser entity.
+     * @param array $data
+     *
+     * @return \App\Model\Entity\GroupsUser
+     */
+    public function buildEntity(array $data) {
+        if (!isset($data['is_admin'])) {
+            $data['is_admin'] = false;
+        }
+        return $this->newEntity($data, [
+            'accessibleFields' => [
+                'group_id' => true,
+                'user_id' => true,
+                'is_admin' => true,
+                'created' => true,
+                'created_by' => true,
+            ],
+        ]);
+    }
+
+    /**
      * Event fired before request data is converted into entities
      * - On create, if not defined set is_admin to false
      *
