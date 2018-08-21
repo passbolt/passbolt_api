@@ -80,12 +80,12 @@ trait SyncAddTrait {
             return;
         }
         if ($ignoreEntity) {
-            $msg = __('The {0} {1} was not synced because the passbolt {0} is marked to as be ignored.',
+            $msg = __('The {0} {1} was not synced because the passbolt {0} is marked as to be ignored.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
                 $this->getEntityName($existingEntity));
             $reportData = $this->DirectoryIgnore->get($existingEntity->id);
         } else {
-            $msg = __('The {0} {1} was not synced because the directory {0} is marked to as be ignored.',
+            $msg = __('The {0} {1} was not synced because the directory {0} is marked as to be ignored.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
                 $this->getNameFromData($data));
             $reportData = $this->DirectoryIgnore->get($entry->id);
