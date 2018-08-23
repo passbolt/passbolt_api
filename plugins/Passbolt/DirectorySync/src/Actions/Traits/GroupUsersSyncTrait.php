@@ -128,6 +128,17 @@ trait GroupUsersSyncTrait {
     }
 
     /**
+     * Check if a DN belongs to the groups returned by the directory.
+     * @param string $dn
+     *
+     * @return bool
+     */
+    protected function groupExistsInDirectory(string $dn) {
+        $groupDns = Hash::extract($this->directoryData, '{n}.directory_name');
+        return in_array($dn, $groupDns);
+    }
+
+    /**
      * Find the directory relations corresponding to an entry.
      * @param string $entryId
      *
@@ -185,11 +196,17 @@ trait GroupUsersSyncTrait {
         // Calculate users to add.
         // We add users that are in group data and not in directoryRelations.
         foreach($data['group']['users'] as $userDn) {
+            // If the group member is a group, we do not process.
+            // TODO: manage nested groups.
+            if($this->groupExistsInDirectory($userDn)) {
+                continue;
+            }
+
             if (!isset($directoryGroupUserEntriesByDn[$userDn])) {
                 // If a DN was returned by the directory, but cannot be resolved with our entries, we notify the admin.
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to group {1} because there is no matching directory entry in passbolt.', $userDn, $group->name),
-                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $userDn));
+                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, [$userDn]));
                 continue;
             }
 

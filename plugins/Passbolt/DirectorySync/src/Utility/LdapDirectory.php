@@ -14,9 +14,14 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
-use LdapTools\LdapManager;
 use LdapTools\Configuration;
 use Cake\Core\Configure;
+
+use LdapTools\LdapManager;
+use LdapTools\Event\Event;
+use LdapTools\Event\LdapObjectSchemaEvent;
+use LdapTools\Object\LdapObjectType;
+use LdapTools\Connection\LdapConnection;
 
 /**
  * Directory factory class
@@ -27,6 +32,7 @@ class LdapDirectory implements DirectoryInterface
     private $ldap;
     private $groups;
     private $users;
+    private $mappingRules;
 
     /**
      * LdapDirectory constructor.
@@ -39,6 +45,50 @@ class LdapDirectory implements DirectoryInterface
         $this->ldap->getConnection();
         $this->groups = [];
         $this->users = [];
+        $this->mappingRules = $this->getMappingRules();
+
+        $this->customizeSchema();
+    }
+
+    /**
+     * Used to map fields and specify the object class names that we'll need.
+     */
+    function customizeSchema() {
+        $this->ldap->getEventDispatcher()->addListener(Event::LDAP_SCHEMA_LOAD, function(LdapObjectSchemaEvent $event) {
+            $schema = $event->getLdapObjectSchema();
+
+            // Only modify the 'user' schema type, ignore the others for this listener...
+            if ($schema->getObjectType() !== LdapObjectType::GROUP && $schema->getObjectType() !== LdapObjectType::USER) {
+                return;
+            }
+
+            // Set custom object class if configured.
+            $objectType = $schema->getObjectType();
+            $customClass = Configure::read('passbolt.plugins.directorySync.' . $objectType . 'ObjectClass');
+            if (isset($customClass)) {
+                $schema->setObjectClass('posixGroup');
+                $schema->getFilter()->setValue('posixGroup');
+            }
+        });
+    }
+
+    public function getFieldValue($object, $fieldName) {
+        $mappingRules = $this->getMappingRules()[$object->getType()];
+        $fieldEquivalent = $mappingRules[$fieldName];
+        $call = 'get' . ucfirst($fieldEquivalent);
+        return $object->{$call}();
+    }
+
+    function getMappingRules () {
+        $type = $this->ldap->getConnection()->getConfig()->getLdapType();
+        if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
+            throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
+        }
+        $defaultMapping = Configure::read('passbolt.plugins.directorySync.fieldsMappingDefaults')[$type];
+        $userMapping = Configure::read('passbolt.plugins.directorySync.fieldsMapping');
+        $mapping = array_merge($defaultMapping, $userMapping);
+
+        return $mapping;
     }
 
     /**
@@ -46,28 +96,33 @@ class LdapDirectory implements DirectoryInterface
      */
     public function getUsers()
     {
+        $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
+        $selectFields = array_values($mappingRules);
+
+
         $query = $this->ldap->buildLdapQuery();
         $users = $query
-            ->select(['guid','firstname', 'lastname', 'groups', 'emailAddress', 'created', 'modified'])
+            ->select($selectFields)
             ->fromUsers()
             ->getLdapQuery()
             ->getResult();
 
         foreach ($users as $user) {
             $this->users[] = [
-                'id' => $user->getGuid(),
-                'directory_name' => $user->getDn(),
-                'directory_created' => $user->created,
-                'directory_modified' => $user->modified,
+                'id' => $this->getFieldValue($user, 'id'),
+                'directory_name' => $this->getFieldValue($user, 'id'),
+                'directory_created' => $this->getFieldValue($user, 'created'),
+                'directory_modified' => $this->getFieldValue($user, 'modified'),
                 'user' => [
-                    'username' => $user->getEmailAddress(),
+                    'username' => $this->getFieldValue($user, 'username'),
                     'profile' => [
-                        'first_name' => $user->getFirstname(),
-                        'last_name' => $user->getLastname(),
+                        'first_name' => $this->getFieldValue($user, 'firstname'),
+                        'last_name' => $this->getFieldValue($user, 'lastname'),
                     ]
                 ]
             ];
         }
+
         return $this->users;
     }
 
@@ -75,23 +130,28 @@ class LdapDirectory implements DirectoryInterface
      * Get a list of groups
      */
     public function getGroups() {
+        $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
+        $selectFields = array_values($mappingRules);
+
         $query = $this->ldap->buildLdapQuery();
         $groups = $query
-            ->select(['guid', 'name', 'members', 'created', 'modified'])
+            ->select($selectFields)
             ->fromGroups()
             ->getLdapQuery()
             ->getResult();
 
         foreach ($groups as $group) {
+            $groups = $group->getGroups();
+            $members = $this->getFieldValue($group, 'users');
             $this->groups[] = [
-                'id' => $group->getGuid(),
+                'id' => $this->getFieldValue($group, 'id'),
                 'directory_name' => $group->getDn(),
-                'directory_created' => $group->created,
-                'directory_modified' => $group->modified,
+                'directory_created' => $this->getFieldValue($group, 'created'),
+                'directory_modified' => $this->getFieldValue($group, 'modified'),
                 'group' => [
-                    'name' => $group->getName(),
-                    'groups' => $group->getGroups(),
-                    'users' => $group->getMembers(),
+                    'name' => $this->getFieldValue($group, 'name'),
+                    'groups' => is_array($groups) ? $groups : [],
+                    'users' => is_array($members) ? $members : [],
                 ]
             ];
         }

@@ -48,7 +48,7 @@ trait SyncAddTrait {
                         $this->getEntityName($existingEntity)),
                     self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingEntity));
             } else {
-                // Else, if entity in directory was created after entity in db. We don't sync. There is an overlapse.
+                // Else, if entity in directory was created after entity in db. We don't sync. There is an overlap.
                 // Later on, we'll introduce a mechanism to fix this manually.
                 $msg =  __('The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
