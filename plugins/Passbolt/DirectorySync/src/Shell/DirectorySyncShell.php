@@ -21,6 +21,7 @@ class DirectorySyncShell extends AppShell
      * @var array of linked tasks
      */
     public $tasks = [
+        'Passbolt/DirectorySync.Test',
         'Passbolt/DirectorySync.All',
         'Passbolt/DirectorySync.Users',
         'Passbolt/DirectorySync.Groups',
@@ -42,6 +43,10 @@ class DirectorySyncShell extends AppShell
         $parser = parent::getOptionParser();
         $parser->setDescription(__('The directory shell offer synchronizations tasks from the CLI.'));
 
+        $parser->addSubcommand('test', [
+            'help' => __d('cake_console', 'Test ldap connection and objects.'),
+            'parser' => $this->All->getOptionParser(),
+        ]);
         $parser->addSubcommand('all', [
             'help' => __d('cake_console', 'Synchronize users and groups.'),
             'parser' => $this->All->getOptionParser(),

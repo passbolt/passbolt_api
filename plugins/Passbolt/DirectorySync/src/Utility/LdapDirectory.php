@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use Cake\I18n\FrozenTime;
 use LdapTools\Configuration;
 use Cake\Core\Configure;
 
@@ -111,8 +112,8 @@ class LdapDirectory implements DirectoryInterface
             $this->users[] = [
                 'id' => $this->getFieldValue($user, 'id'),
                 'directory_name' => $this->getFieldValue($user, 'id'),
-                'directory_created' => $this->getFieldValue($user, 'created'),
-                'directory_modified' => $this->getFieldValue($user, 'modified'),
+                'directory_created' => new FrozenTime($this->getFieldValue($user, 'created')),
+                'directory_modified' => new FrozenTime($this->getFieldValue($user, 'modified')),
                 'user' => [
                     'username' => $this->getFieldValue($user, 'username'),
                     'profile' => [
@@ -146,8 +147,8 @@ class LdapDirectory implements DirectoryInterface
             $this->groups[] = [
                 'id' => $this->getFieldValue($group, 'id'),
                 'directory_name' => $group->getDn(),
-                'directory_created' => $this->getFieldValue($group, 'created'),
-                'directory_modified' => $this->getFieldValue($group, 'modified'),
+                'directory_created' => new FrozenTime($this->getFieldValue($group, 'created')),
+                'directory_modified' => new FrozenTime($this->getFieldValue($group, 'modified')),
                 'group' => [
                     'name' => $this->getFieldValue($group, 'name'),
                     'groups' => is_array($groups) ? $groups : [],

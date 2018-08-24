@@ -206,20 +206,26 @@ class DirectoryEntriesTable extends Table
         }
     }
 
-    /**
-     * Create a new directory entry.
-     *
-     * @param $data
-     * @return bool|DirectoryEntry
-     */
-    public function create($data)
-    {
+    public function buildEntityFromData(array $data) {
         if (strlen($data['directory_name']) > SELF::DN_MAX_LENGTH) {
             $data['directory_name'] = substr($data['directory_name'], 0, SELF::DN_MAX_LENGTH - 1);
         }
 
-        // Check validation rules.
         $directoryEntry = $this->buildEntity($data);
+
+        return $directoryEntry;
+    }
+
+    /**
+     * Create a new directory entry.
+     *
+     * @param array $data
+     * @return bool|DirectoryEntry
+     */
+    public function create(array $data)
+    {
+        // Check validation rules.
+        $directoryEntry = $this->buildEntityFromData($data);
         if (!empty($directoryEntry ->getErrors())) {
             throw new ValidationException(__('Could not validate directoryEntry.'), $directoryEntry, $this);
         }
