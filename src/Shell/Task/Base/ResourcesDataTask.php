@@ -260,6 +260,86 @@ class ResourcesDataTask extends DataTask
             'created_by' => UuidFactory::uuid('user.id.betty'),
             'modified_by' => UuidFactory::uuid('user.id.betty')
         ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.linux'),
+            'name' => 'Linux',
+            'username' => 'linus',
+            'uri' => 'kernel.org',
+            'description' => 'The Linux kernel is an open-source monolithic Unix-like computer operating system kernel.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.hedy'),
+            'modified_by' => UuidFactory::uuid('user.id.hedy')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.mailvelope'),
+            'name' => 'Mailvelope',
+            'username' => 'thomas',
+            'uri' => 'mailvelope.com',
+            'description' => 'Mailvelope is a browser extension that enables the exchange of encrypted emails following the OpenPGP encryption standard.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.jean'),
+            'modified_by' => UuidFactory::uuid('user.id.jean')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.mocha'),
+            'name' => 'Mocha',
+            'username' => 'svp',
+            'uri' => 'mochajs.org',
+            'description' => 'Mocha is a feature-rich JavaScript test framework running on Node.js and in the browser, making asynchronous testing simple and fun.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.kathleen'),
+            'modified_by' => UuidFactory::uuid('user.id.kathleen')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.nodejs'),
+            'name' => 'Nodejs',
+            'username' => 'npm',
+            'uri' => 'nodejs.org',
+            'description' => 'Node.js® is a JavaScript runtime built on Chrome\'s V8 JavaScript engine.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.marlyn'),
+            'modified_by' => UuidFactory::uuid('user.id.marlyn')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.openpgpjs'),
+            'name' => 'OpenGPGJS',
+            'username' => 'openpgpjs',
+            'uri' => 'openpgpjs.org/',
+            'description' => 'This project aims to provide an Open Source OpenPGP library in JavaScript so it can be used on virtually every device.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.nancy'),
+            'modified_by' => UuidFactory::uuid('user.id.nancy')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.phpunit'),
+            'name' => 'PHPunit',
+            'username' => 'phpunit',
+            'uri' => 'phpunit.de',
+            'description' => 'PHPUnit is a programmer-oriented testing framework for PHP.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.ursula'),
+            'modified_by' => UuidFactory::uuid('user.id.ursula')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.qgis'),
+            'name' => 'QGIS',
+            'username' => 'qgis',
+            'uri' => 'phpunit.de',
+            'description' => 'QGIS is a free and open-source cross-platform desktop geographic information system (GIS) application that supports viewing, editing, and analysis of geospatial data.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.wang'),
+            'modified_by' => UuidFactory::uuid('user.id.wang')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.selenium'),
+            'name' => 'Selenium',
+            'username' => 'selenium',
+            'uri' => 'docs.seleniumhq.org',
+            'description' => 'Selenium automates browsers.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.yvonne'),
+            'modified_by' => UuidFactory::uuid('user.id.yvonne')
+        ];
 
         return $resources;
     }

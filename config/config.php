@@ -65,6 +65,19 @@ return [
                 ]
             ],
             'alt0' => [
+                'install' => [
+                    'shellTasks' => [
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/UsersData',
+                        'PassboltTestData.Base/ProfilesData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Alt0/GroupsUsersData',
+                        'PassboltTestData.Alt0/PermissionsData',
+                        'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Alt0/SecretsData',
+                    ]
+                ],
                 'fixturize' => [
                     'shellTasks' => [
                         'PassboltTestData.Base/GroupsData',
@@ -81,18 +94,10 @@ return [
             ],
             'large' => [
                 'install' => [
-                    'count' => [
-                        'resources' => 5000,
-                        'users' => 5000
-                    ],
+                    'count' => 300,
                     'shellTasks' => [
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Large/UsersData',
-                        'PassboltTestData.Large/ProfilesData',
-                        'PassboltTestData.Base/GpgkeysData',
-                        'PassboltTestData.Large/ResourcesData',
-                        'PassboltTestData.Large/PermissionsData',
-                        'PassboltTestData.Large/SecretsData',
                     ]
                 ],
                 'fixturize' => [

@@ -48,7 +48,7 @@ class UsersDataTask extends DataTask
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
-        $max = Configure::read('PassboltTestData.scenarios.large.install.count.users');
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count');
         for ($i = 0; $i < $max; $i++) {
             $users[] = [
                 'id' => UuidFactory::uuid('user.id.user_' . $i),

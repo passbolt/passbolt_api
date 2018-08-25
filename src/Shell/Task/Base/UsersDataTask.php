@@ -147,6 +147,15 @@ class UsersDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $users[] = [
+            'id' => UuidFactory::uuid('user.id.joan'),
+            'username' => 'joan@passbolt.com',
+            'role_id' => UuidFactory::uuid('role.id.user'),
+            'active' => 1,
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
+        ];
+        $users[] = [
             'id' => UuidFactory::uuid('user.id.kathleen'),
             'username' => 'kathleen@passbolt.com',
             'role_id' => UuidFactory::uuid('role.id.user'),
@@ -158,6 +167,15 @@ class UsersDataTask extends DataTask
         $users[] = [
             'id' => UuidFactory::uuid('user.id.lynne'),
             'username' => 'lynne@passbolt.com',
+            'role_id' => UuidFactory::uuid('role.id.user'),
+            'active' => 1,
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
+        ];
+        $users[] = [
+            'id' => UuidFactory::uuid('user.id.margaret'),
+            'username' => 'margaret@passbolt.com',
             'role_id' => UuidFactory::uuid('role.id.user'),
             'active' => 1,
             'deleted' => 0,
@@ -239,6 +257,15 @@ class UsersDataTask extends DataTask
         $users[] = [
             'id' => UuidFactory::uuid('user.id.wang'),
             'username' => 'wang@passbolt.com',
+            'role_id' => UuidFactory::uuid('role.id.user'),
+            'active' => 1,
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
+        ];
+        $users[] = [
+            'id' => UuidFactory::uuid('user.id.yvonne'),
+            'username' => 'yvonne@passbolt.com',
             'role_id' => UuidFactory::uuid('role.id.user'),
             'active' => 1,
             'deleted' => 0,
