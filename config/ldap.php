@@ -3,51 +3,15 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
-               'test' => false,
-
-                'fieldsMappingDefaults' => [
-                    'ad' => [
-                        'user' => [
-                            'id' => 'guid',
-                            'firstname' => 'firstName',
-                            'lastname' => 'lastName',
-                            'username' => 'emailAddress',
-                            'created' => 'created',
-                            'modified' => 'modified',
-                            'groups' => 'groups',
-                        ],
-                        'group' => [
-                            'id' => 'guid',
-                            'name' => 'name',
-                            'created' => 'created',
-                            'modified' => 'modified',
-                            'users' => 'members'
-                        ]
-
-                    ],
-                    'openldap' => [
-                        'user' => [
-                            'id' => 'entryUUID',
-                            'firstname' => 'firstName',
-                            'lastname' => 'lastName',
-                            'username' => 'mail',
-                            'created' => 'created',
-                            'modified' => 'modified',
-                        ],
-                        'group' => [
-                            'id' => 'entryUUID',
-                            'name' => 'cn',
-                            'created' => 'created',
-                            'modified' => 'modified',
-                            'users' => 'members',
-                        ]
-                    ],
-                ],
+                'test' => false,
                 'fieldsMapping' => [
-                    // Override here
+                    // Override the mapping here.
+                    // Needed mainly if using openldap.
+                    // Keep empty if default rules work fine.
                 ],
-//                'groupObjectClass' => 'posixGroup',
-//                'userObjectClass' => null,
+                // only used if the server type is openldap.
+                'groupObjectClass' => 'posixGroup',
+                'userObjectClass' => 'inetOrgPerson',
 
                 // The admin user that will perform operations for the directory.
                 'defaultUser' => 'admin@passbolt.com',
@@ -56,27 +20,27 @@ return [
                 'ldap' => [
                     'domains' => [
                         // Active directory configuration.
-                       'passbolt.local' => [
-                            'domain_name' => 'passbolt.local',
-                            'username' => 'remy',
-                            'password' => ';faso19347rlbfidsu!#$@#%{PO',
-                            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-                            'servers' => ['35.205.131.240'],
-//                            'port' => 636,
-                            'use_ssl' => false,
-                           'ldap_type' => 'ad',
-                        ],
-                        // OpenLDAP configuration.
-//                        'passbolt.local' => [
+//                       'passbolt.local' => [
 //                            'domain_name' => 'passbolt.local',
-//                            'username' => 'cn=admin,dc=passbolt,dc=local',
-//                            'password' => '4dm1n',
+//                            'username' => 'remy',
+//                            'password' => ';faso19347rlbfidsu!#$@#%{PO',
 //                            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-//                            'servers' => ['openldap'],
-//                            'port' => 389,
+//                            'servers' => ['35.205.131.240'],
+////                            'port' => 636,
 //                            'use_ssl' => false,
-//                            'ldap_type' => 'openldap',
-//                        ]
+//                           'ldap_type' => 'ad',
+//                        ],
+                        // OpenLDAP configuration.
+                        'passbolt.local' => [
+                            'domain_name' => 'passbolt.local',
+                            'username' => 'cn=admin,dc=passbolt,dc=local',
+                            'password' => '4dm1n',
+                            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
+                            'servers' => ['openldap'],
+                            'port' => 389,
+                            'use_ssl' => false,
+                            'ldap_type' => 'openldap',
+                        ]
                     ]
                 ]
             ]

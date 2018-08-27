@@ -66,9 +66,10 @@ class LdapDirectory implements DirectoryInterface
             // Set custom object class if configured.
             $objectType = $schema->getObjectType();
             $customClass = Configure::read('passbolt.plugins.directorySync.' . $objectType . 'ObjectClass');
-            if (isset($customClass)) {
-                $schema->setObjectClass('posixGroup');
-                $schema->getFilter()->setValue('posixGroup');
+            $connectionType = $this->ldap->getConnection()->getConfig()->getLdapType();
+            if (isset($customClass) && $connectionType == LdapConnection::TYPE_OPENLDAP) {
+                $schema->setObjectClass($customClass);
+                $schema->getFilter()->setValue($customClass);
             }
         });
     }
@@ -85,9 +86,7 @@ class LdapDirectory implements DirectoryInterface
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
             throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
         }
-        $defaultMapping = Configure::read('passbolt.plugins.directorySync.fieldsMappingDefaults')[$type];
-        $userMapping = Configure::read('passbolt.plugins.directorySync.fieldsMapping');
-        $mapping = array_merge($defaultMapping, $userMapping);
+        $mapping = Configure::read('passbolt.plugins.directorySync.fieldsMapping.' . $type);
 
         return $mapping;
     }
