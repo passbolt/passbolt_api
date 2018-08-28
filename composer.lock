@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "babae6d83e64627d2ecbd9f20d7fb9f1",
+    "content-hash": "3400885901aeb39bd76db2660a101f2d",
     "packages": [
         {
             "name": "aura/intl",
@@ -3194,16 +3194,16 @@
         },
         {
             "name": "passbolt/passbolt_test_data",
-            "version": "2.0.6",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt_test_data.git",
-                "reference": "e15aa0be2350872a8ff31d0a416c7fa4d9948ea3"
+                "reference": "bd0186e309497ca5ef15efda5135c5e2b8e06edd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/e15aa0be2350872a8ff31d0a416c7fa4d9948ea3",
-                "reference": "e15aa0be2350872a8ff31d0a416c7fa4d9948ea3",
+                "url": "https://api.github.com/repos/passbolt/passbolt_test_data/zipball/bd0186e309497ca5ef15efda5135c5e2b8e06edd",
+                "reference": "bd0186e309497ca5ef15efda5135c5e2b8e06edd",
                 "shasum": ""
             },
             "require": {
@@ -3244,7 +3244,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2018-05-05T14:47:24+00:00"
+            "time": "2018-08-25T22:01:29+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -5376,7 +5376,8 @@
     "stability-flags": {
         "ezyang/htmlpurifier": 20,
         "psy/psysh": 0,
-        "passbolt/passbolt_selenium_api": 20
+        "passbolt/passbolt_selenium_api": 20,
+        "passbolt/passbolt_test_data": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

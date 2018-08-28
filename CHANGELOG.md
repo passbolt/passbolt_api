@@ -3,8 +3,18 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- PASSBOLT-2965: Group filter link stays active after switching to a non group filter
+- Route rewriting of the appjs should take in account passbolt installed in a subdirectory
+- Fix the loading bar stuck in the initialization state in some cases
+- PASSBOLT-2969: Enforce steal to load the latest version of the appjs
 
-## [2.2.0] - 2018-09-08
+### Improved
+- PASSBOLT-2950: Display empty feedbacks content
+- PASSBOLT-2971: Reset the workspaces filters when a resource or a user is created
+- PASSBOLT-2267: As an admin deleting a user I can transfer ownership of this user shared passwords to another user or a group that have read access.
+
+## [2.2.0] - 2018-08-13
 ### Added
 - PASSBOLT-2906: Enable CSRF protection
 - PASSBOLT-2940: Implement app-js primary routes

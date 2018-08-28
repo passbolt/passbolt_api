@@ -20,7 +20,7 @@ $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbol
 // See. fetch('scriptBottom')
 $this->start('scriptBottom');
     // Load the javascript application.
-    echo $this->Html->script('/js/app/steal.production.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true]);
+    echo $this->Html->script('/js/app/steal.production.js?v=' . Configure::read('passbolt.version'), ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')]);
 
     // If debug, connect to browserSync service.
     // @see Grunt task appjs-watch

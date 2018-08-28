@@ -45,7 +45,7 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
     {
         // Freelancer group does not anything
         $groupId = UuidFactory::uuid('user.id.freelancer');
-        $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId);
+        $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
@@ -53,7 +53,7 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
     {
         // Ada is sole owner of april that is shared with betty
         $groupId = UuidFactory::uuid('group.id.accounting');
-        $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId);
+        $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId)->extract('aco_foreign_key')->toArray();
         $this->assertNotEmpty($resources);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.kde'));
         $this->assertEquals($resources[1], UuidFactory::uuid('resource.id.enlightenment'));
