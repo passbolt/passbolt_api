@@ -123,6 +123,7 @@ class UsersDeleteController extends AppController
      * @throws ValidationRuleException if the user is sole manager of a group
      * @throws ValidationRuleException if the user is sole owner of a shared resource
      * @throws ValidationRuleException if the user is sole manager of a group that is the sole owner of a shared resource
+     * @return void
      */
     protected function _validateDelete($user)
     {
@@ -167,6 +168,7 @@ class UsersDeleteController extends AppController
      * Transfer the group managers which blocked the user delete
      * @param {User} $user entity
      * @throws BadRequestException The groups that required a change are not all satisfied
+     * @return void
      */
     protected function _transferGroupsManagers($user)
     {
@@ -201,6 +203,7 @@ class UsersDeleteController extends AppController
      * Transfer the resources permissions which blocked the user delete
      * @param {User} $user entity
      * @throws BadRequestException if the array of manager is
+     * @return void
      */
     protected function _transferResourcesOwners($user)
     {
