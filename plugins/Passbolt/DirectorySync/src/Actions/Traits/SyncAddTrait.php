@@ -62,6 +62,9 @@ trait SyncAddTrait {
 
         // If it's a group. We need to process the group users.
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
+            if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.update')) {
+                return;
+            }
             $this->handleGroupUsersEdit($data, $entry, $existingEntity);
         }
     }
@@ -74,6 +77,10 @@ trait SyncAddTrait {
      */
     function handleAddIgnore(array $data, DirectoryEntry $entry = null, Entity $existingEntity = null, bool $ignoreEntity)
     {
+        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+            return;
+        }
+
         $associatedEntity = $entry->getAssociatedEntity();
         // do not overly report ignored record when there is nothing to do
         if ((isset($existingEntity) && isset($associatedEntity) && !$existingEntity->deleted)) {
@@ -99,6 +106,10 @@ trait SyncAddTrait {
      */
     function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
+        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+            return;
+        }
+
         $status = Alias::STATUS_ERROR;
         $reportData = null;
         try {
@@ -134,6 +145,10 @@ trait SyncAddTrait {
      */
     function handleAddDeleted(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
     {
+        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+            return;
+        }
+
         // if the entity was created in ldap and then deleted in passbolt
         // do not try to recreate
         $status = Alias::STATUS_ERROR;

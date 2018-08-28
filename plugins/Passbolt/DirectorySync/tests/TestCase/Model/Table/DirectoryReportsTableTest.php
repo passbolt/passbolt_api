@@ -24,7 +24,7 @@ class DirectoryReportsTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.passbolt/directory_sync.directory_reports'
+        //'plugin.passbolt/directory_sync.directory_reports'
     ];
 
     /**

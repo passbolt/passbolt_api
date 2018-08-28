@@ -393,6 +393,31 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
     }
 
     /**
+     * Scenario: a groupUser has been added to a group without passwords in ldap, not yet added in passbolt
+     * Expected result: check if group already has access to passwords. If not, add the groupUser. If yes, send notification to groupAdmins to add user.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_No_Passwords_UpdateDisabled()
+    {
+        Configure::write('passbolt.plugins.directorySync.jobs.groups.update', false);
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
+        $this->mockDirectoryEntryGroup('marketing');
+        $this->mockDirectoryGroupData('marketing', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+
+        $reports = $this->action->execute();
+        $this->assertReportEmpty($reports);
+        // Frances should be in group users and directoryRelations.
+        $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
+    }
+
+    /**
      * Scenario: a groupUser has been added to a group with passwords in ldap, not yet added in passbolt
      * Expected result: Send email notification to groupAdmins to add user.
      *
@@ -403,8 +428,8 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
     public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
-        $groupEntry = $this->mockDirectoryEntryGroup('accounting');
-        $groupData = $this->mockDirectoryGroupData('accounting', [
+        $this->mockDirectoryEntryGroup('accounting');
+        $this->mockDirectoryGroupData('accounting', [
             'group_users' => [
                 $userEntry->directory_name
             ]
@@ -539,8 +564,8 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
     public function testDirectorySyncGroupUser_Case14_Ok_Ok_Ok_Null_Any()
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'ada', 'foreign_key' => UuidFactory::uuid('user.id.ada')], Alias::STATUS_SUCCESS);
-        $groupEntry = $this->mockDirectoryEntryGroup('freelancer');
-        $groupData = $this->mockDirectoryGroupData('freelancer', [
+        $this->mockDirectoryEntryGroup('freelancer');
+        $this->mockDirectoryGroupData('freelancer', [
             'group_users' => [
                 $userEntry->directory_name
             ]

@@ -148,10 +148,6 @@ trait SyncTrait {
      */
     function processEntriesToCreate()
     {
-        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
-            return;
-        }
-
         foreach ($this->directoryData as $data) {
             // Find and patch (in case directory_name has changed), or create directory entries.
             $entry = $this->DirectoryEntries->updateOrCreate($data, self::ENTITY_TYPE);
@@ -186,7 +182,7 @@ trait SyncTrait {
                 continue;
             }
 
-            // If the entity already exist and is not deleted
+            // If the entity already exist and is not deleted, we update.
             $this->handleAddExist($data, $entry, $existingEntity);
         }
     }
