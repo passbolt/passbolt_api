@@ -14,15 +14,15 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use LdapTools\Configuration;
-use Cake\Core\Configure;
-
-use LdapTools\LdapManager;
+use LdapTools\Connection\LdapConnection;
 use LdapTools\Event\Event;
 use LdapTools\Event\LdapObjectSchemaEvent;
+use LdapTools\LdapManager;
+use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
-use LdapTools\Connection\LdapConnection;
 
 /**
  * Directory factory class
@@ -39,7 +39,7 @@ class LdapDirectory implements DirectoryInterface
      * LdapDirectory constructor.
      * @throws \Exception if connection cannot be established
      */
-    function __construct()
+    public function __construct()
     {
         $config = Configure::read('passbolt.plugins.directorySync.ldap');
         $config = (new Configuration())->loadFromArray($config);
@@ -54,8 +54,9 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Used to map fields and specify the object class names that we'll need.
+     * @return void
      */
-    function customizeSchema()
+    public function customizeSchema()
     {
         $this->ldap->getEventDispatcher()->addListener(Event::LDAP_SCHEMA_LOAD, function (LdapObjectSchemaEvent $event) {
             $schema = $event->getLdapObjectSchema();
@@ -76,6 +77,13 @@ class LdapDirectory implements DirectoryInterface
         });
     }
 
+    /**
+     * Get field value.
+     * @param LdapObject $object object
+     * @param string $fieldName field name
+     *
+     * @return mixed
+     */
     public function getFieldValue($object, $fieldName)
     {
         $mappingRules = $this->getMappingRules()[$object->getType()];
@@ -85,7 +93,12 @@ class LdapDirectory implements DirectoryInterface
         return $object->{$call}();
     }
 
-    function getMappingRules()
+    /**
+     * Get mapping rules.
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getMappingRules()
     {
         $type = $this->ldap->getConnection()->getConfig()->getLdapType();
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
@@ -98,6 +111,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Return users
+     * @return array
      */
     public function getUsers()
     {
@@ -132,6 +146,7 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * Get a list of groups
+     * @return array
      */
     public function getGroups()
     {

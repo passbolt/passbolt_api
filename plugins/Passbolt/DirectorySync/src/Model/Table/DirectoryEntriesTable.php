@@ -134,7 +134,7 @@ class DirectoryEntriesTable extends Table
 
     /**
      * Return a DirectoryEntry entity.
-     * @param array $data
+     * @param array $data data
      *
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
@@ -152,28 +152,10 @@ class DirectoryEntriesTable extends Table
         ]);
     }
 
-//    /**
-//     * Update the status
-//     *
-//     * @param DirectoryEntry $entity
-//     * @param $status
-//     * @return DirectoryEntry|bool
-//     */
-//    public function updateStatus(DirectoryEntry $entity, $status)
-//    {
-//        $entity = $this->get($entity->id);
-//        $this->patchEntity($entity, ['status' => $status], [
-//            'fieldList' => ['status'],
-//            'accessibleFields' => ['status' => true],
-//            'associated' => []
-//        ]);
-//        return $this->save($entity);
-//    }
-
     /**
      * Update the foreign key
      *
-     * @param DirectoryEntry $entity
+     * @param DirectoryEntry $entity entity
      * @param string $foreignKey uuid
      * @return DirectoryEntry|bool
      */
@@ -187,7 +169,7 @@ class DirectoryEntriesTable extends Table
     /**
      * Update the foreign key
      *
-     * @param DirectoryEntry $entity
+     * @param DirectoryEntry $entity entity
      * @param string $directoryName DN or equivalent
      * @return DirectoryEntry|bool
      */
@@ -207,6 +189,12 @@ class DirectoryEntriesTable extends Table
         }
     }
 
+    /**
+     * Build entity from data
+     * @param array $data data
+     *
+     * @return DirectoryEntry
+     */
     public function buildEntityFromData(array $data)
     {
         if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
@@ -221,7 +209,7 @@ class DirectoryEntriesTable extends Table
     /**
      * Create a new directory entry.
      *
-     * @param array $data
+     * @param array $data data
      * @return bool|DirectoryEntry
      */
     public function create(array $data)
@@ -251,8 +239,8 @@ class DirectoryEntriesTable extends Table
      * Find a directory entries if it exist or create one
      * Will update the name if it changed in the directory (example: DN changed)
      *
-     * @param array $data
-     * @param string $model
+     * @param array $data data
+     * @param string $model model
      * @return array|bool|DirectoryEntry
      */
     public function updateOrCreate(array $data, string $model)
@@ -280,7 +268,8 @@ class DirectoryEntriesTable extends Table
      * Find all the directory entries previously stored
      * that are not in the directory anymore
      *
-     * @return string $model name
+     * @param string $model name
+     * @param array $directoryIds directory ids list
      * @return mixed
      */
     public function lookupEntriesForDeletion(string $model, array $directoryIds = null)

@@ -14,12 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
-use Cake\I18n\FrozenTime;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Entity;
-use Cake\ORM\TableRegistry;
-use Cake\Core\Configure;
-use App\Model\Entity\Role;
 
 /**
  * Directory factory class
@@ -31,6 +27,12 @@ class SyncError implements \Serializable
     protected $data;
     protected $exception;
 
+    /**
+     * SyncError constructor.
+     *
+     * @param Entity|null $entity entity
+     * @param \Exception|null $exception exception
+     */
     public function __construct(Entity $entity = null, \Exception $exception = null)
     {
         if (!isset($data) && !isset($entity) && !isset($exception)) {
@@ -40,22 +42,35 @@ class SyncError implements \Serializable
         $this->exception = $exception;
     }
 
+    /**
+     * Get entity
+     * @return Entity|null
+     */
     public function getEntity()
     {
         return $this->entity;
     }
 
+    /**
+     * Get Exception.
+     * @return \Exception|null
+     */
     public function getException()
     {
         return $this->exception;
     }
 
+    /**
+     * Get data.
+     * @return mixed
+     */
     public function getData()
     {
         return $this->getData();
     }
 
     /**
+     * Serialize.
      * @return string
      */
     public function serialize()
@@ -68,7 +83,9 @@ class SyncError implements \Serializable
     }
 
     /**
-     * @param string $serialized
+     * Unserialize.
+     * @param string $serialized serialized
+     * @return void
      */
     public function unserialize($serialized)
     {

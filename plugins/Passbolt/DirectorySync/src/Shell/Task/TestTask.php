@@ -15,9 +15,9 @@
 namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Shell\AppShell;
-use Passbolt\DirectorySync\Utility\LdapDirectory;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\LdapDirectory;
 
 class TestTask extends AppShell
 {
@@ -26,6 +26,10 @@ class TestTask extends AppShell
     protected $Groups;
     protected $Users;
 
+    /**
+     * Initialize.
+     * @return void
+     */
     public function initialize()
     {
         parent::initialize();
@@ -101,6 +105,11 @@ class TestTask extends AppShell
         return true;
     }
 
+    /**
+     * Display valid objects.
+     * @param array $data data
+     * @return void
+     */
     protected function displayValidObjects($data)
     {
         $output = [];

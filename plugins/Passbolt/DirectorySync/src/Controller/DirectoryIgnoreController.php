@@ -30,8 +30,8 @@ class DirectoryIgnoreController extends AppController
     /**
      * Check if a record is ignored
      *
-     * @param string $foreignModel
-     * @param string $foreignKey
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
      * @throws ValidationException If the model name or id is not valid
      * @throws ForbiddenException if the current user is not an admin
      * @return void
@@ -59,8 +59,8 @@ class DirectoryIgnoreController extends AppController
     /**
      * Check if a record is ignored
      *
-     * @param string $foreignModel
-     * @param string $foreignKey
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
      * @throws ValidationException If the model name or id is not valid
      * @throws ForbiddenException if the current user is not an admin
      * @return void
@@ -88,8 +88,8 @@ class DirectoryIgnoreController extends AppController
     /**
      * Mark a record as ignored.
      *
-     * @param string $foreignModel
-     * @param string $foreignKey
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
      * @throws ValidationException If the model name or id is not valid
      * @throws ForbiddenException if the current user is not an admin
      * @return void
@@ -118,8 +118,10 @@ class DirectoryIgnoreController extends AppController
     }
 
     /**
-     * @param string $foreignModel
-     * @param string $foreignKey
+     * Delete
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
+     * @return void
      */
     public function delete(string $foreignModel, string $foreignKey)
     {
@@ -150,7 +152,7 @@ class DirectoryIgnoreController extends AppController
     }
 
     /**
-     * @param string $foreignModel
+     * @param string $foreignModel foreign model
      * @return string
      */
     private function normalizeForeignModel(string $foreignModel)

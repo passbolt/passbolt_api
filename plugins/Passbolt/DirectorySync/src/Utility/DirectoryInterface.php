@@ -16,6 +16,15 @@ namespace Passbolt\DirectorySync\Utility;
 
 interface DirectoryInterface
 {
+    /**
+     * Get users.
+     * @return mixed
+     */
     public function getUsers();
+
+    /**
+     * Get groups.
+     * @return mixed
+     */
     public function getGroups();
 }

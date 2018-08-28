@@ -15,11 +15,11 @@
 namespace Passbolt\DirectorySync\Utility;
 
 use App\Controller\Events\EmailNotificationsListener;
-use Cake\I18n\FrozenTime;
-use Cake\ORM\TableRegistry;
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
-use App\Model\Entity\Role;
+use Cake\I18n\FrozenTime;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
 
@@ -82,6 +82,7 @@ class SyncAction
 
     /**
      * SyncAction constructor.
+     * @param string $parentId parent id
      * @throws \Exception if no directory configuration is present
      */
     public function __construct($parentId = null)
@@ -129,6 +130,7 @@ class SyncAction
     }
 
     /**
+     * Get directory.
      * @return \Passbolt\DirectorySync\Utility\DirectoryInterface
      */
     public function getDirectory()
@@ -139,7 +141,8 @@ class SyncAction
     /**
      * Report back on a sync action
      *
-     * @param ActionReport $reportItem
+     * @param ActionReport $reportItem report item
+     * @return void
      */
     public function addReportItem(ActionReport $reportItem)
     {

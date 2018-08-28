@@ -14,11 +14,13 @@
  */
 namespace Passbolt\DirectorySync\Model\Table;
 
+use App\Model\Entity\Group;
+use App\Model\Entity\GroupsUser;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use Cake\ORM\Table;
-use Cake\Validation\Validator;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Utility\Alias;
 
 class DirectoryRelationsTable extends Table
@@ -90,6 +92,8 @@ class DirectoryRelationsTable extends Table
      * Cleanup orphan DirectoryRelations
      * An orphan directoryRelations is a directoryRelation that doesn't have a corresponding userGroup.
      * It means that userGroup has been deleted manually.
+     * @param array $entryIds entry ids
+     * @return mixed
      */
     public function cleanupHardDeletedUserGroups(array $entryIds)
     {
@@ -112,7 +116,14 @@ class DirectoryRelationsTable extends Table
         }
     }
 
-    public function createFromGroupUser($groupUser)
+    /**
+     * Create group from user
+     * @param GroupsUser $groupUser groupUser
+     *
+     * @return bool|\Cake\Datasource\EntityInterface|false|mixed|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     * @throws \Exception
+     */
+    public function createFromGroupUser(GroupsUser $groupUser)
     {
         $DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $groupEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])->first();
@@ -131,6 +142,12 @@ class DirectoryRelationsTable extends Table
         return $this->createOrUpdate($relation);
     }
 
+    /**
+     * Create or update.
+     * @param array $data data
+     *
+     * @return bool|\Cake\Datasource\EntityInterface|false|mixed|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     */
     public function createOrUpdate(array $data)
     {
         $r = $this->find()->select(['id'])->where(['id' => $data['id']])->first();
@@ -146,11 +163,11 @@ class DirectoryRelationsTable extends Table
 
     /**
      * Return a directory relation matching the groupUser provided.
-     * @param $groupUser
+     * @param GroupsUser $groupUser groupUser
      *
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function lookupByGroupUser($groupUser)
+    public function lookupByGroupUser(GroupsUser $groupUser)
     {
         return $this->find()
             ->where(['id' => $groupUser->id])
@@ -158,7 +175,8 @@ class DirectoryRelationsTable extends Table
     }
 
     /**
-     * @param $data
+     * Create a directory Relation
+     * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      */
     public function create(array $data)

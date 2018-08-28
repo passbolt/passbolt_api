@@ -18,11 +18,11 @@ use App\Error\Exception\ValidationException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Validation\Validator;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validator;
 
 /**
  * DirectoryIgnore Model
@@ -136,7 +136,8 @@ class DirectoryIgnoreTable extends Table
     }
 
     /**
-     * @param $data
+     * Create DirectoryIgnore
+     * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      */
     public function create(array $data)
@@ -153,8 +154,9 @@ class DirectoryIgnoreTable extends Table
     }
 
     /**
-     * @param string $foreignModel
-     * @param string $foreignKey
+     * Create or fail
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
      * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
      */
     public function createOrFail(string $foreignModel, string $foreignKey)
@@ -216,8 +218,8 @@ class DirectoryIgnoreTable extends Table
     /**
      * Cleanup hard deleted entries
      *
-     * @param array|null $entryIds
-     * @param bool $dryRun
+     * @param array|null $entryIds entry ids
+     * @param bool $dryRun dry run
      * @return number
      */
     public function cleanupHardDeletedDirectoryEntries(array $entryIds = null, bool $dryRun = false)

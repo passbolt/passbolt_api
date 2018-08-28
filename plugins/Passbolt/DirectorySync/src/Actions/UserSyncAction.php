@@ -14,9 +14,6 @@
  */
 namespace Passbolt\DirectorySync\Actions;
 
-use Cake\Core\Configure;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
@@ -26,10 +23,10 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 
 class UserSyncAction extends SyncAction
 {
-    use SyncTrait;
-    use SyncDeleteTrait;
-    use SyncAddTrait;
     use GroupUsersSyncTrait;
+    use SyncAddTrait;
+    use SyncDeleteTrait;
+    use SyncTrait;
 
     /**
      * @var string entityType
@@ -48,6 +45,7 @@ class UserSyncAction extends SyncAction
 
     /**
      * Things to do after the constructor and before the sync job
+     * @return void
      */
     public function beforeExecute()
     {
@@ -74,10 +72,11 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * @param $data
+     * Get user from data.
+     * @param array $data data
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    protected function getUserFromData($data)
+    protected function getUserFromData(array $data)
     {
         $existingUser = $this->Users->find()
             ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])

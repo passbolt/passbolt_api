@@ -17,6 +17,7 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -24,7 +25,6 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
-use App\Utility\UserAccessControl;
 
 trait GroupUsersSyncTrait
 {
@@ -33,6 +33,7 @@ trait GroupUsersSyncTrait
      * Handle groupUsers once a group is created.
      * @param array $data directory data
      * @param Group $group group
+     * @return void
      */
     public function handleGroupUsersAfterGroupCreate(array $data, Group $group)
     {
@@ -59,6 +60,7 @@ trait GroupUsersSyncTrait
      * @param array $data directory data
      * @param DirectoryEntry $entry directory entry
      * @param Group $group group to edit
+     * @return void
      */
     public function handleGroupUsersEdit(array $data, DirectoryEntry $entry, Group $group)
     {
@@ -92,8 +94,9 @@ trait GroupUsersSyncTrait
 
     /**
      * Request to add users into the group.
-     * @param Group $group
-     * @param array $userIdsToAdd
+     * @param Group $group groups
+     * @param array $userIdsToAdd list of user ids to add
+     * @return void
      */
     public function requestAddGroupUsers(Group $group, array $userIdsToAdd)
     {
@@ -122,7 +125,7 @@ trait GroupUsersSyncTrait
 
     /**
      * Retrieve a group with its groupUsers.
-     * @param Group $existingGroup
+     * @param Group $existingGroup existing group
      *
      * @return mixed
      */
@@ -139,7 +142,7 @@ trait GroupUsersSyncTrait
 
     /**
      * Check if a DN belongs to the groups returned by the directory.
-     * @param string $dn
+     * @param string $dn DN
      *
      * @return bool
      */
@@ -152,7 +155,7 @@ trait GroupUsersSyncTrait
 
     /**
      * Find the directory relations corresponding to an entry.
-     * @param string $entryId
+     * @param string $entryId entry id
      *
      * @return array
      */
@@ -295,10 +298,10 @@ trait GroupUsersSyncTrait
      * Add Group users
      * @param Group $group group where to ad the group users.
      * @param array $userIdsToAdd list of user ids to be added.
+     * @return void
      */
     protected function addGroupUsers(Group $group, array $userIdsToAdd)
     {
-
         foreach ($userIdsToAdd as $userId) {
             $u = $this->Users->get($userId);
             try {
@@ -338,7 +341,7 @@ trait GroupUsersSyncTrait
                 } elseif (isset($errors['groups_users'][1]['user_id']['user_is_not_soft_deleted'])) {
                     $msg = __('The user {0} could not be added to group {1} because it is deleted.', $u->username, $group->name);
                 } else {
-                    $msg =  __('The user {0} could not be added to the group {1} because some validation issues.', $u->username, $group->name);
+                    $msg = __('The user {0} could not be added to the group {1} because some validation issues.', $u->username, $group->name);
                 }
                 $this->addReportItem(new ActionReport(
                     $msg,
@@ -371,6 +374,7 @@ trait GroupUsersSyncTrait
      * Remove groupUsers for a given group.
      * @param Group $group group where to remove the groupUsers
      * @param array $groupUserIdsToRemove list of groupUsers Ids
+     * @return void
      */
     protected function removeGroupUsers(Group $group, array $groupUserIdsToRemove)
     {
@@ -410,7 +414,7 @@ trait GroupUsersSyncTrait
                 if (isset($errors['groups_users']['at_least_one_admin'])) {
                     $msg = __('The user {0} could not be removed from the group {1} because it is the only group manager.', $gp->user->username, $group->name);
                 } else {
-                    $msg =  __('The user {0} could not be removed from the group {1} because some validation issues.', $gp->user->username, $group->name);
+                    $msg = __('The user {0} could not be removed from the group {1} because some validation issues.', $gp->user->username, $group->name);
                 }
                 $error = new SyncError($group, new \Exception($msg));
                 $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $error));
@@ -436,6 +440,7 @@ trait GroupUsersSyncTrait
      * Sync Group Users.
      * @param Group $group group
      * @param array $toSync list of groupuserIds to be synced.
+     * @return void
      */
     public function syncGroupUsers(Group $group, array $toSync)
     {

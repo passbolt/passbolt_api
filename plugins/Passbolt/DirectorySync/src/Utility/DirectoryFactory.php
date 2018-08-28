@@ -24,9 +24,12 @@ use Passbolt\DirectorySync\Test\Utility\TestDirectory;
 class DirectoryFactory
 {
     /**
+     * Get directory factory.
+     *
+     * @return mixed
      * @throws \Exception
      */
-    static function get()
+    public static function get()
     {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
             return new TestDirectory();

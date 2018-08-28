@@ -16,8 +16,8 @@ namespace Passbolt\DirectorySync\Actions;
 
 use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
-use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
+use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -25,11 +25,11 @@ use Passbolt\DirectorySync\Utility\SyncAction;
 
 class GroupSyncAction extends SyncAction
 {
-    use SyncTrait;
-    use SyncDeleteTrait;
-    use SyncAddTrait;
-    use GroupUsersSyncTrait;
     use EventDispatcherTrait;
+    use GroupUsersSyncTrait;
+    use SyncAddTrait;
+    use SyncDeleteTrait;
+    use SyncTrait;
 
     /**
      * @var string entityType
@@ -56,6 +56,10 @@ class GroupSyncAction extends SyncAction
         parent::__construct();
     }
 
+    /**
+     * BeforeExecute.
+     * @return void
+     */
     public function beforeExecute()
     {
         parent::beforeExecute();
@@ -87,7 +91,7 @@ class GroupSyncAction extends SyncAction
     /**
      * Get group from data.
      *
-     * @param array $data
+     * @param array $data data
      * @return array|\Cake\Datasource\EntityInterface|null
      */
     public function getGroupFromData(array $data)

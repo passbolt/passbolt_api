@@ -15,7 +15,7 @@
 namespace Passbolt\DirectorySync\Utility;
 
 use Cake\I18n\FrozenTime;
-use http\Exception\InvalidArgumentException;
+use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
@@ -33,7 +33,7 @@ class ActionReport implements \Serializable
     /**
      * ActionReport constructor.
      *
-     * @param string $message
+     * @param string $message message
      * @param string $model Users, Groups, GroupsUsers
      * @param string $action see Alias::ACTION_*
      * @param string $status see Alias::STATUS_*
@@ -79,7 +79,9 @@ class ActionReport implements \Serializable
     }
 
     /**
-     * @param string $serialized
+     * Unserialize.
+     * @param string $serialized serialized
+     * @return void
      */
     public function unserialize($serialized)
     {
@@ -154,7 +156,7 @@ class ActionReport implements \Serializable
     /**
      * Action validator
      *
-     * @param string $action
+     * @param string $action action
      * @return bool
      */
     public static function isValidAction(string $action)
@@ -165,7 +167,7 @@ class ActionReport implements \Serializable
     /**
      * Status validator
      *
-     * @param string $status
+     * @param string $status status
      * @return bool
      */
     public static function isValidStatus(string $status)
@@ -176,7 +178,7 @@ class ActionReport implements \Serializable
     /**
      * Model validator
      *
-     * @param string $model
+     * @param string $model model
      * @return bool
      */
     public static function isValidModel(string $model)
@@ -187,7 +189,7 @@ class ActionReport implements \Serializable
     /**
      * Is valid data
      *
-     * @param $data
+     * @param array $data data
      * @return bool
      */
     public static function isValidData($data)

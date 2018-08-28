@@ -14,21 +14,20 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
-use Cake\Utility\Hash;
-use Cake\Utility\Inflector;
-use Passbolt\DirectorySync\Utility\Alias;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Cake\Core\Configure;
-use Cake\Network\Exception\InternalErrorException;
-use Passbolt\DirectorySync\Utility\ActionReport;
-use Passbolt\DirectorySync\Utility\SyncError;
 use App\Error\Exception\ValidationException;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\Utility\Inflector;
+use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 trait SyncDeleteTrait
 {
     /**
      * Handle ignored entries.
-     * @param DirectoryEntry $entry
+     * @param DirectoryEntry $entry entry
+     * @return void
      */
     protected function handleDeletedIgnoredEntry(DirectoryEntry $entry)
     {
@@ -51,7 +50,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle ignored entities.
-     * @param DirectoryEntry $entry
+     * @param DirectoryEntry $entry entry
+     * @return void
      */
     protected function handleDeletedIgnoredEntity(DirectoryEntry $entry)
     {
@@ -75,7 +75,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle deleted entity.
-     * @param DirectoryEntry $entry
+     * @param DirectoryEntry $entry entry
+     * @return void
      */
     protected function handleDeletedEntry(DirectoryEntry $entry)
     {
@@ -98,7 +99,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle delete when it's not possible to delete.
-     * @param DirectoryEntry $entry
+     * @param DirectoryEntry $entry entry
+     * @return void
      */
     protected function handleNotPossibleDelete(DirectoryEntry $entry)
     {
@@ -122,7 +124,8 @@ trait SyncDeleteTrait
 
     /**
      * Handle a successful delete.
-     * @param DirectoryEntry $entry
+     * @param DirectoryEntry $entry entry
+     * @return void
      */
     protected function handleSuccessfulDelete(DirectoryEntry $entry)
     {
@@ -143,8 +146,9 @@ trait SyncDeleteTrait
 
     /**
      * Handle an internal error delete.
-     * @param DirectoryEntry $entry
-     * @param InternalErrorException $exception
+     * @param DirectoryEntry $entry entry
+     * @param InternalErrorException $exception exception
+     * @return void
      */
     protected function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
     {

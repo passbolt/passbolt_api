@@ -98,8 +98,9 @@ class DirectoryReportsItemsTable extends Table
     }
 
     /**
-     * @param string|null $reportId
-     * @param ActionReport $reportItem
+     * Create report item table.
+     * @param string|null $reportId report id
+     * @param ActionReport $reportItem report item
      * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem
      */
     public function create(string $reportId = null, ActionReport $reportItem)

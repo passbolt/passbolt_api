@@ -14,21 +14,12 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
-use Cake\Utility\Inflector;
 use Passbolt\DirectorySync\Utility\Alias;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Cake\Core\Configure;
-use Cake\Network\Exception\InternalErrorException;
-use Passbolt\DirectorySync\Utility\ActionReport;
-use Passbolt\DirectorySync\Utility\SyncError;
-use App\Error\Exception\ValidationException;
-use App\Model\Entity\User;
-use App\Model\Entity\Group;
-use App\Utility\UserAccessControl;
-use App\Model\Entity\Role;
 
 trait SyncTrait
 {
@@ -48,8 +39,9 @@ trait SyncTrait
     /**
      * Initialize data to perform the job.
      * @param string $modelType type of model
+     * @return void
      */
-    function initialize($modelType = Alias::MODEL_USERS)
+    public function initialize($modelType = Alias::MODEL_USERS)
     {
         $this->entriesToIgnore = Hash::extract($this->DirectoryIgnore->find()
             ->select(['id'])
@@ -63,7 +55,7 @@ trait SyncTrait
             ->all()
             ->toArray(), '{n}.id');
 
-        $this->directoryData = $this->directory->{'get'.$modelType}();
+        $this->directoryData = $this->directory->{'get' . $modelType}();
         $this->formatDirectoryData();
     }
 
@@ -71,8 +63,9 @@ trait SyncTrait
      * Format directoryData to be compatible with the expected format.
      *
      * Mainly modify the dates format to the expected format FrozenTime.
+     * @return void
      */
-    function formatDirectoryData()
+    public function formatDirectoryData()
     {
         foreach ($this->directoryData as $key => $data) {
             if (get_class($data['directory_created']) !== 'FrozenTime') {
@@ -92,7 +85,7 @@ trait SyncTrait
      *
      * @return void
      */
-    function processEntriesToDelete()
+    public function processEntriesToDelete()
     {
         if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.delete')) {
             return;
@@ -148,7 +141,7 @@ trait SyncTrait
      *
      * @return void
      */
-    function processEntriesToCreate()
+    public function processEntriesToCreate()
     {
         foreach ($this->directoryData as $data) {
             // Find and patch (in case directory_name has changed), or create directory entries.
@@ -193,7 +186,7 @@ trait SyncTrait
      * Get entity name.
      * For a user it will return the username
      * For a group it will return the group name
-     * @param Entity $entity
+     * @param Entity $entity entity
      *
      * @return mixed
      */
@@ -210,7 +203,7 @@ trait SyncTrait
      * Get name of group or user from directory data.
      * For a user it will return the username
      * For a group it will return the group name
-     * @param array $data
+     * @param array $data data
      *
      * @return mixed
      */
@@ -223,6 +216,12 @@ trait SyncTrait
         return isset($data['user']['username']) ? $data['user']['username'] : 'undefined';
     }
 
+    /**
+     * Get entity from data.
+     * @param array $data data
+     *
+     * @return mixed
+     */
     protected function getEntityFromData(array $data)
     {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {

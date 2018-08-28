@@ -14,29 +14,28 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
-use Cake\ORM\Entity;
-use Cake\Utility\Hash;
-use Cake\Utility\Inflector;
-use Passbolt\DirectorySync\Utility\Alias;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\Entity;
+use Cake\Utility\Inflector;
+use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
-use App\Error\Exception\ValidationException;
-use App\Model\Entity\User;
-use App\Model\Entity\Group;
-use App\Utility\UserAccessControl;
-use App\Model\Entity\Role;
 
 trait SyncAddTrait
 {
     /**
-     * @param array $data
-     * @param DirectoryEntry|null $entry
+     * Handle add exist.
+     * @param array $data data
+     * @param DirectoryEntry|null $entry entry
      * @param Entity $existingEntity (User or Group)
+     * @return void
      */
-    function handleAddExist(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
+    public function handleAddExist(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
     {
         // Do not overly report already successfully synced entities
         if (isset($entry) && !isset($entry->foreign_key)) {
@@ -57,7 +56,7 @@ trait SyncAddTrait
             } else {
                 // Else, if entity in directory was created after entity in db. We don't sync. There is an overlap.
                 // Later on, we'll introduce a mechanism to fix this manually.
-                $msg =  __(
+                $msg = __(
                     'The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
                     $this->getEntityName($existingEntity)
@@ -83,12 +82,14 @@ trait SyncAddTrait
     }
 
     /**
-     * @param array $data
-     * @param DirectoryEntry|null $entry
-     * @param Entity|null $existingEntity
-     * @param bool $ignoreEntity
+     * Handle add ignore
+     * @param array $data data
+     * @param DirectoryEntry|null $entry entry
+     * @param Entity|null $existingEntity existingEntity
+     * @param bool $ignoreEntity ignoreEntity
+     * @return void
      */
-    function handleAddIgnore(array $data, DirectoryEntry $entry = null, Entity $existingEntity = null, bool $ignoreEntity)
+    public function handleAddIgnore(array $data, DirectoryEntry $entry = null, Entity $existingEntity = null, bool $ignoreEntity)
     {
         if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
             return;
@@ -118,10 +119,12 @@ trait SyncAddTrait
     }
 
     /**
-     * @param array $data
-     * @param DirectoryEntry|null $entry
+     * Handle add new
+     * @param array $data data
+     * @param DirectoryEntry|null $entry entry
+     * @return void
      */
-    function handleAddNew(array $data, DirectoryEntry $entry = null)
+    public function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
         if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
             return;
@@ -162,11 +165,13 @@ trait SyncAddTrait
     }
 
     /**
-     * @param array $data
-     * @param DirectoryEntry|null $entry
-     * @param Entity $existingEntity
+     * Handle add deleted
+     * @param array $data data
+     * @param DirectoryEntry|null $entry entry
+     * @param Entity $existingEntity existingEntity
+     * @return void
      */
-    function handleAddDeleted(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
+    public function handleAddDeleted(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
     {
         if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
             return;
@@ -218,6 +223,13 @@ trait SyncAddTrait
         }
     }
 
+    /**
+     * Create entity
+     * @param array $data data
+     * @param DirectoryEntry $entry entry
+     *
+     * @return mixed
+     */
     public function createEntity(array $data, DirectoryEntry $entry)
     {
         $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);

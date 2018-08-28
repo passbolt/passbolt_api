@@ -16,6 +16,7 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
+use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
@@ -24,6 +25,11 @@ abstract class SyncTask extends AppShell
     protected $model;
     protected $pad = 10;
 
+    /**
+     * Display reports
+     * @param array $reports list of reports
+     * @return void
+     */
     protected function _displayReports($reports)
     {
         $this->hr();
@@ -41,7 +47,7 @@ abstract class SyncTask extends AppShell
         $this->out(__('To delete:'));
         $deleted = $reports->getByAction(Alias::ACTION_DELETE);
         if (!count($deleted)) {
-            $this->success(str_pad('[success]', $this->pad)  . __('No new item to delete'));
+            $this->success(str_pad('[success]', $this->pad) . __('No new item to delete'));
         }
         foreach ($deleted as $i => $report) {
             $this->_displayReport($report);
@@ -49,6 +55,11 @@ abstract class SyncTask extends AppShell
         $this->out();
     }
 
+    /**
+     * Display report
+     * @param ActionReport $report report
+     * @return void
+     */
     protected function _displayReport($report)
     {
         $msg = str_pad('[' . $report->getStatus() . ']', $this->pad);
