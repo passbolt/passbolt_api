@@ -39,7 +39,8 @@ class LdapDirectory implements DirectoryInterface
      * LdapDirectory constructor.
      * @throws \Exception if connection cannot be established
      */
-    function __construct() {
+    function __construct()
+    {
         $config = Configure::read('passbolt.plugins.directorySync.ldap');
         $config = (new Configuration())->loadFromArray($config);
         $this->ldap = new LdapManager($config);
@@ -54,8 +55,9 @@ class LdapDirectory implements DirectoryInterface
     /**
      * Used to map fields and specify the object class names that we'll need.
      */
-    function customizeSchema() {
-        $this->ldap->getEventDispatcher()->addListener(Event::LDAP_SCHEMA_LOAD, function(LdapObjectSchemaEvent $event) {
+    function customizeSchema()
+    {
+        $this->ldap->getEventDispatcher()->addListener(Event::LDAP_SCHEMA_LOAD, function (LdapObjectSchemaEvent $event) {
             $schema = $event->getLdapObjectSchema();
 
             // Only modify the 'user' schema type, ignore the others for this listener...
@@ -74,14 +76,17 @@ class LdapDirectory implements DirectoryInterface
         });
     }
 
-    public function getFieldValue($object, $fieldName) {
+    public function getFieldValue($object, $fieldName)
+    {
         $mappingRules = $this->getMappingRules()[$object->getType()];
         $fieldEquivalent = $mappingRules[$fieldName];
         $call = 'get' . ucfirst($fieldEquivalent);
+
         return $object->{$call}();
     }
 
-    function getMappingRules () {
+    function getMappingRules()
+    {
         $type = $this->ldap->getConnection()->getConfig()->getLdapType();
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
             throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
@@ -98,7 +103,6 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
         $selectFields = array_values($mappingRules);
-
 
         $query = $this->ldap->buildLdapQuery();
         $users = $query
@@ -129,7 +133,8 @@ class LdapDirectory implements DirectoryInterface
     /**
      * Get a list of groups
      */
-    public function getGroups() {
+    public function getGroups()
+    {
         $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
         $selectFields = array_values($mappingRules);
 
@@ -155,6 +160,7 @@ class LdapDirectory implements DirectoryInterface
                 ]
             ];
         }
+
         return $this->groups;
     }
 }

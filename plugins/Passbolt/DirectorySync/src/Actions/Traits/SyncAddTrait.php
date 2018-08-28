@@ -29,7 +29,8 @@ use App\Model\Entity\Group;
 use App\Utility\UserAccessControl;
 use App\Model\Entity\Role;
 
-trait SyncAddTrait {
+trait SyncAddTrait
+{
     /**
      * @param array $data
      * @param DirectoryEntry|null $entry
@@ -43,20 +44,32 @@ trait SyncAddTrait {
             if ($data['directory_created']->lte($existingEntity->created)) {
                 $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
                 $this->addReportItem(new ActionReport(
-                    __('The {0} {1} was mapped with an existing {0} in passbolt.',
+                    __(
+                        'The {0} {1} was mapped with an existing {0} in passbolt.',
                         Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                        $this->getEntityName($existingEntity)),
-                    self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $existingEntity));
+                        $this->getEntityName($existingEntity)
+                    ),
+                    self::ENTITY_TYPE,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_SYNC,
+                    $existingEntity
+                ));
             } else {
                 // Else, if entity in directory was created after entity in db. We don't sync. There is an overlap.
                 // Later on, we'll introduce a mechanism to fix this manually.
-                $msg =  __('The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
+                $msg =  __(
+                    'The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($existingEntity));
+                    $this->getEntityName($existingEntity)
+                );
                 $reportData = new SyncError($entry, new \Exception($msg));
                 $this->addReportItem(new ActionReport(
                     $msg,
-                    self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_ERROR, $reportData));
+                    self::ENTITY_TYPE,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_ERROR,
+                    $reportData
+                ));
             }
         }
 
@@ -87,14 +100,18 @@ trait SyncAddTrait {
             return;
         }
         if ($ignoreEntity) {
-            $msg = __('The {0} {1} was not synced because the passbolt {0} is marked as to be ignored.',
+            $msg = __(
+                'The {0} {1} was not synced because the passbolt {0} is marked as to be ignored.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($existingEntity));
+                $this->getEntityName($existingEntity)
+            );
             $reportData = $this->DirectoryIgnore->get($existingEntity->id);
         } else {
-            $msg = __('The {0} {1} was not synced because the directory {0} is marked as to be ignored.',
+            $msg = __(
+                'The {0} {1} was not synced because the directory {0} is marked as to be ignored.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getNameFromData($data));
+                $this->getNameFromData($data)
+            );
             $reportData = $this->DirectoryIgnore->get($entry->id);
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $reportData));
@@ -115,21 +132,27 @@ trait SyncAddTrait {
         try {
             $reportData = $entity = $this->createEntity($data, $entry);
             $status = Alias::STATUS_SUCCESS;
-            $msg = __('The {0} {1} was successfully added to passbolt.',
+            $msg = __(
+                'The {0} {1} was successfully added to passbolt.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getNameFromData($data));
-        } catch(ValidationException $exception) {
+                $this->getNameFromData($data)
+            );
+        } catch (ValidationException $exception) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, $exception);
-            $msg = __('The {0} {1} could not be added because of data validation issues.',
+            $msg = __(
+                'The {0} {1} could not be added because of data validation issues.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getNameFromData($data));
+                $this->getNameFromData($data)
+            );
         } catch (InternalErrorException $exception) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, $exception);
-            $msg = __('The {0} {1} could not be added because of an internal error. Please try again later.',
+            $msg = __(
+                'The {0} {1} could not be added because of an internal error. Please try again later.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getNameFromData($data));
+                $this->getNameFromData($data)
+            );
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, $status, $reportData));
 
@@ -155,9 +178,11 @@ trait SyncAddTrait {
         if ($data['directory_created']->lt($existingEntity->modified)) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, null);
-            $msg = __('The previously deleted {0} {1} was not re-added to passbolt.',
+            $msg = __(
+                'The previously deleted {0} {1} was not re-added to passbolt.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($existingEntity));
+                $this->getEntityName($existingEntity)
+            );
         } else {
             // if the entity was delete in passbolt and then created in ldap
             // try to recreate
@@ -165,19 +190,25 @@ trait SyncAddTrait {
             try {
                 $reportData = $entity = $this->createEntity($data, $entry);
                 $status = Alias::STATUS_SUCCESS;
-                $msg = __('The previously deleted {0} {1} was re-added to passbolt.',
+                $msg = __(
+                    'The previously deleted {0} {1} was re-added to passbolt.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($existingEntity));
-            } catch(ValidationException $exception) {
+                    $this->getEntityName($existingEntity)
+                );
+            } catch (ValidationException $exception) {
                 $reportData = new SyncError($entry, $exception);
-                $msg = __('The deleted {0} {1} could not be re-added to passbolt because of validation errors.',
+                $msg = __(
+                    'The deleted {0} {1} could not be re-added to passbolt because of validation errors.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($existingEntity));
+                    $this->getEntityName($existingEntity)
+                );
             } catch (InternalErrorException $exception) {
                 $reportData = new SyncError($entry, $exception);
-                $msg = __('The deleted {0} {1} could not be re-added to passbolt because of an internal error.',
+                $msg = __(
+                    'The deleted {0} {1} could not be re-added to passbolt because of an internal error.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($existingEntity));
+                    $this->getEntityName($existingEntity)
+                );
             }
         }
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_CREATE, $status, $reportData));
@@ -187,7 +218,8 @@ trait SyncAddTrait {
         }
     }
 
-    public function createEntity(array $data, DirectoryEntry $entry) {
+    public function createEntity(array $data, DirectoryEntry $entry)
+    {
         $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             // Define default admin for group.

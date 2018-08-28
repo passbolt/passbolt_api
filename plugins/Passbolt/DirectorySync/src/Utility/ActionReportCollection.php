@@ -42,6 +42,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
                 $result[] = $report;
             }
         }
+
         return new ActionReportCollection($result);
     }
 
@@ -53,6 +54,7 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
                 $result[] = $report;
             }
         }
+
         return new ActionReportCollection($result);
     }
 
@@ -76,27 +78,33 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
         $this->reports = unserialize($serialized);
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         $this->position = 0;
     }
 
-    public function current() {
+    public function current()
+    {
         return $this->reports[$this->position];
     }
 
-    public function key() {
+    public function key()
+    {
         return $this->position;
     }
 
-    public function next() {
+    public function next()
+    {
         ++$this->position;
     }
 
-    public function valid() {
+    public function valid()
+    {
         return isset($this->reports[$this->position]);
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (is_null($offset)) {
             $this->reports[] = $value;
         } else {
@@ -104,19 +112,23 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
         }
     }
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->reports[$offset]);
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->reports[$offset]);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return isset($this->reports[$offset]) ? $this->reports[$offset] : null;
     }
 
-    public function count() {
+    public function count()
+    {
         return count($this->reports);
     }
 }

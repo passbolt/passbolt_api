@@ -58,7 +58,8 @@ class DirectoryEntry extends Entity
      * Get associated entity.
      * @return Group|User|null
      */
-    public function getAssociatedEntity() {
+    public function getAssociatedEntity()
+    {
         if ($this->foreign_model == Alias::MODEL_GROUPS && isset($this->group)) {
             return $this->group;
         }

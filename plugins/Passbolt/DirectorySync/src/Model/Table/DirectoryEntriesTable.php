@@ -87,7 +87,6 @@ class DirectoryEntriesTable extends Table
             'bindingKey' => 'foreign_key',
             'foreignKey' => 'id'
         ]);
-
     }
 
     /**
@@ -139,7 +138,8 @@ class DirectoryEntriesTable extends Table
      *
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
-    public function buildEntity(array $data) {
+    public function buildEntity(array $data)
+    {
         return $this->newEntity($data, [
             'accessibleFields' => [
                 'id' => true,
@@ -180,6 +180,7 @@ class DirectoryEntriesTable extends Table
     public function updateForeignKey(DirectoryEntry $entity, string $foreignKey = null)
     {
         $entity->foreign_key = $foreignKey;
+
         return $this->save($entity);
     }
 
@@ -206,9 +207,10 @@ class DirectoryEntriesTable extends Table
         }
     }
 
-    public function buildEntityFromData(array $data) {
-        if (strlen($data['directory_name']) > SELF::DN_MAX_LENGTH) {
-            $data['directory_name'] = substr($data['directory_name'], 0, SELF::DN_MAX_LENGTH - 1);
+    public function buildEntityFromData(array $data)
+    {
+        if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
+            $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
         }
 
         $directoryEntry = $this->buildEntity($data);
@@ -259,16 +261,17 @@ class DirectoryEntriesTable extends Table
             $entry = $this->get($data['id'], ['contain' => [$model]]);
             if (is_string($data['directory_name']) && $entry->directory_name !== $data['directory_name']) {
                 if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
-                    $data['directory_name'] = substr($data['directory_name'], 0, SELF::DN_MAX_LENGTH - 1);
+                    $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
                 }
                 $entry->directory_name = $data['directory_name'];
                 $this->save($entry);
-
             }
+
             return $entry;
-        } catch(RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) {
             $data['foreign_model'] = $model;
             $data['foreign_key'] = null;
+
             return $this->create($data);
         }
     }
@@ -289,6 +292,7 @@ class DirectoryEntriesTable extends Table
         if (!empty($directoryIds)) {
             $query = $query->where(['DirectoryEntries.id NOT IN' => $directoryIds]);
         }
+
         return $query->all();
     }
 }

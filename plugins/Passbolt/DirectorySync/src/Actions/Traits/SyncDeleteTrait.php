@@ -24,7 +24,8 @@ use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\SyncError;
 use App\Error\Exception\ValidationException;
 
-trait SyncDeleteTrait {
+trait SyncDeleteTrait
+{
     /**
      * Handle ignored entries.
      * @param DirectoryEntry $entry
@@ -35,10 +36,16 @@ trait SyncDeleteTrait {
         $this->DirectoryEntries->delete($entry);
         if (!empty($entry->foreign_key) && isset($entity) && $entity->deleted == false) {
             $this->addReportItem(new ActionReport(
-                __('The directory {0} {1} was not deleted because it is ignored.',
+                __(
+                    'The directory {0} {1} was not deleted because it is ignored.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($entity)),
-                self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $entry));
+                    $this->getEntityName($entity)
+                ),
+                self::ENTITY_TYPE,
+                Alias::ACTION_DELETE,
+                Alias::STATUS_IGNORE,
+                $entry
+            ));
         }
     }
 
@@ -53,10 +60,16 @@ trait SyncDeleteTrait {
         if (!$entity->deleted) {
             $reportData = $this->DirectoryIgnore->get($entity->id);
             $this->addReportItem(new ActionReport(
-                __('The passbolt {0} {1} was not deleted because it is marked as to be ignored.',
+                __(
+                    'The passbolt {0} {1} was not deleted because it is marked as to be ignored.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($entity)),
-                self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_IGNORE, $reportData));
+                    $this->getEntityName($entity)
+                ),
+                self::ENTITY_TYPE,
+                Alias::ACTION_DELETE,
+                Alias::STATUS_IGNORE,
+                $reportData
+            ));
         }
     }
 
@@ -70,10 +83,16 @@ trait SyncDeleteTrait {
         $this->DirectoryEntries->delete($entry);
         if (isset($entity) && $entity->deleted) {
             $this->addReportItem(new ActionReport(
-                __('The directory {0} {1} was already deleted in passbolt.',
+                __(
+                    'The directory {0} {1} was already deleted in passbolt.',
                     Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                    $this->getEntityName($entity)),
-                self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_SYNC, $entity));
+                    $this->getEntityName($entity)
+                ),
+                self::ENTITY_TYPE,
+                Alias::ACTION_DELETE,
+                Alias::STATUS_SYNC,
+                $entity
+            ));
         }
     }
 
@@ -86,12 +105,16 @@ trait SyncDeleteTrait {
         $entity = $entry->getAssociatedEntity();
         $errors = $entity->getErrors();
         if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-            $msg = __('The user {0} could not be deleted because they are the only owner of one or more passwords.',
-                $this->getEntityName($entity));
+            $msg = __(
+                'The user {0} could not be deleted because they are the only owner of one or more passwords.',
+                $this->getEntityName($entity)
+            );
         } else {
-            $msg = __('The {0} {1} could not be deleted because they are the only manager of one or more groups.',
+            $msg = __(
+                'The {0} {1} could not be deleted because they are the only manager of one or more groups.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($entity));
+                $this->getEntityName($entity)
+            );
         }
         $data = new SyncError($entry, new ValidationException($msg, $entity));
         $this->addReportItem(new ActionReport($msg, self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
@@ -106,10 +129,16 @@ trait SyncDeleteTrait {
         $entity = $entry->getAssociatedEntity();
         $this->DirectoryEntries->delete($entry);
         $this->addReportItem(new ActionReport(
-            __('The {0} {1} was successfully deleted.',
+            __(
+                'The {0} {1} was successfully deleted.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($entity)),
-            self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $entity));
+                $this->getEntityName($entity)
+            ),
+            self::ENTITY_TYPE,
+            Alias::ACTION_DELETE,
+            Alias::STATUS_SUCCESS,
+            $entity
+        ));
     }
 
     /**
@@ -122,9 +151,15 @@ trait SyncDeleteTrait {
         $entity = $entry->getAssociatedEntity();
         $data = new SyncError($entry, $exception);
         $this->addReportItem(new ActionReport(
-            __('The {0} {1} could not be deleted because of an internal error. Please try again later.',
+            __(
+                'The {0} {1} could not be deleted because of an internal error. Please try again later.',
                 Inflector::singularize(strtolower(self::ENTITY_TYPE)),
-                $this->getEntityName($entity)),
-            self::ENTITY_TYPE, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $data));
+                $this->getEntityName($entity)
+            ),
+            self::ENTITY_TYPE,
+            Alias::ACTION_DELETE,
+            Alias::STATUS_ERROR,
+            $data
+        ));
     }
 }

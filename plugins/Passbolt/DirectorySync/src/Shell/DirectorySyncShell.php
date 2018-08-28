@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 namespace Passbolt\DirectorySync\Shell;
+
 use App\Shell\AppShell;
 
 class DirectorySyncShell extends AppShell

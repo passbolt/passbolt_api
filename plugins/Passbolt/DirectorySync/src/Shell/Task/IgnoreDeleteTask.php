@@ -81,11 +81,12 @@ class IgnoreDeleteTask extends AppShell
             }
             $DirectoryIgnore->delete($ignored);
             $this->success(__('The record will stop being ignored in the next directory synchronization.'));
+
             return true;
-        } catch(RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) {
             $this->err($exception->getMessage());
+
             return false;
         }
     }
-
 }

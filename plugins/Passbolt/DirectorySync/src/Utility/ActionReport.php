@@ -96,7 +96,8 @@ class ActionReport implements \Serializable
      *
      * @return string
      */
-    public function getMessage() {
+    public function getMessage()
+    {
         return $this->message;
     }
 
@@ -105,7 +106,8 @@ class ActionReport implements \Serializable
      *
      * @return string
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->status;
     }
 
@@ -114,7 +116,8 @@ class ActionReport implements \Serializable
      *
      * @return string
      */
-    public function getModel() {
+    public function getModel()
+    {
         return $this->model;
     }
 
@@ -123,7 +126,8 @@ class ActionReport implements \Serializable
      *
      * @return string
      */
-    public function getAction() {
+    public function getAction()
+    {
         return $this->action;
     }
 
@@ -132,7 +136,8 @@ class ActionReport implements \Serializable
      *
      * @return mixed
      */
-    public function getData() {
+    public function getData()
+    {
         return $this->data;
     }
 
@@ -141,7 +146,8 @@ class ActionReport implements \Serializable
      *
      * @return mixed
      */
-    public function getCreated() {
+    public function getCreated()
+    {
         return $this->created;
     }
 
@@ -151,7 +157,7 @@ class ActionReport implements \Serializable
      * @param string $action
      * @return bool
      */
-    static public function isValidAction(string $action)
+    public static function isValidAction(string $action)
     {
         return ($action === Alias::ACTION_CREATE || $action === Alias::ACTION_UPDATE || $action === Alias::ACTION_DELETE);
     }
@@ -162,10 +168,9 @@ class ActionReport implements \Serializable
      * @param string $status
      * @return bool
      */
-    static public function isValidStatus(string $status)
+    public static function isValidStatus(string $status)
     {
         return ($status === Alias::STATUS_SUCCESS || $status === Alias::STATUS_ERROR || $status === Alias::STATUS_IGNORE || $status === Alias::STATUS_SYNC);
-
     }
 
     /**
@@ -174,7 +179,7 @@ class ActionReport implements \Serializable
      * @param string $model
      * @return bool
      */
-    static public function isValidModel(string $model)
+    public static function isValidModel(string $model)
     {
         return ($model === Alias::MODEL_USERS || $model === Alias::MODEL_GROUPS || $model === Alias::MODEL_GROUPS_USERS || $model === SyncAction::MEMBERS);
     }
@@ -185,7 +190,7 @@ class ActionReport implements \Serializable
      * @param $data
      * @return bool
      */
-    static public function isValidData($data)
+    public static function isValidData($data)
     {
         return is_object($data) || is_array($data);
     }

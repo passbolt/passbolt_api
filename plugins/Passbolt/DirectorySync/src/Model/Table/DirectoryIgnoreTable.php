@@ -122,6 +122,7 @@ class DirectoryIgnoreTable extends Table
                         return false;
                     }
                 }
+
                 return true;
             },
             'AssociatedRecordExists',
@@ -130,6 +131,7 @@ class DirectoryIgnoreTable extends Table
                 'message' => __('The associated record could not be found')
             ]
         );
+
         return $rules;
     }
 
@@ -159,7 +161,8 @@ class DirectoryIgnoreTable extends Table
     {
         try {
             $entry = $this->get($foreignKey);
-        } catch(RecordNotFoundException $exception) {}
+        } catch (RecordNotFoundException $exception) {
+        }
         if (isset($entry)) {
             throw new BadRequestException(__('This record is already marked as to be ignored.'));
         }
@@ -168,7 +171,8 @@ class DirectoryIgnoreTable extends Table
             [
                 'id' => $foreignKey,
                 'foreign_model' => $foreignModel
-            ], [
+            ],
+            [
                 'accessibleFields' => [
                     'id' => true,
                     'foreign_model' => true
@@ -200,7 +204,7 @@ class DirectoryIgnoreTable extends Table
         $query = $this->query()
             ->select(['id'])
             ->leftJoinWith($entityType)
-            ->where(function ($exp, $q)  use($entityType) {
+            ->where(function ($exp, $q) use ($entityType) {
                 return $exp
                     ->isNull($entityType . '.id')
                     ->eq('DirectoryIgnore.foreign_model', $entityType);

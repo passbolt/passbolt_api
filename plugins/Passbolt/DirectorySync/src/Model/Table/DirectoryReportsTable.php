@@ -95,10 +95,11 @@ class DirectoryReportsTable extends Table
                     $DirectoryReport = TableRegistry::getTableLocator()->get('DirectoryReports');
                     try {
                         $DirectoryReport->get($entity->parent_id);
-                    } catch(RecordNotFoundException $exception) {
+                    } catch (RecordNotFoundException $exception) {
                         return false;
                     }
                 }
+
                 return true;
             },
             'ParentDirectoryReports',
@@ -107,6 +108,7 @@ class DirectoryReportsTable extends Table
                 'message' => __('The associated record could not be found')
             ]
         );
+
         return $rules;
     }
 
@@ -126,6 +128,7 @@ class DirectoryReportsTable extends Table
             ]
         ]);
         $result = $this->save($entity);
+
         return $result;
     }
 }

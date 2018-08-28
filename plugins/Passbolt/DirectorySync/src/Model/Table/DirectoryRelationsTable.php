@@ -91,7 +91,8 @@ class DirectoryRelationsTable extends Table
      * An orphan directoryRelations is a directoryRelation that doesn't have a corresponding userGroup.
      * It means that userGroup has been deleted manually.
      */
-    public function cleanupHardDeletedUserGroups(array $entryIds) {
+    public function cleanupHardDeletedUserGroups(array $entryIds)
+    {
         $conditions = [
             'GroupUser.id IS NULL'
         ];
@@ -111,7 +112,8 @@ class DirectoryRelationsTable extends Table
         }
     }
 
-    public function createFromGroupUser($groupUser) {
+    public function createFromGroupUser($groupUser)
+    {
         $DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $groupEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $groupUser->group_id])->first();
         $userEntry = $DirectoryEntries->find()->select('id')->where(['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $groupUser->user_id])->first();
@@ -125,18 +127,19 @@ class DirectoryRelationsTable extends Table
             'parent_key' => $groupEntry->id,
             'child_key' => $userEntry->id,
         ];
+
         return $this->createOrUpdate($relation);
     }
 
-    public function createOrUpdate(array $data) {
+    public function createOrUpdate(array $data)
+    {
         $r = $this->find()->select(['id'])->where(['id' => $data['id']])->first();
         if (!$r) {
             return $this->create($data);
-        }
-
-        else {
+        } else {
             unset($data['id']);
             $this->patchEntity($r, $data);
+
             return $this->save($r);
         }
     }
@@ -147,7 +150,8 @@ class DirectoryRelationsTable extends Table
      *
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function lookupByGroupUser($groupUser) {
+    public function lookupByGroupUser($groupUser)
+    {
         return $this->find()
             ->where(['id' => $groupUser->id])
             ->first();

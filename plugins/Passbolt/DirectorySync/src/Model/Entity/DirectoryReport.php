@@ -20,7 +20,7 @@ class DirectoryReport extends Entity
 
     const STATUS_RUNNING = 'running';
     const STATUS_DONE = 'done';
-    
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

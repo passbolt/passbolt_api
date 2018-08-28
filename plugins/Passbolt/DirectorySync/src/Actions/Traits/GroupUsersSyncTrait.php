@@ -26,14 +26,16 @@ use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 use App\Utility\UserAccessControl;
 
-trait GroupUsersSyncTrait {
+trait GroupUsersSyncTrait
+{
 
     /**
      * Handle groupUsers once a group is created.
      * @param array $data directory data
      * @param Group $group group
      */
-    public function handleGroupUsersAfterGroupCreate(array $data, Group $group) {
+    public function handleGroupUsersAfterGroupCreate(array $data, Group $group)
+    {
         if (!isset($group->groups_users)) {
             $group = $this->findGroupWithGroupUsers($group);
         }
@@ -47,7 +49,8 @@ trait GroupUsersSyncTrait {
      *
      * @return mixed
      */
-    public function handleGroupUsersDeleted(DirectoryEntry $entry) {
+    public function handleGroupUsersDeleted(DirectoryEntry $entry)
+    {
         return $this->DirectoryRelations->deleteAll(['parent_key' => $entry->id]);
     }
 
@@ -57,7 +60,8 @@ trait GroupUsersSyncTrait {
      * @param DirectoryEntry $entry directory entry
      * @param Group $group group to edit
      */
-    public function handleGroupUsersEdit(array $data, DirectoryEntry $entry, Group $group) {
+    public function handleGroupUsersEdit(array $data, DirectoryEntry $entry, Group $group)
+    {
         if (!isset($group->groups_users)) {
             $group = $this->findGroupWithGroupUsers($group);
         }
@@ -76,7 +80,6 @@ trait GroupUsersSyncTrait {
             } else {
                 // Else, we need to send notifications.
                 $this->requestAddGroupUsers($group, $toAdd);
-
             }
         }
         if (!empty($toRemove)) {
@@ -92,19 +95,24 @@ trait GroupUsersSyncTrait {
      * @param Group $group
      * @param array $userIdsToAdd
      */
-    public function requestAddGroupUsers(Group $group, array $userIdsToAdd) {
-        foreach($userIdsToAdd as $userId) {
+    public function requestAddGroupUsers(Group $group, array $userIdsToAdd)
+    {
+        foreach ($userIdsToAdd as $userId) {
             $u = $this->Users->get($userId);
             $this->addReportItem(new ActionReport(
                 __('A request to add user {0} in group {1} was sent to the group manager.', $u->username, $group->name),
-                Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SUCCESS, $u));
+                Alias::MODEL_GROUPS_USERS,
+                Alias::ACTION_CREATE,
+                Alias::STATUS_SUCCESS,
+                $u
+            ));
         }
 
         // Send notification.
         $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
         $groupUsers = [];
         // Build group_users entity for the call.
-        foreach($userIdsToAdd as $userId) {
+        foreach ($userIdsToAdd as $userId) {
             $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
         }
         $eventData = ['groupUsers' => $groupUsers, 'group' => $group, 'requester' => $accessControl];
@@ -118,12 +126,14 @@ trait GroupUsersSyncTrait {
      *
      * @return mixed
      */
-    protected function findGroupWithGroupUsers(Group $existingGroup) {
+    protected function findGroupWithGroupUsers(Group $existingGroup)
+    {
         $group = $this->Groups
             ->find()
             ->where(['id' => $existingGroup->id])
             ->contain(['GroupsUsers', 'GroupsUsers.Users'])
             ->first();
+
         return $group;
     }
 
@@ -133,8 +143,10 @@ trait GroupUsersSyncTrait {
      *
      * @return bool
      */
-    protected function groupExistsInDirectory(string $dn) {
+    protected function groupExistsInDirectory(string $dn)
+    {
         $groupDns = Hash::extract($this->directoryData, '{n}.directory_name');
+
         return in_array($dn, $groupDns);
     }
 
@@ -144,7 +156,8 @@ trait GroupUsersSyncTrait {
      *
      * @return array
      */
-    protected function findDirectoryRelationsByEntryId(string $entryId) {
+    protected function findDirectoryRelationsByEntryId(string $entryId)
+    {
         // Retrieve existing relations.
         $directoryRelations = $this->DirectoryRelations
             ->find()
@@ -153,6 +166,7 @@ trait GroupUsersSyncTrait {
             ->all()
             ->toArray();
         $directoryRelations = Hash::combine($directoryRelations, '{n}.id', '{n}');
+
         return $directoryRelations;
     }
 
@@ -162,7 +176,8 @@ trait GroupUsersSyncTrait {
      *
      * @return mixed
      */
-    protected function findDirectoryEntriesForGroupUsers(array $GroupsUsersDn) {
+    protected function findDirectoryEntriesForGroupUsers(array $GroupsUsersDn)
+    {
         if (empty($GroupsUsersDn)) {
             return [];
         }
@@ -183,7 +198,8 @@ trait GroupUsersSyncTrait {
      *
      * @return array
      */
-    protected function retrieveUsersToAdd(array $data, Group $group) {
+    protected function retrieveUsersToAdd(array $data, Group $group)
+    {
         $toAdd = [];
         if (empty($data['group']['users'])) {
             return $toAdd;
@@ -195,10 +211,10 @@ trait GroupUsersSyncTrait {
 
         // Calculate users to add.
         // We add users that are in group data and not in directoryRelations.
-        foreach($data['group']['users'] as $userDn) {
+        foreach ($data['group']['users'] as $userDn) {
             // If the group member is a group, we do not process.
             // TODO: manage nested groups.
-            if($this->groupExistsInDirectory($userDn)) {
+            if ($this->groupExistsInDirectory($userDn)) {
                 continue;
             }
 
@@ -206,7 +222,11 @@ trait GroupUsersSyncTrait {
                 // If a DN was returned by the directory, but cannot be resolved with our entries, we notify the admin.
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to group {1} because there is no matching directory entry in passbolt.', $userDn, $group->name),
-                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, [$userDn]));
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_IGNORE,
+                    [$userDn]
+                ));
                 continue;
             }
 
@@ -226,7 +246,11 @@ trait GroupUsersSyncTrait {
                 $u = $this->Users->get($userId);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to the group {1} because the membership has been removed in passbolt', $u->username, $group->name),
-                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $directoryGroupUserEntriesByDn[$userDn]));
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_IGNORE,
+                    $directoryGroupUserEntriesByDn[$userDn]
+                ));
                 continue;
             }
 
@@ -243,7 +267,8 @@ trait GroupUsersSyncTrait {
      *
      * @return array
      */
-    protected function retrieveUsersToRemove(array $data) {
+    protected function retrieveUsersToRemove(array $data)
+    {
         $directoryRelations = $this->findDirectoryRelationsByEntryId($data['id']);
 
         // Retrieve directory entries matching the group users returned by the directory.
@@ -257,7 +282,7 @@ trait GroupUsersSyncTrait {
 
         // Calculate groupUsers to remove.
         // We remove group users that are in directoryRelations but not in group data
-        foreach($directoryRelations as $directoryRelation) {
+        foreach ($directoryRelations as $directoryRelation) {
             if (!in_array($directoryRelation['user_directory_entry']['id'], $directoryGroupUserEntryIds)) {
                 $toRemove[] = $directoryRelation['id'];
             }
@@ -271,9 +296,10 @@ trait GroupUsersSyncTrait {
      * @param Group $group group where to ad the group users.
      * @param array $userIdsToAdd list of user ids to be added.
      */
-    protected function addGroupUsers(Group $group, array $userIdsToAdd) {
+    protected function addGroupUsers(Group $group, array $userIdsToAdd)
+    {
 
-        foreach($userIdsToAdd as $userId) {
+        foreach ($userIdsToAdd as $userId) {
             $u = $this->Users->get($userId);
             try {
                 $newGroupUsers = $this->GroupsUsers->patchEntitiesWithChanges(
@@ -288,12 +314,20 @@ trait GroupUsersSyncTrait {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to the group {1} because of a validation error.', $u->username, $group->name),
-                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_ERROR, $error));
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_ERROR,
+                    $error
+                ));
             } catch (\Exception $exception) {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to the group {1} because of an internal error.', $u->username, $group->name),
-                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_ERROR, $error));
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_ERROR,
+                    $error
+                ));
             }
 
             $saveResult = $this->Groups->save($group);
@@ -308,17 +342,25 @@ trait GroupUsersSyncTrait {
                 }
                 $this->addReportItem(new ActionReport(
                     $msg,
-                     Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $group));
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_IGNORE,
+                    $group
+                ));
                 continue;
             }
 
             // Add relations for each new group.
-            foreach($saveResult->groups_users as $groupUser) {
+            foreach ($saveResult->groups_users as $groupUser) {
                 if ($groupUser->user_id == $userId) {
                     $this->DirectoryRelations->createFromGroupUser($groupUser);
                     $this->addReportItem(new ActionReport(
                         __('The user {0} was successfully added to the group {1}.', $u->username, $group->name),
-                        Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SUCCESS, $group));
+                        Alias::MODEL_GROUPS_USERS,
+                        Alias::ACTION_CREATE,
+                        Alias::STATUS_SUCCESS,
+                        $group
+                    ));
                     break;
                 }
             }
@@ -332,9 +374,9 @@ trait GroupUsersSyncTrait {
      */
     protected function removeGroupUsers(Group $group, array $groupUserIdsToRemove)
     {
-        foreach($groupUserIdsToRemove as $groupUserId) {
+        foreach ($groupUserIdsToRemove as $groupUserId) {
             // If corresponding groupUser does not exist, cleanup the relation.
-            if (!$this->GroupsUsers->exists(['id' => $groupUserId])){
+            if (!$this->GroupsUsers->exists(['id' => $groupUserId])) {
                 $directoryRelation = $this->DirectoryRelations->get($groupUserId);
                 $this->DirectoryRelations->delete($directoryRelation);
                 continue;
@@ -353,7 +395,11 @@ trait GroupUsersSyncTrait {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be removed from the group {1} because some validation issues.', $groupUserId, $group->name),
-                    Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $error));
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_CREATE,
+                    Alias::STATUS_IGNORE,
+                    $error
+                ));
                 continue;
             }
 
@@ -378,7 +424,11 @@ trait GroupUsersSyncTrait {
             // Send report.
             $this->addReportItem(new ActionReport(
                 __('The user {0} was successfully removed from the group {1}.', $groupUserId, $group->name),
-                 Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_SUCCESS, $group));
+                Alias::MODEL_GROUPS_USERS,
+                Alias::ACTION_DELETE,
+                Alias::STATUS_SUCCESS,
+                $group
+            ));
         }
     }
 
@@ -387,12 +437,17 @@ trait GroupUsersSyncTrait {
      * @param Group $group group
      * @param array $toSync list of groupuserIds to be synced.
      */
-    public function syncGroupUsers(Group $group, array $toSync) {
-        foreach($toSync as $groupUser) {
+    public function syncGroupUsers(Group $group, array $toSync)
+    {
+        foreach ($toSync as $groupUser) {
             $directoryRelation = $this->DirectoryRelations->createFromGroupUser($groupUser);
             $this->addReportItem(new ActionReport(
                 __('The user {0} was successfully synced with the group {1}.', $groupUser->user->username, $group->name),
-                Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_SYNC, $directoryRelation));
+                Alias::MODEL_GROUPS_USERS,
+                Alias::ACTION_CREATE,
+                Alias::STATUS_SYNC,
+                $directoryRelation
+            ));
         }
     }
 
@@ -403,14 +458,15 @@ trait GroupUsersSyncTrait {
      *
      * @return array
      */
-    public function retrieveUsersToSync(array $data, Group $group) {
+    public function retrieveUsersToSync(array $data, Group $group)
+    {
         $toSync = [];
 
         // Look for users to sync.
         // Users that are in data and have a correspondence in GroupUsers
         $directoryGroupUserEntries = $this->findDirectoryEntriesForGroupUsers($data['group']['users']);
         $directoryGroupUserEntriesByDn = Hash::combine($directoryGroupUserEntries, '{n}.directory_name', '{n}');
-        foreach($data['group']['users'] as $userDn) {
+        foreach ($data['group']['users'] as $userDn) {
             if (isset($directoryGroupUserEntriesByDn[$userDn])) {
                 $groupUser = $group->hasUser(['id' => $directoryGroupUserEntriesByDn[$userDn]->foreign_key]);
                 if ($groupUser) {
@@ -427,7 +483,11 @@ trait GroupUsersSyncTrait {
                         // Send ignore report.
                         $this->addReportItem(new ActionReport(
                             __('The user {0} was not synced with existing membership for group {1} because the membership was created before.', $groupUser->user->username, $group->name),
-                            Alias::MODEL_GROUPS_USERS, Alias::ACTION_CREATE, Alias::STATUS_IGNORE, $directoryGroupUserEntriesByDn[$userDn]));
+                            Alias::MODEL_GROUPS_USERS,
+                            Alias::ACTION_CREATE,
+                            Alias::STATUS_IGNORE,
+                            $directoryGroupUserEntriesByDn[$userDn]
+                        ));
                     }
                 }
             }

@@ -51,7 +51,8 @@ class GroupSyncAction extends SyncAction
      *
      * @throws \Exception
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -73,11 +74,13 @@ class GroupSyncAction extends SyncAction
      *
      * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
      */
-    public function execute() {
+    public function execute()
+    {
         $this->beforeExecute();
         $this->processEntriesToDelete();
         $this->processEntriesToCreate();
         $this->afterExecute();
+
         return $this->getSummary();
     }
 
@@ -87,7 +90,8 @@ class GroupSyncAction extends SyncAction
      * @param array $data
      * @return array|\Cake\Datasource\EntityInterface|null
      */
-    public function getGroupFromData(array $data) {
+    public function getGroupFromData(array $data)
+    {
         // If not group already associated, find if there is a corresponding group in the database.
         $existingGroup = $this->Groups->find()
             ->select(['id', 'name', 'deleted', 'created', 'modified'])
@@ -97,6 +101,7 @@ class GroupSyncAction extends SyncAction
         if (!isset($existingGroup) || empty($existingGroup)) {
             $existingGroup = null;
         }
+
         return $existingGroup;
     }
 
@@ -105,7 +110,8 @@ class GroupSyncAction extends SyncAction
      *
      * @return array|\Cake\Datasource\EntityInterface|mixed|null
      */
-    public function getDefaultGroupAdmin() {
+    public function getDefaultGroupAdmin()
+    {
         $groupAdmin = Configure::read('passbolt.plugins.directorySync.defaultGroupAdminUser');
         if (!empty($groupAdmin)) {
             // Get groupAdmin from database.

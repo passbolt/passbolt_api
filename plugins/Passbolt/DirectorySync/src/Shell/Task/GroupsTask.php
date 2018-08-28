@@ -52,6 +52,7 @@ class GroupsTask extends SyncTask
                 'default' => 'true',
                 'boolean' => true,
             ]);
+
         return $parser;
     }
 
@@ -67,10 +68,12 @@ class GroupsTask extends SyncTask
             $action = new GroupSyncAction();
             $reports = $action->execute();
             $this->_displayReports($reports);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->abort($exception->getMessage());
+
             return false;
         }
+
         return true;
     }
 }

@@ -32,7 +32,7 @@ abstract class SyncTask extends AppShell
         $this->out(__('To create:'));
         $created = $reports->getByAction(Alias::ACTION_CREATE);
         if (!count($created)) {
-            $this->success( str_pad('[success]', $this->pad) . __('No new item to create.'));
+            $this->success(str_pad('[success]', $this->pad) . __('No new item to create.'));
         }
         foreach ($created as $i => $report) {
             $this->_displayReport($report);
@@ -49,11 +49,12 @@ abstract class SyncTask extends AppShell
         $this->out();
     }
 
-    protected function _displayReport($report) {
+    protected function _displayReport($report)
+    {
         $msg = str_pad('[' . $report->getStatus() . ']', $this->pad);
         $msg .= $report->getMessage();
         $data = $report->getData();
-        switch($report->getStatus()) {
+        switch ($report->getStatus()) {
             case Alias::STATUS_ERROR:
                 $this->err($msg);
                 if ($data instanceof SyncError) {

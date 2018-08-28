@@ -26,7 +26,8 @@ class TestTask extends AppShell
     protected $Groups;
     protected $Users;
 
-    public function initialize() {
+    public function initialize()
+    {
         parent::initialize();
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $this->Users = TableRegistry::get('Users');
@@ -46,9 +47,9 @@ class TestTask extends AppShell
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('Test Sync'));
+
         return $parser;
     }
-
 
     /**
      * Main shell entry point
@@ -58,18 +59,19 @@ class TestTask extends AppShell
     public function main()
     {
         try {
-            $ldapDirectory = new  LdapDirectory();
+            $ldapDirectory = new LdapDirectory();
             $data = [
                 'users' => $ldapDirectory->getUsers(),
                 'groups' => $ldapDirectory->getGroups(),
             ];
         } catch (\Exception $e) {
              $this->err($e->getMessage());
+
             return false;
         }
 
         $validUsers = [];
-        foreach($data['users'] as $entryUser) {
+        foreach ($data['users'] as $entryUser) {
             $entryUser['foreign_model'] = Alias::MODEL_USERS;
             $entry = $this->DirectoryEntries->buildEntityFromData($entryUser);
             if (!empty($entry->getErrors())) {
@@ -81,7 +83,7 @@ class TestTask extends AppShell
         }
 
         $validGroups = [];
-        foreach($data['groups'] as $entryGroup) {
+        foreach ($data['groups'] as $entryGroup) {
             $entryGroup['foreign_model'] = Alias::MODEL_GROUPS;
             $entry = $this->DirectoryEntries->buildEntityFromData($entryGroup);
             if (!empty($entry->getErrors())) {
@@ -99,7 +101,8 @@ class TestTask extends AppShell
         return true;
     }
 
-    protected function displayValidObjects($data) {
+    protected function displayValidObjects($data)
+    {
         $output = [];
         $output[] = [__('groups'), __('users')];
 
@@ -107,18 +110,22 @@ class TestTask extends AppShell
         for ($i = 0; $i < $maxEntries; $i++) {
             // Handle user.
             $groupStr = '';
-            if(isset($data['groups'][$i]) && isset($data['groups'][$i]['group'])) {
-                $groupStr = __('{0} ({1} members)',
+            if (isset($data['groups'][$i]) && isset($data['groups'][$i]['group'])) {
+                $groupStr = __(
+                    '{0} ({1} members)',
                     $data['groups'][$i]['group']['name'],
-                    count($data['groups'][$i]['group']['users']));
+                    count($data['groups'][$i]['group']['users'])
+                );
             }
 
             $userStr = '';
-            if(isset($data['users'][$i]) && isset($data['users'][$i]['user'])) {
-                $userStr = __('{0} {1} ({2})',
+            if (isset($data['users'][$i]) && isset($data['users'][$i]['user'])) {
+                $userStr = __(
+                    '{0} {1} ({2})',
                     $data['users'][$i]['user']['profile']['first_name'],
                     $data['users'][$i]['user']['profile']['last_name'],
-                    $data['users'][$i]['user']['username']);
+                    $data['users'][$i]['user']['username']
+                );
             }
 
             $output[] = [$groupStr, $userStr];
@@ -128,5 +135,4 @@ class TestTask extends AppShell
         $io = $this->getIo();
         $io->helper('Table')->output($output);
     }
-
 }

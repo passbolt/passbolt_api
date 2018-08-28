@@ -76,13 +76,16 @@ class IgnoreCreateTask extends SyncTask
             $DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
             $DirectoryIgnore->createOrFail($foreignModel, $foreignKey);
             $this->success(__('The record will be ignored in the next directory synchronization.'));
+
             return true;
-        } catch(ValidationException $exception) {
+        } catch (ValidationException $exception) {
             $this->err($exception->getMessage());
             $this->_displayValidationError($exception->getEntity()->getErrors());
+
             return false;
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->err($exception->getMessage());
+
             return false;
         }
     }

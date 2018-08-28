@@ -23,6 +23,7 @@ use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncAction;
+
 class UserSyncAction extends SyncAction
 {
     use SyncTrait;
@@ -68,6 +69,7 @@ class UserSyncAction extends SyncAction
         $this->processEntriesToDelete();
         $this->processEntriesToCreate();
         $this->afterExecute();
+
         return $this->getSummary();
     }
 
@@ -85,6 +87,7 @@ class UserSyncAction extends SyncAction
         if (!isset($existingUser) || empty($existingUser)) {
             $existingUser = null;
         }
+
         return $existingUser;
     }
 }

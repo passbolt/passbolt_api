@@ -26,7 +26,8 @@ class DirectoryFactory
     /**
      * @throws \Exception
      */
-    static function get() {
+    static function get()
+    {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
             return new TestDirectory();
         }

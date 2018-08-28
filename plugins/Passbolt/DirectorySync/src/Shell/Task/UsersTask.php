@@ -56,6 +56,7 @@ class UsersTask extends SyncTask
                 'default' => 'true',
                 'boolean' => true,
             ]);
+
         return $parser;
     }
 
@@ -71,10 +72,12 @@ class UsersTask extends SyncTask
             $action = new UserSyncAction();
             $reports = $action->execute();
             $this->_displayReports($reports);
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $this->abort($exception->getMessage());
+
             return false;
         }
+
         return true;
     }
 }

@@ -79,5 +79,4 @@ class SyncError implements \Serializable
             }
         }
     }
-
 }

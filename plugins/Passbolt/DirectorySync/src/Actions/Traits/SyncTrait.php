@@ -30,7 +30,8 @@ use App\Model\Entity\Group;
 use App\Utility\UserAccessControl;
 use App\Model\Entity\Role;
 
-trait SyncTrait {
+trait SyncTrait
+{
 
     /**
      * Store entities (users or groups) to ignore.
@@ -71,8 +72,9 @@ trait SyncTrait {
      *
      * Mainly modify the dates format to the expected format FrozenTime.
      */
-    function formatDirectoryData() {
-        foreach($this->directoryData as $key => $data) {
+    function formatDirectoryData()
+    {
+        foreach ($this->directoryData as $key => $data) {
             if (get_class($data['directory_created']) !== 'FrozenTime') {
                 $this->directoryData[$key]['directory_created'] = new FrozenTime($data['directory_created']);
             }
@@ -97,8 +99,8 @@ trait SyncTrait {
         }
 
         $entriesId = Hash::extract($this->directoryData, '{n}.id');
-        $this->DirectoryIgnore->cleanupHardDeletedEntities(SELF::ENTITY_TYPE);
-        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(SELF::ENTITY_TYPE, $entriesId);
+        $this->DirectoryIgnore->cleanupHardDeletedEntities(self::ENTITY_TYPE);
+        $entries = $this->DirectoryEntries->lookupEntriesForDeletion(self::ENTITY_TYPE, $entriesId);
         $this->DirectoryIgnore->cleanupHardDeletedDirectoryEntries($entriesId);
         $this->DirectoryRelations->cleanupHardDeletedUserGroups($entriesId);
 
@@ -187,7 +189,6 @@ trait SyncTrait {
         }
     }
 
-
     /**
      * Get entity name.
      * For a user it will return the username
@@ -196,10 +197,12 @@ trait SyncTrait {
      *
      * @return mixed
      */
-    protected function getEntityName(Entity $entity) {
+    protected function getEntityName(Entity $entity)
+    {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return $entity->name;
         }
+
         return $entity->username;
     }
 
@@ -211,17 +214,21 @@ trait SyncTrait {
      *
      * @return mixed
      */
-    protected function getNameFromData(array $data) {
+    protected function getNameFromData(array $data)
+    {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return isset($data['group']['name']) ? $data['group']['name'] : 'undefined';
         }
+
         return isset($data['user']['username']) ? $data['user']['username'] : 'undefined';
     }
 
-    protected function getEntityFromData(array $data) {
+    protected function getEntityFromData(array $data)
+    {
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
             return $this->getGroupFromData($data);
         }
+
         return $this->getUserFromData($data);
     }
 }

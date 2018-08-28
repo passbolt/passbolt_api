@@ -161,7 +161,8 @@ class SyncAction
      * Get default admin.
      * @return array|\Cake\Datasource\EntityInterface|mixed|null
      */
-    public function getDefaultAdmin() {
+    public function getDefaultAdmin()
+    {
         $defaultUser = Configure::read('passbolt.plugins.directorySync.defaultUser');
         if (!empty($defaultUser)) {
             // Get default user from database.

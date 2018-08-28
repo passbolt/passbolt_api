@@ -31,6 +31,7 @@ class AllTask extends AppShell
     {
         $parser = parent::getOptionParser();
         $parser->setDescription(__('Directory Sync'));
+
         return $parser;
     }
 
@@ -45,6 +46,7 @@ class AllTask extends AppShell
         $result = $this->dispatchShell($cmd);
         $cmd2 = $this->_formatCmd('directory_sync groups');
         $result2 = $this->dispatchShell($cmd2);
+
         return ($result2 === self::CODE_SUCCESS && $result === self::CODE_SUCCESS);
     }
 }

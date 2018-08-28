@@ -89,6 +89,7 @@ class IgnoreListTask extends AppShell
         }
         if (count($records) === 1) {
             $this->success(__('No record is being ignored. The next job will try to synchronize all records.'));
+
             return true;
         }
 
@@ -97,7 +98,7 @@ class IgnoreListTask extends AppShell
         $this->out('[help] you can stop ignoring records with the following command.');
         $this->out('       ./bin/cake directory_sync ignore-create [ID]');
         $this->out();
+
         return true;
     }
-
 }

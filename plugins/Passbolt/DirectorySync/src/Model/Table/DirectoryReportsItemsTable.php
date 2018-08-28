@@ -120,6 +120,7 @@ class DirectoryReportsItemsTable extends Table
             ]
         ]);
         $result = $this->save($entity);
+
         return $result;
     }
 }

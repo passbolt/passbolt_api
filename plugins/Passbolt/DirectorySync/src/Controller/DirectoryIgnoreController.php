@@ -51,8 +51,7 @@ class DirectoryIgnoreController extends AppController
         try {
             $ignored = $this->DirectoryIgnore->get($foreignKey);
             $result = $this->DirectoryIgnore->delete($ignored);
-        } catch(RecordNotFoundException $exception) {
-
+        } catch (RecordNotFoundException $exception) {
         }
         $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
     }
@@ -79,8 +78,8 @@ class DirectoryIgnoreController extends AppController
 
         $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
         try {
-        $ignored = $this->DirectoryIgnore->get($foreignKey);
-        } catch(RecordNotFoundException $exception) {
+            $ignored = $this->DirectoryIgnore->get($foreignKey);
+        } catch (RecordNotFoundException $exception) {
             throw new NotFoundException(__('The record is currently not ignored as part of directory synchronization.'));
         }
         $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
@@ -108,7 +107,7 @@ class DirectoryIgnoreController extends AppController
 
         try {
             $ignored = $this->DirectoryIgnore->createOrFail($foreignModel, $foreignKey);
-        } catch(ValidationException $exception) {
+        } catch (ValidationException $exception) {
             $errors = $exception->getEntity()->getErrors();
             if (isset($errors['id']['AssociatedRecordExists'])) {
                 throw new NotFoundException($errors['id']['AssociatedRecordExists']);
@@ -154,11 +153,13 @@ class DirectoryIgnoreController extends AppController
      * @param string $foreignModel
      * @return string
      */
-    private function normalizeForeignModel(string $foreignModel) {
+    private function normalizeForeignModel(string $foreignModel)
+    {
         $foreignModel = ucfirst($foreignModel);
         if ($foreignModel === 'Directoryentries') {
             $foreignModel = 'DirectoryEntries';
         }
+
         return $foreignModel;
     }
 }
