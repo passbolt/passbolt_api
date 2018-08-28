@@ -9,18 +9,30 @@ return [
                 // If not specified, the first admin user found will be used.
                 // 'defaultGroupAdminUser' => 'email@domain.com',
                 //
+                // 'fieldsMapping' => [
+                //      // Override the mapping here.
+                //      // Needed mainly if using openldap.
+                //      // Keep commented or empty if default rules work fine.
+                // ],
+                //
+                // Group Object Class. Only used if the server type is openldap.
+                // 'groupObjectClass' => 'posixGroup',
+                //
+                // User Object Class. Only used if the server type is openldap.
+                // 'userObjectClass' => 'inetOrgPerson',
+                //
                 // Optional: disable one or more sync tasks
-                //'jobs' => [
+                // 'jobs' => [
                 //    'users' => [
                 //        'create' => true,
-                //        'update' => true,
                 //        'delete' => true,
-                //   ],
+                //     ],
                 //    'groups' => [
                 //        'create' => true,
+                //        // update is used for adding users as group members.
                 //        'update' => true,
                 //        'delete' => true,
-                //    ],
+                //     ],
                 //],
                 'ldap' => [
                     //'general' => [

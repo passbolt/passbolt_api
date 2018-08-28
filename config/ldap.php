@@ -3,7 +3,7 @@ return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
-                'test' => false,
+                'test' => true,
                 'fieldsMapping' => [
                     // Override the mapping here.
                     // Needed mainly if using openldap.
