@@ -360,6 +360,16 @@ class ResourcesTable extends Table
             $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
         }
 
+        // Retrieve the permission and the details of a user attach to it if any
+        if (isset($options['contain']['permissions.user.profile'])) {
+            $query->contain('Permissions.Users.Profiles');
+        }
+
+        // Retrieve the permission and the details of a group attach to it if any
+        if (isset($options['contain']['permissions.user.profile'])) {
+            $query->contain('Permissions.Groups');
+        }
+
         // Manage order clauses.
         if (isset($options['order']['Resources.modified'])) {
             $query->order('Resources.modified DESC');
@@ -427,11 +437,12 @@ class ResourcesTable extends Table
      *
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
+     * @param array $options array of options
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @return \Cake\ORM\Query
      */
-    public function findAllByIds(string $userId, array $resourceIds)
+    public function findAllByIds(string $userId, array $resourceIds = [], array $options = [])
     {
         if (!Validation::uuid($userId)) {
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
@@ -446,11 +457,8 @@ class ResourcesTable extends Table
             }
         }
 
-        $query = $this->findIndex($userId)
-            ->where(['Resources.id IN' => $resourceIds])
-            ->all();
-
-        return $query;
+        return $this->findIndex($userId, $options)
+            ->where(['Resources.id IN' => $resourceIds]);
     }
 
     /**

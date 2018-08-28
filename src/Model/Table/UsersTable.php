@@ -17,7 +17,7 @@ namespace App\Model\Table;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
+//use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use Cake\Core\Configure;
@@ -200,10 +200,10 @@ class UsersTable extends Table
             'errorField' => 'id',
             'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
         ]);
-        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleManagerOfGroupOwnerOfSharedResource', [
-            'errorField' => 'id',
-            'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
-        ]);
+//        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleManagerOfGroupOwnerOfSharedResource', [
+//            'errorField' => 'id',
+//            'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
+//        ]);
 
         return $rules;
     }
@@ -824,7 +824,7 @@ class UsersTable extends Table
         // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true);
+        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true)->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
             $Resources->softDeleteAll($resourceIds);

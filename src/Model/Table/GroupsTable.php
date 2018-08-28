@@ -363,9 +363,11 @@ class GroupsTable extends Table
      * Get a list of groups matching a given list of group ids
      *
      * @param array $groupsIds array of groups uuids
+     * @param array $options array of options
+     *
      * @return \Cake\ORM\Query
      */
-    public function findAllByIds(array $groupsIds)
+    public function findAllByIds(array $groupsIds, array $options = [])
     {
         if (empty($groupsIds)) {
             throw new \InvalidArgumentException(__('The parameter groupIds cannot be empty.'));
@@ -376,9 +378,8 @@ class GroupsTable extends Table
             }
         }
 
-        return $this->findIndex()
-            ->where(['Groups.id IN' => $groupsIds])
-            ->all();
+        return $this->findIndex($options)
+            ->where(['Groups.id IN' => $groupsIds]);
     }
 
     /**
@@ -457,7 +458,7 @@ class GroupsTable extends Table
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
         $Permissions = TableRegistry::get('Permissions');
-        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id);
+        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id)->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
             $Resources->softDeleteAll($resourceIds);
