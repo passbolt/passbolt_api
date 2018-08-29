@@ -140,7 +140,7 @@ class TestTask extends AppShell
             $output[] = [$groupStr, $userStr];
         }
 
-        $this->info(__('The following valid groups and users have been found'));
+        $this->info(__('The following groups and users have been found'));
         $io = $this->getIo();
         $io->helper('Table')->output($output);
     }

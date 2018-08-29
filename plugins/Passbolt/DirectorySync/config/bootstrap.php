@@ -14,6 +14,8 @@
  */
 use Cake\Core\Configure;
 
-// Load the plugin configuration.
-Configure::load('Passbolt/DirectorySync.config', 'default', true);
-Configure::load('ldap', 'default', true);
+if (file_exists(CONFIG . 'ldap.php')) {
+    // Load the plugin configuration.
+    Configure::load('Passbolt/DirectorySync.config', 'default', true);
+    Configure::load('ldap', 'default', true);
+}
