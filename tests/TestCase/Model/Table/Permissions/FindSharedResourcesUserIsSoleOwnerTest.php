@@ -247,4 +247,42 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId, true)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
+
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    {
+        $userId = UuidFactory::uuid('user.id.orna');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 1);
+        $this->assertTrue(in_array($resourceLId, $resources));
+    }
+
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    {
+        $userId = UuidFactory::uuid('user.id.orna');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId, true)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 1);
+        $this->assertTrue(in_array($resourceLId, $resources));
+    }
 }

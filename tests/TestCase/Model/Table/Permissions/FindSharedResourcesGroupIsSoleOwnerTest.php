@@ -55,8 +55,8 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
         $groupId = UuidFactory::uuid('group.id.accounting');
         $resources = $this->Permissions->findSharedResourcesGroupIsSoleOwner($groupId)->extract('aco_foreign_key')->toArray();
         $this->assertNotEmpty($resources);
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.kde'));
-        $this->assertEquals($resources[1], UuidFactory::uuid('resource.id.enlightenment'));
+        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.kde'), $resources));
+        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.enlightenment'), $resources));
 
         // Only kde and enlightenment are in this case, all other resources have some other owner
         // or are not shared with anybody
