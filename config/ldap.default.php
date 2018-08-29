@@ -21,6 +21,12 @@ return [
                 // User Object Class. Only used if the server type is openldap.
                 // 'userObjectClass' => 'inetOrgPerson',
                 //
+                // Group path is used in addition to base_dn while searching groups.
+                // 'groupPath' => '',
+                //
+                // User path is used in addition to base_dn while searching users.
+                // 'userPath' => '',
+                //
                 // Optional: disable one or more sync tasks
                 // 'jobs' => [
                 //    'users' => [

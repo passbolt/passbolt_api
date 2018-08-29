@@ -78,6 +78,19 @@ class LdapDirectory implements DirectoryInterface
     }
 
     /**
+     * Get DN Full Path as per configuration.
+     * @param string $ldapObjectType ldap object type (user or group)
+     *
+     * @return string
+     */
+    public function getDNFullPath(string $ldapObjectType) {
+        $paths = [];
+        $paths['additionalPath'] = Configure::read('passbolt.plugins.directorySync.' . $ldapObjectType . 'Path');
+        $paths['baseDN'] = $this->ldap->getConnection()->getConfig()->getBaseDn();
+        return ltrim(implode(',', $paths), ',');
+    }
+
+    /**
      * Get field value.
      * @param LdapObject $object object
      * @param string $fieldName field name
@@ -120,6 +133,7 @@ class LdapDirectory implements DirectoryInterface
 
         $query = $this->ldap->buildLdapQuery();
         $users = $query
+            ->setBaseDn($this->getDNFullPath(LdapObjectType::USER))
             ->select($selectFields)
             ->fromUsers()
             ->getLdapQuery()
@@ -155,6 +169,7 @@ class LdapDirectory implements DirectoryInterface
 
         $query = $this->ldap->buildLdapQuery();
         $groups = $query
+            ->setBaseDn($this->getDNFullPath(LdapObjectType::GROUP))
             ->select($selectFields)
             ->fromGroups()
             ->getLdapQuery()
