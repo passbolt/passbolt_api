@@ -115,7 +115,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
 
         $this->getJson('/users.json?order[]=User.username DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.wang'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.yvonne'));
     }
 
     public function testUsersIndexOrderByFirstName()
@@ -127,7 +127,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
 
         $this->getJson('/users.json?order=Profile.first_name DESC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.wang'));
+        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.yvonne'));
     }
 
     public function testUsersIndexOrderByLastName()

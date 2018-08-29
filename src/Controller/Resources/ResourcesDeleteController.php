@@ -17,8 +17,8 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\Role;
 use App\Model\Entity\Resource;
+use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
@@ -104,7 +104,7 @@ class ResourcesDeleteController extends AppController
     /**
      * Send email notification
      *
-     * @param Resource $resource Resource
+     * @param resource $resource Resource
      * @param \Cake\Datasource\ResultSetInterface $users list of User entity who had access to the resource
      * @return void
      */

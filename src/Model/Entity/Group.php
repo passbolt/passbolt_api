@@ -69,7 +69,7 @@ class Group extends Entity
 
         $userId = is_array($user) ? $user['id'] : $user->id;
 
-        foreach($this->groups_users as $groupUser) {
+        foreach ($this->groups_users as $groupUser) {
             if ($groupUser->user_id === $userId) {
                 return $groupUser;
             }

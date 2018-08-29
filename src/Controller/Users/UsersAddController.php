@@ -31,6 +31,7 @@ class UsersAddController extends UsersRegisterController
     public function beforeFilter(Event $event)
     {
         $this->loadModel('Users');
+
         return AppController::beforeFilter($event);
     }
 

@@ -266,7 +266,6 @@ trait GroupsFindersTrait
         }
 
         return $this->findIndex()
-                    ->where(['Groups.id IN' => $groupsIds])
-                    ->all();
+                    ->where(['Groups.id IN' => $groupsIds]);
     }
 }

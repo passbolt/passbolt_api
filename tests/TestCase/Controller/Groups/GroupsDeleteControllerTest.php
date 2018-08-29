@@ -27,7 +27,8 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/resources', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars'
+        'app.Base/resources', 'app.Base/secrets', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
+        'app.Base/email_queue'
     ];
 
     public function setUp()
@@ -42,17 +43,26 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->deleteJson('/groups/' . $groupId . '/dry-run.json');
+        $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
         $this->assertSuccess();
         $group = $this->Groups->get($groupId);
         $this->assertFalse($group->deleted);
+    }
+
+    public function testGroupsDeleteDryRunError_MissingCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->delete('/groups/' . $groupId . '/dry-run.json?api-version=v2');
+        $this->assertResponseCode(403);
     }
 
     public function testGroupsDeleteDryRunError()
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.creative');
-        $this->deleteJson('/groups/' . $groupId . '/dry-run.json');
+        $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
         $this->assertError(400);
         $this->assertContains(
             'You need to transfer the ownership for the shared passwords',
@@ -64,7 +74,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->deleteJson('/groups/' . $groupId . '.json');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
         $this->assertSuccess();
         $group = $this->Groups->get($groupId);
         $this->assertTrue($group->deleted);
@@ -74,7 +84,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('edith');
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->deleteJson('/groups/' . $groupId . '.json');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
         $this->assertSuccess();
         $group = $this->Groups->get($groupId);
         $this->assertTrue($group->deleted);
@@ -83,7 +93,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     public function testGroupsDeleteNotLoggedInError()
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->deleteJson('/groups/' . $groupId . '.json');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
         $this->assertAuthenticationError();
     }
 
@@ -91,7 +101,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->deleteJson('/groups/' . $groupId . '.json');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
@@ -99,22 +109,22 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $bogusId = '0';
-        $this->deleteJson('/groups/' . $bogusId . '.json');
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
         $this->assertError(400, 'The group id must be a valid uuid.');
 
         $this->authenticateAs('admin');
         $bogusId = 'true';
-        $this->deleteJson('/groups/' . $bogusId . '.json');
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
         $this->assertError(400, 'The group id must be a valid uuid.');
 
         $this->authenticateAs('admin');
         $bogusId = 'null';
-        $this->deleteJson('/groups/' . $bogusId . '.json');
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
         $this->assertError(400, 'The group id must be a valid uuid.');
 
         $this->authenticateAs('admin');
         $bogusId = '🔥';
-        $this->deleteJson('/groups/' . $bogusId . '.json');
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
         $this->assertError(400, 'The group id must be a valid uuid.');
     }
 
@@ -122,7 +132,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $bogusId = UuidFactory::uuid('group.id.bogus');
-        $this->deleteJson('/groups/' . $bogusId . '.json');
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
         $this->assertError(404, 'The group does not exist or has been already deleted.');
     }
 
@@ -131,8 +141,8 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         // Delete the group twice
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->deleteJson('/groups/' . $groupId . '.json');
-        $this->deleteJson('/groups/' . $groupId . '.json');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
         $this->assertError(404, 'The group does not exist or has been already deleted.');
     }
 
@@ -140,13 +150,13 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.creative');
-        $this->deleteJson('/groups/' . $groupId . '/dry-run.json');
+        $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
         $this->assertError(400);
         $this->assertContains(
             'You need to transfer the ownership for the shared passwords',
             $this->_responseJsonHeader->message
         );
         $this->assertNotEmpty($this->_responseJsonBody);
-        $this->assertResourceAttributes($this->_responseJsonBody->resources[0]->Resource);
+        $this->assertResourceAttributes($this->_responseJsonBody->resources->sole_owner[0]);
     }
 }

@@ -14,8 +14,8 @@
  */
 namespace App\Shell;
 
-use Cake\Console\Shell;
 use App\Controller\Events\EmailNotificationsListener;
+use Cake\Console\Shell;
 use Cake\Event\EventManager;
 
 /**

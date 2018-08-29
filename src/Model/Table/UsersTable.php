@@ -18,12 +18,12 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Model\Rule\IsNotSoleManagerOfGroupOwningSharedResourcesRule;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -31,11 +31,6 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
-
-// TODO MOVE OUT
-use App\Model\Entity\AuthenticationToken;
-use App\Model\Table\AuthenticationTokensTable;
-use Cake\Event\Event;
 
 /**
  * Users Model
@@ -208,10 +203,10 @@ class UsersTable extends Table
             'errorField' => 'id',
             'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
         ]);
-        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleManagerOfGroupOwnerOfSharedResource', [
-            'errorField' => 'id',
-            'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
-        ]);
+//        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleManagerOfGroupOwnerOfSharedResource', [
+//            'errorField' => 'id',
+//            'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
+//        ]);
 
         return $rules;
     }
@@ -362,7 +357,7 @@ class UsersTable extends Table
         // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true);
+        $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true)->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
             $Resources->softDeleteAll($resourceIds);
@@ -372,7 +367,7 @@ class UsersTable extends Table
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
         // ref. findResourcesOnlyUserCanAccess checkGroupsUsers = true
-        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
+        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);
@@ -402,7 +397,7 @@ class UsersTable extends Table
 
     /**
      * Register a user
-     * @param array $data
+     * @param array $data register data
      * @param UserAccessControl $control who is requesting the registration
      * @throws InternalErrorException if there was an issue during the save
      * @throws ValidationException if the user data do not validate
@@ -449,6 +444,7 @@ class UsersTable extends Table
         }
         $event = new Event('Model.Users.afterRegister.success', $this, $eventData);
         $this->getEventManager()->dispatch($event);
+
         return $user;
     }
 }
