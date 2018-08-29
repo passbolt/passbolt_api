@@ -71,7 +71,7 @@ class UsersDeleteController extends AppController
     {
         $user = $this->_validateRequestData($id);
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
-        $groupIdsNotOnlyMember = $this->GroupsUsers->findGroupsWhereUserNotOnlyMember($id);
+        $groupIdsNotOnlyMember = $this->GroupsUsers->findGroupsWhereUserNotOnlyMember($id)->extract('group_id')->toArray();
 
         $this->GroupsUsers->getConnection()->transactional(function () use ($user) {
             $this->_transferGroupsManagers($user);
@@ -136,7 +136,7 @@ class UsersDeleteController extends AppController
             $msg = __('The user cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleManagerOfNonEmptyGroup'])) {
-                $groupIds = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id);
+                $groupIds = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id)->extract('group_id')->toArray();
                 $findGroupsOptions = [];
                 $findGroupsOptions['contain']['group_user.user.profile'] = true;
                 $groups = $this->Groups->findAllByIds($groupIds, $findGroupsOptions);
@@ -154,7 +154,7 @@ class UsersDeleteController extends AppController
                 $msg .= $errors['id']['soleOwnerOfSharedResource'];
             }
 
-            $groupsToDeleteIds = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
+            $groupsToDeleteIds = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
             if ($groupsToDeleteIds) {
                 $groupsToDelete = $this->Groups->findAllByIds($groupsToDeleteIds);
                 $body['groups_to_delete'] = $groupsToDelete;
@@ -187,7 +187,7 @@ class UsersDeleteController extends AppController
         $groupsIdsToUpdate = Hash::extract($managers, '{n}.group_id');
         sort($groupsIdsToUpdate);
 
-        $groupsIdsBlockingDelete = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id);
+        $groupsIdsBlockingDelete = $this->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($user->id)->extract('group_id')->toArray();
         sort($groupsIdsBlockingDelete);
 
         // If all the groups that are requiring a change are not satisfied, throw an exception.

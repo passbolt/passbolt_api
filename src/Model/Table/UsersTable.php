@@ -834,7 +834,7 @@ class UsersTable extends Table
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
         // ref. findResourcesOnlyUserCanAccess checkGroupsUsers = true
-        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id);
+        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);
