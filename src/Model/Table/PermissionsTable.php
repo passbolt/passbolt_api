@@ -336,7 +336,7 @@ class PermissionsTable extends Table
 
         if ($checkGroupsUsers) {
             // R = All the shared resources that are only owned by the user given in parameter or owned by non empty groups he is sole manager of
-            // If the user is deleted these resources will require the permissions to be updated to not be left without OWNER.
+            // If the user is deleted these resources will require their permissions to be updated to not be left without OWNER.
             //
             // Details:
             // AROS, all users or groups that have entries in the permissions table (aro_foreign_key)
@@ -345,28 +345,41 @@ class PermissionsTable extends Table
             // ACOS, all the resources that have entries in the permissions table (aro_foreign_key)
             // ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS, all the ACOS that are only owned by the user and the groups he is sole manager
             // ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS, all the ACOS that are owned by the user and the non empty groups he is sole manager
-            // R = ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS
+            // ACOS_ONLY_ACCESSIBLE_BY_USER, all the ACOS that are only accessible by the user and the groups he is the only member
+            // R = ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS - ACOS_ONLY_ACCESSIBLE_BY_USER
 
             $GroupsUsers = TableRegistry::get('GroupsUsers');
             // (USER_AND_SOLE_MANAGER_GROUPS)
             $groupsSoleManager = $GroupsUsers->findGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
-            // (R = ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS), if the user is not sole manager of non empty group this is the result of the function.
+            // (R = ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS)
             $arosIds = [$userId];
             $arosIds = array_merge($arosIds, $groupsSoleManager);
-            $query = $this->findSharedResourcesArosIsSoleOwner($arosIds);
+            $query = $this->findResourcesArosIsSoleOwner($arosIds);
 
             // (USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
-            $nonEmptyGroupsSoleManager = $GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId);
+            $nonEmptyGroupsSoleManager = $GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
             if (!empty($nonEmptyGroupsSoleManager)) {
                 // (ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
                 $acosOnlyOwnedByUsersAndSoleManagerOfNonEmptyGroups = $this->find()
                     ->select('aco_foreign_key')->distinct()
                     ->where(['type' => Permission::OWNER, 'aro_foreign_key IN' => $nonEmptyGroupsSoleManager]);
-                // (R = ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
+
+                // (R = R - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
                 $query->where(['aco_foreign_key NOT IN' => $acosOnlyOwnedByUsersAndSoleManagerOfNonEmptyGroups]);
             }
+
+            // (ACOS_ONLY_ACCESSIBLE_BY_USER)
+            $subquery = $this->findResourcesOnlyUserCanAccess($userId, true);
+            // (R = R - ACOS_ONLY_ACCESSIBLE_BY_USER)
+            $query->where(['aco_foreign_key NOT IN' => $subquery]);
         } else {
-            $query = $this->findSharedResourcesArosIsSoleOwner([$userId]);
+            $arosIds = [$userId];
+            // (R = ACOS_ONLY_OWNED_BY_USER)
+            $query = $this->findResourcesArosIsSoleOwner($arosIds);
+            // (ACOS_ONLY_ACCESSIBLE_BY_USER)
+            $subquery = $this->findResourcesOnlyUserCanAccess($userId, $checkGroupsUsers);
+            // (R = R - ACOS_ONLY_ACCESSIBLE_BY_USER)
+            $query->where(['aco_foreign_key NOT IN' => $subquery]);
         }
 
         return $query;
@@ -385,19 +398,24 @@ class PermissionsTable extends Table
             throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
         }
 
-        return $this->findSharedResourcesArosIsSoleOwner([$groupId]);
+        // (R = ACOS_ONLY_OWNED_BY_GROUP
+        $query = $this->findResourcesArosIsSoleOwner([$groupId]);
+        // (ACOS_ONLY_ACCESSIBLE_BY_GROUP)
+        $subquery = $this->findResourcesOnlyArosCanAccess([$groupId]);
+        // (R = R - ACOS_ONLY_ACCESSIBLE_BY_GROUP)
+        $query->where(['aco_foreign_key NOT IN' => $subquery]);
+
+        return $query;
     }
 
     /**
-     * Returns an array of resources the given AROs are the owner of
-     * and that are shared with somebody else. Useful to know which resources
-     * need to be transferred when deleting the list or AROs
+     * Returns an array of resources the given AROs are the owner of.
      *
      * @param array $arosIds uuid of the users|groups
      * @throw \InvalidArgumentException if the aros ids are not valid uuids
      * @return \Cake\ORM\Query
      */
-    public function findSharedResourcesArosIsSoleOwner(array $arosIds)
+    public function findResourcesArosIsSoleOwner(array $arosIds)
     {
         foreach ($arosIds as $aroId) {
             if (!Validation::uuid($aroId)) {
@@ -405,7 +423,7 @@ class PermissionsTable extends Table
             }
         }
 
-        // R = All the shared resources that are only owned by the user given in parameter or owned by non empty groups he is sole manager of
+        // R = All the resources that are only owned by the user given in parameter or owned by non empty groups he is sole manager of.
         //
         // Details:
         // AROS, all users or groups that have entries in the permissions table (aro_foreign_key)
@@ -414,8 +432,7 @@ class PermissionsTable extends Table
         // ACOS, all the resources that have entries in the permissions table (aro_foreign_key)
         // ACOS_OWNED_BY_USERS_AND_GROUPS, is the set of AROS that are owned by the USERS_AND_GROUPS
         // ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS, is the set of AROS that are owned by the OTHER_USERS_AND_GROUPS
-        // ACOS_ONLY_ACCESSIBLE_BY_USERS_AND_GROUPS, is the set of AROS that are only accesible by the USERS_AND_GROUPS
-        // R = ACOS_OWNED_BY_USERS_AND_GROUPS - ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS - ACOS_ONLY_ACCESSIBLE_BY_USERS_AND_GROUPS, is the set of shared AROS only owned by USERS_AND_GROUPS
+        // R = ACOS_OWNED_BY_USERS_AND_GROUPS - ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS, is the set of ACOS only owned by USERS_AND_GROUPS
 
         // (ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS)
         // SELECT aco_foreign_key
@@ -435,7 +452,6 @@ class PermissionsTable extends Table
         // WHERE aro_foreign_key IN (USER_AND_GROUPS)
         // AND type = OWNER
         // AND aco_foreign_key NOT IN (ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS)
-        // AND aco_foreign_key NOT IN (ACOS_ONLY_ACCESSIBLE_BY_USERS_AND_GROUPS)
         return $this->find()
             ->select(['aco_foreign_key'])->distinct()
             // ACOS_OWNED_BY_USERS_AND_GROUPS
@@ -443,9 +459,8 @@ class PermissionsTable extends Table
                 'aro_foreign_key IN' => $arosIds,
                 'type' => Permission::OWNER,
             ])
-            // ACOS_OWNED_BY_USERS_AND_GROUPS - ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS - ACOS_ONLY_ACCESSIBLE_BY_USERS_AND_GROUPS
-            ->where(['aco_foreign_key NOT IN' => $acosOwnedByOtherUsersAndGroups])
-            ->where(['aco_foreign_key NOT IN' => $this->findResourcesOnlyArosCanAccess($arosIds)]);
+            // ACOS_OWNED_BY_USERS_AND_GROUPS - ACOS_OWNED_BY_OTHER_USERS_AND_GROUPS
+            ->where(['aco_foreign_key NOT IN' => $acosOwnedByOtherUsersAndGroups]);
     }
 
     /**
@@ -538,7 +553,7 @@ class PermissionsTable extends Table
         $arosIds = [$userId];
         if ($checkGroupsUsers) {
             $GroupsUsers = TableRegistry::get('GroupsUsers');
-            $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId);
+            $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId)->extract('group_id')->toArray();
             $arosIds = array_merge($arosIds, $groups);
         }
 

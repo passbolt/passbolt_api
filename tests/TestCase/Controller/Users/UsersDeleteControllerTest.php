@@ -575,4 +575,61 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
                 $this->assertResourceIsNotSoftDeleted($resourceSId);
                 $this->assertUserIsAdmin($groupHId, $userJId);
         }
+
+        public function testUsersDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+        {
+                $this->authenticateAs('admin');
+                $userOId = UuidFactory::uuid('user.id.orna');
+                $groupMId = UuidFactory::uuid('group.id.management');
+                $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+                // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+                $permission = $this->Permissions->find()->select()->where([
+                    'aro_foreign_key' => $groupMId,
+                    'aco_foreign_key' => $resourceLId
+                ])->first();
+                $permission->type = Permission::READ;
+                $this->Permissions->save($permission);
+
+                $this->deleteJson("/users/$userOId.json?api-version=v2");
+                $this->assertError(400);
+                $this->assertUserIsNotSoftDeleted($userOId);
+
+                $errors = $this->_responseJsonBody->errors;
+                $this->assertCount(1, $errors->groups->sole_manager);
+                $this->assertCount(1, $errors->resources->sole_owner);
+
+                $group = $errors->groups->sole_manager[0];
+                $this->assertGroupAttributes($group);
+                $this->assertEquals($group->id, $groupMId);
+
+                $resource = $errors->resources->sole_owner[0];
+                $this->assertGroupAttributes($resource);
+                $this->assertEquals($resource->id, $resourceLId);
+        }
+
+        public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+        {
+                $this->authenticateAs('admin');
+                $userOId = UuidFactory::uuid('user.id.orna');
+                $userPId = UuidFactory::uuid('user.id.ping');
+                $groupMId = UuidFactory::uuid('group.id.management');
+                $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+                // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+                $permission = $this->Permissions->find()->select()->where([
+                    'aro_foreign_key' => $groupMId,
+                    'aco_foreign_key' => $resourceLId
+                ])->first();
+                $permission->type = Permission::READ;
+                $this->Permissions->save($permission);
+
+                $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.linux-management'), 'aco_foreign_key' => $resourceLId];
+                $transfer['managers'][] = ['id' => UuidFactory::uuid('group_user.id.management-ping'), 'group_id' => $groupMId];
+                $this->deleteJson("/users/$userOId.json?api-version=v2", ['transfer' => $transfer]);
+                $this->assertSuccess();
+                $this->assertUserIsSoftDeleted($userOId);
+                $this->assertUserIsAdmin($groupMId, $userPId);
+                $this->assertPermission($resourceLId, $groupMId, Permission::OWNER);
+        }
 }

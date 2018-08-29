@@ -363,4 +363,61 @@ class SoftDeleteTest extends AppTestCase
         $this->assertGroupIsNotSoftDeleted($groupHId);
         $this->assertResourceIsNotSoftDeleted($resourceSId);
     }
+
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        $user = $this->Users->get($userOId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $errors = $user->getErrors();
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+    }
+
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $userPId = UuidFactory::uuid('user.id.ping');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        // FIX
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+        $groupUser = $this->GroupsUsers->find()->select()->where([
+            'user_id' => $userPId,
+            'group_id' => $groupMId
+        ])->first();
+        $groupUser->is_admin = true;
+        $this->GroupsUsers->save($groupUser);
+
+        $user = $this->Users->get($userOId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userOId);
+        $this->assertGroupIsNotSoftDeleted($groupMId);
+        $this->assertResourceIsNotSoftDeleted($resourceLId);
+    }
 }
