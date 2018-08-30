@@ -4,6 +4,7 @@
 - Route rewriting of the appjs should take in account passbolt installed in a subdirectory
 - Fix the loading bar stuck in the initialization state in some cases
 - PASSBOLT-2969: Enforce steal to load the latest version of the appjs
+- Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
 
 ### Improved
 - PASSBOLT-2950: Display empty feedbacks content
