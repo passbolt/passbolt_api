@@ -1,0 +1,167 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.2.0
+ */
+
+namespace Passbolt\DirectorySync\Controller;
+
+use App\Controller\AppController;
+use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\BadRequestException;
+use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\Network\Exception\NotFoundException;
+use Cake\Validation\Validation;
+
+class DirectoryIgnoreController extends AppController
+{
+    /**
+     * Check if a record is ignored
+     *
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
+     * @throws ValidationException If the model name or id is not valid
+     * @throws ForbiddenException if the current user is not an admin
+     * @return void
+     */
+    public function toggle(string $foreignModel, string $foreignKey)
+    {
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
+        }
+
+        $foreignModel = $this->normalizeForeignModel($foreignModel);
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
+
+        $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+        try {
+            $ignored = $this->DirectoryIgnore->get($foreignKey);
+            $result = $this->DirectoryIgnore->delete($ignored);
+        } catch (RecordNotFoundException $exception) {
+        }
+        $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
+    }
+
+    /**
+     * Check if a record is ignored
+     *
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
+     * @throws ValidationException If the model name or id is not valid
+     * @throws ForbiddenException if the current user is not an admin
+     * @return void
+     */
+    public function view(string $foreignModel, string $foreignKey)
+    {
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
+        }
+
+        $foreignModel = $this->normalizeForeignModel($foreignModel);
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
+
+        $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+        try {
+            $ignored = $this->DirectoryIgnore->get($foreignKey);
+        } catch (RecordNotFoundException $exception) {
+            throw new NotFoundException(__('The record is currently not ignored as part of directory synchronization.'));
+        }
+        $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);
+    }
+
+    /**
+     * Mark a record as ignored.
+     *
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
+     * @throws ValidationException If the model name or id is not valid
+     * @throws ForbiddenException if the current user is not an admin
+     * @return void
+     */
+    public function add(string $foreignModel, string $foreignKey)
+    {
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
+        }
+        $foreignModel = $this->normalizeForeignModel($foreignModel);
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
+        $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+
+        try {
+            $ignored = $this->DirectoryIgnore->createOrFail($foreignModel, $foreignKey);
+        } catch (ValidationException $exception) {
+            $errors = $exception->getEntity()->getErrors();
+            if (isset($errors['id']['AssociatedRecordExists'])) {
+                throw new NotFoundException($errors['id']['AssociatedRecordExists']);
+            }
+            throw $exception;
+        }
+        $this->success(__('The record will be ignored in the next directory synchronization.'), $ignored);
+    }
+
+    /**
+     * Delete
+     * @param string $foreignModel foreign model
+     * @param string $foreignKey foreign key
+     * @return void
+     */
+    public function delete(string $foreignModel, string $foreignKey)
+    {
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('You are not authorized to access that location.'));
+        }
+        if (!Validation::uuid($foreignKey)) {
+            throw new BadRequestException(__('The record id is not valid.'));
+        }
+        $foreignModel = $this->normalizeForeignModel($foreignModel);
+        if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
+            throw new BadRequestException(__('The record model is not valid.'));
+        }
+
+        $this->loadModel('Passbolt/DirectorySync.DirectoryIgnore');
+
+        try {
+            $record = $this->DirectoryIgnore->get($foreignKey);
+        } catch (RecordNotFoundException $e) {
+            throw new NotFoundException(__('The record does not exist.'));
+        }
+
+        $result = $this->DirectoryIgnore->delete($record);
+        if (!$result) {
+            throw new InternalErrorException(__('The record could not be unmarked as ignored. Please try again later.'));
+        }
+        $this->success(__('The record will not be ignored in the next directory synchronization.'));
+    }
+
+    /**
+     * @param string $foreignModel foreign model
+     * @return string
+     */
+    private function normalizeForeignModel(string $foreignModel)
+    {
+        $foreignModel = ucfirst($foreignModel);
+        if ($foreignModel === 'Directoryentries') {
+            $foreignModel = 'DirectoryEntries';
+        }
+
+        return $foreignModel;
+    }
+}

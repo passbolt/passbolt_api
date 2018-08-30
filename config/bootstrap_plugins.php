@@ -56,3 +56,8 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'AccountSettings')) {
     Plugin::load('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add DirectorySync plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'DirectorySync')) {
+    Plugin::load('Passbolt/DirectorySync', ['bootstrap' => true, 'routes' => true]);
+}

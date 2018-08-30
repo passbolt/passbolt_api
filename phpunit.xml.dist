@@ -19,6 +19,7 @@
             <directory>./plugins/Passbolt/Tags/tests/TestCase</directory>
             <directory>./plugins/Passbolt/License/tests/TestCase</directory>
             <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/DirectorySync/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>

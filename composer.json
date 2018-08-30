@@ -49,7 +49,8 @@
         "lorenzo/cakephp-email-queue": "^3.1",
         "burzum/file-storage": "1.2.1",
         "burzum/cakephp-imagine-plugin": "2.1.1",
-        "ezyang/htmlpurifier": "dev-master"
+        "ezyang/htmlpurifier": "dev-master",
+        "ldaptools/ldaptools": "^0.25.2"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -68,7 +69,8 @@
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\License\\": "./plugins/Passbolt/License/src",
-            "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src"
+            "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
+            "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src"
         }
     },
     "autoload-dev": {
@@ -78,7 +80,8 @@
             "Passbolt\\License\\Test\\": "./plugins/Passbolt/License/tests",
             "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
             "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
-            "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests"
+            "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
+            "Passbolt\\DirectorySync\\Test\\": "./plugins/Passbolt/DirectorySync/tests"
         }
     },
     "scripts": {
