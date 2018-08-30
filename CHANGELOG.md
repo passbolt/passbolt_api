@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.3.0] - 2018-08-30
 ### Fixed
 - PASSBOLT-2965: Group filter link stays active after switching to a non group filter
 - Route rewriting of the appjs should take in account passbolt installed in a subdirectory
@@ -510,7 +512,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/passbolt/passbolt_api/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/passbolt/passbolt_api/compare/v2.0.7...v2.1.0
 [2.0.7]: https://github.com/passbolt/passbolt_api/compare/v2.0.5...v2.0.7
