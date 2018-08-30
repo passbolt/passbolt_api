@@ -12,10 +12,11 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
-if (file_exists(CONFIG . 'ldap.php')) {
+if (file_exists(CONFIG . 'ldap.php') || Configure::read('passbolt.plugins.directorySync.test') === true) {
     Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
         $routes->setExtensions(['json']);
 
