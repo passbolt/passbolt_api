@@ -52,7 +52,7 @@ define('CONFIG', ROOT . DS . 'config' . DS);
 define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
 
 /**
- * File path to the webroot directory.
+ * File path to the images directory.
  */
 define('IMAGES', WWW_ROOT . 'img' . DS);
 
