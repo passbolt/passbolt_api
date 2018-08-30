@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- PASSBOLT-2999: Add Ldap plugin
+
 ### Fixed
 - PASSBOLT-2965: Group filter link stays active after switching to a non group filter
 - Route rewriting of the appjs should take in account passbolt installed in a subdirectory
