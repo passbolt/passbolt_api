@@ -17,9 +17,9 @@ namespace App\Model\Traits\Users;
 use App\Model\Entity\Role;
 use App\Model\Table\AvatarsTable;
 use Cake\Core\Configure;
-use Cake\Validation\Validation;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 
 trait UsersFindersTrait
 {

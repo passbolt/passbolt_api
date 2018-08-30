@@ -34,6 +34,7 @@ class GroupsAddController extends AppController
     {
         $this->loadModel('Groups');
         $this->loadModel('Users');
+
         return AppController::beforeFilter($event);
     }
 
@@ -58,7 +59,6 @@ class GroupsAddController extends AppController
         $msg = __('The group has been added successfully.');
         $this->success($msg, $group);
     }
-
 
     /**
      * Format request data formatted for API v1 to API v2 format

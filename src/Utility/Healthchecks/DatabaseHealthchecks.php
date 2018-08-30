@@ -14,7 +14,6 @@
  */
 namespace App\Utility\Healthchecks;
 
-
 use Cake\Database\Exception as DatabaseException;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Datasource\ConnectionManager;
@@ -25,10 +24,10 @@ class DatabaseHealthchecks
     /**
      * Run all databases health checks
      *
-     * @param $checks
+     * @param array $checks List of checks
      * @return array
      */
-    public static function all($checks = null)
+    public static function all($checks = [])
     {
         // init results to false by default
         $checks = self::canConnect($checks);
@@ -42,10 +41,10 @@ class DatabaseHealthchecks
     /**
      * Check if application can connect to database
      *
-     * @param mixed $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function canConnect($checks = null)
+    public static function canConnect($checks = [])
     {
         $checks['database']['connect'] = false;
         try {
@@ -61,16 +60,17 @@ class DatabaseHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
     /**
      * Is the database engine supported
      *
-     * @param null $checks
-     * @return null
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function supportedBackend($checks = null)
+    public static function supportedBackend($checks = [])
     {
         $checks['database']['supportedBackend'] = false;
         $connection = ConnectionManager::get(self::getConnectionName());
@@ -78,16 +78,17 @@ class DatabaseHealthchecks
         if ($config['driver'] === 'Cake\Database\Driver\Mysql') {
             $checks['database']['supportedBackend'] = true;
         }
+
         return $checks;
     }
 
     /**
      * Check if tables are present
      *
-     * @param mixed $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function tableCount($checks = null)
+    public static function tableCount($checks = [])
     {
         $checks['database']['info']['tablesCount'] = 0;
         try {
@@ -100,6 +101,7 @@ class DatabaseHealthchecks
             }
         } catch (DatabaseException $connectionError) {
         }
+
         return $checks;
     }
 
@@ -107,10 +109,10 @@ class DatabaseHealthchecks
      * Check if some default data is present
      * We only check the number of roles
      *
-     * @param mixed $checks
-     * @return mixed
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function defaultContent($checks = null)
+    public static function defaultContent($checks = [])
     {
         $checks['database']['defaultContent'] = false;
         try {
@@ -121,9 +123,14 @@ class DatabaseHealthchecks
             }
         } catch (DatabaseException $e) {
         }
+
         return $checks;
     }
 
+    /**
+     * Get the db connection name
+     * @return string
+     */
     protected static function getConnectionName()
     {
         // Do not use default connection when test are running
@@ -132,6 +139,7 @@ class DatabaseHealthchecks
         if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
             $connectionName = 'test';
         }
+
         return $connectionName;
     }
 }

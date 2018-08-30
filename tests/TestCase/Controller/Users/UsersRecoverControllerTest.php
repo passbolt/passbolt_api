@@ -78,6 +78,15 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function testRecoverPostError_MissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->post('/users/recover');
+        $this->assertResponseCode(403);
+        $result = ($this->_getBodyAsString());
+        $this->assertContains('Missing CSRF token cookie', $result);
+    }
+
     public function testRecoverPostSuccess()
     {
         foreach ($this->successes as $case => $data) {
@@ -102,5 +111,12 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             $this->postJson('/users/recover.json', $data['form-data']);
             $this->assertSuccess();
         }
+    }
+
+    public function testRecoverPostJsonError_MissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->post('/users/recover.json?api-version=v1');
+        $this->assertResponseCode(403);
     }
 }

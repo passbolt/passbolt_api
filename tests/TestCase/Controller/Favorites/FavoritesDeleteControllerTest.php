@@ -34,6 +34,15 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertempty($deletedFavorite);
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('dame');
+        $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
+        $this->delete("/favorites/$favoriteId.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
     public function testDeleteErrorNotValidId()
     {
         $this->authenticateAs('dame');

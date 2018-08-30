@@ -14,8 +14,8 @@
  */
 namespace App\Model\Table;
 
-use App\Model\Entity\Group;
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Group;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Groups\GroupsFindersTrait;
@@ -170,11 +170,12 @@ class GroupsTable extends Table
 
     /**
      * Return a group entity.
-     * @param array $data
+     * @param array $data entity data
      *
      * @return \App\Model\Entity\Group
      */
-    public function buildEntity(array $data) {
+    public function buildEntity(array $data)
+    {
         return $this->newEntity($data, [
             'accessibleFields' => [
                 'name' => true,
@@ -205,7 +206,8 @@ class GroupsTable extends Table
      * @throws ValidationException
      * @throws InternalErrorException
      */
-    public function create(array $data, UserAccessControl $control) {
+    public function create(array $data, UserAccessControl $control)
+    {
         // Manage defaults.
         $defaults = [
             'created_by' => $control->userId(),
@@ -285,7 +287,7 @@ class GroupsTable extends Table
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
         $Permissions = TableRegistry::get('Permissions');
-        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id);
+        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id)->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::get('Resources');
             $Resources->softDeleteAll($resourceIds);

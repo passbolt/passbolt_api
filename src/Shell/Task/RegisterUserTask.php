@@ -124,16 +124,17 @@ class RegisterUserTask extends AppShell
                 $user = $this->Users->register($data, $accessControl);
                 $result = true;
                 break;
-            } catch(ValidationException $exception) {
+            } catch (ValidationException $exception) {
                 $this->out(__('Validation failed for the following user data:'));
                 $this->_displayValidationError($exception->getErrors());
-            } catch(InternalErrorException $exception) {
+            } catch (InternalErrorException $exception) {
                 $this->out(__('Something went wrong when trying to save the user, please try again.'));
             };
         }
 
         if (!$result) {
             $this->_error(__('User registration failed.'));
+
             return false;
         }
 
