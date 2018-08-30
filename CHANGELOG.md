@@ -552,6 +552,3 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 [1.0.7]: https://github.com/passbolt/passbolt_api/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/passbolt/passbolt_api/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/passbolt/passbolt_api/compare/6a92766...v1.0.5
-- PASSBOLT-2764: Fix Groups autocomplete doesn't work with less than 3 characters
-- PASSBOLT-2826: Upgrade styleguide to v2.1.0
-- PASSBOLT-2812: Rebuild fixtures with updated public keys
