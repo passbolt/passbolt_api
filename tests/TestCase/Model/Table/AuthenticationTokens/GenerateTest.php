@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -37,13 +37,13 @@ class GenerateTest extends AppTestCase
 
     public function testGenerateWrongUserId()
     {
-        $this->expectException(ValidationRuleException::class);
+        $this->expectException(ValidationException::class);
         $this->AuthenticationTokens->generate('nope');
     }
 
     public function testGenerateUserIdNotExist()
     {
-        $this->expectException(ValidationRuleException::class);
+        $this->expectException(ValidationException::class);
         $userId = UuidFactory::uuid('user.id.nope');
         $token = $this->AuthenticationTokens->generate($userId);
     }
@@ -51,7 +51,7 @@ class GenerateTest extends AppTestCase
     public function testGenerateDeletedUserIdError()
     {
         // Sofia is deleted it should not be possible to create a token
-        $this->expectException(ValidationRuleException::class);
+        $this->expectException(ValidationException::class);
         $userId = UuidFactory::uuid('user.id.sofia');
         $token = $this->AuthenticationTokens->generate($userId);
     }

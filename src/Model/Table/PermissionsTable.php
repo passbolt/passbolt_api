@@ -15,7 +15,7 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
@@ -630,9 +630,9 @@ class PermissionsTable extends Table
      * @param array $changes The changes to apply
      * @param null $acoForeignKey The aco identifier that the entities belong to
      * @param array $changesReferences A reference list of the applied changes
-     * @throw ValidationRuleException If a change try to modify a permission that is not in the list of permissions
-     * @throw ValidationRuleException If a change does not validate when calling patchEntity
-     * @throw ValidationRuleException If a change does not validate when calling newEntity
+     * @throw CustomValidationException If a change try to modify a permission that is not in the list of permissions
+     * @throw CustomValidationException If a change does not validate when calling patchEntity
+     * @throw CustomValidationException If a change does not validate when calling newEntity
      * @return array The list of permissions entities patched with the changes
      */
     public function patchEntitiesWithChanges($entities = [], $changes = [], $acoForeignKey = null, &$changesReferences = [])
@@ -653,7 +653,7 @@ class PermissionsTable extends Table
                     $errors = ['id' => [
                         'permission_exists' => __('The permission does not exist.', $change['id'])
                     ]];
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
                 // Keep a trace of the permission entity the change will be applied on.
                 $changesReferences[$changeKey] = $permissionKey;
@@ -667,7 +667,7 @@ class PermissionsTable extends Table
                     $this->patchEntity($entities[$permissionKey], $change, $options);
                     $errors = $entities[$permissionKey]->getErrors();
                     if (!empty($errors)) {
-                        throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                        throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                     }
                 }
             } else {
@@ -687,7 +687,7 @@ class PermissionsTable extends Table
                 $permission = $this->newEntity($change, $options);
                 $errors = $permission->getErrors();
                 if (!empty($errors)) {
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
                 $entities[] = $permission;
                 // Keep a trace of the permission entity the change will be applied on.

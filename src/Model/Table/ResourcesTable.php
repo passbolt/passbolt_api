@@ -15,7 +15,7 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
@@ -820,7 +820,7 @@ class ResourcesTable extends Table
                 $changesReferences
             );
             $resource->setDirty('permissions', true);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             return $resource->setError('permissions', $e->getErrors());
         }
 
@@ -937,7 +937,7 @@ class ResourcesTable extends Table
                 $delete
             );
             $resource->setDirty('secrets', true);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
 
             return false;

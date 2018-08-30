@@ -47,7 +47,7 @@ trait GroupsEmailTrait
             return;
         }
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($group->created_by);
+        $admin = $Users->findFirstForEmail($group->created_by);
 
         $userIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $userIds])->all();
@@ -80,7 +80,7 @@ trait GroupsEmailTrait
         }
 
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($deletedBy);
+        $admin = $Users->findFirstForEmail($deletedBy);
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $usersIds])->all();
         $userNames = Hash::combine($userNames->toArray(), '{n}.id', '{n}.username');
@@ -118,7 +118,7 @@ trait GroupsEmailTrait
     ) {
         // Get the details of whoever did the changes
         $Users = TableRegistry::get('Users');
-        $modifiedBy = $Users->getForEmail($modifiedById);
+        $modifiedBy = $Users->findFirstForEmail($modifiedById);
 
         $this->sendAddUserGroupUpdateEmail($event, $group, $addedGroupsUsers, $modifiedBy);
         $this->sendUpdateMembershipGroupUpdateEmail($event, $group, $updatedGroupsUsers, $modifiedBy);
@@ -314,6 +314,46 @@ trait GroupsEmailTrait
                 'whoIsAdmin' => $whoIsAdmin
             ], 'title' => $subject];
             $this->_send($groupManager->username, $subject, $data, $template);
+        }
+    }
+
+    /**
+     * Send a group user add request to the group managers of a group.
+     * @param Event $event The event
+     *   - requester, the admin that requested the action
+     *   - group, the group on which to add groupUsers
+     *   - groupUsers, the list of groupUsers entity to request to add
+     * @return void
+     */
+    public function sendGroupUsersRequestEmail(Event $event)
+    {
+        $data = $event->getData();
+        $accessControl = $data['requester'];
+        $group = $data['group'];
+        $requestedGroupUsers = $data['groupUsers'];
+
+        foreach ($requestedGroupUsers as $key => $groupUser) {
+            $requestedGroupUsers[$key]->user = $this->_getSummaryUser([$groupUser->user_id])[0];
+        }
+
+        // Get group managers of group.
+        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $adminGroupUsers = $GroupsUsers->find()->where(['group_id' => $group->id, 'is_admin' => true])->contain(['Users'])->all();
+
+        $Users = TableRegistry::get('Users');
+        $admin = $Users->findFirstForEmail($accessControl->userId());
+
+        $subject = __("{0} requested you to add members to {1}", $admin->profile->first_name, $group->name);
+        $template = 'GM/group_user_request';
+        $data = ['body' => [
+            'admin' => $admin,
+            'group' => $group,
+            'groupUsers' => $requestedGroupUsers,
+        ], 'title' => $subject];
+
+        // Send to all group managers.
+        foreach ($adminGroupUsers as $adminGroupUser) {
+            $this->_send($adminGroupUser->user->username, $subject, $data, $template);
         }
     }
 

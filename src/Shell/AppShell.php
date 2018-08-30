@@ -14,7 +14,9 @@
  */
 namespace App\Shell;
 
+use App\Controller\Events\EmailNotificationsListener;
 use Cake\Console\Shell;
+use Cake\Event\EventManager;
 
 /**
  * Application Shell
@@ -24,6 +26,20 @@ use Cake\Console\Shell;
  */
 class AppShell extends Shell
 {
+    /**
+     * Initializes the Shell
+     * acts as constructor for subclasses
+     * allows configuration of tasks prior to shell execution
+     *
+     * @return void
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        $emails = new EmailNotificationsListener();
+        EventManager::instance()->on($emails);
+    }
 
     /**
      * Display a banner

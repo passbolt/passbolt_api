@@ -14,7 +14,7 @@
  */
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -128,9 +128,9 @@ class AuthenticationTokensTable extends Table
      * Build the authentication token
      *
      * @param string $userId uuid
-     * @throws ValidationRuleException is the user is not a valid uuid
-     * @throws ValidationRuleException is the user is not found
-     * @throws ValidationRuleException is the user is deleted
+     * @throws ValidationException is the user is not a valid uuid
+     * @throws ValidationException is the user is not found
+     * @throws ValidationException is the user is deleted
      * @return \App\Model\Entity\AuthenticationToken $token
      */
     public function generate(string $userId)
@@ -150,11 +150,11 @@ class AuthenticationTokensTable extends Table
         $errors = $token->getErrors();
         if (!empty($errors)) {
             $msg = __('It is not possible to create an authentication token for this user.');
-            throw new ValidationRuleException($msg);
+            throw new ValidationException($msg);
         }
         if (!$this->save($token)) {
             $msg = __('It is not possible to create an authentication token for this user.');
-            throw new ValidationRuleException($msg);
+            throw new ValidationException($msg);
         }
 
         return $token;
@@ -243,6 +243,26 @@ class AuthenticationTokensTable extends Table
         }
         $token = $this->find('all')
             ->where(['token' => $tokenId, 'active' => true ])
+            ->first();
+
+        return $token;
+    }
+
+    /**
+     * Get a token entity using a user id
+     *
+     * @param string $userId uuid
+     * @throws \InvalidArgumentException is the token is not a valid uuid
+     * @return array|\Cake\Datasource\EntityInterface|null
+     */
+    public function getByUserId(string $userId)
+    {
+        if (!Validation::uuid($userId)) {
+            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+        }
+        $token = $this->find('all')
+            ->where(['user_id' => $userId, 'active' => true ])
+            ->order(['created' => 'DESC'])
             ->first();
 
         return $token;

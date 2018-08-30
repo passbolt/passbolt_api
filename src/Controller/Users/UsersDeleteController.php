@@ -15,12 +15,11 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use Cake\Event\Event;
-use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\InternalErrorException;
@@ -120,9 +119,9 @@ class UsersDeleteController extends AppController
     /**
      * Validate the delete operation.
      * @param User $user The target user
-     * @throws ValidationRuleException if the user is sole manager of a group
-     * @throws ValidationRuleException if the user is sole owner of a shared resource
-     * @throws ValidationRuleException if the user is sole manager of a group that is the sole owner of a shared resource
+     * @throws CustomValidationException if the user is sole manager of a group
+     * @throws CustomValidationException if the user is sole owner of a shared resource
+     * @throws CustomValidationException if the user is sole manager of a group that is the sole owner of a shared resource
      * @return void
      */
     protected function _validateDelete($user)
@@ -160,7 +159,7 @@ class UsersDeleteController extends AppController
                 $body['groups_to_delete'] = $groupsToDelete;
             }
 
-            throw new ValidationRuleException($msg, $body);
+            throw new CustomValidationException($msg, $body);
         }
     }
 
