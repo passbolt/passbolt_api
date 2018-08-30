@@ -14,9 +14,9 @@
  */
 namespace App\Utility;
 
+use App\Model\Entity\Role;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validation;
-use App\Model\Entity\Role;
 
 /**
  * Class UserAccessControl
@@ -31,7 +31,12 @@ class UserAccessControl
     private $userId;
     private $roleName;
 
-    function __construct($roleName, $userId = null)
+    /**
+     * UserAccessControl constructor.
+     * @param string $roleName The role name
+     * @param string $userId the user uuid
+     */
+    public function __construct($roleName, $userId = null)
     {
         if (!is_string($roleName)) {
             throw new InternalErrorException('Invalid UserControl role name.');
@@ -43,21 +48,37 @@ class UserAccessControl
         $this->roleName = $roleName;
     }
 
+    /**
+     * Get the user id
+     * @return string
+     */
     public function userId()
     {
         return $this->userId;
     }
 
+    /**
+     * Get the user role name
+     * @return string
+     */
     public function roleName()
     {
         return $this->roleName;
     }
 
+    /**
+     * Check if the user is an admin
+     * @return bool
+     */
     public function isAdmin()
     {
         return ($this->roleName() === Role::ADMIN);
     }
 
+    /**
+     * Convert the UserAccessControl data in array
+     * @return array
+     */
     public function toArray()
     {
         return [

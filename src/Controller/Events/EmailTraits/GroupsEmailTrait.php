@@ -319,18 +319,20 @@ trait GroupsEmailTrait
 
     /**
      * Send a group user add request to the group managers of a group.
-     * @param Event $event
+     * @param Event $event The event
      *   - requester, the admin that requested the action
      *   - group, the group on which to add groupUsers
      *   - groupUsers, the list of groupUsers entity to request to add
+     * @return void
      */
-    public function sendGroupUsersRequestEmail(Event $event) {
+    public function sendGroupUsersRequestEmail(Event $event)
+    {
         $data = $event->getData();
         $accessControl = $data['requester'];
         $group = $data['group'];
         $requestedGroupUsers = $data['groupUsers'];
 
-        foreach($requestedGroupUsers as $key => $groupUser) {
+        foreach ($requestedGroupUsers as $key => $groupUser) {
             $requestedGroupUsers[$key]->user = $this->_getSummaryUser([$groupUser->user_id])[0];
         }
 
@@ -350,7 +352,7 @@ trait GroupsEmailTrait
         ], 'title' => $subject];
 
         // Send to all group managers.
-        foreach($adminGroupUsers as $adminGroupUser) {
+        foreach ($adminGroupUsers as $adminGroupUser) {
             $this->_send($adminGroupUser->user->username, $subject, $data, $template);
         }
     }

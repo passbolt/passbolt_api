@@ -41,6 +41,7 @@ class Healthchecks
         $checks = Healthchecks::database($checks);
         $checks = Healthchecks::gpg($checks);
         $checks = Healthchecks::application($checks);
+
         return $checks;
     }
 
@@ -54,8 +55,8 @@ class Healthchecks
      * - registrationClosed: true if registration is not open
      * - jsProd: true if using minified/concatenated javascript
      *
-     * @param mixed
-     * @return array $checks
+     * @param array $checks List of checks
+     * @return array
      * @access private
      */
     public static function application($checks = null)
@@ -90,8 +91,7 @@ class Healthchecks
      * Check that users are set in the database
      * - app.adminCount there is at least an admin in the database
      *
-     * @param mixed
-     * @access private
+     * @param array $checks List of checks
      * @return array
      */
     public static function appUser($checks = null)
@@ -122,7 +122,7 @@ class Healthchecks
      * Return config file checks:
      * - configFile.app true if file is present, false otherwise
      *
-     * @param mixed
+     * @param array $checks List of checks
      * @return array
      */
     public static function configFiles($checks = null)
@@ -142,10 +142,10 @@ class Healthchecks
      * - salt: true if non default salt is used
      * - cipherSeed: true if non default cipherSeed is used
      *
-     * @param mixed
+     * @param array $checks List of checks
      * @return array
      */
-    public static function core($checks = null)
+    public static function core($checks = [])
     {
         $settings = Cache::getConfig('_cake_core_');
         $checks['core']['cache'] = (!empty($settings));
@@ -189,10 +189,10 @@ class Healthchecks
      * - info.tableCount: number of tables installed
      * - defaultContent: some default content (4 roles)
      *
-     * @param mixed
+     * @param array $checks List of checks
      * @return array
      */
-    public static function database($checks = null)
+    public static function database($checks = [])
     {
         return DatabaseHealthchecks::all($checks);
     }
@@ -203,10 +203,10 @@ class Healthchecks
      * - pcre: unicode support
      * - tmpWritable: the TMP directory is writable for the current user
      *
-     * @param mixed
+     * @param array $checks List of checks
      * @return array
      */
-    public static function environment($checks = null)
+    public static function environment($checks = [])
     {
         $checks['environment']['phpVersion'] = (version_compare(PHP_VERSION, '7.0', '>='));
         $checks['environment']['pcre'] = (Validation::alphaNumeric('passbolt'));
@@ -224,11 +224,10 @@ class Healthchecks
     /**
      * Gpg checks
      *
-     * @param mixed
-     * @return array $checks
-     * @access private
+     * @param array $checks List of checks
+     * @return array
      */
-    public static function gpg($checks = null)
+    public static function gpg($checks = [])
     {
         return GpgHealthchecks::all($checks);
     }
@@ -239,11 +238,10 @@ class Healthchecks
      * - ssl.hostValid
      * - ssl.notSelfSigned
      *
-     * @param mixed
+     * @param array $checks List of checks
      * @return array
-     * @access private
      */
-    public static function ssl($checks = null)
+    public static function ssl($checks = [])
     {
         return SslHealthchecks::all($checks);
     }
@@ -275,7 +273,7 @@ class Healthchecks
     /**
      * Get schema tables list. (per version number).
      * @param int $version passbolt major version number.
-     * @return array list of tables.
+     * @return array
      */
     public static function getSchemaTables($version = 2)
     {

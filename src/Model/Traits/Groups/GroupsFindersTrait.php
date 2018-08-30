@@ -252,9 +252,11 @@ trait GroupsFindersTrait
      * Get a list of groups matching a given list of group ids
      *
      * @param array $groupsIds array of groups uuids
+     * @param array $options array of options
+     *
      * @return \Cake\ORM\Query
      */
-    public function findAllByIds(array $groupsIds)
+    public function findAllByIds(array $groupsIds, array $options = [])
     {
         if (empty($groupsIds)) {
             throw new \InvalidArgumentException(__('The parameter groupIds cannot be empty.'));
@@ -265,8 +267,7 @@ trait GroupsFindersTrait
             }
         }
 
-        return $this->findIndex()
-                    ->where(['Groups.id IN' => $groupsIds])
-                    ->all();
+        return $this->findIndex($options)
+            ->where(['Groups.id IN' => $groupsIds]);
     }
 }

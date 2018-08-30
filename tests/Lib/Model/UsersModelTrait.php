@@ -27,7 +27,6 @@ trait UsersModelTrait
      */
     public static function getDummyUser($data = [])
     {
-        $userId = UuidFactory::uuid('user.id.ada');
         $entityContent = [
             'name' => UuidFactory::uuid('user.id.dummy'),
             'username' => 'dummy@passbolt.com',
@@ -53,5 +52,39 @@ trait UsersModelTrait
     {
         $attributes = ['id', 'role_id', 'username', 'active', 'deleted', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $user);
+    }
+
+    /**
+     * Asserts than a user is soft deleted.
+     *
+     * @param string $id
+     */
+    protected function assertUserIsSoftDeleted($id)
+    {
+        $user = $this->Users->get($id);
+        $this->assertTrue($user->deleted);
+
+        $groupsUsers = $this->GroupsUsers->find()->where(['user_id' => $id])->count();
+        $this->assertEquals(0, $groupsUsers);
+
+        $permissions = $this->Permissions->find()->where(['aro_foreign_key' => $id])->count();
+        $this->assertEquals(0, $permissions);
+
+        $secrets = $this->Secrets->find()->where(['user_id' => $id])->count();
+        $this->assertEquals(0, $secrets);
+
+        $favorites = $this->Favorites->find()->where(['user_id' => $id])->count();
+        $this->assertEquals(0, $favorites);
+    }
+
+    /**
+     * Asserts than a user is not soft deleted.
+     *
+     * @param string $id
+     */
+    protected function assertUserIsNotSoftDeleted($id)
+    {
+        $user = $this->Users->get($id);
+        $this->assertFalse($user->deleted);
     }
 }

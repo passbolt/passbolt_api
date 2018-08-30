@@ -22,7 +22,6 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 class GroupsDeleteController extends AppController
@@ -107,10 +106,10 @@ class GroupsDeleteController extends AppController
             $msg = __('The group cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id);
-                $body = $this->Resources->findAllByIds($id, $resourceIds);
+                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id)->extract('aco_foreign_key')->toArray();
+                $body['resources']['sole_owner'] = $this->Resources->findAllByIds($id, $resourceIds);
                 $msg .= $errors['id']['soleOwnerOfSharedResource'];
-                throw new CustomValidationException($msg, $body, $this->Resources);
+                throw new CustomValidationException($msg, $body);
             }
         }
 

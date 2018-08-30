@@ -15,11 +15,11 @@
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Error\Exception\CustomValidationException;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validation;
-use App\Error\Exception\CustomValidationException;
 
 class SetupCompleteController extends AppController
 {

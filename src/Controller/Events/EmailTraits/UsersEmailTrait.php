@@ -41,6 +41,7 @@ trait UsersEmailTrait
      * @param Event $event event
      * @param \App\Model\Entity\User $user user to send the mail to
      * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
+     * @param string $adminId admin identifier
      * @return void
      */
     public function sendRegisteredEmail(Event $event, User $user, AuthenticationToken $token, string $adminId = null)

@@ -24,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindResourcesOnlyUserCanAccessTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users'];
+    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users', 'app.Base/resources', 'app.Base/users', 'app.Base/groups'];
 
     /**
      * Test subject
@@ -44,36 +44,69 @@ class FindResourcesOnlyUserCanAccessTest extends AppTestCase
         $this->Permissions = TableRegistry::get('Permissions');
     }
 
-    public function testFindOnlyUserCanAccessSuccess()
+    public function testFindOnlyUserCanAccess_SoleOwnerNotShared()
     {
-        // Ada has sole owner of with apache
         $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId);
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId)->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.apache'));
     }
 
-    public function testFindOnlyUserCanAccessWitGroupsSuccess()
+    public function testFindOnlyUserCanAccess_OwnerAlongWithAnotherUser()
     {
-        // Ada is also indirectly sole owner of composer because she is alone in group creative
+        $userId = UuidFactory::uuid('user.id.orna');
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 0);
+    }
+
+    public function testFindOnlyUserCanAccess_SharedWithMe()
+    {
+        $userId = UuidFactory::uuid('user.id.lynne');
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 0);
+    }
+
+    public function testFindOnlyUserCanAccess_NoOwnerNoResourcesSharedNoGroupsMember()
+    {
+        $userId = UuidFactory::uuid('user.id.irene');
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 0);
+    }
+
+    public function testFindOnlyUserCanAccess_NoOwner()
+    {
+        $userId = UuidFactory::uuid('user.id.betty');
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 0);
+    }
+
+    public function testFindOnlyUserCanAccess_CheckGroupsUsers_OwnerAlongWithSoleManagerEmptyGroup()
+    {
         $userId = UuidFactory::uuid('user.id.ada');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true);
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true)->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 2);
-        $this->assertEquals($resources[1], UuidFactory::uuid('resource.id.apache'));
-        $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.composer'));
+        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.apache'), $resources));
+        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.composer'), $resources));
     }
 
-    public function testFindOnlyUserCanAccessNoDirectResources()
+    public function testFindOnlyUserCanAccess_CheckGroupsUsers_SoleOwnerSharedWithSoleManagerEmptyGroup()
     {
-        $userId = UuidFactory::uuid('user.id.betty');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId);
-        $this->assertEquals(count($resources), 0);
+        $userId = UuidFactory::uuid('user.id.nancy');
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 1);
+        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.openpgpjs'), $resources));
     }
 
-    public function testFindOnlyUserCanAccessNoDirectResourcesWithGroups()
+    public function testFindOnlyUserCanAccess_CheckGroupsUsers_IndirectlyOwnerSharedWithSoleManagerEmptyGroup()
     {
-        $userId = UuidFactory::uuid('user.id.betty');
-        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true);
-        $this->assertEquals(count($resources), 0);
+        $userNId = UuidFactory::uuid('user.id.nancy');
+        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
+        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
+
+        $userId = UuidFactory::uuid('user.id.nancy');
+        $resources = $this->Permissions->findResourcesOnlyUserCanAccess($userId, true)->extract('aco_foreign_key')->toArray();
+        $this->assertEquals(count($resources), 1);
+        $this->assertTrue(in_array(UuidFactory::uuid('resource.id.openpgpjs'), $resources));
     }
 }

@@ -44,6 +44,7 @@ class UsersRegisterController extends AppController
         };
 
         $this->loadModel('Users');
+
         return parent::beforeFilter($event);
     }
 
@@ -91,7 +92,7 @@ class UsersRegisterController extends AppController
                 ->setLayout('login')
                 ->setTemplate('register_thank_you');
             $this->success(__('The operation was successful.'), $user);
-        } catch(ValidationException $exception) {
+        } catch (ValidationException $exception) {
             if ($this->request->is('json')) {
                 throw $exception;
             }
@@ -102,7 +103,7 @@ class UsersRegisterController extends AppController
                 ->setTemplatePath('/Users')
                 ->setLayout('login')
                 ->setTemplate('register');
-        } catch(InternalErrorException $exception) {
+        } catch (InternalErrorException $exception) {
             throw $exception;
         }
     }
@@ -134,5 +135,4 @@ class UsersRegisterController extends AppController
 
         return $result;
     }
-
 }
