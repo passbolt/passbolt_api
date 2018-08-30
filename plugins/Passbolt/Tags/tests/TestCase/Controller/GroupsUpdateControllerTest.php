@@ -22,7 +22,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
+        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/avatars',
         'app.Base/resources', 'app.Base/favorites',
         'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Alt0/secrets',
         'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags',

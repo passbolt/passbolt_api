@@ -15,6 +15,7 @@
 namespace App\Controller\Component;
 
 use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
 use UserAgentParser\Provider\DonatjUAParser;
 
@@ -62,6 +63,14 @@ class UserComponent extends Component
     public function isAdmin()
     {
         return $this->role() == Role::ADMIN;
+    }
+
+    /**
+     * @return UserAccessControl
+     */
+    public function getAccessControl()
+    {
+        return new UserAccessControl($this->role(), $this->id());
     }
 
     /**

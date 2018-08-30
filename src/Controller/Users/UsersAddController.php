@@ -15,6 +15,7 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
@@ -30,14 +31,14 @@ class UsersAddController extends UsersRegisterController
     public function beforeFilter(Event $event)
     {
         $this->loadModel('Users');
-        $this->loadModel('AuthenticationTokens');
-        // To not use userRegisterController beforeFilter rules
+
         return AppController::beforeFilter($event);
     }
 
     /**
      * User add action (admin only)
      *
+     * @throws ValidationException if user data does not validate
      * @return void
      */
     public function addPost()
@@ -45,24 +46,10 @@ class UsersAddController extends UsersRegisterController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('Only administrators can add new users.'));
         }
-        $user = $this->_registerUser();
+        $data = $this->_formatRequestData();
+        $user = $this->Users->register($data, $this->User->getAccessControl());
         $user = $this->Users->findView($user->id, Role::ADMIN)->first();
         $msg = __('The user was successfully added. This user now need to complete the setup.');
         $this->success($msg, $user);
-    }
-
-    /**
-     * Notify the user
-     *
-     * @param object $user User entity
-     * @param object $token Token entity
-     * @return void
-     */
-    protected function _notifyUser($user, $token)
-    {
-        $event = new Event('UsersAddController.addPost.success', $this, [
-            'user' => $user, 'token' => $token, 'adminId' => $this->User->id()
-        ]);
-        $this->getEventManager()->dispatch($event);
     }
 }

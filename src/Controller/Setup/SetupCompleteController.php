@@ -15,12 +15,11 @@
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Error\Exception\CustomValidationException;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use JsonSchema\Exception\ValidationException;
 
 class SetupCompleteController extends AppController
 {
@@ -164,7 +163,7 @@ class SetupCompleteController extends AppController
         }
         try {
             $gpgkey = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
-        } catch (ValidationException $e) {
+        } catch (CustomValidationException $e) {
             throw new BadRequestException(__('A valid OpenPGP key must be provided.'));
         }
 

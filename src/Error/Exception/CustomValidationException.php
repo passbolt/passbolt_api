@@ -18,8 +18,10 @@ use Cake\Core\Exception\Exception;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Controller.
+ * Compared to ValidationException the second constructor parameter can be anything
+ * e.g. a custom error message format, not necessarily an entity
  */
-class ValidationRuleException extends Exception
+class CustomValidationException extends Exception
 {
 
     /**

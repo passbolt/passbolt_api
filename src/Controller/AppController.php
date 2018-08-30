@@ -15,9 +15,11 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
+use App\Controller\Events\UserRegistrationListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Utility\Text;
@@ -62,10 +64,10 @@ class AppController extends Controller
         ]);
 
         /*
-         * Email notifications
+         * Global event listeners
          */
         $emails = new EmailNotificationsListener();
-        $this->getEventManager()->on($emails);
+        EventManager::instance()->on($emails);
 
         /*
          * Enable the following components for recommended CakePHP security settings.

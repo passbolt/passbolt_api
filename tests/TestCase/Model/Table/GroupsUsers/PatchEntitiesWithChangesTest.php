@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\GroupsUsers;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -60,7 +60,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         // Patch the group groups_users.
         try {
             $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id, $patchOptions);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -97,7 +97,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         // Patch the group groups_users.
         try {
             $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id, $patchOptions);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -132,7 +132,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         // Patch the group groups_users.
         try {
             $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $data, $group->id, $patchOptions);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -231,7 +231,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
             try {
                 $group->groups_users = $this->GroupsUsers->patchEntitiesWithChanges($group->groups_users, $case['data'], $group->id);
                 $this->assertFalse(false, 'Expect an exception');
-            } catch (ValidationRuleException $e) {
+            } catch (CustomValidationException $e) {
                 $this->assertEntityError($e, $case['errorField']);
             }
         }
