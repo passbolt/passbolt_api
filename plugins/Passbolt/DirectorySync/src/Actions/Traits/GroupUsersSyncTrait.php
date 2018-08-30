@@ -111,16 +111,18 @@ trait GroupUsersSyncTrait
             ));
         }
 
-        // Send notification.
-        $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
-        $groupUsers = [];
-        // Build group_users entity for the call.
-        foreach ($userIdsToAdd as $userId) {
-            $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
+        // Send notification if not in dry-run mode.
+        if (!$this->isDryRun()) {
+            $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->id);
+            $groupUsers = [];
+            // Build group_users entity for the call.
+            foreach ($userIdsToAdd as $userId) {
+                $groupUsers[] = $this->GroupsUsers->buildEntity(['group_id' => $group->id, 'user_id' => $userId]);
+            }
+            $eventData = ['groupUsers' => $groupUsers, 'group' => $group, 'requester' => $accessControl];
+            $event = new Event('Model.Groups.requestGroupUsers.success', $this, $eventData);
+            $this->getEventManager()->dispatch($event);
         }
-        $eventData = ['groupUsers' => $groupUsers, 'group' => $group, 'requester' => $accessControl];
-        $event = new Event('Model.Groups.requestGroupUsers.success', $this, $eventData);
-        $this->getEventManager()->dispatch($event);
     }
 
     /**

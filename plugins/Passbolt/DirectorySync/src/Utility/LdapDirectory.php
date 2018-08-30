@@ -142,7 +142,7 @@ class LdapDirectory implements DirectoryInterface
         foreach ($users as $user) {
             $this->users[] = [
                 'id' => $this->getFieldValue($user, 'id'),
-                'directory_name' => $this->getFieldValue($user, 'id'),
+                'directory_name' => $user->getDn(),
                 'directory_created' => new FrozenTime($this->getFieldValue($user, 'created')),
                 'directory_modified' => new FrozenTime($this->getFieldValue($user, 'modified')),
                 'user' => [
