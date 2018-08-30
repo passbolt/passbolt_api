@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use App\Shell\AppShellBootstrap;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
@@ -427,6 +428,9 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
     {
+        // Init AppShellBootstrap to handle email notifications.
+        AppShellBootstrap::init();
+
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $this->mockDirectoryEntryGroup('accounting');
         $this->mockDirectoryGroupData('accounting', [
