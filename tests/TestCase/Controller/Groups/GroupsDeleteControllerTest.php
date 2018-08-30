@@ -21,142 +21,142 @@ use Cake\ORM\TableRegistry;
 
 class GroupsDeleteControllerTest extends AppIntegrationTestCase
 {
-        public $Groups;
-        public $GroupsGroups;
-        public $Permissions;
+    public $Groups;
+    public $GroupsGroups;
+    public $Permissions;
 
-        public $fixtures = [
-            'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-            'app.Base/resources', 'app.Base/secrets', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-            'app.Base/email_queue'
-        ];
+    public $fixtures = [
+        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
+        'app.Base/resources', 'app.Base/secrets', 'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
+        'app.Base/email_queue'
+    ];
 
-        public function setUp()
-        {
-                parent::setUp();
-                $this->Groups = TableRegistry::get('Groups');
-                $this->GroupsGroups = TableRegistry::get('GroupsGroups');
-                $this->Permissions = TableRegistry::get('Permissions');
-        }
+    public function setUp()
+    {
+        parent::setUp();
+        $this->Groups = TableRegistry::get('Groups');
+        $this->GroupsGroups = TableRegistry::get('GroupsGroups');
+        $this->Permissions = TableRegistry::get('Permissions');
+    }
 
-        public function testGroupsDeleteDryRunSuccess()
-        {
-                $this->authenticateAs('admin');
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
-                $this->assertSuccess();
-                $group = $this->Groups->get($groupId);
-                $this->assertFalse($group->deleted);
-        }
+    public function testGroupsDeleteDryRunSuccess()
+    {
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
+        $this->assertSuccess();
+        $group = $this->Groups->get($groupId);
+        $this->assertFalse($group->deleted);
+    }
 
-        public function testGroupsDeleteDryRunError_MissingCsrfToken()
-        {
-                $this->disableCsrfToken();
-                $this->authenticateAs('admin');
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->delete('/groups/' . $groupId . '/dry-run.json?api-version=v2');
-                $this->assertResponseCode(403);
-        }
+    public function testGroupsDeleteDryRunError_MissingCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->delete('/groups/' . $groupId . '/dry-run.json?api-version=v2');
+        $this->assertResponseCode(403);
+    }
 
-        public function testGroupsDeleteDryRunError()
-        {
-                $this->authenticateAs('admin');
-                $groupId = UuidFactory::uuid('group.id.creative');
-                $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
-                $this->assertError(400);
-                $this->assertContains(
-                    'You need to transfer the ownership for the shared passwords',
-                    $this->_responseJsonHeader->message
-                );
-        }
+    public function testGroupsDeleteDryRunError()
+    {
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.creative');
+        $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
+        $this->assertError(400);
+        $this->assertContains(
+            'You need to transfer the ownership for the shared passwords',
+            $this->_responseJsonHeader->message
+        );
+    }
 
-        public function testGroupsDeleteAsAdminSuccess()
-        {
-                $this->authenticateAs('admin');
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
-                $this->assertSuccess();
-                $group = $this->Groups->get($groupId);
-                $this->assertTrue($group->deleted);
-        }
+    public function testGroupsDeleteAsAdminSuccess()
+    {
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->assertSuccess();
+        $group = $this->Groups->get($groupId);
+        $this->assertTrue($group->deleted);
+    }
 
-        public function testGroupsDeleteAsGroupOwnerSuccess()
-        {
-                $this->authenticateAs('edith');
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
-                $this->assertSuccess();
-                $group = $this->Groups->get($groupId);
-                $this->assertTrue($group->deleted);
-        }
+    public function testGroupsDeleteAsGroupOwnerSuccess()
+    {
+        $this->authenticateAs('edith');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->assertSuccess();
+        $group = $this->Groups->get($groupId);
+        $this->assertTrue($group->deleted);
+    }
 
-        public function testGroupsDeleteNotLoggedInError()
-        {
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
-                $this->assertAuthenticationError();
-        }
+    public function testGroupsDeleteNotLoggedInError()
+    {
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->assertAuthenticationError();
+    }
 
-        public function testGroupsDeleteNotAdminError()
-        {
-                $this->authenticateAs('ada');
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
-                $this->assertForbiddenError('You are not authorized to access that location.');
-        }
+    public function testGroupsDeleteNotAdminError()
+    {
+        $this->authenticateAs('ada');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->assertForbiddenError('You are not authorized to access that location.');
+    }
 
-        public function testGroupsDeleteInvalidGroupError()
-        {
-                $this->authenticateAs('admin');
-                $bogusId = '0';
-                $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-                $this->assertError(400, 'The group id must be a valid uuid.');
+    public function testGroupsDeleteInvalidGroupError()
+    {
+        $this->authenticateAs('admin');
+        $bogusId = '0';
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
+        $this->assertError(400, 'The group id must be a valid uuid.');
 
-                $this->authenticateAs('admin');
-                $bogusId = 'true';
-                $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-                $this->assertError(400, 'The group id must be a valid uuid.');
+        $this->authenticateAs('admin');
+        $bogusId = 'true';
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
+        $this->assertError(400, 'The group id must be a valid uuid.');
 
-                $this->authenticateAs('admin');
-                $bogusId = 'null';
-                $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-                $this->assertError(400, 'The group id must be a valid uuid.');
+        $this->authenticateAs('admin');
+        $bogusId = 'null';
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
+        $this->assertError(400, 'The group id must be a valid uuid.');
 
-                $this->authenticateAs('admin');
-                $bogusId = '🔥';
-                $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-                $this->assertError(400, 'The group id must be a valid uuid.');
-        }
+        $this->authenticateAs('admin');
+        $bogusId = '🔥';
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
+        $this->assertError(400, 'The group id must be a valid uuid.');
+    }
 
-        public function testGroupsDeleteGroupDoesNotExistError()
-        {
-                $this->authenticateAs('admin');
-                $bogusId = UuidFactory::uuid('group.id.bogus');
-                $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
-                $this->assertError(404, 'The group does not exist or has been already deleted.');
-        }
+    public function testGroupsDeleteGroupDoesNotExistError()
+    {
+        $this->authenticateAs('admin');
+        $bogusId = UuidFactory::uuid('group.id.bogus');
+        $this->deleteJson('/groups/' . $bogusId . '.json?api-version=v2');
+        $this->assertError(404, 'The group does not exist or has been already deleted.');
+    }
 
-        public function testGroupsDeleteGroupAlreadyDeletedError()
-        {
-                // Delete the group twice
-                $this->authenticateAs('admin');
-                $groupId = UuidFactory::uuid('group.id.freelancer');
-                $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
-                $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
-                $this->assertError(404, 'The group does not exist or has been already deleted.');
-        }
+    public function testGroupsDeleteGroupAlreadyDeletedError()
+    {
+        // Delete the group twice
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->deleteJson('/groups/' . $groupId . '.json?api-version=v2');
+        $this->assertError(404, 'The group does not exist or has been already deleted.');
+    }
 
-        public function testGroupsDeleteSoleResourceOwnerError()
-        {
-                $this->authenticateAs('admin');
-                $groupId = UuidFactory::uuid('group.id.creative');
-                $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
-                $this->assertError(400);
-                $this->assertContains(
-                    'You need to transfer the ownership for the shared passwords',
-                    $this->_responseJsonHeader->message
-                );
-                $this->assertNotEmpty($this->_responseJsonBody);
-                $this->assertResourceAttributes($this->_responseJsonBody->resources->sole_owner[0]);
-        }
+    public function testGroupsDeleteSoleResourceOwnerError()
+    {
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.creative');
+        $this->deleteJson('/groups/' . $groupId . '/dry-run.json?api-version=v2');
+        $this->assertError(400);
+        $this->assertContains(
+            'You need to transfer the ownership for the shared passwords',
+            $this->_responseJsonHeader->message
+        );
+        $this->assertNotEmpty($this->_responseJsonBody);
+        $this->assertResourceAttributes($this->_responseJsonBody->resources->sole_owner[0]);
+    }
 }
