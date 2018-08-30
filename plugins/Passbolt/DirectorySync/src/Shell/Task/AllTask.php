@@ -30,7 +30,12 @@ class AllTask extends AppShell
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
-        $parser->setDescription(__('Directory Sync'));
+        $parser->setDescription(__('Directory Sync'))
+            ->addOption('dry-run', [
+                'help' => 'Don\'t save the changes',
+                'default' => 'true',
+                'boolean' => true,
+            ]);
 
         return $parser;
     }
@@ -42,9 +47,12 @@ class AllTask extends AppShell
      */
     public function main()
     {
+        $dryRun = $this->param('dry-run');
         $cmd = $this->_formatCmd('directory_sync users');
+        if ($dryRun) $cmd .= ' --dry-run';
         $result = $this->dispatchShell($cmd);
         $cmd2 = $this->_formatCmd('directory_sync groups');
+        if ($dryRun) $cmd2 .= ' --dry-run';
         $result2 = $this->dispatchShell($cmd2);
 
         return ($result2 === self::CODE_SUCCESS && $result === self::CODE_SUCCESS);

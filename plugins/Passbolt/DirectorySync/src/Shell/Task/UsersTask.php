@@ -50,10 +50,11 @@ class UsersTask extends SyncTask
     public function getOptionParser()
     {
         $parser = parent::getOptionParser();
+
         $parser->setDescription(__('Sync users'))
             ->addOption('dry-run', [
                 'help' => 'Don\'t save the changes',
-                'default' => 'true',
+                'default' => 'false',
                 'boolean' => true,
             ]);
 
@@ -69,7 +70,9 @@ class UsersTask extends SyncTask
     {
         try {
             $this->model = 'Users';
+            $dryRun = $this->param('dry-run');
             $action = new UserSyncAction();
+            $action->setDryRun($dryRun);
             $reports = $action->execute();
             $this->_displayReports($reports);
         } catch (\Exception $exception) {

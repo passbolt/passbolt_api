@@ -645,4 +645,25 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertDirectoryIgnoreEmpty();
 
     }
+
+    /**
+     * Scenario: a group should be deleted but dry-run is set to true.
+     * Expected result: the group should not be deleted, and the database should not be modified.
+     */
+    public function testDryRunDoNotDeleteEntity() {
+        $this->mockDirectoryEntryGroup('marketing');
+        $this->action->setDryRun(true);
+        $reports = $this->action->execute();
+        $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);
+        $this->assertReportNotEmpty($reports);
+        $expectedReport = [
+            'action' => Alias::ACTION_DELETE,
+            'model'  => Alias::MODEL_GROUPS,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => 'Group',
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+        $this->assertOneDirectoryEntry();
+        $this->assertDirectoryIgnoreEmpty();
+    }
 }

@@ -71,21 +71,14 @@ class GroupSyncAction extends SyncAction
     }
 
     /**
-     * Execute groups sync.
-     * - Delete all groups that can be deleted
-     * - Create all groups that can be created
-     * - Generate report
-     *
-     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
+     * Execute sync.
+     * @return void.
      */
-    public function execute()
-    {
+    protected function _execute() {
         $this->beforeExecute();
         $this->processEntriesToDelete();
         $this->processEntriesToCreate();
         $this->afterExecute();
-
-        return $this->getSummary();
     }
 
     /**

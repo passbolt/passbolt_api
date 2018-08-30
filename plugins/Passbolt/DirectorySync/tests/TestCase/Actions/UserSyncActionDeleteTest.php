@@ -647,4 +647,20 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
     }
+
+    /**
+     * Scenario: a user should be deleted but dry-run is set to true.
+     * Expected result: the user should not be deleted, and the database should not be modified.
+     */
+    public function testDryRunDoNotDeleteEntity() {
+        $this->mockDirectoryEntryUser(['fname' => 'thelma', 'lname' => 'estrin']);
+        $this->action->setDryRun(true);
+        $reports = $this->action->execute();
+        $this->assertReportNotEmpty($reports);
+        $expectedReport = ['action' => Alias::ACTION_DELETE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SUCCESS, 'type' => 'User'];
+        $this->assertReport($reports[0], $expectedReport);
+        $this->assertOneDirectoryEntry();
+        $this->assertDirectoryIgnoreEmpty();
+        $this->assertUserExist(UuidFactory::uuid('user.id.thelma'), ['deleted' => false]);
+    }
 }

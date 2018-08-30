@@ -35,7 +35,7 @@ abstract class SyncTask extends AppShell
         $this->hr();
         $this->out($this->model);
         $this->hr();
-        $this->out(__('To create:'));
+        $this->out(__('Created:'));
         $created = $reports->getByAction(Alias::ACTION_CREATE);
         if (!count($created)) {
             $this->success(str_pad('[success]', $this->pad) . __('No new item to create.'));
@@ -44,7 +44,7 @@ abstract class SyncTask extends AppShell
             $this->_displayReport($report);
         }
         $this->out();
-        $this->out(__('To delete:'));
+        $this->out(__('Deleted:'));
         $deleted = $reports->getByAction(Alias::ACTION_DELETE);
         if (!count($deleted)) {
             $this->success(str_pad('[success]', $this->pad) . __('No new item to delete'));

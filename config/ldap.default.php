@@ -1,10 +1,32 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.0.0
+ */
+
+/**
+ * This is the default configuration file to synchronize passbolt with your ldap server.
+ * To activate LDAP sync, copy / paste this file into ldap.php and
+ * modify the configuration options to match your config.
+ *
+ * For more information: https://www.passbolt.com/configure/ldap
+ */
 return [
     'passbolt' => [
         'plugins' => [
             'directorySync' => [
                 // The admin user that will perform operations for the directory.
                 // 'defaultUser' => 'email@domain.com',
+                //
                 // The default admin is the group manager that will be assigned to a newly created group.
                 // If not specified, the first admin user found will be used.
                 // 'defaultGroupAdminUser' => 'email@domain.com',

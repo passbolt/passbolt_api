@@ -1185,4 +1185,32 @@ class GroupSyncActionAddTest extends DirectorySyncTestCase
         $this->assertDirectoryIgnoreNotEmpty();
         
     }
+
+    /**
+     * Scenario: Group was added in ldap but the test is executed in dry-run
+     * Expected result: DB should remain unmodified, but the report should say that a group has been added
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroup
+     * @group DirectorySyncGroupAdd
+     */
+    public function testDirectorySyncGroup_Case17_DryRun()
+    {
+        $this->mockDirectoryGroupData('newFromLdap');
+        $this->action->setDryRun(true);
+        $reports = $this->action->execute();
+        $this->assertReportNotEmpty($reports);
+        $expectedReport = [
+            'action' => Alias::ACTION_CREATE,
+            'model'  => Alias::MODEL_GROUPS,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS
+        ];
+        $this->assertReport($reports[0], $expectedReport);
+        $reports[0]->getData();
+        $this->assertGroupNotExist(null, ['name' => 'newFromLdap', 'deleted' => false]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+    }
 }

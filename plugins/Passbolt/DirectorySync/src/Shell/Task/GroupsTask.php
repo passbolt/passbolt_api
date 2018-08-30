@@ -65,7 +65,9 @@ class GroupsTask extends SyncTask
     {
         try {
             $this->model = 'Groups';
+            $dryRun = $this->param('dry-run');
             $action = new GroupSyncAction();
+            $action->setDryRun($dryRun);
             $reports = $action->execute();
             $this->_displayReports($reports);
         } catch (\Exception $exception) {

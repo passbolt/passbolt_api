@@ -74,6 +74,11 @@ class SyncAction
     public $DirectoryRelations;
 
     /**
+     * @var bool
+     */
+    protected $dryRun = false;
+
+    /**
      * @var ActionReportCollection
      */
     protected $summary;
@@ -108,6 +113,30 @@ class SyncAction
         // Enable email notifications.
         $emails = new EmailNotificationsListener();
         EventManager::instance()->on($emails);
+    }
+
+    /**
+     * Execute sync.
+     * - Delete all entities that can be deleted
+     * - Create all entities that can be created
+     * - Generate report
+     *
+     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
+     */
+    public function execute()
+    {
+        if ($this->isDryRun()) {
+            $conn = $this->Groups->getConnection();
+            $conn->begin();
+            $conn->transactional(function () {
+                $this->_execute();
+            });
+            $conn->rollback();
+        } else {
+            $this->_execute();
+        }
+
+        return $this->getSummary();
     }
 
     /**
@@ -184,5 +213,22 @@ class SyncAction
 
         // If can't find corresponding config user, return first admin.
         return $this->Users->findFirstAdmin();
+    }
+
+    /**
+     * Set Dryrun
+     * @param bool $dryRun dry run value
+     * @return void
+     */
+    public function setDryRun(bool $dryRun) {
+        $this->dryRun = $dryRun;
+    }
+
+    /**
+     * Get dryRun
+     * @return bool
+     */
+    public function isDryRun() {
+        return $this->dryRun;
     }
 }

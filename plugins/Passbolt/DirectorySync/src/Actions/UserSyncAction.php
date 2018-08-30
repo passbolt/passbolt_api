@@ -54,21 +54,14 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * Perform a sync
-     * - Delete all users/groups that can be deleted
-     * - Create all users/groups that can be created
-     * - Generate report
-     *
-     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
+     * Execute sync.
+     * @return void.
      */
-    public function execute()
-    {
+    protected function _execute() {
         $this->beforeExecute();
         $this->processEntriesToDelete();
         $this->processEntriesToCreate();
         $this->afterExecute();
-
-        return $this->getSummary();
     }
 
     /**

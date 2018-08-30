@@ -1265,4 +1265,25 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
         $this->assertOrphanDirectoryEntryExists($data['id']);
     }
+
+    /**
+     * Scenario:
+     * Expected result:
+     *
+     * @group DirectorySync
+     * @group DirectorySyncUser
+     * @group DirectorySyncUserAdd
+     */
+    public function testDirectorySyncUserAdd_Case17_DryRun()
+    {
+        $this->mockDirectoryUserData('neil', 'armstrong', 'neil@passbolt.com');
+        $this->action->setDryRun(true);
+        $reports = $this->action->execute();
+        $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SUCCESS, 'type' => Alias::MODEL_USERS];
+        $this->assertReport($reports[0], $expectedReport);
+        $reports[0]->getData();
+        $this->assertUserNotExist(['username' => 'neil@passbolt.com', 'active' => false, 'deleted' => false]);
+        $this->assertDirectoryEntryEmpty();
+        $this->assertDirectoryIgnoreEmpty();
+    }
 }
