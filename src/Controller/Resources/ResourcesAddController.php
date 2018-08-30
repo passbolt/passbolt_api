@@ -16,7 +16,7 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use Cake\Core\Configure;
@@ -147,13 +147,14 @@ class ResourcesAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $resource Resource
+     * @throws ValidationException if the resource validation failed
      * @return void
      */
     protected function _handleValidationError($resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
-            throw new ValidationRuleException(__('Could not validate resource data.'), $errors, $this->Resources);
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
     }
 

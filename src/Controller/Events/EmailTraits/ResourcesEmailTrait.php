@@ -47,7 +47,7 @@ trait ResourcesEmailTrait
             return;
         }
         $Users = TableRegistry::get('Users');
-        $user = $Users->getForEmail($resource->created_by);
+        $user = $Users->findFirstForEmail($resource->created_by);
         $subject = __("You added the password {0}", $resource->name);
         $template = 'LU/resource_create';
         $data = ['body' => ['user' => $user, 'resource' => $resource], 'title' => $subject];
@@ -67,7 +67,7 @@ trait ResourcesEmailTrait
             return;
         }
         $Users = TableRegistry::get('Users');
-        $owner = $Users->getForEmail($resource->modified_by);
+        $owner = $Users->findFirstForEmail($resource->modified_by);
         $subject = __("{0} edited the password {1}", $owner->profile->first_name, $resource->name);
         $template = 'LU/resource_update';
 
@@ -98,7 +98,7 @@ trait ResourcesEmailTrait
             return;
         }
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($deletedBy);
+        $admin = $Users->findFirstForEmail($deletedBy);
 
         // if there is nobody or just one user, give it up
         if (count($users) < 2) {

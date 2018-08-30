@@ -16,7 +16,7 @@
 namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
@@ -31,7 +31,6 @@ class FavoritesAddController extends AppController
      * @throws NotFoundException If the resource does not exist
      * @throws NotFoundException If the resource is soft deleted
      * @throws NotFoundException If the user does not have access to the resource
-     * @throws NotFoundException
      * @return void
      */
     public function add($foreignKey = null)
@@ -86,6 +85,9 @@ class FavoritesAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $favorite favorite
+     * @throws BadRequestException if the record is already marked as favorite
+     * @throws NotFoundException if the resource does not exist
+     * @throws ValidationException if validation failed
      * @return void
      */
     protected function _handleValidationError($favorite)
@@ -101,7 +103,7 @@ class FavoritesAddController extends AppController
                 throw new BadRequestException(__('This record is already marked as favorite.'));
             }
 
-            throw new ValidationRuleException(__('Could not validate favorite data.'));
+            throw new ValidationException(__('Could not validate favorite data.'));
         }
     }
 }
