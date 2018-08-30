@@ -14,7 +14,7 @@
  */
 namespace Passbolt\Tags\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Utility\UuidFactory;
@@ -218,7 +218,7 @@ class TagsTable extends Table
             }
         }
         if (!empty($errors)) {
-            throw new ValidationRuleException(__('Could not validate the tags.'), $errors);
+            throw new CustomValidationException(__('Could not validate the tags.'), $errors);
         }
 
         return $collection;

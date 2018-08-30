@@ -14,7 +14,7 @@
  */
 namespace Passbolt\Tags\Test\TestCase\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Tags\Model\Table\TagsTable;
@@ -79,7 +79,7 @@ class TagsTableTest extends TagTestCase
             $tags = [['test']];
             $this->Tags->buildEntitiesOrFail($tags);
             $this->fail('Build entities should throw an exception');
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $this->assertTrue(true);
         }
     }
