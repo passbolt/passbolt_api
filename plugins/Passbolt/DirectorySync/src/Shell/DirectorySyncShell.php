@@ -34,14 +34,19 @@ class DirectorySyncShell extends AppShell
 
     /**
      * Initialize.
+     * @return void
      */
-    public function initialize() {
+    public function initialize()
+    {
         parent::initialize();
         if (!file_exists(CONFIG . 'ldap.php') && !Configure::read('passbolt.plugins.directorySync.test')) {
             $this->err(__('Could not read the ldap config file'));
             $this->info(
-                __('To fix this problem, you need to copy {0} into {1} and edit the configuration options inside.',
-                    [CONFIG . 'ldap.default.php', CONFIG . 'ldap.php']));
+                __(
+                    'To fix this problem, you need to copy {0} into {1} and edit the configuration options inside.',
+                    [CONFIG . 'ldap.default.php', CONFIG . 'ldap.php']
+                )
+            );
             $this->abort(__('aborting'));
         }
     }

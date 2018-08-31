@@ -34,5 +34,4 @@ class DirectoryReportsFixture extends TestFixture
         ],
     ];
     // @codingStandardsIgnoreEnd
-
 }

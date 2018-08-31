@@ -14,8 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Test\Utility;
 
-use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Cake\Core\Configure;
+use Passbolt\DirectorySync\Utility\DirectoryInterface;
 
 /**
  * IntegrationFixture
@@ -37,7 +37,7 @@ class TestDirectory implements DirectoryInterface
         $scenario = Configure::read('passbolt.plugins.directorySync.test');
         if (isset($scenario) && is_string($scenario)) {
             $this->path = dirname(__DIR__) . DS . 'IntegrationFixtures' . DS . stripslashes($scenario);
-            if(!is_dir($this->path)) {
+            if (!is_dir($this->path)) {
                 throw new \Exception(__('The test scenario could not be found in fixtures at: {0}', $this->path));
             }
         } else {
@@ -56,6 +56,7 @@ class TestDirectory implements DirectoryInterface
         if (!isset($this->groups)) {
             $this->groups = $this->read('Groups');
         }
+
         return $this->groups;
     }
 
@@ -68,20 +69,23 @@ class TestDirectory implements DirectoryInterface
         if (!isset($this->users)) {
             $this->users = $this->read('Users');
         }
+
         return $this->users;
     }
 
     /**
      * @param $users
      */
-    public function setUsers($users) {
+    public function setUsers($users)
+    {
         $this->users = $users;
     }
 
     /**
      * @param $groups
      */
-    public function setGroups($groups) {
+    public function setGroups($groups)
+    {
         $this->groups = $groups;
     }
 
@@ -92,9 +96,10 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    private function read($file) {
+    private function read($file)
+    {
         $path = $this->path . DS . $file . '.php';
-        if(!is_file($path) || !is_readable($path)) {
+        if (!is_file($path) || !is_readable($path)) {
             throw new \Exception(__('The {0} data file can not be found/read: {1}', $file, $path));
         }
         $return = include $path;

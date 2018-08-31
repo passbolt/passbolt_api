@@ -15,8 +15,6 @@
 namespace Passbolt\DirectorySync\Test\Fixture\Base;
 
 use Cake\TestSuite\Fixture\TestFixture;
-use App\Utility\UuidFactory;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 
 /**
  * DirectoryEntriesFixture

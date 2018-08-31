@@ -13,6 +13,7 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
+
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Utility\Alias;
 
@@ -54,6 +55,7 @@ trait AssertDirectoryTrait
     {
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
+
         return $syncEntry;
     }
 
@@ -65,6 +67,7 @@ trait AssertDirectoryTrait
     {
         $syncEntry = $this->action->DirectoryEntries->find()->where(['id' => $id, 'foreign_key IS NULL'])->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
+
         return $syncEntry;
     }
 
@@ -80,6 +83,7 @@ trait AssertDirectoryTrait
         $where = ['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $u->id];
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
+
         return $syncEntry;
     }
 
@@ -95,6 +99,7 @@ trait AssertDirectoryTrait
         $where = ['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $g->id];
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEquals(1, count($syncEntry));
+
         return $syncEntry;
     }
 
@@ -106,6 +111,7 @@ trait AssertDirectoryTrait
     {
         $syncEntry = $this->action->DirectoryEntries->find()->where($where)->all()->toArray();
         $this->assertEmpty($syncEntry);
+
         return $syncEntry;
     }
 

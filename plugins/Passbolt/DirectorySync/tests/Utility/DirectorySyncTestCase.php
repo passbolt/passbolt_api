@@ -14,20 +14,20 @@
  */
 namespace Passbolt\DirectorySync\Test\Utility;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
-use App\Test\Lib\AppIntegrationTestCase;
 
 abstract class DirectorySyncTestCase extends AppIntegrationTestCase
 {
     private $originalConfig;
 
-    use MockDirectoryTrait;
     use AssertDirectoryTrait;
     use AssertReportTrait;
+    use MockDirectoryTrait;
 
     public $fixtures = [
         'app.Base/users',
@@ -73,5 +73,4 @@ abstract class DirectorySyncTestCase extends AppIntegrationTestCase
         }
         parent::tearDown();
     }
-
 }

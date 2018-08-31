@@ -12,8 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-use Cake\I18n\FrozenTime;
+
 use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
 
 return [
     // A user that does not exist in passbolt and is valid
