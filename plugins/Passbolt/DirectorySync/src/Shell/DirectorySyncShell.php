@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Shell;
 
 use App\Shell\AppShell;
+use Cake\Core\Configure;
 
 class DirectorySyncShell extends AppShell
 {
@@ -36,12 +37,12 @@ class DirectorySyncShell extends AppShell
      */
     public function initialize() {
         parent::initialize();
-        if (!file_exists(CONFIG . 'ldap.php')) {
+        if (!file_exists(CONFIG . 'ldap.php') && !Configure::read('passbolt.plugins.directorySync.test')) {
             $this->err(__('Could not read the ldap config file'));
             $this->info(
                 __('To fix this problem, you need to copy {0} into {1} and edit the configuration options inside.',
                     [CONFIG . 'ldap.default.php', CONFIG . 'ldap.php']));
-            die();
+            $this->abort(__('aborting'));
         }
     }
 
