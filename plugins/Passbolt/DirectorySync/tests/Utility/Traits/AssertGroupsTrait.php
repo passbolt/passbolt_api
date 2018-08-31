@@ -13,6 +13,7 @@
  * @since         2.2.0
  */
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
+
 use Cake\ORM\TableRegistry;
 
 trait AssertGroupsTrait

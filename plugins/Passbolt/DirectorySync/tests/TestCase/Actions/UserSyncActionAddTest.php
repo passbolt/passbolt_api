@@ -16,11 +16,11 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
-use Cake\ORM\TableRegistry;
 
 class UserSyncActionAddTest extends DirectorySyncTestCase
 {
@@ -33,7 +33,15 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->action->getDirectory()->setUsers([]);
     }
 
-    // TODO: a test to make sure that orphan directoryEntry (foreign_key => null) do not get deleted.
+    /**
+     *  A test to make sure that orphan directoryEntry (foreign_key => null) do not get deleted.
+     *
+     * @return void
+     */
+    public function testInitialize()
+    {
+        $this->markTestIncomplete('Not implemented yet.');
+    }
 
     /**
      * Scenario:
@@ -298,7 +306,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
     }
 
-
     /**
      * Scenario:
      * Expected result:
@@ -394,7 +401,7 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['active' => true, 'deleted' => true]);
         $data = $reports[0]->getData();
         $this->assertUserExist($data->id, ['username' => 'sofia@passbolt.com', 'deleted' => false]);
-        $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.sofia'),'foreign_key' => $data->id]);
+        $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.sofia'), 'foreign_key' => $data->id]);
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SUCCESS];
         $this->assertReport($reports[0], $expectedReport);
     }
@@ -531,7 +538,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertDirectoryEntryExistsForUser(['username' => 'sofia@passbolt.com']);
     }
 
-
     /**
      * Scenario:
      * Expected result:
@@ -556,10 +562,7 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['active' => true, 'deleted' => true]);
         $this->assertDirectoryEntryExistsForUser(['username' => 'sofia@passbolt.com']);
-
     }
-
-
 
     /**
      * Scenario:
@@ -632,7 +635,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertUserNotExist(['username' => 'neil@passbolt.com']);
         $this->assertOrphanDirectoryEntryExists($data['id']);
     }
-
 
     /**
      * Scenario:
@@ -755,7 +757,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReportEmpty($reports);
         $this->assertDirectoryIgnoreExist(['id' => UuidFactory::uuid('ldap.user.id.ruth')]);
         $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.ruth'), 'foreign_key' => UuidFactory::uuid('user.id.ruth')]);
-
     }
 
     /**
@@ -791,7 +792,7 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), Alias::MODEL_DIRECTORY_ENTRIES);
         $this->mockDirectoryEntryUser(['fname' => 'sofia']);
         $reports = $this->action->execute();
-        
+
         $this->assertDirectoryIgnoreExist();
         $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_IGNORE, 'type' => 'DirectoryIgnore'];
         $this->assertReport($reports[0], $expectedReport);
@@ -1012,7 +1013,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReportEmpty($reports);
         $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.ada')]);
         $this->assertOneDirectoryEntry();
-
     }
 
     /**
@@ -1031,7 +1031,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
         $this->assertReportEmpty($reports);
         $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.ruth')]);
         $this->assertOneDirectoryEntry();
-
     }
 
     /**
@@ -1160,7 +1159,6 @@ class UserSyncActionAddTest extends DirectorySyncTestCase
      */
     public function testDirectorySyncUserAdd_Case46_Invalid_Ignore_Active()
     {
-
         $data = $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com');
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.ada'), Alias::MODEL_DIRECTORY_ENTRIES);
         $reports = $this->action->execute();

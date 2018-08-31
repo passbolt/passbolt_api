@@ -64,7 +64,7 @@ trait AssertReportTrait
      */
     public function assertNoReportsForModel(ActionReportCollection $reports, string $model)
     {
-        foreach($reports as $report) {
+        foreach ($reports as $report) {
             $this->assertNotEquals($model, $report->getModel());
         }
     }

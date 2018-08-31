@@ -214,7 +214,8 @@ class SyncAction
      * @param bool $dryRun dry run value
      * @return void
      */
-    public function setDryRun(bool $dryRun) {
+    public function setDryRun(bool $dryRun)
+    {
         $this->dryRun = $dryRun;
     }
 
@@ -222,7 +223,8 @@ class SyncAction
      * Get dryRun
      * @return bool
      */
-    public function isDryRun() {
+    public function isDryRun()
+    {
         return $this->dryRun;
     }
 }

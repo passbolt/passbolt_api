@@ -49,10 +49,14 @@ class AllTask extends AppShell
     {
         $dryRun = $this->param('dry-run');
         $cmd = $this->_formatCmd('directory_sync users');
-        if ($dryRun) $cmd .= ' --dry-run';
+        if ($dryRun) {
+            $cmd .= ' --dry-run';
+        }
         $result = $this->dispatchShell($cmd);
         $cmd2 = $this->_formatCmd('directory_sync groups');
-        if ($dryRun) $cmd2 .= ' --dry-run';
+        if ($dryRun) {
+            $cmd2 .= ' --dry-run';
+        }
         $result2 = $this->dispatchShell($cmd2);
 
         return ($result2 === self::CODE_SUCCESS && $result === self::CODE_SUCCESS);

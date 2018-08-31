@@ -16,7 +16,6 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
@@ -210,7 +209,6 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertDirectoryIgnoreEmpty();
         $this->assertDirectoryEntryEmpty();
         $this->assertUserExist(UuidFactory::uuid('user.id.ruth'), ['deleted' => false, 'active' => false]);
-
     }
 
     /**
@@ -341,7 +339,6 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertUserExist(UuidFactory::uuid('user.id.sofia'), ['deleted' => true, 'active' => true]);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
-
     }
 
     /**
@@ -396,7 +393,6 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
-
     }
 
     /**
@@ -624,8 +620,6 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertReportEmpty($reports);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreNotEmpty();
-
-
     }
 
     /**
@@ -652,7 +646,8 @@ class UserSyncActionDeleteTest extends DirectorySyncTestCase
      * Scenario: a user should be deleted but dry-run is set to true.
      * Expected result: the user should not be deleted, and the database should not be modified.
      */
-    public function testDryRunDoNotDeleteEntity() {
+    public function testDryRunDoNotDeleteEntity()
+    {
         $this->mockDirectoryEntryUser(['fname' => 'thelma', 'lname' => 'estrin']);
         $this->action->setDryRun(true);
         $reports = $this->action->execute();

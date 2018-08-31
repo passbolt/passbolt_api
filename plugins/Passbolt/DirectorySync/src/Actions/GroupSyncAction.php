@@ -72,9 +72,11 @@ class GroupSyncAction extends SyncAction
 
     /**
      * Execute sync.
-     * @return void.
+     *
+     * @return void
      */
-    protected function _execute() {
+    protected function _execute()
+    {
         $this->beforeExecute();
         $this->processEntriesToDelete();
         $this->processEntriesToCreate();
