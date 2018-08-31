@@ -3,5 +3,8 @@
 - Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
+
+### Improved
 - GITHUB#275: Adding SSL configuration environment variables for cake mysql driver
 - PASSBOLT-2534: As LU I should not be able to copy to clipboard empty login/url
+- PASSBOLT-2017: As LU when I save a password (create/edit) the dialog shouldn't persist until the request is processed by the API
