@@ -15,9 +15,9 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Shell;
 
 use Cake\Console\Shell;
-use Cake\TestSuite\ConsoleIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
 
-class DirectorySyncShellTest extends ConsoleIntegrationTestCase
+class DirectorySyncShellTest extends DirectorySyncConsoleIntegrationTestCase
 {
     /**
      * setup method
