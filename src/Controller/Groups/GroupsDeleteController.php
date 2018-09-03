@@ -15,14 +15,13 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 class GroupsDeleteController extends AppController
@@ -78,8 +77,8 @@ class GroupsDeleteController extends AppController
      * @throws ForbiddenException if current group is not an admin
      * @throws BadRequestException if the group uuid id invalid
      * @throws NotFoundException if the group does not exist or is already deleted
-     * @throws ValidationRuleException if the group is sole manager of a group
-     * @throws ValidationRuleException if the group is sole owner of a shared resource
+     * @throws CustomValidationException if the group is sole manager of a group
+     * @throws CustomValidationException if the group is sole owner of a shared resource
      * @return \App\Model\Entity\Group $group entity
      */
     protected function _validateRequestData($id)
@@ -107,10 +106,10 @@ class GroupsDeleteController extends AppController
             $msg = __('The group cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id);
-                $body = $this->Resources->findAllByIds($id, $resourceIds);
+                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id)->extract('aco_foreign_key')->toArray();
+                $body['resources']['sole_owner'] = $this->Resources->findAllByIds($id, $resourceIds);
                 $msg .= $errors['id']['soleOwnerOfSharedResource'];
-                throw new ValidationRuleException($msg, $body, $this->Resources);
+                throw new CustomValidationException($msg, $body);
             }
         }
 

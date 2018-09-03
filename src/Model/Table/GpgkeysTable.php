@@ -14,7 +14,7 @@
  */
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Utility\Gpg;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -349,7 +349,7 @@ class GpgkeysTable extends Table
      * @param string $armoredKey ascii armored key
      * @param string $userId uuid of the user using the key
      * @throws \InvalidArgumentException if the user is not valid
-     * @throws ValidationRuleException if the key info can not be parsed
+     * @throws ValidationException if the key info can not be parsed
      * @return object Gpgkey entity
      */
     public function buildEntityFromArmoredKey(string $armoredKey, string $userId)
@@ -361,7 +361,7 @@ class GpgkeysTable extends Table
             $gpg = new Gpg();
             $info = $gpg->getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {
-            throw new ValidationRuleException(__('Could not create Gpgkey from armored key.'));
+            throw new ValidationException(__('Could not create Gpgkey from armored key.'));
         }
 
         $data = [

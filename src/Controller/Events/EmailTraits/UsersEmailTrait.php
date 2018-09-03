@@ -41,6 +41,24 @@ trait UsersEmailTrait
      * @param Event $event event
      * @param \App\Model\Entity\User $user user to send the mail to
      * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
+     * @param string $adminId admin identifier
+     * @return void
+     */
+    public function sendRegisteredEmail(Event $event, User $user, AuthenticationToken $token, string $adminId = null)
+    {
+        if (!isset($adminId)) {
+            $this->sendSelfRegisteredEmail($event, $user, $token);
+        } else {
+            $this->sendAdminRegisteredEmail($event, $user, $token, $adminId);
+        }
+    }
+
+    /**
+     * Send Register Email
+     *
+     * @param Event $event event
+     * @param \App\Model\Entity\User $user user to send the mail to
+     * @param \App\Model\Entity\AuthenticationToken $token AuthenticationToken
      * @return void
      */
     public function sendSelfRegisteredEmail(Event $event, User $user, AuthenticationToken $token)
@@ -48,7 +66,8 @@ trait UsersEmailTrait
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
         }
-
+        $Users = TableRegistry::get('Users');
+        $user = $Users->findFirstForEmail($user->id);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_self';
         $data = ['body' => ['user' => $user, 'token' => $token], 'title' => $subject];
@@ -71,7 +90,7 @@ trait UsersEmailTrait
         }
 
         $Users = TableRegistry::get('Users');
-        $admin = $Users->getForEmail($adminId);
+        $admin = $Users->findFirstForEmail($adminId);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_admin';
         $data = ['body' => ['user' => $user, 'token' => $token, 'admin' => $admin], 'title' => $subject];
@@ -97,7 +116,7 @@ trait UsersEmailTrait
         }
 
         $Users = TableRegistry::get('Users');
-        $deletedBy = $Users->getForEmail($deletedById);
+        $deletedBy = $Users->findFirstForEmail($deletedById);
         $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
         $template = 'GM/user_delete';
 

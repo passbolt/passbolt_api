@@ -59,7 +59,7 @@
         "cakephp/cakephp-codesniffer": "^3.0",
         "satooshi/php-coveralls": "~1.0",
         "passbolt/passbolt_selenium_api": "dev-master",
-        "passbolt/passbolt_test_data": "^2.0.1"
+        "passbolt/passbolt_test_data": "dev-master"
     },
     "autoload": {
         "psr-4": {

@@ -53,4 +53,26 @@ trait GroupsModelTrait
         $attributes = ['id', 'name', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
         $this->assertObjectHasAttributes($attributes, $group);
     }
+
+    /**
+     * Asserts than a group is soft deleted.
+     *
+     * @param string $id
+     */
+    protected function assertGroupIsSoftDeleted($id)
+    {
+        $group = $this->Groups->get($id);
+        $this->assertTrue($group->deleted);
+    }
+
+    /**
+     * Asserts than a group is not soft deleted.
+     *
+     * @param string $id
+     */
+    protected function assertGroupIsNotSoftDeleted($id)
+    {
+        $group = $this->Groups->get($id);
+        $this->assertFalse($group->deleted);
+    }
 }
