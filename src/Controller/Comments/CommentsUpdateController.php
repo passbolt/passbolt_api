@@ -16,7 +16,7 @@
 namespace App\Controller\Comments;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
@@ -32,7 +32,7 @@ class CommentsUpdateController extends AppController
      * @param string $commentId The identifier of the comment to update
      * @throws ForbiddenException
      * @throws BadRequestException
-     * @throws ValidationRuleException
+     * @throws ValidationException
      * @return void
      */
     public function update($commentId = null)
@@ -58,7 +58,6 @@ class CommentsUpdateController extends AppController
      */
     protected function _formatRequestData()
     {
-        $output = [];
         $data = $this->request->getData();
 
         if (isset($data['Comment'])) {
@@ -74,7 +73,7 @@ class CommentsUpdateController extends AppController
      * Manage validation errors.
      * @param \Cake\Datasource\EntityInterface $comment comment
      * @throws ForbiddenException
-     * @throws ValidationRuleException
+     * @throws ValidationException
      * @return void
      */
     protected function _handleValidationErrors($comment)
@@ -84,7 +83,7 @@ class CommentsUpdateController extends AppController
             if (!empty(Hash::get($errors, 'user_id.is_owner'))) {
                 throw new ForbiddenException(__('You are not allowed to edit this comment.'));
             }
-            throw new ValidationRuleException(__('Could not validate comment data.'), $errors, $this->Comments);
+            throw new ValidationException(__('Could not validate comment data.'), $comment, $this->Comments);
         }
     }
 

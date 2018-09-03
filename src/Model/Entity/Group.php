@@ -54,4 +54,27 @@ class Group extends Entity
         // Associated entities
         'groups_users' => false
     ];
+
+    /**
+     * Check whether a group contains a user based on its groups users.
+     * @param array|User $user the user object or array.
+     *
+     * @return GroupsUser|bool groupUser if found, false otherwise
+     */
+    public function hasUser($user)
+    {
+        if (!isset($this->groups_users)) {
+            return false;
+        }
+
+        $userId = is_array($user) ? $user['id'] : $user->id;
+
+        foreach ($this->groups_users as $groupUser) {
+            if ($groupUser->user_id === $userId) {
+                return $groupUser;
+            }
+        }
+
+        return false;
+    }
 }
