@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Model\Table;
+namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppTestCase;

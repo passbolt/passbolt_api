@@ -17,6 +17,7 @@ namespace App\Controller;
 use App\Controller\Events\EmailNotificationsListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Utility\Text;
@@ -55,7 +56,8 @@ class AppController extends Controller
                 'prefix' => 'Auth',
                 'controller' => 'AuthLogin',
                 'action' => 'loginGet',
-                '_method' => 'GET'
+                '_method' => 'GET',
+                'plugin' => null
             ],
         ]);
 
@@ -77,6 +79,21 @@ class AppController extends Controller
             $this->response = $this->response
                 ->withHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
         }
+    }
+
+    /**
+     * Before filter
+     *
+     * @param Event $event An Event instance
+     * @return \Cake\Http\Response|null
+     */
+    public function beforeFilter(Event $event)
+    {
+        $safeMode = !Configure::read('debug');
+        $safeMode = $safeMode && preg_match('/^https/', Configure::read('App.fullBaseUrl'));
+        $this->set('safeMode', $safeMode);
+
+        return parent::beforeFilter($event);
     }
 
     /**
@@ -164,5 +181,19 @@ class AppController extends Controller
                 throw new NotFoundException(__('Page not found.'));
             }
         }
+    }
+
+    /**
+     * Get the request api version.
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        $apiVersion = $this->request->getQuery('api-version');
+        if (!isset($apiVersion) || $apiVersion === 'v1') {
+            return 'v1';
+        }
+
+        return $apiVersion;
     }
 }

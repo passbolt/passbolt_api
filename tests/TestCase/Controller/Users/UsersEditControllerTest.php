@@ -24,6 +24,15 @@ class UsersEditControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/avatars'];
 
+    public function testUsersEditMissingCsrfTokenError()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $userId = UuidFactory::uuid('user.id.ada');
+        $this->post("/users/$userId.json?api-version=v2");
+        $this->assertResponseCode(403);
+    }
+
     public function testUsersEditNotLoggedInError()
     {
         $data = [];

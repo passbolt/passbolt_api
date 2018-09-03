@@ -346,6 +346,28 @@ trait FormatValidationTrait
     }
 
     /**
+     * Test emails validation rule.
+     *
+     * @param bool $checkMx
+     * @return array
+     */
+    public static function getEmailTestCases($checkMx = false)
+    {
+        $test = [
+            'rule_name' => 'email',
+            'test_cases' => [
+                '0' => false,
+                'nope' => false,
+                'passbolt.com' => false,
+                'dummy@passbolt.com' => true,
+                'dummy@unreachable.tld' => !$checkMx,
+            ],
+        ];
+
+        return $test;
+    }
+
+    /**
      * Test cases for maxLength validation rule.
      *
      * @param int $max maximum

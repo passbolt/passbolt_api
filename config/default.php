@@ -39,9 +39,14 @@ return [
             'tokenExpiry' => env('PASSBOLT_AUTH_TOKEN_EXPIRY', '3 days')
         ],
 
-        // Email notification settings.
-        // Email delivery settings such as credentials are in app.php.
+        // Email settings
         'email' => [
+            // Additional email validation settings
+            'validate' => [
+                'mx' => filter_var(env('PASSBOLT_EMAIL_VALIDATE_MX', false), FILTER_VALIDATE_BOOLEAN),
+            ],
+
+            // Email delivery settings such as credentials are in app.php.
             // Allow to disable displaying the armored secret in the email.
             // WARNING: make sure you have backups in place if you disable these.
             // See. https://www.passbolt.com/help/tech/backup
@@ -152,7 +157,18 @@ return [
 
         // Security.
         'security' => [
-            'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN)
+            'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN),
+            'csrfProtection' => [
+                'active' => true,
+                'unlockedActions' => [
+                    'AuthLogin' => ['loginPost'],
+                    'GroupsAdd' => ['addPost'],
+                    'GroupsUpdate' => ['dryRun', 'update'],
+                    'RecoverComplete' => ['complete'],
+                    'SetupComplete' => ['complete'],
+                    'Share' => ['dryRun'],
+                ]
+            ]
         ],
 
         // Should the app be SSL / HTTPS only.

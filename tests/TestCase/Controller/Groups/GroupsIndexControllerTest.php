@@ -36,6 +36,8 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         // Not expected content.
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('group_user', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody[0]);
     }
 
     public function testApiV1Success()
@@ -51,12 +53,17 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         // Not expected fields.
         $this->assertObjectNotHasAttribute('Modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody[0]);
+        $this->assertObjectNotHasAttribute('GroupUser', $this->_responseJsonBody[0]);
     }
 
     public function testContainSuccess()
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[modifier.profile]=1&contain[user]=1&contain[group_user]=1';
+        $this->authenticateAs('hedy');
+        $urlParameter = 'contain[modifier]=1';
+        $urlParameter .= '&contain[modifier.profile]=1';
+        $urlParameter .= '&contain[user]=1';
+        $urlParameter .= '&contain[group_user]=1';
+        $urlParameter .= '&contain[my_group_user]=1';
         $this->getJson("/groups.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -71,12 +78,38 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->users[0]);
         $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody[0]);
         $this->assertGroupUserAttributes($this->_responseJsonBody[0]->groups_users[0]);
+
+        // A group Hedy is not member
+        $groupAId = UuidFactory::uuid('group.id.accounting');
+        $groupA = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupAId) {
+            if ($item->id == $groupAId) {
+                $carry = $item;
+            }
+
+            return $carry;
+        }, null);
+        $this->assertNull($groupA->my_group_user);
+
+        // A group Hedy is member
+        $groupBId = UuidFactory::uuid('group.id.board');
+        $groupB = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupBId) {
+            if ($item->id == $groupBId) {
+                $carry = $item;
+            }
+
+            return $carry;
+        }, null);
+        $this->assertObjectHasAttribute('my_group_user', $groupB);
+        $this->assertGroupUserAttributes($groupB->my_group_user);
     }
 
     public function testContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1';
+        $urlParameter = 'contain[modifier]=1';
+        $urlParameter .= '&contain[modifier.profile]=1';
+        $urlParameter .= '&contain[user]=1';
+        $urlParameter .= '&contain[group_user]=1';
         $this->getJson("/groups.json?$urlParameter");
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -86,6 +119,8 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($this->_responseJsonBody[0]->Group);
         $this->assertObjectHasAttribute('Modifier', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->Modifier);
+        $this->assertObjectHasAttribute('Profile', $this->_responseJsonBody[0]->Modifier);
+        $this->assertProfileAttributes($this->_responseJsonBody[0]->Modifier->Profile);
         $this->assertObjectHasAttribute('User', $this->_responseJsonBody[0]);
         $this->assertUserAttributes($this->_responseJsonBody[0]->User[0]);
         $this->assertObjectHasAttribute('GroupUser', $this->_responseJsonBody[0]);

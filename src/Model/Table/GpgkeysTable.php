@@ -16,6 +16,7 @@ namespace App\Model\Table;
 
 use App\Error\Exception\ValidationRuleException;
 use App\Utility\Gpg;
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\I18n\FrozenTime;
 use Cake\I18n\Time;
@@ -270,7 +271,7 @@ class GpgkeysTable extends Table
     {
         preg_match('/<(\S+@\S+)>$/', $value, $matches);
         if (isset($matches[1])) {
-            return Validation::email($matches[1]);
+            return Validation::email($matches[1], Configure::read('passbolt.email.validate.mx'));
         }
 
         return false;

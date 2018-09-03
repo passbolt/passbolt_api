@@ -245,6 +245,15 @@ hcciUFw5
         }
     }
 
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('grace');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $this->put("/resources/$resourceId.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
     public function testResourcesUpdateValidationErrors()
     {
         $this->markTestIncomplete();

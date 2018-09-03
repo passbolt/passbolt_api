@@ -15,14 +15,14 @@
 use Cake\Core\Configure;
 ?>
 <!DOCTYPE html>
-<html class="passbolt no-js no-passboltplugin alpha version" lang="en">
+<html class="passbolt no-js no-passboltplugin version" lang="en">
 <head>
     <?= $this->Html->charset() ?>
 
     <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
-
-    <?= $this->Html->css('main.min.css') ?>
+    <?= $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]); ?>
+<?= $this->fetch('css') ?>
 </head>
 <body>
 <div id="container" class="error page <?= $this->fetch('pageClass') ?>">

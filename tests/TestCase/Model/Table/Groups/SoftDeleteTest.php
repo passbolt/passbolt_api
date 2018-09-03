@@ -27,10 +27,11 @@ class SoftDeleteTest extends AppTestCase
     public $Permissions;
     public $Resources;
     public $Users;
+    public $Secrets;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups',
-        'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/resources', 'app.Base/favorites',
+        'app.Base/users', 'app.Base/groups', 'app.Base/profiles',
+        'app.Base/gpgkeys', 'app.Base/resources', 'app.Base/favorites', 'app.Alt0/secrets',
         'app.Alt0/groups_users', 'app.Alt0/permissions'
     ];
 
@@ -42,6 +43,7 @@ class SoftDeleteTest extends AppTestCase
         $this->GroupsUsers = TableRegistry::get('GroupsUsers');
         $this->Resources = TableRegistry::get('Resources');
         $this->Groups = TableRegistry::get('Groups');
+        $this->Secrets = TableRegistry::get('Secrets');
     }
 
     public function testGroupsSoftDeleteSimpleSuccess()
@@ -64,6 +66,11 @@ class SoftDeleteTest extends AppTestCase
         $permissions = $this->Permissions->find()
             ->select()->where(['aco_foreign_key' => UuidFactory::uuid('resource.id.docker')])->all();
         $this->assertEquals(1, count($permissions));
+
+        // Check the secrets have been deleted
+        $secrets = $this->Secrets->find()
+            ->select()->where(['resource_id' => UuidFactory::uuid('resource.id.docker')])->all();
+        $this->assertEquals(1, count($secrets));
     }
 
     public function testGroupsSoftDeleteSoleResourceOwnerError()

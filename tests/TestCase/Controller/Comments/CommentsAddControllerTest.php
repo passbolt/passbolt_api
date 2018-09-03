@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller\Groups;
+namespace App\Test\TestCase\Controller\Comments;
 
 use App\Model\Entity\Role;
 use App\Model\Table\CommentsTable;
@@ -29,7 +29,8 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/comments',
-        'app.Base/permissions', 'app.Base/avatars', 'app.Base/roles', 'app.Base/profiles', 'app.Base/email_queue'
+        'app.Base/permissions', 'app.Base/avatars', 'app.Base/roles', 'app.Base/profiles', 'app.Base/email_queue',
+        'app.Base/gpgkeys'
     ];
 
     public function setUp()
@@ -38,6 +39,24 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $config = TableRegistry::exists('Comments') ? [] : ['className' => CommentsTable::class];
         $this->Comments = TableRegistry::get('Comments', $config);
         $this->Resources = TableRegistry::get('Resources');
+    }
+
+    public function testCommentsAddSuccess()
+    {
+        $this->authenticateAs('ada');
+        $commentContent = 'this is a test';
+        $postData = [
+            'content' => $commentContent,
+        ];
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
+        $this->assertSuccess();
+
+        // Check that the groups and its sub-models are saved as expected.
+        $comment = $this->Comments->find()
+            ->where(['id' => $this->_responseJsonBody->id])
+            ->first();
+        $this->assertEquals($commentContent, $comment->content);
     }
 
     public function testCommentsAddApiV1Success()
@@ -79,6 +98,15 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             ->where(['id' => $this->_responseJsonBody->Comment->id])
             ->first();
         $this->assertEquals($commentContent, $comment->content);
+    }
+
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->post("/comments/resource/$resourceId.json?api-version=v2");
+        $this->assertResponseCode(403);
     }
 
     public function testErrorInvalidResourceId()

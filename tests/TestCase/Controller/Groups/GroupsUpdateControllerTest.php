@@ -28,11 +28,12 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
 
     public function setUp()
     {
+        parent::setUp();
+        $this->disableCsrfToken();
         $this->Favorites = TableRegistry::get('Favorites');
         $this->Groups = TableRegistry::get('Groups');
         $this->GroupsUsers = TableRegistry::get('GroupsUsers');
         $this->Resources = TableRegistry::get('Resources');
-        parent::setUp();
     }
 
     protected function getValidSecret()

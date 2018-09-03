@@ -57,13 +57,18 @@ Find out more: [https://www.passbolt.com](https://www.passbolt.com "Passbolt Hom
 
 You can try a demo of passbolt at https://demo.passbolt.com.
 
-You will need to install a plugin, you can find some help here:
-https://www.passbolt.com/help/start/firefox
+You will need to install a browser extension. You can find some help here:
+https://help.passbolt.com/faq/start/browser-extensions
 
 ## Installing passbolt
 
 You can install passbolt on your own machine. Follow the instructions on the website here:
-https://www.passbolt.com/help/tech/install
+https://help.passbolt.com/hosting/install
+
+## Updating passbolt
+
+Every now and then you will need to update passbolt to benefits from important fixes and improvements.
+Follow the instructions on the website here: https://help.passbolt.com/hosting/update
 
 ## Contributing to passbolt
 
