@@ -10,3 +10,4 @@
 - PASSBOLT-2950: Display empty feedbacks content
 - PASSBOLT-2971: Reset the workspaces filters when a resource or a user is created
 - PASSBOLT-2267: As an admin deleting a user I can transfer ownership of this user shared passwords to another user or a group that have read access.
+- PASSBOLT-3021: Add optional configuration so that settings entry point knows what options to white list
