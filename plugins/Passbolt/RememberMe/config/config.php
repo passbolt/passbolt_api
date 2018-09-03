@@ -3,6 +3,14 @@ return [
     'passbolt' => [
         'plugins' => [
             'rememberMe' => [
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'options',
+                    ],
+                    'whiteList' => [
+                        'options',
+                    ],
+                ],
                 'version' => '2.0.0',
                 'options' => [
                     '300' => __('5 minutes'),
