@@ -16,11 +16,11 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class GroupSyncActionAddTest extends DirectorySyncTestCase
+class GroupSyncActionAddTest extends DirectorySyncIntegrationTestCase
 {
     use AssertGroupsTrait;
 

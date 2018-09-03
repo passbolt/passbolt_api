@@ -20,13 +20,13 @@ use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class GroupUserSyncActionTest extends DirectorySyncTestCase
+class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 {
     use AssertDirectoryRelationsTrait;
     use AssertGroupsTrait;

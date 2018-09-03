@@ -17,11 +17,11 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class UserSyncActionDeleteTest extends DirectorySyncTestCase
+class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
 {
     use AssertUsersTrait;
 
