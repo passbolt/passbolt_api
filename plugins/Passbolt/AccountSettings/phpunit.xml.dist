@@ -13,11 +13,9 @@
 
     <!-- Add any additional test suites you want to run here -->
     <testsuites>
-        <testsuite name="App Test Suite">
-            <directory>./tests/TestCase</directory>
-            <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
+        <testsuite name="Passbolt/AccountSettings">
+            <directory>./tests/TestCase/</directory>
         </testsuite>
-        <!-- Add plugin test suites here. -->
     </testsuites>
 
     <!-- Setup a listener for fixtures -->
@@ -31,11 +29,10 @@
         </listener>
     </listeners>
 
-    <!-- Ignore vendor tests in code coverage reports -->
     <filter>
         <whitelist>
             <directory suffix=".php">./src/</directory>
-            <directory suffix=".php">./plugins/*/src/</directory>
         </whitelist>
     </filter>
+
 </phpunit>

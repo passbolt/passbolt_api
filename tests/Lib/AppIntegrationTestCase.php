@@ -31,6 +31,7 @@ use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestCase;
 use PHPUnit\Framework\Assert;
 
@@ -80,6 +81,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
     {
         parent::setUp();
         $this->initAvatarEvents();
+        Configure::write('passbolt.plugins', []);
         $this->enableCsrfToken();
     }
 
