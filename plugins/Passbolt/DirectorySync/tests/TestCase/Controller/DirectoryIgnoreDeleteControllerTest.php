@@ -15,11 +15,11 @@
 
 namespace App\Test\TestCase\Controller\Favorites;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 
-class DirectoryIgnoreDeleteControllerTest extends AppIntegrationTestCase
+class DirectoryIgnoreDeleteControllerTest extends DirectorySyncIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',

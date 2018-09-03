@@ -15,10 +15,10 @@
 
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 
-class DirectoryIgnoreAddControllerTest extends AppIntegrationTestCase
+class DirectoryIgnoreAddControllerTest extends DirectorySyncIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',

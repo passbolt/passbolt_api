@@ -18,11 +18,11 @@ use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class UserSyncActionAddTest extends DirectorySyncTestCase
+class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
 {
     use AssertUsersTrait;
 

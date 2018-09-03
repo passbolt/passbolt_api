@@ -57,6 +57,7 @@ abstract class AppTestCase extends TestCase
     {
         parent::setUp();
         $this->initAvatarEvents();
+        // The tests should configure themselves their environment.
         Configure::write('passbolt.plugins', []);
     }
 
