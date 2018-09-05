@@ -331,6 +331,12 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
             // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
+            $permission = $this->Permissions->find()->select()->where([
+                'aro_foreign_key' => $groupLId,
+                'aco_foreign_key' => $resourceOId
+            ])->first();
+            $permission->type = Permission::OWNER;
+            $this->Permissions->save($permission);
 
             $this->deleteJson("/users/$userNId.json?api-version=v2");
             $this->assertSuccess();

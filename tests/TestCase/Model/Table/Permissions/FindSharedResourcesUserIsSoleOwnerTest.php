@@ -80,7 +80,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.nodejs'));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithEmptyGroup_Case5()
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_Case5()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
@@ -88,7 +88,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.openpgpjs'));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithEmptyGroup_Case5()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_Case5()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId, true)->extract('aco_foreign_key')->toArray();
@@ -134,10 +134,17 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
     public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_Case7()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
 
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
@@ -146,10 +153,17 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
     public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_Case7()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
 
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId, true)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);

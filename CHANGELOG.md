@@ -1,13 +1,12 @@
 ## [Unreleased]
-### Fixed
-- PASSBOLT-2965: Group filter link stays active after switching to a non group filter
-- Route rewriting of the appjs should take in account passbolt installed in a subdirectory
-- Fix the loading bar stuck in the initialization state in some cases
-- PASSBOLT-2969: Enforce steal to load the latest version of the appjs
-- Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
+### Added
+- PASSBOLT-2972: As LU I should be able to delete multiple passwords in bulk
 
 ### Improved
-- PASSBOLT-2950: Display empty feedbacks content
-- PASSBOLT-2971: Reset the workspaces filters when a resource or a user is created
-- PASSBOLT-2267: As an admin deleting a user I can transfer ownership of this user shared passwords to another user or a group that have read access.
-- PASSBOLT-3021: Add optional configuration so that settings entry point knows what options to white list
+- GITHUB#275: Adding SSL configuration environment variables for cake mysql driver
+- PASSBOLT-2534: As LU I should not be able to copy to clipboard empty login/url
+- PASSBOLT-2017: As LU when I save a password (create/edit) the dialog shouldn't persist until the request is processed by the API
+
+### Fixed
+- PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
+- GITHUB#246: Fix healthcheck tips relative to tmp folder

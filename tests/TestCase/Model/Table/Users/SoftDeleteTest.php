@@ -135,7 +135,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertResourceIsNotSoftDeleted($resourceNId);
     }
 
-    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithEmptyGroup_Case5()
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_Case5()
     {
         $userNId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
@@ -152,6 +152,7 @@ class SoftDeleteTest extends AppTestCase
         $userNId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
@@ -159,6 +160,7 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
+
         $user = $this->Users->get($userNId);
         $this->assertTrue($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
@@ -171,8 +173,16 @@ class SoftDeleteTest extends AppTestCase
         $userNId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+
         $user = $this->Users->get($userNId);
         $this->assertTrue($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
