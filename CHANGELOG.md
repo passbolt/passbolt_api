@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Added
 - PASSBOLT-2972: As LU I should be able to delete multiple passwords in bulk
+- PASSBOLT-2951: Merge the remember me on CE
 
 ### Improved
 - GITHUB#275: Adding SSL configuration environment variables for cake mysql driver
