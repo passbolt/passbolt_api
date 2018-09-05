@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2709: Implement the remember me feature
 - PASSBOLT-2951: Merge the remember me on CE
 - PASSBOLT-2972: As LU I should be able to delete multiple passwords in bulk
+- PASSBOLT-2951: Merge the remember me on CE
 
 ### Improved
 - GITHUB#275: Adding SSL configuration environment variables for cake mysql driver
@@ -14,7 +15,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2017: As LU when I save a password (create/edit) the dialog shouldn't persist until the request is processed by the API
 
 ### Fixed
-- Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
 - Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
