@@ -15,7 +15,7 @@
 
 namespace Passbolt\AccountSettings\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -230,7 +230,7 @@ class AccountSettingsTable extends Table
             $settingItem = $this->newEntity(array_merge($settingFinder, $settingValues));
         }
         if ($settingItem->getErrors()) {
-            throw new ValidationRuleException(__('This is not a valid setting.'), $settingItem->getErrors(), $this);
+            throw new CustomValidationException(__('This is not a valid setting.'), $settingItem->getErrors(), $this);
         }
         if (!$this->save($settingItem)) {
             throw new InternalErrorException(__('Could not save the setting, please try again later.'));
@@ -244,7 +244,8 @@ class AccountSettingsTable extends Table
      *
      * @return array
      */
-    public function findAllThemes() {
+    public function findAllThemes()
+    {
         $defaultCssFileName = Configure::read('passbolt.plugins.accountSettings.themes.css');
         $themesPath = WWW_ROOT . 'css' . DS . 'themes';
 
