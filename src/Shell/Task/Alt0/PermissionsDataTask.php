@@ -509,11 +509,11 @@ class PermissionsDataTask extends \PassboltTestData\Shell\Task\Base\PermissionsD
             'modified' => '2017-11-17 12:37:04'
         ];
         $permissions[] = [
-            'id' => UuidFactory::uuid('permission.id.nodejs-accounting'),
+            'id' => UuidFactory::uuid('permission.id.nodejs-quality_assurance'),
             'aco' => 'Resource',
             'aco_foreign_key' => UuidFactory::uuid('resource.id.nodejs'),
             'aro' => 'Group',
-            'aro_foreign_key' => UuidFactory::uuid('group.id.accounting'),
+            'aro_foreign_key' => UuidFactory::uuid('group.id.quality_assurance'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
             'modified' => '2017-11-17 12:37:04'
@@ -614,6 +614,16 @@ class PermissionsDataTask extends \PassboltTestData\Shell\Task\Base\PermissionsD
             'aco_foreign_key' => UuidFactory::uuid('resource.id.selenium'),
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.margaret'),
+            'type' => Permission::READ,
+            'created' => '2017-11-17 12:37:04',
+            'modified' => '2017-11-17 12:37:04'
+        ];
+        $permissions[] = [
+            'id' => UuidFactory::uuid('permission.id.stealjs-resource_planning'),
+            'aco' => 'Resource',
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.stealjs'),
+            'aro' => 'Group',
+            'aro_foreign_key' => UuidFactory::uuid('group.id.resource_planning'),
             'type' => Permission::READ,
             'created' => '2017-11-17 12:37:04',
             'modified' => '2017-11-17 12:37:04'

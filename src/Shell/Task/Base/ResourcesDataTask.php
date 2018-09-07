@@ -340,6 +340,36 @@ class ResourcesDataTask extends DataTask
             'created_by' => UuidFactory::uuid('user.id.yvonne'),
             'modified_by' => UuidFactory::uuid('user.id.yvonne')
         ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.stealjs'),
+            'name' => 'StealJs',
+            'username' => 'stealjs',
+            'uri' => 'stealjs.com/',
+            'description' => 'Futuristic JavaScript dependency loader and builder.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.yvonne'),
+            'modified_by' => UuidFactory::uuid('user.id.yvonne')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.stealjs'),
+            'name' => 'StealJs',
+            'username' => 'stealjs',
+            'uri' => 'stealjs.com',
+            'description' => 'Futuristic JavaScript dependency loader and builder.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.adele'),
+            'modified_by' => UuidFactory::uuid('user.id.adele')
+        ];
+        $resources[] = [
+            'id' => UuidFactory::uuid('resource.id.virtualbox'),
+            'name' => 'Virtualbox',
+            'username' => 'virtualbox',
+            'uri' => 'virtualbox.org',
+            'description' => 'VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use.',
+            'deleted' => 0,
+            'created_by' => UuidFactory::uuid('user.id.adele'),
+            'modified_by' => UuidFactory::uuid('user.id.adele')
+        ];
 
         return $resources;
     }

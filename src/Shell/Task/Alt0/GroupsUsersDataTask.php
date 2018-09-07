@@ -77,6 +77,14 @@ class GroupsUsersDataTask extends \PassboltTestData\Shell\Task\Base\GroupsUsersD
                 'managers' => ['wang'],
                 'users' => ['wang']
             ],
+            'quality_assurance' => [
+                'managers' => ['hedy'],
+                'users' => ['hedy']
+            ],
+            'resource_planning' => [
+                'managers' => ['adele'],
+                'users' => ['adele']
+            ],
         ];
     }
 }

@@ -47,6 +47,15 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'User'
         ];
         $profiles[] = [
+            'id' => UuidFactory::uuid('profile.id.adele'),
+            'user_id' => UuidFactory::uuid('user.id.adele'),
+            'gender' => 'f',
+            'date_of_birth' => '1920-12-21',
+            'title' => 'Ms',
+            'first_name' => 'Adele',
+            'last_name' => 'Goldstine'
+        ];
+        $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.ada'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'gender' => 'f',

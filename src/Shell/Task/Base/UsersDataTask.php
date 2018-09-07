@@ -58,6 +58,17 @@ class UsersDataTask extends DataTask
             'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
         $users[] = [
+            'id' => UuidFactory::uuid('user.id.adele'),
+            'username' => 'adele@passbolt.com',
+            'role_id' => UuidFactory::uuid('role.id.user'),
+            'active' => 1,
+            'deleted' => 0,
+            'created' => date('Y-m-d H:i:s', strtotime('-2 months')),
+            'modified' => date('Y-m-d H:i:s', strtotime('-1 months')),
+            'created_by' => UuidFactory::uuid('user.id.admin'),
+            'modified_by' => UuidFactory::uuid('user.id.admin')
+        ];
+        $users[] = [
             'id' => UuidFactory::uuid('user.id.betty'),
             'username' => 'betty@passbolt.com',
             'role_id' => UuidFactory::uuid('role.id.user'),
