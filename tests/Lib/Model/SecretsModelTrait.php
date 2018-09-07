@@ -64,4 +64,26 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $attributes = ['id', 'user_id', 'resource_id', 'data', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $secret);
     }
+
+    /**
+     * Assert a secret exists
+     * @param $resourceId
+     * @param $userId
+     */
+    protected function assertSecretExists($resourceId, $userId)
+    {
+        $secret = $this->Secrets->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+        $this->assertNotEmpty($secret);
+    }
+
+    /**
+     * Assert a secret does not exist
+     * @param $resourceId
+     * @param $userId
+     */
+    protected function assertSecretNotExist($resourceId, $userId)
+    {
+        $secret = $this->Secrets->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+        $this->assertEmpty($secret);
+    }
 }
