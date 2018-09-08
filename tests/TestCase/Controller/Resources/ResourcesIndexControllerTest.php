@@ -15,6 +15,7 @@
 
 namespace App\Test\TestCase\Controller\Resources;
 
+use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
@@ -167,6 +168,28 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
         $this->assertCount(count($expectedResourcesIds), $resourcesIds);
         $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
+    }
+
+    public function testFilterIsSharedWithMeSuccess()
+    {
+        $this->authenticateAs('ada');
+        $urlParameter = "filter[is-shared-with-me]=1";
+        $this->getJson("/resources.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+        $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        sort($resourcesIds);
+
+        // Get all resources with permissions.
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        $expectedResourcesIds = [];
+        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
+            if ($resourcePermission >= Permission::READ && $resourcePermission < Permission::OWNER) {
+                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
+            }
+        }
+        sort($expectedResourcesIds);
+
+        $this->assertEquals($resourcesIds, $expectedResourcesIds);
     }
 
     public function testIndexErrorNotAuthenticated()

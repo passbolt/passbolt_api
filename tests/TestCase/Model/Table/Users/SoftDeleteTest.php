@@ -47,7 +47,7 @@ class SoftDeleteTest extends AppTestCase
         $this->Favorites = TableRegistry::get('Favorites');
     }
 
-    public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_Case0()
+    public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()
     {
         $userIId = UuidFactory::uuid('user.id.irene');
         $user = $this->Users->get($userIId);
@@ -55,7 +55,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsSoftDeleted($userIId);
     }
 
-    public function testUsersSoftDeleteSuccess_SoleOwnerNotSharedResource_Case1()
+    public function testUsersSoftDeleteSuccess_SoleOwnerNotSharedResource_DelUserCase1()
     {
         $userJId = UuidFactory::uuid('user.id.jean');
         $user = $this->Users->get($userJId);
@@ -64,7 +64,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertResourceIsSoftDeleted(UuidFactory::uuid('resource.id.mailvelope'));
     }
 
-    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithUser_Case2()
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
         $userKId = UuidFactory::uuid('user.id.kathleen');
         $user = $this->Users->get($userKId);
@@ -77,7 +77,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
 
-    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithUser_Case2()
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
         $userKId = UuidFactory::uuid('user.id.kathleen');
         $userLId = UuidFactory::uuid('user.id.lynne');
@@ -95,7 +95,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertPermission($resourceMId, $userLId, Permission::OWNER);
     }
 
-    public function testUsersSoftDeleteSuccess_SharedResourceWithMe_Case3()
+    public function testUsersSoftDeleteSuccess_SharedResourceWithMe_DelUserCase3()
     {
         $userLId = UuidFactory::uuid('user.id.lynne');
         $user = $this->Users->get($userLId);
@@ -104,7 +104,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
     }
 
-    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithGroup_Case4()
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
         $userMId = UuidFactory::uuid('user.id.marlyn');
         $resourceNId = UuidFactory::uuid('resource.id.nodejs');
@@ -118,13 +118,13 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
 
-    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithGroup_Case4()
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
         $userMId = UuidFactory::uuid('user.id.marlyn');
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        $groupQId = UuidFactory::uuid('group.id.quality_assurance');
         $resourceNId = UuidFactory::uuid('resource.id.nodejs');
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => $groupAId,
+            'aro_foreign_key' => $groupQId,
             'aco_foreign_key' => $resourceNId
         ])->first();
         $permission->type = Permission::OWNER;
@@ -135,7 +135,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertResourceIsNotSoftDeleted($resourceNId);
     }
 
-    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithEmptyGroup_Case5()
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase5()
     {
         $userNId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
@@ -147,11 +147,12 @@ class SoftDeleteTest extends AppTestCase
         $this->assertGroupIsSoftDeleted($groupLId);
     }
 
-    public function testUsersSoftDeleteSuccess_ownerSharedResourceAlongWithSoleManagerEmptyGroup_Case6()
+    public function testUsersSoftDeleteSuccess_ownerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
     {
         $userNId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
@@ -159,6 +160,7 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
+
         $user = $this->Users->get($userNId);
         $this->assertTrue($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
@@ -166,13 +168,21 @@ class SoftDeleteTest extends AppTestCase
         $this->assertGroupIsSoftDeleted($groupLId);
     }
 
-    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_Case7()
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
     {
         $userNId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+
         $user = $this->Users->get($userNId);
         $this->assertTrue($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
@@ -180,7 +190,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertGroupIsSoftDeleted($groupLId);
     }
 
-    public function testUsersSoftDeleteError_soleManagerOfNotEmptyGroup_Case9()
+    public function testUsersSoftDeleteError_soleManagerOfNotEmptyGroup_DelUserCase9()
     {
         $userEId = UuidFactory::uuid('user.id.edith');
         $user = $this->Users->get($userEId);
@@ -192,7 +202,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
 
-    public function testUsersSoftDeleteSuccess_soleManagerOfNotEmptyGroup_Case9()
+    public function testUsersSoftDeleteSuccess_soleManagerOfNotEmptyGroup_DelUserCase9()
     {
         $userEId = UuidFactory::uuid('user.id.edith');
         $userFId = UuidFactory::uuid('user.id.frances');
@@ -210,7 +220,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsAdmin($groupFId, $userFId);
     }
 
-    public function testUsersSoftDeleteError_ownerAlongWithSoleManagerOfNotEmptyGroup_Case10()
+    public function testUsersSoftDeleteError_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
         $userOId = UuidFactory::uuid('user.id.orna');
         $user = $this->Users->get($userOId);
@@ -222,7 +232,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
 
-    public function testUsersSoftDeleteSuccess_ownerAlongWithSoleManagerOfNotEmptyGroup_Case10()
+    public function testUsersSoftDeleteSuccess_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
         $userOId = UuidFactory::uuid('user.id.orna');
         $userPId = UuidFactory::uuid('user.id.ping');
@@ -240,7 +250,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsAdmin($groupMId, $userPId);
     }
 
-    public function testUsersSoftDeleteError_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testUsersSoftDeleteError_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
         $userOId = UuidFactory::uuid('user.id.orna');
         $resourceLId = UuidFactory::uuid('resource.id.linux');
@@ -261,7 +271,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
     }
 
-    public function testUsersSoftDeleteSuccess_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testUsersSoftDeleteSuccess_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
         $userOId = UuidFactory::uuid('user.id.orna');
         $userPId = UuidFactory::uuid('user.id.ping');
@@ -289,7 +299,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertUserIsAdmin($groupMId, $userPId);
     }
 
-    public function testUsersSoftDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_Case12()
+    public function testUsersSoftDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
         $userUId = UuidFactory::uuid('user.id.ursula');
         $user = $this->Users->get($userUId);
@@ -300,7 +310,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
     }
 
-    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_Case12()
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
         $userTId = UuidFactory::uuid('user.id.thelma');
         $userUId = UuidFactory::uuid('user.id.ursula');
@@ -318,7 +328,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertGroupIsSoftDeleted($groupNId);
     }
 
-    public function testUsersSoftDeleteSuccess_indirectlyOwnerResourceWithSoleManagerOfEmptyGroups_Case13()
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
     {
         $userWId = UuidFactory::uuid('user.id.wang');
         $resourceQId = UuidFactory::uuid('resource.id.qgis');
@@ -332,7 +342,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertResourceIsSoftDeleted($resourceQId);
     }
 
-    public function testUsersSoftDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_Case14()
+    public function testUsersSoftDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
         $userYId = UuidFactory::uuid('user.id.yvonne');
         $user = $this->Users->get($userYId);
@@ -343,7 +353,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
     }
 
-    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_Case14()
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
         $userYId = UuidFactory::uuid('user.id.yvonne');
         $userJId = UuidFactory::uuid('user.id.joan');
@@ -364,7 +374,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertResourceIsNotSoftDeleted($resourceSId);
     }
 
-    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
         $userOId = UuidFactory::uuid('user.id.orna');
         $groupMId = UuidFactory::uuid('group.id.management');
@@ -385,7 +395,7 @@ class SoftDeleteTest extends AppTestCase
         $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
     }
 
-    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
         $userOId = UuidFactory::uuid('user.id.orna');
         $userPId = UuidFactory::uuid('user.id.ping');
