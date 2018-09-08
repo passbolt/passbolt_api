@@ -119,8 +119,6 @@ class SettingsIndexController extends AppController
                     'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(true)),
                 ],
             ];
-
-
         }
 
         return $settings;
@@ -133,21 +131,22 @@ class SettingsIndexController extends AppController
      *
      * @return array list of
      */
-    protected function _getPluginWhiteList($public = false) {
+    protected function _getPluginWhiteList($public = false)
+    {
         $confKey = $public === true ? 'whiteListPublic' : 'whiteList';
         $pluginsConf = Configure::read('passbolt.plugins', []);
         $res = [];
 
-        foreach($pluginsConf as $pluginName => $pluginConf) {
+        foreach ($pluginsConf as $pluginName => $pluginConf) {
             if (!$public) {
-                foreach($this->alwaysWhiteListed as $whiteListed) {
+                foreach ($this->alwaysWhiteListed as $whiteListed) {
                     $res[] = $pluginName . '.' . $whiteListed;
                 }
             }
 
-            $whiteListOptions =  Hash::extract($pluginConf, self::SETTINGS_VISIBILITY_KEY . '.' . $confKey);
+            $whiteListOptions = Hash::extract($pluginConf, self::SETTINGS_VISIBILITY_KEY . '.' . $confKey);
             if (isset($whiteListOptions) && is_array($whiteListOptions)) {
-                foreach($whiteListOptions as $whiteList) {
+                foreach ($whiteListOptions as $whiteList) {
                     $res[] = $pluginName . '.' . $whiteList;
                 }
             }

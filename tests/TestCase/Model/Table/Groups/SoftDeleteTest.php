@@ -46,63 +46,123 @@ class SoftDeleteTest extends AppTestCase
         $this->Secrets = TableRegistry::get('Secrets');
     }
 
-    public function testGroupsSoftDeleteSimpleSuccess()
+    public function testGroupsSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelGroupCase0()
     {
-        // Freelancer is a group that does not own anything
-        $group = $this->Groups->get(UuidFactory::uuid('group.id.freelancer'));
+        $groupId = UuidFactory::uuid('group.id.procurement');
+        $group = $this->Groups->get($groupId);
         $this->assertTrue($this->Groups->softDelete($group));
-
-        // Group should be marked as deleted
-        $group = $this->Groups->get(UuidFactory::uuid('group.id.freelancer'));
-        $this->assertTrue($group->deleted);
-
-        // Frances should have been deleted from group freelancer
-        $user = $this->Users->get(UuidFactory::uuid('user.id.frances'));
-        $groups = $this->GroupsUsers->find()
-            ->select()->where(['user_id' => $user->id])->first();
-        $this->assertEmpty($groups);
-
-        // Permissions should be dropped from docker resource
-        $permissions = $this->Permissions->find()
-            ->select()->where(['aco_foreign_key' => UuidFactory::uuid('resource.id.docker')])->all();
-        $this->assertEquals(1, count($permissions));
-
-        // Check the secrets have been deleted
-        $secrets = $this->Secrets->find()
-            ->select()->where(['resource_id' => UuidFactory::uuid('resource.id.docker')])->all();
-        $this->assertEquals(1, count($secrets));
+        $this->assertGroupIsSoftDeleted($groupId);
     }
 
-    public function testGroupsSoftDeleteSoleResourceOwnerError()
+    public function testGroupsSoftDeleteSuccess_SharedResourceWithMe_DelGroupCase1()
     {
-        // Creative and account groups are sole owner of shared resources
-        $group = $this->Groups->get(UuidFactory::uuid('group.id.accounting'));
-        $this->assertFalse($this->Groups->softDelete($group));
-        $errors = $group->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
-
-        $group = $this->Groups->get(UuidFactory::uuid('group.id.creative'));
-        $this->assertFalse($this->Groups->softDelete($group));
-        $errors = $group->getErrors();
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $groupId = UuidFactory::uuid('group.id.quality_assurance');
+        $resourceId = UuidFactory::uuid('resource.id.nodejs');
+        $userHId = UuidFactory::uuid('user.id.hedy');
+        $userMId = UuidFactory::uuid('user.id.marlyn');
+        $group = $this->Groups->get($groupId);
+        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertGroupIsSoftDeleted($groupId);
+        $this->assertResourceIsNotSoftDeleted($resourceId);
+        $this->assertPermissionNotExist($resourceId, $groupId);
+        $this->assertSecretNotExist($resourceId, $userHId);
+        $this->assertSecretExists($resourceId, $userMId);
     }
 
-    public function testGroupsSoftDeleteSoleResourceOwnerFixSuccess()
+    public function testGroupsSoftDeleteSuccess_SoleOwnerNotSharedResource_DelGroupCase2()
     {
-        // Make carol own the resource framasoft resource previously solely owned by creative group
+        $groupId = UuidFactory::uuid('group.id.resource_planning');
+        $resourceId = UuidFactory::uuid('resource.id.stealjs');
+        $userId = UuidFactory::uuid('user.id.adele');
+        $group = $this->Groups->get($groupId);
+        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertGroupIsSoftDeleted($groupId);
+        $this->assertResourceIsSoftDeleted($resourceId);
+        $this->assertPermissionNotExist($resourceId, $groupId);
+        $this->assertSecretNotExist($resourceId, $userId);
+    }
+
+    public function testGroupsSoftDeleteError_SoleOwnerSharedResource_DelGroupCase3()
+    {
+        $groupId = UuidFactory::uuid('group.id.quality_assurance');
+        $resourceId = UuidFactory::uuid('resource.id.nodejs');
+        $userId = UuidFactory::uuid('user.id.marlyn');
+
+        // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.framasoft')
+            'aro_foreign_key' => $userId,
+            'aco_foreign_key' => $resourceId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupId,
+            'aco_foreign_key' => $resourceId
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        // Creative group can now be deleted
-        $group = $this->Groups->get(UuidFactory::uuid('group.id.creative'));
-        $this->assertTrue($this->Groups->softDelete($group));
+        $group = $this->Groups->get($groupId);
+        $this->assertFalse($this->Groups->softDelete($group));
+        $errors = $group->getErrors();
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertGroupIsNotSoftDeleted($groupId);
+        $this->assertResourceIsNotSoftDeleted($resourceId);
+        $this->assertPermission($resourceId, $groupId, Permission::OWNER);
+        $this->assertPermission($resourceId, $userId, Permission::READ);
+    }
 
-        // Composer resources solely owned by group has been deleted
-        $composer = $this->Resources->get(UuidFactory::uuid('resource.id.composer'));
-        $this->assertTrue($composer->deleted);
+    public function testGroupsSoftDeleteSuccess_SoleOwnerSharedResource_DelGroupCase3()
+    {
+        $groupId = UuidFactory::uuid('group.id.quality_assurance');
+        $resourceId = UuidFactory::uuid('resource.id.nodejs');
+        $userMId = UuidFactory::uuid('user.id.marlyn');
+        $userHId = UuidFactory::uuid('user.id.hedy');
+
+        // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $userMId,
+            'aco_foreign_key' => $resourceId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupId,
+            'aco_foreign_key' => $resourceId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+
+        // FIX
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $userMId,
+            'aco_foreign_key' => $resourceId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+
+        $group = $this->Groups->get($groupId);
+        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertGroupIsSoftDeleted($groupId);
+        $this->assertResourceIsNotSoftDeleted($resourceId);
+        $this->assertPermissionNotExist($resourceId, $groupId);
+        $this->assertPermission($resourceId, $userMId, Permission::OWNER);
+        $this->assertSecretNotExist($resourceId, $userHId);
+        $this->assertSecretExists($resourceId, $userMId);
+    }
+
+    public function testGroupsSoftDeleteSuccess_OwnerAlongWithAnotherUser_DelGroupCase4()
+    {
+        $groupId = UuidFactory::uuid('group.id.management');
+        $resourceId = UuidFactory::uuid('resource.id.linux');
+        $userId = UuidFactory::uuid('user.id.orna');
+        $this->assertPermission($resourceId, $groupId, Permission::OWNER);
+        $group = $this->Groups->get($groupId);
+        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertGroupIsSoftDeleted($groupId);
+        $this->assertResourceIsNotSoftDeleted($resourceId);
+        $this->assertPermission($resourceId, $userId, Permission::OWNER);
+        $this->assertPermissionNotExist($resourceId, $groupId);
+        $this->assertSecretExists($resourceId, $userId);
     }
 }

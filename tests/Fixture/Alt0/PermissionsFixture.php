@@ -150,6 +150,16 @@ class PermissionsFixture extends TestFixture
                 'modified' => '2017-11-17 12:37:18'
             ],
             [
+                'id' => '2303ae7b-db66-5874-8f51-54ea11a365a3',
+                'aco' => 'Resource',
+                'aco_foreign_key' => 'd1d240e1-9809-5ee3-9b59-2e1232d3faf0',
+                'aro' => 'Group',
+                'aro_foreign_key' => 'b7cbce9f-6a20-545b-b20a-fcf4092307df',
+                'type' => 1,
+                'created' => '2017-11-17 12:37:04',
+                'modified' => '2017-11-17 12:37:04'
+            ],
+            [
                 'id' => '23382e9b-d867-5d7e-8c37-e304f5adcb79',
                 'aco' => 'Resource',
                 'aco_foreign_key' => '9e2d7f42-4164-5882-9445-92e42a8cf067',
@@ -380,16 +390,6 @@ class PermissionsFixture extends TestFixture
                 'modified' => '2017-11-17 12:37:32'
             ],
             [
-                'id' => '9733ebc8-b962-5a94-89c4-38ae9720733c',
-                'aco' => 'Resource',
-                'aco_foreign_key' => 'ad0d80e0-0441-5388-b679-13c41a693442',
-                'aro' => 'Group',
-                'aro_foreign_key' => '469edf9d-ca1e-5003-91d6-3a46755d5a50',
-                'type' => 1,
-                'created' => '2017-11-17 12:37:04',
-                'modified' => '2017-11-17 12:37:04'
-            ],
-            [
                 'id' => '9858d6ed-4fd5-59ff-94ad-a3f62fdb2f2a',
                 'aco' => 'Resource',
                 'aco_foreign_key' => '690b6e40-f371-579c-b0c6-86e8ef383adc',
@@ -436,6 +436,16 @@ class PermissionsFixture extends TestFixture
                 'aro' => 'User',
                 'aro_foreign_key' => 'f848277c-5398-58f8-a82a-72397af2d450',
                 'type' => 15,
+                'created' => '2017-11-17 12:37:04',
+                'modified' => '2017-11-17 12:37:04'
+            ],
+            [
+                'id' => 'af8a4cd6-85f8-5222-a05b-4b0143f5eaa2',
+                'aco' => 'Resource',
+                'aco_foreign_key' => 'ad0d80e0-0441-5388-b679-13c41a693442',
+                'aro' => 'Group',
+                'aro_foreign_key' => 'a89b771e-62ab-5434-b2fa-950827439ac7',
+                'type' => 1,
                 'created' => '2017-11-17 12:37:04',
                 'modified' => '2017-11-17 12:37:04'
             ],
