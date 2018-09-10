@@ -328,6 +328,19 @@ class GroupsUsersTable extends Table
     }
 
     /**
+     * Get the list of groups where the user is member
+     *
+     * @param string $userId user uuid
+     * @return \Cake\ORM\Query
+     */
+    public function findGroupsWhereUserIsMember(string $userId)
+    {
+        return $this->find()
+            ->select('group_id')
+            ->where(['user_id' => $userId]);
+    }
+
+    /**
      * Check if the given user is the manager of a given group
      *
      * @param string $userId uuid

@@ -67,4 +67,15 @@ trait PermissionsModelTrait
         ])->first();
         $this->assertNotEmpty($permission);
     }
+
+    /**
+     * Assert a permission does not exist
+     * @param $acoForeignKey
+     * @param $aroForeignKey
+     */
+    protected function assertPermissionNotExist($acoForeignKey, $aroForeignKey)
+    {
+        $permission = $this->Permissions->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
+        $this->assertEmpty($permission);
+    }
 }

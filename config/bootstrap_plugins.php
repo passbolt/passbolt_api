@@ -21,3 +21,8 @@ use Cake\Core\Plugin;
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Import')) {
     Plugin::load('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add remember me plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
+    Plugin::load('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
+}

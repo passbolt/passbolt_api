@@ -43,21 +43,21 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->Resources = TableRegistry::get('Resources');
     }
 
-    public function testFindShardResourceUserIsSoleOwner_OwnsNothing_Case0()
+    public function testFindShardResourceUserIsSoleOwner_OwnsNothing_DelUserCase0()
     {
         $userId = UuidFactory::uuid('user.id.irene');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SoleOwnerNotSharedResource_Case1()
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerNotSharedResource_DelUserCase1()
     {
         $userId = UuidFactory::uuid('user.id.jean');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithUser_Case2()
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
         $userId = UuidFactory::uuid('user.id.kathleen');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
@@ -65,14 +65,14 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.mocha'));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SharedResourceWithMe_Case3()
+    public function testFindShardResourceUserIsSoleOwner_SharedResourceWithMe_DelUserCase3()
     {
         $userId = UuidFactory::uuid('user.id.lynne');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithGroup_Case4()
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
         $userId = UuidFactory::uuid('user.id.marlyn');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
@@ -80,7 +80,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.nodejs'));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithEmptyGroup_Case5()
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase5()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
@@ -88,14 +88,14 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.openpgpjs'));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithEmptyGroup_Case5()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase5()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId, true)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_OwnerSharedResourceAlongWithSoleManagerEmptyGroup_Case6()
+    public function testFindShardResourceUserIsSoleOwner_OwnerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
@@ -113,7 +113,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_OwnerSharedResourceAlongWithSoleManagerEmptyGroup_Case6()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_OwnerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
@@ -131,31 +131,45 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_Case7()
+    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
 
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_Case7()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
     {
         $userId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
 
         // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
 
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId, true)->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_OwnerAlongWithSoleManagerOfNotEmptyGroup_Case10()
+    public function testFindShardResourceUserIsSoleOwner_OwnerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
         $userId = UuidFactory::uuid('user.id.orna');
 
@@ -163,7 +177,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_OwnerAlongWithSoleManagerOfNotEmptyGroup_Case10()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_OwnerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
         $userId = UuidFactory::uuid('user.id.orna');
 
@@ -171,7 +185,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testFindShardResourceUserIsSoleOwner_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
         $userId = UuidFactory::uuid('user.id.orna');
 
@@ -185,7 +199,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
         $userId = UuidFactory::uuid('user.id.orna');
 
@@ -199,7 +213,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_Case12()
+    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
         $userId = UuidFactory::uuid('user.id.ursula');
 
@@ -207,7 +221,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_Case12()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
         $userId = UuidFactory::uuid('user.id.ursula');
 
@@ -216,7 +230,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertTrue(in_array(UuidFactory::uuid('resource.id.phpunit'), $resources));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_Case13()
+    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
     {
         $userId = UuidFactory::uuid('user.id.wang');
 
@@ -224,7 +238,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_Case13()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
     {
         $userId = UuidFactory::uuid('user.id.wang');
 
@@ -232,7 +246,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_Case14()
+    public function testFindShardResourceUserIsSoleOwner_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
         $userId = UuidFactory::uuid('user.id.yvonne');
 
@@ -240,7 +254,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_Case14()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
         $userId = UuidFactory::uuid('user.id.yvonne');
 
@@ -248,7 +262,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertEmpty($resources);
     }
 
-    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    public function testFindShardResourceUserIsSoleOwner_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
         $userId = UuidFactory::uuid('user.id.orna');
         $groupMId = UuidFactory::uuid('group.id.management');
@@ -267,7 +281,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->assertTrue(in_array($resourceLId, $resources));
     }
 
-    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    public function testFindShardResourceUserIsSoleOwner_CheckGroupsUsers_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
         $userId = UuidFactory::uuid('user.id.orna');
         $groupMId = UuidFactory::uuid('group.id.management');
