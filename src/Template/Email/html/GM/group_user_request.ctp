@@ -31,7 +31,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = __('Group: {0}', Purifier::clean($group->name));
+$text = __('Group: {0}', Purifier::clean($group->name)) . '<br><br>';
 $text .= ' ' . __('The following members should be added:') . '<br>';
 
 $text .= $this->element('Email/content/group_users_summary', [

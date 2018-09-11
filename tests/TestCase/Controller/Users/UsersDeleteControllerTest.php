@@ -155,7 +155,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertError(400, 'You are not allowed to delete yourself.');
     }
 
-    public function testUsersDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_Case0()
+    public function testUsersDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()
     {
             $this->authenticateAs('admin');
             $userIId = UuidFactory::uuid('user.id.irene');
@@ -164,7 +164,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsSoftDeleted($userIId);
     }
 
-    public function testUsersDeleteSuccess_SoleOwnerNotSharedResource_Case1()
+    public function testUsersDeleteSuccess_SoleOwnerNotSharedResource_DelUserCase1()
     {
             $this->authenticateAs('admin');
             $userJId = UuidFactory::uuid('user.id.jean');
@@ -174,7 +174,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertResourceIsSoftDeleted(UuidFactory::uuid('resource.id.mailvelope'));
     }
 
-    public function testUsersDeleteError_SoleOwnerSharedResourceWithUser_Case2()
+    public function testUsersDeleteError_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
             $this->authenticateAs('admin');
             $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -195,7 +195,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($resource->id, $resourceMId);
     }
 
-    public function testUsersDeleteError_TransferOwnersOfAnotherResource_SoleOwnerSharedResourceWithUser_Case2()
+    public function testUsersDeleteError_TransferOwnersOfAnotherResource_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
             $this->authenticateAs('admin');
             $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -208,7 +208,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsNotSoftDeleted($userKId);
     }
 
-    public function testUsersDeleteError_TransferOwnersBadGroupUserId_SoleOwnerSharedResourceWithUser_Case2()
+    public function testUsersDeleteError_TransferOwnersBadGroupUserId_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
             $this->authenticateAs('admin');
             $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -221,7 +221,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsNotSoftDeleted($userKId);
     }
 
-    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithUser_Case2()
+    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
             $this->authenticateAs('admin');
             $userKId = UuidFactory::uuid('user.id.kathleen');
@@ -237,7 +237,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertPermission($resourceMId, $userLId, Permission::OWNER);
     }
 
-    public function testUsersSoftDeleteSuccess_SharedResourceWithMe_Case3()
+    public function testUsersSoftDeleteSuccess_SharedResourceWithMe_DelUserCase3()
     {
             $this->authenticateAs('admin');
             $userLId = UuidFactory::uuid('user.id.lynne');
@@ -247,7 +247,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
     }
 
-    public function testUsersDeleteError_SoleOwnerSharedResourceWithGroup_Case4()
+    public function testUsersDeleteError_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
             $this->authenticateAs('admin');
             $userMId = UuidFactory::uuid('user.id.marlyn');
@@ -268,23 +268,23 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($resource->id, $resourceNId);
     }
 
-    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithGroup_Case4()
+    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
             $this->authenticateAs('admin');
             $userMId = UuidFactory::uuid('user.id.marlyn');
-            $groupAId = UuidFactory::uuid('group.id.accounting');
+            $groupQId = UuidFactory::uuid('group.id.quality_assurance');
             $resourceNId = UuidFactory::uuid('resource.id.nodejs');
 
-            $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.nodejs-accounting'), 'aco_foreign_key' => $resourceNId];
+            $transfer['owners'][] = ['id' => UuidFactory::uuid('permission.id.nodejs-quality_assurance'), 'aco_foreign_key' => $resourceNId];
             $this->deleteJson("/users/$userMId.json?api-version=v2", ['transfer' => $transfer]);
 
             $this->assertSuccess();
             $this->assertUserIsSoftDeleted($userMId);
             $this->assertResourceIsNotSoftDeleted($resourceNId);
-            $this->assertPermission($resourceNId, $groupAId, Permission::OWNER);
+            $this->assertPermission($resourceNId, $groupQId, Permission::OWNER);
     }
 
-    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithSoleManageEmptyGroup_Case5()
+    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithSoleManageEmptyGroup_DelUserCase5()
     {
             $this->authenticateAs('admin');
             $userNId = UuidFactory::uuid('user.id.nancy');
@@ -299,7 +299,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertGroupIsSoftDeleted($groupLId);
     }
 
-    public function testUsersDeleteSuccess_ownerSharedResourceAlongWithSoleManagerEmptyGroup_Case6()
+    public function testUsersDeleteSuccess_ownerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
     {
             $this->authenticateAs('admin');
             $userNId = UuidFactory::uuid('user.id.nancy');
@@ -322,7 +322,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertGroupIsSoftDeleted($groupLId);
     }
 
-    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_Case7()
+    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
     {
             $this->authenticateAs('admin');
             $userNId = UuidFactory::uuid('user.id.nancy');
@@ -331,6 +331,12 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
             // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
+            $permission = $this->Permissions->find()->select()->where([
+                'aro_foreign_key' => $groupLId,
+                'aco_foreign_key' => $resourceOId
+            ])->first();
+            $permission->type = Permission::OWNER;
+            $this->Permissions->save($permission);
 
             $this->deleteJson("/users/$userNId.json?api-version=v2");
             $this->assertSuccess();
@@ -340,7 +346,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertGroupIsSoftDeleted($groupLId);
     }
 
-    public function testUsersDeleteError_soleManagerOfNotEmptyGroup_Case9()
+    public function testUsersDeleteError_soleManagerOfNotEmptyGroup_DelUserCase9()
     {
             $this->authenticateAs('admin');
             $userEId = UuidFactory::uuid('user.id.edith');
@@ -359,7 +365,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($group->id, $groupFId);
     }
 
-    public function testUsersDeleteSuccess_soleManagerOfNotEmptyGroup_Case9()
+    public function testUsersDeleteSuccess_soleManagerOfNotEmptyGroup_DelUserCase9()
     {
             $this->authenticateAs('admin');
             $userEId = UuidFactory::uuid('user.id.edith');
@@ -375,7 +381,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsAdmin($groupFId, $userFId);
     }
 
-    public function testUsersDeleteError_ownerAlongWithSoleManagerOfNotEmptyGroup_Case10()
+    public function testUsersDeleteError_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');
@@ -396,7 +402,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($group->id, $groupMId);
     }
 
-    public function testUsersDeleteSuccess_ownerAlongWithSoleManagerOfNotEmptyGroup_Case10()
+    public function testUsersDeleteSuccess_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');
@@ -412,7 +418,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsAdmin($groupMId, $userPId);
     }
 
-    public function testUsersDeleteError_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testUsersDeleteError_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');
@@ -439,7 +445,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($group->id, $groupMId);
     }
 
-    public function testUsersDeleteError_TransferManagersBadPermissionId_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testUsersDeleteError_TransferManagersBadPermissionId_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');
@@ -457,7 +463,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsNotSoftDeleted($userOId);
     }
 
-    public function testUsersDeleteSuccess_indireclyOwnerWithSoleManagerOfNotEmptyGroup_Case11()
+    public function testUsersDeleteSuccess_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');
@@ -481,7 +487,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsAdmin($groupMId, $userPId);
     }
 
-    public function testUsersDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_Case12()
+    public function testUsersDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
             $this->authenticateAs('admin');
             $userUId = UuidFactory::uuid('user.id.ursula');
@@ -500,7 +506,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($resource->id, $resourcePId);
     }
 
-    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_Case12()
+    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
     {
             $this->authenticateAs('admin');
             $userTId = UuidFactory::uuid('user.id.thelma');
@@ -523,7 +529,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertGroupIsSoftDeleted($groupNId);
     }
 
-    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_Case13()
+    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
     {
             $this->authenticateAs('admin');
             $userWId = UuidFactory::uuid('user.id.wang');
@@ -539,7 +545,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertResourceIsSoftDeleted($resourceQId);
     }
 
-    public function testUsersDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_Case14()
+    public function testUsersDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
             $this->authenticateAs('admin');
             $userYId = UuidFactory::uuid('user.id.yvonne');
@@ -558,7 +564,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($group->id, $groupHId);
     }
 
-    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_Case14()
+    public function testUsersDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
     {
             $this->authenticateAs('admin');
             $userYId = UuidFactory::uuid('user.id.yvonne');
@@ -576,7 +582,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertUserIsAdmin($groupHId, $userJId);
     }
 
-    public function testUsersDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    public function testUsersDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');
@@ -608,7 +614,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->assertEquals($resource->id, $resourceLId);
     }
 
-    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_Case15()
+    public function testUsersDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
     {
             $this->authenticateAs('admin');
             $userOId = UuidFactory::uuid('user.id.orna');

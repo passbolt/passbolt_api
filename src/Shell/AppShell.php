@@ -14,9 +14,8 @@
  */
 namespace App\Shell;
 
-use App\Controller\Events\EmailNotificationsListener;
+use App\Shell\AppShellBootstrap;
 use Cake\Console\Shell;
-use Cake\Event\EventManager;
 
 /**
  * Application Shell
@@ -37,8 +36,7 @@ class AppShell extends Shell
     public function initialize()
     {
         parent::initialize();
-        $emails = new EmailNotificationsListener();
-        EventManager::instance()->on($emails);
+        AppShellBootstrap::init();
     }
 
     /**
