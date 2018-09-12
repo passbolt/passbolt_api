@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
 - Fix Email notifications being sent several times when an AppShell is instantiated inside an AppShell
+- PASSBOLT-3063: Fix appjs base url and subfolder
 
 ## [2.3.0] - 2018-08-30
 ### Fixed
