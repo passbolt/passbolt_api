@@ -131,6 +131,12 @@ class TagsTable extends Table
      */
     public static function decorateForeignFind(Query $query, array $options, string $userId)
     {
+        if (isset($options['contain']['all_tags'])) {
+            $query->contain('Tags', function (Query $q) use ($userId) {
+                return $q->order(['slug']);
+            });
+        }
+
         // Display the user tags for a given resource
         if (isset($options['contain']['tag'])) {
             $query->contain('Tags', function (Query $q) use ($userId) {
@@ -139,8 +145,8 @@ class TagsTable extends Table
                     ->where(function (QueryExpression $where) use ($userId) {
                         return $where->or_(function (QueryExpression $or) use ($userId) {
                             return $or
-                            ->eq('ResourcesTags.user_id', $userId)
-                            ->isNull('ResourcesTags.user_id');
+                                ->eq('ResourcesTags.user_id', $userId)
+                                ->isNull('ResourcesTags.user_id');
                         });
                     });
             });
@@ -189,24 +195,36 @@ class TagsTable extends Table
     }
 
     /**
+    /**
      * Build tag entities or fail
      *
+     * @param string $userId uuid owner of the tags
      * @param array $tags list of tag slugs
      * @throws BadRequestException if the validation fails
      * @return array $tags list of tag entities
      */
-    public function buildEntitiesOrFail(array $tags)
+    public function buildEntitiesOrFail(string $userId = null, array $tags)
     {
         $collection = [];
         if (!empty($tags)) {
             foreach ($tags as $i => $slug) {
                 $collection[$i] = $this->newEntity([
-                    'slug' => $slug
+                    'slug' => $slug,
                 ], [
                     'accessibleFields' => [
-                        'id' => true,
                         'slug' => true,
-                        'is_shared' => true
+                        'is_shared' => true,
+                        'resources_tags' => true
+                    ]
+                ]);
+                // If not shared, add the user_id in the resources_tags join table
+                $notShared = @mb_substr($slug, 0, 1, 'utf-8') !== '#';
+                $resourceTagUserId = $notShared ? $userId : null;
+                $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity([
+                    'user_id' => $resourceTagUserId
+                ], [
+                    'accessibleFields' => [
+                        'user_id' => true
                     ]
                 ]);
             }
@@ -222,107 +240,6 @@ class TagsTable extends Table
         }
 
         return $collection;
-    }
-
-    /**
-     * Given two arrays of tag Entities this function returns the tags organized by changes
-     * example:
-     *  current [ 'alpha', '#bravo' ]
-     *  new [ '#bravo', 'echo' ]
-     *  result [
-     *     'created' => ['echo']
-     *     'deleted' => ['alpha']
-     *     'unchanged' => ['#bravo']
-     *
-     * @param array $currentTags array of Tag Entity
-     * @param array $requestedTags array of Tag Entity
-     * @return mixed
-     */
-    public static function calculateChanges(array $currentTags, array $requestedTags)
-    {
-        $currentTags = Hash::combine($currentTags, '{n}.id', '{n}');
-        $requestedTags = Hash::combine($requestedTags, '{n}.id', '{n}');
-        $allTags = Hash::merge($currentTags, $requestedTags);
-
-        $currentIds = array_keys($currentTags);
-        $requestIds = array_keys($requestedTags);
-        $changes = [
-            'deleted' => array_diff($currentIds, $requestIds),
-            'created' => array_diff($requestIds, $currentIds),
-            'unchanged' => array_intersect($requestIds, $currentIds)
-        ];
-        $tags = [];
-        foreach ($changes as $change => $tagIds) {
-            $tags[$change] = [];
-            foreach ($tagIds as $tagId) {
-                $tags[$change][] = $allTags[$tagId];
-            }
-        }
-
-        return $tags;
-    }
-
-    /**
-     * Save an assoc array of tag entity organized by changes
-     * for a given resource
-     *
-     * @param array $tags list of changes from TagsTable::calculateChanges
-     * @param resource $resource entity
-     * @param string $userId UUID
-     * @return bool|mixed
-     * @throws \Exception
-     */
-    public function saveChanges(array $tags, Resource $resource, string $userId)
-    {
-        // check if user is adding/deleting shared tag and not owner
-        if (count($tags['created']) || count($tags['deleted'])) {
-            $addedSharedTags = count(Hash::extract($tags['created'], '{n}[is_shared=1]'));
-            $removedSharedTags = count(Hash::extract($tags['deleted'], '{n}[is_shared=1]'));
-            $isNotOwner = ($resource->permission->type !== Permission::OWNER);
-            if (($removedSharedTags || $addedSharedTags) && $isNotOwner) {
-                throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
-            }
-        }
-
-        // Add all the new tags
-        $Tags = $this;
-        $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
-        $resourceId = $resource->id;
-        $success = $this->getConnection()->transactional(function () use ($userId, $resourceId, $tags, $Tags, $ResourcesTags) {
-            // Save all new tags
-            foreach ($tags['created'] as $tag) {
-                $Tags->save($tag, ['atomic' => false]);
-                $resourceData = ['resource_id' => $resourceId, 'tag_id' => $tag->id];
-                $options = ['accessibleFields' => ['resource_id' => true, 'tag_id' => true]];
-                if (!$tag->is_shared) {
-                    $resourceData['user_id'] = $userId;
-                    $options['accessibleFields']['user_id'] = true;
-                }
-                $resourceTag = $ResourcesTags->newEntity($resourceData, $options);
-                if (!$ResourcesTags->save($resourceTag, ['atomic' => false])) {
-                    return false;
-                }
-            }
-
-            // Delete all removed tags
-            foreach ($tags['deleted'] as $tag) {
-                $condition = [
-                    'resource_id' => $resourceId,
-                    'tag_id' => $tag->id
-                ];
-                if (!$tag->is_shared) {
-                    $condition['user_id'] = $userId;
-                }
-                if (!$ResourcesTags->deleteAll($condition)) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-        $this->deleteAllUnusedTags();
-
-        return $success;
     }
 
     /**

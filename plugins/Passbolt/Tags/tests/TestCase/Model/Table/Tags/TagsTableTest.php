@@ -77,7 +77,7 @@ class TagsTableTest extends TagTestCase
     {
         try {
             $tags = [['test']];
-            $this->Tags->buildEntitiesOrFail($tags);
+            $this->Tags->buildEntitiesOrFail(UuidFactory::uuid('user.id.ada'), $tags);
             $this->fail('Build entities should throw an exception');
         } catch (CustomValidationException $e) {
             $this->assertTrue(true);
@@ -91,17 +91,21 @@ class TagsTableTest extends TagTestCase
      */
     public function testTagsTableBeforeMarshall()
     {
+        $userId = UuidFactory::uuid('user.id.ada');
         $tag = $this->Tags->newEntity([
             'slug' => 'test',
-            'is_shared' => true
+            'is_shared' => true,
+            'user_id' => $userId
         ]);
         $this->assertEmpty($tag->toArray());
         $tag = $this->Tags->newEntity([
             'slug' => 'test',
-            'is_shared' => true
+            'is_shared' => true,
+            'user_id' => $userId
         ], [
             'accessibleFields' => [
                 'id' => true,
+                'user_id' => true,
                 'slug' => true,
                 'is_shared' => true
             ]
@@ -109,59 +113,6 @@ class TagsTableTest extends TagTestCase
         $this->assertNotEmpty($tag->id);
         $this->assertEquals($tag->id, UuidFactory::uuid('tag.id.test'));
         $this->assertFalse($tag->is_shared);
-    }
-
-    public function testTagsTableCalculateChanges()
-    {
-        // Test delete and add and unchange
-        $current = [
-            0 => ['id' => UuidFactory::uuid('tag1')],
-            1 => ['id' => UuidFactory::uuid('tag2')]
-        ];
-        $new = [
-            0 => ['id' => UuidFactory::uuid('tag3')],
-            1 => ['id' => UuidFactory::uuid('tag2')]
-        ];
-        $expect = [
-            'created' => [['id' => UuidFactory::uuid('tag3')]],
-            'deleted' => [['id' => UuidFactory::uuid('tag1')]],
-            'unchanged' => [['id' => UuidFactory::uuid('tag2')]]
-        ];
-        $result = $this->Tags->calculateChanges($current, $new);
-        $this->assertEquals($expect, $result);
-
-        // Test add when there is currently no tag
-        $current = [];
-        $new = [0 => ['id' => UuidFactory::uuid('tag1')]];
-        $expect = [
-            'created' => [['id' => UuidFactory::uuid('tag1')]],
-            'deleted' => [],
-            'unchanged' => []
-        ];
-        $result = $this->Tags->calculateChanges($current, $new);
-        $this->assertEquals($expect, $result);
-
-        // Test delete all
-        $current = [0 => ['id' => UuidFactory::uuid('tag1')]];
-        $new = [];
-        $expect = [
-            'created' => [],
-            'deleted' => [['id' => UuidFactory::uuid('tag1')]],
-            'unchanged' => []
-        ];
-        $result = $this->Tags->calculateChanges($current, $new);
-        $this->assertEquals($expect, $result);
-
-        // Test unchange all
-        $current = [0 => ['id' => UuidFactory::uuid('tag1')]];
-        $new = $current;
-        $expect = [
-            'created' => [],
-            'deleted' => [],
-            'unchanged' => [['id' => UuidFactory::uuid('tag1')]]
-        ];
-        $result = $this->Tags->calculateChanges($current, $new);
-        $this->assertEquals($expect, $result);
     }
 
     public function testDeleteAllUnusedTags()
