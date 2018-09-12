@@ -15,6 +15,7 @@
 namespace Passbolt\Tags\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Permission;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
@@ -33,35 +34,72 @@ class ResourcesTagsAddController extends AppController
      */
     public function addPost($resourceId)
     {
-        // check if resourceId is valid
         if (!Validation::uuid($resourceId)) {
             throw new BadRequestException(__('The resource id is not valid.'));
         }
+
+        $this->loadModel('Resources');
+        $this->loadModel('Passbolt/Tags.Tags');
+        $userId = $this->User->id();
         $data = $this->request->getData('Tags', []);
 
-        // check if user has read access to the resource
-        // and get all the tags for a given resource
-        $this->loadModel('Resources');
-        $options = ['contain' => ['tag' => 1, 'permission' => 1]];
-        $resource = $this->Resources->findView($this->User->id(), $resourceId, $options)->first();
+        $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
+        $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
-        // Make sure all the provided tags are valid
-        $this->loadModel('Passbolt/Tags.Tags');
-        $requestTags = $this->Tags->buildEntitiesOrFail($data);
-
-        // make diff to get all the tags to create and delete
-        $tags = $this->Tags->calculateChanges($resource->tags, $requestTags);
-        $success = $this->Tags->saveChanges($tags, $resource, $this->User->id());
-
-        // Build answer
-        if ($success) {
-            $resource = $this->Resources->findView($this->User->id(), $resourceId, $options)->first();
+        $this->patchTagsEntities($resource, $data);
+        $saveOptions = ['associated' => ['Tags', 'Tags._joinData']];
+        if ($this->Resources->save($resource, $saveOptions)) {
+            $this->Tags->deleteAllUnusedTags();
+            $options = ['contain' => ['tag' => 1, 'permission' => 1]];
+            $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
             $this->success(__('The operation was successful.'), $resource->tags);
         } else {
             throw new InternalErrorException(__('The tags could not be saved. Try again later.'));
         }
+    }
+
+    /**
+     * Patch the resource tags entities of a resource for a given user
+     * @param resource $resource The resource to patch the tags for
+     * @param array $data The list
+     * @return void
+     */
+    private function patchTagsEntities($resource, $data)
+    {
+        $userId = $this->User->id();
+        $isOwner = $resource->permission->type === Permission::OWNER;
+
+        foreach ($resource->tags as $i => $tag) {
+            // Do not patch tags owned by other users.
+            if ($tag->_joinData->user_id != $userId && !is_null($tag->_joinData->user_id)) {
+                continue;
+            }
+            $tagFoundIndex = array_search($tag->slug, $data);
+            if ($tagFoundIndex === false) {
+                // If the user is not owner of the resource he cannot edit shared tags
+                if ($tag->is_shared && !$isOwner) {
+                    throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
+                } else {
+                    unset($resource->tags[$i]);
+                }
+            } else {
+                unset($data[$tagFoundIndex]);
+            }
+        }
+
+        // If the user is not owner of the resource he cannot edit shared tags
+        if (!$isOwner) {
+            if (!empty(preg_grep('/(^#|,#)/', $data))) {
+                throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
+            }
+        }
+
+        $requestTags = $this->Tags->buildEntitiesOrFail($userId, $data);
+        $resource->tags = array_merge($resource->tags, $requestTags);
+        $resource->setDirty('tags', true);
+        $resource->setAccess('tags', true);
     }
 }
