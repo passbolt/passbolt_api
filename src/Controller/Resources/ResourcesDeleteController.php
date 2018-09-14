@@ -16,7 +16,8 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
+use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
@@ -78,7 +79,7 @@ class ResourcesDeleteController extends AppController
      *
      * @param \Cake\Datasource\EntityInterface $resource entity
      * @throws NotFoundException
-     * @throws ValidationRuleException
+     * @throws ValidationException
      * @return void
      */
     protected function _handleDeleteError($resource)
@@ -97,17 +98,17 @@ class ResourcesDeleteController extends AppController
             }
             throw new NotFoundException(__('The resource does not exist.'));
         }
-        throw new ValidationRuleException(__('Could not delete the resource.'), $errors, $this->Resources);
+        throw new ValidationException(__('Could not delete the resource.'), $resource, $this->Resources);
     }
 
     /**
      * Send email notification
      *
-     * @param \App\Model\Entity\Resource $resource Resource
+     * @param resource $resource Resource
      * @param \Cake\Datasource\ResultSetInterface $users list of User entity who had access to the resource
      * @return void
      */
-    protected function _notifyUser(\App\Model\Entity\Resource $resource, \Cake\Datasource\ResultSetInterface $users)
+    protected function _notifyUser(Resource $resource, \Cake\Datasource\ResultSetInterface $users)
     {
         $event = new Event('ResourcesDeleteController.delete.success', $this, [
             'resource' => $resource,

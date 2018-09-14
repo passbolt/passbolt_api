@@ -14,6 +14,7 @@
  */
 namespace App\Shell;
 
+use App\Shell\AppShellBootstrap;
 use Cake\Console\Shell;
 
 /**
@@ -24,6 +25,19 @@ use Cake\Console\Shell;
  */
 class AppShell extends Shell
 {
+    /**
+     * Initializes the Shell
+     * acts as constructor for subclasses
+     * allows configuration of tasks prior to shell execution
+     *
+     * @return void
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        AppShellBootstrap::init();
+    }
 
     /**
      * Display a banner
@@ -37,7 +51,7 @@ class AppShell extends Shell
 
     /**
      * Some of the passbolt commands shouldn't be executed as root.
-     * By instance it's the case of the Healtcheck command that needs to be executed with the same user as your web server.
+     * By instance it's the case of the healthcheck command that needs to be executed with the same user as your web server.
      *
      * @return bool true if user is root
      */

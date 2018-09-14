@@ -51,4 +51,31 @@ trait PermissionsModelTrait
         $attributes = ['id', 'aro', 'aro_foreign_key', 'aco', 'aco_foreign_key', 'type', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $permission);
     }
+
+    /**
+     * Assert an aro has the expected permission for a given aco
+     * @param string $acoForeignKey
+     * @param string $aroForeignKey
+     * @param string $type
+     */
+    protected function assertPermission($acoForeignKey, $aroForeignKey, $type)
+    {
+        $permission = $this->Permissions->find()->where([
+            'aco_foreign_key' => $acoForeignKey,
+            'aro_foreign_key' => $aroForeignKey,
+            'type' => $type,
+        ])->first();
+        $this->assertNotEmpty($permission);
+    }
+
+    /**
+     * Assert a permission does not exist
+     * @param $acoForeignKey
+     * @param $aroForeignKey
+     */
+    protected function assertPermissionNotExist($acoForeignKey, $aroForeignKey)
+    {
+        $permission = $this->Permissions->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
+        $this->assertEmpty($permission);
+    }
 }

@@ -49,4 +49,30 @@ trait GroupsUsersModelTrait
         $attributes = ['id', 'group_id', 'user_id', 'is_admin', 'created'];
         $this->assertObjectHasAttributes($attributes, $group);
     }
+
+    /**
+     * Assert a user is admin of group a group.
+     * @param string $groupId
+     * @param string $userId
+     */
+    protected function assertUserIsAdmin($groupId, $userId)
+    {
+        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
+        $this->assertTrue($groupUser->is_admin);
+    }
+
+    /**
+     * Assert a user is not admin of group a group.
+     * @param string $groupId
+     * @param string $userId
+     */
+    protected function assertUserIsNotAdmin($groupId, $userId)
+    {
+        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
+        if (!empty($groupUser)) {
+            $this->assertFalse($groupUser->is_admin);
+        } else {
+            $this->assertTrue(true);
+        }
+    }
 }

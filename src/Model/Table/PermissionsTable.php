@@ -15,18 +15,16 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
+use App\Model\Traits\Permissions\PermissionsFindersTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
-use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 /**
@@ -48,6 +46,7 @@ use Cake\Validation\Validator;
  */
 class PermissionsTable extends Table
 {
+    use PermissionsFindersTrait;
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
 
@@ -275,354 +274,6 @@ class PermissionsTable extends Table
     }
 
     /**
-     * Build the query that fetches data for aco permissions view
-     *
-     * @param string $acoForeignKey The aco instance id to retrieve to get the permissions for
-     * @param array $options options
-     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
-     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
-     */
-    public function findViewAcoPermissions(string $acoForeignKey, array $options = [])
-    {
-        if (!Validation::uuid($acoForeignKey)) {
-            throw new \InvalidArgumentException(__('The parameter acoForeignKey is not a valid uuid.'));
-        }
-
-        $query = $this->find()
-            ->where(['Permissions.aco_foreign_key' => $acoForeignKey]);
-
-        // If contains group.
-        if (isset($options['contain']['group'])) {
-            $query->contain('Groups');
-        }
-
-        // If contains user.
-        if (isset($options['contain']['user'])) {
-            $query->contain('Users');
-        }
-
-        // If contains user profile.
-        if (isset($options['contain']['user.profile'])) {
-            $query->contain([
-                'Users' => [
-                    'Profiles' =>
-                        AvatarsTable::addContainAvatar()
-                ]
-            ]);
-        }
-
-        return $query;
-    }
-
-    /**
-     * User alias for findSharedResourcesAroIsSoleOwner
-     *
-     * @param string $userId uuid of the user
-     * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return array $results the uuids of the resources
-     */
-    public function findSharedResourcesUserIsSoleOwner(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-
-        return $this->findSharedResourcesAroIsSoleOwner($userId);
-    }
-
-    /**
-     * Group alias for findSharedResourcesAroIsSoleOwner
-     *
-     * @param string $groupId uuid of the group
-     * @throws \InvalidArgumentException if the group id is not a valid uuid
-     * @return array $results the uuids of the resources
-     */
-    public function findSharedResourcesGroupIsSoleOwner(string $groupId)
-    {
-        if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
-        }
-
-        return $this->findSharedResourcesAroIsSoleOwner($groupId);
-    }
-
-    /**
-     * Returns an array of resources the given ARO is the owner of
-     * and that are shared with somebody else. Useful to know which resources
-     * need to be transferred when deleting the user or a group
-     *
-     * @param string $aroId uuid of the user|group
-     * @throw \InvalidArgumentException if the aro id is not a valid uuid
-     * @return array $results the uuids of the resources
-     */
-    public function findSharedResourcesAroIsSoleOwner(string $aroId)
-    {
-        if (!Validation::uuid($aroId)) {
-            throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
-        }
-
-        // Show the ARO counts by permissions for all the resources
-        // the given user or group is the owner of.
-        //
-        // SELECT permissions.aco_foreign_key AS resource_id,
-        //    permissions.type, count(permissions.id) AS aro_count
-        // FROM permissions
-        // WHERE permissions.aco_foreign_key IN (
-        //    SELECT permissions.aco_foreign_key
-        //    FROM permissions
-        //    WHERE permissions.type = Permission::OWNER
-        //    AND permissions.aro_foreign_key = :aroId
-        // )
-        // GROUP BY permissions.aco_foreign_key, permissions.type
-        // ORDER BY permissions.aco_foreign_key, permissions.type;
-        //
-        // Returns something like:
-        // +--------------------------------------+--------+------------+
-        // | resource_id                          | type   | aro_count  |
-        // +--------------------------------------+--------+------------+
-        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | READ   |          2 |
-        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | WRITE  |          1 |
-        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | OWNER  |          1 |
-        // | ...                                  |  ...   |        ... |
-        // +--------------------------------------+--------+------------+
-
-        // Find all the resources the ARO is owner of
-        $subquery = $this->find()
-            ->select(['aco_foreign_key'])
-            ->where(['type' => Permission::OWNER, 'aro_foreign_key' => $aroId]);
-
-        // Find the user count by permissions for these
-        $query = $this->find();
-        $resources = $query
-            ->select([
-                'aco_foreign_key' => 'aco_foreign_key',
-                'type' => 'type',
-                'aro_count' => $query->func()->count('id')
-            ])
-            ->where(['aco_foreign_key IN' => $subquery])
-            ->group(['aco_foreign_key', 'type'])
-            ->order(['aco_foreign_key', 'type'])
-            ->all()
-            ->toArray();
-
-        return $this->_extractResourcesWhereAroIsSoleOwner($resources);
-    }
-
-    /**
-     * Find list of shared resources ids for all the groups for a given user
-     * where the user is the only admin of these groups
-     *
-     * Useful to make sure we do not delete a user from a group that would make a resource
-     * loose its only owner.
-     *
-     * @param string $userId uuid of the user
-     * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return array $results the uuids of the resources
-     */
-    public function findSharedResourcesSoleGroupManagerIsSoleOwner(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-
-        // Show the ARO counts by permissions for all the resources
-        // the given user is the only admin of a non empty group
-        // and this group is the only owner of the resource
-        //
-        // SELECT permissions.aco_foreign_key AS resource_id,
-        //    permissions.type, count(permissions.id) AS aro_count
-        // FROM permissions
-        // WHERE permissions.aco_foreign_key IN (
-        //    SELECT permissions.aco_foreign_key
-        //    FROM permissions
-        //    WHERE permissions.type = Permission::OWNER
-        //    AND permissions.aro_foreign_key IN (
-        //         'uuid_group1', 'uuid_group2', etc.
-        //    )
-        // )
-        // GROUP BY permissions.aco_foreign_key, permissions.type
-        // ORDER BY permissions.aco_foreign_key, permissions.type;
-        //
-        // Returns something like:
-        // +--------------------------------------+--------+------------+
-        // | resource_id                          | type   | aro_count  |
-        // +--------------------------------------+--------+------------+
-        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | READ   |          2 |
-        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | WRITE  |          1 |
-        // | 8378fa3d-b9f4-5428-90a4-ab5478c1a5bb | OWNER  |          1 |
-        // | ...                                  |  ...   |        ... |
-        // +--------------------------------------+--------+------------+
-
-        // Find all the groups a user is the only member (and thus only manager)
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
-        $subquery1 = $GroupsUsers->findGroupsWhereUserOnlyMember($userId);
-        if (empty($subquery1)) {
-            return [];
-        }
-
-        // Find all the resources groups are owner of
-        $subquery2 = $this->find()
-            ->select(['aco_foreign_key'])
-            ->where(['type' => Permission::OWNER, 'aro_foreign_key IN' => $subquery1]);
-        if (empty($subquery2)) {
-            return [];
-        }
-
-        // Find the user|group count by permissions for these
-        $query = $this->find();
-        $resources = $query
-            ->select([
-                'aco_foreign_key' => 'aco_foreign_key',
-                'type' => 'type',
-                'aro_count' => $query->func()->count('id')
-            ])
-            ->where(['aco_foreign_key IN' => $subquery2])
-            ->group(['aco_foreign_key', 'type'])
-            ->order(['aco_foreign_key', 'type'])
-            ->all()
-            ->toArray();
-
-        return $this->_extractResourcesWhereAroIsSoleOwner($resources);
-    }
-
-    /**
-     * Extract resources id where ARO is sole owner from a list of resources
-     * and their associated permissions map. See. findSharedResourcesGroupManagerIsSoleOwner
-     *
-     * @param array $resources list of resources with associated permissions type count
-     * @return array
-     */
-    private function _extractResourcesWhereAroIsSoleOwner(array $resources)
-    {
-        $results = [];
-
-        // No resources, no problem
-        if (empty($resources) || count($resources) === 0) {
-            return $results;
-        }
-
-        // Hash around the results to look like a table where the aro id is the key
-        // and the count of each permission rights is a sub table with permission types as keys
-        //
-        // Example:
-        // [
-        //      [8378fa3d-b9f4-5428-90a4-ab5478c1a5bb] => [
-        //          [1] => 2
-        //          [7] => 2
-        //          [15] => 1
-        //      ]
-        // ]
-        $resources = Hash::combine($resources, '{n}.type', '{n}.aro_count', '{n}.aco_foreign_key');
-        foreach ($resources as $resourceId => $rights) {
-            if ($rights[Permission::OWNER] === 1) {
-                $someRead = !empty($rights[Permission::READ]);
-                $someUpdate = !empty($rights[Permission::UPDATE]);
-                if ($someRead || $someUpdate) {
-                    $results[] = $resourceId;
-                }
-            }
-        }
-
-        return $results;
-    }
-
-    /**
-     * Returns the list of resources ids that the ARO has access
-     * and that are not shared with anybody
-     *
-     * Note: this does not check for ownership right. In theory it should not be possible to have
-     * a resource with only a group|user permission set to anything else than OWNER,
-     * but since we might as well delete these, we do cast a wider net.
-     *
-     * @param string $aroId uuid
-     * @throws \InvalidArgumentException if the aro id is not a valid uuid
-     * @return array list of resource uuid
-     */
-    public function findResourcesOnlyAroCanAccess(string $aroId)
-    {
-        if (!Validation::uuid($aroId)) {
-            throw new \InvalidArgumentException(__('The aro id should be a valid uuid.'));
-        }
-
-        // SELECT aco_foreign_key, count(aro_foreign_key) as aro_count
-        // FROM permissions
-        // WHERE aco_foreign_key IN (
-        //    SELECT aco_foreign_key
-        //    FROM permissions
-        //    WHERE aro_foreign_key = $aroId
-        // )
-        // GROUP by aco_foreign_key
-        // HAVING aro_count=1;
-
-        $subquery = $this->find();
-        $subquery->select(['aco_foreign_key'])
-            ->where(['aro_foreign_key' => $aroId]);
-
-        $query = $this->find();
-        $resources = $query
-            ->select([
-                'aco_foreign_key' => 'aco_foreign_key',
-                'aro_count' => $query->func()->count('id')
-            ])
-            ->where(['aco_foreign_key IN' => $subquery])
-            ->group(['aco_foreign_key'])
-            ->having(['aro_count' => 1])
-            ->all()
-            ->toArray();
-
-        if (!empty($resources)) {
-            $resources = Hash::extract($resources, '{n}.aco_foreign_key');
-        }
-
-        return $resources;
-    }
-
-    /**
-     * User alias for findResourcesOnlyAroCanAccess
-     *
-     * @param string $userId uuid
-     * @param bool $checkGroupsUsers also check for group user is sole member of
-     * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return array list of resource uuid
-     */
-    public function findResourcesOnlyUserCanAccess(string $userId, bool $checkGroupsUsers = false)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-        $resources = $this->findResourcesOnlyAroCanAccess($userId);
-        if ($checkGroupsUsers) {
-            $GroupsUsers = TableRegistry::get('GroupsUsers');
-            $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId);
-            foreach ($groups as $i => $groupId) {
-                $r = $this->findResourcesOnlyGroupCanAccess($groupId);
-                if (!empty($r)) {
-                    $resources = array_merge($r, $resources);
-                }
-            }
-        }
-
-        return $resources;
-    }
-
-    /**
-     * Group alias for findResourcesOnlyAroCanAccess
-     *
-     * @param string $groupId uuid
-     * @throws \InvalidArgumentException if the group id is not a valid uuid
-     * @return array list of resource uuid
-     */
-    public function findResourcesOnlyGroupCanAccess(string $groupId)
-    {
-        if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException(__('The group id should be a valid uuid.'));
-        }
-
-        return $this->findResourcesOnlyAroCanAccess($groupId);
-    }
-
-    /**
      * Patch a list of permission entities with a list of changes.
      * A change is formatted as following :
      *
@@ -658,9 +309,9 @@ class PermissionsTable extends Table
      * @param array $changes The changes to apply
      * @param null $acoForeignKey The aco identifier that the entities belong to
      * @param array $changesReferences A reference list of the applied changes
-     * @throw ValidationRuleException If a change try to modify a permission that is not in the list of permissions
-     * @throw ValidationRuleException If a change does not validate when calling patchEntity
-     * @throw ValidationRuleException If a change does not validate when calling newEntity
+     * @throw CustomValidationException If a change try to modify a permission that is not in the list of permissions
+     * @throw CustomValidationException If a change does not validate when calling patchEntity
+     * @throw CustomValidationException If a change does not validate when calling newEntity
      * @return array The list of permissions entities patched with the changes
      */
     public function patchEntitiesWithChanges($entities = [], $changes = [], $acoForeignKey = null, &$changesReferences = [])
@@ -681,7 +332,7 @@ class PermissionsTable extends Table
                     $errors = ['id' => [
                         'permission_exists' => __('The permission does not exist.', $change['id'])
                     ]];
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
                 // Keep a trace of the permission entity the change will be applied on.
                 $changesReferences[$changeKey] = $permissionKey;
@@ -695,7 +346,7 @@ class PermissionsTable extends Table
                     $this->patchEntity($entities[$permissionKey], $change, $options);
                     $errors = $entities[$permissionKey]->getErrors();
                     if (!empty($errors)) {
-                        throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                        throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                     }
                 }
             } else {
@@ -715,7 +366,7 @@ class PermissionsTable extends Table
                 $permission = $this->newEntity($change, $options);
                 $errors = $permission->getErrors();
                 if (!empty($errors)) {
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
                 $entities[] = $permission;
                 // Keep a trace of the permission entity the change will be applied on.

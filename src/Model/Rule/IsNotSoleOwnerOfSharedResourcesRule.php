@@ -30,8 +30,13 @@ class IsNotSoleOwnerOfSharedResourcesRule
     public function __invoke(EntityInterface $entity, array $options)
     {
         $Permissions = TableRegistry::get('Permissions');
-        $resources = $Permissions->findSharedResourcesAroIsSoleOwner($entity->id);
 
-        return (empty($resources));
+        if (is_a($entity, 'App\Model\Entity\User')) {
+            $check = $Permissions->findSharedResourcesUserIsSoleOwner($entity->id, true)->count();
+        } else {
+            $check = $Permissions->findSharedResourcesGroupIsSoleOwner($entity->id)->count();
+        }
+
+        return $check == 0;
     }
 }

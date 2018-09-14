@@ -44,177 +44,390 @@ class SoftDeleteTest extends AppTestCase
         $this->Resources = TableRegistry::get('Resources');
         $this->Groups = TableRegistry::get('Groups');
         $this->Secrets = TableRegistry::get('Secrets');
+        $this->Favorites = TableRegistry::get('Favorites');
     }
 
-    public function testUsersSoftDeleteSimpleSuccess()
+    public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()
     {
-        // Frances is not the admin of any group or owner of any resources
-        $user = $this->Users->get(UuidFactory::uuid('user.id.frances'));
+        $userIId = UuidFactory::uuid('user.id.irene');
+        $user = $this->Users->get($userIId);
         $this->assertTrue($this->Users->softDelete($user));
-
-        // User should be marked as deleted
-        $user = $this->Users->get(UuidFactory::uuid('user.id.frances'));
-        $this->assertTrue($user->deleted);
-
-        // Frances should have been deleted from group freelancer
-        $groups = $this->GroupsUsers->find()
-            ->select()->where(['user_id' => $user->id])->first();
-        $this->assertEmpty($groups);
-
-        // Frances permissions should have been delete from bower resource
-        $permissions = $this->Permissions->find()
-            ->select()->where([
-                'aco_foreign_key' => UuidFactory::uuid('resource.id.bower')
-            ])->all();
-        $this->assertEquals(count($permissions), 3);
-
-        // There should not be any secrets
-        $secrets = $this->Secrets->find()
-            ->select()->where([
-                ['user_id' => $user->id]
-            ])->all();
-        $this->assertEquals(count($secrets), 0);
+        $this->assertUserIsSoftDeleted($userIId);
     }
 
-    public function testUsersSoftDeleteCheckAllRulesError()
+    public function testUsersSoftDeleteSuccess_SoleOwnerNotSharedResource_DelUserCase1()
     {
-        $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
+        $userJId = UuidFactory::uuid('user.id.jean');
+        $user = $this->Users->get($userJId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userJId);
+        $this->assertResourceIsSoftDeleted(UuidFactory::uuid('resource.id.mailvelope'));
+    }
+
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithUser_DelUserCase2()
+    {
+        $userKId = UuidFactory::uuid('user.id.kathleen');
+        $user = $this->Users->get($userKId);
         $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userKId);
+        $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
         $errors = $user->getErrors();
         $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
-        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
-        $this->assertNotEmpty($errors['id']['soleManagerOfGroupOwnerOfSharedResource']);
-    }
-
-    public function testUsersSoftDeleteSoleResourceOwnerErrorFix()
-    {
-        // Ada breaks all the rules (see next three tests below)
-        $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
-        $this->Permissions->deleteAll([
-            'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.april')
-        ]);
-        $this->assertFalse($this->Users->softDelete($user));
-        $errors = $user->getErrors();
-        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
-        $this->assertNotEmpty($errors['id']['soleManagerOfGroupOwnerOfSharedResource']);
-        $this->assertFalse(isset($errors['id']['soleOwnerOfSharedResource']));
-    }
-
-    public function testUsersSoftDeleteSoleManagerOfNonEmptyGroupErrorFix()
-    {
-        // Ada cannot be deleted because it is sole admin of group accounting
-        // and that group owns a bunch of resources
-        $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
-
-        // Making betty admin of this group should solve the issue
-        $groupUser = $this->GroupsUsers->find()->select()->where([
-            'group_id' => UuidFactory::uuid('group.id.accounting'),
-            'user_id' => UuidFactory::uuid('user.id.betty')
-        ])->first();
-        $groupUser->is_admin = true;
-        $this->GroupsUsers->save($groupUser);
-
-        $this->assertFalse($this->Users->softDelete($user));
-        $errors = $user->getErrors();
         $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
-        $this->assertNotEmpty($errors['id']['soleManagerOfGroupOwnerOfSharedResource']);
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
-    }
-
-    public function testUsersSoftDeleteSoleAdminOfGroupOwnerOfSharedResourceErrorFix()
-    {
-        // Ada cannot be deleted because it is sole member of group creative
-        // and that group owns the framasoft resource
-        $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
-
-        // Making carol own the resource too should solve the issue
-        $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.framasoft')
-        ])->first();
-        $permission->type = Permission::OWNER;
-        $this->Permissions->save($permission);
-
-        $this->assertFalse($this->Users->softDelete($user));
-        $errors = $user->getErrors();
         $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
-        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
-        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
     }
 
-    public function testUsersSoftDeleteAllErrorFix()
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
-        // Ada breaks all the rules (see next three tests below)
-        $user = $this->Users->get(UuidFactory::uuid('user.id.ada'));
-
-        // Make betty own the april resource
+        $userKId = UuidFactory::uuid('user.id.kathleen');
+        $userLId = UuidFactory::uuid('user.id.lynne');
+        $resourceMId = UuidFactory::uuid('resource.id.mocha');
+        $user = $this->Users->get($userKId);
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => UuidFactory::uuid('user.id.betty'),
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.april')
+            'aro_foreign_key' => $userLId,
+            'aco_foreign_key' => $resourceMId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userKId);
+        $this->assertResourceIsNotSoftDeleted($resourceMId);
+        $this->assertPermission($resourceMId, $userLId, Permission::OWNER);
+    }
+
+    public function testUsersSoftDeleteSuccess_SharedResourceWithMe_DelUserCase3()
+    {
+        $userLId = UuidFactory::uuid('user.id.lynne');
+        $user = $this->Users->get($userLId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userLId);
+        $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
+    }
+
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithGroup_DelUserCase4()
+    {
+        $userMId = UuidFactory::uuid('user.id.marlyn');
+        $resourceNId = UuidFactory::uuid('resource.id.nodejs');
+        $user = $this->Users->get($userMId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userMId);
+        $this->assertResourceIsNotSoftDeleted($resourceNId);
+        $errors = $user->getErrors();
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
+        $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
+    }
+
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithGroup_DelUserCase4()
+    {
+        $userMId = UuidFactory::uuid('user.id.marlyn');
+        $groupQId = UuidFactory::uuid('group.id.quality_assurance');
+        $resourceNId = UuidFactory::uuid('resource.id.nodejs');
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupQId,
+            'aco_foreign_key' => $resourceNId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+        $user = $this->Users->get($userMId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userMId);
+        $this->assertResourceIsNotSoftDeleted($resourceNId);
+    }
+
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase5()
+    {
+        $userNId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
+        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+        $user = $this->Users->get($userNId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userNId);
+        $this->assertResourceIsSoftDeleted($resourceOId);
+        $this->assertGroupIsSoftDeleted($groupLId);
+    }
+
+    public function testUsersSoftDeleteSuccess_ownerSharedResourceAlongWithSoleManagerEmptyGroup_DelUserCase6()
+    {
+        $userNId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
+        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+
+        // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        // Make carol own the resource framasoft resource
+        $user = $this->Users->get($userNId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userNId);
+        $this->assertResourceIsSoftDeleted($resourceOId);
+        $this->assertGroupIsSoftDeleted($groupLId);
+    }
+
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerEmptyGroup_DelUserCase7()
+    {
+        $userNId = UuidFactory::uuid('user.id.nancy');
+        $groupLId = UuidFactory::uuid('group.id.leadership_team');
+        $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
+
+        // CONTEXTUAL TEST CHANGES Remove the direct permission of nancy
+        $this->Permissions->deleteAll(['aro_foreign_key IN' => $userNId, 'aco_foreign_key' => $resourceOId]);
         $permission = $this->Permissions->find()->select()->where([
-            'aro_foreign_key' => UuidFactory::uuid('user.id.carol'),
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.framasoft')
+            'aro_foreign_key' => $groupLId,
+            'aco_foreign_key' => $resourceOId
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        // Make betty admin of accounting group
+        $user = $this->Users->get($userNId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userNId);
+        $this->assertResourceIsSoftDeleted($resourceOId);
+        $this->assertGroupIsSoftDeleted($groupLId);
+    }
+
+    public function testUsersSoftDeleteError_soleManagerOfNotEmptyGroup_DelUserCase9()
+    {
+        $userEId = UuidFactory::uuid('user.id.edith');
+        $user = $this->Users->get($userEId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userEId);
+        $errors = $user->getErrors();
+        $this->assertFalse(isset($errors['id']['soleOwnerOfSharedResource']));
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
+        $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
+    }
+
+    public function testUsersSoftDeleteSuccess_soleManagerOfNotEmptyGroup_DelUserCase9()
+    {
+        $userEId = UuidFactory::uuid('user.id.edith');
+        $userFId = UuidFactory::uuid('user.id.frances');
+        $groupFId = UuidFactory::uuid('group.id.freelancer');
         $groupUser = $this->GroupsUsers->find()->select()->where([
-            'group_id' => UuidFactory::uuid('group.id.accounting'),
-            'user_id' => UuidFactory::uuid('user.id.betty')
+            'user_id' => $userFId,
+            'group_id' => $groupFId
+        ])->first();
+        $groupUser->is_admin = true;
+        $this->GroupsUsers->save($groupUser);
+        $user = $this->Users->get($userEId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userEId);
+        $this->assertGroupIsNotSoftDeleted($groupFId);
+        $this->assertUserIsAdmin($groupFId, $userFId);
+    }
+
+    public function testUsersSoftDeleteError_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $user = $this->Users->get($userOId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userOId);
+        $errors = $user->getErrors();
+        $this->assertFalse(isset($errors['id']['soleOwnerOfSharedResource']));
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
+        $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
+    }
+
+    public function testUsersSoftDeleteSuccess_ownerAlongWithSoleManagerOfNotEmptyGroup_DelUserCase10()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $userPId = UuidFactory::uuid('user.id.ping');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $groupUser = $this->GroupsUsers->find()->select()->where([
+            'user_id' => $userPId,
+            'group_id' => $groupMId
+        ])->first();
+        $groupUser->is_admin = true;
+        $this->GroupsUsers->save($groupUser);
+        $user = $this->Users->get($userOId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userOId);
+        $this->assertGroupIsNotSoftDeleted($groupMId);
+        $this->assertUserIsAdmin($groupMId, $userPId);
+    }
+
+    public function testUsersSoftDeleteError_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
+        $this->Permissions->deleteAll([
+            'aro_foreign_key' => $userOId,
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+        ]);
+
+        $user = $this->Users->get($userOId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userOId);
+        $this->assertResourceIsNotSoftDeleted($resourceLId);
+        $errors = $user->getErrors();
+        $this->assertFalse(isset($errors['id']['soleOwnerOfSharedResource']));
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
+        $this->assertFalse(isset($errors['id']['soleManagerOfGroupOwnerOfSharedResource']));
+    }
+
+    public function testUsersSoftDeleteSuccess_indireclyOwnerWithSoleManagerOfNotEmptyGroup_DelUserCase11()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $userPId = UuidFactory::uuid('user.id.ping');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
+        $this->Permissions->deleteAll([
+            'aro_foreign_key' => $userOId,
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+        ]);
+
+        $groupUser = $this->GroupsUsers->find()->select()->where([
+            'user_id' => $userPId,
+            'group_id' => $groupMId
         ])->first();
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
 
-        // Check if some favorites exist for ada
-        $Favorites = TableRegistry::get('Favorites');
-        $favorites = $Favorites->find()->where(['user_id' => $user->id])->all()->toArray();
-        $this->assertNotEmpty($favorites);
-
-        // Can delete ada
+        $user = $this->Users->get($userOId);
         $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userOId);
+        $this->assertGroupIsNotSoftDeleted($groupMId);
+        $this->assertResourceIsNotSoftDeleted($resourceLId);
+        $this->assertUserIsAdmin($groupMId, $userPId);
+    }
+
+    public function testUsersSoftDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
+    {
+        $userUId = UuidFactory::uuid('user.id.ursula');
+        $user = $this->Users->get($userUId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userUId);
         $errors = $user->getErrors();
-        $this->assertEmpty($errors);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+        $this->assertFalse(isset($errors['id']['soleManagerOfNonEmptyGroup']));
+    }
 
-        // Apache resource, only owned by ada was deleted
-        $apache = $this->Resources->get(UuidFactory::uuid('resource.id.apache'));
-        $this->assertTrue($apache->deleted);
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfEmptyGroup_DelUserCase12()
+    {
+        $userTId = UuidFactory::uuid('user.id.thelma');
+        $userUId = UuidFactory::uuid('user.id.ursula');
+        $groupNId = UuidFactory::uuid('group.id.network');
+        $resourcePId = UuidFactory::uuid('resource.id.phpunit');
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $userTId,
+            'aco_foreign_key' => $resourcePId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+        $user = $this->Users->get($userUId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userUId);
+        $this->assertGroupIsSoftDeleted($groupNId);
+    }
 
-        // April is still there since it's owned by betty
-        $april = $this->Resources->get(UuidFactory::uuid('resource.id.april'));
-        $this->assertFalse($april->deleted);
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerResourceWithSoleManagerOfEmptyGroups_DelUserCase13()
+    {
+        $userWId = UuidFactory::uuid('user.id.wang');
+        $resourceQId = UuidFactory::uuid('resource.id.qgis');
+        $groupOId = UuidFactory::uuid('group.id.operations');
+        $groupPId = UuidFactory::uuid('group.id.procurement');
+        $user = $this->Users->get($userWId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userWId);
+        $this->assertGroupIsSoftDeleted($groupOId);
+        $this->assertGroupIsSoftDeleted($groupPId);
+        $this->assertResourceIsSoftDeleted($resourceQId);
+    }
 
-        // Developer group still there since betty is also admin
-        $developer = $this->Groups->get(UuidFactory::uuid('group.id.developer'));
-        $this->assertFalse($developer->deleted);
+    public function testUsersSoftDeleteError_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
+    {
+        $userYId = UuidFactory::uuid('user.id.yvonne');
+        $user = $this->Users->get($userYId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $this->assertUserIsNotSoftDeleted($userYId);
+        $errors = $user->getErrors();
+        $this->assertFalse(isset($errors['id']['soleOwnerOfSharedResource']));
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
+    }
 
-        // Creative group is gone (group where ada is alone)
-        $creative = $this->Groups->get(UuidFactory::uuid('group.id.creative'));
-        $this->assertTrue($creative->deleted);
+    public function testUsersSoftDeleteSuccess_indirectlyOwnerSharedResourceWithSoleManagerOfNonEmptyGroup_DelUserCase14()
+    {
+        $userYId = UuidFactory::uuid('user.id.yvonne');
+        $userJId = UuidFactory::uuid('user.id.joan');
+        $resourceSId = UuidFactory::uuid('resource.id.selenium');
+        $groupHId = UuidFactory::uuid('group.id.human_resource');
 
-        // Composer, owned by creative group is gone
-        $composer = $this->Resources->get(UuidFactory::uuid('resource.id.composer'));
-        $this->assertTrue($composer->deleted);
+        $groupUser = $this->GroupsUsers->find()->select()->where([
+            'user_id' => $userJId,
+            'group_id' => $groupHId
+        ])->first();
+        $groupUser->is_admin = true;
+        $this->GroupsUsers->save($groupUser);
 
-        // Framasoft previously owned by creative is still theres since it's owned by carol
-        $framasoft = $this->Resources->get(UuidFactory::uuid('resource.id.framasoft'));
-        $this->assertFalse($framasoft->deleted);
+        $user = $this->Users->get($userYId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userYId);
+        $this->assertGroupIsNotSoftDeleted($groupHId);
+        $this->assertResourceIsNotSoftDeleted($resourceSId);
+    }
 
-        // Check Favorites are gone
-        $favorites = $Favorites->find()->where(['user_id' => $user->id])->all()->toArray();
-        $this->assertEmpty($favorites);
+    public function testUsersSoftDeleteError_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
 
-        // There should not be any secrets
-        $secrets = $this->Secrets->find()
-            ->select()->where([
-                ['user_id' => $user->id]
-            ])->all();
-        $this->assertEquals(count($secrets), 0);
+        // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        $user = $this->Users->get($userOId);
+        $this->assertFalse($this->Users->softDelete($user));
+        $errors = $user->getErrors();
+        $this->assertNotEmpty($errors['id']['soleManagerOfNonEmptyGroup']);
+        $this->assertNotEmpty($errors['id']['soleOwnerOfSharedResource']);
+    }
+
+    public function testUsersSoftDeleteSuccess_SoleOwnerSharedResourceWithNotEmptyGroup_DelUserCase15()
+    {
+        $userOId = UuidFactory::uuid('user.id.orna');
+        $userPId = UuidFactory::uuid('user.id.ping');
+        $groupMId = UuidFactory::uuid('group.id.management');
+        $resourceLId = UuidFactory::uuid('resource.id.linux');
+
+        // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::READ;
+        $this->Permissions->save($permission);
+
+        // FIX
+        $permission = $this->Permissions->find()->select()->where([
+            'aro_foreign_key' => $groupMId,
+            'aco_foreign_key' => $resourceLId
+        ])->first();
+        $permission->type = Permission::OWNER;
+        $this->Permissions->save($permission);
+        $groupUser = $this->GroupsUsers->find()->select()->where([
+            'user_id' => $userPId,
+            'group_id' => $groupMId
+        ])->first();
+        $groupUser->is_admin = true;
+        $this->GroupsUsers->save($groupUser);
+
+        $user = $this->Users->get($userOId);
+        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertUserIsSoftDeleted($userOId);
+        $this->assertGroupIsNotSoftDeleted($groupMId);
+        $this->assertResourceIsNotSoftDeleted($resourceLId);
     }
 }
