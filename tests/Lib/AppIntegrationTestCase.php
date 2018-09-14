@@ -80,6 +80,7 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
     {
         parent::setUp();
         $this->initAvatarEvents();
+        Configure::write('passbolt.plugins', []);
         $this->enableCsrfToken();
     }
 

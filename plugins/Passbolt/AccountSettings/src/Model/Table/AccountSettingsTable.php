@@ -244,7 +244,8 @@ class AccountSettingsTable extends Table
      *
      * @return array
      */
-    public function findAllThemes() {
+    public function findAllThemes()
+    {
         $defaultCssFileName = Configure::read('passbolt.plugins.accountSettings.themes.css');
         $themesPath = WWW_ROOT . 'css' . DS . 'themes';
 
