@@ -37,7 +37,7 @@ class ResourcesAddController extends AppController
         $resource = $this->_buildAndValidateEntity();
 
         // Save the entity
-        $result = $this->Resources->save($resource);
+        $result = $this->Resources->saveOrRetry($resource);
         $this->_handleValidationError($resource);
 
         // Retrieve the saved resource.
