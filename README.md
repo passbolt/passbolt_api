@@ -11,9 +11,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c804760791534e62b90632215952eaf0)](https://www.codacy.com/app/passbolt/passbolt_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=passbolt/passbolt_api&amp;utm_campaign=Badge_Grade)
 [![Build Status](https://travis-ci.org/passbolt/passbolt_api.svg?branch=master)](https://travis-ci.org/passbolt/passbolt_api)
-[![Build Status](https://saucelabs.com/buildstatus/passbolt)](https://saucelabs.com/beta/builds/c32d4f7b34c94ebdab39baed17b4d975)
 [![Coverage Status](https://coveralls.io/repos/github/passbolt/passbolt_api/badge.svg?branch=master)](https://coveralls.io/github/passbolt/passbolt_api?branch=master)
-[![Build Status](https://saucelabs.com/browser-matrix/passbolt.svg)](https://saucelabs.com/beta/builds/2b2d0f3a120a4818a137fda932a86c75)
 
 ## License
 
