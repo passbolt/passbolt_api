@@ -19,7 +19,6 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
-use App\Model\Traits\Model\ModelSaveTrait;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -48,7 +47,6 @@ use Cake\Validation\Validator;
  */
 class ResourcesTable extends Table
 {
-    use ModelSaveTrait;
     use ResourcesFindersTrait;
 
     /**
