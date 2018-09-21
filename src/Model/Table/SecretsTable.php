@@ -16,6 +16,7 @@
 namespace App\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
@@ -167,6 +168,12 @@ class SecretsTable extends Table
             'table' => 'Resources',
             'errorField' => 'resource_id',
             'message' => __('The resource does not exist.')
+        ]);
+        $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
+            'errorField' => 'resource_id',
+            'message' => __('Access denied.'),
+            'userField' => 'user_id',
+            'resourceField' => 'resource_id',
         ]);
 
         return $rules;

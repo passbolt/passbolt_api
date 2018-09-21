@@ -42,6 +42,35 @@ trait PermissionsModelTrait
     }
 
     /**
+     * Add permission.
+     * @param string $aco Aco
+     * @param string $aco_foreign_key Target aco
+     * @param string $aro Aro
+     * @param string $aro_foreign_key Target aro
+     * @param int $type The type of permissions
+     */
+    public function addPermission($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type = Permission::OWNER)
+    {
+        $saveOptions = [
+            'validate' => 'default',
+            'accessibleFields' => [
+                '*' => true
+            ],
+        ];
+        $data = [
+            'aco' => $aco,
+            'aco_foreign_key' => $aco_foreign_key,
+            'aro' => $aro,
+            'aro_foreign_key' => $aro_foreign_key,
+            'type' => $type
+        ];
+        $permission = $this->Permissions->newEntity($data, $saveOptions);
+        $this->Permissions->save($permission);
+
+        return $permission;
+    }
+
+    /**
      * Asserts that an object has all the attributes a permission should have.
      *
      * @param object $permission
