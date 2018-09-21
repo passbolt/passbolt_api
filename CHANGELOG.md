@@ -19,6 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
 - PASSBOLT-3063: Fix appjs base url and subfolder
 - PASSBOLT-3022: Fix the "import tag" is not associated to passwords imported from a csv where have no category
+- PASSBOLT-3024 As LU I can't access the theme manager screen via url
 
 ## [2.3.0] - 2018-09-05
 ### Added
@@ -58,6 +59,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.1.0] - 2018-06-14
 ### Added
+- PASSBOLT-2878: Integrate dark theme
 - PASSBOLT-2878: Add default theme
 - PASSBOLT-2861: Add copy username to clipboard on click
 
