@@ -13,3 +13,4 @@
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
 - PASSBOLT-3063: Fix appjs base url and subfolder
+- PASSBOLT-3074: As a logged in user selecting a "remember me" duration the  checkbox should be selected automatically
