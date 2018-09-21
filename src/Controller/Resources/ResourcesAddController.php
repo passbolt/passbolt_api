@@ -37,7 +37,7 @@ class ResourcesAddController extends AppController
         $resource = $this->_buildAndValidateEntity();
 
         // Save the entity
-        $result = $this->Resources->save($resource);
+        $result = $this->Resources->save($resource, ['atomic' => false]);
         $this->_handleValidationError($resource);
 
         // Retrieve the saved resource.
@@ -75,7 +75,7 @@ class ResourcesAddController extends AppController
             'aco' => 'Resource',
             'type' => Permission::OWNER,
         ]];
-        // If no secrets given, a specific message is returned.
+        // If no secrets given, the model will throw a validation error, no need to take care of it here.
         if (isset($data['secrets'])) {
             $data['secrets'][0]['user_id'] = $this->User->id();
         }
