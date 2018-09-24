@@ -14,3 +14,4 @@
 - GITHUB#246: Fix healthcheck tips relative to tmp folder
 - PASSBOLT-3063: Fix appjs base url and subfolder
 - PASSBOLT-3074: As a logged in user selecting a "remember me" duration the  checkbox should be selected automatically
+- PASSBOLT-2976: Fix API requests issues when the user is going to another workspace
