@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2534: As LU I should not be able to copy to clipboard empty login/url
 - PASSBOLT-2017: As LU when I save a password (create/edit) the dialog shouldn't persist until the request is processed by the API
 - PASSBOLT-2981: As Pro LU importing a large set of passwords I should request the API by batch
+- PASSBOLT-3073: As LU I should get a visual feedback directly after filtering the passwords or the users workspace
 
 ### Fixed
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
@@ -20,6 +21,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-3063: Fix appjs base url and subfolder
 - PASSBOLT-3022: Fix the "import tag" is not associated to passwords imported from a csv where have no category
 - PASSBOLT-3024 As LU I can't access the theme manager screen via url
+- PASSBOLT-3074: As a logged in user selecting a "remember me" duration the  checkbox should be selected automatically
+- PASSBOLT-2976: Fix API requests issues when the user is going to another workspace
 
 ## [2.3.0] - 2018-09-05
 ### Added
