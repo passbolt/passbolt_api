@@ -19,10 +19,12 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\UnauthorizedException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
@@ -139,12 +141,38 @@ class OrganizationSettingsTable extends Table
      */
     public function getOrganizationSettings()
     {
-        $settings = $this->find()->order('created ASC')->all()->toArray();
+        $settings = $this->find()->select(['property', 'value'])->order('created ASC')->all()->toArray();
         if (!empty($settings)) {
             return $this->_organizationSettingsToArray($settings);
         }
 
         return [];
+    }
+
+    /**
+     * Merge organization settings to config.
+     * @return bool true or false
+     */
+    public static function mergeOrganizationSettingsToConfig()
+    {
+        $organizationSettings = [];
+
+        try {
+            $OrganizationSetting = TableRegistry::get('OrganizationSettings');
+            $organizationSettings = $OrganizationSetting->getOrganizationSettings();
+        } catch(\Exception $e) {
+            // Do nothing. If there is any issue with retrieving the organization settings
+            // we shouldn't break the app.
+            return false;
+        }
+
+        // Override App configuration if any existing org config.
+        if (!empty($organizationSettings)) {
+            $config = array_merge_recursive(Configure::read(), $organizationSettings);
+            Configure::write($config);
+        }
+
+        return true;
     }
 
     /**

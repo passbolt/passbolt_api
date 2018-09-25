@@ -21,6 +21,7 @@ use App\Model\Table\OrganizationSettingsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\UnauthorizedException;
 use Cake\ORM\TableRegistry;
@@ -189,5 +190,34 @@ class OrganizationSettingsTableTest extends AppTestCase
         $this->OrganizationSettings->saveOrganizationSettings($initialOrganizationSettings, $accessControl);
         $settings = $this->OrganizationSettings->getOrganizationSettings();
         $this->assertEquals($settings, $initialOrganizationSettings);
+    }
+
+    /**
+     * Test overriding the properties.
+     */
+    public function testMergeOrganizationSettingsToConfig() {
+        $initialConfig = Configure::read();
+        // Insert an initial config at the same level as the one that will be written.
+        Configure::write('passbolt.ldap.testSettingThree', 'value3');
+
+        $initialOrganizationSettings = $this->_getTestSettings();
+        $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
+        $this->OrganizationSettings->saveOrganizationSettings($initialOrganizationSettings, $accessControl);
+        OrganizationSettingsTable::mergeOrganizationSettingsToConfig();
+
+        $passboltConfig = Configure::read('passbolt');
+
+        // Assert that the entries exist for the new ones, and old ones.
+        $this->assertTrue(isset($passboltConfig['ldap']['testSettingOne']));
+        $this->assertTrue(isset($passboltConfig['ldap']['testSettingThree']));
+        $this->assertTrue(isset($passboltConfig['emailNotifications']['create']));
+
+        // Assert that the values correspond to what we expect.
+        $this->assertEquals(Configure::read('passbolt.ldap.testSettingOne'), 'value1');
+        $this->assertEquals(Configure::read('passbolt.ldap.testSettingTwo'), 'value2');
+        $this->assertEquals(Configure::read('passbolt.ldap.testSettingThree'), 'value3');
+
+        // Reset config to initial one.
+        Configure::write($initialConfig);
     }
 }
