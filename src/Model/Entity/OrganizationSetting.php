@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace Passbolt\OrganizationSettings\Model\Entity;
+namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 
@@ -39,6 +39,8 @@ class OrganizationSetting extends Entity
         'property_id' => true,
         'property' => true,
         'value' => true,
+        'created_by' => true,
+        'modified_by' => true,
     ];
 
     const UUID_NAMESPACE = 'organization.settings.property.id.';

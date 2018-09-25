@@ -13,36 +13,22 @@
  * @since         2.0.0
  */
 
-namespace Passbolt\OrganizationSettings\Model\Table;
+namespace App\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\OrganizationSetting;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
-use Cake\Log\Log;
-use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Query;
+use Cake\Network\Exception\UnauthorizedException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting;
 
 /**
- * OrganizationSettings Model
- *
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting get($primaryKey, $options = [])
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting newEntity($data = null, array $options = [])
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting[] patchEntities($entities, array $data, array $options = [])
- * @method \Passbolt\OrganizationSettings\Model\Entity\OrganizationSetting findOrCreate($search, callable $callback = null, $options = [])
+ * Class OrganizationSettingsTable
+ * @package App\Model\Table
  */
 class OrganizationSettingsTable extends Table
 {
@@ -60,6 +46,8 @@ class OrganizationSettingsTable extends Table
         $this->setTable('organization_settings');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->addBehavior('Timestamp');
     }
 
     /**
@@ -79,24 +67,53 @@ class OrganizationSettingsTable extends Table
             ->maxLength('property', 256)
             ->requirePresence('property', 'create')
             ->notEmpty('property')
-            // TODO
-//            ->add('property', ['isValidProperty' => [
-//                'rule' => [$this, 'isValidProperty'],
-//                'message' => __('This setting is not supported.')
-//            ]])
-            ;
+            ->add('property', ['isValidProperty' => [
+                'rule' => [$this, 'isValidProperty'],
+                'message' => __('This setting is not supported.')
+            ]]);
+
+        $validator
+            ->uuid('property_id')
+            ->requirePresence('property_id', 'create')
+            ->notEmpty('property_id');
 
         $validator
             ->utf8Extended('value')
             ->maxLength('property', 10240)
-            ->requirePresence('value', ['create', 'update'])
-            ->notEmpty('value')
-            ->add('property', ['isValidValue' => [
-                'rule' => [$this, 'isValidValue'],
-                'message' => __('This property value is not supported.')
-            ]]);
+            ->requirePresence('value', 'create')
+            ->notEmpty('value');
 
         return $validator;
+    }
+
+    /**
+     * Custom validation rule to validate fingerprint
+     *
+     * @param string $value fingerprint
+     * @param array $context not in use
+     * @return bool
+     */
+    public function isValidProperty(string $value, array $context = null)
+    {
+        // Format should always be camel case, without numbers. Only points are allowed as special characters.
+        return (preg_match('/^[a-zA-Z][a-zA-Z.]+[a-z]$/', $value) === 1);
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        // Add rule
+        $rules->add($rules->isUnique(['property_id']), 'uniquePropertyId', [
+            'message' => __('This property id is already in use.')
+        ]);
+
+        return $rules;
     }
 
     /**
@@ -106,7 +123,7 @@ class OrganizationSettingsTable extends Table
      * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstPropertyOrFail($property)
+    public function getFirstSettingOrFail(string $property)
     {
         $settingNamespace = OrganizationSetting::UUID_NAMESPACE . $property;
 
@@ -116,14 +133,79 @@ class OrganizationSettingsTable extends Table
     }
 
     /**
+     * Find all the organization settings and return them as array.
+     *
+     * @return array organization settings as array
+     */
+    public function getOrganizationSettings()
+    {
+        $settings = $this->find()->order('created ASC')->all()->toArray();
+        if (!empty($settings)) {
+            return $this->_organizationSettingsToArray($settings);
+        }
+
+        return [];
+    }
+
+    /**
+     * Transform a collection of organization settings into an array.
+     * @param array $organizationSettings collection of organization settings
+     *
+     * @return array
+     */
+    protected function _organizationSettingsToArray(array $organizationSettings)
+    {
+        $settings = [];
+        foreach ($organizationSettings as $s) {
+            $settings[$s->property] = $s->value;
+        }
+
+        return Hash::expand($settings);
+    }
+
+    /**
+     * Save an array of settings
+     * @param array $settings settings
+     * @param UserAccessControl $control userAccessControl
+     * @return array list of saved settings.
+     */
+    public function saveOrganizationSettings(array $settings, UserAccessControl $control)
+    {
+        if (!$control->isAdmin()) {
+            throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
+        }
+
+        $settings = Hash::flatten($settings);
+        $savedSettings = [];
+        try {
+            $this->getConnection()->transactional(function () use ($settings, $control, &$savedSettings) {
+                foreach ($settings as $property => $value) {
+                    $savedSettings[] = $this->createOrUpdateSetting($property, $value, $control);
+                }
+            });
+        } catch (CustomValidationException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw new InternalErrorException($e->getMessage());
+        }
+
+        return $savedSettings;
+    }
+
+    /**
      * Create (or update) an organization setting
      *
      * @param string $property The property name
      * @param mixed $value The property value
+     * @param UserAccessControl $control user access control object
      * @return OrganizationSetting
      */
-    public function createOrUpdateSetting($property, $value)
+    public function createOrUpdateSetting(string $property, string $value, UserAccessControl $control)
     {
+        if (!$control->isAdmin()) {
+            throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
+        }
+
         $settingId = $this->_getSettingPropertyId($property);
         $settingFinder = ['property_id' => $settingId];
         $settingValues = ['value' => $value, 'property' => $property];
@@ -131,8 +213,10 @@ class OrganizationSettingsTable extends Table
             ->where($settingFinder)
             ->first();
         if ($settingItem) {
-            $this->patchEntity($settingItem, $settingValues);
+            $settingValues['modified_by'] = $control->userId();
+            $settingItem = $this->patchEntity($settingItem, $settingValues);
         } else {
+            $settingValues['created_by'] = $settingValues['modified_by'] = $control->userId();
             $settingItem = $this->newEntity(array_merge($settingFinder, $settingValues));
         }
         if ($settingItem->getErrors()) {
@@ -151,7 +235,8 @@ class OrganizationSettingsTable extends Table
      *
      * @return string (uuid) property id
      */
-    protected function _getSettingPropertyId(string $property) {
+    protected function _getSettingPropertyId(string $property)
+    {
         $settingNamespace = OrganizationSetting::UUID_NAMESPACE . $property;
 
         return UuidFactory::uuid($settingNamespace);
