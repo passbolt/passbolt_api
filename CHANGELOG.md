@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-3024 As LU I can't access the theme manager screen via url
 - PASSBOLT-3074: As a logged in user selecting a "remember me" duration the  checkbox should be selected automatically
 - PASSBOLT-2976: Fix API requests issues when the user is going to another workspace
+- PASSBOLT-3082: ezyang/htmlpurifier cache should be stored in the application cache directory
 
 ## [2.3.0] - 2018-09-05
 ### Added

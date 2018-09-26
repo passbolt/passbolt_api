@@ -24,6 +24,11 @@ class Purifier
     public static function clean($html)
     {
         $config = \HTMLPurifier_Config::createDefault();
+        $cacheDir = CACHE . '/htmlpurifier/definition_cache';
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0770, true);
+        }
+        $config->set('Cache.SerializerPath', $cacheDir);
         $purifier = new \HTMLPurifier($config);
         if (is_string($html)) {
             return $purifier->purify($html);
