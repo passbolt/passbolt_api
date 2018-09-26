@@ -20,6 +20,7 @@ use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Log\Log;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\UnauthorizedException;
 use Cake\ORM\RulesChecker;
@@ -160,9 +161,12 @@ class OrganizationSettingsTable extends Table
         try {
             $OrganizationSetting = TableRegistry::get('OrganizationSettings');
             $organizationSettings = $OrganizationSetting->getOrganizationSettings();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             // Do nothing. If there is any issue with retrieving the organization settings
             // we shouldn't break the app.
+            Log::write('error', 'Could not retrieve organization settings');
+            Log::write('error', $e->getTraceAsString());
+
             return false;
         }
 

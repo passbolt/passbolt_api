@@ -195,7 +195,8 @@ class OrganizationSettingsTableTest extends AppTestCase
     /**
      * Test overriding the properties.
      */
-    public function testMergeOrganizationSettingsToConfig() {
+    public function testMergeOrganizationSettingsToConfig()
+    {
         $initialConfig = Configure::read();
         // Insert an initial config at the same level as the one that will be written.
         Configure::write('passbolt.ldap.testSettingThree', 'value3');
