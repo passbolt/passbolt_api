@@ -43,6 +43,7 @@ class AppShellBootstrap
             self::$instance = new AppShellBootstrap();
             self::$instance->_bindEvents();
         }
+
         return self::$instance;
     }
 
