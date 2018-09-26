@@ -1,5 +1,6 @@
 <?php
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
+
 use Cake\ORM\TableRegistry;
 
 trait AssertGroupUsersTrait

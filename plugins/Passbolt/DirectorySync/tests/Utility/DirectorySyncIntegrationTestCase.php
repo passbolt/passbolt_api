@@ -14,20 +14,18 @@
  */
 namespace Passbolt\DirectorySync\Test\Utility;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
-use App\Test\Lib\AppIntegrationTestCase;
 
-abstract class DirectorySyncTestCase extends AppIntegrationTestCase
+abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
 {
-    private $originalConfig;
-
-    use MockDirectoryTrait;
     use AssertDirectoryTrait;
     use AssertReportTrait;
+    use MockDirectoryTrait;
 
     public $fixtures = [
         'app.Base/users',
@@ -56,22 +54,13 @@ abstract class DirectorySyncTestCase extends AppIntegrationTestCase
 
     public function setUp()
     {
-        $this->originalConfig = Configure::read('passbolt.plugins.directorySync');
+        parent::setUp();
+        Configure::load('Passbolt/DirectorySync.config', 'default', true);
         $this->Groups = TableRegistry::get('Groups');
         $this->Users = TableRegistry::get('Users');
         $this->DirectoryEntries = TableRegistry::get('DirectoryEntries');
         Configure::write('passbolt.plugins.directorySync.test', true);
         Configure::write('passbolt.plugins.directorySync.defaultUser', 'admin@passbolt.com');
         Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', 'ada@passbolt.com');
-        parent::setUp();
     }
-
-    public function tearDown()
-    {
-        if ($this->originalConfig !== null) {
-            Configure::write('passbolt.plugins.directorySync', $this->originalConfig);
-        }
-        parent::tearDown();
-    }
-
 }

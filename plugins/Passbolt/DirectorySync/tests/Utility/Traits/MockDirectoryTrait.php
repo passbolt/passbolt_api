@@ -14,8 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
-use Cake\I18n\FrozenTime;
 use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
 use Passbolt\DirectorySync\Utility\Alias;
 
 trait MockDirectoryTrait
@@ -35,16 +35,19 @@ trait MockDirectoryTrait
         if (!$save) {
             throw new \InvalidArgumentException('Could not save directory sync ignore for mock');
         }
+
         return $entry;
     }
 
-
-    protected function mockOrphanDirectoryEntryUser($data) {
+    protected function mockOrphanDirectoryEntryUser($data)
+    {
         $data['foreign_key'] = 'null';
+
         return $this->mockDirectoryEntryUser($data);
     }
 
-    protected function mockDirectoryEntryUser($data) {
+    protected function mockDirectoryEntryUser($data)
+    {
         if (!isset($data['fname'])) {
             throw new \InvalidArgumentException('A mocked directory entry should have at least a first name');
         }
@@ -64,7 +67,7 @@ trait MockDirectoryTrait
             $data['modified'] = '2018-07-20 06:31:57';
         }
         if (!isset($data['dn'])) {
-            $data['dn'] = 'CN='. ucfirst($data['fname']);
+            $data['dn'] = 'CN=' . ucfirst($data['fname']);
             if (isset($data['lname'])) {
                 $data['dn'] .= ' ' . ucfirst($data['lname']);
             }
@@ -103,6 +106,7 @@ trait MockDirectoryTrait
         if (!$save) {
             throw new \InvalidArgumentException('Could not save directory entry for mock');
         }
+
         return $entry;
     }
 
@@ -124,7 +128,7 @@ trait MockDirectoryTrait
             'id' => UuidFactory::uuid('ldap.user.id.' . $fname),
             'foreign_model' => 'Users',
             'foreign_key' => UuidFactory::uuid('user.id.' . $fname),
-            'directory_name' => 'CN='. ucfirst($fname) . ' ' . ucfirst($lastname) . ',OU=PassboltUsers,DC=passbolt,DC=local',
+            'directory_name' => 'CN=' . ucfirst($fname) . ' ' . ucfirst($lastname) . ',OU=PassboltUsers,DC=passbolt,DC=local',
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
             'created' => $created,
@@ -147,6 +151,7 @@ trait MockDirectoryTrait
         if (!$save) {
             throw new \InvalidArgumentException('Could not save directory entry for mock');
         }
+
         return $entry;
     }
 
@@ -169,10 +174,12 @@ trait MockDirectoryTrait
             ]
         ];
         $this->saveMockDirectoryGroupData($group);
+
         return $group;
     }
 
-    protected function mockOrphanDirectoryEntryGroup($name, $dirCreated = null, $dirModified = null, $created = null, $modified = null) {
+    protected function mockOrphanDirectoryEntryGroup($name, $dirCreated = null, $dirModified = null, $created = null, $modified = null)
+    {
         return $this->mockDirectoryEntryGroup($name, $dirCreated, $dirModified, $created, $modified, 'null');
     }
 
@@ -197,24 +204,26 @@ trait MockDirectoryTrait
             'id' => UuidFactory::uuid('ldap.group.id.' . $name),
             'foreign_model' => Alias::MODEL_GROUPS,
             'foreign_key' => $foreignKey === 'null' ? null : $defaultForeignKey,
-            'directory_name' => substr('CN='. ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local', 0, 255),
+            'directory_name' => substr('CN=' . ucfirst($name) . ',OU=PassboltUsers,DC=passbolt,DC=local', 0, 255),
             'directory_created' => $dirCreated,
             'directory_modified' => $dirModified,
             'created' => $created,
             'modified' => $modified
         ];
         $this->saveMockDirectoryEntry($entry);
+
         return $entry;
     }
 
-    public function mockDirectoryRelationGroupUser($groupAlias, $userAlias) {
+    public function mockDirectoryRelationGroupUser($groupAlias, $userAlias)
+    {
         $relation = [
             'id' => UuidFactory::uuid("group_user.id.$groupAlias-$userAlias"),
             'parent_key' => UuidFactory::uuid('ldap.group.id.' . $groupAlias),
             'child_key' => UuidFactory::uuid('ldap.user.id.' . $userAlias),
         ];
-        return $this->action->DirectoryRelations->create($relation);
 
+        return $this->action->DirectoryRelations->create($relation);
     }
 
     private function saveMockDirectoryEntry($data)
@@ -268,6 +277,7 @@ trait MockDirectoryTrait
         $users = $this->action->getDirectory()->getUsers();
         $users[] = $user;
         $this->action->getDirectory()->setUsers($users);
+
         return $user;
     }
 }

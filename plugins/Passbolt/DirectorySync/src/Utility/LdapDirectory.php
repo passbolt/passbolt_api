@@ -83,10 +83,12 @@ class LdapDirectory implements DirectoryInterface
      *
      * @return string
      */
-    public function getDNFullPath(string $ldapObjectType) {
+    public function getDNFullPath(string $ldapObjectType)
+    {
         $paths = [];
         $paths['additionalPath'] = Configure::read('passbolt.plugins.directorySync.' . $ldapObjectType . 'Path');
         $paths['baseDN'] = $this->ldap->getConnection()->getConfig()->getBaseDn();
+
         return ltrim(implode(',', $paths), ',');
     }
 

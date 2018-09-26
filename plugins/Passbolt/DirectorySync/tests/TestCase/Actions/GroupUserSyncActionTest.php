@@ -18,19 +18,19 @@ use App\Shell\AppShellBootstrap;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
-use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
-use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
-use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
-use Passbolt\DirectorySync\Utility\Alias;
 use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Actions\GroupSyncAction;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
+use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
+use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
+use Passbolt\DirectorySync\Utility\Alias;
 
-class GroupUserSyncActionTest extends DirectorySyncTestCase
+class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 {
+    use AssertDirectoryRelationsTrait;
     use AssertGroupsTrait;
     use AssertGroupUsersTrait;
-    use AssertDirectoryRelationsTrait;
 
     // TODO: should break if default group admin doesn't exist, is deleted or !active.
 
@@ -93,7 +93,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS
         ];
@@ -124,7 +124,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_ERROR,
             'type' => 'SyncError',
         ];
@@ -150,7 +150,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS
         ];
@@ -185,7 +185,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS
         ];
         $this->assertReport($reports[0], $expectedReport);
@@ -243,7 +243,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS
         ];
@@ -277,7 +277,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 2);
         $expectedGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
         ];
@@ -285,7 +285,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
 
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS
         ];
@@ -325,7 +325,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 2);
         $expectedGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
         ];
@@ -333,7 +333,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
 
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
         ];
@@ -374,7 +374,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS
         ];
@@ -444,7 +444,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_USERS
         ];
@@ -502,7 +502,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => 'DirectoryEntry'
         ];
@@ -546,7 +546,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => Alias::MODEL_GROUPS,
         ];
@@ -582,7 +582,7 @@ class GroupUserSyncActionTest extends DirectorySyncTestCase
         $this->assertEquals(count($reports), 1);
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
-            'model'  => Alias::MODEL_GROUPS_USERS,
+            'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => 'DirectoryEntry',
         ];

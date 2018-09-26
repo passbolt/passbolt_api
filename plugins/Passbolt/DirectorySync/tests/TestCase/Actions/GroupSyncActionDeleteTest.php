@@ -15,14 +15,13 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
-use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
+use Cake\Core\Configure;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Utility\Alias;
-use Cake\Core\Configure;
 
-class GroupSyncActionDeleteTest extends DirectorySyncTestCase
+class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
 {
     use AssertGroupsTrait;
 
@@ -42,7 +41,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), Alias::MODEL_GROUPS);
         $report = $this->action->execute();
         $this->assertDirectoryIgnoreEmpty();
-
     }
 
     /**
@@ -391,7 +389,8 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
      * @group DirectorySyncGroup
      * @group DirectorySyncGroupDelete
      */
-    public function testDirectorySyncGroupDelete_Case09_Null_Error_Null_Null_Null() {
+    public function testDirectorySyncGroupDelete_Case09_Null_Error_Null_Null_Null()
+    {
         $this->mockOrphanDirectoryEntryGroup('notthere');
         $report = $this->action->execute();
         $this->assertReportEmpty($report);
@@ -506,7 +505,6 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertDirectoryIgnoreEmpty();
         $this->assertDirectoryEntryEmpty();
         $this->assertReportEmpty($reports);
-
     }
 
     /**
@@ -525,7 +523,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => 'Group',
         ];
@@ -569,7 +567,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_ERROR,
             'type' => 'SyncError'
         ];
@@ -596,7 +594,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_IGNORE,
             'type' => 'DirectoryIgnore'
         ];
@@ -643,14 +641,14 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertReport($reports[0], $expectedReport);
         $this->assertDirectoryEntryEmpty();
         $this->assertDirectoryIgnoreEmpty();
-
     }
 
     /**
      * Scenario: a group should be deleted but dry-run is set to true.
      * Expected result: the group should not be deleted, and the database should not be modified.
      */
-    public function testDryRunDoNotDeleteEntity() {
+    public function testDryRunDoNotDeleteEntity()
+    {
         $this->mockDirectoryEntryGroup('marketing');
         $this->action->setDryRun(true);
         $reports = $this->action->execute();
@@ -658,7 +656,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncTestCase
         $this->assertReportNotEmpty($reports);
         $expectedReport = [
             'action' => Alias::ACTION_DELETE,
-            'model'  => Alias::MODEL_GROUPS,
+            'model' => Alias::MODEL_GROUPS,
             'status' => Alias::STATUS_SUCCESS,
             'type' => 'Group',
         ];
