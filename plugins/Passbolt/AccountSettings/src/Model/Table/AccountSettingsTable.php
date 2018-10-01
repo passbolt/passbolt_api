@@ -17,21 +17,15 @@ namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
-use Cake\Log\Log;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Routing\Router;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
+use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
 
 /**
  * AccountSettings Model
@@ -48,6 +42,7 @@ use Passbolt\AccountSettings\Model\Entity\AccountSetting;
  */
 class AccountSettingsTable extends Table
 {
+    use ThemeSettingsTrait;
 
     /**
      * Initialize method
@@ -99,14 +94,7 @@ class AccountSettingsTable extends Table
             ->notEmpty('value');
 
         // Theme validation
-        $validator
-            ->add('value', ['isValidTheme' => [
-                'on' => function ($context) {
-                    return (isset($context['data']['property']) && $context['data']['property'] === 'theme');
-                },
-                'rule' => [$this, 'isValidTheme'],
-                'message' => __('This theme is not supported.')
-            ]]);
+        $validator = $this->themeValidationDefault($validator);
 
         return $validator;
     }
@@ -121,18 +109,6 @@ class AccountSettingsTable extends Table
     public function isValidProperty(string $value, array $context = null)
     {
         return (in_array($value, AccountSetting::SUPPORTED_PROPERTIES));
-    }
-
-    /**
-     * Custom validation rule to validate account setting property name
-     *
-     * @param string $value fingerprint
-     * @param array $context not in use
-     * @return bool
-     */
-    public function isValidTheme(string $value, array $context = null)
-    {
-        return in_array($value, Hash::extract($this->findAllThemes(), "{n}.name"));
     }
 
     /**
@@ -187,24 +163,6 @@ class AccountSettingsTable extends Table
     }
 
     /**
-     * Get the theme to apply
-     *
-     * @param string $userId uuid
-     * @return string value of the theme setting or default
-     */
-    public function getTheme($userId)
-    {
-        try {
-            $theme = $this->getFirstPropertyOrFail($userId, 'theme');
-        } catch (RecordNotFoundException $exception) {
-            return null;
-        }
-        $theme = $theme->toArray();
-
-        return $theme['value'];
-    }
-
-    /**
      * Create (or update) an account setting
      *
      * @param string $userId uuid
@@ -239,40 +197,4 @@ class AccountSettingsTable extends Table
         return $settingItem;
     }
 
-    /**
-     * Return the list of valid themes
-     *
-     * @return array
-     */
-    public function findAllThemes()
-    {
-        $defaultCssFileName = Configure::read('passbolt.plugins.accountSettings.themes.css');
-        $themesPath = WWW_ROOT . 'css' . DS . 'themes';
-
-        $dir = new Folder($themesPath);
-        $files = $dir->read(true, true);
-        if (!isset($files[0])) {
-            throw new InternalErrorException(__('No themes installed.'));
-        }
-        $response = [];
-        foreach ($files[0] as $dir) {
-            $cssFilePath = $themesPath . DS . $dir . DS . $defaultCssFileName;
-            $defaultPreviewImageName = $dir . '.png';
-            $imagePreviewFilePath = IMAGES . DS . 'themes' . DS . $defaultPreviewImageName;
-            $cssFile = new File($cssFilePath);
-            $imagePreviewFile = new File($imagePreviewFilePath);
-            if ($cssFile->exists() && $imagePreviewFile->exists()) {
-                $response[] = [
-                    'id' => UuidFactory::uuid('theme.id.' . $dir),
-                    'name' => $dir,
-                    'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true)
-                ];
-            } else {
-                $msg = __('ThemesIndexController: Could not load theme {0}, the main css file or preview image is missing', $dir);
-                Log::error($msg);
-            }
-        }
-
-        return $response;
-    }
 }
