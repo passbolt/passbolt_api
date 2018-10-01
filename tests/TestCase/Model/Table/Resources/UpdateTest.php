@@ -99,7 +99,8 @@ class UpdateTest extends AppTestCase
                 'Secrets' => [
                     'validate' => 'saveResource',
                     'accessibleFields' => [
-                        'data' => true
+                        'data' => true,
+                        'user_id' => true
                     ]
                 ]
             ]

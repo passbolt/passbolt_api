@@ -143,4 +143,19 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $resource = $this->Resources->get($id);
         $this->assertFalse($resource->deleted);
     }
+
+    /**
+     * Assert than a resource does not exist
+     *
+     * @param mixed $selector Either the resource id or a find options array
+     */
+    protected function assertResourceNotExist($selector)
+    {
+        if (is_string($selector)) {
+            $resource = $this->Resources->get($selector);
+        } else {
+            $resource = $this->Resources->find()->where($selector)->first();
+        }
+        $this->assertEmpty($resource);
+    }
 }
