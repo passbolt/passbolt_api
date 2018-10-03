@@ -43,6 +43,16 @@ class UserComponent extends Component
     }
 
     /**
+     * Return the current username if the user is identified
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return $this->Auth->user('username');
+    }
+
+    /**
      * Return the current user role or GUEST if the user is not identified
      *
      * @return string
@@ -72,7 +82,7 @@ class UserComponent extends Component
      */
     public function getAccessControl()
     {
-        return new UserAccessControl($this->role(), $this->id());
+        return new UserAccessControl($this->role(), $this->id(), $this->username());
     }
 
     /**

@@ -16,6 +16,7 @@ namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Utility\UserAccessControl;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 
@@ -34,7 +35,7 @@ class ThemesSelectController extends AppController
         }
         $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
         try {
-            $setting = $AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);
+            $setting = $AccountSettings->createOrUpdateSetting($this->User->getAccessControl(), 'theme', $theme);
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid theme.'));
         }

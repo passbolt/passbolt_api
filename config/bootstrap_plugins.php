@@ -27,3 +27,8 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'AccountSettings')) {
     Plugin::load('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add MFA plugin if present
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'MultiFactorAuthentication')) {
+    Plugin::load('Passbolt/MultiFactorAuthentication', ['bootstrap' => true, 'routes' => true]);
+}
