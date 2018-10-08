@@ -63,6 +63,19 @@ return [
                 ]
             ],
             'alt0' => [
+                'install' => [
+                    'shellTasks' => [
+                        'PassboltTestData.Base/GroupsData',
+                        'PassboltTestData.Base/UsersData',
+                        'PassboltTestData.Base/ProfilesData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Base/RolesData',
+                        'PassboltTestData.Alt0/GroupsUsersData',
+                        'PassboltTestData.Alt0/PermissionsData',
+                        'PassboltTestData.Base/ResourcesData',
+                        'PassboltTestData.Alt0/SecretsData',
+                    ]
+                ],
                 'fixturize' => [
                     'shellTasks' => [
                         'PassboltTestData.Base/GroupsData',

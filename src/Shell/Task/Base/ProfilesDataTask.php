@@ -47,6 +47,15 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'User'
         ];
         $profiles[] = [
+            'id' => UuidFactory::uuid('profile.id.adele'),
+            'user_id' => UuidFactory::uuid('user.id.adele'),
+            'gender' => 'f',
+            'date_of_birth' => '1920-12-21',
+            'title' => 'Ms',
+            'first_name' => 'Adele',
+            'last_name' => 'Goldstine'
+        ];
+        $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.ada'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'gender' => 'f',
@@ -137,6 +146,15 @@ class ProfilesDataTask extends DataTask
             'last_name' => 'Bartik'
         ];
         $profiles[] = [
+            'id' => UuidFactory::uuid('profile.id.joan'),
+            'user_id' => UuidFactory::uuid('user.id.joan'),
+            'gender' => 'f',
+            'date_of_birth' => '1917-06-29',
+            'title' => 'Ms',
+            'first_name' => 'Joan',
+            'last_name' => 'Clarke'
+        ];
+        $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.kathleen'),
             'user_id' => UuidFactory::uuid('user.id.kathleen'),
             'gender' => 'f',
@@ -153,6 +171,15 @@ class ProfilesDataTask extends DataTask
             'title' => 'Ms',
             'first_name' => 'Lynne',
             'last_name' => 'Jolitz'
+        ];
+        $profiles[] = [
+            'id' => UuidFactory::uuid('profile.id.margaret'),
+            'user_id' => UuidFactory::uuid('user.id.margaret'),
+            'gender' => 'f',
+            'date_of_birth' => '1936-08-17',
+            'title' => 'Ms',
+            'first_name' => 'Margaret',
+            'last_name' => 'Hamilton'
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.marlyn'),
@@ -234,6 +261,15 @@ class ProfilesDataTask extends DataTask
             'title' => 'Ms',
             'first_name' => 'Wang',
             'last_name' => 'Xiaoyun'
+        ];
+        $profiles[] = [
+            'id' => UuidFactory::uuid('profile.id.yvonne'),
+            'user_id' => UuidFactory::uuid('user.id.yvonne'),
+            'gender' => 'f',
+            'date_of_birth' => '1923-12-29',
+            'title' => 'Ms',
+            'first_name' => 'Yvonne',
+            'last_name' => 'Choquet-Bruhat'
         ];
 
         return $profiles;

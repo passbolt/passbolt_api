@@ -49,6 +49,42 @@ class GroupsUsersDataTask extends \PassboltTestData\Shell\Task\Base\GroupsUsersD
                 'managers' => ['edith'],
                 'users' => ['edith', 'frances', 'grace']
             ],
+            'human_resource' => [
+                'managers' => ['yvonne'],
+                'users' => ['yvonne', 'joan']
+            ],
+            'leadership_team' => [
+                'managers' => ['nancy'],
+                'users' => ['nancy']
+            ],
+            'management' => [
+                'managers' => ['orna'],
+                'users' => ['orna', 'ping']
+            ],
+            'marketing' => [
+                'managers' => ['ada'],
+                'users' => ['ada']
+            ],
+            'network' => [
+                'managers' => ['ursula'],
+                'users' => ['ursula']
+            ],
+            'operations' => [
+                'managers' => ['wang'],
+                'users' => ['wang']
+            ],
+            'procurement' => [
+                'managers' => ['wang'],
+                'users' => ['wang']
+            ],
+            'quality_assurance' => [
+                'managers' => ['hedy'],
+                'users' => ['hedy']
+            ],
+            'resource_planning' => [
+                'managers' => ['adele'],
+                'users' => ['adele']
+            ],
         ];
     }
 }
