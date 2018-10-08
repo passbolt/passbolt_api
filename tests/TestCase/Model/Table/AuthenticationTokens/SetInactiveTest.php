@@ -15,6 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -34,24 +35,39 @@ class SetInactiveTest extends AppTestCase
         $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
     }
 
-    public function testSetInactiveInvalidToken()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokenSetInactive
+     */
+    public function testAuthenticationTokensSetInactiveInvalidToken()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->AuthenticationTokens->setInactive('nope');
     }
 
-    public function testSetInactiveAlreadyInactiveToken()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokenSetInactive
+     */
+    public function testAuthenticationTokensSetInactiveAlreadyInactiveToken()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
         $t->active = false;
         $this->AuthenticationTokens->save($t);
         $result = $this->AuthenticationTokens->setInactive($t->token);
         $this->assertFalse($result);
     }
 
-    public function testSetInactiveTokenSuccess()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokenSetInactive
+     */
+    public function testAuthenticationTokensSetInactiveTokenSuccess()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
         $result = $this->AuthenticationTokens->setInactive($t->token);
         $this->assertTrue($result);
         $t = $this->AuthenticationTokens->get($t->id);

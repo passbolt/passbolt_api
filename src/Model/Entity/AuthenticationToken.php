@@ -22,6 +22,8 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $token
  * @property string $user_id
+ * @property string $type
+ * @property string $data
  * @property bool $active
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
@@ -30,6 +32,10 @@ use Cake\ORM\Entity;
  */
 class AuthenticationToken extends Entity
 {
+    const TYPE_RECOVER = 'recover';
+    const TYPE_REGISTER = 'register';
+    const TYPE_MFA = 'mfa';
+    const TYPE_LOGIN = 'login';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -44,6 +50,8 @@ class AuthenticationToken extends Entity
         'id' => false,
         'user_id' => false,
         'token' => false,
-        'active' => false
+        'active' => false,
+        'type' => false,
+        'data' => false
     ];
 }
