@@ -31,6 +31,10 @@
                         <div class="message helptext">
                             <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>
                         </div>
+                        <p>
+                            <input type="checkbox" name="remember" value="remember" >
+                            <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
+                        </p>
                     </div>
                 </div>
             </div>

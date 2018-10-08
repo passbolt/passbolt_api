@@ -35,7 +35,7 @@ class ThemesSelectController extends AppController
         }
         $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
         try {
-            $setting = $AccountSettings->createOrUpdateSetting($this->User->getAccessControl(), 'theme', $theme);
+            $setting = $AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid theme.'));
         }

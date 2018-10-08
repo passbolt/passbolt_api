@@ -24,7 +24,7 @@ use Cake\Validation\Validator;
 use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class TotpSetupForm extends Form
+class TotpVerifyForm extends Form
 {
     /**
      * @var UserAccessControl
@@ -37,13 +37,20 @@ class TotpSetupForm extends Form
     protected $otp;
 
     /**
-     * TotpSettingsForm constructor.
-     *
-     * @param UserAccessControl $uac
+     * @var MfaSettings
      */
-    public function __construct(UserAccessControl $uac)
+    protected $settings;
+
+    /**
+     * TotpVerifyForm constructor.
+     * @param UserAccessControl $uac
+     * @param MfaSettings $settings
+     */
+    public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
         $this->uac = $uac;
+        $this->settings = $settings;
+        $this->otp = Factory::loadFromProvisioningUri($settings->getOtpProvisioningUri());
     }
 
     /**
@@ -55,7 +62,6 @@ class TotpSetupForm extends Form
     protected function _buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('otpProvisioningUri', ['type' => 'string'])
             ->addField('otp', ['type' => 'string']);
     }
 
@@ -68,45 +74,24 @@ class TotpSetupForm extends Form
     protected function _buildValidator(Validator $validator)
     {
         $validator
-            ->scalar('otpProvisioningUri')
-            ->notEmpty('otpProvisioningUri')
-            ->add('otpProvisioningUri', ['isValidOtpProvisioningUri' => [
-                'rule' => [$this, 'isValidOtpProvisioningUri'],
-                'message' => __('This OTP provision uri is not valid.')
-            ]]);
-
-        $validator
             ->requirePresence('otp', __('An OTP is required.'))
             ->notEmpty('otp', __('The OTP should not be empty.'))
-            ->numeric('otp', __('The OTP should be composed of numbers only.'))
-            ->lengthBetween('otp', [6, 9], __('The secret should be 6 char in length.'))
-            ->scalar('otp')
+            ->add('otp', ['numeric' => [
+                'rule' => 'numeric',
+                'last' => true,
+                'message' => 'The OTP should be composed of numbers only.',
+            ]])
+            ->add('otp', ['minLength' => [
+                'rule' => ['minLength', 6],
+                'last' => true,
+                'message' => 'The OTP should be at least 6 characters long',
+            ]])
             ->add('otp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.')
             ]]);
 
         return $validator;
-    }
-
-    /**
-     * Custom validation rule to validate otp provisioning uri
-     *
-     * @param string $value otp provisioning uri
-     * @return bool
-     */
-    public function isValidOtpProvisioningUri(string $value)
-    {
-        if (!is_string($value)) {
-            return false;
-        }
-        try {
-            $this->otp = Factory::loadFromProvisioningUri($value);
-        } catch (\InvalidArgumentException $exception) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -130,19 +115,6 @@ class TotpSetupForm extends Form
      */
     protected function _execute(array $data)
     {
-        try {
-            $mfaSettings = new MfaSettings($this->uac , [
-                'providers' => ['otp'],
-                'otp' => [
-                    'verified' => true,
-                    'otpProvisioningUri' => $data['otpProvisioningUri']
-                ]
-            ]);
-            $mfaSettings->save();
-        } catch (ValidationException $e) {
-            throw new InternalErrorException(__('Could not save the OTP settings. Please try again later.'));
-        }
-
         return true;
     }
 
@@ -162,7 +134,7 @@ class TotpSetupForm extends Form
     {
         if (!$this->validate($data)) {
             throw new CustomValidationException(
-                __('Something went wrong when validating the OTP setup data.'),
+                __('Something went wrong when validating the OTP.'),
                 $this->errors()
             );
         }

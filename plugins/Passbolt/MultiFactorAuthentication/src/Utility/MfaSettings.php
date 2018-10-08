@@ -16,19 +16,25 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 use App\Utility\UserAccessControl;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Cake\ORM\TableRegistry;
+use App\Utility\UuidFactory;
+use DateTime;
+use Cake\Http\Cookie\Cookie;
+use Cake\Core\Configure;
 
 class MfaSettings
 {
     const MFA = 'mfa';
-    const PROVIDER = 'provider';
+    const PROVIDERS = 'providers';
     const PROVIDER_OTP = 'otp';
     const VERIFIED = 'verified';
     const OTP_PROVISIONING_URI = 'otpProvisioningUri';
+    const MFA_COOKIE_ALIAS = 'passbolt_mfa';
 
     protected $settings;
     protected $original;
     protected $uac;
     protected $errors;
+    protected $remember;
 
     public function __construct(UserAccessControl $uac, $settings = null) {
         $this->uac = $uac;
@@ -64,9 +70,12 @@ class MfaSettings
         return null;
     }
 
-    public function isReadyToUse()
+    public function isReadyToUse($provider = null)
     {
         if (!$this->isProviderSet() || !$this->isVerified()) {
+            return false;
+        }
+        if (isset($provider) && $this->getProvider() !== $provider) {
             return false;
         }
         switch ($this->getProvider()) {
@@ -90,17 +99,22 @@ class MfaSettings
 
     public function getProvider()
     {
-        return $this->settings[self::PROVIDER];
+        return $this->settings[self::PROVIDERS][0];
     }
 
     public function isProviderSet()
     {
-        return (isset($this->settings[self::PROVIDER]));
+        return (isset($this->settings[self::PROVIDERS]) && count($this->settings[self::PROVIDERS]));
     }
 
     public function isVerified()
     {
-        return (isset($this->settings[self::VERIFIED]) && $this->settings[self::VERIFIED]);
+        foreach($this->settings[self::PROVIDERS] as $provider) {
+            if (isset($this->settings[$provider])) {
+                return $this->settings[$provider][self::VERIFIED];
+            }
+            return false;
+        }
     }
 
     public function getOtpProvisioningUri()
@@ -130,4 +144,5 @@ class MfaSettings
         $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
         $AccountSettings->createOrUpdateSetting($this->uac->getId(), self::MFA, $this->toJson());
     }
+
 }

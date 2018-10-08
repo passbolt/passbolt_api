@@ -24,7 +24,10 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
     $routes->connect('/totp/setup', ['prefix' => 'Totp', 'controller' => 'TotpSetupPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
-    $routes->connect('/totp/:id', ['prefix' => 'Totp', 'controller' => 'TotpCheck', 'action' => 'check'])
-        ->setPass(['id'])
+    $routes->connect('/totp/verify', ['prefix' => 'Totp', 'controller' => 'TotpVerifyGet', 'action' => 'get'])
         ->setMethods(['GET']);
+
+    $routes->connect('/totp/verify', ['prefix' => 'Totp', 'controller' => 'TotpVerifyPost', 'action' => 'post'])
+        ->setMethods(['POST']);
+
 });

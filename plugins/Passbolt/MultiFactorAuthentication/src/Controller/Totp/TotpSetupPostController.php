@@ -20,19 +20,16 @@ use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
 
 class TotpSetupPostController extends AppController
 {
-    /**
-     *
-     */
+
     public function post()
     {
         $uac = $this->User->getAccessControl();
         $totpSetupForm = new TotpSetupForm($uac);
-        $data = $this->request->getData();
         try {
-            $totpSetupForm->execute($data);
-        } catch(CustomValidationException $exception) {
+            $totpSetupForm->execute($this->request->getData());
+        } catch (CustomValidationException $exception) {
             if ($this->request->is('json')) {
-                throw new $exception;
+                throw $exception;
             } else {
                 $this->set('totpSetupForm', $totpSetupForm);
                 $this->request = $this->request
