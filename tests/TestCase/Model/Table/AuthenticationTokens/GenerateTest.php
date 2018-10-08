@@ -16,6 +16,7 @@
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -35,40 +36,55 @@ class GenerateTest extends AppTestCase
         $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
     }
 
-    public function testGenerateWrongUserId()
+    public function testAuthenticationTokensGenerateWrongUserId()
     {
         $this->expectException(ValidationException::class);
-        $this->AuthenticationTokens->generate('nope');
+        $this->AuthenticationTokens->generate('nope', AuthenticationToken::TYPE_LOGIN);
     }
 
-    public function testGenerateUserIdNotExist()
+    public function testAuthenticationTokensLoginGenerateUserIdNotExist()
     {
         $this->expectException(ValidationException::class);
         $userId = UuidFactory::uuid('user.id.nope');
-        $token = $this->AuthenticationTokens->generate($userId);
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_LOGIN);
     }
 
-    public function testGenerateDeletedUserIdError()
+    public function testAuthenticationTokensRegisterGenerateUserIdNotExist()
+    {
+        $this->expectException(ValidationException::class);
+        $userId = UuidFactory::uuid('user.id.nope');
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+    }
+
+    public function testAuthenticationTokensLoginGenerateDeletedUserIdError()
     {
         // Sofia is deleted it should not be possible to create a token
         $this->expectException(ValidationException::class);
         $userId = UuidFactory::uuid('user.id.sofia');
-        $token = $this->AuthenticationTokens->generate($userId);
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_LOGIN);
     }
 
-    public function testGenerateActiveUserIdSuccess()
+    public function testAuthenticationTokensRegisterGenerateDeletedUserIdError()
+    {
+        // Sofia is deleted it should not be possible to create a token
+        $this->expectException(ValidationException::class);
+        $userId = UuidFactory::uuid('user.id.sofia');
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
+    }
+
+    public function testAuthenticationTokensGenerateActiveUserIdSuccess()
     {
         // Ada is active it should be possible to create a token (e.g. login token)
         $userId = UuidFactory::uuid('user.id.ada');
-        $token = $this->AuthenticationTokens->generate($userId);
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_LOGIN);
         $this->assertAuthTokenAttributes($token);
     }
 
-    public function testGenerateInactiveUserIdSuccess()
+    public function testAuthenticationTokensGenerateInactiveUserIdSuccess()
     {
         // Ruth is inactive it should be possible to create a token (e.g. setup token)
         $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->AuthenticationTokens->generate($userId);
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
         $this->assertAuthTokenAttributes($token);
     }
 }
