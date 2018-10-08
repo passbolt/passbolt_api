@@ -15,6 +15,7 @@
 namespace App\Controller\Setup;
 
 use App\Controller\Setup\SetupStartController;
+use App\Model\Entity\AuthenticationToken;
 use Cake\Network\Exception\BadRequestException;
 
 class RecoverStartController extends SetupStartController
@@ -34,7 +35,7 @@ class RecoverStartController extends SetupStartController
     public function start($userId, $tokenId)
     {
         // Check user id and token id are valid
-        $this->_assertRequestSanity($userId, $tokenId);
+        $this->_assertRequestSanity($userId, $tokenId, AuthenticationToken::TYPE_RECOVER);
 
         // Retrieve the user.
         $this->loadModel('Users');
