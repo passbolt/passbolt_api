@@ -99,7 +99,7 @@ class IsValidTest extends AppTestCase
     public function testAuthenticationTokensIsValidTokenInactiveFail()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN,'inactive');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN, 'inactive');
         $result = $this->AuthenticationTokens->isValid($tokenInactive, UuidFactory::uuid('user.id.ada'));
         $this->assertFalse($result);
     }
@@ -112,7 +112,7 @@ class IsValidTest extends AppTestCase
     public function testAuthenticationTokensIsValidTokenExpiredFail()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER,'expired');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
         $result = $this->AuthenticationTokens->isValid($tokenInactive, $userId);
         $this->assertFalse($result);
 

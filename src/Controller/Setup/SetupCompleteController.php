@@ -97,7 +97,7 @@ class SetupCompleteController extends AppController
      * Return the authentication from data if any
      *
      * @param string $userId the user uuid the token belongs to
-     * @param string $tokenType
+     * @param string $tokenType AuthenticationToken::TYPE_*
      * @throws BadRequestException if no authentication token was provided
      * @throws BadRequestException if the authentication token is not a uuid
      * @throws BadRequestException if the authentication token is expired or invalid

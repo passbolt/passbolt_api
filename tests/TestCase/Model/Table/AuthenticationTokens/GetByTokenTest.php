@@ -54,7 +54,7 @@ class GetByTokenTest extends AppTestCase
     public function testAuthenticationTokensGetByTokenInactive()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER,'inactive');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
         $t = $this->AuthenticationTokens->getByToken($tokenInactive);
         $this->assertEmpty($t);
     }
@@ -67,7 +67,7 @@ class GetByTokenTest extends AppTestCase
     public function testAuthenticationTokensGetByTokenExpiredSuccess()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER,'expired');
+        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
         $t = $this->AuthenticationTokens->getByToken($tokenExpired);
         $this->assertAuthTokenAttributes($t);
     }

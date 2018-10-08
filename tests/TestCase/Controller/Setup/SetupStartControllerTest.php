@@ -14,11 +14,11 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\AuthenticationToken;
 
 class SetupStartControllerTest extends AppIntegrationTestCase
 {
@@ -83,7 +83,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartBadRequestErrorExpiredToken()
     {
-        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER,'expired');
+        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER, 'expired');
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was expired');
@@ -96,12 +96,12 @@ class SetupStartControllerTest extends AppIntegrationTestCase
      */
     public function testSetupStartBadRequestErrorInactiveToken()
     {
-        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER,'inactive');
+        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER, 'inactive');
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
 
-        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER,'expired_inactive');
+        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER, 'expired_inactive');
         $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
@@ -130,7 +130,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     {
         // Build the token manually as generate do not allow creating token for deleted users
         $userId = UuidFactory::uuid('user.id.sofia');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER,'inactive');
+        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
         $url = '/setup/install/' . $userId . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');

@@ -153,6 +153,7 @@ class AuthenticationTokensTable extends Table
      * Build the authentication token
      *
      * @param string $userId uuid
+     * @param string $type AuthenticationToken::TYPE_*
      * @throws ValidationException is the user is not a valid uuid
      * @throws ValidationException is the user is not found
      * @throws ValidationException is the user is deleted
@@ -230,12 +231,14 @@ class AuthenticationTokensTable extends Table
     }
 
     /**
-     * @param $token
+     * Check if a token is expired
+     *
+     * @param string $token uuid
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired($token, $expiry = null)
+    public function isExpired(string $token, $expiry = null)
     {
         if ($expiry === null) {
             $expiry = Configure::read('passbolt.auth.tokenExpiry');
@@ -248,6 +251,7 @@ class AuthenticationTokensTable extends Table
 
             return true;
         }
+
         return false;
     }
 

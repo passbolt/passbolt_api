@@ -13,8 +13,9 @@
  * @since         2.0.0
  */
 namespace App\Test\Lib\Model;
-use Cake\ORM\TableRegistry;
+
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait AuthenticationTokenModelTrait
 {
@@ -37,7 +38,8 @@ trait AuthenticationTokenModelTrait
     {
         $authToken = TableRegistry::get('AuthenticationTokens');
         $token = $authToken->newEntity(
-            $data, ['accessibleFields' => [
+            $data,
+            ['accessibleFields' => [
                 'user_id' => true,
                 'token' => true,
                 'active' => true,
@@ -48,6 +50,7 @@ trait AuthenticationTokenModelTrait
             ]]
         );
         $authToken->save($token, ['checkRules' => false]);
+
         return $token->token;
     }
 
@@ -65,7 +68,7 @@ trait AuthenticationTokenModelTrait
             'token' => UuidFactory::uuid(),
             'active' => true
         ];
-        switch($case) {
+        switch ($case) {
             case 'inactive':
                 $data['active'] = false;
                 break;
@@ -79,6 +82,7 @@ trait AuthenticationTokenModelTrait
                 $data['modified'] = date('Y-m-d H:i:s', strtotime('-10 days'));
                 break;
         }
+
         return $this->saveDummyAuthToken($data);
     }
 }

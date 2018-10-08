@@ -117,8 +117,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $url = '/setup/recover/complete/' . $userId . '.json';
-        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER,'expired');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER,'inactive');
+        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
 
         $fails = [
             'empty array' => [

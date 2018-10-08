@@ -14,11 +14,11 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\AuthenticationToken;
 
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
@@ -86,7 +86,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     public function testRecoverStartBadRequestErrorExpiredToken()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER,'expired');
+        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
         $url = '/setup/install/' . $userId . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was expired');
@@ -100,7 +100,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     public function testRecoverStartBadRequestErrorInactiveToken()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER,'inactive');
+        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
         $url = '/setup/recover/' . $userId . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
@@ -114,7 +114,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     public function testRecoverStartBadRequestErrorInactiveAndExpiredToken()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER,'expired_inactive');
+        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired_inactive');
         $url = '/setup/recover/start/' . $userId . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');

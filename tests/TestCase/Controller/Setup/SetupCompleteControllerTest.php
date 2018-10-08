@@ -14,11 +14,11 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\AuthenticationToken;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
@@ -125,8 +125,8 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid('user.id.ruth');
         $url = '/setup/complete/' . $userId . '.json';
-        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER,'expired');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER,'inactive');
+        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
         $fails = [
             'empty array' => [
                 'data' => [],
