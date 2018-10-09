@@ -48,10 +48,6 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($userE);
         $this->assertUserAttributes($userE);
 
-        // Should not find the user Ada who already has access to the resource
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $this->assertFalse(array_search($userAId, $arosIds));
-
         // Should not return inactive users
         $userAId = UuidFactory::uuid('user.id.ruth');
         $this->assertFalse(array_search($userAId, $arosIds));
@@ -67,10 +63,6 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($groupC);
         // Contain user count field.
         $this->assertNotEmpty($groupC->user_count);
-
-        // Should not find the group board which already has access to the resource
-        $groupBId = UuidFactory::uuid('group.id.board');
-        $this->assertFalse(array_search($groupBId, $arosIds));
 
         // Should not return deleted groups
         $groupDId = UuidFactory::uuid('group.id.deleted');
@@ -99,57 +91,6 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($aros);
         $this->assertCount(1, $aros);
         $this->assertEquals(UuidFactory::uuid('group.id.creative'), $aros[0]->id);
-    }
-
-    public function testShareSearchArosApiV1Success()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
-        $aros = $this->_responseJsonBody;
-        $this->assertNotEmpty($aros);
-
-        // Extract and check a user.
-        $users = Hash::extract($aros, "{n}.User");
-        $this->assertUserAttributes($users[0]);
-
-        // Extract and check a group.
-        $groups = Hash::extract($aros, "{n}.Group");
-        $this->assertGroupAttributes($groups[0]);
-        // Contain user count field.
-        $this->assertNotEmpty($groups[0]->user_count);
-    }
-
-    public function testShareSearchAros_ErrorNotValidResourceId()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = 'invalid-id';
-        $this->getJson("/share/search-users/resource/$resourceId.json");
-        $this->assertError(400, 'The resource id is not valid.');
-    }
-
-    public function testShareSearchAros_ErrorDoesNotExistResource()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid();
-        $this->getJson("/share/search-users/resource/$resourceId.json");
-        $this->assertError(404, 'The resource does not exist.');
-    }
-
-    public function testShareSearchArosErrorResourceIsSoftDeleted()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
-        $this->assertError(404, 'The resource does not exist.');
-    }
-
-    public function testShareSearchArosErrorAccessDenied()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.april');
-        $this->getJson("/share/search-users/resource/$resourceId.json");
-        $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testShareSearchAros_NotAuthenticated()

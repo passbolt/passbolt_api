@@ -234,8 +234,13 @@ if (!PASSBOLT_IS_CONFIGURED) {
     Router::prefix('/share', function ($routes) {
         $routes->setExtensions(['json']);
 
+        // @deprecated since v2.4.0 will be removed in v2.6
+        // replaced by /share/search-aros
         $routes->connect('/search-users/resource/:acoForeignKey', ['prefix' => 'Share', 'controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
             ->setPass(['acoForeignKey'])
+            ->setMethods(['GET']);
+
+        $routes->connect('/search-aros', ['prefix' => 'Share', 'controller' => 'ShareSearch', 'action' => 'searchArosToShareWith'])
             ->setMethods(['GET']);
 
         $routes->connect('/simulate/resource/:acoForeignKey', ['prefix' => 'Share', 'controller' => 'Share', 'action' => 'dryRun'])
