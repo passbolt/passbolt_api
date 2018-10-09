@@ -17,6 +17,6 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "passbolt-appjs": "git+ssh://git@github.com/passbolt/passbolt-appjs.git#master",
-    "passbolt-styleguide": "^2.4.0"
+    "passbolt-styleguide": "^2.4.4"
   }
 }

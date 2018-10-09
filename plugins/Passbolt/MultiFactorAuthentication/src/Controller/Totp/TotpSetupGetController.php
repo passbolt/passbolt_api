@@ -45,6 +45,35 @@ class TotpSetupGetController extends AppController
         }
     }
 
+    public function start()
+    {
+        $isReadyToUse = false;
+        $uac = $this->User->getAccessControl();
+        try {
+            $mfaSettings = MfaSettings::get($uac);
+            $isReadyToUse = $mfaSettings->isReadyToUse(MfaSettings::PROVIDER_OTP);
+        } catch(RecordNotFoundException $exception) {
+        }
+
+        if (!$isReadyToUse) {
+            $this->_handleGetStart();
+        } else {
+            $this->_handleGetExistingSettings($mfaSettings);
+        }
+    }
+
+    public function _handleGetStart() {
+        if (!$this->request->is('json')) {
+            $this->set('theme', $this->User->theme());
+            $this->viewBuilder()
+                ->setLayout('totp_setup')
+                ->setTemplatePath('Totp')
+                ->setTemplate('setupStart');
+        } else {
+            $this->success(__('Please setup the TOTP application.'));
+        }
+    }
+
     /**
      * Handle get request when ready to use settings are present
      *
@@ -53,8 +82,9 @@ class TotpSetupGetController extends AppController
      */
     protected function _handleGetExistingSettings(MfaSettings $mfaSettings)
     {
+        $this->set('theme', $this->User->theme());
         $this->viewBuilder()
-            ->setLayout('totp')
+            ->setLayout('totp_setup')
             ->setTemplatePath('Totp')
             ->setTemplate('setupSuccess');
 
@@ -80,11 +110,12 @@ class TotpSetupGetController extends AppController
 
         if (!$this->request->is('json')) {
             $this->set('totpSetupForm', $totpSetupForm);
+            $this->set('theme', $this->User->theme());
             $this->request = $this->request
                 ->withData('otpQrCodeImage', $qrCode)
                 ->withData('otpProvisioningUri', $uri);
             $this->viewBuilder()
-                ->setLayout('totp')
+                ->setLayout('totp_setup')
                 ->setTemplatePath('Totp')
                 ->setTemplate('setupForm');
         } else {

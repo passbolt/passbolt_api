@@ -13,13 +13,11 @@
  * @since         2.4.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
+use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Cake\ORM\TableRegistry;
-use App\Utility\UuidFactory;
-use DateTime;
-use Cake\Http\Cookie\Cookie;
-use Cake\Core\Configure;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 class MfaSettings
 {
@@ -36,7 +34,13 @@ class MfaSettings
     protected $errors;
     protected $remember;
 
+    /**
+     * @var AccountSettingsTable
+     */
+    protected $AccountSettings;
+
     public function __construct(UserAccessControl $uac, $settings = null) {
+        $this->AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
         $this->uac = $uac;
         if ($settings instanceof AccountSetting) {
             $this->original = $settings;
@@ -139,10 +143,30 @@ class MfaSettings
         return new MfaSettings($uac, $settings);
     }
 
-    public function save()
+    public function delete()
     {
-        $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
-        $AccountSettings->createOrUpdateSetting($this->uac->getId(), self::MFA, $this->toJson());
+        $this->AccountSettings->deleteByProperty($this->uac->getId(), self::MFA);
     }
 
+    public function save()
+    {
+        $this->AccountSettings->createOrUpdateSetting($this->uac->getId(), self::MFA, $this->toJson());
+    }
+
+    public function disableProvider($providerToDisable = self::PROVIDER_OTP)
+    {
+        $providers = $this->settings[self::PROVIDERS];
+        foreach($providers as $i => $provider) {
+            if ($provider === $providerToDisable) {
+                unset($this->settings[self::PROVIDERS][$i]);
+                unset($this->settings[$providerToDisable]);
+                if (!count($this->settings[self::PROVIDERS])) {
+                    $this->delete();
+                } else {
+                    $this->save();
+                }
+            }
+        }
+        throw new ValidationException(__('The provider could not be deleted, it was not found.'));
+    }
 }

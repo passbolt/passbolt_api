@@ -17,10 +17,10 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupPostController extends AppController
 {
-
     public function post()
     {
         $uac = $this->User->getAccessControl();
@@ -32,21 +32,30 @@ class TotpSetupPostController extends AppController
                 throw $exception;
             } else {
                 $this->set('totpSetupForm', $totpSetupForm);
+                $this->set('theme', $this->User->theme());
                 $this->request = $this->request
                     ->withData('otpQrCodeImage', $this->request->getData('otpQrCodeImage'));
                 $this->viewBuilder()
-                    ->setLayout('totp')
+                    ->setLayout('totp_setup')
                     ->setTemplatePath('Totp')
                     ->setTemplate('setupForm');
             }
 
             return;
         }
-        $this->viewBuilder()
-            ->setLayout('totp')
-            ->setTemplatePath('Totp')
-            ->setTemplate('setupSuccess');
 
-        $this->success(__('The TOTP setup is complete!'));
+        if (!$this->request->is('json')) {
+            $this->set('theme', $this->User->theme());
+            $this->viewBuilder()
+                ->setLayout('totp_setup')
+                ->setTemplatePath('Totp')
+                ->setTemplate('setupSuccess');
+        }
+
+        $mfaSettings = MfaSettings::get($uac);
+        $this->success(__('Multi Factor Authentication is configured!'), [
+            'created' => $mfaSettings->getCreated(),
+            'modified' => $mfaSettings->getModified()
+        ]);
     }
 }

@@ -76,11 +76,6 @@ class TotpSetupForm extends Form
             ]]);
 
         $validator
-            ->requirePresence('otp', __('An OTP is required.'))
-            ->notEmpty('otp', __('The OTP should not be empty.'))
-            ->numeric('otp', __('The OTP should be composed of numbers only.'))
-            ->lengthBetween('otp', [6, 9], __('The secret should be 6 char in length.'))
-            ->scalar('otp')
             ->add('otp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.')
@@ -119,6 +114,12 @@ class TotpSetupForm extends Form
     public function isValidOtp(string $value)
     {
         if (!isset($this->otp)) {
+            return false;
+        }
+        if (!is_string($value)) {
+            return false;
+        }
+        if (!is_numeric($value)) {
             return false;
         }
         return $this->otp->verify($value);

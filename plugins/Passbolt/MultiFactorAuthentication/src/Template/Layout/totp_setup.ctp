@@ -21,17 +21,14 @@ use Cake\Core\Configure;
 
     <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
-
     <?= $this->fetch('css') ?>
+
+    <?= $this->fetch('js') ?>
+
 </head>
 <body>
 <div id="container" class="page <?= $this->fetch('pageClass') ?>">
-    <?= $this->element('Navigation/empty'); ?>
-    <div id="content">
-        <?= $this->fetch('content') ?>
-
-    </div>
-    <?= $this->element('Footer/default'); ?>
+    <?= $this->fetch('content') ?>
 </div>
 </body>
 </html>

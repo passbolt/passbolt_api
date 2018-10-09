@@ -63,7 +63,7 @@ class TotpVerifyGetController extends AppController
         if (!$this->request->is('json')) {
             $this->set('totpVerifyForm', $totpVerifyForm);
             $this->viewBuilder()
-                ->setLayout('totp')
+                ->setLayout('totp_verify')
                 ->setTemplatePath('Totp')
                 ->setTemplate('verifyForm');
         } else {

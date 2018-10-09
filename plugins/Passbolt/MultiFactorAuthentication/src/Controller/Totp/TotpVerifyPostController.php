@@ -60,7 +60,7 @@ class TotpVerifyPostController extends AppController
             // Display form with error msg
             $this->set('totpVerifyForm', $totpVerifyForm);
             $this->viewBuilder()
-                ->setLayout('totp')
+                ->setLayout('totp_verify')
                 ->setTemplatePath('Totp')
                 ->setTemplate('verifyForm');
 

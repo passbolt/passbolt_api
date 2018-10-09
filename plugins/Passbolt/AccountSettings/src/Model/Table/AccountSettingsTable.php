@@ -18,6 +18,7 @@ namespace Passbolt\AccountSettings\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
@@ -58,6 +59,8 @@ class AccountSettingsTable extends Table
         $this->setTable('account_settings');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
@@ -200,4 +203,35 @@ class AccountSettingsTable extends Table
         return $settingItem;
     }
 
+    /**
+     * Delete an entry for a given user and property
+     *
+     * @param string $userId
+     * @param string $property
+     * @return bool
+     */
+    public function deleteByProperty(string $userId, string $property)
+    {
+        $settingItem = $this->getByProperty($userId, $property);
+        if ($settingItem !== null) {
+            return $this->delete($settingItem);
+        }
+        return false;
+    }
+
+    /**
+     * Get an entry for a given user and property
+     *
+     * @param string $userId
+     * @param string $property
+     * @return EntityInterface|null
+     */
+    public function getByProperty(string $userId, string $property)
+    {
+        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
+        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+        return $this->find()
+            ->where($settingFinder)
+            ->first();
+    }
 }
