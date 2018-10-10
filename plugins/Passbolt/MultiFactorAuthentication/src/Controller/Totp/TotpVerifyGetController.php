@@ -21,6 +21,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\TotpVerifyForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class TotpVerifyGetController extends AppController
 {
