@@ -16,7 +16,9 @@
 namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
@@ -58,10 +60,12 @@ class AccountSettingsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Timestamp');
+
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
-            'className' => 'Passbolt/AccountSettings.Users'
+            'className' => UsersTable::class
         ]);
     }
 
@@ -89,7 +93,6 @@ class AccountSettingsTable extends Table
 
         $validator
             ->utf8Extended('value')
-            ->maxLength('value', 256)
             ->requirePresence('value', 'create')
             ->notEmpty('value');
 
@@ -130,14 +133,19 @@ class AccountSettingsTable extends Table
      * @param string $userId uuid
      * @return Query
      */
-    public function findIndex($userId)
+    public function findIndex(string $userId, $whitelist)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
 
+        $props = [];
+        foreach ($whitelist as $i => $item) {
+            $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
+            $props[] = UuidFactory::uuid($settingNamespace);
+        }
         return $this->find()
-            ->where(['user_id' => $userId])
+            ->where(['user_id' => $userId, 'property_id IN' => $props])
             ->all();
     }
 
@@ -149,7 +157,7 @@ class AccountSettingsTable extends Table
      * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstPropertyOrFail($userId, $property)
+    public function getFirstPropertyOrFail(string $userId, string $property)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
@@ -157,9 +165,11 @@ class AccountSettingsTable extends Table
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
 
-        return $this->find()
+        $entity = $this->find()
             ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();
+
+        return $entity;
     }
 
     /**
@@ -170,7 +180,7 @@ class AccountSettingsTable extends Table
      * @param mixed $value The property value
      * @return AccountSetting
      */
-    public function createOrUpdateSetting($userId, $property, $value)
+    public function createOrUpdateSetting(string $userId, string $property, string $value)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
@@ -182,6 +192,7 @@ class AccountSettingsTable extends Table
         $settingItem = $this->find()
             ->where($settingFinder)
             ->first();
+
         if ($settingItem) {
             $this->patchEntity($settingItem, $settingValues);
         } else {
@@ -197,4 +208,36 @@ class AccountSettingsTable extends Table
         return $settingItem;
     }
 
+    /**
+     * Delete an entry for a given user and property
+     *
+     * @param string $userId
+     * @param string $property
+     * @return bool
+     */
+    public function deleteByProperty(string $userId, string $property)
+    {
+        $settingItem = $this->getByProperty($userId, $property);
+        if ($settingItem !== null) {
+            return $this->delete($settingItem);
+        }
+        return false;
+    }
+
+    /**
+     * Get an entry for a given user and property
+     *
+     * @param string $userId
+     * @param string $property
+     * @return EntityInterface|null
+     */
+    public function getByProperty(string $userId, string $property)
+    {
+        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
+        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+        return $this->find()
+            ->where($settingFinder)
+            ->first();
+    }
 }
+
