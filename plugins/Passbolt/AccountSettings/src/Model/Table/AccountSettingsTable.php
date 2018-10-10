@@ -133,14 +133,19 @@ class AccountSettingsTable extends Table
      * @param string $userId uuid
      * @return Query
      */
-    public function findIndex(string $userId)
+    public function findIndex(string $userId, $whitelist)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
 
+        $props = [];
+        foreach ($whitelist as $i => $item) {
+            $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
+            $props[] = UuidFactory::uuid($settingNamespace);
+        }
         return $this->find()
-            ->where(['user_id' => $userId])
+            ->where(['user_id' => $userId, 'property_id IN' => $props])
             ->all();
     }
 
@@ -235,3 +240,4 @@ class AccountSettingsTable extends Table
             ->first();
     }
 }
+
