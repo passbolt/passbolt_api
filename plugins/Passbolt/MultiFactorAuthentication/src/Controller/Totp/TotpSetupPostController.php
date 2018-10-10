@@ -18,6 +18,8 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class TotpSetupPostController extends AppController
 {
@@ -43,6 +45,12 @@ class TotpSetupPostController extends AppController
 
             return;
         }
+
+        // Build verified proof token and associated cookie and add it to request
+        $token = MfaVerifiedToken::get($uac);
+        $remember = ($this->request->getData('remember') !== null);
+        $cookie = MfaVerifiedCookie::get($uac, $token, $remember);
+        $this->response = $this->response->withCookie($cookie);
 
         if (!$this->request->is('json')) {
             $this->set('theme', $this->User->theme());
