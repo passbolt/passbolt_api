@@ -47,7 +47,7 @@ class TotpSetupPostController extends AppController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $token = MfaVerifiedToken::get($uac);
+        $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_OTP);
         $remember = ($this->request->getData('remember') !== null);
         $cookie = MfaVerifiedCookie::get($uac, $token, $remember);
         $this->response = $this->response->withCookie($cookie);

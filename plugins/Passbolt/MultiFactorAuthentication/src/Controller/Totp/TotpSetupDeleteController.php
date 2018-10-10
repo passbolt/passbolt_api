@@ -19,6 +19,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\ForbiddenException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class TotpSetupDeleteController extends AppController
 {
@@ -38,12 +39,19 @@ class TotpSetupDeleteController extends AppController
         }
 
         // One need to have an active mfa token to disable it
-        $mfa = $this->request->getCookie(MfaSettings::MFA_COOKIE_ALIAS);
+        $mfa = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (!isset($mfa) || !MfaVerifiedToken::check($uac, $mfa)) {
             throw new ForbiddenException(__('MFA verification required.'));
         }
 
+        // Disable provider
         $mfaSettings->disableProvider(MfaSettings::PROVIDER_OTP);
+        MfaVerifiedToken::deleteAll($uac);
+
+        // Clear any existing cookie if mfa check required
+        $this->response = $this->response
+            ->withCookie(MfaVerifiedCookie::clearCookie());
+
         $this->success('The TOTP configuration was deleted.');
     }
 

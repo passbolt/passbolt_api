@@ -26,7 +26,6 @@ class MfaSettings
     const PROVIDER_OTP = 'otp';
     const VERIFIED = 'verified';
     const OTP_PROVISIONING_URI = 'otpProvisioningUri';
-    const MFA_COOKIE_ALIAS = 'passbolt_mfa';
 
     protected $settings;
     protected $original;
@@ -167,6 +166,5 @@ class MfaSettings
                 }
             }
         }
-        throw new ValidationException(__('The provider could not be deleted, it was not found.'));
     }
 }

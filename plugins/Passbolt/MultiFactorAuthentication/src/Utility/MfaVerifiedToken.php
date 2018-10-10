@@ -29,7 +29,7 @@ class MfaVerifiedToken
      * @param UserAccessControl $uac
      * @return mixed
      */
-    public static function get(UserAccessControl $uac)
+    public static function get(UserAccessControl $uac, string $provider)
     {
         $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
         $entityData = [
@@ -38,6 +38,7 @@ class MfaVerifiedToken
             'active' => true,
             'type' => AuthenticationToken::TYPE_MFA,
             'data' => json_encode([
+                'provider' => $provider,
                 'user_agent' => env('HTTP_USER_AGENT')
             ])
         ];
@@ -82,5 +83,21 @@ class MfaVerifiedToken
         }
 
         return true;
+    }
+
+    /**
+     * @param UserAccessControl $uac
+     */
+    static function deleteAll(UserAccessControl $uac)
+    {
+        $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $mfaTokens = $AuthenticationTokens->find()
+            ->where(['user_id' => $uac->getId(), 'type' => AuthenticationToken::TYPE_MFA])
+            ->all();
+
+        foreach ($mfaTokens as $token) {
+            $token->active = false;
+            $AuthenticationTokens->save($token);
+        }
     }
 }

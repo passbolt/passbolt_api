@@ -32,7 +32,7 @@ class MfaMiddleware
     {
         if ($this->requiredMfaCheck($request)) {
             // Clear any dubious cookie if mfa check required
-            if ($request->getCookie(MfaSettings::MFA_COOKIE_ALIAS)) {
+            if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
                 $response = $response
                     ->withCookie(MfaVerifiedCookie::clearCookie());
             }
@@ -82,7 +82,7 @@ class MfaMiddleware
         }
 
         // Mfa cookie is set and a valid token
-        $mfa = $request->getCookie(MfaSettings::MFA_COOKIE_ALIAS);
+        $mfa = $request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (isset($mfa)) {
             return !MfaVerifiedToken::check($uac, $mfa);
         }

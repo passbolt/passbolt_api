@@ -44,7 +44,7 @@ class TotpVerifyGetController extends AppController
         }
 
         // Mfa cookie is set and a valid token
-        $mfaVerifiedToken = $this->request->getCookie(MfaSettings::MFA_COOKIE_ALIAS);
+        $mfaVerifiedToken = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (isset($mfaVerifiedToken)) {
             if(MfaVerifiedToken::check($uac, $mfaVerifiedToken)) {
                 if ($this->request->is('json')) {
