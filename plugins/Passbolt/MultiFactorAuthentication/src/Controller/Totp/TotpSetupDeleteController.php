@@ -50,7 +50,7 @@ class TotpSetupDeleteController extends AppController
 
         // Clear any existing cookie if mfa check required
         $this->response = $this->response
-            ->withCookie(MfaVerifiedCookie::clearCookie());
+            ->withCookie(MfaVerifiedCookie::clearCookie($this->request->is('ssl')));
 
         $this->success('The TOTP configuration was deleted.');
     }

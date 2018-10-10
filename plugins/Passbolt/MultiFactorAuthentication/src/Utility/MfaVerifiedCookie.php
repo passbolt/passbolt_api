@@ -14,10 +14,8 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
-use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use DateTime;
-use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
 
 class MfaVerifiedCookie
@@ -27,11 +25,14 @@ class MfaVerifiedCookie
     const MAX_DURATION = '30 days';
 
     /**
-     * @param UserAccessControl $uac
+     * Get a new mfa verification cookie
+     *
+     * @param string $token
      * @param bool $remember
+     * @param bool $ssl
      * @return Cookie|static
      */
-    static public function get(UserAccessControl $uac, string $token, bool $remember = false)
+    static public function get(string $token, bool $remember = false, bool $ssl = true)
     {
         if ($remember) {
             $expiry = new DateTime(self::MAX_DURATION);
@@ -44,24 +45,25 @@ class MfaVerifiedCookie
             ->withExpiry($expiry)
             ->withPath('/')
             ->withHttpOnly(true)
-            ->withSecure(Configure::read('passbolt.ssl.force'));
+            ->withSecure($ssl);
 
         return $mfaCookie;
     }
 
     /**
-     * Return an expired cookie to clear things up
+     * Return an expired cookie to clear it
      *
+     * @param bool $ssl
      * @return Cookie
      */
-    static public function clearCookie()
+    static public function clearCookie(bool $ssl = true)
     {
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
             ->withValue(UuidFactory::uuid())
             ->withExpiry(new DateTime('yesterday'))
             ->withPath('/')
             ->withHttpOnly(true)
-            ->withSecure(Configure::read('passbolt.ssl.force'));
+            ->withSecure($ssl);
 
         return $mfaCookie;
     }

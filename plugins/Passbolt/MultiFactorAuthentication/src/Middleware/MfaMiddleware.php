@@ -34,7 +34,7 @@ class MfaMiddleware
             // Clear any dubious cookie if mfa check required
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
                 $response = $response
-                    ->withCookie(MfaVerifiedCookie::clearCookie());
+                    ->withCookie(MfaVerifiedCookie::clearCookie($request->is('ssl')));
             }
             // Redirect
             return $response
