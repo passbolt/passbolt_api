@@ -18,22 +18,22 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/totp/setup/start', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'start'])
+    $routes->connect('/setup/totp/start', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'start'])
         ->setMethods(['GET']);
 
-    $routes->connect('/totp/setup', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'get'])
+    $routes->connect('/setup/totp', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
-    $routes->connect('/totp/setup', ['prefix' => 'Totp', 'controller' => 'TotpSetupPost', 'action' => 'post'])
+    $routes->connect('/setup/totp', ['prefix' => 'Totp', 'controller' => 'TotpSetupPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
-    $routes->connect('/totp/setup', ['prefix' => 'Totp', 'controller' => 'TotpSetupDelete', 'action' => 'delete'])
+    $routes->connect('/setup/totp', ['prefix' => 'Totp', 'controller' => 'TotpSetupDelete', 'action' => 'delete'])
         ->setMethods(['DELETE']);
 
-    $routes->connect('/totp/verify', ['prefix' => 'Totp', 'controller' => 'TotpVerifyGet', 'action' => 'get'])
+    $routes->connect('/verify/totp', ['prefix' => 'Totp', 'controller' => 'TotpVerifyGet', 'action' => 'get'])
         ->setMethods(['GET']);
 
-    $routes->connect('/totp/verify', ['prefix' => 'Totp', 'controller' => 'TotpVerifyPost', 'action' => 'post'])
+    $routes->connect('/verify/totp', ['prefix' => 'Totp', 'controller' => 'TotpVerifyPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
 

@@ -7,7 +7,7 @@ function domReady() {
   const totpDisableButton = document.getElementById('js_totp_disable');
   totpDisableButton.addEventListener('click', () => {
     totpDisableButton.classList.add('processing');
-    return fetch('/mfa/totp/setup.json', {
+    return fetch('/mfa/setup/totp.json', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

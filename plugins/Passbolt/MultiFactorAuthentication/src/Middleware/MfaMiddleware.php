@@ -59,10 +59,9 @@ class MfaMiddleware
         // Do not redirect on mfa setup or check page
         // same goes for authentication pages
         $whitelistedPaths = [
-            '/mfa',
-            '/auth',
-            '/logout',
-            '/login'
+            '/mfa/verify',
+            '/auth/logout',
+            '/logout'
         ];
         foreach($whitelistedPaths as $path) {
             if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {
@@ -96,7 +95,7 @@ class MfaMiddleware
      */
     protected function getVerifyUrl(ServerRequest $request)
     {
-        $url = '/mfa/totp/verify';
+        $url = '/mfa/verify/totp';
         if ($request->is('json')) {
             $url .= '.json';
         }
