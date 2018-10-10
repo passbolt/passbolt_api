@@ -15,13 +15,10 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
 use App\Controller\AppController;
-use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
-use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Cake\Network\Exception\ForbiddenException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Utility\OtpFactory;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class TotpSetupDeleteController extends AppController
 {
@@ -39,6 +36,13 @@ class TotpSetupDeleteController extends AppController
             $this->success('No TOTP configuration found. Nothing to delete.');
             return;
         }
+
+        // One need to have an active mfa token to disable it
+        $mfa = $this->request->getCookie(MfaSettings::MFA_COOKIE_ALIAS);
+        if (!isset($mfa) || !MfaVerifiedToken::check($uac, $mfa)) {
+            throw new ForbiddenException(__('MFA verification required.'));
+        }
+
         $mfaSettings->disableProvider(MfaSettings::PROVIDER_OTP);
         $this->success('The TOTP configuration was deleted.');
     }
