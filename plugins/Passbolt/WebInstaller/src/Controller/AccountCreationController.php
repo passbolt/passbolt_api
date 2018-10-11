@@ -14,6 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use Cake\Network\Exception\ForbiddenException;
 
@@ -61,7 +62,7 @@ class AccountCreationController extends WebInstallerController
     protected function _createToken($userId)
     {
         $this->loadModel('AuthenticationTokens');
-        $token = $this->AuthenticationTokens->generate($userId);
+        $token = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
 
         $session = $this->request->getSession();
         $session->write(self::CONFIG_KEY . '.user.token', $token);
