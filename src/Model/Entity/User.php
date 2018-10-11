@@ -14,7 +14,7 @@
  */
 namespace App\Model\Entity;
 
-use App\Model\Table\AuthenticationTokensTable;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
@@ -70,7 +70,7 @@ class User extends Entity
 
     /**
      * Url virtual field implementation.
-     * @return array
+     * @return string
      */
     protected function _getLastLoggedIn()
     {
@@ -78,10 +78,9 @@ class User extends Entity
         if ($fieldExist) {
             $this->__unset(self::LAST_LOGGED_IN_PLACEHOLDER);
             if ($this->active == true) {
-                $authenticationTokens = $this->_getAuthenticationTokensQuery();
-                // If there are more than 2 tokens (first one is usually for setup).
-                if ($authenticationTokens->count() > 1) {
-                    return $authenticationTokens->toArray()[0]['modified'];
+                $token = $this->_getAuthenticationTokensQuery();
+                if ($token) {
+                    return $token->modified;
                 }
             }
         }
@@ -91,7 +90,7 @@ class User extends Entity
 
     /**
      * Get a query that returns used authentication tokens for a given user.
-     * @return $this
+     * @return EntityInterface
      */
     protected function _getAuthenticationTokensQuery()
     {
@@ -104,9 +103,10 @@ class User extends Entity
             ->where([
                 'user_id' => $this->id,
                 'active' => 0,
+                'type' => AuthenticationToken::TYPE_LOGIN
             ])
             ->order('modified DESC')
-            ->limit(2);
+            ->first();
 
         return $tokenQuery;
     }

@@ -15,6 +15,7 @@
 namespace App\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -443,7 +444,7 @@ class UsersTable extends Table
 
         // Generate an authentication token
         $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
-        $token = $AuthenticationTokens->generate($user->id);
+        $token = $AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];

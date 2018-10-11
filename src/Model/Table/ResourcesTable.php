@@ -150,12 +150,12 @@ class ResourcesTable extends Table
         $validator
             ->requirePresence('permissions', 'create', __('The permissions are required.'))
             ->notEmpty('permissions', __('The permissions cannot be empty.'))
-            ->count(1, __('Only the permission of the owner is required.'));
+            ->hasAtMost('permissions', 1, __('Only the permission of the owner must be provided.'), 'create');
 
         $validator
             ->requirePresence('secrets', 'create', __('A secret is required.'))
             ->notEmpty('secrets', __('The secret cannot be empty.'), 'create')
-            ->count(1, __('Only the secret of the owner is required.'));
+            ->hasAtMost('secrets', 1, __('Only the secret of the owner must be provided.'), 'create');
 
         return $validator;
     }
