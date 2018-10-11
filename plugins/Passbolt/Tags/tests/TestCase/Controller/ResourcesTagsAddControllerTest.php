@@ -90,12 +90,12 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $data = ['Tags' => ['#bravo', 'flip', '#stup']];
+        $data = ['Tags' => ['#bravo', 'flip', '#stup', 'hotel']];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertEquals($results, ['#bravo', '#stup', 'flip']);
+        $this->assertEquals($results, ['#bravo', '#stup', 'flip', 'hotel']);
     }
 
     // A user can add shared and personal tags on a resource it owns via group permission
