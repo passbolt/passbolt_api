@@ -20,3 +20,5 @@
 - PASSBOLT-3074: As a logged in user selecting a "remember me" duration the  checkbox should be selected automatically
 - PASSBOLT-2976: Fix API requests issues when the user is going to another workspace
 - PASSBOLT-3082: ezyang/htmlpurifier cache should be stored in the application cache directory
+- PASSBOLT-2982: Fix session expired check
+- PASSBOLT-3086: As LU when I have 100+ passwords I cannot see the passwords after the 100th more than once
