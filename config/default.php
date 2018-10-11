@@ -166,7 +166,7 @@ return [
                     'GroupsUpdate' => ['dryRun', 'update'],
                     'RecoverComplete' => ['complete'],
                     'SetupComplete' => ['complete'],
-                    'Share' => ['dryRun'],
+                    'Share' => ['dryRun', 'share'],
                 ]
             ]
         ],

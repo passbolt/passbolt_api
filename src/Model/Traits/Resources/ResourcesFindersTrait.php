@@ -15,6 +15,7 @@
 namespace App\Model\Traits\Resources;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
@@ -38,21 +39,11 @@ trait ResourcesFindersTrait
 
         $query = $this->find();
 
-        // If contains Secrets.
-        if (isset($options['contain']['secret'])) {
-            $query->contain('Secrets', function ($q) use ($userId) {
-                return $q->where(['Secrets.user_id' => $userId]);
-            });
-        }
+        // Filter out deleted resources
+        $query->where(['Resources.deleted' => false]);
 
-        // If contains creator.
-        if (isset($options['contain']['creator'])) {
-            $query->contain('Creator');
-        }
-
-        // If contains modifier.
-        if (isset($options['contain']['modifier'])) {
-            $query->contain('Modifier');
+        if (isset($options['filter']['has-id'])) {
+            $query->where(['Resources.id IN' => $options['filter']['has-id']]);
         }
 
         // If filtered by favorite.
@@ -85,13 +76,6 @@ trait ResourcesFindersTrait
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
-        // If contains favorite.
-        if (isset($options['contain']['favorite'])) {
-            $query->contain('Favorites', function ($q) use ($userId) {
-                return $q->where(['Favorites.user_id' => $userId]);
-            });
-        }
-
         // If plugin tag is present and request contains tags
         if (Configure::read('passbolt.plugins.tags')) {
             $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
@@ -120,13 +104,43 @@ trait ResourcesFindersTrait
             $query = $this->_filterQueryByPermissionsType($query, $userId, Permission::READ);
         }
 
+        // If contains Secrets.
+        if (isset($options['contain']['secret'])) {
+            $query->contain('Secrets', function ($q) use ($userId) {
+                return $q->where(['Secrets.user_id' => $userId]);
+            });
+        }
+
+        // If contains creator.
+        if (isset($options['contain']['creator'])) {
+            $query->contain('Creator');
+        }
+
+        // If contains modifier.
+        if (isset($options['contain']['modifier'])) {
+            $query->contain('Modifier');
+        }
+
+        // If contains favorite.
+        if (isset($options['contain']['favorite'])) {
+            $query->contain('Favorites', function ($q) use ($userId) {
+                return $q->where(['Favorites.user_id' => $userId]);
+            });
+        }
+
         // Retrieve the permission and the details of a user attach to it if any
         if (isset($options['contain']['permissions.user.profile'])) {
-            $query->contain('Permissions.Users.Profiles');
+            $query->contain([
+                'Permissions' => [
+                    'Users' => [
+                        'Profiles' => AvatarsTable::addContainAvatar()
+                    ]
+                ]
+            ]);
         }
 
         // Retrieve the permission and the details of a group attach to it if any
-        if (isset($options['contain']['permissions.user.profile'])) {
+        if (isset($options['contain']['permissions.group'])) {
             $query->contain('Permissions.Groups');
         }
 
@@ -136,9 +150,6 @@ trait ResourcesFindersTrait
         } else {
             $query->orderAsc('Resources.name');
         }
-
-        // Filter out deleted resources
-        $query->where(['Resources.deleted' => false]);
 
         return $query;
     }

@@ -248,6 +248,7 @@ class QueryStringComponent extends Component
                         self::validateFilterSearch($values);
                         break;
                     case 'has-access':
+                    case 'has-id':
                         self::validateFilterResources($values, $filter);
                         break;
                     case 'has-managers':

@@ -14,7 +14,9 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -22,6 +24,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/authentication_tokens'];
     public $AuthenticationTokens;
+    use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
@@ -31,9 +34,14 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteApiV1Success()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
         $data = [
@@ -60,9 +68,14 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertTrue(!empty($key));
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteSuccess()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
         $data = [
@@ -77,6 +90,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteInvalidUserIdError()
     {
         $url = '/setup/complete/nope.json';
@@ -85,6 +103,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The user id is not valid.');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteInvalidUserTokenError()
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
@@ -93,10 +116,17 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The user does not exist');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteInvalidAuthenticationTokenError()
     {
-        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-
+        $userId = UuidFactory::uuid('user.id.ruth');
+        $url = '/setup/complete/' . $userId . '.json';
+        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
         $fails = [
             'empty array' => [
                 'data' => [],
@@ -119,11 +149,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
                 'message' => 'The authentication token should be a valid uuid.'
             ],
             'expired token' => [
-                'data' => ['token' => UuidFactory::uuid('token.id.expired')],
+                'data' => ['token' => $tokenExpired],
                 'message' => 'The authentication token is not valid or has expired.'
             ],
             'inactive token' => [
-                'data' => ['token' => UuidFactory::uuid('token.id.inactive')],
+                'data' => ['token' => $tokenInactive],
                 'message' => 'The authentication token is not valid or has expired.'
             ],
         ];
@@ -136,9 +166,14 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         }
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteInvalidGpgkeyError()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
 
         $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
@@ -181,6 +216,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, $case['message'], 'Issue with case: ' . $caseName);
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteDeletedUserError()
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
@@ -188,6 +228,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The user does not exist or is already active or has been deleted.');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
     public function testSetupCompleteAlreadyActiveUserError()
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
