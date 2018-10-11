@@ -19,46 +19,15 @@ use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use Cake\Collection\Collection;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
-use Cake\Validation\Validation;
 
 class ShareSearchController extends AppController
 {
     /**
-     * Share search potential aros action
-     *
-     * @param string $resourceId uuid Identifier of the resource
-     * @throws BadRequestException if the resource id is not a uuid
-     * @throws NotFoundException if the resource does not exist
-     * @throws NotFoundException if the user does not have access to the resource
+     * Share search potential user or group to share with
      * @return void
      */
-    public function searchArosToShareWith(string $resourceId)
+    public function searchArosToShareWith()
     {
-        // Check request sanity
-        if (!Validation::uuid($resourceId)) {
-            throw new BadRequestException(__('The resource id is not valid.'));
-        }
-
-        $this->loadModel('Resources');
-
-        // Retrieve the resource to search the aros for.
-        try {
-            $resource = $this->Resources->get($resourceId);
-        } catch (RecordNotFoundException $e) {
-            throw new NotFoundException(__('The resource does not exist.'));
-        }
-        // The resource is not soft deleted.
-        if ($resource->deleted) {
-            throw new NotFoundException(__('The resource does not exist.'));
-        }
-        // The user can access the resource.
-        if (!$this->Resources->hasAccess($this->User->id(), $resourceId)) {
-            throw new NotFoundException(__('The resource does not exist.'));
-        }
-
         $this->loadModel('Users');
         $this->loadModel('Groups');
 
@@ -68,31 +37,22 @@ class ShareSearchController extends AppController
         ];
         $options = $this->QueryString->get($whitelist);
 
-        // Retrieve the groups.
-        $groups = $this->_searchGroups($resourceId, $options);
-
-        // Retrieve the users.
-        $users = $this->_searchUsers($resourceId, $options);
-
-        // Merge the users and groups.
+        $groups = $this->_searchGroups($options);
+        $users = $this->_searchUsers($options);
         $aros = $users->append($groups);
-
-        // Sort the result alphabetically.
         $output = $this->_formatResult($aros);
 
         $this->success(__('The operation was successful.'), $output);
     }
 
     /**
-     * Search the groups.
+     * Search groups.
      *
-     * @param string $resourceId uuid Identifier of the resource
      * @param array $options The find options
      * @return \Cake\ORM\Query
      */
-    private function _searchGroups(string $resourceId, array $options = [])
+    private function _searchGroups(array $options = [])
     {
-        $options['filter']['has-not-permission'] = [$resourceId];
         $options['contain']['user_count'] = true;
 
         return $this->Groups->findIndex($options);
@@ -101,13 +61,11 @@ class ShareSearchController extends AppController
     /**
      * Search the users.
      *
-     * @param string $resourceId uuid Identifier of the resource
      * @param array $options The find options
      * @return \Cake\ORM\Query
      */
-    private function _searchUsers(string $resourceId, array $options = [])
+    private function _searchUsers(array $options = [])
     {
-        $options['filter']['has-not-permission'] = [$resourceId];
         $options['filter']['is-active'] = true;
 
         return $this->Users->findIndex($this->User->role(), $options);
