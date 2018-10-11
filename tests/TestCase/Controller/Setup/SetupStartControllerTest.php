@@ -14,7 +14,9 @@
  */
 namespace App\Test\TestCase\Controller\Setup;
 
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -22,6 +24,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/authentication_tokens'];
     public $AuthenticationTokens;
+    use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
@@ -29,6 +32,11 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartUrlParametersMissingError()
     {
         $fails = [
@@ -43,9 +51,15 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         }
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartBadRequestError()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
+        $t2 = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_LOGIN);
         $fails = [
             'user not a uuid' => '/setup/start/nope/' . UuidFactory::uuid(),
             'user not a uuid with legacy url' => '/setup/install/nope/' . UuidFactory::uuid(),
@@ -62,69 +76,75 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         }
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartBadRequestErrorExpiredToken()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.expired')])
-            ->first();
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
+        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER, 'expired');
+        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was expired');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartBadRequestErrorInactiveToken()
     {
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.inactive')])
-            ->first();
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
+        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER, 'inactive');
+        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
 
-        $t = $this->AuthenticationTokens->find()
-            ->where(['id' => UuidFactory::uuid('token.id.expired_inactive')])
-            ->first();
-        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t->token;
+        $token = $this->quickDummyAuthToken(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER, 'expired_inactive');
+        $url = '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when token was already used.');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartBadRequestErrorAlreadyActiveUser()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $t = $this->AuthenticationTokens->generate($userId);
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/install/' . $userId . '/' . $t->token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has already completed setup.');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartBadRequestErrorDeletedUser()
     {
         // Build the token manually as generate do not allow creating token for deleted users
         $userId = UuidFactory::uuid('user.id.sofia');
-        $token = $this->AuthenticationTokens->newEntity(
-            [
-            'user_id' => $userId,
-            'token' => UuidFactory::uuid(),
-            'active' => true
-            ],
-            ['accessibleFields' => [
-                'user_id' => true,
-                'token' => true,
-                'active' => true
-            ]]
-        );
-        $this->AuthenticationTokens->save($token, ['checkRules' => false]);
-
-        $url = '/setup/install/' . $userId . '/' . $token->token;
+        $token = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
+        $url = '/setup/install/' . $userId . '/' . $token;
         $this->get($url);
         $this->assertResponseCode(400, 'Setup start should fail with 400 when user has been deleted.');
     }
 
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
     public function testSetupStartSuccess()
     {
         $userId = UuidFactory::uuid('user.id.ruth');
-        $t = $this->AuthenticationTokens->generate($userId);
+        $t = $this->AuthenticationTokens->generate($userId, AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/install/' . $userId . '/' . $t->token;
         $this->get($url);
         $this->assertResponseOk();
