@@ -19,6 +19,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -233,12 +234,12 @@ class AuthenticationTokensTable extends Table
     /**
      * Check if a token is expired
      *
-     * @param string $token uuid
+     * @param EntityInterface $token uuid
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(string $token, $expiry = null)
+    public function isExpired(EntityInterface $token, $expiry = null)
     {
         if ($expiry === null) {
             $expiry = Configure::read('passbolt.auth.tokenExpiry');
