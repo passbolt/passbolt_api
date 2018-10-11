@@ -61,3 +61,8 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'AccountSettings')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'DirectorySync')) {
     Plugin::load('Passbolt/DirectorySync', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add MFA plugin if present
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'MultiFactorAuthentication')) {
+    Plugin::load('Passbolt/MultiFactorAuthentication', ['bootstrap' => true, 'routes' => true]);
+}

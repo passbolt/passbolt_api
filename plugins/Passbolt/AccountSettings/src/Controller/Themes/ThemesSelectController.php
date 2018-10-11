@@ -16,6 +16,7 @@ namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
+use App\Utility\UserAccessControl;
 use Cake\Network\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 

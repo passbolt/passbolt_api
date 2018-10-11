@@ -10,23 +10,17 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.1.0
+ * @since         2.5.0
  */
-namespace Passbolt\AccountSettings\Controller\AccountSettings;
+use Cake\Core\Configure;
+use Cake\Event\EventManager;
+use Passbolt\MultiFactorAuthentication\Middleware\MfaMiddleware;
 
-use App\Controller\AppController;
+Configure::load('Passbolt/MultiFactorAuthentication.config', 'default', true);
 
-class AccountSettingsIndexController extends AppController
-{
-    /**
-     * AccountSettings Index action
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-        $response = $this->AccountSettings->findIndex($this->User->id(), ['theme']);
-        $this->success(__('The operation was successful.'), $response);
+EventManager::instance()->on(
+    'Server.buildMiddleware',
+    function ($event, $middlewareQueue) {
+        $middlewareQueue->add(new MfaMiddleware());
     }
-}
+);

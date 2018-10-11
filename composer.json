@@ -45,12 +45,14 @@
         "ramsey/uuid": "^3.7",
         "singpolyma/openpgp-php": "^0.3.0",
         "thadafinser/user-agent-parser": "^2.0",
-        "donatj/phpuseragentparser": "^0.7.0",
+        "donatj/phpuseragentparser": "^0.10.0",
         "lorenzo/cakephp-email-queue": "^3.1",
         "burzum/file-storage": "1.2.1",
         "burzum/cakephp-imagine-plugin": "2.1.1",
         "ezyang/htmlpurifier": "dev-master",
-        "ldaptools/ldaptools": "^0.25.2"
+        "ldaptools/ldaptools": "^0.25.2",
+        "spomky-labs/otphp": "^8.3",
+        "bacon/bacon-qr-code": "^1.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -70,7 +72,8 @@
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\License\\": "./plugins/Passbolt/License/src",
             "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
-            "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src"
+            "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src",
+            "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src"
         }
     },
     "autoload-dev": {
@@ -81,7 +84,8 @@
             "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
             "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
-            "Passbolt\\DirectorySync\\Test\\": "./plugins/Passbolt/DirectorySync/tests"
+            "Passbolt\\DirectorySync\\Test\\": "./plugins/Passbolt/DirectorySync/tests",
+            "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests"
         }
     },
     "scripts": {

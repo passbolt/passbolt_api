@@ -16,22 +16,18 @@
 namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Table\UsersTable;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Filesystem\File;
-use Cake\Filesystem\Folder;
-use Cake\Log\Log;
+use Cake\Datasource\EntityInterface;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Routing\Router;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
+use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
 
 /**
  * AccountSettings Model
@@ -48,6 +44,7 @@ use Passbolt\AccountSettings\Model\Entity\AccountSetting;
  */
 class AccountSettingsTable extends Table
 {
+    use ThemeSettingsTrait;
 
     /**
      * Initialize method
@@ -63,10 +60,12 @@ class AccountSettingsTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Timestamp');
+
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
             'joinType' => 'INNER',
-            'className' => 'Passbolt/AccountSettings.Users'
+            'className' => UsersTable::class
         ]);
     }
 
@@ -94,19 +93,11 @@ class AccountSettingsTable extends Table
 
         $validator
             ->utf8Extended('value')
-            ->maxLength('value', 256)
             ->requirePresence('value', 'create')
             ->notEmpty('value');
 
         // Theme validation
-        $validator
-            ->add('value', ['isValidTheme' => [
-                'on' => function ($context) {
-                    return (isset($context['data']['property']) && $context['data']['property'] === 'theme');
-                },
-                'rule' => [$this, 'isValidTheme'],
-                'message' => __('This theme is not supported.')
-            ]]);
+        $validator = $this->themeValidationDefault($validator);
 
         return $validator;
     }
@@ -121,18 +112,6 @@ class AccountSettingsTable extends Table
     public function isValidProperty(string $value, array $context = null)
     {
         return (in_array($value, AccountSetting::SUPPORTED_PROPERTIES));
-    }
-
-    /**
-     * Custom validation rule to validate account setting property name
-     *
-     * @param string $value fingerprint
-     * @param array $context not in use
-     * @return bool
-     */
-    public function isValidTheme(string $value, array $context = null)
-    {
-        return in_array($value, Hash::extract($this->findAllThemes(), "{n}.name"));
     }
 
     /**
@@ -154,14 +133,19 @@ class AccountSettingsTable extends Table
      * @param string $userId uuid
      * @return Query
      */
-    public function findIndex($userId)
+    public function findIndex(string $userId, $whitelist)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
         }
 
+        $props = [];
+        foreach ($whitelist as $i => $item) {
+            $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
+            $props[] = UuidFactory::uuid($settingNamespace);
+        }
         return $this->find()
-            ->where(['user_id' => $userId])
+            ->where(['user_id' => $userId, 'property_id IN' => $props])
             ->all();
     }
 
@@ -173,7 +157,7 @@ class AccountSettingsTable extends Table
      * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstPropertyOrFail($userId, $property)
+    public function getFirstPropertyOrFail(string $userId, string $property)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
@@ -181,27 +165,11 @@ class AccountSettingsTable extends Table
 
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
 
-        return $this->find()
+        $entity = $this->find()
             ->where(['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();
-    }
 
-    /**
-     * Get the theme to apply
-     *
-     * @param string $userId uuid
-     * @return string value of the theme setting or default
-     */
-    public function getTheme($userId)
-    {
-        try {
-            $theme = $this->getFirstPropertyOrFail($userId, 'theme');
-        } catch (RecordNotFoundException $exception) {
-            return null;
-        }
-        $theme = $theme->toArray();
-
-        return $theme['value'];
+        return $entity;
     }
 
     /**
@@ -212,7 +180,7 @@ class AccountSettingsTable extends Table
      * @param mixed $value The property value
      * @return AccountSetting
      */
-    public function createOrUpdateSetting($userId, $property, $value)
+    public function createOrUpdateSetting(string $userId, string $property, string $value)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
@@ -224,6 +192,7 @@ class AccountSettingsTable extends Table
         $settingItem = $this->find()
             ->where($settingFinder)
             ->first();
+
         if ($settingItem) {
             $this->patchEntity($settingItem, $settingValues);
         } else {
@@ -240,39 +209,35 @@ class AccountSettingsTable extends Table
     }
 
     /**
-     * Return the list of valid themes
+     * Delete an entry for a given user and property
      *
-     * @return array
+     * @param string $userId
+     * @param string $property
+     * @return bool
      */
-    public function findAllThemes()
+    public function deleteByProperty(string $userId, string $property)
     {
-        $defaultCssFileName = Configure::read('passbolt.plugins.accountSettings.themes.css');
-        $themesPath = WWW_ROOT . 'css' . DS . 'themes';
-
-        $dir = new Folder($themesPath);
-        $files = $dir->read(true, true);
-        if (!isset($files[0])) {
-            throw new InternalErrorException(__('No themes installed.'));
+        $settingItem = $this->getByProperty($userId, $property);
+        if ($settingItem !== null) {
+            return $this->delete($settingItem);
         }
-        $response = [];
-        foreach ($files[0] as $dir) {
-            $cssFilePath = $themesPath . DS . $dir . DS . $defaultCssFileName;
-            $defaultPreviewImageName = $dir . '.png';
-            $imagePreviewFilePath = IMAGES . DS . 'themes' . DS . $defaultPreviewImageName;
-            $cssFile = new File($cssFilePath);
-            $imagePreviewFile = new File($imagePreviewFilePath);
-            if ($cssFile->exists() && $imagePreviewFile->exists()) {
-                $response[] = [
-                    'id' => UuidFactory::uuid('theme.id.' . $dir),
-                    'name' => $dir,
-                    'preview' => Router::url('/img/themes/' . $defaultPreviewImageName, true)
-                ];
-            } else {
-                $msg = __('ThemesIndexController: Could not load theme {0}, the main css file or preview image is missing', $dir);
-                Log::error($msg);
-            }
-        }
+        return false;
+    }
 
-        return $response;
+    /**
+     * Get an entry for a given user and property
+     *
+     * @param string $userId
+     * @param string $property
+     * @return EntityInterface|null
+     */
+    public function getByProperty(string $userId, string $property)
+    {
+        $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
+        $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+        return $this->find()
+            ->where($settingFinder)
+            ->first();
     }
 }
+

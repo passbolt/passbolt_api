@@ -10,23 +10,32 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.1.0
+ * @since         2.4.0
  */
-namespace Passbolt\AccountSettings\Controller\AccountSettings;
 
-use App\Controller\AppController;
+use Migrations\AbstractMigration;
 
-class AccountSettingsIndexController extends AppController
+class V240ExtendAccountSettingsPlugin extends AbstractMigration
 {
     /**
-     * AccountSettings Index action
+     * Up
      *
      * @return void
      */
-    public function index()
+    public function up()
     {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-        $response = $this->AccountSettings->findIndex($this->User->id(), ['theme']);
-        $this->success(__('The operation was successful.'), $response);
+        $this->table('account_settings')
+            ->changeColumn('value', 'text')
+            ->addColumn('created', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->addColumn('modified', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
+            ->update();
     }
 }

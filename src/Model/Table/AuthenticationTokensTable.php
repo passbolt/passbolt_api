@@ -234,7 +234,7 @@ class AuthenticationTokensTable extends Table
     /**
      * Check if a token is expired
      *
-     * @param EntityInterface $token uuid
+     * @param EntityInterface $token AuthenticationToken
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool

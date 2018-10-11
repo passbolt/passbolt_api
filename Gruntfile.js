@@ -129,6 +129,10 @@ module.exports = function(grunt) {
             'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png',
             // Themes preview
             'themes/*.png',
+            // Fontawesome
+            'fa/**',
+            // Background images for error pages for ex
+            'diagrams/totp.svg',
           ],
           dest: paths.webroot + 'img',
           expand: true
@@ -139,10 +143,16 @@ module.exports = function(grunt) {
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
-          // Default css theme
+          // Midgar css theme
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
           src: ['api_main.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        }, {
+          // A new css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/anew',
+          src: ['api_login.min.css'],
+          dest: paths.webroot + 'css/themes/anew',
           expand: true
         }]
       }

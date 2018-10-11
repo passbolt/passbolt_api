@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- PASSBOLT-3009: Add support multiple factor authentication using TOTP (Google Authenticator, Authy, FreeOTP)
 - PASSBOLT-2972: As LU I should be able to delete multiple passwords in bulk
 - PASSBOLT-2951: Merge the remember me on CE
 - PASSBOLT-2329: As an administrator deleting a group which is sole owner of one or several passwords, I should be requested to select a new owner for these passwords

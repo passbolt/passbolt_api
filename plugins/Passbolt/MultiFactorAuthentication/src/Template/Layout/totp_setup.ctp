@@ -10,23 +10,25 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.1.0
+ * @since         2.4.0
  */
-namespace Passbolt\AccountSettings\Controller\AccountSettings;
+use Cake\Core\Configure;
+?>
+<!DOCTYPE html>
+<html class="passbolt" lang="en">
+<head>
+    <?= $this->Html->charset() ?>
 
-use App\Controller\AppController;
+    <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
+    <?= $this->element('Header/meta') ?>
+    <?= $this->fetch('css') ?>
 
-class AccountSettingsIndexController extends AppController
-{
-    /**
-     * AccountSettings Index action
-     *
-     * @return void
-     */
-    public function index()
-    {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-        $response = $this->AccountSettings->findIndex($this->User->id(), ['theme']);
-        $this->success(__('The operation was successful.'), $response);
-    }
-}
+    <?= $this->fetch('js') ?>
+
+</head>
+<body>
+<div id="container" class="page <?= $this->fetch('pageClass') ?>">
+    <?= $this->fetch('content') ?>
+</div>
+</body>
+</html>
