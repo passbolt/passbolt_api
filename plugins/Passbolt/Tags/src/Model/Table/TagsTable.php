@@ -121,6 +121,18 @@ class TagsTable extends Table
     }
 
     /**
+     * Retrieve all the tags by slugs.
+     * @param array $slugs The slugs to search
+     * @return Query
+     *
+     */
+    public function findAllBySlugs(array $slugs = [])
+    {
+        return $this->find()
+            ->where(['slug IN' => $slugs]);
+    }
+
+    /**
      * Decorate a query with the necessary tag finder conditions
      * Usefull to do a contain[tag] and filter[has-tags] on resources for example
      *

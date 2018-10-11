@@ -97,6 +97,23 @@ class ResourcesTagsAddController extends AppController
             }
         }
 
+        // The tag the user is adding already exist, associate it to the resource.
+        if (!empty($data)) {
+            $existingTags = $this->Tags->findAllBySlugs($data)->all()->toArray();
+            foreach ($existingTags as $existingTag) {
+                $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
+                unset($data[array_search($existingTag->slug, $data)]);
+                if ($notShared) {
+                    $existingTag->_joinData = new \StdClass();
+                    $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([
+                        'user_id' => $userId
+                    ]);
+                }
+                array_push($resource->tags, $existingTag);
+            }
+        }
+
+        // Create the new tags.
         $requestTags = $this->Tags->buildEntitiesOrFail($userId, $data);
         $resource->tags = array_merge($resource->tags, $requestTags);
         $resource->setDirty('tags', true);
