@@ -14,6 +14,7 @@
  */
 namespace App\Controller\Setup;
 
+use App\Model\Entity\AuthenticationToken;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validation;
@@ -37,11 +38,11 @@ class RecoverCompleteController extends SetupCompleteController
      * @param string $userId uuid of the user
      * @return void
      */
-    public function complete($userId)
+    public function complete(string $userId)
     {
         // Check request sanity
         $this->_getAndAssertUser($userId);
-        $token = $this->_getAndAssertToken($userId);
+        $token = $this->_getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
         $gpgkey = $this->_getAndAssertGpgkey($userId);
 
         // Check that the "new" gpg key match the old one
@@ -67,7 +68,7 @@ class RecoverCompleteController extends SetupCompleteController
      * @throws BadRequestException if the user was deleted or has not completed the setup
      * @return bool if user id is valid
      */
-    protected function _getAndAssertUser($userId)
+    protected function _getAndAssertUser(string $userId)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
