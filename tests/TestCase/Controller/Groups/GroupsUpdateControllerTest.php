@@ -30,7 +30,6 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->disableCsrfToken();
         $this->Favorites = TableRegistry::get('Favorites');
         $this->Groups = TableRegistry::get('Groups');
         $this->GroupsUsers = TableRegistry::get('GroupsUsers');
@@ -602,5 +601,14 @@ hcciUFw5
         $postData = [];
         $this->putJson("/groups/$groupId.json?api-version=v1", $postData);
         $this->assertAuthenticationError();
+    }
+
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->put("/groups/$groupId.json");
+        $this->assertResponseCode(403);
     }
 }

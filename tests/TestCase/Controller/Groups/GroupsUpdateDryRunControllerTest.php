@@ -29,7 +29,6 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->disableCsrfToken();
         $this->Groups = TableRegistry::get('Groups');
         $this->Resources = TableRegistry::get('Resources');
     }
@@ -220,5 +219,14 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $postData = [];
         $this->putJson("/groups/$groupId/dry-run.json?api-version=v1", $postData);
         $this->assertAuthenticationError();
+    }
+
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->put("/groups/$groupId/dry-run.json");
+        $this->assertResponseCode(403);
     }
 }

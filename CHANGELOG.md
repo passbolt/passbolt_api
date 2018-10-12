@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2981: As Pro LU importing a large set of passwords I should request the API by batch
 - PASSBOLT-3073: As LU I should get a visual feedback directly after filtering the passwords or the users workspace
 - PASSBOLT-2972: As LU I should be able to select multiple passwords with standard keyboard interactions (command and shift keys)
+- PASSBOLT-3090: Extend the CSRF protection
 
 ### Fixed
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
