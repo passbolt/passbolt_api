@@ -8,19 +8,11 @@ return [
                         'config.format',
                     ],
                 ],
-                'version' => '2.0.0',
+                'version' => '2.0.1',
                 'config' => [
                     'format' => [
                         'kdbx',
                         'csv',
-                    ]
-                ],
-                'security' => [
-                    'csrfProtection' => [
-                        'unlockedActions' => [
-                            'ResourcesAdd' => ['add'],
-                            'ResourcesTagsAdd' => ['addPost']
-                        ]
                     ]
                 ],
             ]
