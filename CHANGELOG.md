@@ -12,6 +12,7 @@
 - PASSBOLT-2017: As LU when I save a password (create/edit) the dialog shouldn't persist until the request is processed by the API
 - PASSBOLT-3073: As LU I should get a visual feedback directly after filtering the passwords or the users workspace
 - PASSBOLT-2972: As LU I should be able to select multiple passwords with classic keyboard interactions (command and shift keys)
+- PASSBOLT-3090: Extend the CSRF protection
 
 ### Fixed
 - PASSBOLT-2966: As LU I can't see passwords shared with me clicking on the "shared with me" shortcut filter
