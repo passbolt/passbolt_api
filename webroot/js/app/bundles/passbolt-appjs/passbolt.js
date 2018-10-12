@@ -1026,16 +1026,16 @@ define('package.json!npm', [
             },
             'resolutions': {
                 'passbolt-appjs': '2.4.0',
-                'passbolt-mad': '2.2.0',
                 'jquery': '3.3.1',
+                'passbolt-mad': '2.2.0',
                 'browser-cookies': '1.2.0',
                 'steal-stache': '4.1.2',
-                'can-connect': '2.1.0',
-                'can-string': '1.0.0',
                 'can-route': '4.3.0',
-                'can-define': '2.5.5',
                 'can-route-pushstate': '5.0.2',
+                'can-define': '2.5.5',
+                'can-connect': '2.1.0',
                 'uuid': '3.3.2',
+                'can-string': '1.0.0',
                 'can-util': '3.12.0',
                 'can-dom-data': '1.0.1',
                 'can-dom-events': '1.3.0',
@@ -1134,6 +1134,14 @@ define('package.json!npm', [
             'resolutions': {}
         },
         {
+            'name': 'buffer',
+            'version': '5.0.8',
+            'fileUrl': './node_modules/buffer/package.json',
+            'main': 'index.js',
+            'jspm': {},
+            'resolutions': {}
+        },
+        {
             'name': 'assert',
             'version': '1.4.1',
             'fileUrl': './node_modules/assert/package.json',
@@ -1141,11 +1149,10 @@ define('package.json!npm', [
             'resolutions': {}
         },
         {
-            'name': 'buffer',
-            'version': '5.0.8',
-            'fileUrl': './node_modules/buffer/package.json',
-            'main': 'index.js',
-            'jspm': {},
+            'name': 'console-browserify',
+            'version': '1.1.0',
+            'fileUrl': './node_modules/console-browserify/package.json',
+            'main': 'index',
             'resolutions': {}
         },
         {
@@ -1163,25 +1170,11 @@ define('package.json!npm', [
             'resolutions': {}
         },
         {
-            'name': 'console-browserify',
-            'version': '1.1.0',
-            'fileUrl': './node_modules/console-browserify/package.json',
-            'main': 'index',
-            'resolutions': {}
-        },
-        {
             'name': 'domain-browser',
             'version': '1.1.7',
             'fileUrl': './node_modules/domain-browser/package.json',
             'main': './index.js',
             'jspm': {},
-            'resolutions': {}
-        },
-        {
-            'name': 'events',
-            'version': '1.1.1',
-            'fileUrl': './node_modules/events/package.json',
-            'main': './events.js',
             'resolutions': {}
         },
         {
@@ -1197,6 +1190,13 @@ define('package.json!npm', [
             'version': '1.0.0',
             'fileUrl': './node_modules/https-browserify/package.json',
             'main': 'index.js',
+            'resolutions': {}
+        },
+        {
+            'name': 'events',
+            'version': '1.1.1',
+            'fileUrl': './node_modules/events/package.json',
+            'main': './events.js',
             'resolutions': {}
         },
         {
@@ -1232,17 +1232,17 @@ define('package.json!npm', [
             'resolutions': {}
         },
         {
-            'name': 'string_decoder',
-            'version': '1.0.3',
-            'fileUrl': './node_modules/string_decoder/package.json',
-            'main': 'lib/string_decoder.js',
-            'resolutions': {}
-        },
-        {
             'name': 'tty-browserify',
             'version': '0.0.1',
             'fileUrl': './node_modules/tty-browserify/package.json',
             'main': 'index.js',
+            'resolutions': {}
+        },
+        {
+            'name': 'string_decoder',
+            'version': '1.0.3',
+            'fileUrl': './node_modules/string_decoder/package.json',
+            'main': 'lib/string_decoder.js',
             'resolutions': {}
         },
         {
@@ -1257,6 +1257,13 @@ define('package.json!npm', [
             'version': '0.0.3',
             'fileUrl': './node_modules/zlib-browserify/package.json',
             'main': 'index.js',
+            'resolutions': {}
+        },
+        {
+            'name': 'jquery',
+            'version': '3.3.1',
+            'fileUrl': './node_modules/jquery/package.json',
+            'main': 'dist/jquery.js',
             'resolutions': {}
         },
         {
@@ -1284,13 +1291,13 @@ define('package.json!npm', [
                 'can-util': '3.12.0',
                 'steal-stache': '4.1.2',
                 'jquery': '3.3.1',
+                'can-dom-events': '1.3.0',
                 'can-ajax': '2.0.0',
                 'uuid': '3.3.2',
-                'can-dom-events': '1.3.0',
                 'can-define': '2.4.0',
-                'can-dom-data': '1.0.1',
-                'can-control': '4.2.0',
                 'can-construct-super': '3.2.0',
+                'can-control': '4.2.0',
+                'can-dom-data': '1.0.1',
                 'can-stache': '4.9.0',
                 'string-hash': '1.1.3',
                 'xregexp': '3.2.0',
@@ -1299,20 +1306,6 @@ define('package.json!npm', [
                 'can-view-import': '4.1.0',
                 'can-stache-bindings': '4.3.0'
             }
-        },
-        {
-            'name': 'jquery',
-            'version': '3.3.1',
-            'fileUrl': './node_modules/jquery/package.json',
-            'main': 'dist/jquery.js',
-            'resolutions': {}
-        },
-        {
-            'name': 'browser-cookies',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/browser-cookies/package.json',
-            'main': 'src/browser-cookies.js',
-            'resolutions': {}
         },
         {
             'name': 'can-construct',
@@ -1340,6 +1333,77 @@ define('package.json!npm', [
             }
         },
         {
+            'name': 'browser-cookies',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/browser-cookies/package.json',
+            'main': 'src/browser-cookies.js',
+            'resolutions': {}
+        },
+        {
+            'name': 'can-route',
+            'version': '4.3.0',
+            'fileUrl': './node_modules/can-route/package.json',
+            'main': 'can-route',
+            'resolutions': {
+                'can-namespace': '1.0.0',
+                'can-route': '4.3.0',
+                'can-reflect': '1.17.0',
+                'can-observation': '4.1.0',
+                'can-log': '1.0.0',
+                'can-simple-map': '4.2.0',
+                'can-bind': '1.0.0',
+                'can-symbol': '1.6.1',
+                'can-route-hash': '1.0.0',
+                'can-queues': '1.1.2',
+                'can-simple-observable': '2.2.0',
+                'can-globals': '1.2.0',
+                'can-diff': '1.4.0',
+                'can-param': '1.1.0',
+                'can-string': '1.0.0',
+                'can-deparam': '1.2.0'
+            }
+        },
+        {
+            'name': 'can-route-pushstate',
+            'version': '5.0.2',
+            'fileUrl': './node_modules/can-route-pushstate/package.json',
+            'main': 'can-route-pushstate',
+            'resolutions': {
+                'can-route': '4.3.0',
+                'can-dom-events': '1.3.0',
+                'can-observation-recorder': '1.2.0',
+                'can-queues': '1.1.2',
+                'can-reflect': '1.17.0',
+                'can-key-tree': '1.2.0',
+                'can-simple-observable': '2.2.0',
+                'can-globals': '1.2.0',
+                'can-diff': '1.4.0'
+            }
+        },
+        {
+            'name': 'can-define',
+            'version': '2.5.5',
+            'fileUrl': './node_modules/can-define/package.json',
+            'main': 'can-define.js',
+            'resolutions': {
+                'can-construct': '3.3.1',
+                'can-define': '2.5.5',
+                'can-namespace': '1.0.0',
+                'can-observation-recorder': '1.2.0',
+                'can-queues': '1.1.2',
+                'can-reflect': '1.17.0',
+                'can-log': '1.0.0',
+                'can-event-queue': '1.1.0',
+                'can-symbol': '1.6.1',
+                'can-observation': '4.1.0',
+                'can-simple-observable': '2.2.0',
+                'can-assign': '1.2.0',
+                'can-data-types': '1.2.0',
+                'can-define-lazy-value': '1.1.0',
+                'can-string-to-any': '1.2.0'
+            }
+        },
+        {
             'name': 'can-connect',
             'version': '2.1.0',
             'fileUrl': './node_modules/can-connect/package.json',
@@ -1352,19 +1416,30 @@ define('package.json!npm', [
             },
             'resolutions': {
                 'can-connect': '2.1.0',
+                'can-namespace': '1.0.0',
                 'can-construct': '3.3.1',
                 'can-util': '3.12.0',
-                'can-namespace': '1.0.0',
-                'can-ajax': '1.3.0',
-                'can-make-rest': '0.1.3',
-                'can-symbol': '1.6.1',
-                'can-reflect': '1.17.0',
-                'can-event-queue': '1.1.0',
                 'can-observation-recorder': '1.2.0',
+                'can-reflect': '1.17.0',
+                'can-symbol': '1.6.1',
+                'can-event-queue': '1.1.0',
+                'can-make-rest': '0.1.3',
+                'can-ajax': '1.3.0',
                 'can-types': '1.2.0',
                 'can-queues': '1.1.2',
                 'can-validate-interface': '1.0.2'
             }
+        },
+        {
+            'name': 'uuid',
+            'version': '3.3.2',
+            'fileUrl': './node_modules/uuid/package.json',
+            'browser': {
+                'uuid#lib/rng': 'uuid#lib/rng-browser',
+                'uuid#lib/sha1': 'uuid#lib/sha1-browser',
+                'uuid#lib/md5': 'uuid#lib/md5-browser'
+            },
+            'resolutions': { 'uuid': '3.3.2' }
         },
         {
             'name': 'can-string',
@@ -1386,79 +1461,25 @@ define('package.json!npm', [
             'resolutions': {}
         },
         {
-            'name': 'can-route',
-            'version': '4.3.0',
-            'fileUrl': './node_modules/can-route/package.json',
-            'main': 'can-route',
+            'name': 'can-dom-events',
+            'version': '1.3.0',
+            'fileUrl': './node_modules/can-dom-events/package.json',
+            'main': 'can-dom-events',
             'resolutions': {
-                'can-route': '4.3.0',
-                'can-bind': '1.0.0',
-                'can-log': '1.0.0',
-                'can-queues': '1.1.2',
-                'can-symbol': '1.6.1',
-                'can-observation': '4.1.0',
-                'can-simple-observable': '2.2.0',
-                'can-simple-map': '4.2.0',
-                'can-reflect': '1.17.0',
-                'can-route-hash': '1.0.0',
-                'can-globals': '1.2.0',
                 'can-namespace': '1.0.0',
-                'can-diff': '1.4.0',
-                'can-param': '1.1.0',
-                'can-string': '1.0.0',
-                'can-deparam': '1.2.0'
-            }
-        },
-        {
-            'name': 'can-define',
-            'version': '2.5.5',
-            'fileUrl': './node_modules/can-define/package.json',
-            'main': 'can-define.js',
-            'resolutions': {
-                'can-construct': '3.3.1',
-                'can-define': '2.5.5',
-                'can-namespace': '1.0.0',
-                'can-log': '1.0.0',
-                'can-queues': '1.1.2',
-                'can-reflect': '1.17.0',
-                'can-event-queue': '1.1.0',
-                'can-observation-recorder': '1.2.0',
-                'can-symbol': '1.6.1',
-                'can-observation': '4.1.0',
-                'can-simple-observable': '2.2.0',
-                'can-assign': '1.2.0',
-                'can-string-to-any': '1.2.0',
-                'can-data-types': '1.2.0',
-                'can-define-lazy-value': '1.1.0'
-            }
-        },
-        {
-            'name': 'can-route-pushstate',
-            'version': '5.0.2',
-            'fileUrl': './node_modules/can-route-pushstate/package.json',
-            'main': 'can-route-pushstate',
-            'resolutions': {
-                'can-route': '4.3.0',
                 'can-dom-events': '1.3.0',
-                'can-reflect': '1.17.0',
-                'can-observation-recorder': '1.2.0',
+                'can-globals': '1.2.0',
                 'can-key-tree': '1.2.0',
-                'can-diff': '1.4.0',
-                'can-queues': '1.1.2',
-                'can-simple-observable': '2.2.0',
-                'can-globals': '1.2.0'
+                'can-reflect': '1.17.0'
             }
         },
         {
-            'name': 'uuid',
-            'version': '3.3.2',
-            'fileUrl': './node_modules/uuid/package.json',
-            'browser': {
-                'uuid#lib/rng': 'uuid#lib/rng-browser',
-                'uuid#lib/sha1': 'uuid#lib/sha1-browser',
-                'uuid#lib/md5': 'uuid#lib/md5-browser'
-            },
-            'resolutions': { 'uuid': '3.3.2' }
+            'name': 'can-namespace',
+            'version': '1.0.0',
+            'fileUrl': './node_modules/can-namespace/package.json',
+            'main': 'can-namespace',
+            'steal': { 'npmAlgorithm': 'flat' },
+            'resolutions': {}
         },
         {
             'name': 'can-ajax',
@@ -1473,72 +1494,12 @@ define('package.json!npm', [
                 'main': 'can-ajax'
             },
             'resolutions': {
-                'can-namespace': '1.0.0',
+                'can-globals': '1.2.0',
                 'can-reflect': '1.17.0',
+                'can-namespace': '1.0.0',
                 'can-parse-uri': '1.2.0',
-                'can-param': '1.1.0',
-                'can-globals': '1.2.0'
+                'can-param': '1.1.0'
             }
-        },
-        {
-            'name': 'can-dom-events',
-            'version': '1.3.0',
-            'fileUrl': './node_modules/can-dom-events/package.json',
-            'main': 'can-dom-events',
-            'resolutions': {
-                'can-namespace': '1.0.0',
-                'can-dom-events': '1.3.0',
-                'can-key-tree': '1.2.0',
-                'can-reflect': '1.17.0',
-                'can-globals': '1.2.0'
-            }
-        },
-        {
-            'name': 'can-namespace',
-            'version': '1.0.0',
-            'fileUrl': './node_modules/can-namespace/package.json',
-            'main': 'can-namespace',
-            'steal': { 'npmAlgorithm': 'flat' },
-            'resolutions': {}
-        },
-        {
-            'name': 'can-define',
-            'version': '2.4.0',
-            'fileUrl': './node_modules/passbolt-mad/node_modules/can-define/package.json',
-            'main': 'can-define.js',
-            'resolutions': {
-                'can-construct': '3.3.1',
-                'can-define': '2.4.0',
-                'can-observation-recorder': '1.2.0',
-                'can-namespace': '1.0.0',
-                'can-log': '1.0.0',
-                'can-reflect': '1.17.0',
-                'can-symbol': '1.6.1',
-                'can-queues': '1.1.2',
-                'can-event-queue': '1.1.0',
-                'can-assign': '1.2.0',
-                'can-diff': '1.4.0',
-                'can-observation': '4.1.0',
-                'can-simple-observable': '2.2.0',
-                'can-single-reference': '1.2.0',
-                'can-string-to-any': '1.2.0',
-                'can-define-lazy-value': '1.1.0',
-                'can-data-types': '1.2.0'
-            }
-        },
-        {
-            'name': 'can-dom-data',
-            'version': '1.0.1',
-            'fileUrl': './node_modules/can-dom-data/package.json',
-            'main': 'can-dom-data.js',
-            'steal': {
-                'npmIgnore': {
-                    'steal-tools': true,
-                    'testee': true
-                },
-                'main': 'can-dom-data'
-            },
-            'resolutions': { 'can-namespace': '1.0.0' }
         },
         {
             'name': 'steal-config-utils',
@@ -1558,84 +1519,22 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-ajax',
-            'version': '1.3.0',
-            'fileUrl': './node_modules/can-connect/node_modules/can-ajax/package.json',
-            'main': 'dist/cjs/can-ajax',
+            'name': 'can-observation-recorder',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-observation-recorder/package.json',
+            'main': './can-observation-recorder.js',
             'steal': {
                 'npmIgnore': {
                     'testee': true,
                     'generator-donejs': true,
                     'donejs-cli': true,
                     'steal-tools': true
-                },
-                'main': 'can-ajax'
+                }
             },
             'resolutions': {
-                'can-globals': '1.2.0',
-                'can-reflect': '1.17.0',
                 'can-namespace': '1.0.0',
-                'can-parse-uri': '1.2.0',
-                'can-param': '1.1.0'
+                'can-symbol': '1.6.1'
             }
-        },
-        {
-            'name': 'can-make-rest',
-            'version': '0.1.3',
-            'fileUrl': './node_modules/can-make-rest/package.json',
-            'main': './can-make-rest.js',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                },
-                'plugins': [
-                    'steal-less',
-                    'steal-stache'
-                ],
-                'main': 'can-make-rest'
-            },
-            'browser': {},
-            'resolutions': { 'can-util': '3.12.0' }
-        },
-        {
-            'name': 'can-bind',
-            'version': '1.0.0',
-            'fileUrl': './node_modules/can-bind/package.json',
-            'main': 'can-bind',
-            'steal': {
-                'npmIgnore': {
-                    'steal-tools': true,
-                    'testee': true
-                },
-                'main': 'can-bind'
-            },
-            'resolutions': {
-                'can-reflect': '1.17.0',
-                'can-symbol': '1.6.1',
-                'can-namespace': '1.0.0',
-                'can-queues': '1.1.2',
-                'can-log': '1.0.0',
-                'can-reflect-dependencies': '1.1.0'
-            }
-        },
-        {
-            'name': 'can-log',
-            'version': '1.0.0',
-            'fileUrl': './node_modules/can-log/package.json',
-            'main': 'dist/cjs/can-log',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                },
-                'main': 'can-log'
-            },
-            'resolutions': { 'can-log': '1.0.0' }
         },
         {
             'name': 'can-queues',
@@ -1659,10 +1558,21 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-symbol',
-            'version': '1.6.1',
-            'fileUrl': './node_modules/can-symbol/package.json',
-            'main': 'can-symbol',
+            'name': 'can-reflect',
+            'version': '1.17.0',
+            'fileUrl': './node_modules/can-reflect/package.json',
+            'main': 'can-reflect',
+            'resolutions': {
+                'can-reflect': '1.17.0',
+                'can-namespace': '1.0.0',
+                'can-symbol': '1.6.1'
+            }
+        },
+        {
+            'name': 'can-key-tree',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-key-tree/package.json',
+            'main': 'dist/cjs/can-key-tree',
             'steal': {
                 'npmIgnore': {
                     'testee': true,
@@ -1670,9 +1580,61 @@ define('package.json!npm', [
                     'donejs-cli': true,
                     'steal-tools': true
                 },
-                'main': 'can-symbol'
+                'plugins': [
+                    'steal-less',
+                    'steal-stache'
+                ],
+                'main': 'can-key-tree'
             },
-            'resolutions': { 'can-namespace': '1.0.0' }
+            'resolutions': { 'can-reflect': '1.17.0' }
+        },
+        {
+            'name': 'can-simple-observable',
+            'version': '2.2.0',
+            'fileUrl': './node_modules/can-simple-observable/package.json',
+            'main': 'can-simple-observable',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'steal-tools': true
+                }
+            },
+            'resolutions': {
+                'can-simple-observable': '2.2.0',
+                'can-namespace': '1.0.0',
+                'can-symbol': '1.6.1',
+                'can-reflect': '1.17.0',
+                'can-observation-recorder': '1.2.0',
+                'can-event-queue': '1.1.0',
+                'can-log': '1.0.0',
+                'can-observation': '4.1.0',
+                'can-queues': '1.1.2'
+            }
+        },
+        {
+            'name': 'can-globals',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-globals/package.json',
+            'main': 'can-globals.js',
+            'resolutions': {
+                'can-globals': '1.2.0',
+                'can-namespace': '1.0.0',
+                'can-reflect': '1.17.0'
+            }
+        },
+        {
+            'name': 'can-diff',
+            'version': '1.4.0',
+            'fileUrl': './node_modules/can-diff/package.json',
+            'main': 'can-diff',
+            'steal': { 'main': 'can-diff' },
+            'resolutions': {
+                'can-reflect': '1.17.0',
+                'can-key-tree': '1.2.0',
+                'can-symbol': '1.6.1',
+                'can-diff': '1.4.0',
+                'can-queues': '1.1.2'
+            }
         },
         {
             'name': 'can-observation',
@@ -1692,27 +1654,20 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-simple-observable',
-            'version': '2.2.0',
-            'fileUrl': './node_modules/can-simple-observable/package.json',
-            'main': 'can-simple-observable',
+            'name': 'can-log',
+            'version': '1.0.0',
+            'fileUrl': './node_modules/can-log/package.json',
+            'main': 'dist/cjs/can-log',
             'steal': {
                 'npmIgnore': {
                     'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
                     'steal-tools': true
-                }
+                },
+                'main': 'can-log'
             },
-            'resolutions': {
-                'can-reflect': '1.17.0',
-                'can-simple-observable': '2.2.0',
-                'can-namespace': '1.0.0',
-                'can-symbol': '1.6.1',
-                'can-observation-recorder': '1.2.0',
-                'can-event-queue': '1.1.0',
-                'can-log': '1.0.0',
-                'can-observation': '4.1.0',
-                'can-queues': '1.1.2'
-            }
+            'resolutions': { 'can-log': '1.0.0' }
         },
         {
             'name': 'can-simple-map',
@@ -1740,15 +1695,41 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-reflect',
-            'version': '1.17.0',
-            'fileUrl': './node_modules/can-reflect/package.json',
-            'main': 'can-reflect',
+            'name': 'can-bind',
+            'version': '1.0.0',
+            'fileUrl': './node_modules/can-bind/package.json',
+            'main': 'can-bind',
+            'steal': {
+                'npmIgnore': {
+                    'steal-tools': true,
+                    'testee': true
+                },
+                'main': 'can-bind'
+            },
             'resolutions': {
                 'can-reflect': '1.17.0',
+                'can-symbol': '1.6.1',
                 'can-namespace': '1.0.0',
-                'can-symbol': '1.6.1'
+                'can-queues': '1.1.2',
+                'can-log': '1.0.0',
+                'can-reflect-dependencies': '1.1.0'
             }
+        },
+        {
+            'name': 'can-symbol',
+            'version': '1.6.1',
+            'fileUrl': './node_modules/can-symbol/package.json',
+            'main': 'can-symbol',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
+                    'steal-tools': true
+                },
+                'main': 'can-symbol'
+            },
+            'resolutions': { 'can-namespace': '1.0.0' }
         },
         {
             'name': 'can-route-hash',
@@ -1766,14 +1747,28 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-globals',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-globals/package.json',
-            'main': 'can-globals.js',
+            'name': 'can-define',
+            'version': '2.4.0',
+            'fileUrl': './node_modules/passbolt-mad/node_modules/can-define/package.json',
+            'main': 'can-define.js',
             'resolutions': {
-                'can-globals': '1.2.0',
+                'can-construct': '3.3.1',
+                'can-define': '2.4.0',
+                'can-observation-recorder': '1.2.0',
                 'can-namespace': '1.0.0',
-                'can-reflect': '1.17.0'
+                'can-log': '1.0.0',
+                'can-reflect': '1.17.0',
+                'can-symbol': '1.6.1',
+                'can-queues': '1.1.2',
+                'can-event-queue': '1.1.0',
+                'can-assign': '1.2.0',
+                'can-diff': '1.4.0',
+                'can-observation': '4.1.0',
+                'can-simple-observable': '2.2.0',
+                'can-string-to-any': '1.2.0',
+                'can-define-lazy-value': '1.1.0',
+                'can-data-types': '1.2.0',
+                'can-single-reference': '1.2.0'
             }
         },
         {
@@ -1805,28 +1800,24 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-observation-recorder',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-observation-recorder/package.json',
-            'main': './can-observation-recorder.js',
+            'name': 'can-dom-data',
+            'version': '1.0.1',
+            'fileUrl': './node_modules/can-dom-data/package.json',
+            'main': 'can-dom-data.js',
             'steal': {
                 'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                }
+                    'steal-tools': true,
+                    'testee': true
+                },
+                'main': 'can-dom-data'
             },
-            'resolutions': {
-                'can-namespace': '1.0.0',
-                'can-symbol': '1.6.1'
-            }
+            'resolutions': { 'can-namespace': '1.0.0' }
         },
         {
-            'name': 'can-key-tree',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-key-tree/package.json',
-            'main': 'dist/cjs/can-key-tree',
+            'name': 'can-make-rest',
+            'version': '0.1.3',
+            'fileUrl': './node_modules/can-make-rest/package.json',
+            'main': './can-make-rest.js',
             'steal': {
                 'npmIgnore': {
                     'testee': true,
@@ -1838,48 +1829,16 @@ define('package.json!npm', [
                     'steal-less',
                     'steal-stache'
                 ],
-                'main': 'can-key-tree'
+                'main': 'can-make-rest'
             },
-            'resolutions': { 'can-reflect': '1.17.0' }
+            'browser': {},
+            'resolutions': { 'can-util': '3.12.0' }
         },
         {
-            'name': 'can-diff',
-            'version': '1.4.0',
-            'fileUrl': './node_modules/can-diff/package.json',
-            'main': 'can-diff',
-            'steal': { 'main': 'can-diff' },
-            'resolutions': {
-                'can-reflect': '1.17.0',
-                'can-key-tree': '1.2.0',
-                'can-symbol': '1.6.1',
-                'can-diff': '1.4.0',
-                'can-queues': '1.1.2'
-            }
-        },
-        {
-            'name': 'can-types',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-types/package.json',
-            'main': 'can-types',
-            'resolutions': {
-                'can-namespace': '1.0.0',
-                'can-reflect': '1.17.0',
-                'can-symbol': '1.6.1',
-                'can-log': '1.0.0'
-            }
-        },
-        {
-            'name': 'can-validate-interface',
-            'version': '1.0.2',
-            'fileUrl': './node_modules/can-validate-interface/package.json',
-            'main': 'index.js',
-            'resolutions': {}
-        },
-        {
-            'name': 'can-parse-uri',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-parse-uri/package.json',
-            'main': 'can-parse-uri',
+            'name': 'can-ajax',
+            'version': '1.3.0',
+            'fileUrl': './node_modules/can-connect/node_modules/can-ajax/package.json',
+            'main': 'dist/cjs/can-ajax',
             'steal': {
                 'npmIgnore': {
                     'testee': true,
@@ -1887,27 +1846,14 @@ define('package.json!npm', [
                     'donejs-cli': true,
                     'steal-tools': true
                 },
-                'main': 'can-parse-uri'
+                'main': 'can-ajax'
             },
-            'resolutions': { 'can-namespace': '1.0.0' }
-        },
-        {
-            'name': 'can-control',
-            'version': '4.2.0',
-            'fileUrl': './node_modules/can-control/package.json',
-            'main': 'can-control',
             'resolutions': {
-                'can-construct': '3.3.1',
-                'can-namespace': '1.0.0',
-                'can-assign': '1.2.0',
+                'can-globals': '1.2.0',
                 'can-reflect': '1.17.0',
-                'can-observation': '4.1.0',
-                'can-event-queue': '1.1.0',
-                'can-log': '1.0.0',
-                'can-string': '1.0.0',
-                'can-stache-key': '1.4.0',
-                'can-dom-mutate': '1.1.0',
-                'can-key': '1.0.0'
+                'can-namespace': '1.0.0',
+                'can-parse-uri': '1.2.0',
+                'can-param': '1.1.0'
             }
         },
         {
@@ -1931,19 +1877,35 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-param',
-            'version': '1.1.0',
-            'fileUrl': './node_modules/can-param/package.json',
-            'main': 'can-param',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                }
-            },
-            'resolutions': { 'can-namespace': '1.0.0' }
+            'name': 'can-control',
+            'version': '4.2.0',
+            'fileUrl': './node_modules/can-control/package.json',
+            'main': 'can-control',
+            'resolutions': {
+                'can-construct': '3.3.1',
+                'can-namespace': '1.0.0',
+                'can-assign': '1.2.0',
+                'can-reflect': '1.17.0',
+                'can-observation': '4.1.0',
+                'can-event-queue': '1.1.0',
+                'can-log': '1.0.0',
+                'can-string': '1.0.0',
+                'can-dom-mutate': '1.1.0',
+                'can-key': '1.0.0',
+                'can-stache-key': '1.4.0'
+            }
+        },
+        {
+            'name': 'can-types',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-types/package.json',
+            'main': 'can-types',
+            'resolutions': {
+                'can-namespace': '1.0.0',
+                'can-reflect': '1.17.0',
+                'can-symbol': '1.6.1',
+                'can-log': '1.0.0'
+            }
         },
         {
             'name': 'can-assign',
@@ -1962,11 +1924,60 @@ define('package.json!npm', [
             'resolutions': { 'can-namespace': '1.0.0' }
         },
         {
+            'name': 'can-parse-uri',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-parse-uri/package.json',
+            'main': 'can-parse-uri',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
+                    'steal-tools': true
+                },
+                'main': 'can-parse-uri'
+            },
+            'resolutions': { 'can-namespace': '1.0.0' }
+        },
+        {
+            'name': 'can-param',
+            'version': '1.1.0',
+            'fileUrl': './node_modules/can-param/package.json',
+            'main': 'can-param',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
+                    'steal-tools': true
+                }
+            },
+            'resolutions': { 'can-namespace': '1.0.0' }
+        },
+        {
+            'name': 'can-validate-interface',
+            'version': '1.0.2',
+            'fileUrl': './node_modules/can-validate-interface/package.json',
+            'main': 'index.js',
+            'resolutions': {}
+        },
+        {
             'name': 'urijs',
             'version': '1.19.1',
             'fileUrl': './node_modules/urijs/package.json',
             'main': './src/URI',
             'resolutions': { 'urijs': '1.19.1' }
+        },
+        {
+            'name': 'can-view-parser',
+            'version': '4.1.0',
+            'fileUrl': './node_modules/can-view-parser/package.json',
+            'main': 'can-view-parser',
+            'resolutions': {
+                'can-namespace': '1.0.0',
+                'can-log': '1.0.0',
+                'can-attribute-encoder': '1.1.0'
+            }
         },
         {
             'name': 'can-stache',
@@ -1981,12 +1992,12 @@ define('package.json!npm', [
                 'can-assign': '1.2.0',
                 'can-reflect': '1.17.0',
                 'can-view-parser': '4.1.0',
-                'can-import-module': '1.2.0',
-                'can-view-target': '4.1.0',
-                'can-attribute-encoder': '1.1.0',
                 'can-stache-ast': '1.0.0',
+                'can-import-module': '1.2.0',
                 'can-view-callbacks': '4.3.0',
                 'can-view-nodelist': '4.3.0',
+                'can-attribute-encoder': '1.1.0',
+                'can-view-target': '4.1.0',
                 'can-dom-mutate': '1.1.0',
                 'can-observation': '4.1.0',
                 'can-observation-recorder': '1.2.0',
@@ -1994,12 +2005,12 @@ define('package.json!npm', [
                 'can-dom-data': '1.0.1',
                 'can-symbol': '1.6.1',
                 'can-define-lazy-value': '1.1.0',
-                'can-view-scope': '4.5.0',
                 'can-view-live': '4.2.0',
-                'can-join-uris': '1.2.0',
+                'can-view-scope': '4.5.0',
+                'can-dom-data-state': '1.0.1',
                 'can-stache-helpers': '1.2.0',
                 'can-fragment': '1.2.0',
-                'can-dom-data-state': '1.0.1',
+                'can-join-uris': '1.2.0',
                 'can-simple-observable': '2.2.0'
             }
         },
@@ -2009,17 +2020,6 @@ define('package.json!npm', [
             'fileUrl': './node_modules/string-hash/package.json',
             'main': './index',
             'resolutions': {}
-        },
-        {
-            'name': 'can-view-parser',
-            'version': '4.1.0',
-            'fileUrl': './node_modules/can-view-parser/package.json',
-            'main': 'can-view-parser',
-            'resolutions': {
-                'can-namespace': '1.0.0',
-                'can-log': '1.0.0',
-                'can-attribute-encoder': '1.1.0'
-            }
         },
         {
             'name': 'can-deparam',
@@ -2037,53 +2037,21 @@ define('package.json!npm', [
             'resolutions': { 'can-namespace': '1.0.0' }
         },
         {
-            'name': 'xregexp',
-            'version': '3.2.0',
-            'fileUrl': './node_modules/xregexp/package.json',
-            'main': 'xregexp-all.js',
-            'resolutions': {}
-        },
-        {
             'name': 'can-reflect-dependencies',
             'version': '1.1.0',
             'fileUrl': './node_modules/can-reflect-dependencies/package.json',
             'main': 'can-reflect-dependencies.js',
             'resolutions': {
                 'can-reflect-dependencies': '1.1.0',
-                'can-reflect': '1.17.0',
-                'can-symbol': '1.6.1'
+                'can-symbol': '1.6.1',
+                'can-reflect': '1.17.0'
             }
         },
         {
-            'name': 'moment',
-            'version': '2.22.2',
-            'fileUrl': './node_modules/moment/package.json',
-            'main': './moment.js',
-            'jspm': {},
-            'resolutions': {}
-        },
-        {
-            'name': 'moment-timezone',
-            'version': '0.5.21',
-            'fileUrl': './node_modules/moment-timezone/package.json',
-            'main': './index.js',
-            'jspm': { 'main': 'builds/moment-timezone-with-data' },
-            'resolutions': { 'moment': '2.22.2' }
-        },
-        {
-            'name': 'can-string-to-any',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-string-to-any/package.json',
-            'main': 'can-string-to-any',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                },
-                'main': 'can-string-to-any'
-            },
+            'name': 'xregexp',
+            'version': '3.2.0',
+            'fileUrl': './node_modules/xregexp/package.json',
+            'main': 'xregexp-all.js',
             'resolutions': {}
         },
         {
@@ -2103,21 +2071,6 @@ define('package.json!npm', [
             'resolutions': { 'can-reflect': '1.17.0' }
         },
         {
-            'name': 'can-single-reference',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-single-reference/package.json',
-            'main': 'can-single-reference',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                }
-            },
-            'resolutions': { 'can-cid': '1.3.0' }
-        },
-        {
             'name': 'can-define-lazy-value',
             'version': '1.1.0',
             'fileUrl': './node_modules/can-define-lazy-value/package.json',
@@ -2131,10 +2084,10 @@ define('package.json!npm', [
             'resolutions': {}
         },
         {
-            'name': 'can-stache-key',
-            'version': '1.4.0',
-            'fileUrl': './node_modules/can-stache-key/package.json',
-            'main': 'can-stache-key',
+            'name': 'can-string-to-any',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-string-to-any/package.json',
+            'main': 'can-string-to-any',
             'steal': {
                 'npmIgnore': {
                     'testee': true,
@@ -2142,15 +2095,25 @@ define('package.json!npm', [
                     'donejs-cli': true,
                     'steal-tools': true
                 },
-                'main': 'can-stache-key'
+                'main': 'can-string-to-any'
             },
-            'resolutions': {
-                'can-observation-recorder': '1.2.0',
-                'can-log': '1.0.0',
-                'can-symbol': '1.6.1',
-                'can-reflect': '1.17.0',
-                'can-reflect-promise': '2.1.0'
-            }
+            'resolutions': {}
+        },
+        {
+            'name': 'moment',
+            'version': '2.22.2',
+            'fileUrl': './node_modules/moment/package.json',
+            'main': './moment.js',
+            'jspm': {},
+            'resolutions': {}
+        },
+        {
+            'name': 'moment-timezone',
+            'version': '0.5.21',
+            'fileUrl': './node_modules/moment-timezone/package.json',
+            'main': './index.js',
+            'jspm': { 'main': 'builds/moment-timezone-with-data' },
+            'resolutions': { 'moment': '2.22.2' }
         },
         {
             'name': 'can-dom-mutate',
@@ -2187,6 +2150,43 @@ define('package.json!npm', [
             }
         },
         {
+            'name': 'can-stache-key',
+            'version': '1.4.0',
+            'fileUrl': './node_modules/can-stache-key/package.json',
+            'main': 'can-stache-key',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
+                    'steal-tools': true
+                },
+                'main': 'can-stache-key'
+            },
+            'resolutions': {
+                'can-observation-recorder': '1.2.0',
+                'can-log': '1.0.0',
+                'can-symbol': '1.6.1',
+                'can-reflect': '1.17.0',
+                'can-reflect-promise': '2.1.0'
+            }
+        },
+        {
+            'name': 'can-single-reference',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-single-reference/package.json',
+            'main': 'can-single-reference',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
+                    'steal-tools': true
+                }
+            },
+            'resolutions': { 'can-cid': '1.3.0' }
+        },
+        {
             'name': 'can-import-module',
             'version': '1.2.0',
             'fileUrl': './node_modules/can-import-module/package.json',
@@ -2194,34 +2194,6 @@ define('package.json!npm', [
             'resolutions': {
                 'can-globals': '1.2.0',
                 'can-namespace': '1.0.0'
-            }
-        },
-        {
-            'name': 'can-view-target',
-            'version': '4.1.0',
-            'fileUrl': './node_modules/can-view-target/package.json',
-            'main': 'can-view-target',
-            'resolutions': {
-                'can-globals': '1.2.0',
-                'can-dom-mutate': '1.1.0',
-                'can-namespace': '1.0.0'
-            }
-        },
-        {
-            'name': 'can-attribute-encoder',
-            'version': '1.1.0',
-            'fileUrl': './node_modules/can-attribute-encoder/package.json',
-            'main': 'can-attribute-encoder',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'steal-tools': true
-                },
-                'main': 'can-attribute-encoder'
-            },
-            'resolutions': {
-                'can-namespace': '1.0.0',
-                'can-log': '1.0.0'
             }
         },
         {
@@ -2252,11 +2224,32 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-cid',
-            'version': '1.3.0',
-            'fileUrl': './node_modules/can-cid/package.json',
-            'main': 'can-cid',
-            'resolutions': { 'can-namespace': '1.0.0' }
+            'name': 'can-attribute-encoder',
+            'version': '1.1.0',
+            'fileUrl': './node_modules/can-attribute-encoder/package.json',
+            'main': 'can-attribute-encoder',
+            'steal': {
+                'npmIgnore': {
+                    'testee': true,
+                    'steal-tools': true
+                },
+                'main': 'can-attribute-encoder'
+            },
+            'resolutions': {
+                'can-namespace': '1.0.0',
+                'can-log': '1.0.0'
+            }
+        },
+        {
+            'name': 'can-view-target',
+            'version': '4.1.0',
+            'fileUrl': './node_modules/can-view-target/package.json',
+            'main': 'can-view-target',
+            'resolutions': {
+                'can-globals': '1.2.0',
+                'can-dom-mutate': '1.1.0',
+                'can-namespace': '1.0.0'
+            }
         },
         {
             'name': 'can-reflect-promise',
@@ -2271,6 +2264,45 @@ define('package.json!npm', [
                 'can-queues': '1.1.2',
                 'can-key-tree': '1.2.0',
                 'can-log': '1.0.0'
+            }
+        },
+        {
+            'name': 'can-cid',
+            'version': '1.3.0',
+            'fileUrl': './node_modules/can-cid/package.json',
+            'main': 'can-cid',
+            'resolutions': { 'can-namespace': '1.0.0' }
+        },
+        {
+            'name': 'can-view-live',
+            'version': '4.2.0',
+            'fileUrl': './node_modules/can-view-live/package.json',
+            'main': 'can-view-live',
+            'steal': {
+                'npmIgnore': {
+                    'documentjs': true,
+                    'testee': true,
+                    'generator-donejs': true,
+                    'donejs-cli': true,
+                    'steal-tools': true
+                },
+                'main': 'can-view-live'
+            },
+            'resolutions': {
+                'can-view-live': '4.2.0',
+                'can-reflect': '1.17.0',
+                'can-queues': '1.1.2',
+                'can-view-parser': '4.1.0',
+                'can-dom-mutate': '1.1.0',
+                'can-view-nodelist': '4.3.0',
+                'can-fragment': '1.2.0',
+                'can-reflect-dependencies': '1.1.0',
+                'can-view-callbacks': '4.3.0',
+                'can-symbol': '1.6.1',
+                'can-simple-observable': '2.2.0',
+                'can-diff': '1.4.0',
+                'can-child-nodes': '1.2.0',
+                'can-attribute-observable': '1.0.0'
             }
         },
         {
@@ -2297,46 +2329,23 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-view-live',
-            'version': '4.2.0',
-            'fileUrl': './node_modules/can-view-live/package.json',
-            'main': 'can-view-live',
+            'name': 'can-dom-data-state',
+            'version': '1.0.1',
+            'fileUrl': './node_modules/can-dom-data-state/package.json',
+            'main': 'can-dom-data-state.js',
             'steal': {
                 'npmIgnore': {
-                    'documentjs': true,
                     'testee': true,
                     'generator-donejs': true,
                     'donejs-cli': true,
                     'steal-tools': true
                 },
-                'main': 'can-view-live'
+                'main': 'can-dom-data-state'
             },
             'resolutions': {
-                'can-view-live': '4.2.0',
-                'can-view-parser': '4.1.0',
-                'can-dom-mutate': '1.1.0',
-                'can-view-nodelist': '4.3.0',
-                'can-fragment': '1.2.0',
-                'can-reflect': '1.17.0',
-                'can-reflect-dependencies': '1.1.0',
-                'can-symbol': '1.6.1',
-                'can-queues': '1.1.2',
-                'can-view-callbacks': '4.3.0',
-                'can-simple-observable': '2.2.0',
-                'can-diff': '1.4.0',
-                'can-child-nodes': '1.2.0',
-                'can-attribute-observable': '1.0.0'
-            }
-        },
-        {
-            'name': 'can-join-uris',
-            'version': '1.2.0',
-            'fileUrl': './node_modules/can-join-uris/package.json',
-            'main': 'can-join-uris',
-            'steal': {},
-            'resolutions': {
                 'can-namespace': '1.0.0',
-                'can-parse-uri': '1.2.0'
+                'can-dom-mutate': '1.1.0',
+                'can-cid': '1.3.0'
             }
         },
         {
@@ -2375,23 +2384,14 @@ define('package.json!npm', [
             }
         },
         {
-            'name': 'can-dom-data-state',
-            'version': '1.0.1',
-            'fileUrl': './node_modules/can-dom-data-state/package.json',
-            'main': 'can-dom-data-state.js',
-            'steal': {
-                'npmIgnore': {
-                    'testee': true,
-                    'generator-donejs': true,
-                    'donejs-cli': true,
-                    'steal-tools': true
-                },
-                'main': 'can-dom-data-state'
-            },
+            'name': 'can-join-uris',
+            'version': '1.2.0',
+            'fileUrl': './node_modules/can-join-uris/package.json',
+            'main': 'can-join-uris',
+            'steal': {},
             'resolutions': {
                 'can-namespace': '1.0.0',
-                'can-dom-mutate': '1.1.0',
-                'can-cid': '1.3.0'
+                'can-parse-uri': '1.2.0'
             }
         },
         {
@@ -38275,17 +38275,15 @@ define('app/net/ajax', [
     'passbolt-mad/config/config',
     'passbolt-mad/component/dialog',
     'passbolt-mad/control/bus',
-    'passbolt-mad/net/response',
     'app/component/session/session_expired',
     'app/component/mfa/mfa_required'
-], function (exports, _ajax, _config, _dialog, _bus, _response, _session_expired, _mfa_required) {
+], function (exports, _ajax, _config, _dialog, _bus, _session_expired, _mfa_required) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var _ajax2 = _interopRequireDefault(_ajax);
     var _config2 = _interopRequireDefault(_config);
     var _dialog2 = _interopRequireDefault(_dialog);
     var _bus2 = _interopRequireDefault(_bus);
-    var _response2 = _interopRequireDefault(_response);
     var _session_expired2 = _interopRequireDefault(_session_expired);
     var _mfa_required2 = _interopRequireDefault(_mfa_required);
     function _interopRequireDefault(obj) {
@@ -38304,7 +38302,6 @@ define('app/net/ajax', [
             var _this = this;
             return this._super(request, data).then(function (data) {
                 _this._triggerNotification(request, request._response);
-                _this._mfaRequired(request, request._response);
                 return Promise.resolve(data);
             });
         },
@@ -38313,6 +38310,7 @@ define('app/net/ajax', [
             return this._super(request, data).then(null, function (data) {
                 _this2._triggerNotification(request, request._response);
                 _this2._sessionExpired(request, data);
+                _this2._mfaRequired(request, request._response);
                 return Promise.reject(data);
             });
         },
@@ -38327,7 +38325,7 @@ define('app/net/ajax', [
         },
         _mfaRequired: function _mfaRequired(request, response) {
             if (response.header) {
-                if (response.header.code === 200 && response.header.url.startsWith('/mfa/verify')) {
+                if (response.header.code === 403 && response.header.url.startsWith('/mfa/verify/error')) {
                     if ($('.mfa-required-dialog').length > 0) {
                         return;
                     }
@@ -38338,11 +38336,7 @@ define('app/net/ajax', [
                             'dialog-wrapper'
                         ]
                     }).start();
-                    var url = response.header.url.replace('.json', '');
-                    if (url.startsWith('/')) {
-                        url = url.substring(1);
-                    }
-                    dialog.add(_mfa_required2.default, { url: url });
+                    dialog.add(_mfa_required2.default, { url: '/' });
                 }
                 return true;
             }
@@ -38350,7 +38344,8 @@ define('app/net/ajax', [
         },
         _sessionExpired: function _sessionExpired(request, response) {
             if (response.header) {
-                if (response.header.status === _response2.default.STATUS_ERROR && response.header.code === 403) {
+                var sessionExpiredAutoRedirect = request.sessionExpiredAutoRedirect !== undefined ? request.sessionExpiredAutoRedirect : true;
+                if (response.header.code === 403 && response.header.message === 'You need to login to access this location.' && sessionExpiredAutoRedirect) {
                     if ($('.session-expired-dialog').length > 0) {
                         return;
                     }
@@ -43413,8 +43408,10 @@ define('app/component/settings/workspace_breadcrumb', [
                 id: (0, _v2.default)(),
                 label: __('All users'),
                 action: function action() {
-                    var workspace = 'user';
-                    _bus2.default.trigger('request_workspace', { workspace: workspace });
+                    return _canRoute2.default.data.update({
+                        controller: 'User',
+                        action: 'index'
+                    });
                 }
             });
             this.menuItems.push(allUsersItem);
@@ -43422,8 +43419,10 @@ define('app/component/settings/workspace_breadcrumb', [
                 id: (0, _v2.default)(),
                 label: _user2.default.getCurrent().profile.fullName(),
                 action: function action() {
-                    var section = 'profile';
-                    _bus2.default.trigger('request_settings_section', { section: section });
+                    return _canRoute2.default.data.update({
+                        controller: 'Settings',
+                        action: 'profile'
+                    });
                 }
             });
             this.menuItems.push(profileItem);
@@ -43444,6 +43443,13 @@ define('app/component/settings/workspace_breadcrumb', [
             this.sectionMenuItems['theme'] = [new _action2.default({
                     id: (0, _v2.default)(),
                     label: __('Theme'),
+                    action: function action() {
+                        return;
+                    }
+                })];
+            this.sectionMenuItems['mfa'] = [new _action2.default({
+                    id: (0, _v2.default)(),
+                    label: __('Multi factor authentication'),
                     action: function action() {
                         return;
                     }
@@ -45944,6 +45950,10 @@ define('app/component/settings/workspace_primary_menu', [
                 this.options.editButton.state.hidden = true;
                 this.options.publicKeyButton.state.hidden = false;
                 this.options.privateKeyButton.state.hidden = false;
+            } else {
+                this.options.editButton.state.hidden = true;
+                this.options.publicKeyButton.state.hidden = true;
+                this.options.privateKeyButton.state.hidden = true;
             }
         },
         afterStart: function afterStart() {
@@ -49066,159 +49076,62 @@ define('app/component/settings/theme', [
     });
     exports.default = ThemeComponent;
 });
-/*app/view/template/component/settings/mfa.stache!steal-stache@4.1.2#steal-stache*/
-define('app/view/template/component/settings/mfa.stache!steal-stache@4.1.2#steal-stache', [
-    'module',
-    'can-stache',
-    'can-stache/src/mustache_core',
-    'can-view-import@4.1.0#can-view-import',
-    'can-stache-bindings@4.3.0#can-stache-bindings'
-], function (module, stache, mustacheCore) {
-    var renderer = stache('app/view/template/component/settings/mfa.stache', [
-        {
-            'tokenType': 'start',
-            'args': [
-                'iframe',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_mfa_iframe',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'src',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                '/mfa/setup/totp/start',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'src',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'width',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                '100%',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'width',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'height',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                '100%',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'height',
-                1
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'iframe',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'iframe',
-                1
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                1
-            ]
-        },
-        {
-            'tokenType': 'done',
-            'args': [2]
+/*app/model/utility/session*/
+define('app/model/utility/session', [
+    'exports',
+    'app/net/ajax',
+    'passbolt-mad/config/config'
+], function (exports, _ajax, _config) {
+    'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var _ajax2 = _interopRequireDefault(_ajax);
+    var _config2 = _interopRequireDefault(_config);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError('Cannot call a class as a function');
         }
-    ]);
-    return function (scope, options, nodeList) {
-        var moduleOptions = Object.assign({}, options);
-        if (moduleOptions.helpers) {
-            moduleOptions.helpers = Object.assign({ module: module }, moduleOptions.helpers);
-        } else {
-            moduleOptions.module = module;
-        }
-        return renderer(scope, moduleOptions, nodeList);
+    }
+    var Session = function Session() {
+        _classCallCheck(this, Session);
     };
+    Session.getTimeout = function () {
+        return _config2.default.read('server.app.session_timeout') * 60 * 1000;
+    };
+    Session.check = function (autoRedirect) {
+        autoRedirect = autoRedirect != undefined ? autoRedirect : true;
+        return _ajax2.default.request({
+            url: APP_URL + 'auth/checkSession.json',
+            type: 'GET',
+            sessionExpiredAutoRedirect: autoRedirect
+        });
+    };
+    exports.default = Session;
 });
 /*app/component/settings/mfa*/
 define('app/component/settings/mfa', [
     'exports',
     'passbolt-mad/component/component',
-    'app/view/template/component/settings/mfa.stache!'
-], function (exports, _component, _mfa) {
+    'passbolt-mad/helper/html',
+    'app/model/utility/session'
+], function (exports, _component, _html, _session) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var _component2 = _interopRequireDefault(_component);
-    var _mfa2 = _interopRequireDefault(_mfa);
+    var _html2 = _interopRequireDefault(_html);
+    var _session2 = _interopRequireDefault(_session);
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
     }
-    var MfaComponent = _component2.default.extend('passbolt.component.settings.mfa', { defaults: { template: _mfa2.default } }, {
+    var MfaComponent = _component2.default.extend('passbolt.component.settings.mfa', { defaults: {} }, {
         afterStart: function afterStart() {
+            var _this = this;
+            _session2.default.check().then(function () {
+                var iframeContent = '<iframe id=\'js_mfa_iframe\' src=\'' + APP_URL + '/mfa/setup/totp/start\' width=\'100%\' height=\'100%\'></iframe>';
+                _html2.default.create($(_this.element), 'inside_replace', iframeContent);
+            });
         }
     });
     exports.default = MfaComponent;
@@ -55944,26 +55857,8 @@ define('app/util/plugin', ['exports'], function (exports) {
             },
             {
                 key: 'insertShareIframe',
-                value: function insertShareIframe(resourceId, armored) {
-                    this.send('passbolt.plugin.resource_share', {
-                        resourceId: resourceId,
-                        armored: armored
-                    });
-                }
-            },
-            {
-                key: 'shareIframeRemovePermission',
-                value: function shareIframeRemovePermission(userId, isTemporaryPermission) {
-                    this.send('passbolt.share.remove_permission', {
-                        userId: userId,
-                        isTemporaryPermission: isTemporaryPermission
-                    });
-                }
-            },
-            {
-                key: 'shareIframeEncrypt',
-                value: function shareIframeEncrypt() {
-                    this.send('passbolt.share.encrypt');
+                value: function insertShareIframe(resourcesIds) {
+                    this.send('passbolt.plugin.resources_share', { resourcesIds: resourcesIds });
                 }
             },
             {
@@ -57712,20 +57607,12 @@ define('app/model/map/permission_type', [
             }]
     };
     PermissionType.formatToString = function (permId) {
-        var returnValue = '';
-        if (permId == undefined) {
-            console.error('Warning, PermissionType.toString called without permId');
-            return 'can read';
-        }
         switch (permId.toString()) {
         case PermissionType.ADMIN.toString():
-            returnValue = __('is %s', PermissionType.PERMISSION_TYPES[permId]);
-            break;
+            return __('is %s', PermissionType.PERMISSION_TYPES[permId]);
         default:
-            returnValue = __('can %s', PermissionType.PERMISSION_TYPES[permId]);
-            break;
+            return __('can %s', PermissionType.PERMISSION_TYPES[permId]);
         }
-        return returnValue;
     };
     exports.default = PermissionType;
 });
@@ -57773,25 +57660,9 @@ define('app/model/map/permission', [
         aro_foreign_key: 'string',
         aro_foreign_label: 'string',
         group: _group2.default,
-        user: _user2.default,
-        isAllowedTo: function isAllowedTo(permissionType) {
-            return this.type >= permissionType;
-        }
+        user: _user2.default
     });
     _map4.default.setReference('Permission', Permission);
-    Permission.List = _list2.default.extend({ '#': { Type: Permission } });
-    Permission.List.prototype.sortAlphabetically = function () {
-        this.sort(function (a, b) {
-            var aValue = a.user ? a.user.profile.first_name : a.group.name;
-            var bValue = b.user ? b.user.profile.first_name : b.group.name;
-            if (aValue < bValue) {
-                return -1;
-            } else if (aValue > bValue) {
-                return 1;
-            }
-            return 0;
-        });
-    };
     Permission.validationRules = {
         aro_foreign_key: [
             'required',
@@ -57809,6 +57680,22 @@ define('app/model/map/permission', [
             }
         ]
     };
+    Permission.prototype.isAllowedTo = function (permissionType) {
+        return this.type >= permissionType;
+    };
+    Permission.List = _list2.default.extend({ '#': { Type: Permission } });
+    Permission.List.prototype.sortAlphabetically = function () {
+        this.sort(function (a, b) {
+            var aValue = a.user ? a.user.profile.first_name : a.group.name;
+            var bValue = b.user ? b.user.profile.first_name : b.group.name;
+            if (aValue < bValue) {
+                return -1;
+            } else if (aValue > bValue) {
+                return 1;
+            }
+            return 0;
+        });
+    };
     Permission.connection = (0, _canConnect2.default)([
         _parse2.default,
         _url2.default,
@@ -57822,9 +57709,13 @@ define('app/model/map/permission', [
         url: {
             resource: '/',
             getListData: function getListData(params) {
+                var url = 'permissions.json';
+                if (params.aco_foreign_key) {
+                    url = 'permissions/{aco}/{aco_foreign_key}.json';
+                }
                 params['api-version'] = 'v2';
                 return _ajax2.default.request({
-                    url: 'permissions/{aco}/{aco_foreign_key}.json',
+                    url: url,
                     type: 'GET',
                     params: params
                 });
@@ -60253,18 +60144,8 @@ define('app/model/map/resource', [
             }
             return safeUri.toString();
         },
-        share: function share(params) {
-            var _this = this;
-            return _ajax2.default.request({
-                url: 'share/resource/' + this.id + '.json?api-version=v1',
-                type: 'PUT',
-                params: params
-            }).then(function () {
-                _this._reloadResource();
-            });
-        },
         _reloadResource: function _reloadResource() {
-            var _this2 = this;
+            var _this = this;
             var findOptions = {
                 id: this.id,
                 silentLoading: false,
@@ -60277,12 +60158,22 @@ define('app/model/map/resource', [
                 }
             };
             Resource.findOne(findOptions).then(null, function () {
-                Resource.dispatch('destroyed', [_this2]);
+                Resource.dispatch('destroyed', [_this]);
             });
         }
     });
     _map4.default.setReference('Resource', Resource);
     Resource.List = _list2.default.extend({ '#': { Type: Resource } });
+    Resource.List.prototype.sortAlphabetically = function () {
+        this.sort(function (a, b) {
+            if (a.name < b.name) {
+                return -1;
+            } else if (a.name > b.name) {
+                return 1;
+            }
+            return 0;
+        });
+    };
     Resource.validationRules = {
         id: [{ rule: 'uuid' }],
         name: [
@@ -78964,4539 +78855,6 @@ define('app/component/footer/notification', [
     });
     exports.default = NotificationComponent;
 });
-/*can-util@3.12.0#js/is-empty-object/is-empty-object*/
-define('can-util@3.12.0#js/is-empty-object/is-empty-object', [
-    'require',
-    'exports',
-    'module',
-    'can-namespace'
-], function (require, exports, module) {
-    'use strict';
-    var namespace = require('can-namespace');
-    module.exports = namespace.isEmptyObject = function (obj) {
-        for (var prop in obj) {
-            return false;
-        }
-        return true;
-    };
-});
-/*app/view/component/permission/permissions*/
-define('app/view/component/permission/permissions', [
-    'exports',
-    'can-dom-data',
-    'can-dom-events',
-    'passbolt-mad/view/view'
-], function (exports, _canDomData, _canDomEvents, _view) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _canDomData2 = _interopRequireDefault(_canDomData);
-    var _canDomEvents2 = _interopRequireDefault(_canDomEvents);
-    var _view2 = _interopRequireDefault(_view);
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-    }
-    var PermissionsView = _view2.default.extend('passbolt.view.component.permission.Permissions', {}, {
-        '{element} .js_perm_delete click': function elementJs_perm_deleteClick(el, ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            var $li = $(el).parents('li');
-            var permission = _canDomData2.default.get($li[0], 'passbolt.model.Permission');
-            _canDomEvents2.default.dispatch(this.element, {
-                type: 'request_permission_delete',
-                data: { permission: permission }
-            });
-        },
-        '{element} .js_share_rs_perm_type changed': function elementJs_share_rs_perm_typeChanged(el, ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            var data = ev.data;
-            var $li = $(el).parents('li');
-            var permission = _canDomData2.default.get($li[0], 'passbolt.model.Permission');
-            var type = data.value;
-            _canDomEvents2.default.dispatch(this.element, {
-                type: 'request_permission_edit',
-                data: {
-                    permission: permission,
-                    type: type
-                }
-            });
-        },
-        '{element} #js_perm_create_form_add_btn click': function elementJs_perm_create_form_add_btnClick(el, ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            $(el).trigger('submit');
-        }
-    });
-    exports.default = PermissionsView;
-});
-/*app/view/template/component/permission/permissions.stache!steal-stache@4.1.2#steal-stache*/
-define('app/view/template/component/permission/permissions.stache!steal-stache@4.1.2#steal-stache', [
-    'module',
-    'can-stache',
-    'can-stache/src/mustache_core',
-    'can-view-import@4.1.0#can-view-import',
-    'can-stache-bindings@4.3.0#can-stache-bindings'
-], function (module, stache, mustacheCore) {
-    var renderer = stache('app/view/template/component/permission/permissions.stache', [
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'form-content permission-edit',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                1
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                1
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'ul',
-                false,
-                2
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                2
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_permissions_list',
-                2
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                2
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                2
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'permissions scroll',
-                2
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                2
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'ul',
-                false,
-                2
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                2
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'ul',
-                3
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                3
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                4
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n',
-                4
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_permissions_changes',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'warning message hidden',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                6
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                6
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                6
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'span',
-                false,
-                7
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'span',
-                false,
-                7
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                'You need to save to apply the changes.',
-                7
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'span',
-                7
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                7
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                8
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                ' ',
-                8
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                '#if(canAdmin)',
-                8
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                8
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_permissions_create_wrapper',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'permission-add js_plugin_share_wrapper',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                9
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                9
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                9
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_perm_create_form_aro',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'hidden',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'value',
-                10
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'value',
-                10
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                10
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                10
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                11
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                11
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'passbolt-password-share-autocomplete-wrapper',
-                11
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                11
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                11
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                11
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                12
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                12
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                13
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                13
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                '/if',
-                14
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n\n',
-                14
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                17
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                17
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'submit-wrapper clearfix',
-                17
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                17
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                17
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                17
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_rs_share_save',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'submit',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'button primary',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'value',
-                18
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'save\') ',
-                18
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'value',
-                18
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                18
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                18
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'a',
-                false,
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js-dialog-cancel cancel',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                19
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'a',
-                false,
-                19
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'cancel\') ',
-                19
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'a',
-                19
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                19
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                20
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                20
-            ]
-        },
-        {
-            'tokenType': 'done',
-            'args': [21]
-        }
-    ]);
-    return function (scope, options, nodeList) {
-        var moduleOptions = Object.assign({}, options);
-        if (moduleOptions.helpers) {
-            moduleOptions.helpers = Object.assign({ module: module }, moduleOptions.helpers);
-        } else {
-            moduleOptions.module = module;
-        }
-        return renderer(scope, moduleOptions, nodeList);
-    };
-});
-/*app/view/template/component/permission/permission_list_item.stache!steal-stache@4.1.2#steal-stache*/
-define('app/view/template/component/permission/permission_list_item.stache!steal-stache@4.1.2#steal-stache', [
-    'module',
-    'can-stache',
-    'can-stache/src/mustache_core',
-    'can-view-import@4.1.0#can-view-import',
-    'can-stache-bindings@4.3.0#can-stache-bindings'
-], function (module, stache, mustacheCore) {
-    var renderer = stache('app/view/template/component/permission/permission_list_item.stache', [
-        {
-            'tokenType': 'start',
-            'args': [
-                'li',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                1
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' mappedItem.id ',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'row ',
-                1
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' cssClasses.join(\' \') ',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                1
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'li',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n    ',
-                1
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'avatar',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                3
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                3
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                3
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'img',
-                true,
-                4
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'src',
-                4
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' mappedItem.aroAvatarPath ',
-                4
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'src',
-                4
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'img',
-                true,
-                4
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                4
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                5
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n    ',
-                5
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'group',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                7
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                7
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                7
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'span',
-                false,
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'name',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                8
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'span',
-                false,
-                8
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' mappedItem.acoLabel ',
-                8
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'span',
-                8
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                8
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'span',
-                false,
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'details',
-                9
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                9
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'span',
-                false,
-                9
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'a',
-                false,
-                9
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'a',
-                false,
-                9
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' mappedItem.acoDetails ',
-                9
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'a',
-                9
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'span',
-                9
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                9
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                10
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n    ',
-                10
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                12
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                12
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'select rights',
-                12
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                12
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                12
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                12
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'form',
-                false,
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_share_rs_perm_',
-                13
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' mappedItem.id ',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_perm_edit_form',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                13
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'form',
-                false,
-                13
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                13
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'select',
-                false,
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_share_rs_perm_type permission',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                14
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'select',
-                false,
-                14
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                14
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'select',
-                15
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                15
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'form',
-                16
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                16
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                17
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n    ',
-                17
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_actions_rs_perm_',
-                19
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' mappedItem.id ',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'actions',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                19
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                19
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                19
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'a',
-                false,
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_perm_delete close',
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'title',
-                20
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'remove\') ',
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'title',
-                20
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'a',
-                false,
-                20
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                20
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'i',
-                false,
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'fa fa-times-circle',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                21
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'i',
-                false,
-                21
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'i',
-                21
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                21
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'span',
-                false,
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'visuallyhidden',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                22
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'span',
-                false,
-                22
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'remove\') ',
-                22
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'span',
-                22
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                22
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'a',
-                23
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                23
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                24
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n',
-                24
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'li',
-                26
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                26
-            ]
-        },
-        {
-            'tokenType': 'done',
-            'args': [27]
-        }
-    ]);
-    return function (scope, options, nodeList) {
-        var moduleOptions = Object.assign({}, options);
-        if (moduleOptions.helpers) {
-            moduleOptions.helpers = Object.assign({ module: module }, moduleOptions.helpers);
-        } else {
-            moduleOptions.module = module;
-        }
-        return renderer(scope, moduleOptions, nodeList);
-    };
-});
-/*app/component/permission/permissions*/
-define('app/component/permission/permissions', [
-    'exports',
-    'passbolt-mad/component/button',
-    'passbolt-mad/component/component',
-    'can-dom-events',
-    'passbolt-mad/form/element/dropdown',
-    'can-util/js/is-empty-object/is-empty-object',
-    'passbolt-mad/util/map/map',
-    'app/model/map/permission',
-    'app/model/map/permission_type',
-    'app/view/component/permission/permissions',
-    'app/util/plugin',
-    'passbolt-mad/form/element/textbox',
-    'passbolt-mad/component/tree',
-    'passbolt-mad/view/component/tree',
-    'uuid/v4',
-    'app/view/template/component/permission/permissions.stache!',
-    'app/view/template/component/permission/permission_list_item.stache!'
-], function (exports, _button, _component, _canDomEvents, _dropdown, _isEmptyObject, _map, _permission, _permission_type, _permissions, _plugin, _textbox, _tree, _tree3, _v, _permissions3, _permission_list_item) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _button2 = _interopRequireDefault(_button);
-    var _component2 = _interopRequireDefault(_component);
-    var _canDomEvents2 = _interopRequireDefault(_canDomEvents);
-    var _dropdown2 = _interopRequireDefault(_dropdown);
-    var _isEmptyObject2 = _interopRequireDefault(_isEmptyObject);
-    var _map2 = _interopRequireDefault(_map);
-    var _permission2 = _interopRequireDefault(_permission);
-    var _permission_type2 = _interopRequireDefault(_permission_type);
-    var _permissions2 = _interopRequireDefault(_permissions);
-    var _plugin2 = _interopRequireDefault(_plugin);
-    var _textbox2 = _interopRequireDefault(_textbox);
-    var _tree2 = _interopRequireDefault(_tree);
-    var _tree4 = _interopRequireDefault(_tree3);
-    var _v2 = _interopRequireDefault(_v);
-    var _permissions4 = _interopRequireDefault(_permissions3);
-    var _permission_list_item2 = _interopRequireDefault(_permission_list_item);
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-    }
-    var PermissionsComponent = _component2.default.extend('passbolt.component.permission.Permissions', {
-        defaults: {
-            label: 'Permissions Controller',
-            viewClass: _permissions2.default,
-            acoInstance: null,
-            changes: {},
-            template: _permissions4.default,
-            silentLoading: false,
-            loadedOnStart: false,
-            state: 'loading',
-            callbacks: { shared: null }
-        }
-    }, {
-        _permissionChangeTypeDropDowns: {},
-        _permissionDeleteButtons: {},
-        init: function init(el, opts) {
-            this._super(el, opts);
-            this.setViewData('canAdmin', this._isAdmin());
-        },
-        _isAdmin: function _isAdmin() {
-            var permission = this.options.acoInstance.permission;
-            return permission.isAllowedTo(_permission_type2.default.ADMIN);
-        },
-        onLoadedChange: function onLoadedChange(loaded) {
-            var saveButton = this.options.saveChangesButton;
-            var isDirty = !(0, _isEmptyObject2.default)(this.options.changes);
-            if (loaded) {
-                if (isDirty) {
-                    saveButton.state.disabled = false;
-                }
-            } else {
-                saveButton.state.disabled = true;
-            }
-            this._super(loaded);
-        },
-        afterStart: function afterStart() {
-            this.permList = new _tree2.default('#js_permissions_list', {
-                cssClasses: ['permissions'],
-                viewClass: _tree4.default,
-                itemClass: _permission2.default,
-                itemTemplate: _permission_list_item2.default,
-                map: new _map2.default({
-                    id: 'id',
-                    aroLabel: {
-                        key: 'aro',
-                        func: function func(aro) {
-                            return aro.toLowerCase();
-                        }
-                    },
-                    aroAvatarPath: {
-                        key: 'id',
-                        func: function func(user, map, obj) {
-                            if (obj.aro == 'User') {
-                                return obj.user.profile.avatarPath('small');
-                            } else {
-                                return 'img/avatar/group_default.png';
-                            }
-                        }
-                    },
-                    permType: 'PermissionType.serial',
-                    permLabel: {
-                        key: 'type',
-                        func: function func(type) {
-                            return _permission_type2.default.formatToString(type);
-                        }
-                    },
-                    acoLabel: {
-                        key: 'aco_foreign_key',
-                        func: function func(aco_foreign_key, map, obj) {
-                            if (obj.aro == 'User') {
-                                return obj.user.profile.fullName();
-                            } else if (obj.aro == 'Group') {
-                                return obj.group.name;
-                            }
-                        }
-                    },
-                    acoDetails: {
-                        key: 'aco_foreign_key',
-                        func: function func(aco_foreign_key, map, obj) {
-                            if (obj.aro == 'User') {
-                                return obj.user.username;
-                            } else if (obj.aro == 'Group') {
-                                return __('group');
-                            }
-                        }
-                    }
-                })
-            });
-            this.permList.start();
-            if (this._isAdmin()) {
-                this.permAroHiddenTxtbx = new _textbox2.default('#js_perm_create_form_aro', {}).start();
-                this.permAroHiddenTxtbx.setValue(this.options.acoInstance.id);
-                _plugin2.default.insertShareIframe(this.options.acoInstance.id, this.options.acoInstance.secrets[0].data);
-            }
-            this.load(this.options.acoInstance);
-            this.options.saveChangesButton = new _button2.default('#js_rs_share_save', { state: { disabled: true } }).start();
-            this.on();
-        },
-        loadPermission: function loadPermission(permission) {
-            var permTypeSelector = '#js_share_rs_perm_' + permission.id;
-            var actionSelector = '#js_actions_rs_perm_' + permission.id;
-            var permSelector = '#' + permission.id;
-            var availablePermissionTypes = {};
-            var permissionTypes = [
-                1,
-                7,
-                15
-            ];
-            for (var permType in permissionTypes) {
-                availablePermissionTypes[permissionTypes[permType]] = _permission_type2.default.formatToString(permissionTypes[permType]);
-            }
-            this.permList.insertItem(permission);
-            this._permissionChangeTypeDropDowns[permission.id] = new _dropdown2.default(permTypeSelector + ' .js_share_rs_perm_type', {
-                id: 'js_share_perm_type_' + permission.id,
-                emptyValue: false,
-                modelReference: 'passbolt.model.Permission.type',
-                availableValues: availablePermissionTypes,
-                state: { disabled: !this._isAdmin() }
-            }).start().setValue(permission.type);
-            this._permissionDeleteButtons[permission.id] = new _button2.default(actionSelector + ' .js_perm_delete', {
-                id: 'js_share_perm_delete_' + permission.id,
-                state: { disabled: !this._isAdmin() }
-            }).start();
-            if (permission.is_new) {
-                $(permSelector).addClass('permission-updated');
-                $(this.permList.element).scrollTop($(permSelector).offset().top);
-            }
-        },
-        load: function load(obj) {
-            var _this = this;
-            var self = this;
-            this.options.acoInstance = obj;
-            this.options.changes = {};
-            this.state.loaded = false;
-            return _permission2.default.findAll({
-                aco: 'resource',
-                aco_foreign_key: this.options.acoInstance.id,
-                contain: {
-                    group: 1,
-                    user: 1,
-                    'user.profile': 1
-                }
-            }).then(function (permissions) {
-                for (var i = 0; i < permissions.length; i++) {
-                    self.loadPermission(permissions[i]);
-                }
-                if (self._isAdmin()) {
-                    self.checkOwner();
-                }
-                _this.state.loaded = true;
-            }, function () {
-                console.log('an error occured');
-                console.log(arguments);
-            });
-        },
-        refresh: function refresh() {
-            var _this2 = this;
-            $('#js_permissions_changes').addClass('hidden');
-            this.permList.reset();
-            if (!this._isAdmin()) {
-                $('#js_permissions_create_wrapper', this.element).hide();
-            }
-            this.load(this.options.acoInstance).done(function () {
-                _this2.state.loaded = true;
-            });
-        },
-        showApplyFeedback: function showApplyFeedback() {
-            var $permissionChanges = $('#js_permissions_changes');
-            $permissionChanges.removeClass('hidden');
-            if (this.options.saveChangesButton.state.disabled) {
-                this.options.saveChangesButton.state.disabled = false;
-            }
-        },
-        hideApplyFeedback: function hideApplyFeedback() {
-            var $permissionChanges = $('#js_permissions_changes');
-            $permissionChanges.addClass('hidden');
-            if (!this.options.saveChangesButton.state.disabled) {
-                this.options.saveChangesButton.state.disabled = true;
-            }
-        },
-        checkOwner: function checkOwner() {
-            var self = this;
-            var ownerPermissions = [];
-            this.permList.options.items.forEach(function (item) {
-                var isOwner = false;
-                if (item.type == 15) {
-                    isOwner = true;
-                }
-                if (typeof self.options.changes[item.id] != 'undefined') {
-                    if (self.options.changes[item.id].Permission.type == 15) {
-                        isOwner = true;
-                    } else {
-                        isOwner = false;
-                    }
-                }
-                if (isOwner) {
-                    ownerPermissions.push(item);
-                }
-            });
-            if (ownerPermissions.length == 1) {
-                var permTypeDropdown = this._permissionChangeTypeDropDowns[ownerPermissions[0].id];
-                var permDeleteButton = this._permissionDeleteButtons[ownerPermissions[0].id];
-                permTypeDropdown.state.disabled = true;
-                permDeleteButton.state.disabled = true;
-            } else if (ownerPermissions.length > 1) {
-                for (var i in ownerPermissions) {
-                    var _permTypeDropdown = this._permissionChangeTypeDropDowns[ownerPermissions[i].id];
-                    var _permDeleteButton = this._permissionDeleteButtons[ownerPermissions[i].id];
-                    _permTypeDropdown.state.disabled = false;
-                    _permDeleteButton.state.disabled = false;
-                }
-            }
-        },
-        addPermission: function addPermission(permission) {
-            this.loadPermission(permission);
-            this.options.changes[permission.id] = {
-                Permission: {
-                    isNew: true,
-                    aco: permission.aco,
-                    aco_foreign_key: permission.aco_foreign_key,
-                    aro: permission.aro,
-                    aro_foreign_key: permission.aro_foreign_key,
-                    type: permission.type
-                }
-            };
-            $(this.element).trigger('changed', this.options.changes);
-            this.showApplyFeedback();
-        },
-        updateTypePermission: function updateTypePermission(id, type) {
-            if (this.options.changes[id]) {
-                this.options.changes[id].Permission.type = type;
-            } else {
-                this.options.changes[id] = {
-                    Permission: {
-                        id: id,
-                        type: type
-                    }
-                };
-            }
-            _canDomEvents2.default.dispatch(this.element, {
-                type: 'changed',
-                data: this.options.changes
-            });
-            this.showApplyFeedback();
-            this.checkOwner();
-        },
-        deletePermission: function deletePermission(permission) {
-            this.permList.removeItem(permission);
-            if (this.options.changes[permission.id] && this.options.changes[permission.id].Permission.isNew) {
-                delete this.options.changes[permission.id];
-                _plugin2.default.shareIframeRemovePermission(permission.aro_foreign_key, true);
-            } else {
-                this.options.changes[permission.id] = {
-                    Permission: {
-                        id: permission.id,
-                        delete: 1
-                    }
-                };
-                _plugin2.default.shareIframeRemovePermission(permission.aro_foreign_key, false);
-            }
-            if ($.isEmptyObject(this.options.changes)) {
-                this.hideApplyFeedback();
-            } else {
-                $(this.element).trigger('changed', this.options.changes);
-                this.showApplyFeedback();
-            }
-            this.checkOwner();
-        },
-        save: function save(armoreds) {
-            var data = {};
-            var acoForeignKey = this.options.acoInstance.id;
-            data.Permissions = [];
-            for (var i in this.options.changes) {
-                data.Permissions.push(this.options.changes[i]);
-            }
-            if (armoreds) {
-                data.Secrets = [];
-                for (var userId in armoreds) {
-                    data.Secrets.push({
-                        Secret: {
-                            resource_id: acoForeignKey,
-                            user_id: userId,
-                            data: armoreds[userId]
-                        }
-                    });
-                }
-            }
-            this.options.callbacks.submit(data);
-        },
-        '{acoInstance} destroyed': function acoInstanceDestroyed() {
-        },
-        '{mad.bus.element} resource_share_encrypted': function madBusElementResource_share_encrypted(el, ev) {
-            var armoreds = ev.data;
-            this.save(armoreds);
-        },
-        '{mad.bus.element} passbolt.plugin.share.canceled': function madBusElementPassboltPluginShareCanceled() {
-            this.state.loaded = true;
-        },
-        '{mad.bus.element} resource_share_add_permission': function madBusElementResource_share_add_permission(el, ev) {
-            var data = ev.data;
-            var dataV2 = {
-                aco: data.aco,
-                aco_foreign_key: data.aco_foreign_key,
-                aro: data.aro,
-                aro_foreign_key: data.aro_foreign_key,
-                type: data.type,
-                is_new: true
-            };
-            if (data.User) {
-                dataV2.user = {
-                    id: data.User.User.id,
-                    username: data.User.User.username,
-                    profile: {
-                        id: data.User.Profile.id,
-                        first_name: data.User.Profile.first_name,
-                        last_name: data.User.Profile.last_name
-                    },
-                    gpgkey: {
-                        id: data.User.Gpgkey.id,
-                        armored_key: data.User.Gpgkey.armored_key
-                    }
-                };
-            } else {
-                dataV2.group = {
-                    id: data.Group.Group.id,
-                    name: data.Group.Group.name
-                };
-            }
-            var permission = new _permission2.default(dataV2);
-            permission.id = (0, _v2.default)();
-            this.addPermission(permission);
-        },
-        '{element} request_permission_delete': function elementRequest_permission_delete(el, ev) {
-            var permission = ev.data.permission;
-            this.deletePermission(permission);
-        },
-        '{element} request_permission_edit': function elementRequest_permission_edit(el, ev) {
-            var permission = ev.data.permission;
-            var type = ev.data.type;
-            this.updateTypePermission(permission.id, type);
-        },
-        '{saveChangesButton.element} click': function saveChangesButtonElementClick() {
-            var usersIds = [];
-            this.state.loaded = false;
-            for (var permissionId in this.options.changes) {
-                if (this.options.changes[permissionId].Permission.isNew) {
-                    usersIds.push(this.options.changes[permissionId].Permission.aro_foreign_key);
-                }
-            }
-            _plugin2.default.shareIframeEncrypt();
-        }
-    });
-    exports.default = PermissionsComponent;
-});
-/*app/form/secret/create*/
-define('app/form/secret/create', [
-    'exports',
-    'passbolt-mad/form/form',
-    'passbolt-mad/form/element/textbox'
-], function (exports, _form, _textbox) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _form2 = _interopRequireDefault(_form);
-    var _textbox2 = _interopRequireDefault(_textbox);
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-    }
-    var CreateForm = _form2.default.extend('passbolt.form.secret.Create', {
-        defaults: {
-            action: 'create',
-            secret_i: null
-        }
-    }, {
-        afterStart: function afterStart() {
-            this.addElement(new _textbox2.default('#js_field_secret_id_' + this.options.secret_i, {
-                modelReference: 'Secret.id',
-                validate: false
-            }).start());
-            this.addElement(new _textbox2.default('#js_field_secret_user_id_' + this.options.secret_i, {
-                modelReference: 'Secret.user_id',
-                validate: false
-            }).start());
-            this.addElement(new _textbox2.default('#js_field_secret_data_' + this.options.secret_i, {
-                state: { hidden: true },
-                modelReference: 'Secret.data',
-                validate: false
-            }).start());
-            this.on();
-        }
-    });
-    exports.default = CreateForm;
-});
-/*app/view/template/form/resource/create.stache!steal-stache@4.1.2#steal-stache*/
-define('app/view/template/form/resource/create.stache!steal-stache@4.1.2#steal-stache', [
-    'module',
-    'can-stache',
-    'can-stache/src/mustache_core',
-    'can-view-import@4.1.0#can-view-import',
-    'can-stache-bindings@4.3.0#can-stache-bindings'
-], function (module, stache, mustacheCore) {
-    var renderer = stache('app/view/template/form/resource/create.stache', [
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'form-content',
-                1
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                1
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                1
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n\t',
-                1
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'hidden',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'Resource.id',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_resource_id',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'form_field',
-                3
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                3
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                3
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n\t',
-                3
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                5
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                5
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'input text required js_form_element_wrapper',
-                5
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                5
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                5
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                5
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'label',
-                false,
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'for',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_name',
-                6
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'for',
-                6
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'label',
-                false,
-                6
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'Name\') ',
-                6
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'label',
-                6
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                6
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'Resource.name',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'required',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'text',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_name',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'placeholder',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'name',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'placeholder',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'autofocus',
-                7
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'autofocus',
-                7
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                7
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                7
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_name_feedback',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'message',
-                8
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                8
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                8
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                8
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                9
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t',
-                9
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                10
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\n\t',
-                10
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                12
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                12
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'input text js_form_element_wrapper',
-                12
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                12
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                12
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                12
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'label',
-                false,
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'for',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_uri',
-                13
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'for',
-                13
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'label',
-                false,
-                13
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'URI\') ',
-                13
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'label',
-                13
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                13
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'Resource.uri',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'text',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_uri',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'placeholder',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'https://example.com/login',
-                14
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'placeholder',
-                14
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                14
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                14
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                15
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                15
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_uri_feedback',
-                15
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                15
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                15
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'message',
-                15
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                15
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                15
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                15
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                16
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t',
-                16
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                17
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\n\t',
-                17
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'input text js_form_element_wrapper',
-                19
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                19
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                19
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                19
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'label',
-                false,
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'for',
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_username',
-                20
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'for',
-                20
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'label',
-                false,
-                20
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'Username\') ',
-                20
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'label',
-                20
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                20
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'Resource.username',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'text',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_username',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'placeholder',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'name',
-                21
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'placeholder',
-                21
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                21
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                21
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_username_feedback',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'message',
-                22
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                22
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                22
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                22
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                23
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t',
-                23
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                24
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n\t',
-                24
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                26
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                26
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'input text required js_form_element_wrapper js_form_secret_wrapper',
-                26
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                26
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                26
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                26
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'label',
-                false,
-                27
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'for',
-                27
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_secret_data_0',
-                27
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'for',
-                27
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'label',
-                false,
-                27
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'Password\') ',
-                27
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'label',
-                27
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n        ',
-                27
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                29
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                29
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_secret_edit_0',
-                29
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                29
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                29
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_secret_edit_form',
-                29
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                29
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                29
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                29
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'hidden',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'passbolt.model.Secret.id',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_secret_id_0',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_secret_id form_field',
-                30
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                30
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                30
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                30
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'hidden',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'passbolt.model.Secret.user_id',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_secret_user_id_0',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_secret_user_id form_field',
-                31
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                31
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                31
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n            ',
-                31
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'textarea',
-                false,
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'passbolt.model.Secret.data',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_secret_data_0',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'form_field js_field_secret_data hidden',
-                32
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                32
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'textarea',
-                false,
-                32
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'textarea',
-                32
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n        ',
-                32
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                33
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t',
-                33
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                34
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n\t',
-                34
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                36
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                36
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'input textarea js_form_element_wrapper',
-                36
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                36
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                36
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                36
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'label',
-                false,
-                37
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'for',
-                37
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_description',
-                37
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'for',
-                37
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'label',
-                false,
-                37
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'Description\') ',
-                37
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'label',
-                37
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                37
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'textarea',
-                false,
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'name',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'Resource.description',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'name',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'required',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_description',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'placeholder',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'add a description',
-                38
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'placeholder',
-                38
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'textarea',
-                false,
-                38
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                38
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'textarea',
-                39
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                39
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                40
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'id',
-                40
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js_field_description_feedback',
-                40
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'id',
-                40
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                40
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'message',
-                40
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                40
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                40
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t\t',
-                40
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                41
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\t',
-                41
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                42
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n',
-                42
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                44
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n\n',
-                44
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'div',
-                false,
-                46
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                46
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'submit-wrapper clearfix',
-                46
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                46
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'div',
-                false,
-                46
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                46
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'input',
-                true,
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'type',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'submit',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'type',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'button primary',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'value',
-                47
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'save\')',
-                47
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'value',
-                47
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'input',
-                true,
-                47
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n    ',
-                47
-            ]
-        },
-        {
-            'tokenType': 'start',
-            'args': [
-                'a',
-                false,
-                48
-            ]
-        },
-        {
-            'tokenType': 'attrStart',
-            'args': [
-                'class',
-                48
-            ]
-        },
-        {
-            'tokenType': 'attrValue',
-            'args': [
-                'js-dialog-cancel cancel',
-                48
-            ]
-        },
-        {
-            'tokenType': 'attrEnd',
-            'args': [
-                'class',
-                48
-            ]
-        },
-        {
-            'tokenType': 'end',
-            'args': [
-                'a',
-                false,
-                48
-            ]
-        },
-        {
-            'tokenType': 'special',
-            'args': [
-                ' __(\'cancel\')',
-                48
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'a',
-                48
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                48
-            ]
-        },
-        {
-            'tokenType': 'close',
-            'args': [
-                'div',
-                49
-            ]
-        },
-        {
-            'tokenType': 'chars',
-            'args': [
-                '\n',
-                49
-            ]
-        },
-        {
-            'tokenType': 'done',
-            'args': [50]
-        }
-    ]);
-    return function (scope, options, nodeList) {
-        var moduleOptions = Object.assign({}, options);
-        if (moduleOptions.helpers) {
-            moduleOptions.helpers = Object.assign({ module: module }, moduleOptions.helpers);
-        } else {
-            moduleOptions.module = module;
-        }
-        return renderer(scope, moduleOptions, nodeList);
-    };
-});
-/*app/form/resource/create*/
-define('app/form/resource/create', [
-    'exports',
-    'can-dom-events',
-    'passbolt-mad/form/feedback',
-    'passbolt-mad/form/form',
-    'passbolt-mad/control/bus',
-    'app/form/secret/create',
-    'passbolt-mad/form/element/textbox',
-    'app/model/map/user',
-    'app/view/template/form/resource/create.stache!'
-], function (exports, _canDomEvents, _feedback, _form, _bus, _create, _textbox, _user, _create3) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _canDomEvents2 = _interopRequireDefault(_canDomEvents);
-    var _feedback2 = _interopRequireDefault(_feedback);
-    var _form2 = _interopRequireDefault(_form);
-    var _bus2 = _interopRequireDefault(_bus);
-    var _create2 = _interopRequireDefault(_create);
-    var _textbox2 = _interopRequireDefault(_textbox);
-    var _user2 = _interopRequireDefault(_user);
-    var _create4 = _interopRequireDefault(_create3);
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-    }
-    var CreateForm = _form2.default.extend('passbolt.form.resource.Create', {
-        defaults: {
-            secretField: null,
-            action: 'create',
-            secretsForms: [],
-            resource: null,
-            template: _create4.default,
-            lastValidationResult: false
-        }
-    }, {
-        beforeRender: function beforeRender() {
-            this._super();
-            this.setViewData('resource', this.options.data);
-        },
-        afterStart: function afterStart() {
-            var self = this;
-            this.options.data.Resource = this.options.data.Resource || {};
-            this.addElement(new _textbox2.default('#js_field_resource_id', {
-                modelReference: 'Resource.id',
-                validate: false
-            }).start());
-            this.addElement(new _textbox2.default('#js_field_name', { modelReference: 'Resource.name' }).start(), new _feedback2.default('#js_field_name_feedback', {}).start());
-            this.addElement(new _textbox2.default('#js_field_uri', { modelReference: 'Resource.uri' }).start(), new _feedback2.default('#js_field_uri_feedback', {}).start());
-            this.addElement(new _textbox2.default('#js_field_username', { modelReference: 'Resource.username' }).start(), new _feedback2.default('#js_field_username_feedback', {}).start());
-            var secrets = this.options.data.secrets;
-            if (secrets) {
-                var secret = secrets.filter(function (secret) {
-                    return secret.user_id == _user2.default.getCurrent().id;
-                })[0];
-                var secretForm = new _create2.default('#js_secret_edit_0', {
-                    data: secret,
-                    secret_i: 0
-                });
-                secretForm.start();
-                secretForm.load({ Secret: secret });
-                self.options.secretsForms.push(secretForm);
-            }
-            this.addElement(new _textbox2.default('#js_field_description', { modelReference: 'Resource.description' }).start(), new _feedback2.default('#js_field_description_feedback', {}).start());
-            if (this.options.data != null) {
-                this.load({ Resource: this.options.data });
-            }
-            _bus2.default.trigger('passbolt.plugin.resource_edition');
-            setTimeout(function () {
-                self.setInitialFocus();
-            }, 100);
-        },
-        setInitialFocus: function setInitialFocus() {
-            var initialFocusEl = $('#js_field_name');
-            initialFocusEl.focus();
-            if (initialFocusEl.val() != '') {
-                initialFocusEl.select();
-            }
-        },
-        validate: function validate() {
-            _bus2.default.trigger('passbolt.secret_edition.validate');
-            this.lastValidationResult = this._super();
-        },
-        encrypt: function encrypt() {
-            var usersIds = [];
-            if (this.options.action == 'edit') {
-                var findOptions = { filter: { 'has-access': this.options.data.id } };
-                _user2.default.findAll(findOptions).then(function (users) {
-                    var usersIds = [];
-                    users.forEach(function (user) {
-                        usersIds.push(user.id);
-                    });
-                    _bus2.default.triggerPlugin('passbolt.secret_edition.encrypt', usersIds);
-                });
-            } else {
-                usersIds.push(_user2.default.getCurrent().id);
-                _bus2.default.triggerPlugin('passbolt.secret_edition.encrypt', usersIds);
-            }
-        },
-        '{element} submit': function elementSubmit(el, ev) {
-            ev.preventDefault();
-            this.validate();
-        },
-        '{mad.bus.element} secret_edition_secret_validated': function madBusElementSecret_edition_secret_validated(el, ev) {
-            var secretValidated = ev.data[0];
-            if (!secretValidated) {
-                $('.js_form_secret_wrapper').addClass('error');
-            } else {
-                $('.js_form_secret_wrapper').removeClass('error');
-            }
-            if (!this.lastValidationResult || !secretValidated) {
-                if (this.options.callbacks.error) {
-                    this.options.callbacks.error();
-                }
-                return;
-            }
-            this.encrypt();
-        },
-        '{mad.bus.element} secret_edition_secret_encrypted': function madBusElementSecret_edition_secret_encrypted(el, ev) {
-            var armoreds = ev.data;
-            var data = this.getData();
-            data['Resource'].secrets = [];
-            for (var userId in armoreds) {
-                data['Resource'].secrets.push({
-                    user_id: userId,
-                    data: armoreds[userId]
-                });
-            }
-            if (this.options.callbacks.submit) {
-                this.options.callbacks.submit(data);
-            }
-        },
-        '{mad.bus.element} secret_edition_secret_changed': function madBusElementSecret_edition_secret_changed() {
-            _canDomEvents2.default.dispatch(this.element, { type: 'changed' });
-        },
-        '{element} #js_field_username keydown': function elementJs_field_usernameKeydown(el, ev) {
-            var code = ev.keyCode || ev.which;
-            if (code == '9') {
-                _bus2.default.trigger('passbolt.secret.focus');
-            }
-        },
-        '{element} #js_field_description keydown': function elementJs_field_descriptionKeydown(el, ev) {
-            var code = ev.keyCode || ev.which;
-            if (code == '9' && ev.shiftKey) {
-                _bus2.default.trigger('passbolt.secret.focus');
-            }
-        },
-        '{mad.bus.element} secret_tab_pressed': function madBusElementSecret_tab_pressed() {
-            $('#js_field_description').focus();
-        },
-        '{mad.bus.element} secret_backtab_pressed': function madBusElementSecret_backtab_pressed() {
-            $('#js_field_username').focus();
-        }
-    });
-    exports.default = CreateForm;
-});
-/*app/component/password/actions_tab*/
-define('app/component/password/actions_tab', [
-    'exports',
-    'passbolt-mad/component/confirm',
-    'app/component/permission/permissions',
-    'app/form/resource/create',
-    'passbolt-mad/component/tab',
-    'passbolt-mad/view/template/component/tab/tab.stache!'
-], function (exports, _confirm, _permissions, _create, _tab, _tab3) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _confirm2 = _interopRequireDefault(_confirm);
-    var _permissions2 = _interopRequireDefault(_permissions);
-    var _create2 = _interopRequireDefault(_create);
-    var _tab2 = _interopRequireDefault(_tab);
-    var _tab4 = _interopRequireDefault(_tab3);
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-    }
-    var ActionsTabComponent = _tab2.default.extend('passbolt.component.password.ActionsTab', {
-        defaults: {
-            cssClasses: ['tabs'],
-            template: _tab4.default,
-            resource: null,
-            dialog: null
-        }
-    }, {
-        _hasChanged: false,
-        afterStart: function afterStart() {
-            var _this = this;
-            this._super();
-            this.addTab(_create2.default, {
-                id: 'js_rs_edit',
-                label: __('Edit'),
-                action: 'edit',
-                data: this.options.resource,
-                callbacks: {
-                    submit: function submit(data) {
-                        return _this._save(data);
-                    }
-                }
-            });
-            this.addTab(_permissions2.default, {
-                id: 'js_rs_permission',
-                label: 'Share',
-                resource: this.options.resources,
-                cssClasses: ['share-tab'],
-                acoInstance: this.options.resource,
-                callbacks: {
-                    submit: function submit(data) {
-                        return _this._share(data);
-                    }
-                }
-            });
-        },
-        _save: function _save(data) {
-            var resourceData = data['Resource'];
-            if (resourceData.secrets.length > 0) {
-                resourceData['__FILTER_CASE__'] = 'edit_with_secrets';
-            } else {
-                resourceData['__FILTER_CASE__'] = 'edit';
-            }
-            this.options.resource.assign(resourceData);
-            this.options.resource.save();
-            this.options.dialog.remove();
-        },
-        _share: function _share(data) {
-            this.options.dialog.remove();
-            this.options.resource.share(data);
-        },
-        enableTab: function enableTab(tabId, force) {
-            force = force || false;
-            if (this._activeTab && this._activeTab.getId() == tabId) {
-                return;
-            }
-            if (this._hasChanged && force === false) {
-                return this._confirmChangeTab(tabId);
-            }
-            this._hasChanged = false;
-            this._super(tabId);
-            $('.tab-content', this.element).show();
-            this.options.dialog.setTitle(this._activeTab.options.label);
-            this.options.dialog.setSubtitle(this.options.resource.name);
-        },
-        _confirmChangeTab: function _confirmChangeTab(tabId) {
-            var self = this;
-            var confirmDialog = _confirm2.default.instantiate({
-                label: __('Do you really want to leave ?'),
-                content: __('If you continue you\'ll lose your changes'),
-                action: function action() {
-                    self.enableTab(tabId, true);
-                }
-            });
-            confirmDialog.start();
-        },
-        '{element} changed': function elementChanged() {
-            this._hasChanged = true;
-        }
-    });
-    exports.default = ActionsTabComponent;
-});
 /*app/component/password/workspace_breadcrumb*/
 define('app/component/password/workspace_breadcrumb', [
     'exports',
@@ -93798,15 +89156,15 @@ define('app/view/template/component/permission/permissions_sidebar_section.stach
         return renderer(scope, moduleOptions, nodeList);
     };
 });
-/*app/view/template/component/permission/permission_list_item_2.stache!steal-stache@4.1.2#steal-stache*/
-define('app/view/template/component/permission/permission_list_item_2.stache!steal-stache@4.1.2#steal-stache', [
+/*app/view/template/component/permission/permissions_sidebar_list_item.stache!steal-stache@4.1.2#steal-stache*/
+define('app/view/template/component/permission/permissions_sidebar_list_item.stache!steal-stache@4.1.2#steal-stache', [
     'module',
     'can-stache',
     'can-stache/src/mustache_core',
     'can-view-import@4.1.0#can-view-import',
     'can-stache-bindings@4.3.0#can-stache-bindings'
 ], function (module, stache, mustacheCore) {
-    var renderer = stache('app/view/template/component/permission/permission_list_item_2.stache', [
+    var renderer = stache('app/view/template/component/permission/permissions_sidebar_list_item.stache', [
         {
             'tokenType': 'start',
             'args': [
@@ -94275,8 +89633,8 @@ define('app/component/permission/permissions_sidebar_section', [
     'passbolt-mad/component/tree',
     'passbolt-mad/view/component/tree',
     'app/view/template/component/permission/permissions_sidebar_section.stache!',
-    'app/view/template/component/permission/permission_list_item_2.stache!'
-], function (exports, _bus, _map, _permission, _permissions_sidebar_section, _permission_type, _secondary_sidebar_section, _tree, _tree3, _permissions_sidebar_section3, _permission_list_item_) {
+    'app/view/template/component/permission/permissions_sidebar_list_item.stache!'
+], function (exports, _bus, _map, _permission, _permissions_sidebar_section, _permission_type, _secondary_sidebar_section, _tree, _tree3, _permissions_sidebar_section3, _permissions_sidebar_list_item) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
     var _bus2 = _interopRequireDefault(_bus);
@@ -94288,7 +89646,7 @@ define('app/component/permission/permissions_sidebar_section', [
     var _tree2 = _interopRequireDefault(_tree);
     var _tree4 = _interopRequireDefault(_tree3);
     var _permissions_sidebar_section4 = _interopRequireDefault(_permissions_sidebar_section3);
-    var _permission_list_item_2 = _interopRequireDefault(_permission_list_item_);
+    var _permissions_sidebar_list_item2 = _interopRequireDefault(_permissions_sidebar_list_item);
     function _interopRequireDefault(obj) {
         return obj && obj.__esModule ? obj : { default: obj };
     }
@@ -94321,7 +89679,7 @@ define('app/component/permission/permissions_sidebar_section', [
                 ],
                 viewClass: _tree4.default,
                 itemClass: _permission2.default,
-                itemTemplate: _permission_list_item_2.default,
+                itemTemplate: _permissions_sidebar_list_item2.default,
                 map: map
             });
             component.start();
@@ -98714,8 +94072,12 @@ define('app/component/password/workspace_primary_menu', [
             _bus2.default.trigger('request_resource_edit', { resource: resource });
         },
         _share: function _share() {
-            var resource = this.options.selectedResources[0];
-            _bus2.default.trigger('request_resource_share', { resource: resource });
+            var resources = this.options.selectedResources;
+            if (resources.length > 1) {
+                _bus2.default.trigger('request_resources_share', { resources: resources });
+            } else {
+                _bus2.default.trigger('request_resource_share', { resource: resources[0] });
+            }
         },
         _export: function _export() {
             var type = 'csv';
@@ -98783,9 +94145,16 @@ define('app/component/password/workspace_primary_menu', [
             var moreButtonDeleteItemId = 'js_wk_menu_delete_action';
             var moreButtonCopyLoginItemId = 'js_wk_menu_copy_login_action';
             var moreButtonCopySecretItemId = 'js_wk_menu_copy_secret_action';
-            var canDelete = this.options.selectedResources.reduce(function (carry, resource) {
-                return resource.permission.isAllowedTo(_permission_type2.default.UPDATE) && carry;
-            }, true);
+            var resources = this.options.selectedResources;
+            var _resources$reduce = resources.reduce(function (carry, resource) {
+                    return {
+                        canDelete: resource.permission.isAllowedTo(_permission_type2.default.UPDATE) && carry.canDelete,
+                        canShare: resource.permission.isAllowedTo(_permission_type2.default.ADMIN) && carry.canShare
+                    };
+                }, {
+                    canDelete: true,
+                    canShare: true
+                }), canDelete = _resources$reduce.canDelete, canShare = _resources$reduce.canShare;
             if (canDelete) {
                 this.moreButton.state.disabled = false;
                 this.moreButton.disableItem(moreButtonCopyLoginItemId);
@@ -98793,6 +94162,9 @@ define('app/component/password/workspace_primary_menu', [
                 this.moreButton.enableItem(moreButtonDeleteItemId);
             } else {
                 this.moreButton.state.disabled = true;
+            }
+            if (canShare) {
+                this.shareButton.state.disabled = false;
             }
         },
         reset: function reset() {
@@ -100888,6 +96260,3337 @@ define('app/component/password/primary_sidebar', [
     });
     exports.default = PrimarySidebarComponent;
 });
+/*app/form/secret/create*/
+define('app/form/secret/create', [
+    'exports',
+    'passbolt-mad/form/form',
+    'passbolt-mad/form/element/textbox'
+], function (exports, _form, _textbox) {
+    'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var _form2 = _interopRequireDefault(_form);
+    var _textbox2 = _interopRequireDefault(_textbox);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var CreateForm = _form2.default.extend('passbolt.form.secret.Create', {
+        defaults: {
+            action: 'create',
+            secret_i: null
+        }
+    }, {
+        afterStart: function afterStart() {
+            this.addElement(new _textbox2.default('#js_field_secret_id_' + this.options.secret_i, {
+                modelReference: 'Secret.id',
+                validate: false
+            }).start());
+            this.addElement(new _textbox2.default('#js_field_secret_user_id_' + this.options.secret_i, {
+                modelReference: 'Secret.user_id',
+                validate: false
+            }).start());
+            this.addElement(new _textbox2.default('#js_field_secret_data_' + this.options.secret_i, {
+                state: { hidden: true },
+                modelReference: 'Secret.data',
+                validate: false
+            }).start());
+            this.on();
+        }
+    });
+    exports.default = CreateForm;
+});
+/*app/view/template/form/resource/create.stache!steal-stache@4.1.2#steal-stache*/
+define('app/view/template/form/resource/create.stache!steal-stache@4.1.2#steal-stache', [
+    'module',
+    'can-stache',
+    'can-stache/src/mustache_core',
+    'can-view-import@4.1.0#can-view-import',
+    'can-stache-bindings@4.3.0#can-stache-bindings'
+], function (module, stache, mustacheCore) {
+    var renderer = stache('app/view/template/form/resource/create.stache', [
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                1
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                1
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'form-content',
+                1
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                1
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                1
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n\t',
+                1
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'hidden',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'Resource.id',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_resource_id',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'form_field',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                3
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                3
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n\t',
+                3
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                5
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                5
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'input text required js_form_element_wrapper',
+                5
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                5
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                5
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                5
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'label',
+                false,
+                6
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'for',
+                6
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_name',
+                6
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'for',
+                6
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'label',
+                false,
+                6
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'Name\') ',
+                6
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'label',
+                6
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                6
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'Resource.name',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'required',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'text',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_name',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'placeholder',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'name',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'placeholder',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'autofocus',
+                7
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'autofocus',
+                7
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                7
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                7
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                8
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                8
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_name_feedback',
+                8
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                8
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                8
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'message',
+                8
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                8
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                8
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                8
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                9
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                9
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                10
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\n\t',
+                10
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                12
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                12
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'input text js_form_element_wrapper',
+                12
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                12
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                12
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                12
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'label',
+                false,
+                13
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'for',
+                13
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_uri',
+                13
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'for',
+                13
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'label',
+                false,
+                13
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'URI\') ',
+                13
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'label',
+                13
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                13
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'Resource.uri',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'text',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_uri',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'placeholder',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'https://example.com/login',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'placeholder',
+                14
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                14
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                14
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                15
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                15
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_uri_feedback',
+                15
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                15
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                15
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'message',
+                15
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                15
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                15
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                15
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                16
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                16
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                17
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\n\t',
+                17
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                19
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                19
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'input text js_form_element_wrapper',
+                19
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                19
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                19
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                19
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'label',
+                false,
+                20
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'for',
+                20
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_username',
+                20
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'for',
+                20
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'label',
+                false,
+                20
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'Username\') ',
+                20
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'label',
+                20
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                20
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'Resource.username',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'text',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_username',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'placeholder',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'name',
+                21
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'placeholder',
+                21
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                21
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                21
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_username_feedback',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'message',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                22
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                22
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                22
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                23
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                23
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                24
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n\t',
+                24
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                26
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                26
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'input text required js_form_element_wrapper js_form_secret_wrapper',
+                26
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                26
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                26
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                26
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'label',
+                false,
+                27
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'for',
+                27
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_secret_data_0',
+                27
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'for',
+                27
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'label',
+                false,
+                27
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'Password\') ',
+                27
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'label',
+                27
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n        ',
+                27
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                29
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                29
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_secret_edit_0',
+                29
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                29
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                29
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_secret_edit_form',
+                29
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                29
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                29
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n            ',
+                29
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'hidden',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'passbolt.model.Secret.id',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_secret_id_0',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_secret_id form_field',
+                30
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                30
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                30
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n            ',
+                30
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'hidden',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'passbolt.model.Secret.user_id',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_secret_user_id_0',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_secret_user_id form_field',
+                31
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                31
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                31
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n            ',
+                31
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'textarea',
+                false,
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'passbolt.model.Secret.data',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_secret_data_0',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'form_field js_field_secret_data hidden',
+                32
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                32
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'textarea',
+                false,
+                32
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'textarea',
+                32
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n        ',
+                32
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                33
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                33
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                34
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n\t',
+                34
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                36
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                36
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'input textarea js_form_element_wrapper',
+                36
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                36
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                36
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                36
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'label',
+                false,
+                37
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'for',
+                37
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_description',
+                37
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'for',
+                37
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'label',
+                false,
+                37
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'Description\') ',
+                37
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'label',
+                37
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                37
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'textarea',
+                false,
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'name',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'Resource.description',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'name',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'required',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_description',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'placeholder',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'add a description',
+                38
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'placeholder',
+                38
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'textarea',
+                false,
+                38
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                38
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'textarea',
+                39
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                39
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                40
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                40
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js_field_description_feedback',
+                40
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                40
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                40
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'message',
+                40
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                40
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                40
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                40
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                41
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                41
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                42
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n',
+                42
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                44
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n',
+                44
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                46
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                46
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js-edit-feedbacks',
+                46
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                46
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                46
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'feedbacks message hidden',
+                46
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                46
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                46
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                46
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n',
+                46
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                48
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                48
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'submit-wrapper clearfix',
+                48
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                48
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                48
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n    ',
+                48
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'input',
+                true,
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'type',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'submit',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'type',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'button primary',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'value',
+                49
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'save\')',
+                49
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'value',
+                49
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'input',
+                true,
+                49
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n    ',
+                49
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'a',
+                false,
+                50
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                50
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js-dialog-cancel cancel',
+                50
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                50
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'a',
+                false,
+                50
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                ' __(\'cancel\')',
+                50
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'a',
+                50
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n',
+                50
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                51
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n',
+                51
+            ]
+        },
+        {
+            'tokenType': 'done',
+            'args': [52]
+        }
+    ]);
+    return function (scope, options, nodeList) {
+        var moduleOptions = Object.assign({}, options);
+        if (moduleOptions.helpers) {
+            moduleOptions.helpers = Object.assign({ module: module }, moduleOptions.helpers);
+        } else {
+            moduleOptions.module = module;
+        }
+        return renderer(scope, moduleOptions, nodeList);
+    };
+});
+/*app/form/resource/create*/
+define('app/form/resource/create', [
+    'exports',
+    'can-dom-events',
+    'passbolt-mad/form/feedback',
+    'passbolt-mad/form/form',
+    'passbolt-mad/control/bus',
+    'app/form/secret/create',
+    'passbolt-mad/form/element/textbox',
+    'app/model/map/user',
+    'app/view/template/form/resource/create.stache!'
+], function (exports, _canDomEvents, _feedback, _form, _bus, _create, _textbox, _user, _create3) {
+    'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var _canDomEvents2 = _interopRequireDefault(_canDomEvents);
+    var _feedback2 = _interopRequireDefault(_feedback);
+    var _form2 = _interopRequireDefault(_form);
+    var _bus2 = _interopRequireDefault(_bus);
+    var _create2 = _interopRequireDefault(_create);
+    var _textbox2 = _interopRequireDefault(_textbox);
+    var _user2 = _interopRequireDefault(_user);
+    var _create4 = _interopRequireDefault(_create3);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var CreateForm = _form2.default.extend('passbolt.form.resource.Create', {
+        defaults: {
+            secretField: null,
+            action: 'create',
+            secretsForms: [],
+            resource: null,
+            template: _create4.default,
+            lastValidationResult: false
+        }
+    }, {
+        beforeRender: function beforeRender() {
+            this._super();
+            this.setViewData('resource', this.options.data);
+        },
+        afterStart: function afterStart() {
+            var self = this;
+            this.options.data.Resource = this.options.data.Resource || {};
+            this.addElement(new _textbox2.default('#js_field_resource_id', {
+                modelReference: 'Resource.id',
+                validate: false
+            }).start());
+            this.addElement(new _textbox2.default('#js_field_name', { modelReference: 'Resource.name' }).start(), new _feedback2.default('#js_field_name_feedback', {}).start());
+            this.addElement(new _textbox2.default('#js_field_uri', { modelReference: 'Resource.uri' }).start(), new _feedback2.default('#js_field_uri_feedback', {}).start());
+            this.addElement(new _textbox2.default('#js_field_username', { modelReference: 'Resource.username' }).start(), new _feedback2.default('#js_field_username_feedback', {}).start());
+            var secrets = this.options.data.secrets;
+            if (secrets) {
+                var secret = secrets.filter(function (secret) {
+                    return secret.user_id == _user2.default.getCurrent().id;
+                })[0];
+                var secretForm = new _create2.default('#js_secret_edit_0', {
+                    data: secret,
+                    secret_i: 0
+                });
+                secretForm.start();
+                secretForm.load({ Secret: secret });
+                self.options.secretsForms.push(secretForm);
+            }
+            this.addElement(new _textbox2.default('#js_field_description', { modelReference: 'Resource.description' }).start(), new _feedback2.default('#js_field_description_feedback', {}).start());
+            if (this.options.data != null) {
+                this.load({ Resource: this.options.data });
+            }
+            _bus2.default.trigger('passbolt.plugin.resource_edition');
+            setTimeout(function () {
+                self.setInitialFocus();
+            }, 100);
+        },
+        setInitialFocus: function setInitialFocus() {
+            var initialFocusEl = $('#js_field_name');
+            initialFocusEl.focus();
+            if (initialFocusEl.val() != '') {
+                initialFocusEl.select();
+            }
+        },
+        validate: function validate() {
+            _bus2.default.trigger('passbolt.secret_edition.validate');
+            this.lastValidationResult = this._super();
+        },
+        encrypt: function encrypt() {
+            var usersIds = [];
+            if (this.options.action == 'edit') {
+                var findOptions = { filter: { 'has-access': this.options.data.id } };
+                _user2.default.findAll(findOptions).then(function (users) {
+                    var usersIds = [];
+                    users.forEach(function (user) {
+                        usersIds.push(user.id);
+                    });
+                    _bus2.default.triggerPlugin('passbolt.secret_edition.encrypt', usersIds);
+                });
+            } else {
+                usersIds.push(_user2.default.getCurrent().id);
+                _bus2.default.triggerPlugin('passbolt.secret_edition.encrypt', usersIds);
+            }
+        },
+        '{element} submit': function elementSubmit(el, ev) {
+            ev.preventDefault();
+            this.validate();
+        },
+        '{mad.bus.element} secret_edition_secret_validated': function madBusElementSecret_edition_secret_validated(el, ev) {
+            var secretValidated = ev.data[0];
+            if (!secretValidated) {
+                $('.js_form_secret_wrapper').addClass('error');
+            } else {
+                $('.js_form_secret_wrapper').removeClass('error');
+            }
+            if (!this.lastValidationResult || !secretValidated) {
+                if (this.options.callbacks.error) {
+                    this.options.callbacks.error();
+                }
+                return;
+            }
+            this.encrypt();
+        },
+        '{mad.bus.element} secret_edition_secret_encrypted': function madBusElementSecret_edition_secret_encrypted(el, ev) {
+            var armoreds = ev.data;
+            var data = this.getData();
+            data['Resource'].secrets = [];
+            for (var userId in armoreds) {
+                data['Resource'].secrets.push({
+                    user_id: userId,
+                    data: armoreds[userId]
+                });
+            }
+            if (this.options.callbacks.submit) {
+                this.options.callbacks.submit(data);
+            }
+        },
+        '{mad.bus.element} secret_edition_secret_changed': function madBusElementSecret_edition_secret_changed() {
+            _canDomEvents2.default.dispatch(this.element, { type: 'changed' });
+        },
+        '{element} #js_field_username keydown': function elementJs_field_usernameKeydown(el, ev) {
+            var code = ev.keyCode || ev.which;
+            if (code == '9') {
+                _bus2.default.trigger('passbolt.secret.focus');
+            }
+        },
+        '{element} #js_field_description keydown': function elementJs_field_descriptionKeydown(el, ev) {
+            var code = ev.keyCode || ev.which;
+            if (code == '9' && ev.shiftKey) {
+                _bus2.default.trigger('passbolt.secret.focus');
+            }
+        },
+        '{mad.bus.element} secret_tab_pressed': function madBusElementSecret_tab_pressed() {
+            $('#js_field_description').focus();
+        },
+        '{mad.bus.element} secret_backtab_pressed': function madBusElementSecret_backtab_pressed() {
+            $('#js_field_username').focus();
+        }
+    });
+    exports.default = CreateForm;
+});
+/*app/view/template/form/resource/edit.stache!steal-stache@4.1.2#steal-stache*/
+define('app/view/template/form/resource/edit.stache!steal-stache@4.1.2#steal-stache', [
+    'module',
+    'can-stache',
+    'can-stache/src/mustache_core',
+    'can-view-import@4.1.0#can-view-import',
+    'can-stache-bindings@4.3.0#can-stache-bindings'
+], function (module, stache, mustacheCore) {
+    var renderer = stache('app/view/template/form/resource/edit.stache', [
+        {
+            'tokenType': 'start',
+            'args': [
+                'ul',
+                false,
+                1
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                1
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'tabs-nav menu',
+                1
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                1
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'ul',
+                false,
+                1
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                1
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'li',
+                false,
+                2
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                2
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js-share-go-to-edit',
+                2
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                2
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'li',
+                false,
+                2
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                2
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'row',
+                3
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                3
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                3
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t',
+                3
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                4
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                4
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'main-cell-wrapper',
+                4
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                4
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                4
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t\t',
+                4
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                5
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                5
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'main-cell',
+                5
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                5
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                5
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t\t\t',
+                5
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'a',
+                false,
+                6
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                6
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'selected',
+                6
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                6
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'a',
+                false,
+                6
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'span',
+                false,
+                6
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'span',
+                false,
+                6
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                'Edit',
+                6
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'span',
+                6
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'a',
+                6
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t\t',
+                6
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                7
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t',
+                7
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                8
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                8
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                9
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                9
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'li',
+                10
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                10
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'li',
+                false,
+                11
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'id',
+                11
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'js-share-go-to-share',
+                11
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'id',
+                11
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                11
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                11
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'li',
+                false,
+                11
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                11
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                12
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                12
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'row',
+                12
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                12
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                12
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t',
+                12
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                13
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                13
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'main-cell-wrapper',
+                13
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                13
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                13
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t\t',
+                13
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'main-cell',
+                14
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                14
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                14
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t\t\t',
+                14
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'a',
+                false,
+                15
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'a',
+                false,
+                15
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'span',
+                false,
+                15
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'span',
+                false,
+                15
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                'Share',
+                15
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'span',
+                15
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'a',
+                15
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t\t',
+                15
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                16
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t\t',
+                16
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                17
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                17
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                18
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                18
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'li',
+                19
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n',
+                19
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'ul',
+                20
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\n',
+                20
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'tab',
+                22
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                22
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                22
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                22
+            ]
+        },
+        {
+            'tokenType': 'start',
+            'args': [
+                'div',
+                false,
+                23
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'class',
+                23
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'tab-content',
+                23
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'class',
+                23
+            ]
+        },
+        {
+            'tokenType': 'attrStart',
+            'args': [
+                'style',
+                23
+            ]
+        },
+        {
+            'tokenType': 'attrValue',
+            'args': [
+                'display:block',
+                23
+            ]
+        },
+        {
+            'tokenType': 'attrEnd',
+            'args': [
+                'style',
+                23
+            ]
+        },
+        {
+            'tokenType': 'end',
+            'args': [
+                'div',
+                false,
+                23
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t\t',
+                23
+            ]
+        },
+        {
+            'tokenType': 'special',
+            'args': [
+                '>createTemplate',
+                24
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n\t',
+                24
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                25
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n',
+                25
+            ]
+        },
+        {
+            'tokenType': 'close',
+            'args': [
+                'div',
+                26
+            ]
+        },
+        {
+            'tokenType': 'chars',
+            'args': [
+                '\n',
+                26
+            ]
+        },
+        {
+            'tokenType': 'done',
+            'args': [27]
+        }
+    ]);
+    return function (scope, options, nodeList) {
+        var moduleOptions = Object.assign({}, options);
+        if (moduleOptions.helpers) {
+            moduleOptions.helpers = Object.assign({ module: module }, moduleOptions.helpers);
+        } else {
+            moduleOptions.module = module;
+        }
+        return renderer(scope, moduleOptions, nodeList);
+    };
+});
+/*app/form/resource/edit*/
+define('app/form/resource/edit', [
+    'exports',
+    'passbolt-mad/component/confirm',
+    'app/form/resource/create',
+    'passbolt-mad/control/bus',
+    'app/view/template/form/resource/create.stache!',
+    'app/view/template/form/resource/edit.stache!'
+], function (exports, _confirm, _create, _bus, _create3, _edit) {
+    'use strict';
+    Object.defineProperty(exports, '__esModule', { value: true });
+    var _confirm2 = _interopRequireDefault(_confirm);
+    var _create2 = _interopRequireDefault(_create);
+    var _bus2 = _interopRequireDefault(_bus);
+    var _create4 = _interopRequireDefault(_create3);
+    var _edit2 = _interopRequireDefault(_edit);
+    function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var EditForm = _create2.default.extend('passbolt.form.resource.Edit', {
+        defaults: {
+            secretField: null,
+            action: 'edit',
+            secretsForms: [],
+            template: _edit2.default,
+            lastValidationResult: false
+        }
+    }, {
+        beforeRender: function beforeRender() {
+            this._super();
+            this.setViewData('createTemplate', _create4.default);
+        },
+        '{element} changed': function elementChanged() {
+            this._hasChanged = true;
+            var text = __('You need to save to apply the changes.');
+            $('#js-edit-feedbacks', this.element).text(text).addClass('warning').removeClass('hidden');
+        },
+        _goToShareTab: function _goToShareTab() {
+            _bus2.default.trigger('request_resource_share', { resource: this.options.data });
+        },
+        _confirmChangeTab: function _confirmChangeTab() {
+            var _this = this;
+            if (!this._hasChanged) {
+                return this._goToShareTab();
+            }
+            var confirmDialog = _confirm2.default.instantiate({
+                label: __('Do you really want to leave ?'),
+                content: __('There are unsaved changes, you might want to save them before leaving.'),
+                submitButton: {
+                    label: __('Leave anyway'),
+                    cssClasses: ['warning']
+                },
+                action: function action() {
+                    return _this._goToShareTab();
+                }
+            });
+            confirmDialog.start();
+        },
+        '{element} #js-share-go-to-share click': function elementJsShareGoToShareClick() {
+            this._confirmChangeTab();
+        }
+    });
+    exports.default = EditForm;
+});
 /*app/view/template/component/comment/delete_confirm.stache!steal-stache@4.1.2#steal-stache*/
 define('app/view/template/component/comment/delete_confirm.stache!steal-stache@4.1.2#steal-stache', [
     'module',
@@ -101630,7 +100333,6 @@ define('app/view/template/component/password/workspace.stache!steal-stache@4.1.2
 /*app/component/password/workspace*/
 define('app/component/password/workspace', [
     'exports',
-    'app/component/password/actions_tab',
     'app/component/password/workspace_breadcrumb',
     'passbolt-mad/component/button',
     'passbolt-mad/component/component',
@@ -101645,6 +100347,7 @@ define('app/component/password/workspace', [
     'app/component/password/workspace_primary_menu',
     'app/component/password/primary_sidebar',
     'app/form/resource/create',
+    'app/form/resource/edit',
     'can-route',
     'app/component/workspace/secondary_menu',
     'app/model/map/favorite',
@@ -101656,10 +100359,9 @@ define('app/component/password/workspace', [
     'app/view/template/component/workspace/import_button.stache!',
     'app/view/template/component/password/delete_confirm.stache!',
     'app/view/template/component/password/workspace.stache!'
-], function (exports, _actions_tab, _workspace_breadcrumb, _button, _component, _component3, _config, _confirm, _dialog, _grid, _bus, _password_secondary_sidebar, _plugin, _workspace_primary_menu, _primary_sidebar, _create, _canRoute, _secondary_menu, _favorite, _filter, _group, _resource2, _delete_confirm, _create_button, _import_button, _delete_confirm3, _workspace) {
+], function (exports, _workspace_breadcrumb, _button, _component, _component3, _config, _confirm, _dialog, _grid, _bus, _password_secondary_sidebar, _plugin, _workspace_primary_menu, _primary_sidebar, _create, _edit, _canRoute, _secondary_menu, _favorite, _filter, _group, _resource2, _delete_confirm, _create_button, _import_button, _delete_confirm3, _workspace) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
-    var _actions_tab2 = _interopRequireDefault(_actions_tab);
     var _workspace_breadcrumb2 = _interopRequireDefault(_workspace_breadcrumb);
     var _button2 = _interopRequireDefault(_button);
     var _component2 = _interopRequireDefault(_component);
@@ -101674,6 +100376,7 @@ define('app/component/password/workspace', [
     var _workspace_primary_menu2 = _interopRequireDefault(_workspace_primary_menu);
     var _primary_sidebar2 = _interopRequireDefault(_primary_sidebar);
     var _create2 = _interopRequireDefault(_create);
+    var _edit2 = _interopRequireDefault(_edit);
     var _canRoute2 = _interopRequireDefault(_canRoute);
     var _secondary_menu2 = _interopRequireDefault(_secondary_menu);
     var _favorite2 = _interopRequireDefault(_favorite);
@@ -101868,7 +100571,7 @@ define('app/component/password/workspace', [
             }
         },
         openCreateResourceDialog: function openCreateResourceDialog(resource) {
-            var self = this;
+            var _this = this;
             var dialog = _dialog2.default.instantiate({
                 label: __('Create Password'),
                 cssClasses: [
@@ -101882,55 +100585,61 @@ define('app/component/password/workspace', [
                     submit: function submit(data) {
                         delete data['Resource']['id'];
                         var resourceToSave = new _resource3.default(data['Resource']);
-                        self._saveResource(resourceToSave, form, dialog);
+                        _this._saveResource(resourceToSave, form, dialog);
                     }
                 }
             });
             form.load(resource);
         },
         _saveResource: function _saveResource(resource, form, dialog) {
-            var _this = this;
+            var _this2 = this;
             this.state.loaded = false;
             dialog.remove();
             resource.save().then(function () {
                 var filter = PasswordWorkspaceComponent.getDefaultFilterSettings();
                 filter.forceReload = true;
                 _bus2.default.trigger('filter_workspace', { filter: filter });
-                _this.state.loaded = true;
+                _this2.state.loaded = true;
             }, function (v) {
                 form.showErrors(JSON.parse(v.responseText)['body']);
             });
         },
         openEditResourceDialog: function openEditResourceDialog(resource) {
             var dialog = _dialog2.default.instantiate({
-                label: __('Edit Password'),
+                label: __('Edit'),
+                subtitle: resource.name,
                 cssClasses: [
                     'edit-password-dialog',
                     'dialog-wrapper'
                 ]
             }).start();
-            var tab = dialog.add(_actions_tab2.default, {
-                resource: resource,
-                dialog: dialog
+            dialog.add(_edit2.default, {
+                id: 'js_rs_edit',
+                label: __('Edit'),
+                action: 'edit',
+                data: resource,
+                callbacks: {
+                    submit: function submit(data) {
+                        var resourceData = data['Resource'];
+                        if (resourceData.secrets.length > 0) {
+                            resourceData['__FILTER_CASE__'] = 'edit_with_secrets';
+                        } else {
+                            resourceData['__FILTER_CASE__'] = 'edit';
+                        }
+                        resource.assign(resourceData);
+                        resource.save();
+                        dialog.remove();
+                    }
+                }
             });
-            tab.enableTab('js_rs_edit');
         },
-        openShareResourceDialog: function openShareResourceDialog(resource) {
-            var dialog = _dialog2.default.instantiate({
-                label: __('Share Password'),
-                cssClasses: [
-                    'share-password-dialog',
-                    'dialog-wrapper'
-                ]
-            }).start();
-            var tab = dialog.add(_actions_tab2.default, {
-                resource: resource,
-                dialog: dialog
-            });
-            tab.enableTab('js_rs_permission');
+        openShareResourcesDialog: function openShareResourcesDialog(resources) {
+            _plugin2.default.insertShareIframe(resources.map(function (resource) {
+                return resource.id;
+            }));
         },
         openDeleteResourcesDialog: function openDeleteResourcesDialog(resources) {
-            var _this2 = this;
+            var _this3 = this;
             var multipleDelete = resources.length > 1;
             var dialog = _confirm2.default.instantiate({
                 label: __('Do you really want to delete?'),
@@ -101940,14 +100649,14 @@ define('app/component/password/workspace', [
                     cssClasses: ['warning']
                 },
                 action: function action() {
-                    return _this2._deleteResources(resources);
+                    return _this3._deleteResources(resources);
                 }
             });
             dialog.setViewData('multipleDelete', multipleDelete);
             dialog.start();
         },
         _deleteResources: function _deleteResources(resources) {
-            var _this3 = this;
+            var _this4 = this;
             var multipleDelete = resources.length > 1;
             this.state.loaded = false;
             this.options.selectedResources.splice(0, this.options.selectedResources.length);
@@ -101957,11 +100666,11 @@ define('app/component/password/workspace', [
                         title: 'app_resources_delete_all_success',
                         status: 'success'
                     });
-                    _this3.state.loaded = true;
+                    _this4.state.loaded = true;
                 });
             } else {
                 resources[0].destroy().then(function () {
-                    _this3.state.loaded = true;
+                    _this4.state.loaded = true;
                 });
             }
         },
@@ -102052,7 +100761,11 @@ define('app/component/password/workspace', [
         },
         '{mad.bus.element} request_resource_share': function madBusElementRequest_resource_share(el, ev) {
             var resource = ev.data.resource;
-            this.openShareResourceDialog(resource);
+            this.openShareResourcesDialog([resource]);
+        },
+        '{mad.bus.element} request_resources_share': function madBusElementRequest_resources_share(el, ev) {
+            var resources = ev.data.resources;
+            this.openShareResourcesDialog(resources);
         },
         '{mad.bus.element} request_resource_favorite': function madBusElementRequest_resource_favorite(el, ev) {
             var resource = ev.data.resource;
@@ -102089,6 +100802,41 @@ define('app/component/password/workspace', [
                 var workspace = 'password';
                 _bus2.default.trigger('request_workspace', { workspace: workspace });
             }
+        },
+        '{mad.bus.element} passbolt.share.complete': function madBusElementPassboltShareComplete() {
+            _bus2.default.trigger('passbolt_notify', {
+                status: 'success',
+                title: 'app_share_share_success'
+            });
+            var selectedResources = this.options.selectedResources;
+            var previouslySelectedResources = selectedResources.get();
+            selectedResources.splice(0);
+            var findOptions = {
+                contain: { permission: 1 },
+                filter: {
+                    'has-id': previouslySelectedResources.map(function (resource) {
+                        return resource.id;
+                    })
+                }
+            };
+            _resource3.default.findAll(findOptions).then(function (resources) {
+                var sharedResourcesIds = resources.map(function (resource) {
+                    return resource.id;
+                }).get();
+                for (var i = previouslySelectedResources.length - 1; i >= 0; i--) {
+                    var resource = previouslySelectedResources[i];
+                    if (sharedResourcesIds.indexOf(resource.id) == -1) {
+                        _resource3.default.dispatch('destroyed', [resource]);
+                    }
+                }
+                if (resources.length) {
+                    selectedResources.push.apply(selectedResources, resources);
+                }
+            });
+        },
+        '{mad.bus.element} passbolt.share.go-to-edit': function madBusElementPassboltShareGoToEdit() {
+            var resource = this.options.selectedResources.get(0);
+            _bus2.default.trigger('request_resource_edit', { resource: resource });
         },
         '{mad.bus.element} request_delete_comment': function madBusElementRequest_delete_comment(el, ev) {
             var comment = ev.data.comment;
@@ -102747,93 +101495,6 @@ define('app/component/profile/header_dropdown', [
         }
     });
     exports.default = HeaderProfileDropdownComponent;
-});
-/*app/model/session_check*/
-define('app/model/session_check', [
-    'exports',
-    'app/net/ajax',
-    'passbolt-mad/config/config'
-], function (exports, _ajax, _config) {
-    'use strict';
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _ajax2 = _interopRequireDefault(_ajax);
-    var _config2 = _interopRequireDefault(_config);
-    function _interopRequireDefault(obj) {
-        return obj && obj.__esModule ? obj : { default: obj };
-    }
-    function _classCallCheck(instance, Constructor) {
-        if (!(instance instanceof Constructor)) {
-            throw new TypeError('Cannot call a class as a function');
-        }
-    }
-    var _createClass = function () {
-        function defineProperties(target, props) {
-            for (var i = 0; i < props.length; i++) {
-                var descriptor = props[i];
-                descriptor.enumerable = descriptor.enumerable || false;
-                descriptor.configurable = true;
-                if ('value' in descriptor)
-                    descriptor.writable = true;
-                Object.defineProperty(target, descriptor.key, descriptor);
-            }
-        }
-        return function (Constructor, protoProps, staticProps) {
-            if (protoProps)
-                defineProperties(Constructor.prototype, protoProps);
-            if (staticProps)
-                defineProperties(Constructor, staticProps);
-            return Constructor;
-        };
-    }();
-    var SessionCheck = function () {
-        _createClass(SessionCheck, null, [{
-                key: 'instantiate',
-                value: function instantiate() {
-                    if (SessionCheck._instance) {
-                        return SessionCheck._instance;
-                    }
-                    return new SessionCheck();
-                }
-            }]);
-        function SessionCheck() {
-            var _this = this;
-            _classCallCheck(this, SessionCheck);
-            this._scheduleCheckSession = null;
-            _ajax2.default._requests.on('length', function (ev, length) {
-                return _this._handleLastRequest(length);
-            });
-        }
-        _createClass(SessionCheck, [
-            {
-                key: '_handleLastRequest',
-                value: function _handleLastRequest(length) {
-                    var _this2 = this;
-                    if (!length) {
-                        var timeout = _config2.default.read('server.app.session_timeout') * 60 * 1000 + 2000;
-                        if (this._scheduleCheckSession) {
-                            clearTimeout(this._scheduleCheckSession);
-                        }
-                        this._scheduleCheckSession = setTimeout(function () {
-                            _this2._checkSession();
-                        }, timeout);
-                    }
-                }
-            },
-            {
-                key: '_checkSession',
-                value: function _checkSession() {
-                    _ajax2.default.request({
-                        url: APP_URL + 'auth/checkSession.json',
-                        type: 'GET',
-                        register: false
-                    });
-                }
-            }
-        ]);
-        return SessionCheck;
-    }();
-    SessionCheck._instance = null;
-    exports.default = SessionCheck;
 });
 /*app/view/template/app.stache!steal-stache@4.1.2#steal-stache*/
 define('app/view/template/app.stache!steal-stache@4.1.2#steal-stache', [
@@ -104556,6 +103217,7 @@ define('app/view/template/app.stache!steal-stache@4.1.2#steal-stache', [
 /*app/component/app*/
 define('app/component/app', [
     'exports',
+    'app/net/ajax',
     'passbolt-mad/component/component',
     'passbolt-mad/helper/component',
     'passbolt-mad/component/contextual_menu',
@@ -104567,15 +103229,16 @@ define('app/component/app', [
     'app/component/password/workspace',
     'app/component/profile/header_dropdown',
     'can-route',
-    'app/model/session_check',
+    'app/model/utility/session',
     'app/component/settings/workspace',
     'can-string',
     'app/model/map/user',
     'app/component/user/workspace',
     'app/view/template/app.stache!'
-], function (exports, _component, _component3, _contextual_menu, _filter, _loading_bar, _bus, _left, _notification, _workspace, _header_dropdown, _canRoute, _session_check, _workspace3, _canString, _user, _workspace5, _app) {
+], function (exports, _ajax, _component, _component3, _contextual_menu, _filter, _loading_bar, _bus, _left, _notification, _workspace, _header_dropdown, _canRoute, _session, _workspace3, _canString, _user, _workspace5, _app) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });
+    var _ajax2 = _interopRequireDefault(_ajax);
     var _component2 = _interopRequireDefault(_component);
     var _component4 = _interopRequireDefault(_component3);
     var _contextual_menu2 = _interopRequireDefault(_contextual_menu);
@@ -104587,7 +103250,7 @@ define('app/component/app', [
     var _workspace2 = _interopRequireDefault(_workspace);
     var _header_dropdown2 = _interopRequireDefault(_header_dropdown);
     var _canRoute2 = _interopRequireDefault(_canRoute);
-    var _session_check2 = _interopRequireDefault(_session_check);
+    var _session2 = _interopRequireDefault(_session);
     var _workspace4 = _interopRequireDefault(_workspace3);
     var _canString2 = _interopRequireDefault(_canString);
     var _user2 = _interopRequireDefault(_user);
@@ -104603,6 +103266,7 @@ define('app/component/app', [
         }
     }, {
         init: function init(el, options) {
+            this._sessionCheckTimeout = null;
             this._initRouteListener();
             return this._super(el, options);
         },
@@ -104626,7 +103290,7 @@ define('app/component/app', [
             this._workspace = null;
             this._initFooter();
             this._initHeader();
-            _session_check2.default.instantiate();
+            this._initSessionCheck();
             this._dispatchRoute();
             this._super();
         },
@@ -104650,15 +103314,35 @@ define('app/component/app', [
             var profileHeaderDropdownComponent = new _header_dropdown2.default('#js_app_profile_dropdown', { user: _user2.default.getCurrent() });
             profileHeaderDropdownComponent.start();
         },
+        _initSessionCheck: function _initSessionCheck() {
+            var _this2 = this;
+            _ajax2.default._requests.on('length', function (ev, length) {
+                if (!length) {
+                    _this2._scheduleSessionCheck();
+                }
+            });
+        },
+        _scheduleSessionCheck: function _scheduleSessionCheck() {
+            var timeout = _session2.default.getTimeout();
+            if (this._sessionCheckTimeout != null) {
+                clearTimeout(this._sessionCheckTimeout);
+                this._sessionCheckTimeout = null;
+            }
+            this._sessionCheckTimeout = setTimeout(function () {
+                $('html').one('mousemove mousedown keypress mousewheel', function () {
+                    return _session2.default.check();
+                });
+            }, timeout);
+        },
         _initFooter: function _initFooter() {
             var loadingBarComponent = new _loading_bar2.default('#js_app_loading_bar');
             loadingBarComponent.start();
             new _notification2.default('#js_app_notificator');
         },
         _enableWorkspace: function _enableWorkspace(name, options) {
-            var _this2 = this;
+            var _this3 = this;
             this._destroyWorkspace().then(function () {
-                return _this2._initWorkspace(name, options);
+                return _this3._initWorkspace(name, options);
             });
         },
         _getWorkspaceClassByName: function _getWorkspaceClassByName(name) {
@@ -104677,7 +103361,7 @@ define('app/component/app', [
             return WorkspaceClass;
         },
         _destroyWorkspace: function _destroyWorkspace() {
-            var _this3 = this;
+            var _this4 = this;
             $('#js_wsp_primary_menu_wrapper').empty();
             $('#js_wsp_secondary_menu_wrapper').empty();
             $('.main-action-wrapper').empty();
@@ -104688,9 +103372,9 @@ define('app/component/app', [
             }
             return new Promise(function (resolve) {
                 var checkInterval = setInterval(function () {
-                    if (!_this3._workspace || _this3._workspace.state.destroyed) {
+                    if (!_this4._workspace || _this4._workspace.state.destroyed) {
                         clearInterval(checkInterval);
-                        _this3._workspace = null;
+                        _this4._workspace = null;
                         resolve();
                     }
                 }, 200);

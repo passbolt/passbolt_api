@@ -105,6 +105,11 @@ class MfaSettings
         return $this->settings[self::PROVIDERS][0];
     }
 
+    public function getProviders()
+    {
+        return $this->settings[self::PROVIDERS];
+    }
+
     public function isProviderSet()
     {
         return (isset($this->settings[self::PROVIDERS]) && count($this->settings[self::PROVIDERS]));
