@@ -15,6 +15,7 @@
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
+use App\Model\Entity\AuthenticationToken;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Validation\Validation;
@@ -80,9 +81,10 @@ class SetupStartController extends AppController
      * @throws BadRequestException if the authentication token is expired or not valid for this user
      * @param string $userId uuid
      * @param string $tokenId uuid
+     * @param string $tokenType register or recover
      * @return void
      */
-    protected function _assertRequestSanity($userId, $tokenId)
+    protected function _assertRequestSanity($userId, $tokenId, $tokenType = AuthenticationToken::TYPE_REGISTER)
     {
         // Check request sanity
         if (!isset($userId)) {
@@ -99,7 +101,7 @@ class SetupStartController extends AppController
         }
 
         // Check that the token exists
-        if (!$this->AuthenticationTokens->isValid($tokenId, $userId)) {
+        if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
             throw new BadRequestException(__('The authentication token is not valid or expired.'));
         }
     }

@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
-use App\Error\Exception\ValidationException;
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -35,28 +35,51 @@ class GetByTokenTest extends AppTestCase
         $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
     }
 
-    public function testGetByTokenNotUuid()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensGet
+     */
+    public function testAuthenticationTokensGetByTokenNotUuid()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->AuthenticationTokens->getByToken('nope');
     }
 
-    public function testGetByTokenInactive()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensGet
+     */
+    public function testAuthenticationTokensGetByTokenInactive()
     {
-        $t = $this->AuthenticationTokens->getByToken(UuidFactory::uuid('token.id.inactive'));
+        $userId = UuidFactory::uuid('user.id.ruth');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'inactive');
+        $t = $this->AuthenticationTokens->getByToken($tokenInactive);
         $this->assertEmpty($t);
     }
 
-    public function testGetByTokenExpiredSuccess()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensGet
+     */
+    public function testAuthenticationTokensGetByTokenExpiredSuccess()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.expired'));
-        $t = $this->AuthenticationTokens->getByToken($t->token);
+        $userId = UuidFactory::uuid('user.id.ruth');
+        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
+        $t = $this->AuthenticationTokens->getByToken($tokenExpired);
         $this->assertAuthTokenAttributes($t);
     }
 
-    public function testGetByTokenSuccess()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensGet
+     */
+    public function testAuthenticationTokensGetByTokenSuccess()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_LOGIN);
         $t = $this->AuthenticationTokens->getByToken($t->token);
         $this->assertAuthTokenAttributes($t);
     }

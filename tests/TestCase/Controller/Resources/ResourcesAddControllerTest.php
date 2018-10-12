@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
@@ -27,18 +28,15 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         'app.Base/secrets', 'app.Base/permissions', 'app.Base/roles', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
     ];
 
-    protected function _getDummyPostData($data = [])
+    public function setUp()
     {
-        $defaultData = [
-            'Resource' => [
-                'name' => 'new resource name',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.domain.com',
-                'description' => 'new resource description'
-            ],
-            'Secret' => [
-                [
-                    'data' => '-----BEGIN PGP MESSAGE-----
+        $this->Resources = TableRegistry::get('Resources');
+        parent::setUp();
+    }
+
+    protected function _getGpgMessage()
+    {
+        return '-----BEGIN PGP MESSAGE-----
 
 hQIMA1P90Qk1JHA+ARAAu3oaLzv/BfeukST6tYAkAID+xbt5dhsv4lxL3oSbo8Nm
 qmJQSVe6wmh8nZJjeHN4L7iCq8FEZpdCwrDbX1qIuqBFFO3vx6BJFOURG0JbI/E/
@@ -54,7 +52,21 @@ sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
 QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
 W3AI8+rWjK8MGH2T88hCYI/6
 =uahb
------END PGP MESSAGE-----'
+-----END PGP MESSAGE-----';
+    }
+
+    protected function _getDummyPostData($data = [])
+    {
+        $defaultData = [
+            'Resource' => [
+                'name' => 'new resource name',
+                'username' => 'username@domain.com',
+                'uri' => 'https://www.domain.com',
+                'description' => 'new resource description'
+            ],
+            'Secret' => [
+                [
+                    'data' => $this->_getGpgMessage()
                 ]
             ]
         ];
@@ -217,6 +229,13 @@ W3AI8+rWjK8MGH2T88hCYI/6
                     0 => ['data' => 'Invalid secret']
                 ]])
             ],
+            'too many secrets provided' => [
+                'errorField' => 'Secrets.hasAtMost',
+                'data' => $this->_getDummyPostData(['Secret' => [
+                    0 => ['data' => $this->_getGpgMessage()],
+                    1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => $this->_getGpgMessage()],
+                ]])
+            ],
         ];
 
         foreach ($errors as $caseLabel => $case) {
@@ -226,6 +245,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $error = Hash::get($arr, $case['errorField']);
             $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
+            $this->assertResourceNotExist(['Resources.name' => $case['data']['Resource']['name']]);
         }
     }
 

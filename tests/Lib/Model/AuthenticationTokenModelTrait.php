@@ -14,6 +14,9 @@
  */
 namespace App\Test\Lib\Model;
 
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
+
 trait AuthenticationTokenModelTrait
 {
     /**
@@ -25,5 +28,61 @@ trait AuthenticationTokenModelTrait
     {
         $attributes = ['id', 'user_id', 'token', 'active', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $roles);
+    }
+
+    /**
+     * @param array $data
+     * @return string token
+     */
+    protected function saveDummyAuthToken(array $data)
+    {
+        $authToken = TableRegistry::get('AuthenticationTokens');
+        $token = $authToken->newEntity(
+            $data,
+            ['accessibleFields' => [
+                'user_id' => true,
+                'token' => true,
+                'active' => true,
+                'type' => true,
+                'data' => true,
+                'created' => true,
+                'deleted' => true
+            ]]
+        );
+        $authToken->save($token, ['checkRules' => false]);
+
+        return $token->token;
+    }
+
+    /**
+     * @param $userId
+     * @param $type
+     * @param $case
+     * @return string token
+     */
+    public function quickDummyAuthToken($userId, $type, $case = null)
+    {
+        $data = [
+            'user_id' => $userId,
+            'type' => $type,
+            'token' => UuidFactory::uuid(),
+            'active' => true
+        ];
+        switch ($case) {
+            case 'inactive':
+                $data['active'] = false;
+                break;
+            case 'expired_inactive':
+                $data['active'] = false;
+                $data['created'] = date('Y-m-d H:i:s', strtotime('-10 days'));
+                $data['modified'] = date('Y-m-d H:i:s', strtotime('-10 days'));
+                break;
+            case 'expired':
+                $data['created'] = date('Y-m-d H:i:s', strtotime('-10 days'));
+                $data['modified'] = date('Y-m-d H:i:s', strtotime('-10 days'));
+                break;
+        }
+
+        return $this->saveDummyAuthToken($data);
     }
 }

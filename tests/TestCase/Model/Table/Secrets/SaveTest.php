@@ -15,22 +15,29 @@
 
 namespace App\Test\TestCase\Model\Table\Secrets;
 
+use App\Model\Entity\Permission;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
+    use PermissionsModelTrait;
 
     public $Secrets;
 
-    public $fixtures = ['app.Base/resources', 'app.Base/secrets', 'app.Base/users'];
+    public $fixtures = [
+        'app.Base/resources', 'app.Base/secrets', 'app.Base/permissions',
+        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users'
+    ];
 
     public function setUp()
     {
         parent::setUp();
+        $this->Permissions = TableRegistry::get('Permissions');
         $this->Secrets = TableRegistry::get('Secrets');
     }
 
@@ -97,6 +104,10 @@ class SaveTest extends AppTestCase
     {
         $data = self::getDummySecret();
         $options = self::getEntityDefaultOptions();
+
+        // Contextual data change: give access to the resource to the user
+        $this->addPermission('Resource', $data['resource_id'], 'User', $data['user_id'], Permission::OWNER);
+
         $entity = $this->Secrets->newEntity($data, $options);
         $save = $this->Secrets->save($entity);
         $this->assertEmpty($entity->getErrors(), 'Errors occurred while saving the entity: ' . json_encode($entity->getErrors()));
@@ -183,5 +194,18 @@ class SaveTest extends AppTestCase
         $errors = $entity->getErrors();
         $this->assertNotEmpty($errors);
         $this->assertNotNull($errors['resource_id']['resource_is_not_soft_deleted']);
+    }
+
+    public function testErrorRuleHasAccess()
+    {
+        $data = self::getDummySecret();
+        $options = self::getEntityDefaultOptions();
+        $entity = $this->Secrets->newEntity($data, $options);
+
+        $save = $this->Secrets->save($entity);
+        $this->assertFalse($save);
+        $errors = $entity->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['resource_id']['has_resource_access']);
     }
 }
