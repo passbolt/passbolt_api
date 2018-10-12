@@ -5,9 +5,11 @@ function readCookie(name) {
 }
 function domReady() {
   const totpDisableButton = document.getElementById('js_totp_disable');
+  const bases = document.getElementsByTagName('base');
+  const appUrl = bases[0].getAttribute('href');
   totpDisableButton.addEventListener('click', () => {
     totpDisableButton.classList.add('processing');
-    return fetch('/mfa/setup/totp.json', {
+    return fetch(appUrl + '/mfa/setup/totp.json', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',

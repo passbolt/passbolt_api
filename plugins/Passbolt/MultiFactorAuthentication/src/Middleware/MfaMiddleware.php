@@ -102,6 +102,6 @@ class MfaMiddleware
         if ($request->getUri()->getPath() !== '/') {
             $url .= '?redirect=' . $request->getUri()->getPath();
         }
-        return Router::url($url);
+        return Router::url($url, true);
     }
 }

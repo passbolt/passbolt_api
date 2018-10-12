@@ -49,7 +49,7 @@
             <div class="col7 last">
                 <div class="actions-wrapper">
                     <div class="actions-wrapper">
-                        <a href="<?= Router::url('/mfa/setup/totp/start'); ?>" class="button cancel">Cancel</a>
+                        <a href="<?= Router::url('/mfa/setup/totp/start', true); ?>" class="button cancel">Cancel</a>
                         <input type="submit" class="button primary" value="Validate">
                     </div>
                 </div>
