@@ -18,6 +18,7 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use Cake\Network\Exception\ForbiddenException;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -36,7 +37,7 @@ class MfaMiddleware
                 $response = $response
                     ->withCookie(MfaVerifiedCookie::clearCookie($request->is('ssl')));
             }
-            // Redirect
+            // Exception if ajax or redirect
             return $response
                 ->withStatus(302)
                 ->withLocation($this->getVerifyUrl($request));
@@ -95,12 +96,12 @@ class MfaMiddleware
      */
     protected function getVerifyUrl(ServerRequest $request)
     {
-        $url = '/mfa/verify/totp';
-        if ($request->is('json')) {
-            $url .= '.json';
-        }
-        if ($request->getUri()->getPath() !== '/') {
+        if (!$request->is('json')) {
+            // @todo provider switch
+            $url = '/mfa/verify/totp';
             $url .= '?redirect=' . $request->getUri()->getPath();
+        } else {
+            $url = '/mfa/verify/error.json';
         }
         return Router::url($url, true);
     }
