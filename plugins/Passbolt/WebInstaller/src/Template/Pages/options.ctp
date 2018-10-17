@@ -8,7 +8,7 @@ use Cake\Routing\Router;
         <?= $this->element('navigation', ['selectedSection' => 'options']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($optionsConfigurationForm); ?>
+    <?= $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -47,7 +47,7 @@ use Cake\Routing\Router;
                                 echo $this->Form->select(
                                     'force_ssl',
                                     ['1' => 'Yes', '0' => 'No'],
-                                    ['default' => $force_ssl, 'class' => 'required fluid']
+                                    ['default' => isset($force_ssl) ? $force_ssl : 0, 'class' => 'required fluid']
                                 );
                                 ?>
                                 <div class="message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If Force SSL is active, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>

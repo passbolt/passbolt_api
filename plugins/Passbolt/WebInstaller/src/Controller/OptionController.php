@@ -20,8 +20,6 @@ use Passbolt\WebInstaller\Form\OptionsConfigurationForm;
 
 class OptionController extends WebInstallerController
 {
-    const MY_CONFIG_KEY = 'options';
-
     /**
      * Initialize.
      * @return void
@@ -30,55 +28,65 @@ class OptionController extends WebInstallerController
     {
         parent::initialize();
         $this->stepInfo['previous'] = 'install/email';
-        $this->stepInfo['next'] = 'install/installation';
         $this->stepInfo['template'] = 'Pages/options';
+        $this->stepInfo['next'] = $this->webInstaller->getSettings('hasAdmin') ? 'install/installation' : 'install/account_creation';
     }
 
     /**
      * Index
-     * @return mixed
+     * @return void|mixed
      */
     public function index()
     {
-        $data = $this->request->getData();
-        if (empty($data)) {
-            // Set default values.
-            $this->request->data['full_base_url'] = trim(Router::url('/', true), '/');
-            $this->set(['force_ssl' => $this->request->is('ssl') === true ? 1 : 0]);
-        } else {
-            // Remove trailing slash in case it exists in full_base_url.
-            $data['full_base_url'] = trim($data['full_base_url'], '/');
-
-            try {
-                $this->_validateData($data);
-            } catch (Exception $e) {
-                return $this->_error($e->getMessage());
-            }
-
-            $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
-
-            return $this->_success();
+        if ($this->request->is('post')) {
+            return $this->indexPost();
         }
 
-        $this->_loadSavedConfiguration(self::MY_CONFIG_KEY);
+        $fullBaseUrl = trim(Router::url('/', true), '/');
+        $this->request = $this->request->withData('full_base_url', $fullBaseUrl);
+        $optionSettings = $this->webInstaller->getSettings('options');
+        if (!empty($optionSettings)) {
+            foreach ($optionSettings as $key => $optionSetting) {
+                $this->request = $this->request->withData($key, $optionSetting);
+            }
+        }
 
+        $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
     }
 
     /**
-     * Validate data.
-     * @param array $data request data
-     * @return mixed
+     * Index post
+     * @return void|mixed
      */
-    protected function _validateData($data)
+    protected function indexPost()
     {
-        // Validate data.
+        try {
+            $data = $this->getAndValidateData();
+        } catch (Exception $e) {
+            return $this->_error($e->getMessage());
+        }
+
+        $this->webInstaller->setSettingsAndSave('options', $data);
+        $this->goToNextStep();
+    }
+
+    /**
+     * Validate data.
+     * @return array
+     */
+    protected function getAndValidateData()
+    {
+        $data = $this->request->getData();
+        $data['full_base_url'] = trim($data['full_base_url'], '/');
         $optionsConfigurationForm = new OptionsConfigurationForm();
         $confIsValid = $optionsConfigurationForm->execute($data);
-        $this->set('optionsConfigurationForm', $optionsConfigurationForm);
+        $this->set('formExecuteResult', $optionsConfigurationForm);
 
         if (!$confIsValid) {
             throw new Exception(__('The data entered are not correct'));
         }
+
+        return $data;
     }
 }

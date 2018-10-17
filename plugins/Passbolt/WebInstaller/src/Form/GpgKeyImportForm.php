@@ -14,13 +14,11 @@
  */
 namespace Passbolt\WebInstaller\Form;
 
+use App\Utility\Gpg;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Form\Form;
 use Cake\Form\Schema;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Utility\Hash;
-
 use Cake\Validation\Validator;
 
 class GpgKeyImportForm extends Form
@@ -46,9 +44,99 @@ class GpgKeyImportForm extends Form
         $validator
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
             ->notEmpty('armored_key', __('An armored key is required.'))
-            ->ascii('armored_key', __('The armored key provided is not a valid ascii string.'));
+            ->ascii('armored_key', __('The key is not a valid ascii string.'))
+            ->add('armored_key', 'is_private_key', [
+                'last' => true,
+                'rule' => [$this, 'checkIsPrivateKey'],
+                'message' => 'The key is not a valid private key'
+            ])
+            ->add('armored_key', 'has_no_expiry', [
+                'last' => true,
+                'rule' => [$this, 'checkHasNoExpiry'],
+                'message' => 'The key cannot have an expiry date'
+            ])
+            ->add('armored_key', 'can_encrypt_decrypt', [
+                'last' => true,
+                'rule' => [$this, 'checkCanEncryptDecrypt'],
+                'message' => 'The key cannot be used to encrypt/decrypt. Please note that passbolt does not support GPG key protected with a secret.'
+            ]);
 
         return $validator;
+    }
+
+    /**
+     * Check true if field is a valid private gpg key
+     *
+     * @param string $check Value to check
+     * @param array $context A key value list of data containing the validation context.
+     * @return bool Success
+     */
+    public function checkIsPrivateKey($check, array $context)
+    {
+        $gpg = new Gpg();
+        if (!$gpg->isParsableArmoredPrivateKeyRule($check)) {
+            return false;
+        }
+        try {
+            $gpg->getKeyInfo($check);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check true if field is a valid private gpg key
+     *
+     * @param string $check Value to check
+     * @param array $context A key value list of data containing the validation context.
+     * @return bool Success
+     */
+    public function checkHasNoExpiry($check, array $context)
+    {
+        $gpg = new Gpg();
+        try {
+            $keyInfo = $gpg->getKeyInfo($check);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        if (!is_null($keyInfo['expires'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check that the key provided can be used to encrypt and decrypt.
+     *
+     * @param string $check Value to check
+     * @param array $context A key value list of data containing the validation context.
+     * @return bool Success
+     */
+    public function checkCanEncryptDecrypt($check, array $context)
+    {
+        $gpg = new Gpg();
+        try {
+            $messageToEncrypt = 'open source password manager for teams';
+            $gpg->setEncryptKey($check);
+            $gpg->setSignKey($check);
+            $encryptedMessage = $gpg->encrypt($messageToEncrypt, true);
+            $gpg->setDecryptKey($check);
+            $decryptedMessage = $gpg->decrypt($encryptedMessage, '', true);
+        } catch (Exception $e) {
+            return false;
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        if ($messageToEncrypt !== $decryptedMessage) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -59,16 +147,5 @@ class GpgKeyImportForm extends Form
     protected function _execute(array $data)
     {
         return true;
-    }
-
-    /**
-     * Export armored keys in the config folder based on the fingerprint provided.
-     * @param string $fingerprint key fingerprint
-     * @return void
-     */
-    public function exportArmoredKeys($fingerprint)
-    {
-        $gpgKeyGenerateForm = new GpgKeyGenerateForm();
-        $gpgKeyGenerateForm->exportArmoredKeys($fingerprint);
     }
 }

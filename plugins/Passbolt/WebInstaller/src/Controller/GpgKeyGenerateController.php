@@ -20,11 +20,6 @@ use Passbolt\WebInstaller\Form\GpgKeyGenerateForm;
 
 class GpgKeyGenerateController extends WebInstallerController
 {
-    // GPG key generate form.
-    protected $gpgKeyGenerateForm = null;
-
-    const MY_CONFIG_KEY = 'gpg';
-
     /**
      * Initialize.
      * @return void
@@ -36,48 +31,50 @@ class GpgKeyGenerateController extends WebInstallerController
         $this->stepInfo['next'] = 'install/email';
         $this->stepInfo['template'] = 'Pages/gpg_key_generate';
         $this->stepInfo['import_key_cta'] = 'install/gpg_key_import';
-
-        $this->gpgKeyGenerateForm = new GpgKeyGenerateForm();
     }
 
     /**
      * Index
-     * @return mixed
+     * @return void|mixed
      */
     public function index()
     {
-        if (!empty($this->request->getData())) {
-            try {
-                $this->_validateData($this->request->getData());
-                $fingerprint = $this->gpgKeyGenerateForm->generateKey($this->request->getData());
-                $this->gpgKeyGenerateForm->exportArmoredKeys($fingerprint);
-            } catch (Exception $e) {
-                return $this->_error($e->getMessage());
-            }
-
-            $this->_saveConfiguration(self::MY_CONFIG_KEY, [
-                'fingerprint' => $fingerprint,
-                'public' => Configure::read('passbolt.gpg.serverKey.public'),
-                'private' => Configure::read('passbolt.gpg.serverKey.private')
-            ]);
-
-            return $this->_success();
+        if ($this->request->is('post')) {
+            return $this->indexPost();
         }
 
+        $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
+    }
+
+    /**
+     * Index post
+     * @return void|mixed
+     */
+    protected function indexPost()
+    {
+        $data = $this->request->getData();
+        try {
+            $this->validateData($data);
+        } catch (Exception $e) {
+            return $this->_error($e->getMessage());
+        }
+        $this->webInstaller->setSettingsAndSave('gpg', $data);
+
+        $this->goToNextStep();
     }
 
     /**
      * Validate data.
      * @param array $data request data
-     * @return mixed
+     * @throws Exception The data does not validate
+     * @return void
      */
-    protected function _validateData($data)
+    protected function validateData($data)
     {
-        $confIsValid = $this->gpgKeyGenerateForm->execute($data);
-        $this->set('gpgKeyGenerateForm', $this->gpgKeyGenerateForm);
-
-        if (!$confIsValid) {
+        $form = new GpgKeyGenerateForm();
+        if (!$form->execute($data)) {
+            $this->set('formExecuteResult', $form);
             throw new Exception(__('The data entered are not correct'));
         }
     }
