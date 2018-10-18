@@ -15,6 +15,7 @@
 
 namespace App\Test\TestCase\Controller\Resources;
 
+use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
@@ -23,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources',
+        'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources',
         'app.Base/secrets', 'app.Base/favorites', 'app.Base/permissions', 'app.Base/avatars'
     ];
 
@@ -61,7 +62,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testContainSuccess()
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[permissions.user.profile]=1&contain[permissions.group]=1&contain[secret]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
 
@@ -76,6 +77,16 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Contain permission.
         $this->assertObjectHasAttribute('permission', $this->_responseJsonBody[0]);
         $this->assertPermissionAttributes($this->_responseJsonBody[0]->permission);
+        // Contain permission user.
+        $this->assertObjectHasAttribute('permissions', $this->_responseJsonBody[0]);
+        foreach ($this->_responseJsonBody[0]->permissions as $permission) {
+            $this->assertPermissionAttributes($permission);
+            if ($permission->user) {
+                $this->assertUserAttributes($permission->user);
+            } else {
+                $this->assertGroupAttributes($permission->group);
+            }
+        }
         // Contain secret.
         $this->assertObjectHasAttribute('secrets', $this->_responseJsonBody[0]);
         $this->assertCount(1, $this->_responseJsonBody[0]->secrets);
@@ -167,6 +178,43 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
         $this->assertCount(count($expectedResourcesIds), $resourcesIds);
         $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
+    }
+
+    public function testFilterIsSharedWithMeSuccess()
+    {
+        $this->authenticateAs('ada');
+        $urlParameter = "filter[is-shared-with-me]=1";
+        $this->getJson("/resources.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+        $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        sort($resourcesIds);
+
+        // Get all resources with permissions.
+        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
+        $expectedResourcesIds = [];
+        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
+            if ($resourcePermission >= Permission::READ && $resourcePermission < Permission::OWNER) {
+                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
+            }
+        }
+        sort($expectedResourcesIds);
+
+        $this->assertEquals($resourcesIds, $expectedResourcesIds);
+    }
+
+    public function testFilterHasIdSuccess()
+    {
+        $this->authenticateAs('ada');
+        $resourceAId = UuidFactory::uuid('resource.id.apache');
+        $resourceBId = UuidFactory::uuid('resource.id.bower');
+        $urlParameter = "filter[has-id][]=$resourceAId&filter[has-id][]=$resourceBId";
+        $this->getJson("/resources.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+
+        $this->assertCount(2, $this->_responseJsonBody);
+        $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $this->assertContains($resourceAId, $resourcesIds);
+        $this->assertContains($resourceBId, $resourcesIds);
     }
 
     public function testIndexErrorNotAuthenticated()

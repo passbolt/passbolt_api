@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Permissions;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
@@ -60,7 +60,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         // Patch the resource permissions.
         try {
             $resource->permissions = $this->Permissions->patchEntitiesWithChanges($resource->permissions, $data, $resource->id);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -104,7 +104,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         // Patch the resource permissions.
         try {
             $resource->permissions = $this->Permissions->patchEntitiesWithChanges($resource->permissions, $data, $resource->id);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -138,7 +138,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         // Patch the resource permissions.
         try {
             $resource->permissions = $this->Permissions->patchEntitiesWithChanges($resource->permissions, $data, $resource->id);
-        } catch (ValidationRuleException $e) {
+        } catch (CustomValidationException $e) {
             $errors = $e->getErrors();
             $this->assertEmpty($errors, 'Expect no error ' . json_encode($errors));
         }
@@ -270,7 +270,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
             try {
                 $resource->permissions = $this->Permissions->patchEntitiesWithChanges($resource->permissions, $case['data'], $resource->id);
                 $this->assertFalse(false, 'Expect an exception');
-            } catch (ValidationRuleException $e) {
+            } catch (CustomValidationException $e) {
                 $this->assertEntityError($e, $case['errorField']);
             }
         }

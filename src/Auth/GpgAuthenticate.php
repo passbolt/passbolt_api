@@ -176,7 +176,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // generate the authentication token
         $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
-        $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id);
+        $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!isset($authenticationToken->token)) {
             return $this->_error(__('Failed to create token.'));
         }
@@ -206,7 +206,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // extract the UUID to get the database records
         list($version, $length, $uuid, $version2) = explode('|', $this->_data['user_token_result']);
-        $isValidToken = $this->_AuthenticationToken->isValid($uuid, $this->_user->id);
+        $isValidToken = $this->_AuthenticationToken->isValid($uuid, $this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!$isValidToken) {
             return $this->_error(__('The user token result could not be found ') .
                 't=' . $uuid . ' u=' . $this->_user->id);

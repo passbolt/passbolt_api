@@ -42,7 +42,7 @@ class FindGroupsWhereUserIsOnlyMemberTest extends AppTestCase
     {
         // Ada is not manager of any group
         $userId = UuidFactory::uuid('user.id.ada');
-        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId);
+        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId)->extract('group_id')->toArray();
         $this->assertEmpty($result);
     }
 
@@ -50,7 +50,7 @@ class FindGroupsWhereUserIsOnlyMemberTest extends AppTestCase
     {
         // Ping is many groups but not alone
         $userId = UuidFactory::uuid('user.id.ping');
-        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId);
+        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId)->extract('group_id')->toArray();
         $this->assertEmpty($result);
     }
 
@@ -58,7 +58,7 @@ class FindGroupsWhereUserIsOnlyMemberTest extends AppTestCase
     {
         // Admin is manager of a bunch of empty groups
         $userId = UuidFactory::uuid('user.id.admin');
-        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId);
+        $result = $this->GroupsUsers->findGroupsWhereUserOnlyMember($userId)->extract('group_id')->toArray();
         $this->assertNotEmpty($result);
         $this->assertGreaterThan(5, count($result));
     }

@@ -17,6 +17,12 @@ use Cake\Core\Plugin;
 /**
  * Insert below all passbolt plugins.
  */
+
+// Add remember me plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
+    Plugin::load('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
+}
+
 // Add tags plugin if present.
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'WebInstaller')) {
     Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);

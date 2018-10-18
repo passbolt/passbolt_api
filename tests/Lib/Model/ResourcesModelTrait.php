@@ -81,4 +81,81 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $attributes = ['id', 'name', 'username', 'uri', 'description', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
         $this->assertObjectHasAttributes($attributes, $resource);
     }
+
+    /**
+     * Assert that a user has not access to a or multiple resources
+     * @param string $userId
+     * @param array $resourcesIds
+     */
+    protected function assertUserHasNotAccessResources(string $userId, array $resourcesIds = [])
+    {
+        foreach ($resourcesIds as $resourceId) {
+            // No access to the resource.
+            $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
+            $this->assertFalse($hasAccess);
+            // No secret for the resource.
+            $secret = $this->Resources->Secrets->find()
+                ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+            $this->assertNull($secret);
+            // Not favorite for the resource.
+            $favorite = $this->Resources->Favorites->find()
+                ->where(['foreign_key' => $resourceId, 'user_id' => $userId])->first();
+            $this->assertNull($favorite);
+        }
+    }
+
+    /**
+     * Assert that a user has access to a or multiple resources
+     * @param string $userId
+     * @param array $resourcesIds
+     */
+    protected function assertUserHasAccessResources(string $userId, array $resourcesIds = [])
+    {
+        foreach ($resourcesIds as $resourceId) {
+            // Access granted to the resource.
+            $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
+            $this->assertTrue($hasAccess);
+            // Secret existing.
+            $secret = $this->Resources->Secrets->find()
+                ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+            $this->assertNotNull($secret);
+        }
+    }
+
+    /**
+     * Asserts than a resource is soft deleted.
+     *
+     * @param string $id
+     */
+    protected function assertResourceIsSoftDeleted($id)
+    {
+        $resource = $this->Resources->get($id);
+        $this->assertTrue($resource->deleted);
+    }
+
+    /**
+     * Asserts than a resource is not soft deleted.
+     *
+     * @param string $id
+     */
+    protected function assertResourceIsNotSoftDeleted($id)
+    {
+        $resource = $this->Resources->get($id);
+        $this->assertFalse($resource->deleted);
+    }
+
+    /**
+     * Assert than a resource does not exist
+     *
+     * @param mixed $selector Either the resource id or a find options array
+     */
+    protected function assertResourceNotExist($selector)
+    {
+        if (is_string($selector)) {
+            $resource = $this->Resources->get($selector);
+        } else {
+            $resource = $this->Resources->find()->where($selector)->first();
+        }
+        $this->assertEmpty($resource);
+    }
 }

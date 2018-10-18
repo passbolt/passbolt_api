@@ -15,7 +15,8 @@
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
@@ -36,10 +37,9 @@ class GroupsDeleteController extends AppController
     public function beforeFilter(Event $event)
     {
         $this->loadModel('Groups');
-        $this->loadModel('Resources');
-        $this->loadModel('Groups');
         $this->loadModel('GroupsUsers');
         $this->loadModel('Permissions');
+        $this->loadModel('Resources');
 
         return parent::beforeFilter($event);
     }
@@ -52,7 +52,8 @@ class GroupsDeleteController extends AppController
      */
     public function dryrun($id)
     {
-        $this->_validateRequestData($id);
+        $group = $this->_validateRequestData($id);
+        $this->_validateDelete($group);
         $resources = $this->Resources->findAllByGroupAccess($id);
         $this->success(__('The group can be deleted.'), $resources);
     }
@@ -65,10 +66,16 @@ class GroupsDeleteController extends AppController
      */
     public function delete($id)
     {
-        $group = $this->_validateRequestData($id);
-        $this->Groups->softDelete($group, ['checkRules' => false]);
-        $this->_notifyUsers($group);
-        $this->success(__('The group was deleted successfully.'));
+        $this->GroupsUsers->getConnection()->transactional(function () use ($id) {
+            $group = $this->_validateRequestData($id);
+            $this->_transferResourcesOwners($group);
+            $this->_validateDelete($group);
+            if (!$this->Groups->softDelete($group, ['checkRules' => false])) {
+                throw new InternalErrorException(__('Could not delete the group, please try again later.'));
+            }
+            $this->_notifyUsers($group);
+            $this->success(__('The group was deleted successfully.'));
+        });
     }
 
     /**
@@ -78,8 +85,6 @@ class GroupsDeleteController extends AppController
      * @throws ForbiddenException if current group is not an admin
      * @throws BadRequestException if the group uuid id invalid
      * @throws NotFoundException if the group does not exist or is already deleted
-     * @throws ValidationRuleException if the group is sole manager of a group
-     * @throws ValidationRuleException if the group is sole owner of a shared resource
      * @return \App\Model\Entity\Group $group entity
      */
     protected function _validateRequestData($id)
@@ -98,6 +103,17 @@ class GroupsDeleteController extends AppController
             throw new NotFoundException(__('The group does not exist or has been already deleted.'));
         }
 
+        return $group;
+    }
+
+    /**
+     * Validate the delete operation.
+     * @param Group $group The target group
+     * @throws CustomValidationException if the group is sole owner of a shared resource
+     * @return void
+     */
+    protected function _validateDelete($group)
+    {
         // Check business rules
         // Returning the validation error is not meaningful enough so we need to
         // build the proper answer with list of incriminated resources that needs transfer
@@ -107,14 +123,50 @@ class GroupsDeleteController extends AppController
             $msg = __('The group cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($id);
-                $body = $this->Resources->findAllByIds($id, $resourceIds);
+                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($group->id)->extract('aco_foreign_key')->toArray();
+                $findResourcesOptions = [];
+                $findResourcesOptions['contain']['permissions.user.profile'] = true;
+                $findResourcesOptions['contain']['permissions.group'] = true;
+                $body['errors']['resources']['sole_owner'] = $this->Resources->findAllByIds($group->id, $resourceIds, $findResourcesOptions);
                 $msg .= $errors['id']['soleOwnerOfSharedResource'];
-                throw new ValidationRuleException($msg, $body, $this->Resources);
+                throw new CustomValidationException($msg, $body);
+            }
+        }
+    }
+
+    /**
+     * Transfer the resources permissions which blocked the group delete
+     * @param {Group} $group entity
+     * @throws BadRequestException if the array of manager is
+     * @return void
+     */
+    protected function _transferResourcesOwners($group)
+    {
+        $owners = $this->request->getData('transfer.owners');
+        if (empty($owners)) {
+            return;
+        }
+
+        $permissionsIdsToUpdate = Hash::extract($owners, '{n}.id');
+        foreach ($permissionsIdsToUpdate as $id) {
+            if (!Validation::uuid($id)) {
+                throw new BadRequestException(__('The permissions ids must be valid uuids.'));
             }
         }
 
-        return $group;
+        $resourcesIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
+        sort($resourcesIdsToUpdate);
+
+        $resourcesIdsBlockingDelete = $this->Permissions->findSharedResourcesGroupIsSoleOwner($group->id)->extract('aco_foreign_key')->toArray();
+        sort($resourcesIdsBlockingDelete);
+
+        // If all the resources that are requiring a change are not satisfied, throw an exception.
+        if ($resourcesIdsToUpdate != $resourcesIdsBlockingDelete) {
+            throw new BadRequestException('The transfer is not authorized');
+        }
+
+        // Update all the permissions given as parameter as long as they are relative to a resource which blocked the delete process.
+        $this->Permissions->updateAll(['type' => Permission::OWNER], ['id IN' => $permissionsIdsToUpdate, 'aco_foreign_key IN' => $resourcesIdsBlockingDelete]);
     }
 
     /**

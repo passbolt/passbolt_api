@@ -191,9 +191,9 @@ class HealthcheckTask extends AppShell
             [
                 __('Ensure the temporary directory and its content are writable by the user the webserver user.'),
                 __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'tmp',
-                'sudo chmod 775 $(find ' . ROOT . 'tmp -type d)',
-                'sudo chmod 664 $(find ' . ROOT . 'tmp -type f)',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . TMP,
+                'sudo chmod 775 $(find ' . TMP . ' -type d)',
+                'sudo chmod 664 $(find ' . TMP . ' -type f)',
             ]
         );
         $this->assert(

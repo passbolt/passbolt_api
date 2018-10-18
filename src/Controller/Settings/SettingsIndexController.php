@@ -25,11 +25,17 @@ use Cake\Utility\Hash;
 class SettingsIndexController extends AppController
 {
     /**
-     * Configuration white list while accessing the entry point as anonymous.
+     * Settings visibility key.
      * @var array
      */
-    protected $pluginConfigurationWhiteList = [
-        'rememberMe.options'
+    const SETTINGS_VISIBILITY_KEY = 'settingsVisibility';
+
+    /**
+     * Keys that will be always whitelisted, in addition to the ones defined in config. (once logged in).
+     * @var array
+     */
+    protected $alwaysWhiteListed = [
+        'version'
     ];
 
     /**
@@ -99,7 +105,7 @@ class SettingsIndexController extends AppController
                 ],
                 'passbolt' => [
                     'edition' => Configure::read('passbolt.edition'),
-                    'plugins' => Configure::read('passbolt.plugins', []),
+                    'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(false)),
                 ],
             ];
         } else {
@@ -110,22 +116,66 @@ class SettingsIndexController extends AppController
                 ],
                 'passbolt' => [
                     'edition' => Configure::read('passbolt.edition'),
-                    'plugins' => array_fill_keys(array_keys(Configure::read('passbolt.plugins'), []), []),
+                    'plugins' => $this->_getWhiteListedPluginConfig($this->_getPluginWhiteList(true)),
                 ],
             ];
+        }
 
-            // Add white listed plugin options.
-            foreach ($this->pluginConfigurationWhiteList as $path) {
-                if (!empty(Configure::read('passbolt.plugins.' . $path))) {
-                    $settings['passbolt']['plugins'] = Hash::insert(
-                        $settings['passbolt']['plugins'],
-                        $path,
-                        Configure::read('passbolt.plugins.' . $path)
-                    );
+        return $settings;
+    }
+
+    /**
+     * Get plugin options that are white listed.
+     *
+     * @param bool $public for public visibility or not (require log in).
+     *
+     * @return array list of
+     */
+    protected function _getPluginWhiteList($public = false)
+    {
+        $confKey = $public === true ? 'whiteListPublic' : 'whiteList';
+        $pluginsConf = Configure::read('passbolt.plugins', []);
+        $res = [];
+
+        foreach ($pluginsConf as $pluginName => $pluginConf) {
+            if (!$public) {
+                foreach ($this->alwaysWhiteListed as $whiteListed) {
+                    $res[] = $pluginName . '.' . $whiteListed;
+                }
+            }
+
+            $whiteListOptions = Hash::extract($pluginConf, self::SETTINGS_VISIBILITY_KEY . '.' . $confKey);
+            if (isset($whiteListOptions) && is_array($whiteListOptions)) {
+                foreach ($whiteListOptions as $whiteList) {
+                    $res[] = $pluginName . '.' . $whiteList;
                 }
             }
         }
 
-        return $settings;
+        return $res;
+    }
+
+    /**
+     * Get white listed config.
+     *
+     * @param array $whiteList white list options array
+     *
+     * @return array white listed plugins configurations
+     */
+    protected function _getWhiteListedPluginConfig(array $whiteList)
+    {
+        $pluginsConfig = [];
+        // Add white listed plugin options.
+        foreach ($whiteList as $path) {
+            if (!empty(Configure::read('passbolt.plugins.' . $path))) {
+                $pluginsConfig = Hash::insert(
+                    $pluginsConfig,
+                    $path,
+                    Configure::read('passbolt.plugins.' . $path)
+                );
+            }
+        }
+
+        return $pluginsConfig;
     }
 }

@@ -16,6 +16,7 @@
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -29,7 +30,6 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->disableCsrfToken();
         $this->Favorites = TableRegistry::get('Favorites');
         $this->Groups = TableRegistry::get('Groups');
         $this->GroupsUsers = TableRegistry::get('GroupsUsers');
@@ -51,48 +51,6 @@ P+b3c493CfF0fQ1MBYFluVK/Wka8usg/b0pNkRGVWzBcZ1BOONYlOe/JmUyMutL5
 hcciUFw5
 =TcQF
 -----END PGP MESSAGE-----';
-    }
-
-    protected function _assertUserHasNotAccessResources(string $userId, array $resourcesIds = [])
-    {
-        foreach ($resourcesIds as $resourceId) {
-            // No access to the resource.
-            $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
-            $this->assertFalse($hasAccess);
-            // No secret for the resource.
-            $secret = $this->Resources->Secrets->find()
-                ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
-            $this->assertNull($secret);
-            // Not favorite for the resource.
-            $favorite = $this->Resources->Favorites->find()
-                ->where(['foreign_key' => $resourceId, 'user_id' => $userId])->first();
-            $this->assertNull($favorite);
-        }
-    }
-
-    protected function _assertUserHasAccessResources(string $userId, array $resourcesIds = [])
-    {
-        foreach ($resourcesIds as $resourceId) {
-            // Access granted to the resource.
-            $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
-            $this->assertTrue($hasAccess);
-            // Secret existing.
-            $secret = $this->Resources->Secrets->find()
-                ->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
-            $this->assertNotNull($secret);
-        }
-    }
-
-    protected function _assertUserIsAdmin($groupId, $userId)
-    {
-        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
-        $this->assertTrue($groupUser->is_admin);
-    }
-
-    protected function _assertUserIsNotAdmin($groupId, $userId)
-    {
-        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
-        $this->assertFalse($groupUser->is_admin);
     }
 
     /*
@@ -126,14 +84,14 @@ hcciUFw5
         $this->assertSuccess();
 
         // Jean and Nancy should still have access to the resources.
-        $this->_assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->_assertUserHasAccessResources($userNId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
 
         // Jean should no longer be a group manager of the group
-        $this->_assertUserIsNotAdmin($groupId, $userJId);
+        $this->assertUserIsNotAdmin($groupId, $userJId);
 
         // Nancy should be a group manager of the group
-        $this->_assertUserIsAdmin($groupId, $userNId);
+        $this->assertUserIsAdmin($groupId, $userNId);
     }
 
     /*
@@ -189,19 +147,19 @@ hcciUFw5
         $this->assertSuccess();
 
         // Frances should have access to the group resources.
-        $this->_assertUserHasAccessResources($userFId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userFId, $groupHasAccess);
         // Frances should also be group manager of the group.
-        $this->_assertUserIsAdmin($groupId, $userFId);
+        $this->assertUserIsAdmin($groupId, $userFId);
 
         // Carol should have access to the group resources.
-        $this->_assertUserHasAccessResources($userCId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userCId, $groupHasAccess);
         // Carol should not be group manager of the group.
-        $this->_assertUserIsNotAdmin($groupId, $userCId);
+        $this->assertUserIsNotAdmin($groupId, $userCId);
 
         // Ada should have access to the group resources.
-        $this->_assertUserHasAccessResources($userAId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userAId, $groupHasAccess);
         // Ada should not be group manager of the group.
-        $this->_assertUserIsNotAdmin($groupId, $userAId);
+        $this->assertUserIsNotAdmin($groupId, $userAId);
     }
 
     /*
@@ -238,13 +196,13 @@ hcciUFw5
         $this->assertSuccess();
 
         // kathleen should not have anymore access to the group resources.
-        $this->_assertUserHasNotAccessResources($userKId, $groupHasAccess);
+        $this->assertUserHasNotAccessResources($userKId, $groupHasAccess);
 
         // Lynne should not have anymore access to the group resources (except chai).
         $userHasAccess = [$resourceCId];
         $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
-        $this->_assertUserHasNotAccessResources($userLId, $userHasNotAccess);
-        $this->_assertUserHasAccessResources($userLId, $userHasAccess);
+        $this->assertUserHasNotAccessResources($userLId, $userHasNotAccess);
+        $this->assertUserHasAccessResources($userLId, $userHasAccess);
     }
 
     /*
@@ -325,24 +283,24 @@ hcciUFw5
         $this->assertSuccess();
 
         // Jean and Nancy should still have access to the resources.
-        $this->_assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->_assertUserHasAccessResources($userNId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
 
         // kathleen should not have anymore access to the group resources.
-        $this->_assertUserHasNotAccessResources($userKId, $groupHasAccess);
+        $this->assertUserHasNotAccessResources($userKId, $groupHasAccess);
 
         // Lynne should not have anymore access to the group resources (except chai).
         $userHasAccess = [$resourceCId];
         $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
-        $this->_assertUserHasNotAccessResources($userLId, $userHasNotAccess);
-        $this->_assertUserHasAccessResources($userLId, $userHasAccess);
+        $this->assertUserHasNotAccessResources($userLId, $userHasNotAccess);
+        $this->assertUserHasAccessResources($userLId, $userHasAccess);
 
         // Frances should have access to the group resources.
-        $this->_assertUserHasAccessResources($userFId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userFId, $groupHasAccess);
         // Carol should have access to the group resources.
-        $this->_assertUserHasAccessResources($userCId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userCId, $groupHasAccess);
         // Ada should have access to the group resources.
-        $this->_assertUserHasAccessResources($userAId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userAId, $groupHasAccess);
     }
 
     /*
@@ -424,14 +382,14 @@ hcciUFw5
         $this->assertSuccess();
 
         // Jean and Nancy should still have access to the resources.
-        $this->_assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->_assertUserHasAccessResources($userNId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
 
         // Jean should no longer be a group manager of the group
-        $this->_assertUserIsNotAdmin($groupId, $userJId);
+        $this->assertUserIsNotAdmin($groupId, $userJId);
 
         // Nancy should be a group manager of the group
-        $this->_assertUserIsAdmin($groupId, $userNId);
+        $this->assertUserIsAdmin($groupId, $userNId);
     }
 
     /*
@@ -468,13 +426,13 @@ hcciUFw5
         $this->assertSuccess();
 
         // kathleen should not have anymore access to the group resources.
-        $this->_assertUserHasNotAccessResources($userKId, $groupHasAccess);
+        $this->assertUserHasNotAccessResources($userKId, $groupHasAccess);
 
         // Lynne should not have anymore access to the group resources (except chai).
         $userHasAccess = [$resourceCId];
         $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
-        $this->_assertUserHasNotAccessResources($userLId, $userHasNotAccess);
-        $this->_assertUserHasAccessResources($userLId, $userHasAccess);
+        $this->assertUserHasNotAccessResources($userLId, $userHasNotAccess);
+        $this->assertUserHasAccessResources($userLId, $userHasAccess);
     }
 
     /*
@@ -521,14 +479,14 @@ hcciUFw5
         $this->assertEquals($data['name'], $group->name);
 
         // Jean and Nancy should still have access to the resources.
-        $this->_assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->_assertUserHasAccessResources($userNId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
 
         // Jean should no longer be a group manager of the group
-        $this->_assertUserIsNotAdmin($groupId, $userJId);
+        $this->assertUserIsNotAdmin($groupId, $userJId);
 
         // Nancy should be a group manager of the group
-        $this->_assertUserIsAdmin($groupId, $userNId);
+        $this->assertUserIsAdmin($groupId, $userNId);
     }
 
     // As an administrator I shouldn't be able to add users to a group
@@ -643,5 +601,14 @@ hcciUFw5
         $postData = [];
         $this->putJson("/groups/$groupId.json", $postData);
         $this->assertAuthenticationError();
+    }
+
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $this->put("/groups/$groupId.json");
+        $this->assertResponseCode(403);
     }
 }

@@ -16,7 +16,7 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use Cake\Event\Event;
@@ -36,7 +36,7 @@ class ResourcesAddController extends AppController
         $resource = $this->_buildAndValidateEntity();
 
         // Save the entity
-        $result = $this->Resources->save($resource);
+        $result = $this->Resources->save($resource, ['atomic' => false]);
         $this->_handleValidationError($resource);
 
         // Retrieve the saved resource.
@@ -71,7 +71,7 @@ class ResourcesAddController extends AppController
             'aco' => 'Resource',
             'type' => Permission::OWNER,
         ]];
-        // If no secrets given, a specific message is returned.
+        // If no secrets given, the model will throw a validation error, no need to take care of it here.
         if (isset($data['secrets'])) {
             $data['secrets'][0]['user_id'] = $this->User->id();
         }
@@ -143,13 +143,14 @@ class ResourcesAddController extends AppController
      * Manage validation errors.
      *
      * @param \Cake\Datasource\EntityInterface $resource Resource
+     * @throws ValidationException if the resource validation failed
      * @return void
      */
     protected function _handleValidationError($resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
-            throw new ValidationRuleException(__('Could not validate resource data.'), $errors, $this->Resources);
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
     }
 
