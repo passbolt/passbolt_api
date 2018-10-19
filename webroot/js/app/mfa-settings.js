@@ -5,11 +5,12 @@ function readCookie(name) {
 }
 function domReady() {
   const totpDisableButton = document.getElementById('js_mfa_provider_disable');
+  const bases = document.getElementsByTagName('base');
+  const appUrl = bases[0].getAttribute('href');
+  const provider = totpDisableButton.dataset.provider;
+  const url = `${appUrl}/mfa/setup/${provider}.json`;
   totpDisableButton.addEventListener('click', () => {
     totpDisableButton.classList.add('processing');
-    const provider = totpDisableButton.dataset.provider;
-    const url = `/mfa/setup/${provider}.json`;
-    console.log(url);
     return fetch(url, {
       method: 'DELETE',
       headers: {

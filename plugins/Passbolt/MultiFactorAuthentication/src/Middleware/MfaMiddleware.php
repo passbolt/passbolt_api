@@ -105,6 +105,6 @@ class MfaMiddleware
         } else {
             $url = '/mfa/verify/error.json';
         }
-        return Router::url($url);
+        return Router::url($url, true);
     }
 }

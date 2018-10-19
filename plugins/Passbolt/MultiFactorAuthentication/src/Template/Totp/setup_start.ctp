@@ -37,10 +37,10 @@
     <div class="row">
         <div class="col7">
             <div class="actions-wrapper">
-                <a class="button cancel" href="<?= Router::url('/mfa/setup/select'); ?>">
+                <a class="button cancel" href="<?= Router::url('/mfa/setup/select', true); ?>">
                     <?= __('cancel'); ?>
                 </a>
-                <a class="button primary" href="<?= Router::url('/mfa/setup/totp'); ?>">
+                <a class="button primary" href="<?= Router::url('/mfa/setup/totp', true); ?>">
                     <?= __('get started!'); ?>
                 </a>
             </div>
