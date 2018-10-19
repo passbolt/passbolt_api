@@ -44,9 +44,6 @@ class AppController extends Controller
      */
     public function initialize()
     {
-        // Update configuration with organization settings.
-        OrganizationSettingsTable::mergeOrganizationSettingsToConfig();
-
         $this->loadComponent('RequestHandler');
         $this->loadComponent('User');
         $this->loadComponent('QueryString');

@@ -49,8 +49,29 @@ class OrganizationSettingsTableTest extends AppTestCase
     ];
 
     /**
+     * Get test settings.
+     * @return array sample settings.
+     */
+    protected function _getTestSettings()
+    {
+        $organizationSettings = [
+            'passbolt' => [
+                'ldap' => [
+                    'testSettingOne' => 'value1',
+                    'testSettingTwo' => 'value2',
+                ],
+                'emailNotifications' => [
+                    'create' => true,
+                ]
+            ]
+        ];
+
+        return $organizationSettings;
+    }
+
+    /**
      * setUp method
-     *
+     * 
      * @return void
      */
     public function setUp()
@@ -75,9 +96,11 @@ class OrganizationSettingsTableTest extends AppTestCase
     /**
      * Test create or update settings in normal conditions.
      *
+     * @group model
+     * @group OrganizationSettings
      * @return void
      */
-    public function testCreateOrUpdateSettingsOk()
+    public function testOrganizationSettingsCreateOrUpdateSettingsOk()
     {
         $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $settingItem = $this->OrganizationSettings->createOrUpdateSetting('test.property', 'testvalue', $accessControl);
@@ -88,9 +111,11 @@ class OrganizationSettingsTableTest extends AppTestCase
     /**
      * Test create or update settings 2 times with the same property and assert that object is not duplicate.
      *
+     * @group model
+     * @group OrganizationSettings
      * @return void
      */
-    public function testCreateOrUpdateSettingsNoDuplicate()
+    public function testOrganizationSettingsCreateOrUpdateNoDuplicate()
     {
         $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $this->OrganizationSettings->createOrUpdateSetting('test.property', 'testvalue', $accessControl);
@@ -103,8 +128,11 @@ class OrganizationSettingsTableTest extends AppTestCase
 
     /**
      * Test create or update settings with a validation exception.
+     *
+     * @group model
+     * @group OrganizationSettings
      */
-    public function testCreateOrUpdateSettingsValidationError()
+    public function testOrganizationSettingsCreateOrUpdateValidationError()
     {
         $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $this->expectException(CustomValidationException::class);
@@ -113,8 +141,11 @@ class OrganizationSettingsTableTest extends AppTestCase
 
     /**
      * Test create or update settings with an unauthorized user.
+     *
+     * @group model
+     * @group OrganizationSettings
      */
-    public function testCreateOrUpdateSettingsUnauthorizedValidationError()
+    public function testOrganizationSettingsCreateOrUpdateUnauthorizedValidationError()
     {
         $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->expectException(UnauthorizedException::class);
@@ -123,8 +154,11 @@ class OrganizationSettingsTableTest extends AppTestCase
 
     /**
      * Test get a property that does not exist.
+     *
+     * @group model
+     * @group OrganizationSettings
      */
-    public function testGetPropertyNotExist()
+    public function testOrganizationSettingsGetPropertyNotExist()
     {
         $this->expectException(RecordNotFoundException::class);
         $this->OrganizationSettings->getFirstSettingOrFail('test.property1DoesNotExist');
@@ -132,93 +166,15 @@ class OrganizationSettingsTableTest extends AppTestCase
 
     /**
      * Test get a property that exists.
+     *
+     * @group model
+     * @group OrganizationSettings
      */
-    public function testGetPropertyOk()
+    public function testOrganizationSettingsGetPropertyOk()
     {
         $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         $this->OrganizationSettings->createOrUpdateSetting('test.property', 'testvalue', $accessControl);
         $property = $this->OrganizationSettings->getFirstSettingOrFail('test.property');
-
         $this->assertEquals($property->value, 'testvalue');
-    }
-
-    /**
-     * Get test settings.
-     * @return array sample settings.
-     */
-    protected function _getTestSettings()
-    {
-        $organizationSettings = [
-            'passbolt' => [
-                'ldap' => [
-                    'testSettingOne' => 'value1',
-                    'testSettingTwo' => 'value2',
-                ],
-                'emailNotifications' => [
-                    'create' => true,
-                ]
-            ]
-        ];
-
-        return $organizationSettings;
-    }
-
-    /**
-     * Test saving the organization settings.
-     */
-    public function testSaveOrganizationSettings()
-    {
-        $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        $organizationSettings = $this->_getTestSettings();
-        $organizationSettings = $this->OrganizationSettings->saveOrganizationSettings($organizationSettings, $accessControl);
-        $this->assertEquals(count($organizationSettings), 3);
-        $this->assertEquals($organizationSettings[0]->property, 'passbolt.ldap.testSettingOne');
-        $this->assertEquals($organizationSettings[0]->value, 'value1');
-        $this->assertEquals($organizationSettings[1]->property, 'passbolt.ldap.testSettingTwo');
-        $this->assertEquals($organizationSettings[1]->value, 'value2');
-        $this->assertEquals($organizationSettings[2]->property, 'passbolt.emailNotifications.create');
-        $this->assertEquals($organizationSettings[2]->value, '1');
-    }
-
-    /**
-     * Test get all the properties as array.
-     */
-    public function testGetOrganizationSettings()
-    {
-        $initialOrganizationSettings = $this->_getTestSettings();
-        $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        $this->OrganizationSettings->saveOrganizationSettings($initialOrganizationSettings, $accessControl);
-        $settings = $this->OrganizationSettings->getOrganizationSettings();
-        $this->assertEquals($settings, $initialOrganizationSettings);
-    }
-
-    /**
-     * Test overriding the properties.
-     */
-    public function testMergeOrganizationSettingsToConfig()
-    {
-        $initialConfig = Configure::read();
-        // Insert an initial config at the same level as the one that will be written.
-        Configure::write('passbolt.ldap.testSettingThree', 'value3');
-
-        $initialOrganizationSettings = $this->_getTestSettings();
-        $accessControl = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        $this->OrganizationSettings->saveOrganizationSettings($initialOrganizationSettings, $accessControl);
-        OrganizationSettingsTable::mergeOrganizationSettingsToConfig();
-
-        $passboltConfig = Configure::read('passbolt');
-
-        // Assert that the entries exist for the new ones, and old ones.
-        $this->assertTrue(isset($passboltConfig['ldap']['testSettingOne']));
-        $this->assertTrue(isset($passboltConfig['ldap']['testSettingThree']));
-        $this->assertTrue(isset($passboltConfig['emailNotifications']['create']));
-
-        // Assert that the values correspond to what we expect.
-        $this->assertEquals(Configure::read('passbolt.ldap.testSettingOne'), 'value1');
-        $this->assertEquals(Configure::read('passbolt.ldap.testSettingTwo'), 'value2');
-        $this->assertEquals(Configure::read('passbolt.ldap.testSettingThree'), 'value3');
-
-        // Reset config to initial one.
-        Configure::write($initialConfig);
     }
 }
