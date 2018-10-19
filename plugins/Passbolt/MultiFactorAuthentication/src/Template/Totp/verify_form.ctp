@@ -10,7 +10,7 @@
         <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>
     </h1>
     <?= $this->form->create($totpVerifyForm); ?>
-    <?= $this->form->control('otp', [
+    <?= $this->form->control('totp', [
         'label' => 'One Time Password (OTP)',
         'placeholder' => '123456'
     ]); ?>

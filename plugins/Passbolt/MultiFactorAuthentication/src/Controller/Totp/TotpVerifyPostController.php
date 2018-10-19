@@ -22,8 +22,6 @@ use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\TotpVerifyForm;
-use App\Model\Entity\AuthenticationToken;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
@@ -39,12 +37,12 @@ class TotpVerifyPostController extends AppController
         // Check if settings exists
         $uac = $this->User->getAccessControl();
         try {
-            $mfaSettings = MfaSettings::get($uac);
+            $mfaSettings = MfaSettings::getOrFail($uac);
         } catch(RecordNotFoundException $exception) {
             // for example mfa config was deleted between mfa middleware redirect and here
             throw new InternalErrorException(__('No valid TOTP settings found.'));
         }
-        if (!$mfaSettings->isReadyToUse(MfaSettings::PROVIDER_OTP)) {
+        if (!$mfaSettings->getAccountSettings()->isProviderReady(MfaSettings::PROVIDER_TOTP)) {
             // for example a user is trying to force a check
             throw new BadRequestException(__('Incomplete TOTP settings found.'));
         }
@@ -68,7 +66,7 @@ class TotpVerifyPostController extends AppController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_OTP);
+        $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP);
         $remember = ($this->request->getData('remember') !== null);
         $cookie = MfaVerifiedCookie::get($token, $remember, $this->request->is('ssl'));
         $this->response = $this->response->withCookie($cookie);

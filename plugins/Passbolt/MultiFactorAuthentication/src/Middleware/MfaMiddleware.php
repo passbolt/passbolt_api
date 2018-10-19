@@ -26,6 +26,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaMiddleware
 {
+    private $mfaSettings;
+
     /**
      * {@inheritdoc}
      */
@@ -73,8 +75,8 @@ class MfaMiddleware
         // Mfa not setup
         $uac = new UserAccessControl($user['role']['name'], $user['id']);
         try {
-            $mfaSettings = MfaSettings::get($uac);
-            if (!$mfaSettings->isVerified()) {
+            $this->mfaSettings = MfaSettings::getOrFail($uac);
+            if (!$this->mfaSettings->getAccountSettings()->isOneProviderSet()) {
                 return false;
             }
         } catch (RecordNotFoundException $exception) {
@@ -98,7 +100,7 @@ class MfaMiddleware
     {
         if (!$request->is('json')) {
             // @todo provider switch
-            $url = '/mfa/verify/totp';
+            $url = $this->mfaSettings->getAccountSettings()->getDefaultProviderVerifyUrl(false);
             $url .= '?redirect=' . $request->getUri()->getPath();
         } else {
             $url = '/mfa/verify/error.json';

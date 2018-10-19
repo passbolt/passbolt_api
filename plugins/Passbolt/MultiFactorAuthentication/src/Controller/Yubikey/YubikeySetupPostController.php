@@ -12,36 +12,34 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
  */
-namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
+namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Error\Exception\CustomValidationException;
-use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 
-class TotpSetupPostController extends MfaSetupController
+class YubikeySetupPostController extends MfaSetupController
 {
     /**
-     * Handle TOTP setup POST request
+     * Handle Yubikey setup POST request
      * @return void
      */
     public function post()
     {
-        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
-        $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
+        $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
 
         $uac = $this->User->getAccessControl();
-        $totpSetupForm = new TotpSetupForm($uac);
+        $setupForm = new YubikeySetupForm($uac);
         try {
-            $totpSetupForm->execute($this->request->getData());
+            $setupForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
             if ($this->request->is('json')) {
                 throw $exception;
             } else {
-                $this->set('totpSetupForm', $totpSetupForm);
+                $this->set('yubikeySetupForm', $setupForm);
                 $this->set('theme', $this->User->theme());
-                $this->request = $this->request
-                    ->withData('otpQrCodeImage', $this->request->getData('otpQrCodeImage'));
                 $this->viewBuilder()
                     ->setLayout('mfa_setup')
                     ->setTemplatePath('Totp')
@@ -50,8 +48,6 @@ class TotpSetupPostController extends MfaSetupController
 
             return;
         }
-
-        // Build verified proof token and associated cookie and add it to request
-        $this->_handlePostSuccess(MfaSettings::PROVIDER_TOTP);
+        $this->_handlePostSuccess(MfaSettings::PROVIDER_YUBIKEY);
     }
 }

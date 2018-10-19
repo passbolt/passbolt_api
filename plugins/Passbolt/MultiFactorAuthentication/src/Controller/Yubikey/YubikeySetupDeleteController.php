@@ -12,26 +12,20 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
  */
-namespace Passbolt\MultiFactorAuthentication\Controller;
+namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
-use App\Controller\AppController;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Routing\Route\Route;
+use Passbolt\MultiFactorAuthentication\Controller\MfaSetupDeleteController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaVerifyAjaxErrorController extends AppController
+class YubikeySetupDeleteController extends MfaSetupDeleteController
 {
-
     /**
-     * @throw ForbiddenException
+     * Delete Totp setup
+     *
+     * @return void
      */
-    public function get()
+    public function delete()
     {
-        $settings = MfaSettings::get($this->User->getAccessControl());
-
-        // Use AppController:error instead of exception to avoid logging the error
-        $this->error(__('MFA authentication is required.'), [
-            'providers' => $settings->getAccountSettings()->getProvidersVerifyUrls()
-        ], 403);
+        $this->_handleDelete(MfaSettings::PROVIDER_YUBIKEY);
     }
 }

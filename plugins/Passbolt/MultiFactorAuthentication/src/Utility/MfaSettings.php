@@ -10,166 +10,113 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
-use App\Error\Exception\ValidationException;
+
 use App\Utility\UserAccessControl;
-use Passbolt\AccountSettings\Model\Entity\AccountSetting;
-use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 class MfaSettings
 {
+
     const MFA = 'mfa';
     const PROVIDERS = 'providers';
-    const PROVIDER_OTP = 'otp';
-    const VERIFIED = 'verified';
-    const OTP_PROVISIONING_URI = 'otpProvisioningUri';
+    const PROVIDER_TOTP = 'totp';
+    const PROVIDER_DUO = 'duo';
+    const PROVIDER_YUBIKEY = 'yubikey';
 
-    protected $settings;
-    protected $original;
-    protected $uac;
-    protected $errors;
-    protected $remember;
+    protected $accountSettings;
+    protected $orgSettings;
 
-    /**
-     * @var AccountSettingsTable
-     */
-    protected $AccountSettings;
 
-    public function __construct(UserAccessControl $uac, $settings = null) {
-        $this->AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
-        $this->uac = $uac;
-        if ($settings instanceof AccountSetting) {
-            $this->original = $settings;
-            if (preg_match('/^[\[\{]\"/', $settings->value)) {
-                $decodedJson = json_decode($settings->value, true);
-                if (!is_null($decodedJson)) {
-                    $this->settings = $decodedJson;
-                }
-            }
-            return;
-        }
-        if (is_array($settings)) {
-            $this->settings = $settings;
-        }
-        $this->errors = null;
-    }
-
-    public function getCreated()
+    public function __construct(MfaOrgSettings $orgSettings, MfaAccountSettings $accountSettings = null)
     {
-        if (isset($this->original->created)) {
-            return $this->original->created;
-        }
-        return null;
-    }
-
-    public function getModified()
-    {
-        if (isset($this->original->modified)) {
-            return $this->original->modified;
-        }
-        return null;
-    }
-
-    public function isReadyToUse($provider = null)
-    {
-        if (!$this->isProviderSet() || !$this->isVerified()) {
-            return false;
-        }
-        if (isset($provider) && $this->getProvider() !== $provider) {
-            return false;
-        }
-        switch ($this->getProvider()) {
-            case self::PROVIDER_OTP:
-                return ($this->isOtpProvisioningUriSet());
-                break;
-            default:
-                return true;
-        }
-    }
-
-    public function toJson()
-    {
-        return json_encode($this->settings);
-    }
-
-    public function toArray()
-    {
-        return $this->settings;
-    }
-
-    public function getProvider()
-    {
-        return $this->settings[self::PROVIDERS][0];
-    }
-
-    public function getProviders()
-    {
-        return $this->settings[self::PROVIDERS];
-    }
-
-    public function isProviderSet()
-    {
-        return (isset($this->settings[self::PROVIDERS]) && count($this->settings[self::PROVIDERS]));
-    }
-
-    public function isVerified()
-    {
-        foreach($this->settings[self::PROVIDERS] as $provider) {
-            if (isset($this->settings[$provider])) {
-                return $this->settings[$provider][self::VERIFIED];
-            }
-            return false;
-        }
-    }
-
-    public function getOtpProvisioningUri()
-    {
-        return $this->settings[self::PROVIDER_OTP][self::OTP_PROVISIONING_URI];
-    }
-
-    public function isOtpProvisioningUriSet()
-    {
-        return (isset($this->settings[self::PROVIDER_OTP][self::OTP_PROVISIONING_URI]));
+        $this->accountSettings = $accountSettings;
+        $this->orgSettings = $orgSettings;
     }
 
     /**
+     * Get MfaSettings singleton
+     *
      * @param UserAccessControl $uac
-     * @throw RecordNotFoundException
      * @return MfaSettings
      */
-    static public function get(UserAccessControl $uac)
-    {
-        $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
-        $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
-        return new MfaSettings($uac, $settings);
-    }
-
-    public function delete()
-    {
-        $this->AccountSettings->deleteByProperty($this->uac->getId(), self::MFA);
-    }
-
-    public function save()
-    {
-        $this->AccountSettings->createOrUpdateSetting($this->uac->getId(), self::MFA, $this->toJson());
-    }
-
-    public function disableProvider($providerToDisable = self::PROVIDER_OTP)
-    {
-        $providers = $this->settings[self::PROVIDERS];
-        foreach($providers as $i => $provider) {
-            if ($provider === $providerToDisable) {
-                unset($this->settings[self::PROVIDERS][$i]);
-                unset($this->settings[$providerToDisable]);
-                if (!count($this->settings[self::PROVIDERS])) {
-                    $this->delete();
-                } else {
-                    $this->save();
-                }
-            }
+    static public function get(UserAccessControl $uac) {
+        $orgSettings = MfaOrgSettings::get($uac);
+        try {
+            $accountSettings = MfaAccountSettings::get($uac);
+        } catch (RecordNotFoundException $exception) {
+            $accountSettings = null;
         }
+        return new MfaSettings($orgSettings, $accountSettings);
+    }
+
+    /**
+     * Get MfaSettings or fail if not present
+     *
+     * @throws RecordNotFoundException
+     * @param UserAccessControl $uac
+     * @return MfaSettings
+     */
+    static public function getOrFail(UserAccessControl $uac)
+    {
+        $orgSettings = MfaOrgSettings::get($uac);
+        $accountSettings = MfaAccountSettings::get($uac);
+        return new MfaSettings($orgSettings, $accountSettings);
+    }
+
+    /**
+     * @return array
+     */
+    static public function getProviders()
+    {
+        return [
+            self::PROVIDER_TOTP,
+            self::PROVIDER_DUO,
+            self::PROVIDER_YUBIKEY
+        ];
+    }
+
+    /**
+     * Return both the user and org provider configuration status
+     *
+     * @return array
+     */
+    public function getProvidersStatuses()
+    {
+        $result = [];
+        $falsy = [
+            self::PROVIDER_TOTP => false,
+            self::PROVIDER_DUO => false,
+            self::PROVIDER_YUBIKEY => false
+        ];
+        if ($this->orgSettings === null) {
+            $result['MfaOrganizationSettings'] = $falsy;
+        } else {
+            $result['MfaOrganizationSettings'] = $this->orgSettings->getProvidersStatus();
+        }
+        if ($this->accountSettings === null) {
+            $result['MfaAccountSettings'] = $falsy;
+        } else {
+            $result['MfaAccountSettings'] = $this->accountSettings->getProvidersStatus();
+        }
+        return $result;
+    }
+
+    /**
+     * @return MfaAccountSettings
+     */
+    public function getAccountSettings()
+    {
+        return $this->accountSettings;
+    }
+
+    /**
+     * @return MfaOrgSettings
+     */
+    public function getOrganizationSettings()
+    {
+        return $this->orgSettings;
     }
 }

@@ -14,24 +14,15 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Form;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
-use App\Utility\UserAccessControl;
-use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validator;
-use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class TotpSetupForm extends MfaForm
+class YubikeySetupForm extends MfaForm
 {
-    /**
-     * @var \OTPHP\TOTPInterface|\OTPHP\HOTPInterface
-     */
-    protected $otp;
-
     /**
      * Build form schema
      *
@@ -41,8 +32,7 @@ class TotpSetupForm extends MfaForm
     protected function _buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('otpProvisioningUri', ['type' => 'string'])
-            ->addField('totp', ['type' => 'string']);
+            ->addField('otp', ['type' => 'string']);
     }
 
     /**
@@ -54,40 +44,12 @@ class TotpSetupForm extends MfaForm
     protected function _buildValidator(Validator $validator)
     {
         $validator
-            ->scalar('otpProvisioningUri')
-            ->notEmpty('otpProvisioningUri')
-            ->add('otpProvisioningUri', ['isValidOtpProvisioningUri' => [
-                'rule' => [$this, 'isValidOtpProvisioningUri'],
-                'message' => __('This OTP provision uri is not valid.')
-            ]]);
-
-        $validator
-            ->add('totp', ['isValidOtp' => [
+            ->add('otp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.')
             ]]);
 
         return $validator;
-    }
-
-    /**
-     * Custom validation rule to validate otp provisioning uri
-     *
-     * @param string $value otp provisioning uri
-     * @return bool
-     */
-    public function isValidOtpProvisioningUri(string $value)
-    {
-        if (!is_string($value)) {
-            return false;
-        }
-        try {
-            $this->otp = Factory::loadFromProvisioningUri($value);
-        } catch (\InvalidArgumentException $exception) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -99,16 +61,11 @@ class TotpSetupForm extends MfaForm
      */
     public function isValidOtp(string $value)
     {
-        if (!isset($this->otp)) {
-            return false;
-        }
         if (!is_string($value)) {
             return false;
         }
-        if (!is_numeric($value)) {
-            return false;
-        }
-        return $this->otp->verify($value);
+        // TODO Yubikey verify
+        return true;
     }
 
     /**
@@ -118,10 +75,9 @@ class TotpSetupForm extends MfaForm
     protected function _execute(array $data)
     {
         try {
-            $data = ['otpProvisioningUri' => $data['otpProvisioningUri']];
-            MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_TOTP, $data);
+            MfaAccountSettings::enableProvider($this->uac , MfaSettings::PROVIDER_YUBIKEY);
         } catch (ValidationException $e) {
-            throw new InternalErrorException(__('Could not save the OTP settings. Please try again later.'));
+            throw new InternalErrorException(__('Could not save the yubikey settings. Please try again later.'));
         }
 
         return true;

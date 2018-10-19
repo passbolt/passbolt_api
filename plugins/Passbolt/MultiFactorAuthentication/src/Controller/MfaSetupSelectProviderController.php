@@ -10,16 +10,14 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Routing\Route\Route;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaVerifyAjaxErrorController extends AppController
+class MfaSetupSelectProviderController extends AppController
 {
 
     /**
@@ -28,10 +26,14 @@ class MfaVerifyAjaxErrorController extends AppController
     public function get()
     {
         $settings = MfaSettings::get($this->User->getAccessControl());
-
-        // Use AppController:error instead of exception to avoid logging the error
-        $this->error(__('MFA authentication is required.'), [
-            'providers' => $settings->getAccountSettings()->getProvidersVerifyUrls()
-        ], 403);
+        $body = $settings->getProvidersStatuses();
+        if (!$this->request->is('json')) {
+            $this->set('theme', $this->User->theme());
+            $this->viewBuilder()
+                ->setLayout('mfa_setup')
+                ->setTemplatePath('Mfa')
+                ->setTemplate('select');
+        }
+        $this->success(__('Please a provider to setup.'), $body);
     }
 }

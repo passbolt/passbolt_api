@@ -34,12 +34,12 @@ class TotpVerifyGetController extends AppController
     {
         $uac = $this->User->getAccessControl();
         try {
-            $mfaSettings = MfaSettings::get($uac);
+            $mfaSettings = MfaSettings::getOrFail($uac);
         } catch(RecordNotFoundException $exception) {
             // for example mfa config was deleted between mfa middleware redirect and here
             throw new InternalErrorException(__('No valid TOTP settings found.'));
         }
-        if (!$mfaSettings->isReadyToUse(MfaSettings::PROVIDER_OTP)) {
+        if (!$mfaSettings->getAccountSettings()->isProviderReady(MfaSettings::PROVIDER_TOTP)) {
             // for example a user is trying to force a check
             throw new BadRequestException(__('Incomplete TOTP settings found.'));
         }

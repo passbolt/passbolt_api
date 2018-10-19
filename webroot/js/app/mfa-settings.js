@@ -4,10 +4,13 @@ function readCookie(name) {
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 function domReady() {
-  const totpDisableButton = document.getElementById('js_totp_disable');
+  const totpDisableButton = document.getElementById('js_mfa_provider_disable');
   totpDisableButton.addEventListener('click', () => {
     totpDisableButton.classList.add('processing');
-    return fetch('/mfa/setup/totp.json', {
+    const provider = totpDisableButton.dataset.provider;
+    const url = `/mfa/setup/${provider}.json`;
+    console.log(url);
+    return fetch(url, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -15,7 +18,7 @@ function domReady() {
       },
       redirect: 'follow'
     }).then(() => {
-      window.location.replace(window.location.href);
+      window.location.replace('/mfa/setup/select');
     }, () => {
       totpDisableButton.classList.remove('processing');
     })
