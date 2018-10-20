@@ -27,8 +27,8 @@ class TotpSetupPostController extends MfaSetupController
      */
     public function post()
     {
-        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
-        $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
+        $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
 
         $uac = $this->User->getAccessControl();
         $totpSetupForm = new TotpSetupForm($uac);

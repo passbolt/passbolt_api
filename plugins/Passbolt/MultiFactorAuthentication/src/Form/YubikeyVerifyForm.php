@@ -10,34 +10,28 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Form;
 
-use App\Error\Exception\CustomValidationException;
-use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
-use Cake\Form\Form;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Form\Schema;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Yubikey\Validate;
 
 class YubikeyVerifyForm extends MfaForm
 {
-    /**
-     * @var \OTPHP\TOTPInterface
-     */
-    protected $totp;
-
     /**
      * @var MfaSettings
      */
     protected $settings;
 
     /**
-     * TotpVerifyForm constructor.
+     * VerifyForm constructor.
      * @param UserAccessControl $uac
      * @param MfaSettings $settings
      */
@@ -56,7 +50,7 @@ class YubikeyVerifyForm extends MfaForm
     protected function _buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('totp', ['type' => 'string']);
+            ->addField('hotp', ['type' => 'string']);
     }
 
     /**
@@ -68,8 +62,10 @@ class YubikeyVerifyForm extends MfaForm
     protected function _buildValidator(Validator $validator)
     {
         $validator
-            ->add('otp', ['isValidOtp' => [
-                'rule' => [$this, 'isValidOtp'],
+            ->requirePresence('hotp', __('An OTP is required.'))
+            ->notEmpty('hotp', __('The OTP should not be empty.'))
+            ->add('hotp', ['isValidHotp' => [
+                'rule' => [$this, 'isValidHotp'],
                 'message' => __('This OTP is not valid.')
             ]]);
 
@@ -77,17 +73,24 @@ class YubikeyVerifyForm extends MfaForm
     }
 
     /**
+     * Custom validation rule to validate yubikey otp
      *
-     * Custom validation rule to validate otp provisioning uri
-     *
-     * @param string $value otp provisioning uri
+     * @param string $value hotp
      * @return bool
      */
-    public function isValidOtp(string $value)
+    public function isValidHotp(string $value)
     {
-        if (!isset($this->totp)) {
+        if (!Validation::custom($value, '/^[cbdefghijklnrtuv]{44}$/')) {
             return false;
         }
-        return $this->totp->verify($value);
+        try {
+            $secretKey = $this->settings->getOrganizationSettings()->getYubikeyOTPSecretKey();
+            $clientId = $this->settings->getOrganizationSettings()->getYubikeyOTPClientId();
+        } catch(RecordNotFoundException $exception) {
+            throw new InternalErrorException($exception->getMessage());
+        }
+        $request = new Validate($secretKey, $clientId);
+        $response = $request->check($value);
+        return $response->success();
     }
 }

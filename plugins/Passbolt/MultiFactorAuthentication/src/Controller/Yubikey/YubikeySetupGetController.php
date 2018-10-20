@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
@@ -34,9 +34,9 @@ class YubikeySetupGetController extends MfaSetupController
      */
     public function get()
     {
-        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
         try {
-            $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
+            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
             $this->_handleGetNewSettings();
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_YUBIKEY);
@@ -54,7 +54,7 @@ class YubikeySetupGetController extends MfaSetupController
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
-        $totpSetupForm = new YubikeySetupForm($uac);
+        $totpSetupForm = new YubikeySetupForm($uac, MfaSettings::get($uac));
 
         if (!$this->request->is('json')) {
             $this->set('yubikeySetupForm', $totpSetupForm);

@@ -10,19 +10,20 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
-namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
+namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Error\Exception\CustomValidationException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
+use Passbolt\MultiFactorAuthentication\Form\YubikeyVerifyForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\TotpVerifyForm;
 use Cake\Routing\Router;
 
-class TotpVerifyPostController extends MfaVerifyController
+class YubikeyVerifyPostController extends MfaVerifyController
 {
 
     /**
@@ -32,14 +33,17 @@ class TotpVerifyPostController extends MfaVerifyController
     public function post()
     {
         $this->_handleVerifiedNotRequired();
-        $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
+        $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
 
         // Verify totp
         $uac = $this->User->getAccessControl();
-        $verifyForm = new TotpVerifyForm($uac, MfaSettings::getOrFail($uac));
+        $verifyForm = new YubikeyVerifyForm($uac, MfaSettings::getOrFail($uac));
         try {
             $verifyForm->execute($this->request->getData());
         } catch(CustomValidationException $exception) {
+            $this->request = $this->request
+                ->withData('otp', '');
+
             if ($this->request->is('json')) {
                 throw $exception;
             }
@@ -47,14 +51,14 @@ class TotpVerifyPostController extends MfaVerifyController
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
-                ->setTemplatePath('Totp')
+                ->setTemplatePath('Yubikey')
                 ->setTemplate('verifyForm');
 
             return;
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $this->_generateMfaToken(MfaSettings::PROVIDER_TOTP);
+        $this->_generateMfaToken(MfaSettings::PROVIDER_YUBIKEY);
         $this->_handleVerifySuccess();
     }
 }

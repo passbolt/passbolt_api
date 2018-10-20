@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
@@ -27,11 +27,11 @@ class YubikeySetupPostController extends MfaSetupController
      */
     public function post()
     {
-        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
-        $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_YUBIKEY);
+        $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_YUBIKEY);
 
         $uac = $this->User->getAccessControl();
-        $setupForm = new YubikeySetupForm($uac);
+        $setupForm = new YubikeySetupForm($uac, MfaSettings::get($uac));
         try {
             $setupForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {

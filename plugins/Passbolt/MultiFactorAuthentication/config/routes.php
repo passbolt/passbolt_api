@@ -18,6 +18,8 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
+    $routes->redirect('/setup', '/mfa/setup/select');
+
     $routes->connect('/setup/select', ['controller' => 'MfaSetupSelectProvider', 'action' => 'get'])
         ->setMethods(['GET']);
 

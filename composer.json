@@ -51,7 +51,8 @@
         "burzum/cakephp-imagine-plugin": "2.1.1",
         "ezyang/htmlpurifier": "dev-master",
         "spomky-labs/otphp": "^8.3",
-        "bacon/bacon-qr-code": "^1.0"
+        "bacon/bacon-qr-code": "^1.0",
+        "enygma/yubikey": "^3.3"
     },
     "require-dev": {
         "psy/psysh": "@stable",

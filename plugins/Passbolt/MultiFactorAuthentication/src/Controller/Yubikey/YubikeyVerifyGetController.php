@@ -10,17 +10,17 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
-namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
+namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Form\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\YubikeyVerifyForm;
 
-class TotpVerifyGetController extends MfaVerifyController
+class YubikeyVerifyGetController extends MfaVerifyController
 {
 
     /**
@@ -31,18 +31,18 @@ class TotpVerifyGetController extends MfaVerifyController
     public function get()
     {
         $this->_handleVerifiedNotRequired();
-        $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
+        $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
 
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
-        $verifyForm = new TotpVerifyForm($uac, MfaSettings::get($uac));
+        $verifyForm = new YubikeyVerifyForm($uac, MfaSettings::getOrFail($uac));
 
         if (!$this->request->is('json')) {
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
-                ->setTemplatePath('Totp')
+                ->setTemplatePath('Yubikey')
                 ->setTemplate('verifyForm');
         } else {
             $this->success(__('Please provide the one time password.'));

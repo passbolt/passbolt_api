@@ -10,76 +10,31 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Form;
 
 use App\Error\Exception\ValidationException;
-use Cake\Form\Schema;
 use Cake\Network\Exception\InternalErrorException;
-use Cake\Validation\Validator;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class YubikeySetupForm extends MfaForm
+class YubikeySetupForm extends YubikeyVerifyForm
 {
-    /**
-     * Build form schema
-     *
-     * @param Schema $schema
-     * @return $this|Schema
-     */
-    protected function _buildSchema(Schema $schema)
-    {
-        return $schema
-            ->addField('otp', ['type' => 'string']);
-    }
 
     /**
-     * Build form validation
+     * Form post validation treatment
      *
-     * @param Validator $validator
-     * @return Validator
-     */
-    protected function _buildValidator(Validator $validator)
-    {
-        $validator
-            ->add('otp', ['isValidOtp' => [
-                'rule' => [$this, 'isValidOtp'],
-                'message' => __('This OTP is not valid.')
-            ]]);
-
-        return $validator;
-    }
-
-    /**
-     *
-     * Custom validation rule to validate otp provisioning uri
-     *
-     * @param string $value otp provisioning uri
-     * @return bool
-     */
-    public function isValidOtp(string $value)
-    {
-        if (!is_string($value)) {
-            return false;
-        }
-        // TODO Yubikey verify
-        return true;
-    }
-
-    /**
      * @param array $data
      * @return bool
      */
     protected function _execute(array $data)
     {
         try {
-            MfaAccountSettings::enableProvider($this->uac , MfaSettings::PROVIDER_YUBIKEY);
+            MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_YUBIKEY);
         } catch (ValidationException $e) {
-            throw new InternalErrorException(__('Could not save the yubikey settings. Please try again later.'));
+            throw new InternalErrorException(__('Could not save the Yubikey OTP settings. Please try again later.'));
         }
-
         return true;
     }
 }

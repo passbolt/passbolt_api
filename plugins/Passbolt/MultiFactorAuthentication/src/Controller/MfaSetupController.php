@@ -27,10 +27,10 @@ class MfaSetupController extends AppController
     /**
      * Fail is organization do not allow this authentication provider
      *
-     * @param string $provider
+     * @param string $provider name of the provider
      * @throws BadRequestException
      */
-    protected function orgAllowProviderOrFail(string $provider)
+    protected function _orgAllowProviderOrFail(string $provider)
     {
        $this->mfaSettings = MfaSettings::get($this->User->getAccessControl());
        if ($this->mfaSettings->getOrganizationSettings() === null) {
@@ -46,11 +46,11 @@ class MfaSetupController extends AppController
     /**
      * Fail is account is already setup for this authentication provider
      *
-     * @param string $provider
+     * @param string $provider name of the provider
      * @throws BadRequestException
      * @return bool
      */
-    protected function notAlreadySetupOrFail(string $provider)
+    protected function _notAlreadySetupOrFail(string $provider)
     {
         if ($this->mfaSettings->getAccountSettings() !== null) {
             $isReadyToUse = $this->mfaSettings->getAccountSettings()->isProviderReady($provider);
@@ -84,7 +84,7 @@ class MfaSetupController extends AppController
      * Handle post setup success
      * Create auth token and cookie verification proof
      *
-     * @param string $provider
+     * @param string $provider name of the provider
      */
     protected function _handlePostSuccess(string $provider)
     {

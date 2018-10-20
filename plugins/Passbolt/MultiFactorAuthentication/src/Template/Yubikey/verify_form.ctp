@@ -7,15 +7,15 @@
 ?>
 <div class="login-form ">
     <h1>
-        <?= __('Enter the six digit number as presented on your phone or tablet.'); ?>
+        <?= __('Put your finger on the yubikey'); ?>
     </h1>
     <?= $this->form->create($verifyForm); ?>
-    <?= $this->form->control('totp', [
-        'label' => 'One Time Password (OTP)',
-        'placeholder' => '123456'
+    <?= $this->form->control('hotp', [
+        'label' => 'Yubikey OTP',
+        'type' => 'password'
     ]); ?>
     <div class="input checkbox">
-        <input type="checkbox" name="remember" value="remember" id="remember">
+        <input type="checkbox" name="remember" value="remember" id="remember" checked>
         <label for="remember" ><?= __('Remember this device for a month.'); ?></label>
     </div>
     <div class="form-actions">

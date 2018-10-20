@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "711282e196eeb6390083bddb57440d62",
-    "content-hash": "963c572d3dff7c9af99ba0f4eadf7ab4",
+    "hash": "be7bcd2eabd1df6c55e3173055d8e3e8",
+    "content-hash": "d0c846b1a5b41832e33dc6b081768753",
     "packages": [
         {
             "name": "aura/intl",
@@ -580,6 +580,55 @@
                 "useragent"
             ],
             "time": "2018-06-21 15:54:46"
+        },
+        {
+            "name": "enygma/yubikey",
+            "version": "3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/enygma/yubikey.git",
+                "reference": "2c2502dd85ed3d13c08fbb8a3eef516fdef58ec6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/enygma/yubikey/zipball/2c2502dd85ed3d13c08fbb8a3eef516fdef58ec6",
+                "reference": "2c2502dd85ed3d13c08fbb8a3eef516fdef58ec6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.1"
+            },
+            "require-dev": {
+                "codeclimate/php-test-reporter": "dev-master",
+                "phpunit/phpunit": "4.3.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Yubikey": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Chris Cornutt",
+                    "email": "ccornutt@phpdeveloper.org",
+                    "homepage": "http://www.phpdeveloper.org/"
+                }
+            ],
+            "description": "PHP library to interface with the Yubikey REST API",
+            "homepage": "https://github.com/enygma/yubikey.git",
+            "keywords": [
+                "api",
+                "rest",
+                "twofactor",
+                "yubico",
+                "yubikey"
+            ],
+            "time": "2018-03-08 20:38:39"
         },
         {
             "name": "ezyang/htmlpurifier",

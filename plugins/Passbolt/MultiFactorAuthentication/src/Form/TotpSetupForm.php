@@ -62,6 +62,8 @@ class TotpSetupForm extends MfaForm
             ]]);
 
         $validator
+            ->requirePresence('totp', __('An OTP is required.'))
+            ->notEmpty('totp', __('The OTP should not be empty.'))
             ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.')
@@ -112,6 +114,8 @@ class TotpSetupForm extends MfaForm
     }
 
     /**
+     * Form post validation treatment
+     *
      * @param array $data
      * @return bool
      */

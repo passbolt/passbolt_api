@@ -19,7 +19,7 @@ $this->assign('pageClass', 'iframe mfa');
         <div class="col7">
             <h4><?= __('Scan this bar code'); ?></h4>
             <div class="input-verify">
-                <?= $this->form->control('otp', [
+                <?= $this->form->control('hotp', [
                     'label' => 'Yubikey OTP',
                     'type' => 'password'
                 ]); ?>

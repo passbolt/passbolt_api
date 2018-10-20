@@ -45,7 +45,7 @@ class MfaSetupDeleteController extends AppController
         }
 
         // Disable provider
-        $mfaSettings->getAccountSettings()->disableProvider($uac, $provider);
+        $mfaSettings->getAccountSettings()->disableProvider($provider);
         $this->success('The configuration was deleted.');
     }
 }

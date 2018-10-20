@@ -14,7 +14,6 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -60,7 +59,7 @@ class MfaAccountSettings
     /**
      * Return true if a provider setting is ready to use
      *
-     * @param string $provider
+     * @param string $provider name of the provider
      * @return bool
      */
     public function isProviderReady($provider)
@@ -160,7 +159,7 @@ class MfaAccountSettings
     /**
      * Return verification date time as FrozenTime
      *
-     * @param string $provider
+     * @param string $provider name of the provider
      * @return FrozenTime
      */
     public function getVerifiedFrozenTime(string $provider)
@@ -213,7 +212,7 @@ class MfaAccountSettings
      * Enable a new mfa provider for the given user
      *
      * @param UserAccessControl $uac
-     * @param string $provider
+     * @param string $provider name of the provider
      * @param array $data
      */
     static public function enableProvider(UserAccessControl $uac, string $provider, array $data = [])
@@ -245,7 +244,6 @@ class MfaAccountSettings
      */
     public function save()
     {
-        throw new CustomValidationException('test',  $this->toJson());
         $this->AccountSettings->createOrUpdateSetting($this->uac->getId(), MfaSettings::MFA, $this->toJson());
     }
 
@@ -263,21 +261,23 @@ class MfaAccountSettings
     /**
      * Disable a given provider
      *
-     * @param string $providerToDisable
+     * @param string $providerToDisable name of the provider
      */
     public function disableProvider($providerToDisable)
     {
         $providers = $this->getProviders();
         foreach($providers as $i => $provider) {
             if ($provider === $providerToDisable) {
-                unset($this->settings[self::PROVIDERS][$i]);
+                array_splice($this->settings[self::PROVIDERS], $i, 1);
                 unset($this->settings[$providerToDisable]);
+
                 if (!count($this->settings[self::PROVIDERS])) {
                     // if there is no provider left
                     $this->delete();
                 } else {
                     $this->save();
                 }
+                break;
             }
         }
     }

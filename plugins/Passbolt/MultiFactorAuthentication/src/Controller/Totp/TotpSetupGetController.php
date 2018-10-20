@@ -35,9 +35,9 @@ class TotpSetupGetController extends MfaSetupController
      */
     public function get()
     {
-        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         try {
-            $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
             $this->_handleGetNewSettings();
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
@@ -49,9 +49,9 @@ class TotpSetupGetController extends MfaSetupController
      */
     public function start()
     {
-        $this->orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         try {
-            $this->notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
             $this->_handleGetStart();
         } catch (BadRequestException $exception) {
             $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
