@@ -16,11 +16,35 @@ namespace Passbolt\MultiFactorAuthentication\Form;
 
 use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\Validation\Validator;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeySetupForm extends YubikeyVerifyForm
 {
+    /**
+     * Build form validation
+     *
+     * @param Validator $validator
+     * @return Validator
+     */
+    protected function _buildValidator(Validator $validator)
+    {
+        $validator
+            ->requirePresence('hotp', __('An OTP is required.'))
+            ->notEmpty('hotp', __('The OTP should not be empty.'))
+            ->add('hotp', ['isValidModhex' => [
+                'rule' => [$this, 'isValidModhex'],
+                'last' => true,
+                'message' => __('This OTP is not valid.')
+            ]])
+            ->add('hotp', ['isValidHotp' => [
+                'rule' => [$this, 'isValidHotp'],
+                'message' => __('This OTP is not valid.')
+            ]]);
+
+        return $validator;
+    }
 
     /**
      * Form post validation treatment
@@ -31,7 +55,11 @@ class YubikeySetupForm extends YubikeyVerifyForm
     protected function _execute(array $data)
     {
         try {
-            MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_YUBIKEY);
+            // Save yubikey id to ensure next time use
+            // see. https://developers.yubico.com/OTP/OTPs_Explained.html
+            $keyid = substr($data['hotp'],0,12);
+            $data = [MfaAccountSettings::YUBIKEY_ID => $keyid];
+            MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_YUBIKEY, $data);
         } catch (ValidationException $e) {
             throw new InternalErrorException(__('Could not save the Yubikey OTP settings. Please try again later.'));
         }

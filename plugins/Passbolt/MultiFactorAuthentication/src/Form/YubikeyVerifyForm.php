@@ -64,6 +64,16 @@ class YubikeyVerifyForm extends MfaForm
         $validator
             ->requirePresence('hotp', __('An OTP is required.'))
             ->notEmpty('hotp', __('The OTP should not be empty.'))
+            ->add('hotp', ['isValidModhex' => [
+                'rule' => [$this, 'isValidModhex'],
+                'last' => true,
+                'message' => __('This OTP is not valid.')
+            ]])
+            ->add('hotp', ['isSameYubikeyId' => [
+                'rule' => [$this, 'isSameYubikeyId'],
+                'last' => true,
+                'message' => __('This yubikey is not associated with this user.')
+            ]])
             ->add('hotp', ['isValidHotp' => [
                 'rule' => [$this, 'isValidHotp'],
                 'message' => __('This OTP is not valid.')
@@ -73,16 +83,37 @@ class YubikeyVerifyForm extends MfaForm
     }
 
     /**
-     * Custom validation rule to validate yubikey otp
+     * @param string $value
+     * @return bool
+     */
+    public function isValidModHex(string $value)
+    {
+        return (Validation::custom($value, '/^[cbdefghijklnrtuv]{44}$/'));
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    public function isSameYubikeyId(string $value)
+    {
+        $yubikeyId = substr($value,0,12);
+        try {
+            $yubikeyIdInSettings = $this->settings->getAccountSettings()->getYubikeyId();
+        } catch (RecordNotFoundException $exception) {
+            return false;
+        }
+        return ($yubikeyId === $yubikeyIdInSettings);
+    }
+
+    /**
+     * Custom validation rule to validate yubikey otp using Yubicloud
      *
      * @param string $value hotp
      * @return bool
      */
     public function isValidHotp(string $value)
     {
-        if (!Validation::custom($value, '/^[cbdefghijklnrtuv]{44}$/')) {
-            return false;
-        }
         try {
             $secretKey = $this->settings->getOrganizationSettings()->getYubikeyOTPSecretKey();
             $clientId = $this->settings->getOrganizationSettings()->getYubikeyOTPClientId();

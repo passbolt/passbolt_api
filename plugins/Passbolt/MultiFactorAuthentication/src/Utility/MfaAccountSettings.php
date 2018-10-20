@@ -26,9 +26,14 @@ use Cake\Network\Exception\InternalErrorException;
 
 class MfaAccountSettings
 {
+    use MfaAccountSettingsTotpTrait;
+    use MfaAccountSettingsYubikeyTrait;
+
+    // Names used for settings props
+    const OTP_PROVISIONING_URI = 'otpProvisioningUri';
+    const YUBIKEY_ID = 'yubikeyId';
     const VERIFIED = 'verified';
     const PROVIDERS = 'providers';
-    const OTP_PROVISIONING_URI = 'otpProvisioningUri';
 
     private static $instance;
 
@@ -164,31 +169,10 @@ class MfaAccountSettings
      */
     public function getVerifiedFrozenTime(string $provider)
     {
-        return new FrozenTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
-    }
-
-    /**
-     * Return OTP provisioning url
-     *
-     * @throws RecordNotFoundException if URI is not set
-     * @return string
-     */
-    public function getOtpProvisioningUri()
-    {
-        if (!isset($this->settings[MfaSettings::PROVIDER_TOTP][self::OTP_PROVISIONING_URI])) {
-            throw new RecordNotFoundException(__('MFA setting OTP provisioning uri is not set'));
+        if (!isset($this->settings[$provider][self::VERIFIED])) {
+            throw new RecordNotFoundException(__('MFA verification date is not set for this provider.'));
         }
-        return $this->settings[MfaSettings::PROVIDER_TOTP][self::OTP_PROVISIONING_URI];
-    }
-
-    /**
-     * Return true if otp provisioning uri is set
-     *
-     * @return bool
-     */
-    public function isOtpProvisioningUriSet()
-    {
-        return (isset($this->settings[MfaSettings::PROVIDER_TOTP][self::OTP_PROVISIONING_URI]));
+        return new FrozenTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
     }
 
     /**
@@ -339,4 +323,5 @@ class MfaAccountSettings
         }
         return $status;
     }
+
 }
