@@ -16,6 +16,7 @@ namespace App\Controller\Setup;
 
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\AuthenticationToken;
 use Cake\Event\Event;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
@@ -57,11 +58,11 @@ class SetupCompleteController extends AppController
      * @param string $userId uuid of the user
      * @return void
      */
-    public function complete($userId)
+    public function complete(string $userId)
     {
         // Check request sanity
         $user = $this->_getAndAssertUser($userId);
-        $token = $this->_getAndAssertToken($userId);
+        $token = $this->_getAndAssertToken($userId, AuthenticationToken::TYPE_REGISTER);
         $gpgkey = $this->_getAndAssertGpgkey($userId);
 
         // Check business rules before saving
@@ -96,12 +97,13 @@ class SetupCompleteController extends AppController
      * Return the authentication from data if any
      *
      * @param string $userId the user uuid the token belongs to
+     * @param string $tokenType AuthenticationToken::TYPE_*
      * @throws BadRequestException if no authentication token was provided
      * @throws BadRequestException if the authentication token is not a uuid
      * @throws BadRequestException if the authentication token is expired or invalid
      * @return object Token entity
      */
-    protected function _getAndAssertToken($userId)
+    protected function _getAndAssertToken(string $userId, string $tokenType)
     {
         $data = $this->_formatRequestData();
         if (!isset($data['authenticationtoken']) || !isset($data['authenticationtoken']['token'])) {
@@ -111,7 +113,7 @@ class SetupCompleteController extends AppController
         if (!Validation::uuid($tokenId)) {
             throw new BadRequestException(__('The authentication token should be a valid uuid.'));
         }
-        if (!$this->AuthenticationTokens->isValid($tokenId, $userId)) {
+        if (!$this->AuthenticationTokens->isValid($tokenId, $userId, $tokenType)) {
             throw new BadRequestException(__('The authentication token is not valid or has expired.'));
         }
         $token = $this->AuthenticationTokens->getByToken($tokenId);
@@ -127,7 +129,7 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if the user was deleted, is already active or does not exist
      * @return bool if user id is valid
      */
-    protected function _getAndAssertUser($userId)
+    protected function _getAndAssertUser(string $userId)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is not valid. It should be a uuid.'));
@@ -148,7 +150,7 @@ class SetupCompleteController extends AppController
      * @throws BadRequestException if the gpg key is not provided or not a valid OpenPGP key
      * @return object Gpgkey entity
      */
-    protected function _getAndAssertGpgkey($userId)
+    protected function _getAndAssertGpgkey(string $userId)
     {
         $data = $this->_formatRequestData();
         $armoredKey = $data['gpgkey']['armored_key'];

@@ -15,6 +15,7 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -80,7 +81,7 @@ class UsersRecoverController extends AppController
         try {
             $this->_assertValidation();
             $user = $this->_assertRules();
-            $token = $this->AuthenticationTokens->generate($user->id);
+            $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
 
             if ($user->active) {
                 $event = 'UsersRecoverController.recoverPost.success';

@@ -15,7 +15,6 @@
 namespace App\Shell;
 
 use App\Controller\Events\EmailNotificationsListener;
-use App\Model\Table\OrganizationSettingsTable;
 use Cake\Event\EventManager;
 
 /**
@@ -42,7 +41,6 @@ class AppShellBootstrap
     {
         if (!isset(self::$instance)) {
             self::$instance = new AppShellBootstrap();
-            self::$instance->_setConfiguration();
             self::$instance->_bindEvents();
         }
 
@@ -57,13 +55,5 @@ class AppShellBootstrap
     {
         $emails = new EmailNotificationsListener();
         EventManager::instance()->on($emails);
-    }
-
-    /**
-     * Set configuration for the shell environment.
-     * Basically merge file configuration with the db retrieved organization settings.
-     */
-    private function _setConfiguration() {
-        OrganizationSettingsTable::mergeOrganizationSettingsToConfig();
     }
 }
