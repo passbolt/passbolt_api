@@ -15,10 +15,12 @@
 namespace Passbolt\MultiFactorAuthentication\Utility;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
 
 class MfaOrgSettings
 {
+    use MfaOrgSettingsYubikeyTrait;
+    use MfaOrgSettingsDuoTrait;
+
     protected $settings;
 
     /**
@@ -54,30 +56,6 @@ class MfaOrgSettings
     public function getProviders()
     {
         return $this->settings['providers'];
-    }
-
-    /**
-     * @throw RecordNotFoundException if config is missing
-     * @return string
-     */
-    public function getYubikeyOTPSecretKey()
-    {
-        if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY]['secretKey'])) {
-            throw new RecordNotFoundException(__('No configuration set for Yubikey OTP secret key.'));
-        }
-        return $this->settings[MfaSettings::PROVIDER_YUBIKEY]['secretKey'];
-    }
-
-    /**
-     * @throw RecordNotFoundException if config is missing
-     * @return string
-     */
-    public function getYubikeyOTPClientId()
-    {
-        if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY]['clientId'])) {
-            throw new RecordNotFoundException(__('No configuration set for Yubikey OTP clientId.'));
-        }
-        return $this->settings[MfaSettings::PROVIDER_YUBIKEY]['clientId'];
     }
 
     /**

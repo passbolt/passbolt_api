@@ -18,10 +18,8 @@ use App\Error\Exception\CustomValidationException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Form\YubikeyVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeyVerifyForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Form\TotpVerifyForm;
-use Cake\Routing\Router;
 
 class YubikeyVerifyPostController extends MfaVerifyController
 {

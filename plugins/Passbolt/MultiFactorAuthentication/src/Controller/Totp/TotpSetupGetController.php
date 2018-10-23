@@ -17,7 +17,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 use App\Utility\UserAccessControl;
 use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\OtpFactory;
 

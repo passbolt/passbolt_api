@@ -12,16 +12,14 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
  */
-namespace Passbolt\MultiFactorAuthentication\Form;
+namespace Passbolt\MultiFactorAuthentication\Form\Totp;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
-use App\Utility\UserAccessControl;
-use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validator;
 use OTPHP\Factory;
+use Passbolt\MultiFactorAuthentication\Form\MfaForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 

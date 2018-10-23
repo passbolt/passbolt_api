@@ -22,6 +22,9 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaSetupController extends AppController
 {
+    /**
+     * @var MfaSettings
+     */
     protected $mfaSettings;
 
     /**

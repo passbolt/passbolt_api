@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
-namespace Passbolt\MultiFactorAuthentication\Form;
+namespace Passbolt\MultiFactorAuthentication\Form\Yubikey;
 
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -20,6 +20,7 @@ use Cake\Form\Schema;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\MultiFactorAuthentication\Form\MfaForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Yubikey\Validate;
 

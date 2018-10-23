@@ -52,7 +52,8 @@
         "ezyang/htmlpurifier": "dev-master",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
-        "enygma/yubikey": "^3.3"
+        "enygma/yubikey": "^3.3",
+        "duosecurity/duo_php": "^1.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",

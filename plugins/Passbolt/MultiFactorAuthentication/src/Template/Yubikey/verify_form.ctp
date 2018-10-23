@@ -3,7 +3,7 @@
     $title = __('Multi factor authentication verification');
     $this->assign('title', $title);
     $this->Html->css('themes/anew/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
-    $this->assign('pageClass', 'login v240918');
+    $this->assign('pageClass', 'login');
 ?>
 <div class="login-form ">
     <h1>

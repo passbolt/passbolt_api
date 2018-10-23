@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
  */
-namespace Passbolt\MultiFactorAuthentication\Form;
+namespace Passbolt\MultiFactorAuthentication\Form\Totp;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;

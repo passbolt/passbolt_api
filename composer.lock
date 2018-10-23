@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "be7bcd2eabd1df6c55e3173055d8e3e8",
-    "content-hash": "d0c846b1a5b41832e33dc6b081768753",
+    "hash": "5ec963a5bc550b7f994cead28ebc70fc",
+    "content-hash": "c6e8dd616addc40793370ba315ad9868",
     "packages": [
         {
             "name": "aura/intl",
@@ -580,6 +580,39 @@
                 "useragent"
             ],
             "time": "2018-06-21 15:54:46"
+        },
+        {
+            "name": "duosecurity/duo_php",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/duosecurity/duo_php.git",
+                "reference": "c10239df5e70bba733b6c4f803c17904c9a7f4de"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/duosecurity/duo_php/zipball/c10239df5e70bba733b6c4f803c17904c9a7f4de",
+                "reference": "c10239df5e70bba733b6c4f803c17904c9a7f4de",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.1",
+                "satooshi/php-coveralls": "dev-master",
+                "squizlabs/php_codesniffer": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Duo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "A PHP implementation of the Duo Web SDK.",
+            "homepage": "https://duo.com/",
+            "time": "2017-05-24 16:22:25"
         },
         {
             "name": "enygma/yubikey",

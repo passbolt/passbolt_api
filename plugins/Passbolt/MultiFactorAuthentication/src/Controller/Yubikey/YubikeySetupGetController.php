@@ -18,7 +18,7 @@ use App\Utility\UserAccessControl;
 use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Form\YubikeySetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 
 class YubikeySetupGetController extends MfaSetupController
 {
@@ -51,8 +51,6 @@ class YubikeySetupGetController extends MfaSetupController
      */
     protected function _handleGetNewSettings()
     {
-        // Build and return some URI and QR code to work from
-        // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
         $totpSetupForm = new YubikeySetupForm($uac, MfaSettings::get($uac));
 

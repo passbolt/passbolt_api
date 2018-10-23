@@ -15,7 +15,7 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
 use App\Error\Exception\CustomValidationException;
-use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 

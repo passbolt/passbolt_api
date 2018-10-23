@@ -29,12 +29,6 @@ $this->assign('pageClass', 'iframe mfa');
             </div>
         </div>
         <div class="col4 last">
-            <h4><?= __('Requirements'); ?></h4>
-            <div class="message notice">
-                <p>
-                    TODO
-                </p>
-            </div>
         </div>
     </div>
     <div class="row">

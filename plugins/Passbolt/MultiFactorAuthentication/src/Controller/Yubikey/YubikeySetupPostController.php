@@ -15,7 +15,7 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Error\Exception\CustomValidationException;
-use Passbolt\MultiFactorAuthentication\Form\YubikeySetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 

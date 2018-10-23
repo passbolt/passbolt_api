@@ -18,7 +18,7 @@ use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Form\YubikeyVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeyVerifyForm;
 
 class YubikeyVerifyGetController extends MfaVerifyController
 {

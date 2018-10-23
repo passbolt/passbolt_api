@@ -10,19 +10,18 @@
  * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.4.0
+ * @since         2.5.0
  */
-namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
+namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
 
-class TotpVerifyGetController extends MfaVerifyController
+class DuoVerifyGetController extends MfaVerifyController
 {
-
     /**
      * @throws InternalErrorException if there is no MFA settings for the user
      * @throws BadRequestException if valid Verification token is already present in cookie
@@ -30,22 +29,23 @@ class TotpVerifyGetController extends MfaVerifyController
      */
     public function get()
     {
+        if ($this->request->is('json')) {
+            throw new BadRequestException(__('This functionality is not available using AJAX/JSON.'));
+        }
         $this->_handleVerifiedNotRequired();
-        $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
+        $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
-        $verifyForm = new TotpVerifyForm($uac, MfaSettings::get($uac));
-
-        if (!$this->request->is('json')) {
-            $this->set('verifyForm', $verifyForm);
-            $this->viewBuilder()
-                ->setLayout('mfa_verify')
-                ->setTemplatePath('Totp')
-                ->setTemplate('verifyForm');
-        } else {
-            $this->success(__('Please provide the one time password.'));
-        }
+        $settings =  MfaSettings::getOrFail($uac);
+        $verifyForm = new DuoVerifyForm($uac, $settings);
+        $this->set('sigRequest', $verifyForm->getSigRequest());
+        $this->set('hostName', $settings->getOrganizationSettings()->getDuoHostname());
+        $this->set('verifyForm', $verifyForm);
+        $this->viewBuilder()
+            ->setLayout('mfa_verify')
+            ->setTemplatePath('Duo')
+            ->setTemplate('verifyForm');
     }
 }
