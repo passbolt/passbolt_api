@@ -35,5 +35,13 @@ if (file_exists(CONFIG . 'ldap.php') || Configure::read('passbolt.plugins.direct
         $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'delete'])
                ->setPass(['foreign_model', 'foreign_key'])
                ->setMethods(['DELETE']);
+
+        $routes->connect('/configure', ['controller' => 'DirectoryConfigurationController', 'action' => 'add'])
+               ->setPass(['foreign_model', 'foreign_key'])
+               ->setMethods(['POST']);
+
+        $routes->connect('/configure', ['controller' => 'DirectoryIgnore', 'action' => 'add'])
+               ->setPass(['foreign_model', 'foreign_key'])
+               ->setMethods(['POST']);
     });
 }
