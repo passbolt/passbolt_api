@@ -239,7 +239,7 @@ class MfaAccountSettings
      */
     public function delete()
     {
-        MfaVerifiedToken::deleteAll($this->uac);
+        MfaVerifiedToken::setAllInactive($this->uac);
         return $this->AccountSettings->deleteByProperty($this->uac->getId(), MfaSettings::MFA);
     }
 

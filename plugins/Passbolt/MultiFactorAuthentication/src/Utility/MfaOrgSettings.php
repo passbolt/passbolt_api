@@ -50,6 +50,7 @@ class MfaOrgSettings
     /**
      * Get the list of enabled providers for this organization
      *
+     * @throws RecordNotFoundException
      * @return mixed
      */
     public function getProviders()

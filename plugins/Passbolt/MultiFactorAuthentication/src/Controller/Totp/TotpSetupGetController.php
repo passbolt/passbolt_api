@@ -19,7 +19,7 @@ use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Utility\OtpFactory;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 
 class TotpSetupGetController extends MfaSetupController
 {
@@ -84,8 +84,8 @@ class TotpSetupGetController extends MfaSetupController
         // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
         $totpSetupForm = new TotpSetupForm($uac);
-        $uri = OtpFactory::generateTOTP($uac);
-        $qrCode = OtpFactory::getQrCodeInline($uri);
+        $uri = MfaOtpFactory::generateTOTP($uac);
+        $qrCode = MfaOtpFactory::getQrCodeInline($uri);
 
         if (!$this->request->is('json')) {
             $this->set('totpSetupForm', $totpSetupForm);
