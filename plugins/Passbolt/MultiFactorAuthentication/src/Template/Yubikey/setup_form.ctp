@@ -1,12 +1,12 @@
 <?php
-use Cake\Core\Configure;
-use Cake\Routing\Router;
-$title = __('Yubikey One Time Password');
-$this->assign('title', $title);
-$version = Configure::read('passbolt.version');
-$themePath = "themes/$theme/api_main.min.css?v=$version";
-$this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
-$this->assign('pageClass', 'iframe mfa');
+    use Cake\Core\Configure;
+    use Cake\Routing\Router;
+    $title = __('Yubikey One Time Password');
+    $this->assign('title', $title);
+    $version = Configure::read('passbolt.version');
+    $themePath = "themes/$theme/api_main.min.css?v=$version";
+    $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
+    $this->assign('pageClass', 'iframe mfa');
 ?>
 <div class="grid grid-responsive-12">
     <?= $this->form->create($yubikeySetupForm, ['class' => ['yubikey-setup']]); ?>
@@ -17,14 +17,13 @@ $this->assign('pageClass', 'iframe mfa');
     </div>
     <div class="row">
         <div class="col7">
-            <h4><?= __('Scan this bar code'); ?></h4>
             <div class="input-verify">
                 <?= $this->form->control('hotp', [
                     'label' => 'Yubikey OTP',
                     'type' => 'password'
                 ]); ?>
                 <div class="helptext">
-                    <?= __('Put your finger on your yubikey.'); ?>
+                    <?= __('Plug in the yubikey and put your finger on it.'); ?>
                 </div>
             </div>
         </div>
@@ -34,11 +33,10 @@ $this->assign('pageClass', 'iframe mfa');
     <div class="row">
         <div class="col7 last">
             <div class="actions-wrapper">
-                <a href="<?= Router::url('/mfa/setup/select'); ?>" class="button cancel">Cancel</a>
+                <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel">Cancel</a>
                 <input type="submit" class="button primary" value="Validate">
             </div>
         </div>
     </div>
     <?= $this->form->end(); ?>
-
 </div>

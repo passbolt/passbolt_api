@@ -14,15 +14,12 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Form\Totp;
 
-use App\Error\Exception\CustomValidationException;
-use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
-use Cake\Form\Form;
 use Cake\Form\Schema;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validator;
 use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Form\MfaForm;
 
 class TotpVerifyForm extends MfaForm
 {

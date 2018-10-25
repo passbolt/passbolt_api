@@ -13,8 +13,8 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
-use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 class MfaOrgSettings
 {
@@ -37,10 +37,9 @@ class MfaOrgSettings
     /**
      * Get Organization MFA Settings
      *
-     * @param UserAccessControl $uac
      * @return MfaOrgSettings
      */
-    static public function get(UserAccessControl $uac) {
+    static public function get() {
         // TODO class that
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
         // TODO get from database
@@ -55,7 +54,25 @@ class MfaOrgSettings
      */
     public function getProviders()
     {
-        return $this->settings['providers'];
+        if (!isset($this->settings['providers']) && !count($this->settings['providers'])) {
+            throw new RecordNotFoundException(__('No MFA provider set for this organization.'));
+        }
+        return array_keys($this->settings['providers']);
+    }
+
+    /**
+     * Get the list of provider names that are enabled for that organization
+     *
+     */
+    public function getEnabledProviders() {
+        $result = [];
+        $providers = $this->getProviders();
+        foreach ($providers as $key => $provider) {
+            if ($this->isProviderAllowed($provider)) {
+                $result[] = $provider;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -64,12 +81,7 @@ class MfaOrgSettings
      */
     public function getProvidersStatus()
     {
-        $status = [];
-        $possibleProviders = MfaSettings::getProviders();
-        foreach($possibleProviders as $i => $provider) {
-            $status[$provider] = $this->isProviderAllowed($provider);
-        }
-        return $status;
+        return $this->settings['providers'];
     }
 
     /**
@@ -80,7 +92,32 @@ class MfaOrgSettings
      */
     public function isProviderAllowed(string $provider)
     {
-        $orgProviders = $this->getProviders();
-        return (isset($orgProviders[$provider]) && $orgProviders[$provider]);
+        return (isset($this->settings['providers'][$provider]) && $this->settings['providers'][$provider]);
+    }
+
+    /**
+     * Return true if at least one provider is enabled for the org
+     *
+     * @return bool
+     */
+    public function isOneProviderSet()
+    {
+        return (count($this->getProviders()) > 0);
+    }
+
+    /**
+     * Return true if at least one of the given provider is enabled for the org
+     *
+     * @param array $providers
+     * @return bool
+     */
+    public function isOneProviderAllowed(array $providers)
+    {
+        foreach ($providers as $provider) {
+            if ($this->isProviderAllowed($provider)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

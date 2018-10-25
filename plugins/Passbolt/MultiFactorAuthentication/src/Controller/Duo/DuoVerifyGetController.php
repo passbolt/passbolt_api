@@ -35,14 +35,12 @@ class DuoVerifyGetController extends MfaVerifyController
         $this->_handleVerifiedNotRequired();
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
-        // Build and return some URI and QR code to work from
-        // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
-        $settings =  MfaSettings::getOrFail($uac);
-        $verifyForm = new DuoVerifyForm($uac, $settings);
+        $verifyForm = new DuoVerifyForm($uac,  $this->mfaSettings);
         $this->set('sigRequest', $verifyForm->getSigRequest());
-        $this->set('hostName', $settings->getOrganizationSettings()->getDuoHostname());
+        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
         $this->set('verifyForm', $verifyForm);
+        $this->set('providers', $this->mfaSettings->getEnabledProviders());
         $this->viewBuilder()
             ->setLayout('mfa_verify')
             ->setTemplatePath('Duo')

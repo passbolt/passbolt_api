@@ -69,6 +69,9 @@ class MfaAccountSettings
      */
     public function isProviderReady($provider)
     {
+        if (array_search($provider, $this->settings[MfaSettings::PROVIDERS]) === false) {
+            return false;
+        }
         if (!isset($this->settings[$provider])) {
             return false;
         }
@@ -133,6 +136,23 @@ class MfaAccountSettings
     }
 
     /**
+     * Get an array of provider name that are enabled and verified for this user
+     *
+     * @return array
+     */
+    public function getEnabledProviders()
+    {
+        $result = [];
+        $providers = $this->getProviders();
+        foreach ($providers as $provider) {
+            if($this->isProviderReady($provider)) {
+                $result[] = $provider;
+            }
+        }
+        return $result;
+    }
+
+    /**
      * Return tru if at least one provider is set
      *
      * @return bool
@@ -140,25 +160,6 @@ class MfaAccountSettings
     public function isOneProviderSet()
     {
         return (isset($this->settings[self::PROVIDERS]) && count($this->settings[self::PROVIDERS]));
-    }
-
-    /**
-     * Return true if at least one provider is ready to use
-     *
-     * @return bool
-     */
-    public function isReady()
-    {
-        if (!$this->isOneProviderSet()) {
-            return false;
-        }
-        $providers = $this->getProviders();
-        foreach ($providers as $provider) {
-            if ($this->isProviderReady($provider)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -264,50 +265,6 @@ class MfaAccountSettings
                 break;
             }
         }
-    }
-
-    /**
-     * Get the list of verification url by enabled providers
-     * Example: ['totp' => 'BASE_URL/verify/totp']
-     *
-     * @return array
-     */
-    public function getProvidersVerifyUrls($json = true) {
-        $providers = $this->getProviders();
-        $data = [];
-        foreach ($providers as $provider) {
-            if(!$this->isProviderReady($provider)) {
-                continue;
-            }
-            $data[$provider] = $this->getProviderVerifyUrl($provider, $json);
-        }
-        return $data;
-    }
-
-    /**
-     * Get default provider verification url
-     *
-     * @return string
-     */
-    public function getDefaultProviderVerifyUrl($json = true) {
-        $provider = $this->getDefaultProvider();
-        return $this->getProviderVerifyUrl($provider, $json);
-    }
-
-    /**
-     * Return a given provider verification url
-     *
-     * @param $provider
-     * @param bool $json
-     * @return string
-     */
-    public function getProviderVerifyUrl($provider, $json = true) {
-        if ($json) {
-            $json = '.json';
-        } else {
-            $json = '';
-        }
-        return Router::url("/mfa/verify/$provider$json");
     }
 
     /**

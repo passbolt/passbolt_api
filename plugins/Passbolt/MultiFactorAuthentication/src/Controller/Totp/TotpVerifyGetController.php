@@ -39,6 +39,7 @@ class TotpVerifyGetController extends MfaVerifyController
         $verifyForm = new TotpVerifyForm($uac, MfaSettings::get($uac));
 
         if (!$this->request->is('json')) {
+            $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')

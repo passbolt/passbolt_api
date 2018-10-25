@@ -1,11 +1,12 @@
 <?php
-use Cake\Core\Configure;
-use Cake\Routing\Router;
-$title = __('Duo multi-factor authentication');
-$this->assign('title', $title);
-$this->Html->css('themes/anew/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
-$this->assign('pageClass', 'login');
-$this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
+    use Cake\Core\Configure;
+    use Cake\Routing\Router;
+    use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+    $title = __('Duo multi-factor authentication');
+    $this->assign('title', $title);
+    $this->Html->css('themes/anew/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
+    $this->assign('pageClass', 'login');
+    $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
 ?>
 <div class="login-form ">
     <h1>
@@ -17,4 +18,5 @@ $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
             data-sig-request="<?= $sigRequest; ?>"
     ></iframe>
     <?= $this->form->create($verifyForm, ['id' => 'duo_form']); ?><?= $this->form->end(); ?>
+    <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
 </div>

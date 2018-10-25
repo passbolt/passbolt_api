@@ -1,6 +1,6 @@
 <?php
     use Cake\Core\Configure;
-    use Cake\Routing\Router;
+    use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
     $title = __('Duo multi-factor authentication is enabled!');
     $this->assign('title',	$title);
@@ -15,12 +15,7 @@
         <div class="col7 last">
             <h3><?= $title; ?></h3>
             <div class="success success-large message animated">
-                <div class="illustration">
-                    <svg id="successAnimation" class="animated" xmlns="http://www.w3.org/2000/svg" width="170" height="170" viewBox="0 0 70 70">
-                        <circle id="successAnimationCircle" cx="35" cy="35" r="24" stroke="#000000" stroke-width="3" stroke-linecap="round" fill="transparent"/>
-                        <polyline id="successAnimationCheck" stroke="#000000" stroke-width="3" points="23 34 34 43 47 27" linecap="round" fill="transparent"/>
-                    </svg>
-                </div>
+                <?= $this->element('successMark'); ?>
                 <div class="additional-information">
                     <p>
                         <?= __('When logging in you will be asked to perform Duo Authentication.'); ?>
@@ -28,15 +23,10 @@
                     <p class="created date">
                         <?= __('Since')?>: <?= $body['verified']->nice(); ?>
                     </p>
-                    <p>
-                        <a id='js_mfa_provider_disable' data-provider="duo" class="button warning" role="button"><?= __('Turn off'); ?></a>
-                    </p>
+                    <?= $this->element('turnOffProviderButton', ['provider' => MfaSettings::PROVIDER_DUO]); ?>
                 </div>
             </div>
-
-            <div class="actions-wrapper">
-                <a href="<?= Router::url('/mfa/setup/select'); ?>" class="button cancel"><?= __('Manage providers'); ?></a>
-            </div>
+            <?= $this->element('manageProvidersButton'); ?>
         </div>
     </div>
 </div>

@@ -17,7 +17,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 use App\Controller\AppController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class MfaSetupSelectProviderController extends AppController
+class MfaSetupSelectProviderController extends MfaController
 {
 
     /**
@@ -25,8 +25,7 @@ class MfaSetupSelectProviderController extends AppController
      */
     public function get()
     {
-        $settings = MfaSettings::get($this->User->getAccessControl());
-        $body = $settings->getProvidersStatuses();
+        $body = $this->mfaSettings->getProvidersStatuses();
         if (!$this->request->is('json')) {
             $this->set('theme', $this->User->theme());
             $this->viewBuilder()

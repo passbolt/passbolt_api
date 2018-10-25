@@ -24,13 +24,12 @@
     </div>
     <div class="row">
         <div class="col7">
+            <?php if (!$mfaPossible): ?>
+            <h4><?= __('Sorry no multi factor authentication is enabled for this organization.'); ?></h4>
+            <p><?= __('Please contact your administrator to enable MFA.'); ?></p>
+            <?php else: ?>
             <h4><?= __('Please select a provider'); ?></h4>
             <ul class="mfa-providers">
-                <?php if (!$mfaPossible): ?>
-                <li>
-                    <p><?= __('Sorry no multi factor authentication are enabled for this organization.'); ?></p>
-                </li>
-                <?php endif; ?>
                 <?php if ($body['MfaOrganizationSettings']['totp']) : ?>
                 <li>
 
@@ -88,6 +87,7 @@
                 </li>
                 <?php endif; ?>
             </ul>
+            <?php endif; ?>
         </div>
         <div class="col4 last">
             <h4><?= __('What is multi-factor authentication?'); ?></h4>

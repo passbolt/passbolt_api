@@ -38,7 +38,7 @@ class DuoVerifyPostController extends MfaVerifyController
 
         // Verify totp
         $uac = $this->User->getAccessControl();
-        $verifyForm = new DuoVerifyForm($uac, MfaSettings::getOrFail($uac));
+        $verifyForm = new DuoVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
         } catch(CustomValidationException $exception) {

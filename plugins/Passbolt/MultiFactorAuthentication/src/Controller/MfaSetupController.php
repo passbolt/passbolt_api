@@ -14,38 +14,13 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use App\Controller\AppController;
 use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
-class MfaSetupController extends AppController
+class MfaSetupController extends MfaController
 {
-    /**
-     * @var MfaSettings
-     */
-    protected $mfaSettings;
-
-    /**
-     * Fail is organization do not allow this authentication provider
-     *
-     * @param string $provider name of the provider
-     * @throws BadRequestException
-     */
-    protected function _orgAllowProviderOrFail(string $provider)
-    {
-       $this->mfaSettings = MfaSettings::get($this->User->getAccessControl());
-       if ($this->mfaSettings->getOrganizationSettings() === null) {
-           $msg = __('No authentication provider set for your organization.');
-           throw new BadRequestException($msg);
-       }
-       if (!$this->mfaSettings->getOrganizationSettings()->isProviderAllowed($provider)) {
-           $msg = __('This authentication provider is not enabled for your organization.');
-           throw new BadRequestException($msg);
-       }
-    }
-
     /**
      * Fail is account is already setup for this authentication provider
      *
@@ -56,12 +31,15 @@ class MfaSetupController extends AppController
     protected function _notAlreadySetupOrFail(string $provider)
     {
         if ($this->mfaSettings->getAccountSettings() !== null) {
-            $isReadyToUse = $this->mfaSettings->getAccountSettings()->isProviderReady($provider);
+            $isReadyToUse = $this->mfaSettings
+                ->getAccountSettings()
+                ->isProviderReady($provider);
             if ($isReadyToUse) {
                 $msg = __('This authentication provider is already setup. Disable it first');
                 throw new BadRequestException($msg);
             }
         }
+
         return true;
     }
 
@@ -78,8 +56,9 @@ class MfaSetupController extends AppController
             ->setTemplatePath($provider)
             ->setTemplate('setupSuccess');
 
-        $mfaSettings = MfaSettings::get($this->User->getAccessControl());
-        $verified = $mfaSettings->getAccountSettings()->getVerifiedFrozenTime($provider);
+        $verified = $this->mfaSettings
+            ->getAccountSettings()
+            ->getVerifiedFrozenTime($provider);
         $this->success(__('Multi Factor Authentication is configured!'), ['verified' =>  $verified]);
     }
 
@@ -104,9 +83,10 @@ class MfaSetupController extends AppController
                 ->setTemplate('setupSuccess');
         }
 
-        $mfaSettings = MfaSettings::get($this->User->getAccessControl());
-        $verified = $mfaSettings->getAccountSettings()->getVerifiedFrozenTime($provider);
-        $this->success(__('Multi Factor Authentication is configured!'), ['verified' =>  $verified]);
+        $verified = $this->mfaSettings
+            ->getAccountSettings(true)
+            ->getVerifiedFrozenTime($provider);
+        $msg = __('Multi Factor Authentication is configured!');
+        $this->success($msg, ['verified' =>  $verified]);
     }
-
 }

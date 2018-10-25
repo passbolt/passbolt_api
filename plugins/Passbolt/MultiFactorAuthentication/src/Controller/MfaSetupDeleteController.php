@@ -14,14 +14,11 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use App\Controller\AppController;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 use Cake\Network\Exception\ForbiddenException;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
-class MfaSetupDeleteController extends AppController
+class MfaSetupDeleteController extends MfaController
 {
     /**
      * Delete a provider setting
@@ -31,9 +28,7 @@ class MfaSetupDeleteController extends AppController
     protected function _handleDelete(string $provider)
     {
         $uac = $this->User->getAccessControl();
-        try {
-            $mfaSettings = MfaSettings::getOrFail($uac);
-        } catch (RecordNotFoundException $exception) {
+        if ($this->mfaSettings->getAccountSettings() === null) {
             $this->success('No configuration found for this provider. Nothing to delete.');
             return;
         }
@@ -45,7 +40,7 @@ class MfaSetupDeleteController extends AppController
         }
 
         // Disable provider
-        $mfaSettings->getAccountSettings()->disableProvider($provider);
+        $this->mfaSettings->getAccountSettings()->disableProvider($provider);
         $this->success('The configuration was deleted.');
     }
 }

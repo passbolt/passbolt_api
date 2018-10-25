@@ -35,7 +35,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
 
         // Verify totp
         $uac = $this->User->getAccessControl();
-        $verifyForm = new YubikeyVerifyForm($uac, MfaSettings::getOrFail($uac));
+        $verifyForm = new YubikeyVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
         } catch(CustomValidationException $exception) {
@@ -46,6 +46,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
                 throw $exception;
             }
             // Display form with error msg
+            $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')

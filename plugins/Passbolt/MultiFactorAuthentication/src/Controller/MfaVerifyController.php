@@ -14,16 +14,13 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use App\Controller\AppController;
 use Cake\Network\Exception\BadRequestException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Routing\Router;
 
-class MfaVerifyController extends AppController
+class MfaVerifyController extends MfaController
 {
     /**
      * Trigger a redirect if MFA verification is not required
@@ -53,15 +50,11 @@ class MfaVerifyController extends AppController
      */
     protected function _handleInvalidSettings(string $provider)
     {
-        $uac = $this->User->getAccessControl();
-        try {
-            $mfaSettings = MfaSettings::getOrFail($uac);
-        } catch(RecordNotFoundException $exception) {
-            // for example mfa config was deleted between mfa middleware redirect and here
+        if ($this->mfaSettings->getAccountSettings() === null) {
             throw new InternalErrorException(__('No valid MFA settings found.'));
         }
-        if (!$mfaSettings->getAccountSettings()->isProviderReady($provider)) {
-            // for example a user is trying to force a check
+        if (!$this->mfaSettings->isProviderEnabled($provider)) {
+            // for example a user is trying to force a check on a provider that is not set for the org
             throw new BadRequestException(__('Incomplete MFA provider settings found.'));
         }
     }
@@ -90,7 +83,12 @@ class MfaVerifyController extends AppController
         if ($this->request->is('json')) {
             $this->success(__('The multi-factor authentication was a success.'));
         } else {
-            $this->redirect(Router::url($this->request->getQuery('redirect')));
+            $redirectLoop = '/mfa/verify';
+            $redirect = $this->request->getQuery('redirect');
+            if (is_null($redirect) || substr($redirect, 0, strlen($redirectLoop)) === $redirectLoop) {
+                $redirect = '/';
+            }
+            $this->redirect(Router::url($redirect, true));
         }
     }
 }

@@ -36,9 +36,10 @@ class YubikeyVerifyGetController extends MfaVerifyController
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
         $uac = $this->User->getAccessControl();
-        $verifyForm = new YubikeyVerifyForm($uac, MfaSettings::getOrFail($uac));
+        $verifyForm = new YubikeyVerifyForm($uac, $this->mfaSettings);
 
         if (!$this->request->is('json')) {
+            $this->set('providers', $this->mfaSettings->getEnabledProviders());
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
