@@ -63,7 +63,7 @@ class MfaSettings
      * @return MfaSettings
      */
     static public function get(UserAccessControl $uac) {
-        $orgSettings = MfaOrgSettings::get($uac);
+        $orgSettings = MfaOrgSettings::get();
         try {
             $accountSettings = MfaAccountSettings::get($uac);
         } catch (RecordNotFoundException $exception) {
@@ -73,6 +73,7 @@ class MfaSettings
     }
 
     /**
+     * Get an array of all possible providers
      *
      * @return array
      */
@@ -92,19 +93,18 @@ class MfaSettings
      */
     public function getProvidersStatuses()
     {
-        $result = [];
-        $falsy = [
-            self::PROVIDER_TOTP => false,
-            self::PROVIDER_DUO => false,
-            self::PROVIDER_YUBIKEY => false
-        ];
+        $result = $default = [];
+        $providers = self::getProviders();
+        foreach ($providers as $i => $provider) {
+            $default[$provider] = false;
+        }
         if ($this->orgSettings === null) {
-            $result['MfaOrganizationSettings'] = $falsy;
+            $result['MfaOrganizationSettings'] = $default;
         } else {
             $result['MfaOrganizationSettings'] = $this->orgSettings->getProvidersStatus();
         }
         if ($this->accountSettings === null) {
-            $result['MfaAccountSettings'] = $falsy;
+            $result['MfaAccountSettings'] = $default;
         } else {
             $result['MfaAccountSettings'] = $this->accountSettings->getProvidersStatus();
         }

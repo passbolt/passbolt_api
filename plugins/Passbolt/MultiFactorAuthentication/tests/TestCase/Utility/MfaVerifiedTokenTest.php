@@ -26,8 +26,13 @@ use App\Model\Entity\AuthenticationToken;
 
 class MfaVerifiedTokenTest extends MfaIntegrationTestCase
 {
-
-    public $fixtures = ['app.Base/authentication_tokens', 'app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles'];
+    /**
+     * @var array
+     */
+    public $fixtures = [
+        'app.Base/authentication_tokens',
+        'app.Base/users', 'app.Base/profiles', 'app.Base/roles'
+    ];
 
     /**
      * @var AuthenticationTokensTable;

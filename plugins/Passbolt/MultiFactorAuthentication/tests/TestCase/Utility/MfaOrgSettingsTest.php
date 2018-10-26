@@ -16,17 +16,21 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Model\Table\OrganizationSettingsTable;
 use Cake\Core\Configure;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsTest extends MfaIntegrationTestCase
 {
-
+    /**
+     * @var array
+     */
     public $fixtures = [
         'app.Base/organization_settings',
-        'app.Base/authentication_tokens', 'app.Base/users', 'app.Base/profiles',
-        'app.Base/gpgkeys', 'app.Base/roles'
+        'app.Base/authentication_tokens', 'app.Base/users',
+        'app.Base/roles'
     ];
 
     /**
@@ -36,15 +40,15 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
 
     protected $defaultConfig = [
         'providers' => [
-            'totp' => true,
-            'duo' => true,
-            'yubikey' => true
+            MfaSettings::PROVIDER_DUO => true,
+            MfaSettings::PROVIDER_TOTP => true,
+            MfaSettings::PROVIDER_YUBIKEY => true
         ],
-        'yubikey' => [
+        MfaSettings::PROVIDER_YUBIKEY => [
             'clientId' => '40123',
             'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXUY='
         ],
-        'duo' => [
+        MfaSettings::PROVIDER_DUO => [
             'salt' => '__CHANGE_ME__THIS_MUST_BE_AT_LEAST_FOURTY_CHARACTERS_____',
             'integrationKey' => 'UICPIC93F14RWR5F55SJ',
             'secretKey' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
@@ -65,11 +69,135 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      * @group mfa
      * @group mfaOrgSettings
      */
-    public function testMfaOrgSettingsGetSuccess()
+    public function testMfaOrgSettingsGetProvidersSuccess()
     {
         Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
         $this->assertEquals(count($settings->getProviders()), 3);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetSettingsEmpty()
+    {
+        Configure::write('passbolt.plugins.multiFactorAuthentication', []);
+        $settings = MfaOrgSettings::get();
+        $this->assertNotEmpty($settings);
+        $this->expectException(RecordNotFoundException::class);
+        $settings->getProviders();
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetProvidersEmpty()
+    {
+        $config = $this->defaultConfig;
+        $config['providers'] = [];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->assertNotEmpty($settings);
+        $this->expectException(RecordNotFoundException::class);
+        $settings->getProviders();
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsIsProviderAllowedSuccess()
+    {
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
+        $settings = MfaOrgSettings::get();
+        $this->assertTrue($settings->isProviderAllowed(MfaSettings::PROVIDER_YUBIKEY));
+        $this->assertTrue($settings->isProviderAllowed(MfaSettings::PROVIDER_TOTP));
+        $this->assertTrue($settings->isProviderAllowed(MfaSettings::PROVIDER_DUO));
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsIsProviderAllowedFail()
+    {
+        $config = $this->defaultConfig;
+        $config['providers'] = [];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->assertFalse($settings->isProviderAllowed(MfaSettings::PROVIDER_YUBIKEY));
+
+        $config = $this->defaultConfig;
+        $config['providers'] = [MfaSettings::PROVIDER_DUO];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->assertFalse($settings->isProviderAllowed(MfaSettings::PROVIDER_YUBIKEY));
+        $this->assertFalse($settings->isProviderAllowed(MfaSettings::PROVIDER_TOTP));
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetProviderStatus()
+    {
+        // All provider set to false
+        $providers = [
+            MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_DUO => false,
+            MfaSettings::PROVIDER_YUBIKEY => false
+        ];
+        $config = $this->defaultConfig;
+        $config['providers'] = $providers;
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $status = $settings->getProvidersStatus();
+        $this->assertEquals($status, $providers);
+
+        // No provider set
+        $config = $this->defaultConfig;
+        $config['providers'] = [];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $status = $settings->getProvidersStatus();
+        $this->assertEquals($status, $providers);
+
+        // Mix missing provider and one true
+        $providers = [
+            MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_DUO => true,
+        ];
+        $config = $this->defaultConfig;
+        $config['providers'] = $providers;
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $status = $settings->getProvidersStatus();
+        $this->assertEquals($status, [
+            MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_DUO => true,
+            MfaSettings::PROVIDER_YUBIKEY => false
+        ]);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetProviderEnabled()
+    {
+        // Mix missing provider and one true
+        $providers = [
+            MfaSettings::PROVIDER_TOTP => false,
+            MfaSettings::PROVIDER_DUO => true,
+        ];
+        $config = $this->defaultConfig;
+        $config['providers'] = $providers;
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $status = $settings->getEnabledProviders();
+        $this->assertEquals($status, [MfaSettings::PROVIDER_DUO]);
     }
 }

@@ -19,7 +19,6 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
@@ -98,30 +97,6 @@ class MfaAccountSettings
     }
 
     /**
-     * Return MfaSettings as an array
-     *
-     * @return array|null
-     */
-    public function toArray()
-    {
-        return $this->settings;
-    }
-
-    /**
-     * Return the default mfa provider
-     *
-     * @throws RecordNotFoundException if there is no provider set
-     * @return string
-     */
-    public function getDefaultProvider()
-    {
-        if ($this->isOneProviderSet()) {
-            return $this->settings[self::PROVIDERS][0];
-        }
-        throw new RecordNotFoundException(__('No default MFA provider set.'));
-    }
-
-    /**
      * Return all providers
      *
      * @throws RecordNotFoundException if there is no provider set
@@ -138,6 +113,7 @@ class MfaAccountSettings
     /**
      * Get an array of provider name that are enabled and verified for this user
      *
+     * @throws RecordNotFoundException
      * @return array
      */
     public function getEnabledProviders()
@@ -150,16 +126,6 @@ class MfaAccountSettings
             }
         }
         return $result;
-    }
-
-    /**
-     * Return tru if at least one provider is set
-     *
-     * @return bool
-     */
-    public function isOneProviderSet()
-    {
-        return (isset($this->settings[self::PROVIDERS]) && count($this->settings[self::PROVIDERS]));
     }
 
     /**
@@ -199,6 +165,7 @@ class MfaAccountSettings
      * @param UserAccessControl $uac
      * @param string $provider name of the provider
      * @param array $data
+     * @return void
      */
     static public function enableProvider(UserAccessControl $uac, string $provider, array $data = [])
     {
@@ -247,6 +214,7 @@ class MfaAccountSettings
      * Disable a given provider
      *
      * @param string $providerToDisable name of the provider
+     * @return void
      */
     public function disableProvider($providerToDisable)
     {
@@ -268,15 +236,25 @@ class MfaAccountSettings
     }
 
     /**
-     * Return a list of provider
+     * Return an associative array of provider with provider name as key and status value
+     * example: ['totp' => true, 'duo' => false]
+     *
+     * @return array
      */
     public function getProvidersStatus()
     {
         $status = [];
-        $acccountProviders = $this->getProviders();
         $possibleProviders = MfaSettings::getProviders();
+        foreach ($possibleProviders as $i => $provider) {
+            $status[$provider] = false;
+        }
+        try {
+            $accountProviders = $this->getProviders();
+        } catch(RecordNotFoundException $exception) {
+            return $status;
+        }
         foreach($possibleProviders as $i => $provider) {
-            $status[$provider] = in_array($provider, $acccountProviders);
+            $status[$provider] = in_array($provider, $accountProviders);
         }
         return $status;
     }

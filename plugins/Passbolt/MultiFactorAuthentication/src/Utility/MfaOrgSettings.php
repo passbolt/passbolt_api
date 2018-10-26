@@ -55,7 +55,7 @@ class MfaOrgSettings
      */
     public function getProviders()
     {
-        if (!isset($this->settings['providers']) && !count($this->settings['providers'])) {
+        if (!isset($this->settings) || !isset($this->settings['providers']) || !count($this->settings['providers'])) {
             throw new RecordNotFoundException(__('No MFA provider set for this organization.'));
         }
         return array_keys($this->settings['providers']);
@@ -67,7 +67,7 @@ class MfaOrgSettings
      */
     public function getEnabledProviders() {
         $result = [];
-        $providers = $this->getProviders();
+        $providers = MfaSettings::getProviders();
         foreach ($providers as $key => $provider) {
             if ($this->isProviderAllowed($provider)) {
                 $result[] = $provider;
@@ -78,11 +78,17 @@ class MfaOrgSettings
 
     /**
      * Return a list of provider
+     *
      * @return array with provider as key and al
      */
     public function getProvidersStatus()
     {
-        return $this->settings['providers'];
+        $results = [];
+        $providers = MfaSettings::getProviders();
+        foreach ($providers as $provider) {
+            $results[$provider] = $this->isProviderAllowed($provider);
+        }
+        return $results;
     }
 
     /**
@@ -93,32 +99,10 @@ class MfaOrgSettings
      */
     public function isProviderAllowed(string $provider)
     {
+        if(!isset($this->settings) || !isset($this->settings['providers'])) {
+            return false;
+        }
         return (isset($this->settings['providers'][$provider]) && $this->settings['providers'][$provider]);
     }
 
-    /**
-     * Return true if at least one provider is enabled for the org
-     *
-     * @return bool
-     */
-    public function isOneProviderSet()
-    {
-        return (count($this->getProviders()) > 0);
-    }
-
-    /**
-     * Return true if at least one of the given provider is enabled for the org
-     *
-     * @param array $providers
-     * @return bool
-     */
-    public function isOneProviderAllowed(array $providers)
-    {
-        foreach ($providers as $provider) {
-            if ($this->isProviderAllowed($provider)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
