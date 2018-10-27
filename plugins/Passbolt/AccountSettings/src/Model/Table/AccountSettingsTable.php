@@ -202,6 +202,9 @@ class AccountSettingsTable extends Table
             throw new ValidationException(__('This is not a valid setting.'), $settingItem, $this);
         }
         if (!$this->save($settingItem)) {
+            if ($settingItem->getErrors()) {
+                throw new ValidationException(__('This is not a valid setting.'), $settingItem, $this);
+            }
             throw new InternalErrorException(__('Could not save the setting, please try again later.'));
         }
 
