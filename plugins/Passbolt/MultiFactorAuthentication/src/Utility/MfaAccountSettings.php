@@ -34,8 +34,6 @@ class MfaAccountSettings
     const VERIFIED = 'verified';
     const PROVIDERS = 'providers';
 
-    private static $instance;
-
     protected $settings;
     protected $uac;
     protected $errors;
@@ -45,6 +43,20 @@ class MfaAccountSettings
      * @var AccountSettingsTable
      */
     protected $AccountSettings;
+
+    /**
+     * Get MfaSettings (Singleton)
+     *
+     * @param UserAccessControl $uac
+     * @return MfaAccountSettings
+     */
+    static public function get(UserAccessControl $uac)
+    {
+        $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+        $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
+        $decodedJson = json_decode($settings->value, true);
+        return new MfaAccountSettings($uac, $decodedJson);
+    }
 
     /**
      * MfaSettings constructor.
@@ -68,19 +80,21 @@ class MfaAccountSettings
      */
     public function isProviderReady($provider)
     {
+        if (!isset($this->settings[MfaSettings::PROVIDERS]) || !count($this->settings[MfaSettings::PROVIDERS])) {
+            return false;
+        }
         if (array_search($provider, $this->settings[MfaSettings::PROVIDERS]) === false) {
             return false;
         }
-        if (!isset($this->settings[$provider])) {
-            return false;
-        }
-        if (!isset($this->settings[$provider][self::VERIFIED])) {
+        if (!isset($this->settings[$provider]) || !isset($this->settings[$provider][self::VERIFIED])) {
             return false;
         }
         switch ($provider) {
             case MfaSettings::PROVIDER_TOTP:
                 return ($this->isOtpProvisioningUriSet());
                 break;
+            case MfaSettings::PROVIDER_YUBIKEY:
+                return ($this->isYubikeyUserIdSet());
             default:
                 return true;
         }
@@ -143,23 +157,6 @@ class MfaAccountSettings
     }
 
     /**
-     * Get MfaSettings (Singleton)
-     *
-     * @param UserAccessControl $uac
-     * @return MfaAccountSettings
-     */
-    static public function get(UserAccessControl $uac)
-    {
-        if (self::$instance === null) {
-            $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
-            $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
-            $decodedJson = json_decode($settings->value, true);
-            self::$instance = new MfaAccountSettings($uac, $decodedJson);
-        }
-        return self::$instance;
-    }
-
-    /**
      * Enable a new mfa provider for the given user
      *
      * @param UserAccessControl $uac
@@ -170,20 +167,21 @@ class MfaAccountSettings
     static public function enableProvider(UserAccessControl $uac, string $provider, array $data = [])
     {
         $data['verified'] = FrozenTime::now();
+        $mfaAccountSettings = null;
         try {
             $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
             $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
             $decodedJson = json_decode($settings->value, true);
-            self::$instance = new MfaAccountSettings($uac, $decodedJson);
-            self::$instance->settings[MfaAccountSettings::PROVIDERS][] = $provider;
-            self::$instance->settings[$provider] = $data;
+            $mfaAccountSettings = new MfaAccountSettings($uac, $decodedJson);
+            $mfaAccountSettings->settings[MfaAccountSettings::PROVIDERS][] = $provider;
+            $mfaAccountSettings->settings[$provider] = $data;
         } catch (RecordNotFoundException $exception) {
-            self::$instance = new MfaAccountSettings($uac, [
+            $mfaAccountSettings = new MfaAccountSettings($uac, [
                 'providers' => [$provider],
                 $provider => $data
             ]);
         }
-        self::$instance->save();
+        $mfaAccountSettings->save();
     }
 
     /**
@@ -222,8 +220,9 @@ class MfaAccountSettings
         foreach($providers as $i => $provider) {
             if ($provider === $providerToDisable) {
                 array_splice($this->settings[self::PROVIDERS], $i, 1);
-                unset($this->settings[$providerToDisable]);
-
+                if (isset($this->settings[$providerToDisable])) {
+                    unset($this->settings[$providerToDisable]);
+                }
                 if (!count($this->settings[self::PROVIDERS])) {
                     // if there is no provider left
                     $this->delete();
@@ -249,7 +248,7 @@ class MfaAccountSettings
             $status[$provider] = false;
         }
         try {
-            $accountProviders = $this->getProviders();
+            $accountProviders = $this->getEnabledProviders();
         } catch(RecordNotFoundException $exception) {
             return $status;
         }

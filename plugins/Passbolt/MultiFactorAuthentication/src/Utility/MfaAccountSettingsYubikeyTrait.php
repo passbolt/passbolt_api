@@ -17,8 +17,8 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 
 trait MfaAccountSettingsYubikeyTrait
 {
-
     /**
+     * Return the yubikey id
      *
      * @throws RecordNotFoundException if URI is not set
      * @return mixed
@@ -31,4 +31,18 @@ trait MfaAccountSettingsYubikeyTrait
         return $this->settings[MfaSettings::PROVIDER_YUBIKEY][self::YUBIKEY_ID];
     }
 
+    /**
+     * Check if YubikeyUserId is set
+     *
+     * @return bool
+     */
+    public function isYubikeyUserIdSet()
+    {
+        try {
+            $this->getYubikeyId();
+        } catch (RecordNotFoundException $exception) {
+            return false;
+        }
+        return true;
+    }
 }

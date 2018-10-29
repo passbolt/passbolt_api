@@ -200,4 +200,113 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         $status = $settings->getEnabledProviders();
         $this->assertEquals($status, [MfaSettings::PROVIDER_DUO]);
     }
+
+    /*
+     * TEST ORG SETTING DUO TRAIT
+     */
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetDuoProps()
+    {
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
+        $settings = MfaOrgSettings::get();
+        $this->assertNotEmpty($settings->getDuoSalt());
+        $this->assertNotEmpty($settings->getDuoHostname());
+        $this->assertNotEmpty($settings->getDuoSecretKey());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetDuoIncompletePropsSalt()
+    {
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->expectException(RecordNotFoundException::class);
+        $this->assertNotEmpty($settings->getDuoSalt());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetDuoIncompletePropsHostname()
+    {
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->expectException(RecordNotFoundException::class);
+        $this->assertNotEmpty($settings->getDuoHostname());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetDuoIncompletePropsSeckey()
+    {
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->expectException(RecordNotFoundException::class);
+        $this->assertNotEmpty($settings->getDuoSecretKey());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetDuoIncompletePropsIKey()
+    {
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->expectException(RecordNotFoundException::class);
+        $this->assertNotEmpty($settings->getDuoIntegrationKey());
+    }
+
+    /*
+     * TEST ORG SETTING YUBIKEY TRAIT
+     */
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetYubikeyProp()
+    {
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
+        $settings = MfaOrgSettings::get();
+        $this->assertNotEmpty($settings->getYubikeyOTPSecretKey());
+        $this->assertNotEmpty($settings->getYubikeyOTPClientId());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetYubikeyIncompletePropsSeckey()
+    {
+        $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->expectException(RecordNotFoundException::class);
+        $this->assertNotEmpty($settings->getYubikeyOTPSecretKey());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsGetYubikeyIncompletePropsClientId()
+    {
+        $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
+        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $settings = MfaOrgSettings::get();
+        $this->expectException(RecordNotFoundException::class);
+        $this->assertNotEmpty($settings->getYubikeyOTPClientId());
+    }
 }

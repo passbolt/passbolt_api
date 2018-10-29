@@ -20,4 +20,5 @@ use App\Test\Lib\Utility\UserAccessControlTrait;
 class MfaIntegrationTestCase extends AppIntegrationTestCase {
 
     use UserAccessControlTrait;
+    use MfaAccountSettingsTestTrait;
 }
