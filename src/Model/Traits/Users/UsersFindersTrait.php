@@ -238,6 +238,13 @@ trait UsersFindersTrait
             'Roles.name <>' => Role::GUEST
         ]);
 
+        // If searching admins
+        if (isset($options['filter']['is-admin'])) {
+            $query->where([
+                'Roles.name' => Role::ADMIN
+            ]);
+        }
+
         // If user is admin, we allow seeing inactive users via the 'is-active' filter
         if ($role === Role::ADMIN) {
             if (isset($options['filter']['is-active'])) {

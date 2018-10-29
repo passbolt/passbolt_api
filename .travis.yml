@@ -112,6 +112,11 @@ matrix:
       env: PHPUNIT=1 DB=mysql DB_VERSION=5.6
       addons: *php7_addon
 
+    # PHP 7.3 - MYSQL 5.6
+    - php: 7.3
+      env: PHPUNIT=1 DB=mysql DB_VERSION=5.6
+      addons: *php7_addon
+
     # PHPCS
     - php: 7.0
       env: PHPCS=1 DB=mysql DB_VERSION=5.6
