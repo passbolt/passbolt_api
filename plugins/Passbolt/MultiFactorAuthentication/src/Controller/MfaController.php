@@ -55,7 +55,7 @@ class MfaController extends AppController
             $msg = __('No authentication provider set for your organization.');
             throw new BadRequestException($msg);
         }
-        if (!$this->mfaSettings->getOrganizationSettings()->isProviderAllowed($provider)) {
+        if (!$this->mfaSettings->getOrganizationSettings()->isProviderEnabled($provider)) {
             $msg = __('This authentication provider is not enabled for your organization.');
             throw new BadRequestException($msg);
         }

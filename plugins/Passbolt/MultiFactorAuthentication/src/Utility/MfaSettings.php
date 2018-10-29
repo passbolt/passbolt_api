@@ -20,12 +20,14 @@ use Cake\Routing\Router;
 
 class MfaSettings
 {
-
     const MFA = 'mfa';
     const PROVIDERS = 'providers';
     const PROVIDER_TOTP = 'totp';
     const PROVIDER_DUO = 'duo';
     const PROVIDER_YUBIKEY = 'yubikey';
+
+    const ORG_SETTINGS = 'MfaOrganizationSettings';
+    const ACCOUNT_SETTINGS = 'MfaAccountSettings';
 
     /**
      * @var MfaAccountSettings
@@ -99,14 +101,14 @@ class MfaSettings
             $default[$provider] = false;
         }
         if ($this->orgSettings === null) {
-            $result['MfaOrganizationSettings'] = $default;
+            $result[MfaSettings::ORG_SETTINGS] = $default;
         } else {
-            $result['MfaOrganizationSettings'] = $this->orgSettings->getProvidersStatus();
+            $result[MfaSettings::ORG_SETTINGS] = $this->orgSettings->getProvidersStatus();
         }
         if ($this->accountSettings === null) {
-            $result['MfaAccountSettings'] = $default;
+            $result[MfaSettings::ACCOUNT_SETTINGS] = $default;
         } else {
-            $result['MfaAccountSettings'] = $this->accountSettings->getProvidersStatus();
+            $result[MfaSettings::ACCOUNT_SETTINGS] = $this->accountSettings->getProvidersStatus();
         }
         return $result;
     }

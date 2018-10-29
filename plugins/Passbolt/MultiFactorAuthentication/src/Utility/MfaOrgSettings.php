@@ -69,7 +69,7 @@ class MfaOrgSettings
         $result = [];
         $providers = MfaSettings::getProviders();
         foreach ($providers as $key => $provider) {
-            if ($this->isProviderAllowed($provider)) {
+            if ($this->isProviderEnabled($provider)) {
                 $result[] = $provider;
             }
         }
@@ -86,7 +86,7 @@ class MfaOrgSettings
         $results = [];
         $providers = MfaSettings::getProviders();
         foreach ($providers as $provider) {
-            $results[$provider] = $this->isProviderAllowed($provider);
+            $results[$provider] = $this->isProviderEnabled($provider);
         }
         return $results;
     }
@@ -97,12 +97,35 @@ class MfaOrgSettings
      * @param string $provider name of the provider
      * @return bool
      */
-    public function isProviderAllowed(string $provider)
+    public function isProviderEnabled(string $provider)
     {
-        if(!isset($this->settings) || !isset($this->settings['providers'])) {
+        if (!isset($this->settings) || !isset($this->settings['providers'])) {
             return false;
         }
-        return (isset($this->settings['providers'][$provider]) && $this->settings['providers'][$provider]);
+        if (!isset($this->settings['providers'][$provider]) || !$this->settings['providers'][$provider]) {
+            return false;
+        }
+        switch ($provider) {
+            case MfaSettings::PROVIDER_TOTP:
+                return true;
+            case MfaSettings::PROVIDER_YUBIKEY:
+                try {
+                    $this->getYubikeyOTPClientId();
+                    $this->getYubikeyOTPSecretKey();
+                    return true;
+                } catch (RecordNotFoundException $exception) {
+                    return false;
+                }
+            case MfaSettings::PROVIDER_DUO:
+                try {
+                    $this->getDuoIntegrationKey();
+                    $this->getDuoSecretKey();
+                    $this->getDuoHostname();
+                    $this->getDuoSalt();
+                    return true;
+                } catch (RecordNotFoundException $exception) {
+                    return false;
+                }
+        }
     }
-
 }

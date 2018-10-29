@@ -98,7 +98,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     {
         $config = $this->defaultConfig;
         $config['providers'] = [];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
         $this->expectException(RecordNotFoundException::class);
@@ -109,33 +109,33 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      * @group mfa
      * @group mfaOrgSettings
      */
-    public function testMfaOrgSettingsIsProviderAllowedSuccess()
+    public function testMfaOrgSettingsisProviderEnabledSuccess()
     {
         Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
         $settings = MfaOrgSettings::get();
-        $this->assertTrue($settings->isProviderAllowed(MfaSettings::PROVIDER_YUBIKEY));
-        $this->assertTrue($settings->isProviderAllowed(MfaSettings::PROVIDER_TOTP));
-        $this->assertTrue($settings->isProviderAllowed(MfaSettings::PROVIDER_DUO));
+        $this->assertTrue($settings->isProviderEnabled(MfaSettings::PROVIDER_YUBIKEY));
+        $this->assertTrue($settings->isProviderEnabled(MfaSettings::PROVIDER_TOTP));
+        $this->assertTrue($settings->isProviderEnabled(MfaSettings::PROVIDER_DUO));
     }
 
     /**
      * @group mfa
      * @group mfaOrgSettings
      */
-    public function testMfaOrgSettingsIsProviderAllowedFail()
+    public function testMfaOrgSettingsisProviderEnabledFail()
     {
         $config = $this->defaultConfig;
         $config['providers'] = [];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
-        $this->assertFalse($settings->isProviderAllowed(MfaSettings::PROVIDER_YUBIKEY));
+        $this->assertFalse($settings->isProviderEnabled(MfaSettings::PROVIDER_YUBIKEY));
 
         $config = $this->defaultConfig;
         $config['providers'] = [MfaSettings::PROVIDER_DUO];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
-        $this->assertFalse($settings->isProviderAllowed(MfaSettings::PROVIDER_YUBIKEY));
-        $this->assertFalse($settings->isProviderAllowed(MfaSettings::PROVIDER_TOTP));
+        $this->assertFalse($settings->isProviderEnabled(MfaSettings::PROVIDER_YUBIKEY));
+        $this->assertFalse($settings->isProviderEnabled(MfaSettings::PROVIDER_TOTP));
     }
 
     /**
@@ -152,7 +152,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         ];
         $config = $this->defaultConfig;
         $config['providers'] = $providers;
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getProvidersStatus();
         $this->assertEquals($status, $providers);
@@ -160,7 +160,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         // No provider set
         $config = $this->defaultConfig;
         $config['providers'] = [];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getProvidersStatus();
         $this->assertEquals($status, $providers);
@@ -172,7 +172,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         ];
         $config = $this->defaultConfig;
         $config['providers'] = $providers;
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getProvidersStatus();
         $this->assertEquals($status, [
@@ -195,7 +195,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         ];
         $config = $this->defaultConfig;
         $config['providers'] = $providers;
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getEnabledProviders();
         $this->assertEquals($status, [MfaSettings::PROVIDER_DUO]);
@@ -224,7 +224,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetDuoIncompletePropsSalt()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getDuoSalt());
@@ -237,7 +237,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetDuoIncompletePropsHostname()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getDuoHostname());
@@ -250,7 +250,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetDuoIncompletePropsSeckey()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getDuoSecretKey());
@@ -263,7 +263,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetDuoIncompletePropsIKey()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getDuoIntegrationKey());
@@ -291,7 +291,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetYubikeyIncompletePropsSeckey()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getYubikeyOTPSecretKey());
@@ -304,7 +304,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetYubikeyIncompletePropsClientId()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getYubikeyOTPClientId());
