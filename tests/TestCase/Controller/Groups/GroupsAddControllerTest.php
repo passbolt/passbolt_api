@@ -34,7 +34,6 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->disableCsrfToken();
         $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
         $this->Groups = TableRegistry::get('Groups', $config);
     }
@@ -192,5 +191,13 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $postData = [];
         $this->postJson("/groups.json?api-version=v1", $postData);
         $this->assertAuthenticationError();
+    }
+
+    public function testErrorCsrfToken()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $this->post("/groups.json?api-version=2");
+        $this->assertResponseCode(403);
     }
 }

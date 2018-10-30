@@ -265,6 +265,7 @@ class QueryStringComponent extends Component
                         self::validateFilterTimestamp($values, $filter);
                         break;
                     case 'is-active':
+                    case 'is-admin':
                     case 'is-favorite':
                     case 'is-owned-by-me':
                     case 'is-shared-with-me':

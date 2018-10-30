@@ -14,14 +14,13 @@
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestCase;
 use Cake\Validation\Validation;
-use PassboltTestData\Shell\Task\Base\GpgkeysDataTask;
 
-class AuthLoginControllerTest extends IntegrationTestCase
+class AuthLoginControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens',
@@ -89,6 +88,14 @@ class AuthLoginControllerTest extends IntegrationTestCase
         $this->assertContains($expect, $data);
         $expect = 'The OpenPGP server key defined in the config could not be found in the GnuPG keyring.';
         $this->assertContains($expect, $data);
+    }
+
+    /**
+     * Test login without providing the csrf token
+     */
+    public function testErrorCsrfToken()
+    {
+        $this->markTestIncomplete();
     }
 
     /**
