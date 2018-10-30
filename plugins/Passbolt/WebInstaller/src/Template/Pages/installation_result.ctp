@@ -1,1 +1,1 @@
-<?= $installResult ?>
+<?= isset($data) ? json_encode($data) : '{}' ?>

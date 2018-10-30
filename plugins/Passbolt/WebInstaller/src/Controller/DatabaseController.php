@@ -14,17 +14,15 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
+use Cake\Datasource\ConnectionManager;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
+use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 class DatabaseController extends WebInstallerController
 {
-    const MY_CONFIG_KEY = 'database';
-
-    // Database configuration form.
-    protected $databaseConfigurationForm = null;
-
     /**
      * Initialize.
      * @return void
@@ -39,62 +37,101 @@ class DatabaseController extends WebInstallerController
         }
         $this->stepInfo['next'] = 'install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
-
-        $this->databaseConfigurationForm = new DatabaseConfigurationForm();
     }
 
     /**
      * Index
-     * @return mixed
+     * @return void|mixed
      */
     public function index()
     {
-        $data = $this->request->getData();
-        if (!empty($data)) {
-            try {
-                $this->_validateData($data);
-            } catch (Exception $e) {
-                return $this->_error($e->getMessage());
-            }
-
-            try {
-                $this->databaseConfigurationForm->testConnection($data);
-            } catch (Exception $e) {
-                return $this->_error($e->getMessage());
-            }
-
-            // Depending on the database content, check if this is a new passbolt instance,
-            // or if we are reconfiguring an existing one (there already tables and  users in the db).
-            try {
-                $nbAdmins = $this->databaseConfigurationForm->checkDbHasAdmin($data);
-            } catch (Exception $e) {
-                return $this->_error($e->getMessage());
-            }
-
-            // Save in session whether the database has existing admins.
-            $this->request->getSession()->write(self::CONFIG_KEY . '.hasExistingAdmin', $nbAdmins > 0 ? true : false);
-
-            $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
-
-            return $this->_success();
+        if ($this->request->is('post')) {
+            return $this->indexPost();
         }
 
-        $this->_loadSavedConfiguration(self::MY_CONFIG_KEY);
+        $databaseSettings = $this->webInstaller->getSettings('database');
+        if (!empty($databaseSettings)) {
+            foreach ($databaseSettings as $key => $databaseSetting) {
+                $this->request = $this->request->withData($key, $databaseSetting);
+            }
+        }
 
+        $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
+    }
+
+    /**
+     * Index post
+     * @return void|mixed
+     */
+    protected function indexPost()
+    {
+        $data = $this->request->getData();
+        try {
+            $this->validateData($data);
+            $this->testConnection($data);
+            DatabaseConfiguration::setDefaultConfig($data);
+            $hasAdmin = $this->hasAdmin();
+        } catch (Exception $e) {
+            return $this->_error($e->getMessage());
+        }
+
+        $this->webInstaller->setSettings('database', $data);
+        $this->webInstaller->setSettings('hasAdmin', $hasAdmin);
+        $this->webInstaller->saveSettings();
+
+        $this->goToNextStep();
+    }
+
+    /**
+     * Check if the database has already administrator.
+     * @throws Exception If the database schema does not validate
+     * @return bool
+     */
+    protected function hasAdmin()
+    {
+        $tables = DatabaseConfiguration::getTables();
+        if (!count($tables)) {
+            return false;
+        }
+
+        DatabaseConfiguration::validateSchema();
+
+        $this->loadModel('Users');
+        $nbAdmins = $this->Users->find()
+            ->where(['role_id' => $this->Users->Roles->getIdByName(Role::ADMIN)])
+            ->count();
+
+        return $nbAdmins > 0;
+    }
+
+    /**
+     * Test the connection to the database
+     * @param array $data The database configuration to test
+     * @throws Exception A connection could not be established with the provided data
+     * @return void
+     */
+    protected function testConnection($data)
+    {
+        $config = DatabaseConfiguration::buildConfig($data);
+        $this->webInstaller->setSettings('database', $config);
+        $this->webInstaller->initDatabaseConnection();
+        if (!DatabaseConfiguration::testConnection()) {
+            throw new Exception(__('A connection could not be established with the credentials provided. Please verify the settings.'));
+        }
     }
 
     /**
      * Validate data.
      * @param array $data request data
-     * @return mixed
+     * @throws Exception The data does not validate
+     * @return void
      */
-    protected function _validateData($data)
+    protected function validateData($data)
     {
-        $confIsValid = $this->databaseConfigurationForm->execute($data);
-        $this->set('databaseConfigurationForm', $this->databaseConfigurationForm);
-
-        if (!$confIsValid) {
+        $form = new DatabaseConfigurationForm();
+        $this->set('formExecuteResult', $form);
+        if (!$form->execute($data)) {
             throw new Exception(__('The data entered are not correct'));
         }
     }

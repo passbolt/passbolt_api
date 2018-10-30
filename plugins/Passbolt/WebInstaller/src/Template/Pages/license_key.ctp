@@ -10,7 +10,7 @@ $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBott
         <?= $this->element('navigation', ['selectedSection' => 'license_key']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($licenseKeyForm); ?>
+    <?= $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -20,13 +20,12 @@ $this->Html->script('Passbolt/WebInstaller.key_chooser', ['block' => 'scriptBott
                                 <h3><?= __('Copy paste your Passbolt Pro subscription key here'); ?></h3>
                                 <?= $this->Flash->render() ?>
                                 <div class="input textarea gpgkey">
-                                    <?= $this->Form->textarea('license_key', ['class' => ['key-content']]); ?>
+                                    <?= $this->Form->control('license_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>
                                 </div>
                                 <div class="input file">
                                     <a role="button" class="button" id="key-chooser"><?= __('Browse'); ?></a>
                                     <span class="help-text"><?= __('Or select a file from your computer'); ?></span>
                                 </div>
-<!--                                <div id="ErrorMessage" class="message error hidden"></div>-->
                             </div>
                         </div>
                 </div>

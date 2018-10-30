@@ -12,7 +12,7 @@ use Cake\Routing\Router;
         <?= $this->element('navigation', ['selectedSection' => 'server_keys']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($gpgKeyGenerateForm); ?>
+    <?= $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">

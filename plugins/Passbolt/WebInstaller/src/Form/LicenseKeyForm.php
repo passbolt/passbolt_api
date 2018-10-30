@@ -42,10 +42,16 @@ class LicenseKeyForm extends Form
         $validator
             ->requirePresence('license_key', 'create', __('A subscription key is required.'))
             ->notEmpty('license_key', __('A subscription key is required.'))
-            ->add('license_key', ['custom' => [
-                'rule' => [$this, 'isValidLicenseFormat'],
-                'message' => __('The license format is not valid.')
-            ]]);
+            ->add('license_key', 'is_valid_license_format', [
+                'last' => true,
+                'rule' => [$this, 'checkLicenseFormat'],
+                'message' => 'The license format is not valid.'
+            ])
+            ->add('license_key', 'is_valid_license', [
+                'last' => true,
+                'rule' => [$this, 'checkLicense'],
+                'message' => 'The license is not valid.'
+            ]);
 
         return $validator;
     }
@@ -57,13 +63,32 @@ class LicenseKeyForm extends Form
      * @param array $context not in use
      * @return bool
      */
-    public function isValidLicenseFormat(string $value, array $context = null)
+    public function checkLicenseFormat(string $value, array $context = null)
     {
         $license = new License($value);
         try {
             $license->getArmoredSignedLicense();
         } catch (\Exception $e) {
             return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the license is valid.
+     *
+     * @param string $value The license
+     * @param array|null $context not in use
+     * @return string|bool
+     */
+    public function checkLicense(string $value, array $context = null)
+    {
+        $license = new License($value);
+        try {
+            $license->validate();
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
 
         return true;

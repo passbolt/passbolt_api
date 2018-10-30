@@ -17,6 +17,7 @@ namespace Passbolt\WebInstaller\Controller;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
+use Passbolt\WebInstaller\Utility\WebInstallerHealthchecks;
 
 class SystemCheckController extends WebInstallerController
 {
@@ -28,9 +29,10 @@ class SystemCheckController extends WebInstallerController
     {
         $checks = Healthchecks::environment();
         $gpgChecks = Healthchecks::gpg();
-        $checks = array_merge($checks, $gpgChecks);
+        $webInstallerCheck = WebInstallerHealthchecks::all();
+        $checks = array_merge($checks, $gpgChecks, $webInstallerCheck);
         $checks['ssl'] = ['is' => $this->request->is('ssl')];
-        $checks['system_ok'] = $this->_healthcheckIsOk($checks) ? true : false;
+        $checks['system_ok'] = $this->_healthcheckIsOk($checks);
 
         if (Configure::read('passbolt.plugins.license')) {
             $nextStepUrl = Router::url('install/license_key', true);
@@ -38,6 +40,7 @@ class SystemCheckController extends WebInstallerController
             $nextStepUrl = Router::url('install/database', true);
         }
 
+        $this->webInstaller->setSettingsAndSave('initialized', true);
         $this->set('data', $checks);
         $this->set('nextStepUrl', $nextStepUrl);
         $this->render('Pages/system_check');
@@ -46,20 +49,21 @@ class SystemCheckController extends WebInstallerController
     /**
      * Check if healthcheck values are good enough to continue installation.
      * @param array $checks checks
-     * @return bool mixed
+     * @return bool
      */
     protected function _healthcheckIsOk($checks)
     {
         $envCheckResults = array_values($checks['environment']);
+        $webInstallerChecksResults = array_values($checks['webInstaller']);
         $gpgKeys = ['lib', 'gpgHome', 'gpgHomeWritable'];
         $gpgChecks = [];
         foreach ($gpgKeys as $gpgKey) {
             $gpgChecks[$gpgKey] = $checks['gpg'][$gpgKey];
         }
         $gpgCheckResults = array_values($gpgChecks);
-        $allChecks = array_merge($envCheckResults, $gpgCheckResults);
+        $allChecks = array_merge($envCheckResults, $gpgCheckResults, $webInstallerChecksResults);
         sort($allChecks);
 
-        return $allChecks[0];
+        return $allChecks[0] ? true : false;
     }
 }

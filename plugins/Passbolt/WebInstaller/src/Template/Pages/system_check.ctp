@@ -1,6 +1,6 @@
 <?php
-use App\View\Helper\HealthcheckHtmlHelper;
 use Cake\Routing\Router;
+use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
 $healtcheck = new HealthcheckHtmlHelper();
 ?>

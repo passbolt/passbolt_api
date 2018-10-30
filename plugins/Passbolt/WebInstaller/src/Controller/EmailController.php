@@ -20,8 +20,6 @@ use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
 {
-    const MY_CONFIG_KEY = 'email';
-
     public $components = ['Flash'];
 
     /**
@@ -42,11 +40,6 @@ class EmailController extends WebInstallerController
     protected $email = null;
 
     /**
-     * Contains the email configuration form.
-     */
-    protected $emailConfigurationForm = null;
-
-    /**
      * Initialize.
      * @return void
      */
@@ -56,51 +49,62 @@ class EmailController extends WebInstallerController
         $this->stepInfo['previous'] = 'install/gpg_key';
         $this->stepInfo['next'] = 'install/options';
         $this->stepInfo['template'] = 'Pages/email';
-
-        $this->emailConfigurationForm = new EmailConfigurationForm();
     }
 
     /**
      * Index
-     * @return mixed
+     * @return void|mixed
      */
     public function index()
     {
-        $data = $this->request->getData();
-        if (!empty($data)) {
-            try {
-                $this->_validateData($data);
-            } catch (Exception $e) {
-                return $this->_error($e->getMessage());
-            }
+        if ($this->request->is('post')) {
+            return $this->indexPost();
+        }
 
-            if (isset($data['send_test_email'])) {
-                $this->_sendTestEmail($data);
-
-                return $this->render($this->stepInfo['template']);
-            } else {
-                $this->_saveConfiguration(self::MY_CONFIG_KEY, $data);
-
-                return $this->_success();
+        $databaseSettings = $this->webInstaller->getSettings('email');
+        if (!empty($databaseSettings)) {
+            foreach ($databaseSettings as $key => $databaseSetting) {
+                $this->request = $this->request->withData($key, $databaseSetting);
             }
         }
 
-        $this->_loadSavedConfiguration(self::MY_CONFIG_KEY);
-
+        $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
+    }
+
+    /**
+     * Index post
+     * @return void|mixed
+     */
+    protected function indexPost()
+    {
+        $data = $this->request->getData();
+        try {
+            $this->validateData($data);
+        } catch (Exception $e) {
+            return $this->_error($e->getMessage());
+        }
+
+        if (isset($data['send_test_email'])) {
+            $this->sendTestEmail($data);
+            $this->render($this->stepInfo['template']);
+        } else {
+            $this->webInstaller->setSettingsAndSave('email', $data);
+            $this->goToNextStep();
+        }
     }
 
     /**
      * Validate data.
      * @param array $data request data
-     * @return mixed
+     * @throws Exception The data does not validate
+     * @return void
      */
-    protected function _validateData($data)
+    protected function validateData($data)
     {
-        $confIsValid = $this->emailConfigurationForm->execute($data);
-        $this->set('emailConfigurationForm', $this->emailConfigurationForm);
-
-        if (!$confIsValid) {
+        $form = new EmailConfigurationForm();
+        $this->set('formExecuteResult', $form);
+        if (!$form->execute($data)) {
             throw new Exception(__('The data entered are not correct'));
         }
     }
@@ -110,7 +114,7 @@ class EmailController extends WebInstallerController
      * @param array $data request data
      * @return void
      */
-    protected function _sendTestEmail($data)
+    protected function sendTestEmail($data)
     {
         $this->email = new Email('default');
         $this->_setTransport(self::TRANSPORT_CLASS, $data);

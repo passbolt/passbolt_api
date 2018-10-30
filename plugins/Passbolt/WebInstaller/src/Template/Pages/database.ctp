@@ -8,7 +8,7 @@ use Cake\Routing\Router;
         <?= $this->element('navigation', ['selectedSection' => 'database']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($databaseConfigurationForm); ?>
+    <?= $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -18,63 +18,47 @@ use Cake\Routing\Router;
                             <h3><?= __('Database configuration'); ?></h3>
                             <?= $this->Flash->render() ?>
                             <div class="input text required">
-                                <label for="DbType">Type</label>
-                                <?php
-                                    echo $this->Form->select(
-                                        'type',
-                                        ['mysql' => 'MySQL / MariaDB'],
-                                        ['default' => 'mysql', 'class' => 'required fluid']
-                                    );
-                                ?>
+                                <label for="type">Type</label>
+                                <?= $this->Form->select('type',
+                                    ['mysql' => 'MySQL / MariaDB'],
+                                    ['default' => 'mysql', 'class' => 'required fluid']
+                                ); ?>
                             </div>
-                            <?php
-                            echo $this->Form->input('host',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('host name or ip address'),
-                                    'label' => __('Host'),
-                                    'class' => 'required fluid'
-                                ]
-                            );
+                            <?= $this->Form->input('host', [
+                                'required' => 'required',
+                                'placeholder' => __('host name or ip address'),
+                                'label' => __('Host'),
+                                'class' => 'required fluid'
+                            ]); ?>
 
-                            echo $this->Form->input('port',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('port'),
-                                    'label' => __('Port'),
-                                    'class' => 'required fluid',
-                                    'default' => '3306',
-                                ]
-                            );
+                            <?= $this->Form->input('port', [
+                                'required' => 'required',
+                                'placeholder' => __('port'),
+                                'label' => __('Port'),
+                                'class' => 'required fluid',
+                                'default' => '3306',
+                            ]); ?>
 
-                            echo $this->Form->input('username',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('username'),
-                                    'label' => __('Username'),
-                                    'class' => 'required fluid',
-                                ]
-                            );
+                            <?= $this->Form->input('username', [
+                                'required' => 'required',
+                                'placeholder' => __('username'),
+                                'label' => __('Username'),
+                                'class' => 'required fluid',
+                            ]); ?>
 
-                            echo $this->Form->input('password',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('password'),
-                                    'label' => __('Password'),
-                                    'class' => 'required fluid',
-                                    'type' => 'password',
-                                ]
-                            );
+                            <?= $this->Form->input('password', [
+                                'placeholder' => __('password'),
+                                'label' => __('Password'),
+                                'class' => 'fluid',
+                                'type' => 'password',
+                            ]); ?>
 
-                            echo $this->Form->input('database',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('database name'),
-                                    'label' => __('Database name'),
-                                    'class' => 'required fluid',
-                                ]
-                            );
-                            ?>
+                            <?= $this->Form->input('database', [
+                                'required' => 'required',
+                                'placeholder' => __('database name'),
+                                'label' => __('Database name'),
+                                'class' => 'required fluid',
+                            ]); ?>
                         </div>
                     </div>
                 </div>

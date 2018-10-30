@@ -23,8 +23,10 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Pro')) {
 }
 
 // Add webinstaller plugin if present.
-if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'WebInstaller')) {
-    Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+if (defined('PASSBOLT_IS_CONFIGURED') && !PASSBOLT_IS_CONFIGURED) {
+    if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'WebInstaller')) {
+        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+    }
 }
 
 // Add tags plugin if present.

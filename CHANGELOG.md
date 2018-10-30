@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Improved
 - PASSBOLT-3166: Add PHP 7.3 job on travis
+- PASSBOLT-3119: The Web Installer should control the route with a middleware
+- PASSBOLT-3153: The Web Installer healtchecks should ensure the config files can be written before continuing
+- PASSBOLT-3120: Improve the Web Installer code coverage
+- PASSBOLT-3127: The Web Installer should change the config folder permissions after the installation is completed
 
 ### Fixed
 - PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords

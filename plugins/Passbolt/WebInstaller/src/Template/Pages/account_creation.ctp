@@ -1,4 +1,4 @@
-<?= $this->element('header', ['title' => __('Installation is done. Create your user account!')]) ?>
+<?= $this->element('header', ['title' => __('Create your user account!')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">

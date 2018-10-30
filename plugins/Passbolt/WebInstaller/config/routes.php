@@ -18,8 +18,9 @@ use Cake\Routing\Router;
  * Selenium tests routes
  */
 Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($routes) {
+    $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'SystemCheck', 'action' => 'index'])
+    $routes->connect('/', ['controller' => 'GettingStarted', 'action' => 'index'])
         ->setMethods(['GET']);
 
     $routes->connect('/system_check', ['controller' => 'SystemCheck', 'action' => 'index'])
@@ -50,8 +51,5 @@ Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($route
         ->setMethods(['GET']);
 
     $routes->connect('/account_creation', ['controller' => 'AccountCreation', 'action' => 'index'])
-        ->setMethods(['GET', 'POST']);
-
-    $routes->connect('/complete', ['controller' => 'Installation', 'action' => 'complete'])
         ->setMethods(['GET', 'POST']);
 });

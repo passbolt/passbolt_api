@@ -14,7 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Passbolt\License\Utility\License;
+use Cake\Core\Exception\Exception;
 use Passbolt\WebInstaller\Form\LicenseKeyForm;
 
 class LicenseKeyController extends WebInstallerController
@@ -37,44 +37,44 @@ class LicenseKeyController extends WebInstallerController
      */
     public function index()
     {
-        $data = $this->request->getData();
-        if (!empty($data)) {
-            $data = $this->request->getData();
-            $licenseKeyForm = new LicenseKeyForm();
-            $dataIsValid = $licenseKeyForm->execute($data);
-            $this->set('licenseKeyForm', $licenseKeyForm);
-
-            if (!$dataIsValid) {
-                $errors = $licenseKeyForm->errors();
-                if (isset($errors['license_key'])) {
-                    return $this->_error(array_pop($errors['license_key']));
-                }
-
-                return $this->_error(__('The data entered are not correct'));
-            }
-
-            return $this->_saveLicense($data['license_key']);
+        if ($this->request->is('post')) {
+            return $this->indexPost();
         }
 
+        $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
     }
 
     /**
-     * Save the the provided license if valid
-     * @param string $licenseStr The license
+     * Index post
      * @return mixed
      */
-    protected function _saveLicense(string $licenseStr = '')
+    protected function indexPost()
     {
-        $license = new License($licenseStr);
+        $data = $this->request->getData();
         try {
-            $license->validate();
-        } catch (\Exception $e) {
+            $this->validateData($data);
+        } catch (Exception $e) {
             return $this->_error($e->getMessage());
         }
-        $session = $this->request->getSession();
-        $session->write('Passbolt.License', $licenseStr);
 
-        return $this->_success();
+        $this->webInstaller->setSettingsAndSave('license', $data);
+        $this->goToNextStep();
+    }
+
+    /**
+     * Validate data.
+     * @param array $data request data
+     * @throws Exception The license is not valid
+     * @return void
+     */
+    protected function validateData($data)
+    {
+        $form = new LicenseKeyForm();
+        $confIsValid = $form->execute($data);
+        $this->set('formExecuteResult', $form);
+        if (!$confIsValid) {
+            throw new Exception(__('The license is not valid.'));
+        }
     }
 }

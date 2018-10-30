@@ -10,7 +10,7 @@ $this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
         <?= $this->element('navigation', ['selectedSection' => 'emails']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($emailConfigurationForm); ?>
+    <?= $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -18,79 +18,54 @@ $this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
                     <div class="row">
                         <div class="col12">
                             <h3><?= __('Email configuration'); ?></h3>
-                            <?php
-                            echo $this->Form->input('sender_name',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('admin or company name'),
-                                    'label' => __('Sender name'),
-                                    'class' => 'required fluid',
-                                ]
-                            );
-
-                            echo $this->Form->input('sender_email',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('email@company.com'),
-                                    'label' => __('Sender email'),
-                                    'class' => 'required fluid',
-                                    'type' => 'email',
-                                ]
-                            );
-                            ?>
+                            <?= $this->Flash->render() ?>
+                            <?= $this->Form->input('sender_name', [
+                                'required' => 'required',
+                                'placeholder' => __('admin or company name'),
+                                'label' => __('Sender name'),
+                                'class' => 'required fluid',
+                            ]); ?>
+                            <?= $this->Form->input('sender_email', [
+                                'required' => 'required',
+                                'placeholder' => __('email@company.com'),
+                                'label' => __('Sender email'),
+                                'class' => 'required fluid',
+                                'type' => 'email',
+                            ]); ?>
 
                             <h3><?= __('SMTP server configuration'); ?></h3>
-                            <?= $this->Flash->render() ?>
-                            <?php
-                            echo $this->Form->input('host',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('host name or ip address'),
-                                    'label' => __('SMTP host'),
-                                    'class' => 'required fluid'
-                                ]
-                            );
-                            ?>
+                            <?= $this->Form->input('host', [
+                                'required' => 'required',
+                                'placeholder' => __('host name or ip address'),
+                                'label' => __('SMTP host'),
+                                'class' => 'required fluid'
+                            ]); ?>
                             <div class="input text required">
-                                <label for="DbType"><?= __('Use TLS?'); ?></label>
-                                <?php
-                                echo $this->Form->select(
-                                    'tls',
+                                <label for="tls"><?= __('Use TLS?'); ?></label>
+                                <?= $this->Form->select('tls',
                                     ['1' => 'Yes', '0' => 'No'],
                                     ['default' => '1', 'class' => 'required fluid']
-                                );
-                                ?>
+                                ); ?>
                             </div>
-                            <?php
-                            echo $this->Form->input('port',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('port'),
-                                    'label' => __('Port'),
-                                    'class' => 'required fluid',
-                                    'default' => '587',
-                                ]
-                            );
-
-                            echo $this->Form->input('username',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('username'),
-                                    'label' => __('Username'),
-                                    'class' => 'required fluid',
-                                ]
-                            );
-
-                            echo $this->Form->input('password',
-                                [
-                                    'required' => 'required',
-                                    'placeholder' => __('password'),
-                                    'label' => __('Password'),
-                                    'class' => 'required fluid',
-                                    'type' => 'password',
-                                ]
-                            );
-                            ?>
+                            <?= $this->Form->input('port', [
+                                'required' => 'required',
+                                'placeholder' => __('port'),
+                                'label' => __('Port'),
+                                'class' => 'required fluid',
+                                'default' => '587']); ?>
+                            <?= $this->Form->input('username', [
+                                'required' => 'required',
+                                'placeholder' => __('username'),
+                                'label' => __('Username'),
+                                'class' => 'required fluid',
+                            ]); ?>
+                            <?= $this->Form->input('password', [
+                                'required' => 'required',
+                                'placeholder' => __('password'),
+                                'label' => __('Password'),
+                                'class' => 'required fluid',
+                                'type' => 'password',
+                            ]); ?>
                         </div>
                     </div>
                 </div>
@@ -102,7 +77,6 @@ $this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
                     </div>
                     <h3>Why do I need a SMTP server?</h3>
                     <p>Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications.</p>
-<!--                    <p>You can find configuration examples for some of the most popular email providers in our <a href="https://help.passbolt.com" target="_blank" rel="noopener">knowledge base</a></p>-->
 
                     <h3>Send test email</h3>
                     <p>Test your configuration by sending a test email.</p>
@@ -137,14 +111,12 @@ $this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
                     <?php endif; ?>
                     <div class="input text required">
                         <?php
-                        echo $this->Form->input('email_test_to',
-                            [
-                                'placeholder' => __('Your email address'),
-                                'label' => false,
-                                'class' => 'required fluid',
-                                'type' => 'email',
-                            ]
-                        );
+                        echo $this->Form->input('email_test_to', [
+                            'placeholder' => __('Your email address'),
+                            'label' => false,
+                            'class' => 'required fluid',
+                            'type' => 'email',
+                        ]);
                         ?>
                         <input type="submit" name="send_test_email" class="button" value="<?= __('Send test email'); ?>" >
                     </div>
