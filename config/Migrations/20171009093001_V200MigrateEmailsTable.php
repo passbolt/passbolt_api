@@ -30,6 +30,7 @@ class V200MigrateEmailsTable extends AbstractMigration
         $migrations = new Migrations([
             'connection' => 'default',
             'plugin' => 'EmailQueue',
+            'connection' => defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default'
         ]);
         $migrations->migrate();
     }

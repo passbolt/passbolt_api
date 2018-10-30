@@ -42,11 +42,14 @@ class V200MigrateFileStorageTable extends AbstractMigration
             $this->table('file_storage')
                 ->changeColumn('id', 'char', ['limit' => 36])
                 ->save();
-            $migrations->markMigrated(self::$fileStorageMigrations['initial_migration']);
+            $migrations->markMigrated(self::$fileStorageMigrations['initial_migration'], [
+                'connection' => defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default'
+            ]);
         }
         // Continue with the next plugin migrations.
         $migrations->migrate([
-            'target' => self::$fileStorageMigrations['fixing_mime_type_field']
+            'target' => self::$fileStorageMigrations['fixing_mime_type_field'],
+            'connection' => defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default'
         ]);
 
         // Transform "ProfileAvatar" into "Avatar" in existing db data.
