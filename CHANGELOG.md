@@ -8,5 +8,8 @@
 - PASSBOLT-3120: Improve the Web Installer code coverage
 - PASSBOLT-3127: The Web Installer should change the config folder permissions after the installation is completed
 
+### Improved
+- PASSBOLT-3166: Add PHP 7.3 job on travis
+
 ### Fixed
 - PASSBOLT-2963: Persist the license in a file
