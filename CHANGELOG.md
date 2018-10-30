@@ -10,4 +10,6 @@
 - PASSBOLT-3166: Add PHP 7.3 job on travis
 
 ### Fixed
+- PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords
 - PASSBOLT-2963: Persist the license in a file
+- GITHUB-290: A user who have not completed the setup should be allowed to request a new token using recover
