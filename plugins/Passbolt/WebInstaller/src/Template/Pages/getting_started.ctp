@@ -18,7 +18,7 @@ use Cake\Core\Configure;
 $this->assign('title',	__('Passbolt is not configured.'));
 $this->Html->css('themes/default/api_setup.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 
-$this->assign('page_classes', 'start');
+$this->assign('page_classes', 'setup start');
 ?>
 <?php echo $this->element('Navigation/empty'); ?>
 <div class="page-row">
@@ -43,25 +43,14 @@ $this->assign('page_classes', 'start');
             </div>
             <div class="col6 last">
                 <div class="big-choice">
-                    <?php if (PASSBOLT_PRO): ?>
                     <div class="ribbon"><span><?= __('POPULAR') ?></span></div>
                     <h3><?= __('Wizard configuration') ?></h3>
                     <p>
                         <?= __('Choose this option if you want to be guided by the configuration wizard and get started in no time.') ?>
                     </p>
-                    <a href="<?= Router::url('install') ?>" class="button primary">
+                    <a href="<?= Router::url('install/system_check') ?>" class="button primary">
                         <i class="fa fa-magic fa-fw"></i> <?= __('Start the wizard') ?>
                     </a>
-                    <?php else: ?>
-                    <div class="ribbon"><span><?= __('PRO') ?></span></div>
-                    <h3><?= __('Wizard configuration') ?></h3>
-                    <p>
-                        <?= __('Don\'t want the hassle of a manual configuration? Passbolt Pro includes a configuration wizard that will get you started in minutes.') ?>
-                    </p>
-                    <a href="https://www.passbolt.com/services/pro" target="_blank" rel="noopener" class="button primary">
-                        <i class="fa fa-cubes fa-fw"></i> <?= __('Upgrade to passbolt pro') ?>
-                    </a>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

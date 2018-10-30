@@ -4,13 +4,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- PASSBOLT-2694: Implement the Web Installer feature
 - PASSBOLT-3093: As LU I can select all passwords to perform a bulk operation
+- PASSBOLT-3119: The Web Installer should control the route with a middleware
+- PASSBOLT-3153: The Web Installer healtchecks should ensure the config files can be written before continuing
+- PASSBOLT-3120: Improve the Web Installer code coverage
+- PASSBOLT-3127: The Web Installer should change the config folder permissions after the installation is completed
 
 ### Improved
 - PASSBOLT-3166: Add PHP 7.3 job on travis
 
 ### Fixed
 - PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords
+- PASSBOLT-2963: Persist the license in a file
 
 ## [2.4.0] - 2018-10-12
 ### Added
