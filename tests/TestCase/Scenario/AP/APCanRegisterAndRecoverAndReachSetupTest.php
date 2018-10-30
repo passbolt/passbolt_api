@@ -19,6 +19,7 @@ use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\UsersTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
@@ -67,7 +68,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 
         // Link to install should be present in email
         $this->get('/seleniumtests/showLastEmail/integration@passbolt.com');
-        $url = 'https://www.passbolt.test/setup/install/' . $user->id . '/' . $tokens[0]['token'];
+        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[0]['token']);
         $this->assertResponseContains($url);
 
         // Recover to get another token
@@ -96,7 +97,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 
         // Try to start setup with other token
         // Url should not work since user is already signed up
-        $url = 'https://www.passbolt.test/setup/install/' . $user->id . '/' . $tokens[1]['token'];
+        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[1]['token']);
         $this->get($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The user does not exist or is already active or has been deleted');
