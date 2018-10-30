@@ -1,7 +1,7 @@
 <?php
 use Cake\Routing\Router;
 $this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
-$this->Html->script('Passbolt/WebInstaller.email', ['block' => 'scriptBottom']);
+$this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
 <div class="panel main ">
