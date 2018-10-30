@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - PASSBOLT-3093: As LU I can select all passwords to perform a bulk operation
+- PASSBOLT-3001: Add support multiple factor authentication using Yubikey
+- PASSBOLT-3110: Add support multiple factor authentication using Duo
+- PASSBOLT-3121: Add multiple factor authentication administration screen
 
 ### Improved
 - PASSBOLT-3166: Add PHP 7.3 job on travis

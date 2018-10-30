@@ -21,7 +21,6 @@ use Cake\Http\Cookie\Cookie;
 class MfaVerifiedCookie
 {
     const MFA_COOKIE_ALIAS = 'passbolt_mfa';
-    const MIN_DURATION = '24 hours';
     const MAX_DURATION = '30 days';
 
     /**
@@ -34,18 +33,16 @@ class MfaVerifiedCookie
      */
     static public function get(string $token, bool $remember = false, bool $ssl = true)
     {
-        if ($remember) {
-            $expiry = new DateTime(self::MAX_DURATION);
-        } else {
-            $expiry = new DateTime(self::MIN_DURATION);
-        }
-
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
             ->withValue($token)
-            ->withExpiry($expiry)
             ->withPath('/')
             ->withHttpOnly(true)
             ->withSecure($ssl);
+
+        if ($remember) {
+            $mfaCookie = $mfaCookie
+                ->withExpiry(new DateTime(self::MAX_DURATION));
+        }
 
         return $mfaCookie;
     }

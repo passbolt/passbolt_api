@@ -21,11 +21,10 @@ use BaconQrCode\Common\ErrorCorrectionLevel;
 use BaconQrCode\Encoder\Encoder;
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
-use OTPHP\Factory;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 
-class OtpFactory
+class MfaOtpFactory
 {
     /**
      * Generate a random TOTP
@@ -43,24 +42,11 @@ class OtpFactory
             throw new InternalErrorException(__('Could not generate enough random bytes, please try again later.'));
         }
         $totp = new TOTP(
-            $uac->username(), //label: string shown bellow the code digits
+            $uac->getUsername(), //label: string shown bellow the code digits
             $secret
         );
         $totp->setIssuer(Configure::read('passbolt.meta.title')); //issuer: string shown above the code digits
         return $totp->getProvisioningUri();
-    }
-
-    /**
-     * Verify a OTP from provisioning uri
-     *
-     * @param string $uri
-     * @param string $code
-     * @return bool true if verified
-     */
-    static function verityOTP(string $uri, string $code)
-    {
-        $otp = Factory::loadFromProvisioningUri($uri);
-        return $otp->verify($code);
     }
 
     /**

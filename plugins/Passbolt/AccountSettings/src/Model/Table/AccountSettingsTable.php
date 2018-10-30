@@ -178,7 +178,10 @@ class AccountSettingsTable extends Table
      * @param string $userId uuid
      * @param string $property The property name
      * @param mixed $value The property value
-     * @return AccountSetting
+     * @throws BadRequestException if userId does not exist
+     * @throws ValidationException if could not save because of validation issues
+     * @throws InternalErrorException if save operation saved for another reason
+     * @return \Passbolt\AccountSettings\Model\Entity\AccountSetting
      */
     public function createOrUpdateSetting(string $userId, string $property, string $value)
     {
@@ -202,6 +205,9 @@ class AccountSettingsTable extends Table
             throw new ValidationException(__('This is not a valid setting.'), $settingItem, $this);
         }
         if (!$this->save($settingItem)) {
+            if ($settingItem->getErrors()) {
+                throw new ValidationException(__('This is not a valid setting.'), $settingItem, $this);
+            }
             throw new InternalErrorException(__('Could not save the setting, please try again later.'));
         }
 

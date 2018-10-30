@@ -14,57 +14,35 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
-use App\Controller\AppController;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
+use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Form\TotpVerifyForm;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
 
-class TotpVerifyGetController extends AppController
+class TotpVerifyGetController extends MfaVerifyController
 {
 
     /**
-     * @throws InternalErrorException
-     * @throws BadRequestException
+     * @throws InternalErrorException if there is no MFA settings for the user
+     * @throws BadRequestException if valid Verification token is already present in cookie
+     * @throws BadRequestException if there is no MFA settings for this provider
      */
     public function get()
     {
-        $uac = $this->User->getAccessControl();
-        try {
-            $mfaSettings = MfaSettings::get($uac);
-        } catch(RecordNotFoundException $exception) {
-            // for example mfa config was deleted between mfa middleware redirect and here
-            throw new InternalErrorException(__('No valid TOTP settings found.'));
-        }
-        if (!$mfaSettings->isReadyToUse(MfaSettings::PROVIDER_OTP)) {
-            // for example a user is trying to force a check
-            throw new BadRequestException(__('Incomplete TOTP settings found.'));
-        }
-
-        // Mfa cookie is set and a valid token
-        $mfaVerifiedToken = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-        if (isset($mfaVerifiedToken)) {
-            if(MfaVerifiedToken::check($uac, $mfaVerifiedToken)) {
-                if ($this->request->is('json')) {
-                    throw new BadRequestException(__('MFA is not required.'));
-                } else {
-                    $this->redirect('/');
-                    return;
-                }
-            }
-        }
+        $this->_handleVerifiedNotRequired();
+        $this->_handleInvalidSettings(MfaSettings::PROVIDER_TOTP);
 
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
-        $totpVerifyForm = new TotpVerifyForm($uac, $mfaSettings);
+        $uac = $this->User->getAccessControl();
+        $verifyForm = new TotpVerifyForm($uac, MfaSettings::get($uac));
 
         if (!$this->request->is('json')) {
-            $this->set('totpVerifyForm', $totpVerifyForm);
+            $this->set('providers', $this->mfaSettings->getEnabledProviders());
+            $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
-                ->setLayout('totp_verify')
+                ->setLayout('mfa_verify')
                 ->setTemplatePath('Totp')
                 ->setTemplate('verifyForm');
         } else {

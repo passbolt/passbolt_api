@@ -18,6 +18,14 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
+    $routes->redirect('/setup', '/mfa/setup/select');
+
+    $routes->connect('/setup/select', ['controller' => 'MfaSetupSelectProvider', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    /**
+     * TOTP
+     */
     $routes->connect('/setup/totp/start', ['prefix' => 'Totp', 'controller' => 'TotpSetupGet', 'action' => 'start'])
         ->setMethods(['GET']);
 
@@ -34,6 +42,42 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
         ->setMethods(['GET']);
 
     $routes->connect('/verify/totp', ['prefix' => 'Totp', 'controller' => 'TotpVerifyPost', 'action' => 'post'])
+        ->setMethods(['POST']);
+
+    /**
+     * Yubikey
+     */
+    $routes->connect('/setup/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeySetupGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/setup/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeySetupPost', 'action' => 'post'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeySetupDelete', 'action' => 'delete'])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/verify/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeyVerifyGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/verify/yubikey', ['prefix' => 'Yubikey', 'controller' => 'YubikeyVerifyPost', 'action' => 'post'])
+        ->setMethods(['POST']);
+
+    /**
+     * Duo
+     */
+    $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupPost', 'action' => 'post'])
+        ->setMethods(['POST']);
+
+    $routes->connect('/setup/duo', ['prefix' => 'Duo', 'controller' => 'DuoSetupDelete', 'action' => 'delete'])
+        ->setMethods(['DELETE']);
+
+    $routes->connect('/verify/duo', ['prefix' => 'Duo', 'controller' => 'DuoVerifyGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/verify/duo', ['prefix' => 'Duo', 'controller' => 'DuoVerifyPost', 'action' => 'post'])
         ->setMethods(['POST']);
 
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])

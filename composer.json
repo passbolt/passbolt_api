@@ -52,7 +52,9 @@
         "ezyang/htmlpurifier": "dev-master",
         "ldaptools/ldaptools": "^0.25.2",
         "spomky-labs/otphp": "^8.3",
-        "bacon/bacon-qr-code": "^1.0"
+        "bacon/bacon-qr-code": "^1.0",
+        "enygma/yubikey": "^3.3",
+        "duosecurity/duo_php": "^1.0"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -82,7 +84,6 @@
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\License\\Test\\": "./plugins/Passbolt/License/tests",
             "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
-            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
             "Passbolt\\DirectorySync\\Test\\": "./plugins/Passbolt/DirectorySync/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",

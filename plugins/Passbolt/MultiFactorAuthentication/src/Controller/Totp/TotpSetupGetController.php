@@ -14,15 +14,20 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
-use App\Controller\AppController;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Cake\Network\Exception\BadRequestException;
+use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Utility\OtpFactory;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 
-class TotpSetupGetController extends AppController
+class TotpSetupGetController extends MfaSetupController
 {
+    /**
+     * @var MfaSettings
+     */
+    protected $mfaSettings;
+
     /**
      * Totp Get Qr Code and provisioning urls
      *
@@ -30,68 +35,41 @@ class TotpSetupGetController extends AppController
      */
     public function get()
     {
-        $isReadyToUse = false;
-        $uac = $this->User->getAccessControl();
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
         try {
-            $mfaSettings = MfaSettings::get($uac);
-            $isReadyToUse = $mfaSettings->isReadyToUse(MfaSettings::PROVIDER_OTP);
-        } catch(RecordNotFoundException $exception) {
-        }
-
-        if (!$isReadyToUse) {
-            $this->_handleGetNewSettings($uac);
-        } else {
-            $this->_handleGetExistingSettings($mfaSettings);
-        }
-    }
-
-    public function start()
-    {
-        $isReadyToUse = false;
-        $uac = $this->User->getAccessControl();
-        try {
-            $mfaSettings = MfaSettings::get($uac);
-            $isReadyToUse = $mfaSettings->isReadyToUse(MfaSettings::PROVIDER_OTP);
-        } catch(RecordNotFoundException $exception) {
-        }
-
-        if (!$isReadyToUse) {
-            $this->_handleGetStart();
-        } else {
-            $this->_handleGetExistingSettings($mfaSettings);
-        }
-    }
-
-    public function _handleGetStart() {
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('totp_setup')
-                ->setTemplatePath('Totp')
-                ->setTemplate('setupStart');
-        } else {
-            $this->success(__('Please setup the TOTP application.'));
+            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+            $this->_handleGetNewSettings();
+        } catch (BadRequestException $exception) {
+            $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
         }
     }
 
     /**
-     * Handle get request when ready to use settings are present
-     *
-     * @param MfaSettings $mfaSettings
-     * @return void
+     * Display start page (with how to diagram)
      */
-    protected function _handleGetExistingSettings(MfaSettings $mfaSettings)
+    public function start()
     {
-        $this->set('theme', $this->User->theme());
-        $this->viewBuilder()
-            ->setLayout('totp_setup')
-            ->setTemplatePath('Totp')
-            ->setTemplate('setupSuccess');
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
+        try {
+            $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+            $this->_handleGetStart();
+        } catch (BadRequestException $exception) {
+            $this->_handleGetExistingSettings(MfaSettings::PROVIDER_TOTP);
+        }
+    }
 
-        $this->success(__('Multi Factor Authentication is configured!'), [
-            'created' => $mfaSettings->getCreated(),
-            'modified' => $mfaSettings->getModified()
-        ]);
+    /**
+     * Display start page
+     */
+    public function _handleGetStart() {
+        if (!$this->request->is('json')) {
+            $this->set('theme', $this->User->theme());
+            $this->viewBuilder()
+                ->setLayout('mfa_setup')
+                ->setTemplatePath('Totp')
+                ->setTemplate('setupStart');
+        }
+        $this->success(__('Please setup the TOTP application.'));
     }
 
     /**
@@ -100,13 +78,14 @@ class TotpSetupGetController extends AppController
      * @param UserAccessControl $uac
      * @return void
      */
-    protected function _handleGetNewSettings(UserAccessControl $uac)
+    protected function _handleGetNewSettings()
     {
         // Build and return some URI and QR code to work from
         // even though they can be set manually in the post as well
+        $uac = $this->User->getAccessControl();
         $totpSetupForm = new TotpSetupForm($uac);
-        $uri = OtpFactory::generateTOTP($uac);
-        $qrCode = OtpFactory::getQrCodeInline($uri);
+        $uri = MfaOtpFactory::generateTOTP($uac);
+        $qrCode = MfaOtpFactory::getQrCodeInline($uri);
 
         if (!$this->request->is('json')) {
             $this->set('totpSetupForm', $totpSetupForm);
@@ -115,7 +94,7 @@ class TotpSetupGetController extends AppController
                 ->withData('otpQrCodeImage', $qrCode)
                 ->withData('otpProvisioningUri', $uri);
             $this->viewBuilder()
-                ->setLayout('totp_setup')
+                ->setLayout('mfa_setup')
                 ->setTemplatePath('Totp')
                 ->setTemplate('setupForm');
         } else {

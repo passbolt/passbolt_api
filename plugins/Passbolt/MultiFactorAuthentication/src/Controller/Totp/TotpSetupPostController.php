@@ -14,17 +14,22 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
-use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
-use Passbolt\MultiFactorAuthentication\Form\TotpSetupForm;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 
-class TotpSetupPostController extends AppController
+class TotpSetupPostController extends MfaSetupController
 {
+    /**
+     * Handle TOTP setup POST request
+     * @return void
+     */
     public function post()
     {
+        $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_TOTP);
+        $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_TOTP);
+
         $uac = $this->User->getAccessControl();
         $totpSetupForm = new TotpSetupForm($uac);
         try {
@@ -38,7 +43,7 @@ class TotpSetupPostController extends AppController
                 $this->request = $this->request
                     ->withData('otpQrCodeImage', $this->request->getData('otpQrCodeImage'));
                 $this->viewBuilder()
-                    ->setLayout('totp_setup')
+                    ->setLayout('mfa_setup')
                     ->setTemplatePath('Totp')
                     ->setTemplate('setupForm');
             }
@@ -47,23 +52,6 @@ class TotpSetupPostController extends AppController
         }
 
         // Build verified proof token and associated cookie and add it to request
-        $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_OTP);
-        $remember = ($this->request->getData('remember') !== null);
-        $cookie = MfaVerifiedCookie::get($token, $remember, $this->request->is('ssl'));
-        $this->response = $this->response->withCookie($cookie);
-
-        if (!$this->request->is('json')) {
-            $this->set('theme', $this->User->theme());
-            $this->viewBuilder()
-                ->setLayout('totp_setup')
-                ->setTemplatePath('Totp')
-                ->setTemplate('setupSuccess');
-        }
-
-        $mfaSettings = MfaSettings::get($uac);
-        $this->success(__('Multi Factor Authentication is configured!'), [
-            'created' => $mfaSettings->getCreated(),
-            'modified' => $mfaSettings->getModified()
-        ]);
+        $this->_handlePostSuccess(MfaSettings::PROVIDER_TOTP);
     }
 }

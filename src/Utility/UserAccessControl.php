@@ -84,9 +84,18 @@ class UserAccessControl
 
     /**
      * Return username / email
+     * @deprecated use getUsername
      * @return null|string
      */
     public function username()
+    {
+        return $this->getUsername();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getUsername()
     {
         return $this->username;
     }

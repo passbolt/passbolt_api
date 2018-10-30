@@ -17,14 +17,14 @@
         </div>
         <div class="row">
             <div class="col7">
-                <h4>Scan this bar code</h4>
+                <h4><?= __('Scan this bar code'); ?></h4>
                 <?= $this->form->hidden('otpQrCodeImage'); ?>
 
                 <?= $this->form->hidden('otpProvisioningUri'); ?>
 
                 <img class="qrcode" src="<?= $this->request->getData('otpQrCodeImage'); ?>" width="128" height="128"/>
                 <div class="input-verify">
-                    <?= $this->form->control('otp', [
+                    <?= $this->form->control('totp', [
                         'label' => 'One Time Password (OTP)',
                         'placeholder' => '123456'
                     ]); ?>
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="col4 last">
-                <h4>Requirements</h4>
+                <h4><?= __('Requirements'); ?></h4>
                 <div class="message notice">
                     <p>
                        <?= __('To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:'); ?>

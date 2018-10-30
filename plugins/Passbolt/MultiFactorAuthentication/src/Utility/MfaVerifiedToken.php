@@ -88,7 +88,7 @@ class MfaVerifiedToken
     /**
      * @param UserAccessControl $uac
      */
-    static function deleteAll(UserAccessControl $uac)
+    static function setAllInactive(UserAccessControl $uac)
     {
         $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
         $mfaTokens = $AuthenticationTokens->find()

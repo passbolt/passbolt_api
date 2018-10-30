@@ -12,29 +12,21 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
  */
-namespace Passbolt\MultiFactorAuthentication\Form;
+namespace Passbolt\MultiFactorAuthentication\Form\Totp;
 
-use App\Error\Exception\CustomValidationException;
-use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
-use Cake\Form\Form;
 use Cake\Form\Schema;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validator;
 use OTPHP\Factory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Form\MfaForm;
 
-class TotpVerifyForm extends Form
+class TotpVerifyForm extends MfaForm
 {
     /**
-     * @var UserAccessControl
+     * @var \OTPHP\TOTPInterface
      */
-    protected $uac;
-
-    /**
-     * @var \OTPHP\TOTPInterface|\OTPHP\HOTPInterface
-     */
-    protected $otp;
+    protected $totp;
 
     /**
      * @var MfaSettings
@@ -48,9 +40,9 @@ class TotpVerifyForm extends Form
      */
     public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
-        $this->uac = $uac;
+        parent::__construct($uac);
         $this->settings = $settings;
-        $this->otp = Factory::loadFromProvisioningUri($settings->getOtpProvisioningUri());
+        $this->totp = Factory::loadFromProvisioningUri($settings->getAccountSettings()->getOtpProvisioningUri());
     }
 
     /**
@@ -62,7 +54,7 @@ class TotpVerifyForm extends Form
     protected function _buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('otp', ['type' => 'string']);
+            ->addField('totp', ['type' => 'string']);
     }
 
     /**
@@ -74,19 +66,19 @@ class TotpVerifyForm extends Form
     protected function _buildValidator(Validator $validator)
     {
         $validator
-            ->requirePresence('otp', __('An OTP is required.'))
-            ->notEmpty('otp', __('The OTP should not be empty.'))
-            ->add('otp', ['numeric' => [
+            ->requirePresence('totp', __('An OTP is required.'))
+            ->notEmpty('totp', __('The OTP should not be empty.'))
+            ->add('totp', ['numeric' => [
                 'rule' => 'numeric',
                 'last' => true,
                 'message' => 'The OTP should be composed of numbers only.',
             ]])
-            ->add('otp', ['minLength' => [
+            ->add('totp', ['minLength' => [
                 'rule' => ['minLength', 6],
                 'last' => true,
                 'message' => 'The OTP should be at least 6 characters long',
             ]])
-            ->add('otp', ['isValidOtp' => [
+            ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.')
             ]]);
@@ -103,43 +95,10 @@ class TotpVerifyForm extends Form
      */
     public function isValidOtp(string $value)
     {
-        if (!isset($this->otp)) {
+        if (!isset($this->totp)) {
             return false;
         }
-        return $this->otp->verify($value);
-    }
-
-    /**
-     * @param array $data
-     * @return bool
-     */
-    protected function _execute(array $data)
-    {
-        return true;
-    }
-
-    /**
-     * Execute the form if it is valid.
-     *
-     * First validates the form, then calls the `_execute()` hook method.
-     * This hook method can be implemented in subclasses to perform
-     * the action of the form. This may be sending email, interacting
-     * with a remote API, or anything else you may need.
-     *
-     * @param array $data Form data.
-     * @return bool False on validation failure, otherwise returns the
-     *   result of the `_execute()` method.
-     */
-    public function execute(array $data)
-    {
-        if (!$this->validate($data)) {
-            throw new CustomValidationException(
-                __('Something went wrong when validating the OTP.'),
-                $this->errors()
-            );
-        }
-
-        return $this->_execute($data);
+        return $this->totp->verify($value);
     }
 
 }

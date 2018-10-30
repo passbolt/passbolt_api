@@ -12,39 +12,23 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
  */
-namespace Passbolt\MultiFactorAuthentication\Form;
+namespace Passbolt\MultiFactorAuthentication\Form\Totp;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
-use App\Utility\UserAccessControl;
-use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Validation\Validator;
 use OTPHP\Factory;
+use Passbolt\MultiFactorAuthentication\Form\MfaForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
-class TotpSetupForm extends Form
+class TotpSetupForm extends MfaForm
 {
-    /**
-     * @var UserAccessControl
-     */
-    protected $uac;
-
     /**
      * @var \OTPHP\TOTPInterface|\OTPHP\HOTPInterface
      */
     protected $otp;
-
-    /**
-     * TotpSettingsForm constructor.
-     *
-     * @param UserAccessControl $uac
-     */
-    public function __construct(UserAccessControl $uac)
-    {
-        $this->uac = $uac;
-    }
 
     /**
      * Build form schema
@@ -56,7 +40,7 @@ class TotpSetupForm extends Form
     {
         return $schema
             ->addField('otpProvisioningUri', ['type' => 'string'])
-            ->addField('otp', ['type' => 'string']);
+            ->addField('totp', ['type' => 'string']);
     }
 
     /**
@@ -76,7 +60,9 @@ class TotpSetupForm extends Form
             ]]);
 
         $validator
-            ->add('otp', ['isValidOtp' => [
+            ->requirePresence('totp', __('An OTP is required.'))
+            ->notEmpty('totp', __('The OTP should not be empty.'))
+            ->add('totp', ['isValidOtp' => [
                 'rule' => [$this, 'isValidOtp'],
                 'message' => __('This OTP is not valid.')
             ]]);
@@ -126,49 +112,20 @@ class TotpSetupForm extends Form
     }
 
     /**
+     * Form post validation treatment
+     *
      * @param array $data
      * @return bool
      */
     protected function _execute(array $data)
     {
         try {
-            $mfaSettings = new MfaSettings($this->uac , [
-                'providers' => ['otp'],
-                'otp' => [
-                    'verified' => true,
-                    'otpProvisioningUri' => $data['otpProvisioningUri']
-                ]
-            ]);
-            $mfaSettings->save();
+            $data = ['otpProvisioningUri' => $data['otpProvisioningUri']];
+            MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_TOTP, $data);
         } catch (ValidationException $e) {
             throw new InternalErrorException(__('Could not save the OTP settings. Please try again later.'));
         }
 
         return true;
     }
-
-    /**
-     * Execute the form if it is valid.
-     *
-     * First validates the form, then calls the `_execute()` hook method.
-     * This hook method can be implemented in subclasses to perform
-     * the action of the form. This may be sending email, interacting
-     * with a remote API, or anything else you may need.
-     *
-     * @param array $data Form data.
-     * @return bool False on validation failure, otherwise returns the
-     *   result of the `_execute()` method.
-     */
-    public function execute(array $data)
-    {
-        if (!$this->validate($data)) {
-            throw new CustomValidationException(
-                __('Something went wrong when validating the OTP setup data.'),
-                $this->errors()
-            );
-        }
-
-        return $this->_execute($data);
-    }
-
 }
