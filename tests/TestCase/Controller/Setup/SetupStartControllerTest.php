@@ -59,7 +59,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     public function testSetupStartBadRequestError()
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
-        $t2 = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_LOGIN);
+        $t2 = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_LOGIN);
         $fails = [
             'user not a uuid' => '/setup/start/nope/' . UuidFactory::uuid(),
             'user not a uuid with legacy url' => '/setup/install/nope/' . UuidFactory::uuid(),
@@ -69,6 +69,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
             'user does not exist' => '/setup/install/' . UuidFactory::uuid('user.id.nope') . '/' . $t->token,
             'token does not exist' => '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . UuidFactory::uuid(),
             'token from other user' => '/setup/install/' . UuidFactory::uuid('user.id.ada') . '/' . $t->token,
+            'token is of wrong type' => '/setup/install/' . UuidFactory::uuid('user.id.ruth') . '/' . $t2->token,
         ];
         foreach ($fails as $case => $url) {
             $this->get($url);
