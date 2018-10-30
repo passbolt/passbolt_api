@@ -20,7 +20,7 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/WebInstaller', ['path' => '/install'], function ($routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'SystemCheck', 'action' => 'index'])
+    $routes->connect('/', ['controller' => 'GettingStarted', 'action' => 'index'])
         ->setMethods(['GET']);
 
     $routes->connect('/system_check', ['controller' => 'SystemCheck', 'action' => 'index'])

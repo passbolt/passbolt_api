@@ -32,7 +32,7 @@ class SystemCheckController extends WebInstallerController
         $webInstallerCheck = WebInstallerHealthchecks::all();
         $checks = array_merge($checks, $gpgChecks, $webInstallerCheck);
         $checks['ssl'] = ['is' => $this->request->is('ssl')];
-        $checks['system_ok'] = $this->_healthcheckIsOk($checks) ? true : false;
+        $checks['system_ok'] = $this->_healthcheckIsOk($checks);
 
         if (Configure::read('passbolt.plugins.license')) {
             $nextStepUrl = Router::url('install/license_key', true);
@@ -49,7 +49,7 @@ class SystemCheckController extends WebInstallerController
     /**
      * Check if healthcheck values are good enough to continue installation.
      * @param array $checks checks
-     * @return bool mixed
+     * @return bool
      */
     protected function _healthcheckIsOk($checks)
     {
@@ -64,6 +64,6 @@ class SystemCheckController extends WebInstallerController
         $allChecks = array_merge($envCheckResults, $gpgCheckResults, $webInstallerChecksResults);
         sort($allChecks);
 
-        return $allChecks[0];
+        return $allChecks[0] ? true : false;
     }
 }

@@ -67,11 +67,11 @@ class WebInstallerController extends Controller
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        $onStartPage = $this->request->controller == 'SystemCheck' && $this->request->action == 'index';
-        if (!$this->webInstaller->isInitialized() && !$onStartPage) {
+        $onSystemCheckPage = $this->request->controller == 'SystemCheck' && $this->request->action == 'index';
+        if (!$this->webInstaller->isInitialized() && !$onSystemCheckPage) {
             $this->Flash->error(__('The session has expired. Please start the configuration again.'));
 
-            return $this->redirect('install');
+            return $this->redirect('install/system_check');
         }
     }
 

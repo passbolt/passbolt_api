@@ -12,28 +12,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Controller\Pages;
+namespace Passbolt\WebInstaller\Controller;
 
-use App\Controller\AppController;
+use App\Utility\Healthchecks;
+use Cake\Controller\Controller;
 use Cake\Core\Configure;
 
-class HomeController extends AppController
+class GettingStartedController extends Controller
 {
     /**
-     * Password workspace page action
+     * Getting started with passbolt.
+     * Is displayed instead of any other page if passbolt is not configured.
      *
      * @return void
      */
-    public function view()
+    public function index()
     {
-        $this->viewBuilder()
-            ->setLayout('default')
-            ->setTemplatePath('/Home')
-            ->setTemplate('home');
-
-        $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
-
-        $this->success();
+        $this->render('Pages/getting_started');
     }
 }

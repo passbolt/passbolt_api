@@ -31,7 +31,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
         $this->get('/install');
         $data = ($this->_getBodyAsString());
         $this->assertResponseOk();
-        $this->assertContains('<div id="container" class="page setup install', $data);
+        $this->assertContains('<div id="container" class="page setup start', $data);
     }
 
     public function testNotConfigured_RedirectAllToInstall_Success()

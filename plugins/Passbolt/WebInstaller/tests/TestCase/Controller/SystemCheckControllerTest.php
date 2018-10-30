@@ -24,11 +24,12 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
+        $this->initWebInstallerSession();
     }
 
     public function testViewSuccess()
     {
-        $this->get('/install');
+        $this->get('/install/system_check');
         $data = ($this->_getBodyAsString());
         $this->assertResponseOk();
         $this->assertContains('2. Database', $data);
@@ -41,7 +42,7 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
     public function testViewSuccess_LicensePluginEnabled()
     {
         Configure::write('passbolt.plugins.license', ['version' => '2.0.0']);
-        $this->get('/install');
+        $this->get('/install/system_check');
         $data = ($this->_getBodyAsString());
         $this->assertResponseOk();
         $this->assertContains('2. Subscription key', $data);
