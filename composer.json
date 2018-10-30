@@ -70,7 +70,8 @@
           "App\\": "src",
           "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
           "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
-          "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src"
+          "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
+            "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src"
         }
     },
     "autoload-dev": {
@@ -78,7 +79,8 @@
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
-            "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests"
+            "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",
+            "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests"
         }
     },
     "scripts": {
@@ -86,10 +88,10 @@
             "App\\Console\\Installer::postInstall"
         ],
         "install-dev": [
-            "@composer install --dev",
-            "npm install",
-            "./node_modules/.bin/grunt appjs-update",
-            "./node_modules/.bin/grunt styleguide-update"
+          "@composer install --dev",
+          "npm install",
+          "./node_modules/.bin/grunt appjs-update",
+          "./node_modules/.bin/grunt styleguide-update"
         ],
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
@@ -97,8 +99,8 @@
             "@test",
             "@cs-check"
         ],
-        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./plugins",
-        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests ./plugins",
+        "cs-check": "phpcs --colors -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
+        "cs-fix": "phpcbf --colors --standard=vendor/cakephp/cakephp-codesniffer/CakePHP --ignore=*.js ./src ./tests ./plugins",
         "test": "phpunit --colors=always"
     },
     "prefer-stable": true

@@ -17,6 +17,8 @@
             <directory>./tests/TestCase</directory>
             <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/MultiFactorAuthentication/tests/TestCase</directory>
+            <directory>./plugins/PassboltSeleniumApi/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
