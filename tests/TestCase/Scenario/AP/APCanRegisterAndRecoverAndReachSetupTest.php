@@ -47,7 +47,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      * Then I can complete the setup
      * And I cannot start the setup again
      */
-    function testAPCanRegisterAndRecoverAndReachSetup() {
+    public function testAPCanRegisterAndRecoverAndReachSetup()
+    {
         // Register using signup form
         $email = 'integration@passbolt.com';
         $data = ['username' => $email, 'profile' => ['first_name' => 'integration', 'last_name' => 'test']];
