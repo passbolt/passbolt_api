@@ -81,13 +81,15 @@ class UsersRecoverController extends AppController
         try {
             $this->_assertValidation();
             $user = $this->_assertRules();
-            $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+            $token = null;
 
             if ($user->active) {
+                $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
                 $event = 'UsersRecoverController.recoverPost.success';
             } else {
                 // The user has not completed the setup, restart setup
                 // Fixes https://github.com/passbolt/passbolt_api/issues/73
+                $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
                 $event = 'UsersRecoverController.registerPost.success';
             }
 

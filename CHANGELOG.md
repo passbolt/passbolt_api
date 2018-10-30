@@ -7,3 +7,4 @@
 
 ### Fixed
 - PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords
+- GITHUB-290: A user who have not completed the setup should be allowed to request a new token using recover
