@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords
+- GITHUB-290: A user who have not completed the setup should be allowed to request a new token using recover
 
 ## [2.4.0] - 2018-10-12
 ### Added
