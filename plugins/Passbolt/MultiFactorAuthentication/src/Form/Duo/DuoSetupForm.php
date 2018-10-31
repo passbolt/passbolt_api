@@ -16,8 +16,8 @@ namespace Passbolt\MultiFactorAuthentication\Form\Duo;
 
 use App\Error\Exception\ValidationException;
 use Cake\Network\Exception\InternalErrorException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupForm extends DuoVerifyForm
 {
@@ -26,7 +26,7 @@ class DuoSetupForm extends DuoVerifyForm
      * Form post validation treatment
      * Add DUO as verified provider
      *
-     * @param array $data
+     * @param array $data user submited data
      * @return bool
      */
     protected function _execute(array $data)
@@ -36,6 +36,7 @@ class DuoSetupForm extends DuoVerifyForm
         } catch (ValidationException $e) {
             throw new InternalErrorException(__('Could not save Duo settings. Please try again later.'));
         }
+
         return true;
     }
 }

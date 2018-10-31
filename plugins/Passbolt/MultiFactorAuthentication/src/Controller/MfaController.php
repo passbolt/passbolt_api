@@ -15,18 +15,12 @@
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Controller\AppController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Cake\Network\Exception\BadRequestException;
 use App\Model\Entity\Role;
+use Cake\Network\Exception\BadRequestException;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaController extends AppController
 {
-
-    /**
-     * @var MfaSettings
-     */
-    protected $mfaSettings;
-
     /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.
@@ -48,17 +42,13 @@ class MfaController extends AppController
      *
      * @param string $provider name of the provider
      * @throws BadRequestException
+     * @return void
      */
     protected function _orgAllowProviderOrFail(string $provider)
     {
-        if ($this->mfaSettings->getOrganizationSettings() === null) {
-            $msg = __('No authentication provider set for your organization.');
-            throw new BadRequestException($msg);
-        }
         if (!$this->mfaSettings->getOrganizationSettings()->isProviderEnabled($provider)) {
             $msg = __('This authentication provider is not enabled for your organization.');
             throw new BadRequestException($msg);
         }
     }
-
 }

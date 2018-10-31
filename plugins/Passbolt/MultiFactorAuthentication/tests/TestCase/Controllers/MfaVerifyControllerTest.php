@@ -19,21 +19,6 @@ use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 class MfaVerifyControllerTest extends MfaIntegrationTestCase
 {
     /**
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/organization_settings',
-        'plugin.passbolt/account_settings.account_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
-    ];
-
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
      * @group mfa
      * @group mfaVerify
      */
@@ -41,7 +26,6 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
     {
         $this->get('/mfa/verify/nope.json?api-version=v2');
         $this->assertResponseError();
-        $this->assertResponseContains('Error: Missing Route');
     }
 
     /**
@@ -52,6 +36,5 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
     {
         $this->post('/mfa/verify/nope.json?api-version=v2', []);
         $this->assertResponseError();
-        $this->assertResponseContains('Error: Missing Route');
     }
 }

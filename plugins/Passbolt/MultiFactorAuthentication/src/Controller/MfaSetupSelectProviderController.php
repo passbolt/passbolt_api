@@ -14,14 +14,11 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use App\Controller\AppController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-
 class MfaSetupSelectProviderController extends MfaController
 {
-
     /**
      * @throw ForbiddenException
+     * @return void
      */
     public function get()
     {

@@ -18,15 +18,17 @@ use App\Error\Exception\CustomValidationException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyPostController extends MfaVerifyController
 {
-
     /**
+     * Totp Verify Post
+     *
      * @throws InternalErrorException
      * @throws BadRequestException
+     * @return void
      */
     public function post()
     {
@@ -38,7 +40,7 @@ class TotpVerifyPostController extends MfaVerifyController
         $verifyForm = new TotpVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
-        } catch(CustomValidationException $exception) {
+        } catch (CustomValidationException $exception) {
             if ($this->request->is('json')) {
                 throw $exception;
             }

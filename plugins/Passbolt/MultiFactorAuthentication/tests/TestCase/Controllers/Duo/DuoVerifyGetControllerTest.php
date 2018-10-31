@@ -19,21 +19,6 @@ use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 class DuoVerifyGetControllerTest extends MfaIntegrationTestCase
 {
     /**
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/organization_settings',
-        'plugin.passbolt/account_settings.account_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
-    ];
-
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
      * @group mfa
      * @group mfaVerify
      * @group mfaVerifyGet
@@ -43,5 +28,4 @@ class DuoVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->get('/mfa/verify/duo.json?api-version=v2');
         $this->assertResponseError('You need to login to access this location.');
     }
-
 }

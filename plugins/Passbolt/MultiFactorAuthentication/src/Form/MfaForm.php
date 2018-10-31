@@ -28,7 +28,7 @@ class MfaForm extends Form
     /**
      * TotpSettingsForm constructor.
      *
-     * @param UserAccessControl $uac
+     * @param UserAccessControl $uac access control
      */
     public function __construct(UserAccessControl $uac)
     {
@@ -58,5 +58,4 @@ class MfaForm extends Form
 
         return $this->_execute($data);
     }
-
 }

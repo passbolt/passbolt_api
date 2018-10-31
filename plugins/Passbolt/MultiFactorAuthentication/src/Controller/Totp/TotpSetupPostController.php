@@ -15,14 +15,15 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
 use App\Error\Exception\CustomValidationException;
+use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 
 class TotpSetupPostController extends MfaSetupController
 {
     /**
      * Handle TOTP setup POST request
+     *
      * @return void
      */
     public function post()

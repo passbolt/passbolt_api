@@ -14,20 +14,14 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
-use App\Utility\UserAccessControl;
 use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupGetController extends MfaSetupController
 {
-    /**
-     * @var MfaSettings
-     */
-    protected $mfaSettings;
-
     /**
      * Totp Get Qr Code and provisioning urls
      *
@@ -46,6 +40,8 @@ class TotpSetupGetController extends MfaSetupController
 
     /**
      * Display start page (with how to diagram)
+     *
+     * @return void
      */
     public function start()
     {
@@ -60,8 +56,11 @@ class TotpSetupGetController extends MfaSetupController
 
     /**
      * Display start page
+     *
+     * @return void
      */
-    public function _handleGetStart() {
+    protected function _handleGetStart()
+    {
         if (!$this->request->is('json')) {
             $this->set('theme', $this->User->theme());
             $this->viewBuilder()
@@ -75,7 +74,6 @@ class TotpSetupGetController extends MfaSetupController
     /**
      * Handle get request when new settings are needed
      *
-     * @param UserAccessControl $uac
      * @return void
      */
     protected function _handleGetNewSettings()

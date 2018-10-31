@@ -13,6 +13,7 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
+
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 trait MfaOrgSettingsYubikeyTrait
@@ -26,6 +27,7 @@ trait MfaOrgSettingsYubikeyTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY]['secretKey'])) {
             throw new RecordNotFoundException(__('No configuration set for Yubikey OTP secret key.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_YUBIKEY]['secretKey'];
     }
 
@@ -38,6 +40,7 @@ trait MfaOrgSettingsYubikeyTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY]['clientId'])) {
             throw new RecordNotFoundException(__('No configuration set for Yubikey OTP clientId.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_YUBIKEY]['clientId'];
     }
 }

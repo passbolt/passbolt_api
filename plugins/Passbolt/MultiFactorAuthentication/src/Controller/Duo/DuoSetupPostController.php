@@ -15,15 +15,16 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Error\Exception\CustomValidationException;
+use Cake\Network\Exception\BadRequestException;
+use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoSetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Cake\Network\Exception\BadRequestException;
 
 class DuoSetupPostController extends MfaSetupController
 {
     /**
      * Handle Duo setup POST request
+     *
      * @return void
      */
     public function post()
@@ -39,7 +40,6 @@ class DuoSetupPostController extends MfaSetupController
             $setupForm = new DuoSetupForm($uac, MfaSettings::get($uac));
             $setupForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
-
             $setupForm = new DuoSetupForm($this->User->getAccessControl(), $this->mfaSettings);
             $this->set('sigRequest', $setupForm->getSigRequest());
             $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());

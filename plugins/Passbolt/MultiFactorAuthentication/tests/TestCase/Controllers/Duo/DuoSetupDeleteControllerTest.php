@@ -14,10 +14,14 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaDuoSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
 {
+    use MfaDuoSettingsTestTrait;
+
     /**
      * @var array
      */
@@ -28,15 +32,11 @@ class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
         'app.Base/roles'
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
     /**
      * @group mfa
      * @group mfaSetup
      * @group mfaSetupDelete
+     * @group mfaSetupDeleteDuo
      */
     public function testMfaSetupDeleteDuoNotAuthenticated()
     {
@@ -44,4 +44,33 @@ class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('You need to login to access this location.');
     }
 
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteDuo
+     */
+    public function testMfaSetupDeleteDuoSuccessNothingToDelete()
+    {
+        $this->authenticateAs('ada');
+        $this->delete('/mfa/setup/duo.json?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('Nothing to delete');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteDuo
+     */
+    public function testMfaSetupDeleteDuoSuccessDeleted()
+    {
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_DUO);
+        $this->mockMfaDuoSettings('ada', 'valid');
+        $this->authenticateAs('ada');
+        $this->delete('/mfa/setup/duo.json?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('The configuration was deleted.');
+    }
 }

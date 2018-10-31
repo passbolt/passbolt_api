@@ -14,10 +14,14 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaDuoSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupGetControllerTest extends MfaIntegrationTestCase
 {
+    use MfaDuoSettingsTestTrait;
+
     /**
      * @var array
      */
@@ -31,12 +35,14 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->useHttpServer(true);
     }
 
     /**
      * @group mfa
      * @group mfaSetup
-     * @group mfaSetupDelete
+     * @group mfaSetupGet
+     * @group mfaSetupGetDuo
      */
     public function testMfaSetupGetDuoNotAuthenticated()
     {
@@ -44,4 +50,63 @@ class DuoSetupGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('You need to login to access this location.');
     }
 
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetDuo
+     */
+    public function testMfaSetupGetDuoJsonNotAllowed()
+    {
+        $this->authenticateAs('ada');
+        $this->get('/mfa/setup/duo.json?api-version=v2');
+        $this->assertResponseError('not available');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetDuo
+     */
+    public function testMfaSetupGetDuoAlreadyConfigured()
+    {
+        $this->mockMfaDuoSettings('ada', 'valid');
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_DUO);
+        $this->authenticateAs('ada');
+        $this->get('/mfa/setup/duo');
+        $this->assertResponseOk();
+        $this->assertResponseContains('Duo multi-factor authentication is enabled');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetDuo
+     */
+    public function testMfaSetupGetDuoOrgSettingsNotEnabled()
+    {
+        $this->mockMfaTotpSettings('ada', 'valid');
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
+        $this->authenticateAs('ada');
+        $this->get('/mfa/setup/duo');
+        $this->assertResponseError();
+        $this->assertResponseContains('This authentication provider is not enabled for your organization.');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetDuo
+     */
+    public function testMfaSetupGetDuoAccountSettingsEmpty()
+    {
+        $this->authenticateAs('ada');
+        $this->mockMfaDuoSettings('ada', 'orgOnly');
+        $this->get('/mfa/setup/duo');
+        $this->assertResponseOk();
+        $this->assertResponseContains('<iframe');
+    }
 }

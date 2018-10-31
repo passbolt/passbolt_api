@@ -47,9 +47,10 @@ class MfaSettings
     /**
      * MfaSettings constructor.
      *
-     * @param MfaOrgSettings $orgSettings
-     * @param MfaAccountSettings|null $accountSettings
-     * @param UserAccessControl $uac
+     * @param MfaOrgSettings $orgSettings organization settings
+     * @param MfaAccountSettings|null $accountSettings account settings
+     * @param UserAccessControl $uac user access control
+     * @return void
      */
     public function __construct(MfaOrgSettings $orgSettings, MfaAccountSettings $accountSettings = null, UserAccessControl $uac)
     {
@@ -61,16 +62,18 @@ class MfaSettings
     /**
      * Get MfaSettings singleton
      *
-     * @param UserAccessControl $uac
+     * @param UserAccessControl $uac access control
      * @return MfaSettings
      */
-    static public function get(UserAccessControl $uac) {
+    public static function get(UserAccessControl $uac)
+    {
         $orgSettings = MfaOrgSettings::get();
         try {
             $accountSettings = MfaAccountSettings::get($uac);
         } catch (RecordNotFoundException $exception) {
             $accountSettings = null;
         }
+
         return new MfaSettings($orgSettings, $accountSettings, $uac);
     }
 
@@ -79,7 +82,7 @@ class MfaSettings
      *
      * @return array
      */
-    static public function getProviders()
+    public static function getProviders()
     {
         return [
             self::PROVIDER_TOTP,
@@ -110,6 +113,7 @@ class MfaSettings
         } else {
             $result[MfaSettings::ACCOUNT_SETTINGS] = $this->accountSettings->getProvidersStatus();
         }
+
         return $result;
     }
 
@@ -122,7 +126,8 @@ class MfaSettings
      *
      * @return array of provider names
      */
-    public function getEnabledProviders() {
+    public function getEnabledProviders()
+    {
         $result = [];
         if ($this->accountSettings === null) {
             return $result;
@@ -130,7 +135,7 @@ class MfaSettings
         try {
             $userProviders = array_flip($this->accountSettings->getEnabledProviders());
             $orgProviders = array_flip($this->orgSettings->getEnabledProviders());
-        } catch(RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) {
             return $result;
         }
         foreach ($orgProviders as $orgProvider => $i) {
@@ -138,22 +143,27 @@ class MfaSettings
                 $result[] = $orgProvider;
             }
         }
+
         return $result;
     }
 
     /**
      * Return true if the provider is enabled for both the organization and user
      *
+     * @param string $provider provider name
      * @return bool
      */
     public function isProviderEnabled(string $provider)
     {
         $providers = $this->getEnabledProviders();
+
         return (array_search($provider, $providers) !== false);
     }
 
     /**
-     * @param bool $refresh
+     * Get account settings
+     *
+     * @param bool $refresh if a new table find is required
      * @return MfaAccountSettings
      */
     public function getAccountSettings(bool $refresh = false)
@@ -161,14 +171,17 @@ class MfaSettings
         if ($this->accountSettings === null || $refresh) {
             try {
                 $this->accountSettings = MfaAccountSettings::get($this->uac);
-            } catch(RecordNotFoundException $exception) {
+            } catch (RecordNotFoundException $exception) {
                 return null;
             }
         }
+
         return $this->accountSettings;
     }
 
     /**
+     * Get organization settings
+     *
      * @return MfaOrgSettings
      */
     public function getOrganizationSettings()
@@ -180,41 +193,48 @@ class MfaSettings
      * Get the list of verification url by enabled providers
      * Example: ['totp' => 'BASE_URL/verify/totp']
      *
+     * @param bool $json if json extension required
      * @return array
      */
-    public function getProvidersVerifyUrls($json = true) {
+    public function getProvidersVerifyUrls(bool $json = true)
+    {
         $providers = $this->getEnabledProviders();
         $data = [];
         foreach ($providers as $provider) {
             $data[$provider] = $this->getProviderVerifyUrl($provider, $json);
         }
+
         return $data;
     }
 
     /**
      * Get default provider verification url
      *
+     * @param bool $json if json extension required
      * @return string
      */
-    public function getDefaultVerifyUrl($json = true) {
+    public function getDefaultVerifyUrl(bool $json = true)
+    {
         $providers = $this->getEnabledProviders();
+
         return $this->getProviderVerifyUrl($providers[0], $json);
     }
 
     /**
      * Return a given provider verification url
      *
-     * @param $provider
-     * @param bool $json
+     * @param string $provider provider name
+     * @param bool $json if json extension required
      * @return string
      */
-    public function getProviderVerifyUrl($provider, $json = true) {
+    public function getProviderVerifyUrl(string $provider, bool $json = true)
+    {
         if ($json) {
             $json = '.json';
         } else {
             $json = '';
         }
+
         return Router::url("/mfa/verify/$provider$json", true);
     }
-
 }

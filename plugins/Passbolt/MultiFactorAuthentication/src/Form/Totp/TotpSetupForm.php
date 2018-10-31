@@ -33,7 +33,7 @@ class TotpSetupForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return $this|Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -46,7 +46,7 @@ class TotpSetupForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -108,13 +108,14 @@ class TotpSetupForm extends MfaForm
         if (!is_numeric($value)) {
             return false;
         }
+
         return $this->otp->verify($value);
     }
 
     /**
      * Form post validation treatment
      *
-     * @param array $data
+     * @param array $data user submited data
      * @return bool
      */
     protected function _execute(array $data)

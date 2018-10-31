@@ -15,32 +15,49 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Yubikey;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeySetupDeleteControllerTest extends MfaIntegrationTestCase
 {
     /**
-     * @var array
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteYubikey
      */
-    public $fixtures = [
-        'app.Base/organization_settings',
-        'plugin.passbolt/account_settings.account_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
-    ];
-
-    public function setUp()
+    public function testMfaSetupDeleteYubikeyNotAuthenticated()
     {
-        parent::setUp();
+        $this->delete('/mfa/setup/yubikey.json?api-version=v2');
+        $this->assertResponseError('You need to login to access this location.');
     }
 
     /**
      * @group mfa
      * @group mfaSetup
      * @group mfaSetupDelete
+     * @group mfaSetupDeleteYubikey
      */
-    public function testMfaSetupDeleteYubikeyNotAuthenticated()
+    public function testMfaSetupDeleteYubikeySuccessNothingToDelete()
     {
+        $this->authenticateAs('ada');
         $this->delete('/mfa/setup/yubikey.json?api-version=v2');
-        $this->assertResponseError('You need to login to access this location.');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('Nothing to delete');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteYubikey
+     */
+    public function testMfaSetupDeleteYubikeySuccessDeleted()
+    {
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_YUBIKEY);
+        $this->mockMfaYubikeySettings('ada', 'valid');
+        $this->authenticateAs('ada');
+        $this->delete('/mfa/setup/yubikey.json?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('The configuration was deleted.');
     }
 }

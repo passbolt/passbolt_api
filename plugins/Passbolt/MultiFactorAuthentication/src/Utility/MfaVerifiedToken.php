@@ -14,20 +14,21 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\UserAccessControl;
-use Cake\ORM\TableRegistry;
 use App\Utility\UuidFactory;
-use App\Error\Exception\ValidationException;
+use Cake\ORM\TableRegistry;
 
 class MfaVerifiedToken
 {
     /**
      * Build and save an AuthenticationToken entity of type mfa
      *
-     * @throws ValidationException
-     * @param UserAccessControl $uac
-     * @return mixed
+     * @throws ValidationException if data are not valid (for example user does not exist)
+     * @param UserAccessControl $uac user access control
+     * @param string $provider provider name
+     * @return string token
      */
     public static function get(UserAccessControl $uac, string $provider)
     {
@@ -55,21 +56,22 @@ class MfaVerifiedToken
         if (!empty($errors) || !$AuthenticationTokens->save($token)) {
             throw new ValidationException($msg);
         }
+
         return $token->token;
     }
 
     /**
      * Check if a mfa verified token is legit
      *
-     * @param UserAccessControl $uac
-     * @param string $token
+     * @param UserAccessControl $uac user access control
+     * @param string $token token
      * @return bool
      */
-    static function check(UserAccessControl $uac, string $token)
+    public static function check(UserAccessControl $uac, string $token)
     {
         // Baseline validity check
         $auth = TableRegistry::get('AuthenticationTokens');
-        if(!$auth->isValid($token, $uac->getId(), AuthenticationToken::TYPE_MFA)) {
+        if (!$auth->isValid($token, $uac->getId(), AuthenticationToken::TYPE_MFA)) {
             return false;
         }
 
@@ -79,6 +81,7 @@ class MfaVerifiedToken
         if ($data->user_agent !== env('HTTP_USER_AGENT')) {
             $token->active = false;
             $auth->save($token);
+
             return false;
         }
 
@@ -86,9 +89,12 @@ class MfaVerifiedToken
     }
 
     /**
-     * @param UserAccessControl $uac
+     * Set all token as inactive
+     *
+     * @param UserAccessControl $uac user access control
+     * @return void
      */
-    static function setAllInactive(UserAccessControl $uac)
+    public static function setAllInactive(UserAccessControl $uac)
     {
         $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
         $mfaTokens = $AuthenticationTokens->find()

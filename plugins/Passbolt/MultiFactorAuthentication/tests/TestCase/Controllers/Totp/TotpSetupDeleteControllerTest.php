@@ -15,28 +15,15 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupDeleteControllerTest extends MfaIntegrationTestCase
 {
     /**
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/organization_settings',
-        'plugin.passbolt/account_settings.account_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
-    ];
-
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
-    /**
      * @group mfa
      * @group mfaSetup
      * @group mfaSetupDelete
+     * @group mfaSetupDeleteTotp
      */
     public function testMfaSetupDeleteTotpNotAuthenticated()
     {
@@ -44,4 +31,33 @@ class TotpSetupDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('You need to login to access this location.');
     }
 
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteTotp
+     */
+    public function testMfaSetupDeleteTotpSuccessNothingToDelete()
+    {
+        $this->authenticateAs('ada');
+        $this->delete('/mfa/setup/totp.json?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('Nothing to delete');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupDelete
+     * @group mfaSetupDeleteTotp
+     */
+    public function testMfaSetupDeleteTotpSuccessDeleted()
+    {
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
+        $this->mockMfaTotpSettings('ada', 'valid');
+        $this->authenticateAs('ada');
+        $this->delete('/mfa/setup/totp.json?api-version=v2');
+        $this->assertResponseSuccess();
+        $this->assertResponseContains('The configuration was deleted.');
+    }
 }

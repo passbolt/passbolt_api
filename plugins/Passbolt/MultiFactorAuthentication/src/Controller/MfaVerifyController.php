@@ -15,10 +15,10 @@
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use Cake\Network\Exception\BadRequestException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaVerifyController extends MfaController
 {
@@ -34,7 +34,7 @@ class MfaVerifyController extends MfaController
         $uac = $this->User->getAccessControl();
         $mfaVerifiedToken = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (isset($mfaVerifiedToken)) {
-            if(MfaVerifiedToken::check($uac, $mfaVerifiedToken)) {
+            if (MfaVerifiedToken::check($uac, $mfaVerifiedToken)) {
                 throw new BadRequestException(__('MFA is not required.'));
             }
         }

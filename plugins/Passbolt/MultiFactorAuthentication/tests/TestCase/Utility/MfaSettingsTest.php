@@ -108,7 +108,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaSettingsGetSuccess()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaSettings::get($this->uac);
         $this->assertInstanceOf(MfaOrgSettings::class, $settings->getOrganizationSettings());

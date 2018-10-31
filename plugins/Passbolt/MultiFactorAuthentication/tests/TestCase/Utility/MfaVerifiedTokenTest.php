@@ -15,6 +15,7 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\AuthenticationToken;
 use App\Model\Table\AuthenticationTokensTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -22,7 +23,6 @@ use Cake\Validation\Validation;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
-use App\Model\Entity\AuthenticationToken;
 
 class MfaVerifiedTokenTest extends MfaIntegrationTestCase
 {

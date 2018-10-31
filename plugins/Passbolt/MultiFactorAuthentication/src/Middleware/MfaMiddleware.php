@@ -15,13 +15,11 @@
 namespace Passbolt\MultiFactorAuthentication\Middleware;
 
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-use Cake\Network\Exception\ForbiddenException;
 use Cake\Routing\Router;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaMiddleware
@@ -47,11 +45,12 @@ class MfaMiddleware
                 ->withStatus(302)
                 ->withLocation($this->getVerifyUrl($request));
         }
+
         return $next($request, $response);
     }
 
     /**
-     * @param ServerRequest $request
+     * @param ServerRequest $request request
      * @return bool
      */
     protected function requiredMfaCheck(ServerRequest $request)
@@ -69,7 +68,7 @@ class MfaMiddleware
             '/auth/logout',
             '/logout'
         ];
-        foreach($whitelistedPaths as $path) {
+        foreach ($whitelistedPaths as $path) {
             if (substr($request->getUri()->getPath(), 0, strlen($path)) === $path) {
                 return false;
             }
@@ -93,7 +92,7 @@ class MfaMiddleware
     }
 
     /**
-     * @param ServerRequest $request
+     * @param ServerRequest $request request
      * @return string
      */
     protected function getVerifyUrl(ServerRequest $request)
@@ -105,6 +104,7 @@ class MfaMiddleware
         } else {
             $url = '/mfa/verify/error.json';
         }
+
         return Router::url($url, true);
     }
 }

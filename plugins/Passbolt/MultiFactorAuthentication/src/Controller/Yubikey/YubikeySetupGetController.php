@@ -17,16 +17,11 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 use App\Utility\UserAccessControl;
 use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class YubikeySetupGetController extends MfaSetupController
 {
-    /**
-     * @var MfaSettings
-     */
-    protected $mfaSettings;
-
     /**
      * Totp Get Qr Code and provisioning urls
      *
@@ -46,7 +41,6 @@ class YubikeySetupGetController extends MfaSetupController
     /**
      * Handle get request when new settings are needed
      *
-     * @param UserAccessControl $uac
      * @return void
      */
     protected function _handleGetNewSettings()

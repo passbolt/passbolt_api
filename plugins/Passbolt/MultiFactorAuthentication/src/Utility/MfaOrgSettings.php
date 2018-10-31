@@ -13,24 +13,27 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
+
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 class MfaOrgSettings
 {
-    use MfaOrgSettingsYubikeyTrait;
     use MfaOrgSettingsDuoTrait;
+    use MfaOrgSettingsYubikeyTrait;
 
+    /**
+     * @var array|null
+     */
     protected $settings;
 
     /**
      * MfaOrgSettings constructor.
-     * @param array|null $databaseSettings
-     * @param array|null $configureSettings
+     * @param array|null $databaseSettings settings from db
+     * @param array|null $configureSettings settings from config
      */
     public function __construct(array $databaseSettings = null, array $configureSettings = null)
     {
-        // TODO merge configure and orgSettings table entries
         $this->settings = $configureSettings;
     }
 
@@ -39,33 +42,36 @@ class MfaOrgSettings
      *
      * @return MfaOrgSettings
      */
-    static public function get() {
-        // TODO class that
+    public static function get()
+    {
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
-        // TODO get from database
         $databaseSettings = null;
+
         return new MfaOrgSettings($databaseSettings, $configureSettings);
     }
 
     /**
-     * Get the list of enabled providers for this organization
+     * Get the list of providers for this organization including invalid/disabled ones
      *
      * @throws RecordNotFoundException
-     * @return mixed
+     * @return array containing providers name
      */
     public function getProviders()
     {
         if (!isset($this->settings) || !isset($this->settings['providers']) || !count($this->settings['providers'])) {
             throw new RecordNotFoundException(__('No MFA provider set for this organization.'));
         }
+
         return array_keys($this->settings['providers']);
     }
 
     /**
      * Get the list of provider names that are enabled for that organization
      *
+     * @return array
      */
-    public function getEnabledProviders() {
+    public function getEnabledProviders()
+    {
         $result = [];
         $providers = MfaSettings::getProviders();
         foreach ($providers as $key => $provider) {
@@ -73,6 +79,7 @@ class MfaOrgSettings
                 $result[] = $provider;
             }
         }
+
         return $result;
     }
 
@@ -88,6 +95,7 @@ class MfaOrgSettings
         foreach ($providers as $provider) {
             $results[$provider] = $this->isProviderEnabled($provider);
         }
+
         return $results;
     }
 
@@ -105,27 +113,31 @@ class MfaOrgSettings
         if (!isset($this->settings['providers'][$provider]) || !$this->settings['providers'][$provider]) {
             return false;
         }
+        $result = false;
         switch ($provider) {
             case MfaSettings::PROVIDER_TOTP:
-                return true;
+                $result = true;
+                break;
             case MfaSettings::PROVIDER_YUBIKEY:
                 try {
                     $this->getYubikeyOTPClientId();
                     $this->getYubikeyOTPSecretKey();
-                    return true;
+                    $result = true;
                 } catch (RecordNotFoundException $exception) {
-                    return false;
                 }
+                break;
             case MfaSettings::PROVIDER_DUO:
                 try {
                     $this->getDuoIntegrationKey();
                     $this->getDuoSecretKey();
                     $this->getDuoHostname();
                     $this->getDuoSalt();
-                    return true;
+                    $result = true;
                 } catch (RecordNotFoundException $exception) {
-                    return false;
                 }
+                break;
         }
+
+        return $result;
     }
 }

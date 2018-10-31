@@ -182,7 +182,6 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $this->assertFalse($ready);
     }
 
-
     /**
      * @group mfa
      * @group mfaAccountSettings

@@ -15,28 +15,24 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaTotpSettingsTestTrait;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupGetControllerTest extends MfaIntegrationTestCase
 {
-    /**
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/organization_settings',
-        'plugin.passbolt/account_settings.account_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
-    ];
+    use MfaTotpSettingsTestTrait;
 
     public function setUp()
     {
         parent::setUp();
+        $this->useHttpServer(true);
     }
 
     /**
      * @group mfa
      * @group mfaSetup
      * @group mfaSetupGet
+     * @group mfaSetupGetTotp
      */
     public function testMfaSetupGetTotpNotAuthenticated()
     {
@@ -44,4 +40,51 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('You need to login to access this location.');
     }
 
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetTotp
+     */
+    public function testMfaSetupGetTotpAlreadyConfigured()
+    {
+        $this->mockMfaTotpSettings('ada', 'valid');
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_TOTP);
+        $this->authenticateAs('ada');
+        $this->get('/mfa/setup/totp');
+        $this->assertResponseOk();
+        $this->assertResponseContains('is enabled');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetTotp
+     */
+    public function testMfaSetupGetTotpOrgSettingsNotEnabled()
+    {
+        $this->mockMfaDuoSettings('ada', 'valid');
+        $this->mockMfaVerified('ada', MfaSettings::PROVIDER_DUO);
+        $this->authenticateAs('ada');
+        $this->get('/mfa/setup/totp');
+        $this->assertResponseError();
+        $this->assertResponseContains('This authentication provider is not enabled for your organization.');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetTotp
+     */
+    public function testMfaSetupGetTotpAccountSettingsEmpty()
+    {
+        $this->authenticateAs('ada');
+        $this->mockMfaTotpSettings('ada', 'orgOnly');
+        $this->get('/mfa/setup/totp');
+        $this->assertResponseOk();
+        $this->assertResponseContains('<form');
+        $this->assertResponseContains('<img class="qrcode"');
+    }
 }

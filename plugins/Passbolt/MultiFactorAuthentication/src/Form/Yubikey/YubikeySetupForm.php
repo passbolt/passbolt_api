@@ -25,7 +25,7 @@ class YubikeySetupForm extends YubikeyVerifyForm
     /**
      * Build form validation
      *
-     * @param Validator $validator
+     * @param Validator $validator validation rules
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -49,7 +49,7 @@ class YubikeySetupForm extends YubikeyVerifyForm
     /**
      * Form post validation treatment
      *
-     * @param array $data
+     * @param array $data user submited data
      * @return bool
      */
     protected function _execute(array $data)
@@ -57,12 +57,13 @@ class YubikeySetupForm extends YubikeyVerifyForm
         try {
             // Save yubikey id to ensure next time use
             // see. https://developers.yubico.com/OTP/OTPs_Explained.html
-            $keyid = substr($data['hotp'],0,12);
+            $keyid = substr($data['hotp'], 0, 12);
             $data = [MfaAccountSettings::YUBIKEY_ID => $keyid];
             MfaAccountSettings::enableProvider($this->uac, MfaSettings::PROVIDER_YUBIKEY, $data);
         } catch (ValidationException $e) {
             throw new InternalErrorException(__('Could not save the Yubikey OTP settings. Please try again later.'));
         }
+
         return true;
     }
 }

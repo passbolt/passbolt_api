@@ -16,9 +16,51 @@ namespace Passbolt\MultiFactorAuthentication\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
+use Cake\Core\Configure;
+use Cake\Network\Exception\InternalErrorException;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
-class MfaIntegrationTestCase extends AppIntegrationTestCase {
+class MfaIntegrationTestCase extends AppIntegrationTestCase
+{
 
-    use UserAccessControlTrait;
     use MfaAccountSettingsTestTrait;
+    use MfaDuoSettingsTestTrait;
+    use MfaTotpSettingsTestTrait;
+    use MfaYubikeySettingsTestTrait;
+    use UserAccessControlTrait;
+
+    /**
+     * @var array
+     */
+    public $fixtures = [
+        'app.Base/organization_settings',
+        'plugin.passbolt/account_settings.account_settings',
+        'app.Base/authentication_tokens', 'app.Base/users',
+        'app.Base/roles'
+    ];
+
+    /**
+     * Setup.
+     */
+    public function setUp()
+    {
+        Configure::write('passbolt.plugins', []);
+        $this->enableCsrfToken();
+        $this->useHttpServer(true);
+    }
+
+    /**
+     * @param string $user firstname
+     * @param string|null $provider provider
+     */
+    public function mockMfaVerified(string $user = 'ada', string $provider = null)
+    {
+        if (!isset($provider)) {
+            throw new InternalErrorException('Cannot mock mfa verification without provider.');
+        }
+        $uac = $this->mockUserAccessControl($user);
+        $token = MfaVerifiedToken::get($uac, $provider);
+        $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $token);
+    }
 }

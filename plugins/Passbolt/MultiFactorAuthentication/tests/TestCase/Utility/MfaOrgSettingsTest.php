@@ -223,7 +223,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsSalt()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -236,7 +236,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsHostname()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -249,7 +249,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsSeckey()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -262,7 +262,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsIKey()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true,], MfaSettings::PROVIDER_DUO => []];
+        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);

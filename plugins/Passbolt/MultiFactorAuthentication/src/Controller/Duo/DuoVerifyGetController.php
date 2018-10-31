@@ -17,15 +17,18 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyGetController extends MfaVerifyController
 {
     /**
+     * Duo Verify Get
+     *
      * @throws InternalErrorException if there is no MFA settings for the user
      * @throws BadRequestException if valid Verification token is already present in cookie
      * @throws BadRequestException if there is no MFA settings for this provider
+     * @return void
      */
     public function get()
     {
@@ -36,7 +39,7 @@ class DuoVerifyGetController extends MfaVerifyController
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_DUO);
 
         $uac = $this->User->getAccessControl();
-        $verifyForm = new DuoVerifyForm($uac,  $this->mfaSettings);
+        $verifyForm = new DuoVerifyForm($uac, $this->mfaSettings);
         $this->set('sigRequest', $verifyForm->getSigRequest());
         $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
         $this->set('verifyForm', $verifyForm);
