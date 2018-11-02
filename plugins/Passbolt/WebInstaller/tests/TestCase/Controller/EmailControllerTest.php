@@ -27,7 +27,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerEmailViewSuccess()
     {
         $this->get('/install/email');
         $data = ($this->_getBodyAsString());
@@ -35,7 +35,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Email configuration', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerEmailPostSuccess()
     {
         $postData = [
             'sender_name' => 'Passbolt Test',
@@ -52,7 +52,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->assertSession($postData, 'webinstaller.email');
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerEmailPostError_InvalidData()
     {
         $postData = [
             'sender_name' => 'Passbolt Test',
@@ -69,7 +69,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('The data entered are not correct', $data);
     }
 
-    public function testPostError_CannotSendTestEmail()
+    public function testWebInstallerEmailPostError_CannotSendTestEmail()
     {
         $postData = [
             'sender_name' => 'Passbolt Test',
