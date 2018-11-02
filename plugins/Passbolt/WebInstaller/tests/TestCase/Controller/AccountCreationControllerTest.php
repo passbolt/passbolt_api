@@ -34,7 +34,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession(['database' => Configure::read('Testing.Datasources.test')]);
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerAccountCreationViewSuccess()
     {
         $this->get('/install/account_creation');
         $data = ($this->_getBodyAsString());
@@ -42,7 +42,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Admin user details', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerAccountCreationPostSuccess()
     {
         $postData = [
             'username' => 'aurore@passbolt.com',
@@ -59,7 +59,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $this->assertSession($postData, 'webinstaller.first_user');
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerAccountCreationPostError_InvalidData()
     {
         $postData = [
             'username' => 'invalid-email',

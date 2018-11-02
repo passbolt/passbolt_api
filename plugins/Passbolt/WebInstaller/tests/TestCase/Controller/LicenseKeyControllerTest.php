@@ -39,7 +39,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         return file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License');
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerLicenseKeyViewSuccess()
     {
         $this->get('/install/license_key');
         $data = ($this->_getBodyAsString());
@@ -47,7 +47,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Passbolt Pro activation.', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerLicenseKeyPostSuccess()
     {
         if ($this->checkPluginLicenseExists()) {
             $this->mockLicenseIssuerKey();
@@ -62,7 +62,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         $this->assertTrue(true);
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerLicenseKeyPostError_InvalidData()
     {
         if ($this->checkPluginLicenseExists()) {
             $this->mockLicenseIssuerKey();
@@ -78,7 +78,7 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
         $this->assertTrue(true);
     }
 
-    public function testPostError_LicenseExpired()
+    public function testWebInstallerLicenseKeyPostError_LicenseExpired()
     {
         if ($this->checkPluginLicenseExists()) {
             $this->mockLicenseIssuerKey();

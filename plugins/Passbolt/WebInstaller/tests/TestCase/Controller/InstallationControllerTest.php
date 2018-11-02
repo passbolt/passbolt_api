@@ -47,7 +47,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
         }
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerInstallationViewSuccess()
     {
         $this->get('/install/installation');
         $data = ($this->_getBodyAsString());
@@ -101,7 +101,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
         return $data;
     }
 
-    public function testDoInstallSuccess()
+    public function testWebInstallerInstallationDoInstallSuccess()
     {
         $this->truncateTables();
         $config = $this->getInstallSessionData();
