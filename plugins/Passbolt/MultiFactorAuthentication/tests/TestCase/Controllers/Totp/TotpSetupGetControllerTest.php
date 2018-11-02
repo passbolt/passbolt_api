@@ -15,19 +15,10 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
-use Passbolt\MultiFactorAuthentication\Test\Lib\MfaTotpSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpSetupGetControllerTest extends MfaIntegrationTestCase
 {
-    use MfaTotpSettingsTestTrait;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->useHttpServer(true);
-    }
-
     /**
      * @group mfa
      * @group mfaSetup
@@ -78,7 +69,7 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
      * @group mfaSetupGet
      * @group mfaSetupGetTotp
      */
-    public function testMfaSetupGetTotpAccountSettingsEmpty()
+    public function testMfaSetupGetTotpSuccess()
     {
         $this->authenticateAs('ada');
         $this->mockMfaTotpSettings('ada', 'orgOnly');
@@ -86,5 +77,21 @@ class TotpSetupGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseOk();
         $this->assertResponseContains('<form');
         $this->assertResponseContains('<img class="qrcode"');
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSetup
+     * @group mfaSetupGet
+     * @group mfaSetupGetTotp
+     */
+    public function testMfaSetupGetTotpSuccessJson()
+    {
+        $this->authenticateAs('ada');
+        $this->mockMfaTotpSettings('ada', 'orgOnly');
+        $this->getJson('/mfa/setup/totp.json?api-version=v2');
+        $this->assertResponseOk();
+        $this->assertNotEmpty($this->_responseJsonBody->otpQrCodeImage);
+        $this->assertNotEmpty($this->_responseJsonBody->otpProvisioningUri);
     }
 }

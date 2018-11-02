@@ -15,6 +15,7 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use OTPHP\Factory;
 
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {
@@ -28,4 +29,41 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         $this->post('/mfa/verify/totp.json?api-version=v2', []);
         $this->assertResponseError('You need to login to access this location.');
     }
+
+    /**
+     * @group mfa
+     * @group mfaVerify
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testMfaVerifyPostTotpUriSuccess()
+    {
+        $user = 'ada';
+        $this->authenticateAs($user);
+        $uri = $this->mockMfaTotpSettings($user, 'valid');
+        $otp = Factory::loadFromProvisioningUri($uri);
+        $this->post('/mfa/verify/totp', [
+            'totp' => $otp->now()
+        ]);
+        $this->assertResponseOk();
+    }
+
+    /**
+     * @group mfa
+     * @group mfaVerifys
+     * @group mfaVerifyPost
+     * @group mfaVerifyPostTotp
+     */
+    public function testMfaVerifyPostTotpUriSuccessJson()
+    {
+        $user = 'ada';
+        $this->authenticateAs($user);
+        $uri = $this->mockMfaTotpSettings($user, 'valid');
+        $otp = Factory::loadFromProvisioningUri($uri);
+        $this->post('/mfa/verify/totp.json?api-version=v2', [
+            'totp' => $otp->now()
+        ]);
+        $this->assertResponseOk();
+    }
+
 }

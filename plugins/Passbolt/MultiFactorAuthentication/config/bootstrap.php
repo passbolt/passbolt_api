@@ -14,10 +14,19 @@
  */
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
+use Cake\Utility\Hash;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaMiddleware;
 
+// Merge config
+$mainConfig = Configure::read('passbolt.plugins.multiFactorAuthentication');
 Configure::load('Passbolt/MultiFactorAuthentication.config', 'default', true);
+if (isset($mainConfig)) {
+    $pluginConfig = Configure::read('passbolt.plugins.multiFactorAuthentication');
+    $newConfig = Hash::merge($pluginConfig, $mainConfig);
+    Configure::write('passbolt.plugins.multiFactorAuthentication', $newConfig);
+}
 
+// Starts middleware
 EventManager::instance()->on(
     'Server.buildMiddleware',
     function ($event, $middlewareQueue) {

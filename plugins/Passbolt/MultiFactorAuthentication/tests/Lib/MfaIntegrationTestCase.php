@@ -23,7 +23,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
 class MfaIntegrationTestCase extends AppIntegrationTestCase
 {
-
     use MfaAccountSettingsTestTrait;
     use MfaDuoSettingsTestTrait;
     use MfaTotpSettingsTestTrait;

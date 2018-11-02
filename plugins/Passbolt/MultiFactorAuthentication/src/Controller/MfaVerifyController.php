@@ -55,7 +55,7 @@ class MfaVerifyController extends MfaController
         }
         if (!$this->mfaSettings->isProviderEnabled($provider)) {
             // for example a user is trying to force a check on a provider that is not set for the org
-            throw new BadRequestException(__('Incomplete MFA provider settings found.'));
+            throw new BadRequestException(__('No valid MFA settings found for this provider.'));
         }
     }
 

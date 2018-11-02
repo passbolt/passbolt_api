@@ -1,6 +1,8 @@
 <?php
     use Cake\Core\Configure;
     use Cake\Routing\Router;
+    use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+
     $title = __('Multi factor authentication');
     $this->assign('title', $title);
     $version = Configure::read('passbolt.version');

@@ -24,17 +24,18 @@ trait MfaTotpSettingsTestTrait
     /**
      * @param string $user
      * @param string $case
+     * @return string|null provisioning uri
      */
     public function mockMfaTotpSettings($user = 'ada', $case = 'valid')
     {
         $uac = $this->mockUserAccessControl('ada');
+        $uri = null;
         switch ($case) {
             case 'orgOnly':
                 $this->mockMfaOrgSettings([
                     MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP => true]
                 ]);
-
-                return;
+                break;
             case 'valid':
                 $uri = MfaOtpFactory::generateTOTP($uac);
                 $this->mockMfaOrgSettings([
@@ -47,8 +48,8 @@ trait MfaTotpSettingsTestTrait
                         MfaAccountSettings::OTP_PROVISIONING_URI => $uri
                     ]
                 ]);
-
-                return;
+                break;
         }
+        return $uri;
     }
 }
