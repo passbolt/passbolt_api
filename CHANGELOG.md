@@ -1,11 +1,9 @@
 ## [Unreleased]
 ### Added
-<<<<<<< HEAD
 - PASSBOLT-3009: Add support multiple factor authentication using TOTP (Google Authenticator, Authy, FreeOTP)
 - PASSBOLT-3001: Add support multiple factor authentication using Yubikey
 - PASSBOLT-3110: Add support multiple factor authentication using Duo
 - PASSBOLT-3121: Add multiple factor authentication administration screen
-=======
 - PASSBOLT-2694: Implement the Web Installer feature
 
 ### Improved
@@ -19,4 +17,4 @@
 - PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords
 - PASSBOLT-2963: Persist the license in a file
 - GITHUB-290: A user who have not completed the setup should be allowed to request a new token using recover
->>>>>>> common
+
