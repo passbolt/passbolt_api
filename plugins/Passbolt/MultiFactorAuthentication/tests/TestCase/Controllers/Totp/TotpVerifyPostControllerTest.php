@@ -42,10 +42,10 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         $this->authenticateAs($user);
         $uri = $this->mockMfaTotpSettings($user, 'valid');
         $otp = Factory::loadFromProvisioningUri($uri);
-        $this->post('/mfa/verify/totp', [
+        $this->post('/mfa/verify/totp?redirect=/app/users', [
             'totp' => $otp->now()
         ]);
-        $this->assertResponseOk();
+        $this->assertRedirect('/app/users');
     }
 
     /**
