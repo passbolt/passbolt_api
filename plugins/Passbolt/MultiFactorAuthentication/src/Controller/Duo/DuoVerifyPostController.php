@@ -23,10 +23,12 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoVerifyPostController extends MfaVerifyController
 {
-
     /**
+     * Duo Verify Post
+     *
      * @throws InternalErrorException
      * @throws BadRequestException
+     * @return void
      */
     public function post()
     {
@@ -41,8 +43,9 @@ class DuoVerifyPostController extends MfaVerifyController
         $verifyForm = new DuoVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
-        } catch(CustomValidationException $exception) {
+        } catch (CustomValidationException $exception) {
             $this->redirect('/mfa/verify/duo');
+
             return;
         }
 

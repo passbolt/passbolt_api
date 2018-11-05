@@ -13,6 +13,7 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
+
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 trait MfaAccountSettingsTotpTrait
@@ -28,6 +29,7 @@ trait MfaAccountSettingsTotpTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_TOTP][MfaAccountSettings::OTP_PROVISIONING_URI])) {
             throw new RecordNotFoundException(__('MFA setting OTP provisioning uri is not set.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_TOTP][MfaAccountSettings::OTP_PROVISIONING_URI];
     }
 

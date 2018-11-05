@@ -17,16 +17,18 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyGetController extends MfaVerifyController
 {
-
     /**
+     * TOTP Verify Get
+     *
      * @throws InternalErrorException if there is no MFA settings for the user
      * @throws BadRequestException if valid Verification token is already present in cookie
      * @throws BadRequestException if there is no MFA settings for this provider
+     * @return void
      */
     public function get()
     {

@@ -27,7 +27,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerGpgKeyImportViewSuccess()
     {
         $this->get('/install/gpg_key_import');
         $data = ($this->_getBodyAsString());
@@ -35,7 +35,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Copy paste the private key below', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerGpgKeyImportPostSuccess()
     {
         $postData = [
             'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_prod_unsecure_private.key')
@@ -46,7 +46,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->assertSession($postData, 'webinstaller.gpg');
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerGpgKeyImportPostError_InvalidData()
     {
         $postData = [
             'armored_key' => 'invalid-key'
@@ -58,7 +58,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('The key is not a valid private key', $data);
     }
 
-    public function testPostError_PublicKey()
+    public function testWebInstallerGpgKeyImportPostError_PublicKey()
     {
         $postData = [
             'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_prod_unsecure_public.key')
@@ -70,7 +70,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('The key is not a valid private key', $data);
     }
 
-    public function testPostError_PrivateKeyWithExpiryDate()
+    public function testWebInstallerGpgKeyImportPostError_PrivateKeyWithExpiryDate()
     {
         $postData = [
             'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_private.key')
@@ -82,7 +82,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('The key cannot have an expiry date', $data);
     }
 
-    public function testPostError_PrivateKeyProtectedWithSecret()
+    public function testWebInstallerGpgKeyImportPostError_PrivateKeyProtectedWithSecret()
     {
         $postData = [
             'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_test_no_expiry_with_secret_private.key')

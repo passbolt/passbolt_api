@@ -25,8 +25,11 @@ class YubikeyVerifyPostController extends MfaVerifyController
 {
 
     /**
+     * Yubikey verify post
+     *
      * @throws InternalErrorException
      * @throws BadRequestException
+     * @return void
      */
     public function post()
     {
@@ -38,7 +41,7 @@ class YubikeyVerifyPostController extends MfaVerifyController
         $verifyForm = new YubikeyVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
-        } catch(CustomValidationException $exception) {
+        } catch (CustomValidationException $exception) {
             $this->request = $this->request
                 ->withData('otp', '');
 

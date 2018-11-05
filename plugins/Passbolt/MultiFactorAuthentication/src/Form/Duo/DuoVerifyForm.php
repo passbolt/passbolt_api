@@ -31,8 +31,8 @@ class DuoVerifyForm extends MfaForm
 
     /**
      * VerifyForm constructor.
-     * @param UserAccessControl $uac
-     * @param MfaSettings $settings
+     * @param UserAccessControl $uac user access control
+     * @param MfaSettings $settings settings
      */
     public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
@@ -43,7 +43,7 @@ class DuoVerifyForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return $this|Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -55,7 +55,7 @@ class DuoVerifyForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -74,12 +74,11 @@ class DuoVerifyForm extends MfaForm
     /**
      * Verify a response signed by Duo
      *
-     * @param string $value
+     * @param string $value signature response value
      * @return bool
      */
     public function isValidSigResponse(string $value)
     {
-
         $orgSettings = $this->settings->getOrganizationSettings();
         $salt = $orgSettings->getDuoSalt();
         $secretKey = $orgSettings->getDuoSecretKey();

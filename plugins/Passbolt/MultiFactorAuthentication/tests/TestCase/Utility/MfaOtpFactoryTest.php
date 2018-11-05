@@ -15,8 +15,8 @@
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use Cake\Core\Configure;
-use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOtpFactory;
 
 class MfaOtpFactoryTest extends MfaIntegrationTestCase
 {

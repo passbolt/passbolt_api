@@ -33,8 +33,8 @@ class YubikeyVerifyForm extends MfaForm
 
     /**
      * VerifyForm constructor.
-     * @param UserAccessControl $uac
-     * @param MfaSettings $settings
+     * @param UserAccessControl $uac access control
+     * @param MfaSettings $settings settings
      */
     public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
@@ -45,7 +45,7 @@ class YubikeyVerifyForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return $this|Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -57,7 +57,7 @@ class YubikeyVerifyForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -84,7 +84,9 @@ class YubikeyVerifyForm extends MfaForm
     }
 
     /**
-     * @param string $value
+     * Check if string match modehex format
+     *
+     * @param string $value value
      * @return bool
      */
     public function isValidModHex(string $value)
@@ -93,17 +95,20 @@ class YubikeyVerifyForm extends MfaForm
     }
 
     /**
-     * @param string $value
+     * Check if Yubikey Id match what is in account settings
+     *
+     * @param string $value value
      * @return bool
      */
     public function isSameYubikeyId(string $value)
     {
-        $yubikeyId = substr($value,0,12);
+        $yubikeyId = substr($value, 0, 12);
         try {
             $yubikeyIdInSettings = $this->settings->getAccountSettings()->getYubikeyId();
         } catch (RecordNotFoundException $exception) {
             return false;
         }
+
         return ($yubikeyId === $yubikeyIdInSettings);
     }
 
@@ -118,11 +123,12 @@ class YubikeyVerifyForm extends MfaForm
         try {
             $secretKey = $this->settings->getOrganizationSettings()->getYubikeyOTPSecretKey();
             $clientId = $this->settings->getOrganizationSettings()->getYubikeyOTPClientId();
-        } catch(RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) {
             throw new InternalErrorException($exception->getMessage());
         }
         $request = new Validate($secretKey, $clientId);
         $response = $request->check($value);
+
         return $response->success();
     }
 }

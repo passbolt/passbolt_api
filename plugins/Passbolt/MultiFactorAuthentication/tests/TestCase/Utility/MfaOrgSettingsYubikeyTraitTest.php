@@ -76,7 +76,7 @@ class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetYubikeyIncompletePropsSeckey()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getYubikeyOTPSecretKey());
@@ -89,7 +89,7 @@ class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetYubikeyIncompletePropsClientId()
     {
         $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
-        Configure::write('passbolt.plugins.multiFactorAuthentication', $config);
+        $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getYubikeyOTPClientId());

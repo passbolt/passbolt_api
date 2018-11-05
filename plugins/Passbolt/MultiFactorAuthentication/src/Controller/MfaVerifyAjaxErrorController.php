@@ -18,6 +18,7 @@ class MfaVerifyAjaxErrorController extends MfaController
 {
     /**
      * @throw ForbiddenException
+     * @return void
      */
     public function get()
     {

@@ -15,7 +15,6 @@
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use Cake\Network\Exception\BadRequestException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 
@@ -46,6 +45,7 @@ class MfaSetupController extends MfaController
     /**
      * Handle get request when ready to use settings are present
      *
+     * @param string $provider name of the provider
      * @return void
      */
     protected function _handleGetExistingSettings(string $provider)
@@ -59,7 +59,7 @@ class MfaSetupController extends MfaController
         $verified = $this->mfaSettings
             ->getAccountSettings()
             ->getVerifiedFrozenTime($provider);
-        $this->success(__('Multi Factor Authentication is configured!'), ['verified' =>  $verified]);
+        $this->success(__('Multi Factor Authentication is configured!'), ['verified' => $verified]);
     }
 
     /**
@@ -67,6 +67,7 @@ class MfaSetupController extends MfaController
      * Create auth token and cookie verification proof
      *
      * @param string $provider name of the provider
+     * @return void
      */
     protected function _handlePostSuccess(string $provider)
     {
@@ -87,6 +88,6 @@ class MfaSetupController extends MfaController
             ->getAccountSettings(true)
             ->getVerifiedFrozenTime($provider);
         $msg = __('Multi Factor Authentication is configured!');
-        $this->success($msg, ['verified' =>  $verified]);
+        $this->success($msg, ['verified' => $verified]);
     }
 }

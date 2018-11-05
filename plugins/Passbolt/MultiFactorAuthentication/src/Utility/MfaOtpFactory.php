@@ -15,10 +15,10 @@
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Utility\UserAccessControl;
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
 use BaconQrCode\Common\ErrorCorrectionLevel;
 use BaconQrCode\Encoder\Encoder;
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
 use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use OTPHP\TOTP;
@@ -29,16 +29,16 @@ class MfaOtpFactory
     /**
      * Generate a random TOTP
      *
-     * @param UserAccessControl $uac
+     * @param UserAccessControl $uac user access control
      * @return string provisioning uri
      */
-    static function generateTOTP(UserAccessControl $uac)
+    public static function generateTOTP(UserAccessControl $uac)
     {
         try {
             $secret = trim(Base32::encode(random_bytes(256)), '='); // 256 random bytes Base32 without padding
-        } catch(\TypeError $exception) {
+        } catch (\TypeError $exception) {
             throw new InternalErrorException(__('Could not generate TOTP secret, please try again later.'));
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             throw new InternalErrorException(__('Could not generate enough random bytes, please try again later.'));
         }
         $totp = new TOTP(
@@ -46,19 +46,20 @@ class MfaOtpFactory
             $secret
         );
         $totp->setIssuer(Configure::read('passbolt.meta.title')); //issuer: string shown above the code digits
+
         return $totp->getProvisioningUri();
     }
 
     /**
      * Build QR code inline image
      *
-     * @param string $provisioningUri
-     * @param int $width
-     * @param int $height
-     * @param string $encoding
+     * @param string $provisioningUri provisioning uri
+     * @param int $width width
+     * @param int $height height
+     * @param string $encoding enconding
      * @return string
      */
-    static function getQrCodeInline(string $provisioningUri, $width = 256, $height = 256, $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING)
+    public static function getQrCodeInline(string $provisioningUri, $width = 256, $height = 256, $encoding = Encoder::DEFAULT_BYTE_MODE_ECODING)
     {
         $renderer = new Png();
         $renderer->setHeight($width);
@@ -66,6 +67,7 @@ class MfaOtpFactory
         $writer = new Writer($renderer);
         $ecLevel = ErrorCorrectionLevel::L;
         $inline = base64_encode($writer->writeString($provisioningUri, $encoding, $ecLevel));
+
         return "data:image/png;base64,{$inline}";
     }
 }

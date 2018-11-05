@@ -14,29 +14,23 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
 use Cake\Network\Exception\ForbiddenException;
-use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
 class MfaSetupDeleteController extends MfaController
 {
     /**
      * Delete a provider setting
      *
+     * @param string $provider provider name
+     * @throws ForbiddenException if mfa cookie is missing or invalid
      * @return void
      */
     protected function _handleDelete(string $provider)
     {
-        $uac = $this->User->getAccessControl();
         if ($this->mfaSettings->getAccountSettings() === null) {
             $this->success('No configuration found for this provider. Nothing to delete.');
-            return;
-        }
 
-        // One need to have an active mfa token to disable it
-        $mfa = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
-        if (!isset($mfa) || !MfaVerifiedToken::check($uac, $mfa)) {
-            throw new ForbiddenException(__('MFA verification required.'));
+            return;
         }
 
         // Disable provider

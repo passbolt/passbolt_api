@@ -18,8 +18,8 @@ use App\Utility\UserAccessControl;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use OTPHP\Factory;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Form\MfaForm;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyForm extends MfaForm
 {
@@ -35,8 +35,9 @@ class TotpVerifyForm extends MfaForm
 
     /**
      * TotpVerifyForm constructor.
-     * @param UserAccessControl $uac
-     * @param MfaSettings $settings
+     *
+     * @param UserAccessControl $uac access control
+     * @param MfaSettings $settings setting
      */
     public function __construct(UserAccessControl $uac, MfaSettings $settings)
     {
@@ -48,7 +49,7 @@ class TotpVerifyForm extends MfaForm
     /**
      * Build form schema
      *
-     * @param Schema $schema
+     * @param Schema $schema schema
      * @return $this|Schema
      */
     protected function _buildSchema(Schema $schema)
@@ -60,7 +61,7 @@ class TotpVerifyForm extends MfaForm
     /**
      * Build form validation
      *
-     * @param Validator $validator
+     * @param Validator $validator validator
      * @return Validator
      */
     protected function _buildValidator(Validator $validator)
@@ -98,7 +99,7 @@ class TotpVerifyForm extends MfaForm
         if (!isset($this->totp)) {
             return false;
         }
+
         return $this->totp->verify($value);
     }
-
 }

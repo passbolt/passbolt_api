@@ -27,7 +27,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerDatabaseViewSuccess()
     {
         $this->get('/install/database');
         $data = ($this->_getBodyAsString());
@@ -35,7 +35,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Database configuration', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerDatabasePostSuccess()
     {
         $this->truncateTables();
         $postData = Configure::read('Testing.Datasources.test');
@@ -46,7 +46,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->assertSession(false, 'webinstaller.hasAdmin');
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerDatabasePostError_InvalidData()
     {
         $postData = Configure::read('Testing.Datasources.test');
         $postData['port'] = 'invalid-port';
@@ -56,7 +56,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('The data entered are not correct', $data);
     }
 
-    public function testPostError_CannotConnectToTheDatabase()
+    public function testWebInstallerDatabasePostError_CannotConnectToTheDatabase()
     {
         $postData = Configure::read('Testing.Datasources.test');
         $postData['username'] = 'invalid-username';

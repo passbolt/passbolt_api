@@ -14,7 +14,6 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
-use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
@@ -24,7 +23,6 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class DuoSetupGetController extends MfaSetupController
 {
-
     /**
      * Duo Get Qr Code and provisioning urls
      *
@@ -47,7 +45,6 @@ class DuoSetupGetController extends MfaSetupController
     /**
      * Handle get request when new settings are needed
      *
-     * @param UserAccessControl $uac
      * @return void
      */
     protected function _handleGetNewSettings()

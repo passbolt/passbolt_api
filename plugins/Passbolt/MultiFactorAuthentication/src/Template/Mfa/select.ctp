@@ -1,6 +1,8 @@
 <?php
     use Cake\Core\Configure;
     use Cake\Routing\Router;
+    use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+
     $title = __('Multi factor authentication');
     $this->assign('title', $title);
     $version = Configure::read('passbolt.version');
@@ -9,7 +11,7 @@
     $this->assign('pageClass', 'iframe mfa');
 
     $mfaPossible = false;
-    foreach($body['MfaOrganizationSettings'] as $provider => $enabled) {
+    foreach($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
         if ($enabled) {
             $mfaPossible = true;
             break;
@@ -30,16 +32,16 @@
             <?php else: ?>
             <h4><?= __('Please select a provider'); ?></h4>
             <ul class="mfa-providers">
-                <?php if ($body['MfaOrganizationSettings']['totp']) : ?>
+                <?php if ($body[MfaSettings::ORG_SETTINGS]['totp']) : ?>
                 <li>
 
-                    <?php $start = !$body['MfaAccountSettings']['totp'] ? 'start' : ''; ?>
+                    <?php $start = !$body[MfaSettings::ACCOUNT_SETTINGS]['totp'] ? 'start' : ''; ?>
                     <a href="<?= Router::url("/mfa/setup/totp/$start", true); ?>">
                         <img src="<?= Router::url('img/third_party/google-authenticator.svg', true); ?>" />
                         <span>Google Authenticator</span>
                     </a>
                     <div class="input toggle-switch">
-                    <?php if ($body['MfaAccountSettings']['totp']) : ?>
+                    <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['totp']) : ?>
                         <label for="ga_switch"><?= __('Enabled'); ?></label>
                         <input class="toggle-switch-checkbox checkbox" id="ga_switch" type="checkbox" checked="checked" disabled="disabled">
                     <?php else: ?>
@@ -50,14 +52,14 @@
                     </div>
                 </li>
                 <?php endif; ?>
-                <?php if ($body['MfaOrganizationSettings']['duo']) : ?>
+                <?php if ($body[MfaSettings::ORG_SETTINGS]['duo']) : ?>
                 <li>
                     <a role="button" href="<?= Router::url('/mfa/setup/duo', true); ?>">
                         <img src="<?= Router::url('img/third_party/duo.svg', true); ?>" />
                         <span>Duo MFA</span>
                     </a>
                     <div class="input toggle-switch">
-                        <?php if ($body['MfaAccountSettings']['duo']) : ?>
+                        <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['duo']) : ?>
                             <label for="ga_switch"><?= __('Enabled'); ?></label>
                             <input class="toggle-switch-checkbox checkbox" id="duo_switch" type="checkbox" checked="checked" disabled="disabled">
                         <?php else: ?>
@@ -68,14 +70,14 @@
                     </div>
                 </li>
                 <?php endif; ?>
-                <?php if ($body['MfaOrganizationSettings']['yubikey']) : ?>
+                <?php if ($body[MfaSettings::ORG_SETTINGS]['yubikey']) : ?>
                 <li>
                     <a role="button" href="<?= Router::url('/mfa/setup/yubikey', true); ?>">
                         <img src="<?= Router::url('img/third_party/yubikey.svg', true); ?>" />
                         <span>Yubikey OTP</span>
                     </a>
                     <div class="input toggle-switch">
-                        <?php if ($body['MfaAccountSettings']['yubikey']) : ?>
+                        <?php if ($body[MfaSettings::ACCOUNT_SETTINGS]['yubikey']) : ?>
                             <label for="ga_switch"><?= __('Enabled'); ?></label>
                             <input class="toggle-switch-checkbox checkbox" id="yubikey_switch" type="checkbox" checked="checked"  disabled="disabled">
                         <?php else: ?>

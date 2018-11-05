@@ -18,10 +18,10 @@ use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\FrozenTime;
-use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 class MfaAccountSettings
 {
@@ -47,22 +47,23 @@ class MfaAccountSettings
     /**
      * Get MfaSettings (Singleton)
      *
-     * @param UserAccessControl $uac
+     * @param UserAccessControl $uac user access control
      * @return MfaAccountSettings
      */
-    static public function get(UserAccessControl $uac)
+    public static function get(UserAccessControl $uac)
     {
         $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
         $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
         $decodedJson = json_decode($settings->value, true);
+
         return new MfaAccountSettings($uac, $decodedJson);
     }
 
     /**
      * MfaSettings constructor.
      *
-     * @param UserAccessControl $uac
-     * @param mixed $settings or Array
+     * @param UserAccessControl $uac user access control
+     * @param array $settings account settings
      */
     public function __construct(UserAccessControl $uac, array $settings = null)
     {
@@ -78,7 +79,7 @@ class MfaAccountSettings
      * @param string $provider name of the provider
      * @return bool
      */
-    public function isProviderReady($provider)
+    public function isProviderReady(string $provider)
     {
         if (!isset($this->settings[MfaSettings::PROVIDERS]) || !count($this->settings[MfaSettings::PROVIDERS])) {
             return false;
@@ -89,15 +90,20 @@ class MfaAccountSettings
         if (!isset($this->settings[$provider]) || !isset($this->settings[$provider][self::VERIFIED])) {
             return false;
         }
+        $result = false;
         switch ($provider) {
             case MfaSettings::PROVIDER_TOTP:
-                return ($this->isOtpProvisioningUriSet());
+                $result = ($this->isOtpProvisioningUriSet());
                 break;
             case MfaSettings::PROVIDER_YUBIKEY:
-                return ($this->isYubikeyUserIdSet());
+                $result = ($this->isYubikeyUserIdSet());
+                break;
             default:
-                return true;
+                $result = true;
+                break;
         }
+
+        return $result;
     }
 
     /**
@@ -121,6 +127,7 @@ class MfaAccountSettings
         if (!isset($this->settings[self::PROVIDERS])) {
             throw new RecordNotFoundException(__('No MFA provider set.'));
         }
+
         return $this->settings[self::PROVIDERS];
     }
 
@@ -135,10 +142,11 @@ class MfaAccountSettings
         $result = [];
         $providers = $this->getProviders();
         foreach ($providers as $provider) {
-            if($this->isProviderReady($provider)) {
+            if ($this->isProviderReady($provider)) {
                 $result[] = $provider;
             }
         }
+
         return $result;
     }
 
@@ -153,18 +161,19 @@ class MfaAccountSettings
         if (!isset($this->settings[$provider][self::VERIFIED])) {
             throw new RecordNotFoundException(__('MFA verification date is not set for this provider.'));
         }
+
         return new FrozenTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
     }
 
     /**
      * Enable a new mfa provider for the given user
      *
-     * @param UserAccessControl $uac
+     * @param UserAccessControl $uac access control
      * @param string $provider name of the provider
-     * @param array $data
+     * @param array $data data
      * @return void
      */
-    static public function enableProvider(UserAccessControl $uac, string $provider, array $data = [])
+    public static function enableProvider(UserAccessControl $uac, string $provider, array $data = [])
     {
         $data['verified'] = FrozenTime::now();
         $mfaAccountSettings = null;
@@ -205,6 +214,7 @@ class MfaAccountSettings
     public function delete()
     {
         MfaVerifiedToken::setAllInactive($this->uac);
+
         return $this->AccountSettings->deleteByProperty($this->uac->getId(), MfaSettings::MFA);
     }
 
@@ -214,10 +224,10 @@ class MfaAccountSettings
      * @param string $providerToDisable name of the provider
      * @return void
      */
-    public function disableProvider($providerToDisable)
+    public function disableProvider(string $providerToDisable)
     {
         $providers = $this->getProviders();
-        foreach($providers as $i => $provider) {
+        foreach ($providers as $i => $provider) {
             if ($provider === $providerToDisable) {
                 array_splice($this->settings[self::PROVIDERS], $i, 1);
                 if (isset($this->settings[$providerToDisable])) {
@@ -249,13 +259,13 @@ class MfaAccountSettings
         }
         try {
             $accountProviders = $this->getEnabledProviders();
-        } catch(RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) {
             return $status;
         }
-        foreach($possibleProviders as $i => $provider) {
+        foreach ($possibleProviders as $i => $provider) {
             $status[$provider] = in_array($provider, $accountProviders);
         }
+
         return $status;
     }
-
 }

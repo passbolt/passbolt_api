@@ -13,6 +13,7 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
+
 use Cake\Datasource\Exception\RecordNotFoundException;
 
 trait MfaOrgSettingsDuoTrait
@@ -26,6 +27,7 @@ trait MfaOrgSettingsDuoTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['integrationKey'])) {
             throw new RecordNotFoundException(__('No configuration set for Duo integration key.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_DUO]['integrationKey'];
     }
 
@@ -38,6 +40,7 @@ trait MfaOrgSettingsDuoTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['hostName'])) {
             throw new RecordNotFoundException(__('No configuration set for Duo host name.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_DUO]['hostName'];
     }
 
@@ -50,6 +53,7 @@ trait MfaOrgSettingsDuoTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['secretKey'])) {
             throw new RecordNotFoundException(__('No configuration set for Duo secret key.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_DUO]['secretKey'];
     }
 
@@ -62,6 +66,7 @@ trait MfaOrgSettingsDuoTrait
         if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['salt'])) {
             throw new RecordNotFoundException(__('No configuration set for Duo salt.'));
         }
+
         return $this->settings[MfaSettings::PROVIDER_DUO]['salt'];
     }
 }

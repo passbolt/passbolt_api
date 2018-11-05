@@ -15,14 +15,15 @@
 namespace Passbolt\MultiFactorAuthentication\Controller\Yubikey;
 
 use App\Error\Exception\CustomValidationException;
+use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 use Passbolt\MultiFactorAuthentication\Form\Yubikey\YubikeySetupForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
 
 class YubikeySetupPostController extends MfaSetupController
 {
     /**
      * Handle Yubikey setup POST request
+     *
      * @return void
      */
     public function post()
