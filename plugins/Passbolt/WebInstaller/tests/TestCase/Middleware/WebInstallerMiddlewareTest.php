@@ -25,7 +25,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
     protected $preserveGlobalState = false;
     protected $runTestInSeparateProcess = true;
 
-    public function testNotConfigured_GoToInstall_Success()
+    public function testWebInstallerMiddlewareNotConfigured_GoToInstall_Success()
     {
         $this->mockPassboltIsNotconfigured();
         $this->get('/install');
@@ -34,7 +34,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
         $this->assertContains('<div id="container" class="page setup start', $data);
     }
 
-    public function testNotConfigured_RedirectAllToInstall_Success()
+    public function testWebInstallerMiddlewareNotConfigured_RedirectAllToInstall_Success()
     {
         $this->mockPassboltIsNotconfigured();
         $uris = ['/', 'auth/login', 'resources.json', 'users/recover'];
@@ -45,7 +45,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
         }
     }
 
-    public function testAlreadyConfigured_GoToInstall_Error()
+    public function testWebInstallerAlreadyConfigured_GoToInstall_Error()
     {
         $this->mockPassboltIsconfigured();
         $this->get('/install');

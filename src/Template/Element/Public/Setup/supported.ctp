@@ -18,7 +18,7 @@
     <div class="plugin-check <?= $browserName; ?> error">
         <p class="message">
             <?php echo __('A web extension is required to use passbolt.'); ?><br>
-            <a href="https://www.passbolt.com/download/<?= $browserName; ?>">
+            <a href="https://www.passbolt.com/download/<?= $browserName; ?>" target="_blank" rel="noopener">
                 <?php echo __('Download it here'); ?>
             </a>.
         </p>
@@ -39,5 +39,5 @@
             return false;
         }
     </script>
-    <a id="js_setup_plugin_check" href="#" class="button primary big" onclick="javascript:reload();">retry</a>
+    <a id="js_setup_plugin_check" class="button primary big" onclick="javascript:reload();">retry</a>
 </div>
