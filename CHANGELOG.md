@@ -8,6 +8,7 @@
 - PASSBOLT-3120: Improve the Web Installer code coverage
 - PASSBOLT-3127: The Web Installer should change the config folder permissions after the installation is completed
 - PASSBOLT-3166: Add PHP 7.3 job on travis
+- PASSBOLT-3152: As AN completing the registration process, if I'm following the link to download the browser extension I cannot go back easily to the registration process
 
 ### Fixed
 - PASSBOLT-3150: I should not see duplicates rows when I filter my passwords by keywords
