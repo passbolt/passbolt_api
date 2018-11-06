@@ -46,27 +46,29 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
     {
         $postData = [
             'username' => 'aurore@passbolt.com',
-            'profile' => [
-                'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
-            ]
+            'first_name' => 'Aurore',
+            'last_name' => 'Avarguès-Weber'
         ];
         $this->post('/install/account_creation', $postData);
         $this->assertResponseCode(302);
         $this->assertRedirectContains('install/installation');
 
-        $Users = TableRegistry::get('Users');
-        $this->assertSession($postData, 'webinstaller.first_user');
+        $expectedData = [
+            'username' => 'aurore@passbolt.com',
+            'profile' => [
+                'first_name' => 'Aurore',
+                'last_name' => 'Avarguès-Weber'
+            ]
+        ];
+        $this->assertSession($expectedData, 'webinstaller.first_user');
     }
 
     public function testWebInstallerAccountCreationPostError_InvalidData()
     {
         $postData = [
             'username' => 'invalid-email',
-            'profile' => [
-                'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
-            ]
+            'first_name' => 'Aurore',
+            'last_name' => 'Avarguès-Weber'
         ];
         $this->post('/install/account_creation', $postData);
         $data = ($this->_getBodyAsString());
