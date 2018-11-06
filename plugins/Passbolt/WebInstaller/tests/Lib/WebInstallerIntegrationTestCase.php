@@ -18,11 +18,10 @@ use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
-use Passbolt\WebInstaller\Controller\WebInstallerController;
-use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 {
+    use ConfigurationTrait;
     use DatabaseTrait;
 
     public function tearDown()

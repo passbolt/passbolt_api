@@ -5,7 +5,7 @@
         <?= $this->element('navigation', ['selectedSection' => 'first_user']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($user); ?>
+    <?= $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -15,7 +15,7 @@
                             <h3><?= __('Admin user details'); ?></h3>
                             <?= $this->Flash->render() ?>
                             <?php
-                            echo $this->Form->control('profile.first_name',
+                            echo $this->Form->control('first_name',
                                 [
                                     'required' => 'required',
                                     'placeholder' => __('First name'),
@@ -25,7 +25,7 @@
                             );
                             ?>
                             <?php
-                            echo $this->Form->control('profile.last_name',
+                            echo $this->Form->control('last_name',
                                 [
                                     'required' => 'required',
                                     'placeholder' => __('Last name'),

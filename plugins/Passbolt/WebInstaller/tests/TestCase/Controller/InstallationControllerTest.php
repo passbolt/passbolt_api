@@ -15,36 +15,24 @@
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use App\Utility\Healthchecks;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Validation\Validation;
-use Passbolt\WebInstaller\Controller\WebInstallerController;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {
-    // Keep a copy of the passbolt config, to rollback after each test.
-    private $passboltConfigOriginal = null;
-
     public function setUp()
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
         $this->initWebInstallerSession();
-        if (file_exists(CONFIG . 'passbolt.php')) {
-            $this->passboltConfigOriginal = file_get_contents(CONFIG . 'passbolt.php');
-        }
+        $this->backupConfiguration();
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        if (!empty($this->passboltConfigOriginal)) {
-            file_put_contents(CONFIG . 'passbolt.php', $this->passboltConfigOriginal);
-        }
-        if (file_exists(CONFIG . 'license')) {
-            unlink(CONFIG . 'license');
-        }
+        $this->restoreConfiguration();
     }
 
     public function testWebInstallerInstallationViewSuccess()
@@ -103,6 +91,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerInstallationDoInstallSuccess()
     {
+        $this->skipTestIfNotWebInstallerFriendly();
         $this->truncateTables();
         $config = $this->getInstallSessionData();
         $this->initWebInstallerSession($config);
