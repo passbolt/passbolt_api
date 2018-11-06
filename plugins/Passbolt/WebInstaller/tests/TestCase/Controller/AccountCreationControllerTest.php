@@ -14,19 +14,12 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
-use Cake\ORM\TableRegistry;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/users', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/roles',
-        'app.Base/profiles', 'app.Base/authentication_tokens', 'app.Base/avatars', 'app.Base/email_queue'
-    ];
-
     public function setUp()
     {
         parent::setUp();
