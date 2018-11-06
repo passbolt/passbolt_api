@@ -23,6 +23,7 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->skipTestIfNotWebInstallerFriendly();
         $this->mockPassboltIsNotconfigured();
         $this->initWebInstallerSession();
     }
