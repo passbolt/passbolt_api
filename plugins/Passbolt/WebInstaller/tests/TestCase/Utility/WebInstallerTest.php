@@ -39,7 +39,6 @@ class WebInstallerTest extends TestCase
         if (file_exists(CONFIG . 'passbolt.php')) {
             $this->passboltConfigOriginal = file_get_contents(CONFIG . 'passbolt.php');
         }
-        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
     }
 
     public function tearDown()
