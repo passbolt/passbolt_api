@@ -45,7 +45,7 @@ class YubikeyVerifyGetController extends MfaVerifyController
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
-                ->setTemplatePath('Yubikey')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
                 ->setTemplate('verifyForm');
         } else {
             $this->success(__('Please provide the one time password.'));

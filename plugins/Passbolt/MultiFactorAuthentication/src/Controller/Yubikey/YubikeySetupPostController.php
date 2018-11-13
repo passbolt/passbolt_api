@@ -43,7 +43,7 @@ class YubikeySetupPostController extends MfaSetupController
                 $this->set('theme', $this->User->theme());
                 $this->viewBuilder()
                     ->setLayout('mfa_setup')
-                    ->setTemplatePath('Totp')
+                    ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_YUBIKEY))
                     ->setTemplate('setupForm');
             }
 

@@ -60,7 +60,7 @@ class DuoSetupGetController extends MfaSetupController
         $this->set('theme', $this->User->theme());
         $this->viewBuilder()
             ->setLayout('mfa_setup')
-            ->setTemplatePath('Duo')
+            ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))
             ->setTemplate('setupForm');
     }
 }

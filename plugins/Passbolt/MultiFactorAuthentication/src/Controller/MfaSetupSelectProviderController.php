@@ -13,6 +13,7 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaSetupSelectProviderController extends MfaController
 {
@@ -27,7 +28,7 @@ class MfaSetupSelectProviderController extends MfaController
             $this->set('theme', $this->User->theme());
             $this->viewBuilder()
                 ->setLayout('mfa_setup')
-                ->setTemplatePath('Mfa')
+                ->setTemplatePath(ucfirst(MfaSettings::MFA))
                 ->setTemplate('select');
         }
         $this->success(__('Please a provider to setup.'), $body);

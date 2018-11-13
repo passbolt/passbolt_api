@@ -45,7 +45,7 @@ class TotpSetupPostController extends MfaSetupController
                     ->withData('otpQrCodeImage', $this->request->getData('otpQrCodeImage'));
                 $this->viewBuilder()
                     ->setLayout('mfa_setup')
-                    ->setTemplatePath('Totp')
+                    ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
                     ->setTemplate('setupForm');
             }
 
