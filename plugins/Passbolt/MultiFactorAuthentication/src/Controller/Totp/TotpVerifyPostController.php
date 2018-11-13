@@ -49,7 +49,7 @@ class TotpVerifyPostController extends MfaVerifyController
             $this->set('verifyForm', $verifyForm);
             $this->viewBuilder()
                 ->setLayout('mfa_verify')
-                ->setTemplatePath('Totp')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
                 ->setTemplate('verifyForm');
 
             return;

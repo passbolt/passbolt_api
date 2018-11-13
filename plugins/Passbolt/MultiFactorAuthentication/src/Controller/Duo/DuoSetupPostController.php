@@ -45,7 +45,7 @@ class DuoSetupPostController extends MfaSetupController
             $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoHostname());
             $this->viewBuilder()
                 ->setLayout('mfa_setup')
-                ->setTemplatePath('Duo')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))
                 ->setTemplate('setupForm');
 
             return;

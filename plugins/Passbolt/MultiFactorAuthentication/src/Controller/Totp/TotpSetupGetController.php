@@ -65,7 +65,7 @@ class TotpSetupGetController extends MfaSetupController
             $this->set('theme', $this->User->theme());
             $this->viewBuilder()
                 ->setLayout('mfa_setup')
-                ->setTemplatePath('Totp')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
                 ->setTemplate('setupStart');
         }
         $this->success(__('Please setup the TOTP application.'));
@@ -93,7 +93,7 @@ class TotpSetupGetController extends MfaSetupController
                 ->withData('otpProvisioningUri', $uri);
             $this->viewBuilder()
                 ->setLayout('mfa_setup')
-                ->setTemplatePath('Totp')
+                ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_TOTP))
                 ->setTemplate('setupForm');
         } else {
             $data = [

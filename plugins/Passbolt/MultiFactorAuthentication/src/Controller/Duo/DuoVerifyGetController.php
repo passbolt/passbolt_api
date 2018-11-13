@@ -46,7 +46,7 @@ class DuoVerifyGetController extends MfaVerifyController
         $this->set('providers', $this->mfaSettings->getEnabledProviders());
         $this->viewBuilder()
             ->setLayout('mfa_verify')
-            ->setTemplatePath('Duo')
+            ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))
             ->setTemplate('verifyForm');
     }
 }

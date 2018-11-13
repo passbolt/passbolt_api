@@ -53,7 +53,7 @@ class MfaSetupController extends MfaController
         $this->set('theme', $this->User->theme());
         $this->viewBuilder()
             ->setLayout('mfa_setup')
-            ->setTemplatePath($provider)
+            ->setTemplatePath(ucfirst($provider))
             ->setTemplate('setupSuccess');
 
         $verified = $this->mfaSettings
@@ -80,7 +80,7 @@ class MfaSetupController extends MfaController
             $this->set('theme', $this->User->theme());
             $this->viewBuilder()
                 ->setLayout('mfa_setup')
-                ->setTemplatePath($provider)
+                ->setTemplatePath(ucfirst($provider))
                 ->setTemplate('setupSuccess');
         }
 
