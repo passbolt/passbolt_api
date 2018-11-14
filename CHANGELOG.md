@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+## [2.5.0] - 2018-11-14
 ### Added
 - PASSBOLT-3093: As LU I can select all passwords to perform a bulk operation
 - PASSBOLT-3001: Add support multiple factor authentication using Yubikey
@@ -589,7 +591,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/passbolt/passbolt_api/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/passbolt/passbolt_api/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/passbolt/passbolt_api/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/passbolt/passbolt_api/compare/v2.1.0...v2.2.0
