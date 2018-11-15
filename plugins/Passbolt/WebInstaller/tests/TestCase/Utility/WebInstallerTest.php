@@ -18,42 +18,33 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 
 class WebInstallerTest extends TestCase
 {
+    use ConfigurationTrait;
     use DatabaseTrait;
-
-    // Keep a copy of the original passbolt config, to rollback after each test.
-    private $passboltConfigOriginal = null;
 
     public function setUp()
     {
         parent::setUp();
-        if (file_exists(CONFIG . 'passbolt.php')) {
-            $this->passboltConfigOriginal = file_get_contents(CONFIG . 'passbolt.php');
-        }
-        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+        $this->skipTestIfNotWebInstallerFriendly();
+        $this->backupConfiguration();
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        if (!empty($this->passboltConfigOriginal)) {
-            file_put_contents(CONFIG . 'passbolt.php', $this->passboltConfigOriginal);
-        }
-        if (file_exists(CONFIG . 'license')) {
-            unlink(CONFIG . 'license');
-        }
+        $this->restoreConfiguration();
     }
 
-    public function testInitDatabaseConnectionSuccess()
+    public function testWebInstallerUtilityInitDatabaseConnectionSuccess()
     {
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
@@ -64,7 +55,7 @@ class WebInstallerTest extends TestCase
         $this->assertTrue($connected);
     }
 
-    public function testInitDatabaseConnectionError()
+    public function testWebInstallerUtilityInitDatabaseConnectionError()
     {
         $this->markTestIncomplete('Cannot be tested, the PDO Exception is not caught by the DatabaseConfiguration::testConnection function when executed in a testsuite. Isolating the tests make it working but break other tests such as the GpgGenerateKey tests.');
         $webInstaller = new WebInstaller(null);
@@ -77,7 +68,7 @@ class WebInstallerTest extends TestCase
         $this->assertFalse($connected);
     }
 
-    public function testGpgGenerateKeySuccess()
+    public function testWebInstallerUtilityGpgGenerateKeySuccess()
     {
         $webInstaller = new WebInstaller(null);
         $gpgSettings = [
@@ -96,7 +87,7 @@ class WebInstallerTest extends TestCase
         $this->assertFileExists(Configure::read('passbolt.gpg.serverKey.private'));
     }
 
-    public function testGpgImportKeySuccess()
+    public function testWebInstallerUtilityGpgImportKeySuccess()
     {
         $webInstaller = new WebInstaller(null);
         $gpgSettings = [
@@ -113,7 +104,7 @@ class WebInstallerTest extends TestCase
         $this->assertFileExists(Configure::read('passbolt.gpg.serverKey.private'));
     }
 
-    public function testWritePassboltConfigFileSuccess()
+    public function testWebInstallerUtilityWritePassboltConfigFileSuccess()
     {
         $webInstaller = new WebInstaller(null);
 
@@ -156,7 +147,7 @@ class WebInstallerTest extends TestCase
         $this->assertFileExists(CONFIG . 'passbolt.php');
     }
 
-    public function testInstallDatabaseSuccess()
+    public function testWebInstallerUtilityInstallDatabaseSuccess()
     {
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
@@ -172,7 +163,7 @@ class WebInstallerTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testCreateFirstUserSuccess()
+    public function testWebInstallerUtilityCreateFirstUserSuccess()
     {
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
@@ -207,7 +198,7 @@ class WebInstallerTest extends TestCase
         $this->assertEquals(AuthenticationToken::TYPE_REGISTER, $user->authentication_tokens[0]->type);
     }
 
-    public function testWriteLicenseFile()
+    public function testWebInstallerUtilityWriteLicenseFile()
     {
         if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
             $webInstaller = new WebInstaller(null);

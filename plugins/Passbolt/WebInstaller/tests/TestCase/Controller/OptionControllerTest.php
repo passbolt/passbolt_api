@@ -28,7 +28,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerOptionViewSuccess()
     {
         $this->get('/install/options');
         $data = ($this->_getBodyAsString());
@@ -36,7 +36,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Options', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerOptionPostSuccess()
     {
         $postData = [
             'full_base_url' => 'http://passbolt.dev/',
@@ -53,7 +53,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $this->assertSession($expectedSessionSettings, 'webinstaller.options');
     }
 
-    public function testPostSuccess_AdminAlreadyExists()
+    public function testWebInstallerOptionPostSuccess_AdminAlreadyExists()
     {
         $this->session(['webinstaller' => ['initialized' => true, 'hasAdmin' => true]]);
         $postData = [
@@ -66,7 +66,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $this->assertRedirectContains('install/installation');
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerOptionPostError_InvalidData()
     {
         $postData = [
             'full_base_url' => 'http://passbolt.dev',
