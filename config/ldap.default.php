@@ -32,7 +32,7 @@ return [
                 'defaultGroupAdminUser' => 'email@domain.com',
 
                 // Will list only objects that are part of this parent group (recursively).
-                // 'parentGroup' => 'Operations',
+                // 'parentGroup' => 'groupName',
 
                 // 'fieldsMapping' => [
                 //      // Override the mapping here.
