@@ -31,6 +31,9 @@ return [
                 // If not specified, the first admin user found will be used.
                 'defaultGroupAdminUser' => 'email@domain.com',
 
+                // Will list only objects that are part of this parent group (recursively).
+                // 'parentGroup' => 'Operations',
+
                 // 'fieldsMapping' => [
                 //      // Override the mapping here.
                 //      // Needed mainly if using openldap.
