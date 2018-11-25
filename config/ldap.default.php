@@ -34,6 +34,9 @@ return [
                 // Will list only objects that are part of this parent group (recursively).
                 // 'parentGroup' => 'groupName',
 
+                // Will return enabled users only. (only available in case of active directory).
+                'enabledUsersOnly' => false,
+
                 // 'fieldsMapping' => [
                 //      // Override the mapping here.
                 //      // Needed mainly if using openldap.

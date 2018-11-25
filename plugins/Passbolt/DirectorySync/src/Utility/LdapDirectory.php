@@ -133,6 +133,7 @@ class LdapDirectory implements DirectoryInterface
         $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
         $selectFields = array_values($mappingRules);
         $fromGroup = Configure::read('passbolt.plugins.directorySync.parentGroup');
+        $enabledUsersOnly = Configure::read('passbolt.plugins.directorySync.enabledUsersOnly');
 
         $query = $this->ldap->buildLdapQuery();
         $usersQuery = $query
@@ -142,6 +143,10 @@ class LdapDirectory implements DirectoryInterface
 
         if (!empty($fromGroup)) {
             $usersQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
+        }
+
+        if (!empty($enabledUsersOnly) && $enabledUsersOnly == true) {
+            $usersQuery->andWhere(['enabled' => true]);
         }
 
         $users = $usersQuery
