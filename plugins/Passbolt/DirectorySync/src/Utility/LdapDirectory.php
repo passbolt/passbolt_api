@@ -134,12 +134,24 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
         $selectFields = array_values($mappingRules);
+        $fromGroup = Configure::read('passbolt.plugins.directorySync.parentGroup');
+        $enabledUsersOnly = Configure::read('passbolt.plugins.directorySync.enabledUsersOnly');
 
         $query = $this->ldap->buildLdapQuery();
-        $users = $query
+        $usersQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::USER))
             ->select($selectFields)
-            ->fromUsers()
+            ->fromUsers();
+
+        if (!empty($fromGroup)) {
+            $usersQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
+        }
+
+        if (!empty($enabledUsersOnly) && $enabledUsersOnly == true) {
+            $usersQuery->andWhere(['enabled' => true]);
+        }
+
+        $users = $usersQuery
             ->getLdapQuery()
             ->getResult();
 
@@ -170,13 +182,19 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
         $selectFields = array_values($mappingRules);
+        $fromGroup = Configure::read('passbolt.plugins.directorySync.parentGroup');
 
         $query = $this->ldap->buildLdapQuery();
-        $groups = $query
+        $groupsQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::GROUP))
             ->select($selectFields)
-            ->fromGroups()
-            ->getLdapQuery()
+            ->fromGroups();
+
+        if (!empty($fromGroup)) {
+            $groupsQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
+        }
+
+        $groups = $groupsQuery->getLdapQuery()
             ->getResult();
 
         foreach ($groups as $group) {
