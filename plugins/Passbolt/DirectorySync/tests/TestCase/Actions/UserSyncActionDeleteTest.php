@@ -28,8 +28,16 @@ class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->initAction();
+    }
+
+    /**
+     * Init the action
+     */
+    protected function initAction()
+    {
         $this->action = new UserSyncAction();
-        $this->action->getDirectory()->setUsers([]);
+        $this->action->getDirectory()->setGroups([]);
     }
 
     /**
@@ -574,7 +582,9 @@ class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncUserDelete_Case14_Null_Success_OK_deletable_no_delete_job()
     {
-        Configure::write('passbolt.plugins.directorySync.jobs.users.delete', false);
+        $this->disableSyncOperation('users', 'delete');
+        $this->initAction();
+
         $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'allen']);
         $report = $this->action->execute();
         $this->assertUserExist(UuidFactory::uuid('user.id.frances'), ['deleted' => false]);

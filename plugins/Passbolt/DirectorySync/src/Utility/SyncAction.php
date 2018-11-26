@@ -38,6 +38,11 @@ class SyncAction
     protected $defaultAdmin;
 
     /**
+     * @var \Passbolt\DirectorySync\Test\Utility\DirectoryOrgSettings
+     */
+    protected $directoryOrgSettings;
+
+    /**
      * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|LdapDirectory
      */
     protected $directory;
@@ -90,7 +95,8 @@ class SyncAction
      */
     public function __construct($parentId = null)
     {
-        $this->directory = DirectoryFactory::get();
+        $this->directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
         $this->DirectoryRelations = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryRelations');
@@ -189,7 +195,7 @@ class SyncAction
      */
     public function getDefaultAdmin()
     {
-        $defaultUser = Configure::read('passbolt.plugins.directorySync.defaultUser');
+        $defaultUser = $this->directoryOrgSettings->getDefaultUser();
         if (!empty($defaultUser)) {
             // Get default user from database.
             $defaultUser = $this->Users->find()

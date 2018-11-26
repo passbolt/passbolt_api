@@ -26,16 +26,17 @@ class DirectoryFactory
     /**
      * Get directory factory.
      *
+     * @param DirectoryOrgSettings $settings The directory settings
      * @return mixed
      * @throws \Exception
      */
-    public static function get()
+    public static function get(DirectoryOrgSettings $settings = null)
     {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
             return new TestDirectory();
         }
-        if (Configure::read('passbolt.plugins.directorySync.ldap')) {
-            return new LdapDirectory();
+        if ($settings->isEnabled()) {
+            return new LdapDirectory($settings);
         }
         throw new \Exception('Directory sync plugin is not enabled.');
     }

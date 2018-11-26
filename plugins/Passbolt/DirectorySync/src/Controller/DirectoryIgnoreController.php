@@ -15,7 +15,6 @@
 
 namespace Passbolt\DirectorySync\Controller;
 
-use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -25,7 +24,7 @@ use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
-class DirectoryIgnoreController extends AppController
+class DirectoryIgnoreController extends DirectoryController
 {
     /**
      * Check if a record is ignored
@@ -41,7 +40,7 @@ class DirectoryIgnoreController extends AppController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
-
+        $this->assertDirectoryEnabled();
         $foreignModel = $this->normalizeForeignModel($foreignModel);
         if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
             throw new BadRequestException(__('The record model is not valid.'));
@@ -70,7 +69,7 @@ class DirectoryIgnoreController extends AppController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
-
+        $this->assertDirectoryEnabled();
         $foreignModel = $this->normalizeForeignModel($foreignModel);
         if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
             throw new BadRequestException(__('The record model is not valid.'));
@@ -99,6 +98,7 @@ class DirectoryIgnoreController extends AppController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
+        $this->assertDirectoryEnabled();
         $foreignModel = $this->normalizeForeignModel($foreignModel);
         if (!Validation::inList($foreignModel, ['Groups', 'Users', 'DirectoryEntries'])) {
             throw new BadRequestException(__('The record model is not valid.'));
@@ -128,6 +128,7 @@ class DirectoryIgnoreController extends AppController
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('You are not authorized to access that location.'));
         }
+        $this->assertDirectoryEnabled();
         if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The record id is not valid.'));
         }

@@ -25,6 +25,7 @@ use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 {
@@ -37,6 +38,16 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->initAction();
+    }
+
+    /**
+     * Init the action
+     *
+     * @return void
+     */
+    public function initAction()
+    {
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
     }
@@ -157,11 +168,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[0], $expectedReport);
         $groupCreated = $this->assertGroupExist(null, ['name' => 'newgroup', 'deleted' => false]);
 
-        $defaultGroupAdmin = 'ada@passbolt.com';
-        // Get default group admin.
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
-        // Get user.
-        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
+        $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
         $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
         $this->assertDirectoryRelationNotExist($groupUser->id);
@@ -191,11 +199,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[0], $expectedReport);
         $groupCreated = $this->assertGroupExist(null, ['name' => 'newgroup', 'deleted' => false]);
 
-        $defaultGroupAdmin = 'ada@passbolt.com';
-        // Get default group admin.
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
-        // Get user.
-        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
+        $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
         $groupUser = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
         $this->assertDirectoryRelationNotExist($groupUser->id);
@@ -293,10 +298,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
         $groupCreated = $this->assertGroupExist(null, ['name' => 'newgroup', 'deleted' => false]);
 
-        $defaultGroupAdmin = 'ada@passbolt.com';
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
-        // Get user.
-        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
+        $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
         $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
         $this->assertGroupUserNotExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.ruth')]);
@@ -340,10 +343,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[1], $expectedUserGroupReport);
         $groupCreated = $this->assertGroupExist(null, ['name' => 'newgroup', 'deleted' => false]);
 
-        $defaultGroupAdmin = 'ada@passbolt.com';
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
-        // Get user.
-        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
+        $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
 
         $groupUserAda = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => $defaultGroupAdmin->id]);
         $groupUserFrances = $this->assertGroupUserExist(null, ['group_id' => $groupCreated->id, 'user_id' => UuidFactory::uuid('user.id.frances')]);
@@ -361,6 +362,11 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_No_Passwords()
     {
+        $defaultGroupAdmin = 'edith@passbolt.com';
+        $this->setDefaultGroupAdminUser($defaultGroupAdmin);
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
+        $this->initAction();
+
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $groupEntry = $this->mockDirectoryEntryGroup('marketing');
         $groupData = $this->mockDirectoryGroupData('marketing', [
@@ -380,11 +386,6 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         ];
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
-        $defaultGroupAdmin = 'edith@passbolt.com';
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
-        // Get user.
-        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
-
         // Group user for default admin should not exist.
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.marketing'), 'user_id' => $defaultGroupAdmin->id]);
 
@@ -403,7 +404,10 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_No_Passwords_UpdateDisabled()
     {
-        Configure::write('passbolt.plugins.directorySync.jobs.groups.update', false);
+        $this->disableSyncOperation('groups', 'update');
+        $this->action = new GroupSyncAction();
+        $this->action->getDirectory()->setGroups([]);
+
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $this->mockDirectoryEntryGroup('marketing');
         $this->mockDirectoryGroupData('marketing', [
@@ -431,6 +435,11 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         // Init AppShellBootstrap to handle email notifications.
         AppShellBootstrap::init();
 
+        $defaultGroupAdmin = 'edith@passbolt.com';
+        $this->setDefaultGroupAdminUser($defaultGroupAdmin);
+        $defaultGroupAdmin = $this->Users->findByUsername($defaultGroupAdmin)->first();
+        $this->initAction();
+
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $this->mockDirectoryEntryGroup('accounting');
         $this->mockDirectoryGroupData('accounting', [
@@ -450,10 +459,6 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         ];
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
-        $defaultGroupAdmin = 'edith@passbolt.com';
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', $defaultGroupAdmin);
-        // Get user.
-        $defaultGroupAdmin = $this->Users->find()->where(['username' => $defaultGroupAdmin])->first();
         // Group user for default admin should not exist.
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => $defaultGroupAdmin->id]);
 

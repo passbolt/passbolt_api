@@ -14,164 +14,314 @@
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Form;
 
+use App\Model\Entity\Role;
 use App\Model\Table\OrganizationSettingsTable;
+use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\TestSuite\TestCase;
-use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Cake\Utility\Hash;
-use App\Model\Entity\Role;
+use Passbolt\DirectorySync\Form\LdapConfigurationForm;
+use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
-class LdapConfigurationFormTest extends TestCase
+class LdapConfigurationFormTest extends AppTestCase
 {
+    use FormatValidationTrait;
+
     public $fixtures = [
         'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
         'app.Base/groups_users', 'app.Base/permissions', 'app.Base/avatars',
         'app.Base/favorites', 'app.Base/organization_settings'
     ];
 
-    public function setUp()
+    public static function getDummyFormData()
     {
-        parent::setUp();
-        $this->ldapConfigurationForm = new LdapConfigurationForm();
-    }
-
-
-    public function testDefaultUserValidationError() {
-        $data = [
-            'default_user' => 'notavalidemail',
-        ];
-        $validate = $this->ldapConfigurationForm->validate($data);
-        $errors = $this->ldapConfigurationForm->errors();
-        $this->assertFalse($validate);
-        $this->assertTrue(isset($errors['default_user']['email']));
-        $this->assertEquals($errors['default_user']['email'], 'Default user should be an email');
-
-        $data = [
-            'default_user' => 'notexist@passbolt.com',
-        ];
-        $this->ldapConfigurationForm->validate($data);
-        $errors = $this->ldapConfigurationForm->errors();
-        $this->assertTrue(isset($errors['default_user']));
-        $this->assertEquals($errors['default_user']['isValidAdmin'], 'The admin user provided does not exist.');
-    }
-
-    public function testDefaultUserValidationSuccess() {
-        $data = [
-            'default_user' => 'admin@passbolt.com',
-        ];
-        $validate = $this->ldapConfigurationForm->validate($data);
-        $errors = $this->ldapConfigurationForm->errors();
-        $this->assertFalse(isset($errors['default_user']['email']));
-        $this->assertFalse(isset($errors['default_user']['isValidAdmin']));
-    }
-
-    public function testDefaultGroupAdminUserValidationError() {
-        $data = [
-            'default_group_admin_user' => 'notavalidemail',
-        ];
-        $validate = $this->ldapConfigurationForm->validate($data);
-        $errors = $this->ldapConfigurationForm->errors();
-        $this->assertFalse($validate);
-        $this->assertTrue(isset($errors['default_group_admin_user']['email']));
-        $this->assertEquals($errors['default_group_admin_user']['email'], 'Default group admin user should be an email');
-
-        $data = [
-            'default_group_admin_user' => 'notexist@passbolt.com',
-        ];
-        $this->ldapConfigurationForm->validate($data);
-        $errors = $this->ldapConfigurationForm->errors();
-        $this->assertTrue(isset($errors['default_group_admin_user']));
-        $this->assertEquals($errors['default_group_admin_user']['isValidUser'], 'The group admin user provided does not exist.');
-    }
-
-    public function testDataToConfig() {
-        $data = [
+        return [
             'directory_type' => 'ad',
-            'domain_name' => 'passbolt.local',
-            'username' => 'root',
-            'password' => 'test',
-            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-            'server' => '127.0.0.1',
-            'port' => '636',
-            'group_object_class' => 'groupObjectClass',
-            'user_object_class' => 'userObjectClass',
-            'group_path' => '',
-            'user_path' => '',
-            'default_user' => 'admin@passbolt.com',
-            'default_group_admin_user' => 'ada@passbolt.com',
+            'domain_name' => 'ldap.passbolt.local',
             'connection_type' => 'tls',
+            'server' => '127.0.0.1',
+            'host' => 'my host',
+            'port' => 999,
+            'username' => 'root',
+            'password' => 'password',
+            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
+            'user_path' => 'my user_path',
+            'group_object_class' => 'my group_object_class',
+            'user_object_class' => 'my user_object_class',
+            'default_user' => UuidFactory::uuid('user.id.admin'),
+            'default_group_admin_user' => UuidFactory::uuid('user.id.ada'),
+            'sync_users_create' => true,
+            'sync_users_delete' => false,
+            'sync_groups_create' => true,
+            'sync_groups_delete' => false,
+            'sync_groups_update' => true
         ];
-        $config = $this->ldapConfigurationForm->dataToConfig($data);
-
-        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.ldap_type'), 'ad');
-        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.domain_name'), 'passbolt.local');
-        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.username'), 'root');
-        $this->assertEquals(preg_match('/BEGIN PGP MESSAGE/', Hash::get($config, 'ldap.domains.org_domain.password')), 1);
-        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.base_dn'), 'OU=PassboltUsers,DC=passbolt,DC=local');
-        $this->assertFalse(isset($config['groupPath']));
-        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.servers.0'), '127.0.0.1');
     }
 
-    public function testConfigToData() {
-        $config = [
-            'userPath' => 'CN=Operations',
-            'defaultUser' => 'adminpassbolt.com',
-            'defaultGroupAdminUser' => 'ada@passbolt.com',
-            'ldap' => [
-                'domains' => [
-                    'org_domain' => [
-                        'domain_name' => 'passbolt.local',
-                        'username' => 'root',
-                        'password' => OrganizationSettingsTable::encryptData('test'),
-                        'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-                        'servers' => ['127.0.0.1'],
-                        'port' => 636,
-                        'use_ssl' => false,
-                        'ldap_type' => 'ad',
-                    ],
+    public function testLdapConfigurationFormValiateError_DirectoryType()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'inList' => self::getInListTestCases(['ad', 'openldap'])
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'directory_type', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_DomainName()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domain_name', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_Username()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'username', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_Password()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'password', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_BaseDn()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'base_dn', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_Server()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'server', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_Port()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'range' => self::getRangeTestCases(0, 65535)
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'port', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_ConnectionType()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'inList' => self::getInListTestCases(LdapConfigurationForm::$connectionTypes)
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'connection_type', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_DefaultUser()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'uuid' => [
+                'rule_name' => 'uuid',
+                'test_cases' => [
+                    'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
+                    UuidFactory::uuid('user.id.admin') => true,
+                ],
+            ],
+            'isValidAdmin' => [
+                'rule_name' => 'isValidAdmin',
+                'test_cases' => [
+                    UuidFactory::uuid('user.id.ada') => false,
+                    UuidFactory::uuid('user.id.admin') => true,
                 ],
             ]
         ];
-
-        $data = $this->ldapConfigurationForm->configToData($config);
-        $this->assertEquals($data['directory_type'], 'ad');
-        $this->assertEquals($data['domain_name'], 'passbolt.local');
-        $this->assertEquals($data['username'], 'root');
-        $this->assertEquals($data['password'], 'test');
-        $this->assertEquals($data['connection_type'], 'plain');
-        $this->assertEquals($data['base_dn'], 'OU=PassboltUsers,DC=passbolt,DC=local');
-        $this->assertFalse(isset($data['group_path']));
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'default_user', $ldapSettings, $testCases);
     }
 
-    public function testSaveReadConfiguration() {
-        $userAccess = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        $data = [
-            'directory_type' => 'ad',
-            'domain_name' => 'passbolt.local',
-            'username' => 'root',
-            'password' => 'test',
-            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-            'server' => '127.0.0.1',
-            'port' => '636',
-            'group_object_class' => 'groupObjectClass',
-            'user_object_class' => 'userObjectClass',
-            'group_path' => '',
-            'user_path' => '',
-            'default_user' => 'admin@passbolt.com',
-            'default_group_admin_user' => 'ada@passbolt.com',
-            'connection_type' => 'tls',
+    public function testLdapConfigurationFormValiateError_DefaultGroupAdminUser()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'uuid' => [
+                'rule_name' => 'uuid',
+                'test_cases' => [
+                    'aaa00003-c5cd-11e1-a0c5-080027z!6c4c' => false,
+                    UuidFactory::uuid('user.id.ada') => true,
+                    UuidFactory::uuid('user.id.admin') => true,
+                ],
+            ],
+            'isValidUser' => [
+                'rule_name' => 'isValidUser',
+                'test_cases' => [
+                    UuidFactory::uuid('user.id.ada') => true,
+                    UuidFactory::uuid('user.id.admin') => true,
+                    UuidFactory::uuid('user.id.ruth') => false
+                ],
+            ]
         ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'default_group_admin_user', $ldapSettings, $testCases);
+    }
 
-        $savedConfig = $this->ldapConfigurationForm->saveConfiguration($data, $userAccess);
-        $this->assertEquals(count($savedConfig), 13);
+    public function testLdapConfigurationFormValiateError_GroupObjectClass()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'group_object_class', $ldapSettings, $testCases);
+    }
 
-        $readConfig = $this->ldapConfigurationForm->readConfiguration();
-        // Remove empty values since they should not be saved.
-        unset($data['group_path']);
-        unset($data['user_path']);
+    public function testLdapConfigurationFormValiateError_UserObjectClass()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'user_object_class', $ldapSettings, $testCases);
+    }
 
-        // Assert that the configuration returned is the same as the one sent.
-        $this->assertEquals($readConfig, $data);
+    public function testLdapConfigurationFormValiateError_GroupPath()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'group_path', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_UserPath()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'user_path', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_SyncUsersCreate()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'boolean' => self::getBooleanTestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'sync_users_create', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_SyncUsersDelete()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'boolean' => self::getBooleanTestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'sync_users_delete', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_SyncGroupsCreate()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'boolean' => self::getBooleanTestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'sync_groups_create', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_SyncGroupsDelete()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'boolean' => self::getBooleanTestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'sync_groups_delete', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValiateError_SyncGroupsUpdate()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'boolean' => self::getBooleanTestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'sync_groups_update', $ldapSettings, $testCases);
+    }
+
+    public function testFormatFormDataToOrgSettings()
+    {
+        $data = self::getDummyFormData();
+        $config = LdapConfigurationForm::formatFormDataToOrgSettings($data);
+
+        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.ldap_type'), 'ad');
+        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.domain_name'), 'ldap.passbolt.local');
+        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.username'), 'root');
+        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.password'), 'password');
+        $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.base_dn'), 'OU=PassboltUsers,DC=passbolt,DC=local');
+        $this->assertFalse(isset($config['groupPath']));
+        $this->assertEquals(Hash::get($config, 'jobs.users.create'), true);
+        $this->assertEquals(Hash::get($config, 'jobs.users.delete'), false);
+        $this->assertEquals(Hash::get($config, 'jobs.groups.create'), true);
+        $this->assertEquals(Hash::get($config, 'jobs.groups.delete'), false);
+        $this->assertEquals(Hash::get($config, 'jobs.groups.update'), true);
+    }
+
+    public function testFormatOrgSettingsToFormData()
+    {
+        $settings = DirectoryOrgSettingsTest::getDummySettings();
+        $formData = LdapConfigurationForm::formatOrgSettingsToFormData($settings);
+
+        $this->assertEquals('ad', $formData['directory_type']);
+        $this->assertEquals('passbolt.local', $formData['domain_name']);
+        $this->assertEquals('root', $formData['username']);
+        $this->assertEquals('password', $formData['password']);
+        $this->assertEquals('ssl', $formData['connection_type']);
+        $this->assertEquals('OU=PassboltUsers,DC=passbolt,DC=local', $formData['base_dn']);
+        $this->assertFalse(isset($formData['group_path']));
+        $this->assertTrue($formData['sync_users_create']);
+        $this->assertFalse($formData['sync_users_delete']);
+        $this->assertTrue($formData['sync_groups_create']);
+        $this->assertFalse($formData['sync_groups_delete']);
+        $this->assertTrue($formData['sync_groups_update']);
     }
 }

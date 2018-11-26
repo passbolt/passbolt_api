@@ -30,6 +30,7 @@ use LdapTools\Object\LdapObjectType;
  */
 class LdapDirectory implements DirectoryInterface
 {
+    private $directorySettings;
     private $ldap;
     private $groups;
     private $users;
@@ -37,12 +38,13 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * LdapDirectory constructor.
+     * @param DirectoryOrgSettings $settings The directory settings
      * @throws \Exception if connection cannot be established
      */
-    public function __construct()
+    public function __construct(DirectoryOrgSettings $settings)
     {
-        $config = Configure::read('passbolt.plugins.directorySync.ldap');
-        $config = (new Configuration())->loadFromArray($config);
+        $this->directorySettings = $settings;
+        $config = (new Configuration())->loadFromArray($this->directorySettings->getLdapSettings());
         $this->ldap = new LdapManager($config);
         $this->ldap->getConnection();
         $this->groups = [];
@@ -68,7 +70,7 @@ class LdapDirectory implements DirectoryInterface
 
             // Set custom object class if configured.
             $objectType = $schema->getObjectType();
-            $customClass = Configure::read('passbolt.plugins.directorySync.' . $objectType . 'ObjectClass');
+            $customClass = $this->directorySettings->getObjectClass($objectType);
             $connectionType = $this->ldap->getConnection()->getConfig()->getLdapType();
             if (isset($customClass) && $connectionType == LdapConnection::TYPE_OPENLDAP) {
                 $schema->setObjectClass($customClass);
@@ -86,7 +88,7 @@ class LdapDirectory implements DirectoryInterface
     public function getDNFullPath(string $ldapObjectType)
     {
         $paths = [];
-        $paths['additionalPath'] = Configure::read('passbolt.plugins.directorySync.' . $ldapObjectType . 'Path');
+        $paths['additionalPath'] = $this->directorySettings->getObjectPath($ldapObjectType);
         $paths['baseDN'] = $this->ldap->getConnection()->getConfig()->getBaseDn();
 
         return ltrim(implode(',', $paths), ',');

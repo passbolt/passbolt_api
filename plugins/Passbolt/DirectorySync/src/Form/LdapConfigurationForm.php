@@ -16,28 +16,23 @@ namespace Passbolt\DirectorySync\Form;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
-use App\Model\Table\OrganizationSettingsTable;
-use App\Utility\Healthchecks;
-use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
-use Cake\Datasource\ConnectionManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
-use App\Utility\Gpg;
+use LdapTools\Configuration;
+use LdapTools\LdapManager;
+use Passbolt\DirectorySync\Utility\DirectoryFactory;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class LdapConfigurationForm extends Form
 {
-    const CONFIG_BASE_KEY = 'passbolt.plugins.directorySync.';
-
     const CONNECTION_TYPE_PLAIN = 'plain';
     const CONNECTION_TYPE_SSL = 'ssl';
     const CONNECTION_TYPE_TLS = 'tls';
 
-    private $connectionTypes = [
+    public static $connectionTypes = [
         self::CONNECTION_TYPE_PLAIN,
         self::CONNECTION_TYPE_SSL,
         self::CONNECTION_TYPE_TLS
@@ -45,9 +40,10 @@ class LdapConfigurationForm extends Form
 
     /**
      * Mapping of the object properties with the configuration paths.
+     * Note that the connection_type property is mapped manually.
      * @var array
      */
-    private $configurationMapping = [
+    private static $configurationMapping = [
         'directory_type' => 'ldap.domains.org_domain.ldap_type',
         'domain_name' => 'ldap.domains.org_domain.domain_name',
         'username' => 'ldap.domains.org_domain.username',
@@ -61,6 +57,11 @@ class LdapConfigurationForm extends Form
         'user_path' => 'userPath',
         'default_user' => 'defaultUser',
         'default_group_admin_user' => 'defaultGroupAdminUser',
+        'sync_users_create' => 'jobs.users.create',
+        'sync_users_delete' => 'jobs.users.delete',
+        'sync_groups_create' => 'jobs.groups.create',
+        'sync_groups_delete' => 'jobs.groups.delete',
+        'sync_groups_update' => 'jobs.groups.update'
     ];
 
     /**
@@ -82,7 +83,14 @@ class LdapConfigurationForm extends Form
             ->addField('group_object_class', 'string')
             ->addField('user_object_class', 'string')
             ->addField('group_path', 'string')
-            ->addField('user_path', 'string');
+            ->addField('user_path', 'string')
+            ->addField('default_user', 'string')
+            ->addField('default_group_admin_user', 'string')
+            ->addField('sync_users_create', 'boolean')
+            ->addField('sync_users_delete', 'boolean')
+            ->addField('sync_groups_create', 'boolean')
+            ->addField('sync_groups_delete', 'boolean')
+            ->addField('sync_groups_update', 'boolean');
     }
 
     /**
@@ -131,12 +139,12 @@ class LdapConfigurationForm extends Form
         $validator
             ->requirePresence('connection_type', 'create', __('A connection type is required.'))
             ->notEmpty('connection_type', __('A connection type is required.'))
-            ->inList('connection_type', $this->connectionTypes, __('The connection type is not valid (only plain, ssl, tls are supported)'));
+            ->inList('connection_type', self::$connectionTypes, __('The connection type is not valid (only plain, ssl, tls are supported)'));
 
         $validator
             ->requirePresence('default_user', 'create', __('A default user is required.'))
             ->notEmpty('default_user', __('Default user cannot be empty.'))
-            ->email(('default_user'), false, __('Default user should be an email'))
+            ->uuid(('default_user'), false, __('Default user should be a valid uuid.'))
             ->add('default_user', ['isValidAdmin' => [
                 'rule' => [$this, 'isValidAdmin'],
                 'message' => __('The admin user provided does not exist.')
@@ -145,7 +153,7 @@ class LdapConfigurationForm extends Form
         $validator
             ->requirePresence('default_group_admin_user', 'create', __('A default group admin user is required.'))
             ->notEmpty('default_group_admin_user', __('Default group admin user cannot be empty.'))
-            ->email(('default_group_admin_user'), false, __('Default group admin user should be an email'))
+            ->uuid(('default_group_admin_user'), false, __('Default group admin user should be a valid uuid.'))
             ->add('default_group_admin_user', ['isValidUser' => [
                 'rule' => [$this, 'isValidUser'],
                 'message' => __('The group admin user provided does not exist.')
@@ -167,6 +175,26 @@ class LdapConfigurationForm extends Form
             ->allowEmpty('user_path')
             ->utf8('user_path', __('User path should be a valid utf8 string.'));
 
+        $validator
+            ->allowEmpty('sync_users_create')
+            ->boolean('sync_users_create', __('Sync of user when create should be a boolean.'));
+
+        $validator
+            ->allowEmpty('sync_users_delete')
+            ->boolean('sync_users_delete', __('Sync of user when delete should be a boolean.'));
+
+        $validator
+            ->allowEmpty('sync_groups_create')
+            ->boolean('sync_groups_create', __('Sync of groups when create should be a boolean.'));
+
+        $validator
+            ->allowEmpty('sync_groups_delete')
+            ->boolean('sync_groups_delete', __('Sync of groups when delete should be a boolean.'));
+
+        $validator
+            ->allowEmpty('sync_groups_update')
+            ->boolean('sync_groups_update', __('Sync of groups when yodate should be a boolean.'));
+
         return $validator;
     }
 
@@ -180,7 +208,7 @@ class LdapConfigurationForm extends Form
     public function isValidAdmin(string $value, array $context = null)
     {
         $User = TableRegistry::get('Users');
-        $exist = $User->find()->contain(['Roles'])->where(['username' => $value, 'active' => 1, 'deleted' => 0, 'Roles.name' => Role::ADMIN])->count();
+        $exist = $User->find()->contain(['Roles'])->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0, 'Roles.name' => Role::ADMIN])->count();
         if ($exist) {
             return true;
         }
@@ -198,7 +226,7 @@ class LdapConfigurationForm extends Form
     public function isValidUser(string $value, array $context = null)
     {
         $User = TableRegistry::get('Users');
-        $exist = $User->find()->where(['username' => $value, 'active' => 1, 'deleted' => 0])->count();
+        $exist = $User->find()->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0])->count();
         if ($exist) {
             return true;
         }
@@ -207,161 +235,92 @@ class LdapConfigurationForm extends Form
     }
 
     /**
-     * Save configuration from from data.
+     * Transform form data into the expected org settings format
      *
-     * @param array $data form data
-     * @param UserAccessControl $control access control
+     * @param array $data The form data
      *
-     * @return array settings as they have been saved
+     * @return array $settings The org settings data
      */
-    public function saveConfiguration(array $data, UserAccessControl $control)
+    public static function formatFormDataToOrgSettings(array $data = [])
     {
-        $validate = $this->validate($data);
-        if (!$validate) {
-            throw new CustomValidationException(
-                __('Could not validate ldap configuration data'),
-                $this->errors()
-            );
+        $settings = [];
+        if (empty($data)) {
+            return $data;
         }
 
-        $conf = $this->dataToConfig($data);
-        $conf = Hash::insert([], trim(self::CONFIG_BASE_KEY, '.'), $conf);
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
-        $savedSettings = $OrganizationSettings->saveOrganizationSettings($conf, $control);
+        $User = TableRegistry::get('Users');
+        $data['default_user'] = $User->find()->where(['Users.id' => $data['default_user']])->first()->get('username');
+        $data['default_group_admin_user'] = $User->find()->where(['Users.id' => $data['default_group_admin_user']])->first()->get('username');
 
-        return $savedSettings;
-    }
-
-    /**
-     * Read ldap configuration from organization settings and return them as form data.
-     *
-     * @return array form data
-     */
-    public function readConfiguration() {
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
-        $settings = $OrganizationSettings->getOrganizationSettings();
-        $settings = Hash::extract($settings, trim(self::CONFIG_BASE_KEY, '.'));
-        $data = $this->configToData($settings);
-
-        return $data;
-    }
-
-    /**
-     * Transorm configuration data into a configuration array (without base key prefix).
-     *
-     * @param array $data ldap configuration data
-     *
-     * @return array configuration
-     */
-    public function dataToConfig(array $data) {
-        $conf = [];
-        foreach($data as $prop => $propVal) {
-            if (!empty($propVal) && isset($this->configurationMapping[$prop])) {
-                $conf[$this->configurationMapping[$prop]] = $propVal;
+        foreach ($data as $prop => $propVal) {
+            if ((!empty($propVal) || $propVal === false) && isset(self::$configurationMapping[$prop])) {
+                $settings[self::$configurationMapping[$prop]] = $propVal;
             }
         }
-        $conf = array_merge($conf, $this->_connectionTypeToConfig($data['connection_type']));
-        if (isset($conf['ldap.domains.org_domain.password'])) {
-            $conf['ldap.domains.org_domain.password'] = OrganizationSettingsTable::encryptData(
-                $conf['ldap.domains.org_domain.password']
-            );
-        }
-        $conf = Hash::expand($conf);
+        $settings['ldap.domains.org_domain.use_ssl'] = $data['connection_type'] === 'ssl' ? 1 : 0;
+        $settings['ldap.domains.org_domain.use_tls'] = $data['connection_type'] === 'tls' ? 1 : 0;
+        $settings = Hash::expand($settings);
 
-        return $conf;
+        return $settings;
     }
 
     /**
      * Transform a configuration array into ldap configuration form data
      *
-     * @param array $directoryConfig configuration array without the base key.
+     * @param array $settings The organization settings
      *
      * @return array LdapConfigurationForm data
      */
-    public function configToData(array $directoryConfig) {
+    public static function formatOrgSettingsToFormData(array $settings = [])
+    {
         $data = [];
-        $config = Hash::flatten($directoryConfig);
-        foreach($this->configurationMapping as $prop => $propVal) {
-            if (isset($config[$propVal])) {
-                $data[$prop] = $config[$propVal];
+        $settings = Hash::flatten($settings);
+        if (empty($settings)) {
+            return $data;
+        }
+
+        $User = TableRegistry::get('Users');
+        if (isset($settings['defaultUser'])) {
+            $username = $User->find()->where(['Users.username' => $settings['defaultUser']])->first()->get('id');
+            $settings['defaultUser'] = $username;
+        }
+        if (isset($settings['defaultGroupAdminUser'])) {
+            $username = $User->find()->where(['Users.username' => $settings['defaultGroupAdminUser']])->first()->get('id');
+            $settings['defaultGroupAdminUser'] = $username;
+        }
+
+        foreach (self::$configurationMapping as $prop => $propVal) {
+            if (isset($settings[$propVal])) {
+                $data[$prop] = $settings[$propVal];
             }
         }
-        $data['connection_type'] = $this->_configToConnectionType($config);
-        if (isset($data['password'])) {
-            $data['password'] = OrganizationSettingsTable::decryptData($data['password']);
+
+        $data['connection_type'] = self::CONNECTION_TYPE_PLAIN;
+        $isSsl = !empty($settings['ldap.domains.org_domain.use_ssl']);
+        $isTls = !empty($settings['ldap.domains.org_domain.use_tls']);
+        if ($isSsl) {
+            $data['connection_type'] = self::CONNECTION_TYPE_SSL;
+        } elseif ($isTls) {
+            $data['connection_type'] = self::CONNECTION_TYPE_TLS;
         }
 
         return $data;
     }
 
     /**
-     * Transform a connection type to config element.
+     * Test the ldap
      *
-     * A connection type can be ssl, tls or plain. But in the configuration it does not reflect like this.
-     * For example, for ssl it will be use_ssl => 1
-     * for tls it will be use_tls => 1
-     * We need to adapt the configuration manually.
-     *
-     * @param string $connectionType connection type (ssl, tls, plain).
-     *
-     * @return array configuration
+     * @param array $data The user input
+     * @throws \Exception if connection cannot be established
+     * @return bool
      */
-    protected function _connectionTypeToConfig(string $connectionType) {
-        $conf = [
-            'ldap.domains.org_domain.use_ssl' => 0,
-            'ldap.domains.org_domain.use_tls' => 0,
-        ];
-        if ($connectionType === 'ssl') {
-            $conf['ldap.domains.org_domain.use_ssl'] = 1;
-        } elseif($connectionType === 'tls') {
-            $conf['ldap.domains.org_domain.use_tls'] = 1;
-        }
-
-        return $conf;
-    }
-
-    /**
-     * Read the connection type from a flattened configuration.
-     *
-     * @param array $flattenedConfig flattened configuration.
-     *
-     * @return string connection type (ssl, tls, plain).
-     */
-    protected function _configToConnectionType(array $flattenedConfig) {
-        $connectionType = self::CONNECTION_TYPE_PLAIN;
-        if (isset($flattenedConfig['ldap.domains.org_domain.use_tls'])
-            && $flattenedConfig['ldap.domains.org_domain.use_tls'] == true) {
-            $connectionType = self::CONNECTION_TYPE_TLS;
-        } elseif (isset($flattenedConfig['ldap.domains.org_domain.use_ssl'])
-              && $flattenedConfig['ldap.domains.org_domain.use_ssl'] == true) {
-            $connectionType = self::CONNECTION_TYPE_SSL;
-        }
-
-        return $connectionType;
-    }
-
-    /**
-     * Test database connection.
-     * @param array $data form data
-     * @throw Exception when a connection cannot be established
-     * @return void
-     */
-    public function testConnection(array $data)
+    protected function testConnection(array $data)
     {
-        // TODO
+        $directorySettings = new DirectoryOrgSettings(self::formatFormDataToOrgSettings($data));
+        $ldapDirectory = DirectoryFactory::get($directorySettings);
+
+        return true;
     }
-
-
-    /**
-     * Set Connection configuration.
-     * @param array $data form data
-     * @return void
-     */
-    protected function _setConnection($data)
-    {
-
-    }
-
 
     /**
      * Execute implementation.
@@ -370,6 +329,6 @@ class LdapConfigurationForm extends Form
      */
     protected function _execute(array $data)
     {
-        return true;
+        return $this->testConnection($data);
     }
 }

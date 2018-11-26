@@ -173,6 +173,30 @@ class OrganizationSettingsTable extends Table
     }
 
     /**
+     * Delete an organization setting
+     *
+     * @param string $property The property name
+     * @param UserAccessControl $control user access control object
+     * @return void
+     */
+    public function deleteSetting(string $property, UserAccessControl $control)
+    {
+        if (!$control->isAdmin()) {
+            throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
+        }
+
+        $settingId = $this->_getSettingPropertyId($property);
+        $settingFinder = ['property_id' => $settingId];
+        $settingItem = $this->find()
+            ->where($settingFinder)
+            ->first();
+
+        if ($settingItem) {
+            $this->delete($settingItem);
+        }
+    }
+
+    /**
      * Get settings property id
      * @param string $property property name
      *

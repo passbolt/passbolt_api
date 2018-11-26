@@ -111,7 +111,7 @@ class GroupSyncAction extends SyncAction
      */
     public function getDefaultGroupAdmin()
     {
-        $groupAdmin = Configure::read('passbolt.plugins.directorySync.defaultGroupAdminUser');
+        $groupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         if (!empty($groupAdmin)) {
             // Get groupAdmin from database.
             $groupAdmin = $this->Users->find()

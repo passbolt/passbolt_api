@@ -87,7 +87,7 @@ trait SyncTrait
      */
     public function processEntriesToDelete()
     {
-        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.delete')) {
+        if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'delete')) {
             return;
         }
 
