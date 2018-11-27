@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
+namespace Passbolt\DirectorySync\Actions\Reports;
 
 /**
  * Directory factory class
