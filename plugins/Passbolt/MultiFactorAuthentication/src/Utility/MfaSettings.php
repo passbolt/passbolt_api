@@ -16,6 +16,7 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Routing\Router;
 
 class MfaSettings
@@ -67,7 +68,12 @@ class MfaSettings
      */
     public static function get(UserAccessControl $uac)
     {
-        $orgSettings = MfaOrgSettings::get();
+        try {
+            $orgSettings = MfaOrgSettings::get();
+        } catch (InternalErrorException $exception) {
+            // invalid configuration => no providers
+            $orgSettings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        }
         try {
             $accountSettings = MfaAccountSettings::get($uac);
         } catch (RecordNotFoundException $exception) {

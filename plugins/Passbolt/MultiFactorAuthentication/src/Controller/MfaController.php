@@ -22,6 +22,11 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class MfaController extends AppController
 {
     /**
+     * @var MfaSettings
+     */
+    protected $mfaSettings;
+
+    /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.
      *

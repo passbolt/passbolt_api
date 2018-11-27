@@ -20,6 +20,9 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
 
     $routes->redirect('/setup', '/mfa/setup/select');
 
+    /**
+     * Setup start page
+     */
     $routes->connect('/setup/select', ['controller' => 'MfaSetupSelectProvider', 'action' => 'get'])
         ->setMethods(['GET']);
 
@@ -82,4 +85,13 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
 
     $routes->connect('/verify/error', ['controller' => 'MfaVerifyAjaxError', 'action' => 'get'])
         ->setMethods(['GET', 'POST', 'PUT', 'DELETE']);
+
+    /**
+     * Org settings
+     */
+    $routes->connect('/settings', ['prefix' => 'OrgSettings', 'controller' => 'MfaOrgSettingsGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/settings', ['prefix' => 'OrgSettings', 'controller' => 'MfaOrgSettingsPost', 'action' => 'post'])
+        ->setMethods(['PUT', 'POST']);
 });

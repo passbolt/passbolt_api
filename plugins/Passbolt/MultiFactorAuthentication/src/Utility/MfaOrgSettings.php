@@ -14,13 +14,31 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
+use App\Error\Exception\CustomValidationException;
+use App\Model\Table\OrganizationSettingsTable;
+use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
 class MfaOrgSettings
 {
     use MfaOrgSettingsDuoTrait;
     use MfaOrgSettingsYubikeyTrait;
+
+    const DUO_SECRET_KEY = 'secretKey';
+    const DUO_HOSTNAME = 'hostName';
+    const DUO_INTEGRATION_KEY = 'integrationKey';
+    const DUO_SALT = 'salt';
+
+    const YUBIKEY_CLIENT_ID = 'clientId';
+    const YUBIKEY_SECRET_KEY = 'secretKey';
+
+    /**
+     * @var OrganizationSettingsTable
+     */
+    protected $OrganizationSettings;
 
     /**
      * @var array|null
@@ -29,12 +47,38 @@ class MfaOrgSettings
 
     /**
      * MfaOrgSettings constructor.
-     * @param array|null $databaseSettings settings from db
-     * @param array|null $configureSettings settings from config
+     *
+     * @param array|null $settings merged settings from configure and database
      */
-    public function __construct(array $databaseSettings = null, array $configureSettings = null)
+    public function __construct(array $settings = null)
     {
-        $this->settings = $configureSettings;
+        if (!isset($settings) || !isset($settings[MfaSettings::PROVIDERS])) {
+            throw new InternalErrorException(__('Invalid MFA org settings.'));
+        }
+
+        $settings[MfaSettings::PROVIDERS] = $this->formatProviders($settings[MfaSettings::PROVIDERS]);
+        $this->settings = $settings;
+        $this->OrganizationSettings = TableRegistry::get('OrganizationSettings');
+    }
+
+    /**
+     * We accept both format ['providers' => ['totp' => true ]] and ['providers' => ['totp']]
+     * This function format the former to the later to ensure consistant format
+     *
+     * @param array $providers
+     * @return array
+     */
+    private function formatProviders(array $providers) {
+        $result = $providers;
+        if (count(array_filter(array_keys($providers), 'is_string')) > 0) {
+            $result = [];
+            foreach ($providers as $provider => $enabled) {
+                if ($enabled) {
+                    $result[] = $provider;
+                }
+            }
+        }
+        return $result;
     }
 
     /**
@@ -44,25 +88,31 @@ class MfaOrgSettings
      */
     public static function get()
     {
+        $defaultSettings = ['providers' => []];
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
-        $databaseSettings = null;
-
-        return new MfaOrgSettings($databaseSettings, $configureSettings);
-    }
-
-    /**
-     * Get the list of providers for this organization including invalid/disabled ones
-     *
-     * @throws RecordNotFoundException
-     * @return array containing providers name
-     */
-    public function getProviders()
-    {
-        if (!isset($this->settings) || !isset($this->settings['providers']) || !count($this->settings['providers'])) {
-            throw new RecordNotFoundException(__('No MFA provider set for this organization.'));
+        try {
+            $orgSettings = TableRegistry::get('OrganizationSettings');
+            $databaseSettings = $orgSettings->getFirstSettingOrFail(MfaSettings::MFA);
+            $databaseSettings = json_decode($databaseSettings->value, true);
+        } catch (RecordNotFoundException $exception) {
+            $databaseSettings = null;
         }
 
-        return array_keys($this->settings['providers']);
+        // Use in order the configuration stored in:
+        // 1. database
+        // 2. configuration file
+        // 3. the defaults in this function
+        if (isset($databaseSettings)) {
+            $settings = $databaseSettings;
+        } else {
+            if (isset($configureSettings)) {
+                $settings = $configureSettings;
+            } else {
+                $settings = $defaultSettings;
+            }
+        }
+
+        return new MfaOrgSettings($settings);
     }
 
     /**
@@ -110,7 +160,7 @@ class MfaOrgSettings
         if (!isset($this->settings) || !isset($this->settings['providers'])) {
             return false;
         }
-        if (!isset($this->settings['providers'][$provider]) || !$this->settings['providers'][$provider]) {
+        if (!in_array($provider, $this->settings['providers'])) {
             return false;
         }
         $result = false;
@@ -139,5 +189,98 @@ class MfaOrgSettings
         }
 
         return $result;
+    }
+
+    /**
+     * Get config
+     */
+    public function getConfig() {
+        $providers = $this->getEnabledProviders();
+        $results = ['providers' => $providers];
+        foreach ($providers as $provider) {
+            switch ($provider) {
+                case MfaSettings::PROVIDER_DUO:
+                    $results[MfaSettings::PROVIDER_DUO] = [
+                        self::DUO_SALT => $this->getDuoSalt(),
+                        self::DUO_SECRET_KEY => $this->getDuoSecretKey(),
+                        self::DUO_HOSTNAME => $this->getDuoHostname(),
+                        self::DUO_INTEGRATION_KEY => $this->getDuoIntegrationKey()
+                    ];
+                    break;
+                case MfaSettings::PROVIDER_YUBIKEY:
+                    $results[MfaSettings::PROVIDER_YUBIKEY] = [
+                        self::YUBIKEY_CLIENT_ID => $this->getYubikeyOTPClientId(),
+                        self::YUBIKEY_SECRET_KEY => $this->getYubikeyOTPSecretKey()
+                    ];
+                    break;
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Validate
+     *
+     * @param $data
+     * @return bool
+     */
+    public function validate($data) {
+
+        if (!isset($data) || empty($data)) {
+            throw new CustomValidationException(__('The MFA settings data cannot be empty.'));
+        }
+        if (!isset($data[MfaSettings::PROVIDERS]) || !is_array($data[MfaSettings::PROVIDERS])) {
+            throw new CustomValidationException(__('The MFA providers list is missing.'));
+        }
+        $results = [];
+        foreach ($data[MfaSettings::PROVIDERS] as $provider) {
+            $errors = null;
+            switch ($provider) {
+                case MfaSettings::PROVIDER_YUBIKEY:
+                    try {
+                        $this->validateYubikeySettings($data);
+                    } catch(CustomValidationException $exception) {
+                        $errors = $exception->getErrors();
+                    }
+                    break;
+                case MfaSettings::PROVIDER_DUO:
+                    try {
+                        $this->validateDuoSettings($data);
+                    } catch(CustomValidationException $exception) {
+                        $errors = $exception->getErrors();
+                    }
+                    break;
+                case MfaSettings::PROVIDER_TOTP:
+                    // Nothing else to validate
+                    break;
+                default:
+                    $errors[$provider] = __('Unknown MFA provider: {0}.', $provider);
+                    break;
+            }
+            if (isset($errors[$provider])) {
+                $results[$provider] = $errors[$provider];
+            }
+        }
+        if (count($results) !== 0) {
+            throw new CustomValidationException(__('Could not validate MFA provider configuration.'), $results);
+        }
+        return true;
+    }
+
+    /**
+     * @throws CustomValidationException in case of validation error
+     * @throws InternalErrorException
+     * @param array $data user provided input
+     * @param UserAccessControl $uac user access control
+     */
+    public function save(array $data, UserAccessControl $uac) {
+        if (isset($data[MfaSettings::PROVIDERS])) {
+            $data[MfaSettings::PROVIDERS] = $this->formatProviders($data[MfaSettings::PROVIDERS]);
+        }
+        $this->validate($data);
+        $this->settings = $data;
+        $json = json_encode($data);
+        $this->OrganizationSettings->createOrUpdateSetting(MfaSettings::MFA, $json, $uac);
     }
 }

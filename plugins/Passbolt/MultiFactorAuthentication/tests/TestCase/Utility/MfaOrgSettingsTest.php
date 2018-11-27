@@ -16,6 +16,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Model\Table\OrganizationSettingsTable;
 use Cake\Core\Configure;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -74,7 +75,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
-        $this->assertEquals(count($settings->getProviders()), 3);
+        $this->assertEquals(count($settings->getEnabledProviders()), 3);
     }
 
     /**
@@ -84,10 +85,8 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetSettingsEmpty()
     {
         Configure::write('passbolt.plugins.multiFactorAuthentication', []);
-        $settings = MfaOrgSettings::get();
-        $this->assertNotEmpty($settings);
-        $this->expectException(RecordNotFoundException::class);
-        $settings->getProviders();
+        $this->expectException(InternalErrorException::class);
+        MfaOrgSettings::get();
     }
 
     /**
@@ -101,8 +100,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
-        $this->expectException(RecordNotFoundException::class);
-        $settings->getProviders();
+        $this->assertEquals($settings->getEnabledProviders(), []);
     }
 
     /**

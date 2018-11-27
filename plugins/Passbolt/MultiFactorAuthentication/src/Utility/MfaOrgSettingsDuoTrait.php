@@ -14,21 +14,24 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
+use App\Error\Exception\CustomValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Validation\Validation;
 
 trait MfaOrgSettingsDuoTrait
 {
+
     /**
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
     public function getDuoIntegrationKey()
     {
-        if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['integrationKey'])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY])) {
             throw new RecordNotFoundException(__('No configuration set for Duo integration key.'));
         }
 
-        return $this->settings[MfaSettings::PROVIDER_DUO]['integrationKey'];
+        return $this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY];
     }
 
     /**
@@ -37,11 +40,11 @@ trait MfaOrgSettingsDuoTrait
      */
     public function getDuoHostname()
     {
-        if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['hostName'])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME])) {
             throw new RecordNotFoundException(__('No configuration set for Duo host name.'));
         }
 
-        return $this->settings[MfaSettings::PROVIDER_DUO]['hostName'];
+        return $this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME];
     }
 
     /**
@@ -50,11 +53,11 @@ trait MfaOrgSettingsDuoTrait
      */
     public function getDuoSecretKey()
     {
-        if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['secretKey'])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY])) {
             throw new RecordNotFoundException(__('No configuration set for Duo secret key.'));
         }
 
-        return $this->settings[MfaSettings::PROVIDER_DUO]['secretKey'];
+        return $this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY];
     }
 
     /**
@@ -63,10 +66,35 @@ trait MfaOrgSettingsDuoTrait
      */
     public function getDuoSalt()
     {
-        if (!isset($this->settings[MfaSettings::PROVIDER_DUO]['salt'])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT])) {
             throw new RecordNotFoundException(__('No configuration set for Duo salt.'));
         }
 
-        return $this->settings[MfaSettings::PROVIDER_DUO]['salt'];
+        return $this->settings[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT];
+    }
+
+    /**
+     * @throw CustomValidationException if there is an issue
+     * @param array $data user provider data
+     */
+    public function validateDuoSettings(array $data)
+    {
+        $msg = __('Could not validate Duo configuration');
+        $errors = [];
+        if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT])) {
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT] = __('No configuration set for Duo salt.');
+        }
+        if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY])) {
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY] = __('No configuration set for Duo secret key.');
+        }
+        if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME])) {
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME] = __('No configuration set for Duo host name.');
+        }
+        if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY])) {
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY] = __('No configuration set for Duo integration key.');
+        }
+        if (count($errors) !== 0) {
+            throw new CustomValidationException($msg, $errors);
+        }
     }
 }
