@@ -26,14 +26,11 @@ trait DatabaseTrait
      */
     public function truncateTables()
     {
-        $connectionName = 'webinstaller_truncate';
-        $config = DatabaseConfiguration::buildConfig(Configure::read('Testing.Datasources.test'));
-        ConnectionManager::setConfig($connectionName, $config);
+        $connectionName = DatabaseConfiguration::getDefaultConfigName();
         $connection = ConnectionManager::get($connectionName);
         $tables = $connection->execute('SHOW TABLES')->fetchAll();
         foreach ($tables as $table) {
             $connection->query('DROP TABLE ' . $table[0]);
         }
-        ConnectionManager::drop($connectionName);
     }
 }
