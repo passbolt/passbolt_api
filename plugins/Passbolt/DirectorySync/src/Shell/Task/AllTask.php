@@ -14,9 +14,9 @@
  */
 namespace Passbolt\DirectorySync\Shell\Task;
 
-use App\Shell\AppShell;
+use Passbolt\DirectorySync\Actions\AllSyncAction;
 
-class AllTask extends AppShell
+class AllTask extends SyncTask
 {
     /**
      * Gets the option parser instance and configures it.
@@ -47,18 +47,25 @@ class AllTask extends AppShell
      */
     public function main()
     {
-        $dryRun = $this->param('dry-run');
-        $cmd = $this->_formatCmd('directory_sync users');
-        if ($dryRun) {
-            $cmd .= ' --dry-run';
-        }
-        $result = $this->dispatchShell($cmd);
-        $cmd2 = $this->_formatCmd('directory_sync groups');
-        if ($dryRun) {
-            $cmd2 .= ' --dry-run';
-        }
-        $result2 = $this->dispatchShell($cmd2);
+        $reports = [];
 
-        return ($result2 === self::CODE_SUCCESS && $result === self::CODE_SUCCESS);
+        try {
+            $this->model = 'Users';
+            $dryRun = $this->param('dry-run');
+            $allSyncAction = new AllSyncAction();
+            $reports = $allSyncAction->execute($dryRun);
+        } catch (\Exception $exception) {
+            $this->abort($exception->getMessage());
+
+            return false;
+        }
+
+        $this->model = 'Groups';
+        $this->_displayReports($reports['groups']);
+
+        $this->model = 'Users';
+        $this->_displayReports($reports['users']);
+
+        return true;
     }
 }

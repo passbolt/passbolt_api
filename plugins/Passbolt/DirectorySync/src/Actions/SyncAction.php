@@ -12,14 +12,17 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
+namespace Passbolt\DirectorySync\Actions;
 
 use App\Model\Entity\Role;
-use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
+use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
+use Passbolt\DirectorySync\Utility\DirectoryFactory;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * Directory factory class
@@ -121,7 +124,7 @@ class SyncAction
      * - Create all entities that can be created
      * - Generate report
      *
-     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
+     * @return ActionReportCollection
      */
     public function execute()
     {

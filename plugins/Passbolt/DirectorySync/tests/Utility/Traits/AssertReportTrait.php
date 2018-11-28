@@ -15,8 +15,8 @@
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use Cake\Utility\Inflector;
-use Passbolt\DirectorySync\Utility\ActionReport;
-use Passbolt\DirectorySync\Utility\ActionReportCollection;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
+use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 
 trait AssertReportTrait
 {
@@ -59,7 +59,7 @@ trait AssertReportTrait
     }
 
     /**
-     * @param array $reports
+     * @param ActionReportCollection $reports
      * @param string $model
      */
     public function assertNoReportsForModel(ActionReportCollection $reports, string $model)

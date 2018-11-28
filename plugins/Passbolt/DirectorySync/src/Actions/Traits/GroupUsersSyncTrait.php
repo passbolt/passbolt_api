@@ -21,8 +21,8 @@ use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 

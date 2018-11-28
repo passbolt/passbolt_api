@@ -5,7 +5,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 
 /**
  * DirectoryReportsItems Model

@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
+namespace Passbolt\DirectorySync\Actions\Reports;
 
 use Cake\I18n\FrozenTime;
 use InvalidArgumentException;
@@ -29,6 +29,7 @@ class ActionReport implements \Serializable
     protected $status;
     protected $data;
     protected $created;
+    protected $message;
 
     /**
      * ActionReport constructor.
