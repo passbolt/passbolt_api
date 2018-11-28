@@ -19,6 +19,8 @@ use App\Model\Entity\Role;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Network\Exception\BadRequestException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
+use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaOrgSettingsPostController extends MfaController
 {
@@ -38,8 +40,14 @@ class MfaOrgSettingsPostController extends MfaController
         if (!$this->request->is('json')) {
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
+        // Allow some flexibility in inputs names
+        $data = $this->request->getData();
+        if (isset($data[MfaSettings::PROVIDER_DUO]['hostname'])) {
+            $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME] = $data[MfaSettings::PROVIDER_DUO]['hostname'];
+        }
+
         $orgSettings = $this->mfaSettings->getOrganizationSettings();
-        $orgSettings->save($this->request->getData(), $this->User->getAccessControl());
+        $orgSettings->save($data, $this->User->getAccessControl());
         $config = $this->mfaSettings->getOrganizationSettings()->getConfig();
         $this->success(__('The multi factor authentication settings for the organization were updated.'), $config);
     }

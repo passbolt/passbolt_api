@@ -52,25 +52,32 @@ trait MfaOrgSettingsYubikeyTrait
      */
     public function validateYubikeySettings(array $data)
     {
-        $msg = __('Could not validate Yubikey configuration.');
         $errors = [];
+
         if (!isset($data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID])) {
-            $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID] = __('No configuration set for Yubikey OTP clientId.');
+            $msg =  __('No configuration set for Yubikey OTP clientId.');
+            $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['notEmpty'] = $msg;
         } else {
             $clientID = $data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID];
             if (!Validation::custom($clientID, '/^[0-9]{1,64}$/')) {
-                $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID] = __('Yubikey OTP clientId should be an integer.');
+                $msg = __('Yubikey OTP clientId should be an integer.');
+                $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['isValidClientId'] = $msg;
             }
         }
+
         if (!isset($data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY])) {
-            $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY] = __('No configuration set for Yubikey OTP secret key.');
+            $msg = __('No configuration set for Yubikey OTP secret key.');
+            $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY]['notEmpty'] = $msg;
         } else {
             $secretKey = $data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY];
             if (!Validation::custom($secretKey, '/^[a-zA-Z0-9\/=]{10,128}$/')) {
-                $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY] = __('Yubikey OTP secret key is not valid.');
+                $msg = __('Yubikey OTP secret key is not valid.');
+                $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY]['isValidSecretKey'] = $msg;
             }
         }
+
         if (count($errors) !== 0) {
+            $msg = __('Could not validate Yubikey configuration.');
             throw new CustomValidationException($msg, $errors);
         }
     }

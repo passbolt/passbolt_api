@@ -79,21 +79,54 @@ trait MfaOrgSettingsDuoTrait
      */
     public function validateDuoSettings(array $data)
     {
-        $msg = __('Could not validate Duo configuration');
         $errors = [];
+
         if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT])) {
-            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT] = __('No configuration set for Duo salt.');
+            $msg = __('No configuration set for Duo salt.');
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT]['notEmpty'] = $msg;
+        } else {
+            $salt = $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT];
+            if (!Validation::lengthBetween($salt, 40, 128)) {
+                $msg = __('Duo salt should be between 40 and 128 characters in length.');
+                $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT]['lengthBetween'] = $msg;
+            }
         }
+
         if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY])) {
-            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY] = __('No configuration set for Duo secret key.');
+            $msg = __('No configuration set for Duo secret key.');
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY]['notEmpty'] = $msg;
+        } else {
+            $secretKey = $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY];
+            if (!Validation::custom($secretKey, '/^[a-zA-Z0-9]{32,128}$/')) {
+                $msg = __('This is not a valid Duo secret key.');
+                $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY]['isValidSecretKey'] = $msg;
+            }
         }
+
         if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME])) {
-            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME] = __('No configuration set for Duo host name.');
+            $msg = __('No configuration set for Duo host name.');
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME]['notEmpty'] = $msg;
+        } else {
+            $hostname = $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME];
+            if (!Validation::custom($hostname, '/^api-[a-fA-F0-9]{8,16}\.duosecurity\.com$/')) {
+                $msg = __('This is not a valid Duo host name.');
+                $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME]['isValidHostname'] = $msg;
+            }
         }
+
         if (!isset($data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY])) {
-            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY] = __('No configuration set for Duo integration key.');
+            $msg = __('No configuration set for Duo integration key.');
+            $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY]['notEmpty'] = $msg;
+        } else {
+            $integrationKey = $data[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY];
+            if (!Validation::custom($integrationKey, '/^[a-zA-Z0-9]{16,32}$/')) {
+                $msg = __('This is not a valid Duo integration key.');
+                $errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY]['isValidIntegrationKey'] = $msg;
+            }
         }
+
         if (count($errors) !== 0) {
+            $msg = __('Could not validate Duo configuration');
             throw new CustomValidationException($msg, $errors);
         }
     }

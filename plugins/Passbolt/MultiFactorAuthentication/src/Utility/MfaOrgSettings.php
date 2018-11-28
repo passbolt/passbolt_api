@@ -20,6 +20,7 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\InternalErrorException;
+use Cake\ORM\Locator\TableLocator;
 use Cake\ORM\TableRegistry;
 
 class MfaOrgSettings
@@ -27,11 +28,17 @@ class MfaOrgSettings
     use MfaOrgSettingsDuoTrait;
     use MfaOrgSettingsYubikeyTrait;
 
+    /**
+     * Duo constants
+     */
     const DUO_SECRET_KEY = 'secretKey';
     const DUO_HOSTNAME = 'hostName';
     const DUO_INTEGRATION_KEY = 'integrationKey';
     const DUO_SALT = 'salt';
 
+    /**
+     * Yubikey constants
+     */
     const YUBIKEY_CLIENT_ID = 'clientId';
     const YUBIKEY_SECRET_KEY = 'secretKey';
 
@@ -55,7 +62,6 @@ class MfaOrgSettings
         if (!isset($settings) || !isset($settings[MfaSettings::PROVIDERS])) {
             throw new InternalErrorException(__('Invalid MFA org settings.'));
         }
-
         $settings[MfaSettings::PROVIDERS] = $this->formatProviders($settings[MfaSettings::PROVIDERS]);
         $this->settings = $settings;
         $this->OrganizationSettings = TableRegistry::get('OrganizationSettings');
@@ -91,7 +97,7 @@ class MfaOrgSettings
         $defaultSettings = ['providers' => []];
         $configureSettings = Configure::read('passbolt.plugins.multiFactorAuthentication');
         try {
-            $orgSettings = TableRegistry::get('OrganizationSettings');
+            $orgSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
             $databaseSettings = $orgSettings->getFirstSettingOrFail(MfaSettings::MFA);
             $databaseSettings = json_decode($databaseSettings->value, true);
         } catch (RecordNotFoundException $exception) {
@@ -124,7 +130,7 @@ class MfaOrgSettings
     {
         $result = [];
         $providers = MfaSettings::getProviders();
-        foreach ($providers as $key => $provider) {
+        foreach ($providers as $provider) {
             if ($this->isProviderEnabled($provider)) {
                 $result[] = $provider;
             }
@@ -193,6 +199,8 @@ class MfaOrgSettings
 
     /**
      * Get config
+     *
+     * @return array
      */
     public function getConfig() {
         $providers = $this->getEnabledProviders();
@@ -222,11 +230,11 @@ class MfaOrgSettings
     /**
      * Validate
      *
-     * @param $data
-     * @return bool
+     * @param array $data user provided data
+     * @throws CustomValidationException if the data does not validate
+     * @return bool if data validates
      */
-    public function validate($data) {
-
+    public function validate(array $data) {
         if (!isset($data) || empty($data)) {
             throw new CustomValidationException(__('The MFA settings data cannot be empty.'));
         }
@@ -255,7 +263,7 @@ class MfaOrgSettings
                     // Nothing else to validate
                     break;
                 default:
-                    $errors[$provider] = __('Unknown MFA provider: {0}.', $provider);
+                    $errors[$provider]['invalidProvider'] = __('Unknown MFA provider: {0}.', $provider);
                     break;
             }
             if (isset($errors[$provider])) {
@@ -265,10 +273,13 @@ class MfaOrgSettings
         if (count($results) !== 0) {
             throw new CustomValidationException(__('Could not validate MFA provider configuration.'), $results);
         }
+
         return true;
     }
 
     /**
+     * Save a user provided org settings in database
+     *
      * @throws CustomValidationException in case of validation error
      * @throws InternalErrorException
      * @param array $data user provided input

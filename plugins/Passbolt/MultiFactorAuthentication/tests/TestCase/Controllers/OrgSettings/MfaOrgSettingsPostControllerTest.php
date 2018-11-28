@@ -141,15 +141,15 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
         $this->putJson('/mfa/settings.json?api-version=v2', [
             'providers' => ['duo', 'nope', 'yubikey'],
             'duo' => ['wrong' => 'config'],
-            'yubikey' => ['clientId' => 'aaa', 'secret' => '123']
+            'yubikey' => ['clientId' => 'aaa', 'secretKey' => '123']
         ]);
         $result = json_decode($this->_getBodyAsString(),true);
-        $this->assertTrue(isset($result['body']['duo']['salt']));
-        $this->assertTrue(isset($result['body']['duo']['secretKey']));
-        $this->assertTrue(isset($result['body']['duo']['hostName']));
-        $this->assertTrue(isset($result['body']['duo']['integrationKey']));
-        $this->assertTrue(isset($result['body']['yubikey']['secretKey']));
-        $this->assertTrue(isset($result['body']['yubikey']['clientId']));
+        $this->assertTrue(isset($result['body']['duo']['salt']['notEmpty']));
+        $this->assertTrue(isset($result['body']['duo']['secretKey']['notEmpty']));
+        $this->assertTrue(isset($result['body']['duo']['hostName']['notEmpty']));
+        $this->assertTrue(isset($result['body']['duo']['integrationKey']['notEmpty']));
+        $this->assertTrue(isset($result['body']['yubikey']['secretKey']['isValidSecretKey']));
+        $this->assertTrue(isset($result['body']['yubikey']['clientId']['isValidClientId']));
         $this->assertTrue(isset($result['body']['nope']));
         $this->assertResponseError();
     }
