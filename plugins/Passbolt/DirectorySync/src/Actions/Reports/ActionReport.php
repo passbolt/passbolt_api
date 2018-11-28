@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Actions\Reports;
 
 use Cake\I18n\FrozenTime;
+use Cake\Network\Exception\InternalErrorException;
 use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
 
@@ -92,6 +93,22 @@ class ActionReport implements \Serializable
                 $this->{$key} = $value;
             }
         }
+    }
+
+    /**
+     * Transform ActionReport to array.
+     * @return array the action report transformed.
+     */
+    public function toArray() {
+        return [
+            'message' => $this->message,
+            'model' => $this->model,
+            'data' => is_object($this->data) && method_exists($this->data, 'toArray') ? $this->data->toArray() : [],
+            'action' => $this->action,
+            'status' => $this->status,
+            'created' => $this->created,
+            'version' => '2'
+        ];
     }
 
     /**

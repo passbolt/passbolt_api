@@ -43,4 +43,10 @@ Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function 
 
     $routes->connect('/settings', ['controller' => 'DirectorySettings', 'action' => 'disable'])
             ->setMethods(['DELETE']);
+
+    $routes->connect('/synchronize', ['controller' => 'DirectorySync', 'action' => 'synchronize'])
+           ->setMethods(['GET']);
+
+    $routes->connect('/synchronize/dry-run', ['controller' => 'DirectorySync', 'action' => 'dryRun'])
+           ->setMethods(['GET']);
 });
