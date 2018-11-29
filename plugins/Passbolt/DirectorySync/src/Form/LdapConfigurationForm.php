@@ -57,6 +57,9 @@ class LdapConfigurationForm extends Form
         'user_path' => 'userPath',
         'default_user' => 'defaultUser',
         'default_group_admin_user' => 'defaultGroupAdminUser',
+        'users_parent_group' => 'usersParentGroup',
+        'groups_parent_group' => 'groupsParentGroup',
+        'enabled_users_only' => 'enabledUsersOnly',
         'sync_users_create' => 'jobs.users.create',
         'sync_users_delete' => 'jobs.users.delete',
         'sync_groups_create' => 'jobs.groups.create',
@@ -86,6 +89,9 @@ class LdapConfigurationForm extends Form
             ->addField('user_path', 'string')
             ->addField('default_user', 'string')
             ->addField('default_group_admin_user', 'string')
+            ->addField('users_parent_group', 'string')
+            ->addField('groups_parent_group', 'string')
+            ->addField('enabled_users_only', 'boolean')
             ->addField('sync_users_create', 'boolean')
             ->addField('sync_users_delete', 'boolean')
             ->addField('sync_groups_create', 'boolean')
@@ -174,6 +180,18 @@ class LdapConfigurationForm extends Form
         $validator
             ->allowEmpty('user_path')
             ->utf8('user_path', __('User path should be a valid utf8 string.'));
+
+        $validator
+            ->allowEmpty('users_parent_group', __('Users parent group cannot be empty.'))
+            ->utf8('users_parent_group', __('Users parent group should be a valid utf8 string.'));
+
+        $validator
+            ->allowEmpty('groups_parent_group', __('Groups parent group cannot be empty.'))
+            ->utf8('groups_parent_group', __('Groups parent group should be a valid utf8 string.'));
+
+        $validator
+            ->allowEmpty('enabled_users_only')
+            ->boolean('enabled_users_only', __('Enabled users only should be a boolean.'));
 
         $validator
             ->allowEmpty('sync_users_create')

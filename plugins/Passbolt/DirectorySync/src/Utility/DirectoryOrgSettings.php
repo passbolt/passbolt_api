@@ -54,12 +54,17 @@ class DirectoryOrgSettings
      */
     public static function get()
     {
-        $settings = [];
+        $pluginDefaultSettings = Configure::read('passbolt.plugins.directorySync');
+        $fileSettings = self::loadSettingsFromFile();
+        $settings = Hash::merge($pluginDefaultSettings, $fileSettings);
+
         try {
-            $settings = self::loadSettingsFromDatabase();
+            $databaseSettings = self::loadSettingsFromDatabase();
         } catch (RecordNotFoundException $e) {
-            $settings = self::loadSettingsFromFile();
+            return new DirectoryOrgSettings($settings);
         }
+
+        $settings = Hash::merge($settings, $databaseSettings);
 
         return new DirectoryOrgSettings($settings);
     }
@@ -160,6 +165,51 @@ class DirectoryOrgSettings
     public function getDefaultGroupAdminUser()
     {
         return Hash::get($this->settings, "defaultGroupAdminUser");
+    }
+
+    /**
+     * Get the default parent group for users.
+     *
+     * @return string
+     */
+    public function getUsersParentGroup()
+    {
+        return Hash::get($this->settings, "usersParentGroup");
+    }
+
+    /**
+     * Get the default parent group for groups.
+     *
+     * @return string
+     */
+    public function getGroupsParentGroup()
+    {
+        return Hash::get($this->settings, "groupsParentGroup");
+    }
+
+    /**
+     * Get the value of enabledUsersOnly.
+     *
+     * @return bool|string
+     */
+    public function getEnabledUsersOnly()
+    {
+        return Hash::get($this->settings, "enabledUsersOnly");
+    }
+
+    /**
+     * Get fields mapping.
+     * @param string $type directory type
+     *
+     * @return bool|string
+     */
+    public function getFieldsMapping(string $type = null)
+    {
+        if ($type === null) {
+            return Hash::get($this->settings, "fieldsMapping");
+        }
+
+        return Hash::get($this->settings, "fieldsMapping.$type");
     }
 
     /**

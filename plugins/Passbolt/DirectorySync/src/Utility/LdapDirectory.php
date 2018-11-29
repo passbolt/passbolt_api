@@ -44,8 +44,8 @@ class LdapDirectory implements DirectoryInterface
     public function __construct(DirectoryOrgSettings $settings)
     {
         $this->directorySettings = $settings;
-        $config = (new Configuration())->loadFromArray($this->directorySettings->getLdapSettings());
-        $this->ldap = new LdapManager($config);
+        $ldapConfig = (new Configuration())->loadFromArray($this->directorySettings->getLdapSettings());
+        $this->ldap = new LdapManager($ldapConfig);
         $this->ldap->getConnection();
         $this->groups = [];
         $this->users = [];
@@ -121,7 +121,7 @@ class LdapDirectory implements DirectoryInterface
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
             throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
         }
-        $mapping = Configure::read('passbolt.plugins.directorySync.fieldsMapping.' . $type);
+        $mapping = $this->directorySettings->getFieldsMapping($type);
 
         return $mapping;
     }
@@ -134,8 +134,8 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
         $selectFields = array_values($mappingRules);
-        $fromGroup = Configure::read('passbolt.plugins.directorySync.parentGroup');
-        $enabledUsersOnly = Configure::read('passbolt.plugins.directorySync.enabledUsersOnly');
+        $fromGroup = $this->directorySettings->getUsersParentGroup();
+        $enabledUsersOnly = $this->directorySettings->getEnabledUsersOnly();
 
         $query = $this->ldap->buildLdapQuery();
         $usersQuery = $query
@@ -182,7 +182,7 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
         $selectFields = array_values($mappingRules);
-        $fromGroup = Configure::read('passbolt.plugins.directorySync.parentGroup');
+        $fromGroup = $this->directorySettings->getGroupsParentGroup();
 
         $query = $this->ldap->buildLdapQuery();
         $groupsQuery = $query
