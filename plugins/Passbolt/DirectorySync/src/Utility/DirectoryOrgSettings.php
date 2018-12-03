@@ -54,17 +54,17 @@ class DirectoryOrgSettings
      */
     public static function get()
     {
-        $pluginDefaultSettings = Configure::read('passbolt.plugins.directorySync');
-        $fileSettings = self::loadSettingsFromFile();
-        $settings = Hash::merge($pluginDefaultSettings, $fileSettings);
+        $pluginDefaultSettings = self::getDefaultSettings();
 
         try {
-            $databaseSettings = self::loadSettingsFromDatabase();
+            $settings = self::loadSettingsFromDatabase();
         } catch (RecordNotFoundException $e) {
-            return new DirectoryOrgSettings($settings);
+            $settings = self::loadSettingsFromFile();
         }
 
-        $settings = Hash::merge($settings, $databaseSettings);
+        if (!empty($settings)) {
+            $settings = Hash::merge($pluginDefaultSettings, $settings);
+        }
 
         return new DirectoryOrgSettings($settings);
     }
@@ -95,6 +95,22 @@ class DirectoryOrgSettings
     private static function loadSettingsFromFile()
     {
         $path = CONFIG . DS . 'ldap.php';
+        if (!\file_exists($path)) {
+            return [];
+        }
+        $data = require($path);
+
+        return Hash::get($data, 'passbolt.plugins.directorySync', []);
+    }
+
+    /**
+     * Load the directory settings from the config file
+     *
+     * @return array
+     */
+    private static function getDefaultSettings()
+    {
+        $path = PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'config.php';
         if (!\file_exists($path)) {
             return [];
         }
