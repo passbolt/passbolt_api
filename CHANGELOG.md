@@ -6,9 +6,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - PASSBOLT-3130: As AD I can configure my user directory integration from the administration panel
 - PASSBOLT-3235: As AD I can synchronize my user directory from the administration panel
+- PASSBOLT-3218: As an admin I can configure the multi factor authentication providers for my organization from the admin panel.
 
 ### Improved
-- As DEV I can test the fields of my form as I was able to test the properties of my entities
+- As DEV I can test the fields of my form
 
 ## [2.5.0] - 2018-11-14
 ### Added
