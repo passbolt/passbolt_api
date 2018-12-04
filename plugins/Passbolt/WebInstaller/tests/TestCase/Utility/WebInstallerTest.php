@@ -18,44 +18,34 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 
 class WebInstallerTest extends TestCase
 {
+    use ConfigurationTrait;
     use DatabaseTrait;
-
-    // Keep a copy of the original passbolt config, to rollback after each test.
-    private $passboltConfigOriginal = null;
 
     public function setUp()
     {
         parent::setUp();
-        if (file_exists(CONFIG . 'passbolt.php')) {
-            $this->passboltConfigOriginal = file_get_contents(CONFIG . 'passbolt.php');
-        }
-        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+        $this->skipTestIfNotWebInstallerFriendly();
+        $this->backupConfiguration();
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        if (!empty($this->passboltConfigOriginal)) {
-            file_put_contents(CONFIG . 'passbolt.php', $this->passboltConfigOriginal);
-        }
-        if (file_exists(CONFIG . 'license')) {
-            unlink(CONFIG . 'license');
-        }
+        $this->restoreConfiguration();
     }
 
     public function testWebInstallerUtilityInitDatabaseConnectionSuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
         $webInstaller->setSettings('database', $databaseSettings);
@@ -67,7 +57,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityInitDatabaseConnectionError()
     {
-        $this->markTestSkipped();
         $this->markTestIncomplete('Cannot be tested, the PDO Exception is not caught by the DatabaseConfiguration::testConnection function when executed in a testsuite. Isolating the tests make it working but break other tests such as the GpgGenerateKey tests.');
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
@@ -81,7 +70,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityGpgGenerateKeySuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
         $gpgSettings = [
             'name' => 'Aurore Avarguès-Weber',
@@ -101,7 +89,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityGpgImportKeySuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
         $gpgSettings = [
             'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_prod_unsecure_private.key')
@@ -119,7 +106,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityWritePassboltConfigFileSuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
 
         // Add the database configuration.
@@ -163,7 +149,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityInstallDatabaseSuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
         $webInstaller->setSettings('database', $databaseSettings);
@@ -180,7 +165,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityCreateFirstUserSuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
         $databaseSettings = Configure::read('Testing.Datasources.test');
         $webInstaller->setSettings('database', $databaseSettings);
@@ -216,7 +200,6 @@ class WebInstallerTest extends TestCase
 
     public function testWebInstallerUtilityWriteLicenseFile()
     {
-        $this->markTestSkipped();
         if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
             $webInstaller = new WebInstaller(null);
             $licenseSettings = [

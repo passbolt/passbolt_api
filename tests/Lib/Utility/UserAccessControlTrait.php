@@ -14,8 +14,8 @@
  */
 namespace App\Test\Lib\Utility;
 
-use App\Utility\UserAccessControl;
 use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 
 trait UserAccessControlTrait
@@ -29,6 +29,6 @@ trait UserAccessControlTrait
      */
     public function mockUserAccessControl($user, $role = Role::GUEST)
     {
-       return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
+        return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
     }
 }
