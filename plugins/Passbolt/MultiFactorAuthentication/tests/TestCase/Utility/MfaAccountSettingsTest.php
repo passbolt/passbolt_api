@@ -77,21 +77,11 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $this->mockMfaAccountSettings('ada', $data);
         $settings = MfaAccountSettings::get($uac);
         $this->assertNotEmpty($settings);
-        $this->assertEquals($settings->getProviders(), [MfaSettings::PROVIDER_TOTP]);
+        $this->assertEquals($settings->getEnabledProviders(), [MfaSettings::PROVIDER_TOTP]);
         $this->assertEquals($settings->getOtpProvisioningUri(), $uri);
         $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_TOTP));
         $this->assertJson($settings->toJson());
         $this->assertInstanceOf(FrozenTime::class, $settings->getVerifiedFrozenTime(MfaSettings::PROVIDER_TOTP));
-
-        $providers = $settings->getProviders();
-        $this->assertEquals($providers, [
-            MfaSettings::PROVIDER_TOTP
-        ]);
-
-        $providers = $settings->getEnabledProviders();
-        $this->assertEquals($providers, [
-            MfaSettings::PROVIDER_TOTP
-        ]);
     }
 
     /**
@@ -119,12 +109,6 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $this->mockMfaAccountSettings('ada', $data);
         $settings = MfaAccountSettings::get($uac);
         $this->assertNotEmpty($settings);
-
-        $providers = $settings->getProviders();
-        $this->assertEquals($providers, [
-            MfaSettings::PROVIDER_TOTP,
-            MfaSettings::PROVIDER_YUBIKEY
-        ]);
 
         $providers = $settings->getEnabledProviders();
         $this->assertEquals($providers, [

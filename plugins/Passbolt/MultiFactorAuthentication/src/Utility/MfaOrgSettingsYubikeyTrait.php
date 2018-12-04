@@ -14,7 +14,9 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
+use App\Error\Exception\CustomValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Validation\Validation;
 
 trait MfaOrgSettingsYubikeyTrait
 {
@@ -24,11 +26,11 @@ trait MfaOrgSettingsYubikeyTrait
      */
     public function getYubikeyOTPSecretKey()
     {
-        if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY]['secretKey'])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY])) {
             throw new RecordNotFoundException(__('No configuration set for Yubikey OTP secret key.'));
         }
 
-        return $this->settings[MfaSettings::PROVIDER_YUBIKEY]['secretKey'];
+        return $this->settings[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY];
     }
 
     /**
@@ -37,10 +39,46 @@ trait MfaOrgSettingsYubikeyTrait
      */
     public function getYubikeyOTPClientId()
     {
-        if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY]['clientId'])) {
+        if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID])) {
             throw new RecordNotFoundException(__('No configuration set for Yubikey OTP clientId.'));
         }
 
-        return $this->settings[MfaSettings::PROVIDER_YUBIKEY]['clientId'];
+        return $this->settings[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID];
+    }
+
+    /**
+     * @throw CustomValidationException if there is an issue
+     * @param array $data user provider data
+     */
+    public function validateYubikeySettings(array $data)
+    {
+        $errors = [];
+
+        if (!isset($data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID])) {
+            $msg =  __('No configuration set for Yubikey OTP clientId.');
+            $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['notEmpty'] = $msg;
+        } else {
+            $clientID = $data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID];
+            if (!Validation::custom($clientID, '/^[0-9]{1,64}$/')) {
+                $msg = __('Yubikey OTP clientId should be an integer.');
+                $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['isValidClientId'] = $msg;
+            }
+        }
+
+        if (!isset($data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY])) {
+            $msg = __('No configuration set for Yubikey OTP secret key.');
+            $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY]['notEmpty'] = $msg;
+        } else {
+            $secretKey = $data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY];
+            if (!Validation::custom($secretKey, '/^[a-zA-Z0-9\/=]{10,128}$/')) {
+                $msg = __('Yubikey OTP secret key is not valid.');
+                $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY]['isValidSecretKey'] = $msg;
+            }
+        }
+
+        if (count($errors) !== 0) {
+            $msg = __('Could not validate Yubikey configuration.');
+            throw new CustomValidationException($msg, $errors);
+        }
     }
 }

@@ -14,8 +14,10 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
+use App\Error\Exception\CustomValidationException;
 use App\Model\Table\OrganizationSettingsTable;
 use Cake\Core\Configure;
+use Cake\Network\Exception\InternalErrorException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -74,7 +76,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         Configure::write('passbolt.plugins.multiFactorAuthentication', $this->defaultConfig);
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
-        $this->assertEquals(count($settings->getProviders()), 3);
+        $this->assertEquals(count($settings->getEnabledProviders()), 3);
     }
 
     /**
@@ -84,10 +86,8 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetSettingsEmpty()
     {
         Configure::write('passbolt.plugins.multiFactorAuthentication', []);
-        $settings = MfaOrgSettings::get();
-        $this->assertNotEmpty($settings);
-        $this->expectException(RecordNotFoundException::class);
-        $settings->getProviders();
+        $this->expectException(InternalErrorException::class);
+        MfaOrgSettings::get();
     }
 
     /**
@@ -97,12 +97,11 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsGetProvidersEmpty()
     {
         $config = $this->defaultConfig;
-        $config['providers'] = [];
+        $config[MfaSettings::PROVIDERS] = [];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->assertNotEmpty($settings);
-        $this->expectException(RecordNotFoundException::class);
-        $settings->getProviders();
+        $this->assertEquals($settings->getEnabledProviders(), []);
     }
 
     /**
@@ -125,13 +124,13 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     public function testMfaOrgSettingsisProviderEnabledFail()
     {
         $config = $this->defaultConfig;
-        $config['providers'] = [];
+        $config[MfaSettings::PROVIDERS] = [];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->assertFalse($settings->isProviderEnabled(MfaSettings::PROVIDER_YUBIKEY));
 
         $config = $this->defaultConfig;
-        $config['providers'] = [MfaSettings::PROVIDER_DUO];
+        $config[MfaSettings::PROVIDERS] = [MfaSettings::PROVIDER_DUO];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->assertFalse($settings->isProviderEnabled(MfaSettings::PROVIDER_YUBIKEY));
@@ -151,7 +150,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_YUBIKEY => false
         ];
         $config = $this->defaultConfig;
-        $config['providers'] = $providers;
+        $config[MfaSettings::PROVIDERS] = $providers;
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getProvidersStatus();
@@ -159,7 +158,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
 
         // No provider set
         $config = $this->defaultConfig;
-        $config['providers'] = [];
+        $config[MfaSettings::PROVIDERS] = [];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getProvidersStatus();
@@ -171,7 +170,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_DUO => true,
         ];
         $config = $this->defaultConfig;
-        $config['providers'] = $providers;
+        $config[MfaSettings::PROVIDERS] = $providers;
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getProvidersStatus();
@@ -194,7 +193,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
             MfaSettings::PROVIDER_DUO => true,
         ];
         $config = $this->defaultConfig;
-        $config['providers'] = $providers;
+        $config[MfaSettings::PROVIDERS] = $providers;
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $status = $settings->getEnabledProviders();
@@ -223,7 +222,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsSalt()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
+        $config = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -236,7 +235,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsHostname()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
+        $config = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -249,7 +248,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsSeckey()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
+        $config = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -262,11 +261,79 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetDuoIncompletePropsIKey()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
+        $config = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO => true, ], MfaSettings::PROVIDER_DUO => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getDuoIntegrationKey());
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsValidateDuoSettings_Empty()
+    {
+        $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        try {
+            $settings->validateDuoSettings([[
+                MfaSettings::PROVIDER_DUO => [
+                    MfaOrgSettings::DUO_SALT => '',
+                    MfaOrgSettings::DUO_INTEGRATION_KEY => '',
+                    MfaOrgSettings::DUO_HOSTNAME => '',
+                    MfaOrgSettings::DUO_SECRET_KEY => ''
+                ]
+            ]]);
+        } catch (CustomValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT]['notEmpty']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY]['notEmpty']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY]['notEmpty']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME]['notEmpty']));
+        }
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsValidateDuoSettings_Invalid()
+    {
+        $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        try {
+            $settings->validateDuoSettings([
+                MfaSettings::PROVIDER_DUO => [
+                    MfaOrgSettings::DUO_SALT => '🔥',
+                    MfaOrgSettings::DUO_INTEGRATION_KEY => '🔥',
+                    MfaOrgSettings::DUO_HOSTNAME => '🔥',
+                    MfaOrgSettings::DUO_SECRET_KEY => '🔥'
+                ]
+            ]);
+        } catch (CustomValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SALT]['lengthBetween']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_SECRET_KEY]['isValidSecretKey']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_INTEGRATION_KEY]['isValidIntegrationKey']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_DUO][MfaOrgSettings::DUO_HOSTNAME]['isValidHostname']));
+        }
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsValidateDuoSettings_Success()
+    {
+        $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        $settings->validateDuoSettings([
+            MfaSettings::PROVIDER_DUO => [
+                MfaOrgSettings::DUO_SALT => 'qwertyuiopasdfghjklzxcvbnm12345678901234567890',
+                MfaOrgSettings::DUO_INTEGRATION_KEY => 'DICPIC33F13IWF1FR52J',
+                MfaOrgSettings::DUO_HOSTNAME => 'api-42e9f2fe.duosecurity.com',
+                MfaOrgSettings::DUO_SECRET_KEY => '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX'
+            ]
+        ]);
+        $this->assertTrue(true);
     }
 
     /*
@@ -290,7 +357,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetYubikeyIncompletePropsSeckey()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
+        $config = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
@@ -303,10 +370,69 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
      */
     public function testMfaOrgSettingsGetYubikeyIncompletePropsClientId()
     {
-        $config = ['providers' => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
+        $config = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY => true], MfaSettings::PROVIDER_YUBIKEY => []];
         $this->mockMfaOrgSettings($config, 'configure');
         $settings = MfaOrgSettings::get();
         $this->expectException(RecordNotFoundException::class);
         $this->assertNotEmpty($settings->getYubikeyOTPClientId());
     }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsValidateYubikeySettings_Empty()
+    {
+        $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        try {
+            $settings->validateYubikeySettings([[
+                MfaSettings::PROVIDER_YUBIKEY => [
+                    MfaOrgSettings::YUBIKEY_CLIENT_ID => '',
+                    MfaOrgSettings::YUBIKEY_SECRET_KEY => '',
+                ]
+            ]]);
+        } catch (CustomValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['notEmpty']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY]['notEmpty']));
+        }
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsValidateYubikeySettings_Invalid()
+    {
+        $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        try {
+            $settings->validateYubikeySettings([
+                MfaSettings::PROVIDER_YUBIKEY => [
+                    MfaOrgSettings::YUBIKEY_CLIENT_ID => '🔥',
+                    MfaOrgSettings::YUBIKEY_SECRET_KEY => '🔥',
+                ]
+            ]);
+        } catch (CustomValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['isValidClientId']));
+            $this->assertTrue(isset($errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY]['isValidSecretKey']));
+        }
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOrgSettings
+     */
+    public function testMfaOrgSettingsValidateYubikeySettings_Success()
+    {
+        $settings = new MfaOrgSettings([MfaSettings::PROVIDERS => []]);
+        $settings->validateYubikeySettings([
+            MfaSettings::PROVIDER_YUBIKEY => [
+                MfaOrgSettings::YUBIKEY_CLIENT_ID => '12345',
+                MfaOrgSettings::YUBIKEY_SECRET_KEY => 'i2/fAjeQBO/Axef16h2xlgRlXxY=',
+            ]
+        ]);
+        $this->assertTrue(true);
+    }
+
 }

@@ -36,14 +36,14 @@ class YubikeyVerifyPostController extends MfaVerifyController
         $this->_handleVerifiedNotRequired();
         $this->_handleInvalidSettings(MfaSettings::PROVIDER_YUBIKEY);
 
-        // Verify totp
+        // Verify hotp
         $uac = $this->User->getAccessControl();
         $verifyForm = new YubikeyVerifyForm($uac, $this->mfaSettings);
         try {
             $verifyForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
             $this->request = $this->request
-                ->withData('otp', '');
+                ->withData('hotp', '');
 
             if ($this->request->is('json')) {
                 throw $exception;

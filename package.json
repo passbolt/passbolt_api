@@ -16,7 +16,7 @@
     "grunt": "^1.0.3",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
-    "passbolt-appjs": "^2.5.2",
+    "passbolt-appjs": "^2.6.0",
     "passbolt-styleguide": "^2.4.6"
   }
 }

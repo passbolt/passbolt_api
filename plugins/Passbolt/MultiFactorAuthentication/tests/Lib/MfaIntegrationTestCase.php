@@ -25,6 +25,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
 {
     use MfaAccountSettingsTestTrait;
     use MfaDuoSettingsTestTrait;
+    use MfaOrgSettingsTestTrait;
     use MfaTotpSettingsTestTrait;
     use MfaYubikeySettingsTestTrait;
     use UserAccessControlTrait;

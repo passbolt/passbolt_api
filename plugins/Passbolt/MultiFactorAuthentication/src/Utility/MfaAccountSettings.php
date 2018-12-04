@@ -122,7 +122,7 @@ class MfaAccountSettings
      * @throws RecordNotFoundException if there is no provider set
      * @return array list of providers
      */
-    public function getProviders()
+    protected function getProviders()
     {
         if (!isset($this->settings[self::PROVIDERS])) {
             throw new RecordNotFoundException(__('No MFA provider set.'));
