@@ -106,6 +106,10 @@ class DirectoryOrgSettingsTest extends AppTestCase
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
+        // Merge with default config.
+        $defaultSettings = require(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'config.php');
+        $settings = Hash::merge(Hash::get($defaultSettings, 'passbolt.plugins.directorySync'), $settings);
+
         $retrievedDirectoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertEquals($settings, $retrievedDirectoryOrgSettings->toArray());
     }
