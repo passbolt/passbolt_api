@@ -12,14 +12,17 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
+namespace Passbolt\DirectorySync\Actions;
 
 use App\Model\Entity\Role;
-use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
+use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
+use Passbolt\DirectorySync\Utility\DirectoryFactory;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * Directory factory class
@@ -36,6 +39,11 @@ class SyncAction
      * @var array|\Cake\Datasource\EntityInterface|mixed|null
      */
     protected $defaultAdmin;
+
+    /**
+     * @var \Passbolt\DirectorySync\Test\Utility\DirectoryOrgSettings
+     */
+    protected $directoryOrgSettings;
 
     /**
      * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|LdapDirectory
@@ -90,7 +98,8 @@ class SyncAction
      */
     public function __construct($parentId = null)
     {
-        $this->directory = DirectoryFactory::get();
+        $this->directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
         $this->DirectoryIgnore = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
         $this->DirectoryRelations = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryRelations');
@@ -115,7 +124,7 @@ class SyncAction
      * - Create all entities that can be created
      * - Generate report
      *
-     * @return \Passbolt\DirectorySync\Utility\ActionReportCollection
+     * @return ActionReportCollection
      */
     public function execute()
     {
@@ -189,7 +198,7 @@ class SyncAction
      */
     public function getDefaultAdmin()
     {
-        $defaultUser = Configure::read('passbolt.plugins.directorySync.defaultUser');
+        $defaultUser = $this->directoryOrgSettings->getDefaultUser();
         if (!empty($defaultUser)) {
             // Get default user from database.
             $defaultUser = $this->Users->find()

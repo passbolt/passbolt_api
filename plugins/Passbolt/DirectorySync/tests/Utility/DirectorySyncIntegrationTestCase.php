@@ -14,18 +14,25 @@
  */
 namespace Passbolt\DirectorySync\Test\Utility;
 
+use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
+use Passbolt\DirectorySync\Test\Utility\Traits\DirectoryOrgSettingsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
 {
     use AssertDirectoryTrait;
     use AssertReportTrait;
+    use DirectoryOrgSettingsTrait;
     use MockDirectoryTrait;
+    use UserAccessControlTrait;
 
     public $fixtures = [
         'app.Base/users',
@@ -40,6 +47,7 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
         'app.Base/avatars',
         'app.Base/favorites',
         'app.Base/email_queue',
+        'app.Base/organization_settings',
         'plugin.passbolt/directorySync.base/directoryEntries',
         'plugin.passbolt/directorySync.base/directoryIgnore',
         'plugin.passbolt/directorySync.base/directoryRelations',
@@ -60,7 +68,6 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
         $this->Users = TableRegistry::get('Users');
         $this->DirectoryEntries = TableRegistry::get('DirectoryEntries');
         Configure::write('passbolt.plugins.directorySync.test', true);
-        Configure::write('passbolt.plugins.directorySync.defaultUser', 'admin@passbolt.com');
-        Configure::write('passbolt.plugins.directorySync.defaultGroupAdminUser', 'ada@passbolt.com');
+        $this->enableDirectoryIntegration();
     }
 }

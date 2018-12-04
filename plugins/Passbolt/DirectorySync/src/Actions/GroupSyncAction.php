@@ -14,14 +14,12 @@
  */
 namespace Passbolt\DirectorySync\Actions;
 
-use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
 use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
 use Passbolt\DirectorySync\Utility\Alias;
-use Passbolt\DirectorySync\Utility\SyncAction;
 
 class GroupSyncAction extends SyncAction
 {
@@ -111,7 +109,7 @@ class GroupSyncAction extends SyncAction
      */
     public function getDefaultGroupAdmin()
     {
-        $groupAdmin = Configure::read('passbolt.plugins.directorySync.defaultGroupAdminUser');
+        $groupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         if (!empty($groupAdmin)) {
             // Get groupAdmin from database.
             $groupAdmin = $this->Users->find()

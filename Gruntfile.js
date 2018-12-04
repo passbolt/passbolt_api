@@ -131,6 +131,8 @@ module.exports = function(grunt) {
             'third_party/duo.svg',
             'third_party/google-authenticator.svg',
             'third_party/yubikey.svg',
+            // Chosen images
+            'third_party/chosen-sprite@2x.png', 'third_party/chosen-sprite.png'
             // Themes preview
             'themes/*.png',
             // Fontawesome

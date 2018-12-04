@@ -26,6 +26,7 @@ return [
                             'created' => 'created',
                             'modified' => 'modified',
                             'groups' => 'groups',
+                            'enabled' => 'enabled',
                         ],
                         'group' => [
                             'id' => 'guid',

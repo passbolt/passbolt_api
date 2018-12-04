@@ -17,6 +17,7 @@ namespace Passbolt\DirectorySync\Shell\Task;
 use App\Shell\AppShell;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
 class TestTask extends AppShell
@@ -63,7 +64,8 @@ class TestTask extends AppShell
     public function main()
     {
         try {
-            $ldapDirectory = new LdapDirectory();
+            $directoryOrgSettings = DirectoryOrgSettings::get();
+            $ldapDirectory = new LdapDirectory($directoryOrgSettings);
             $data = [
                 'users' => $ldapDirectory->getUsers(),
                 'groups' => $ldapDirectory->getGroups(),

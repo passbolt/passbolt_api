@@ -12,7 +12,9 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
  */
-namespace Passbolt\DirectorySync\Utility;
+namespace Passbolt\DirectorySync\Actions\Reports;
+
+use Cake\Utility\Hash;
 
 /**
  * Directory factory class
@@ -216,5 +218,18 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
     public function count()
     {
         return count($this->reports);
+    }
+
+    /**
+     * Transform a collection of reports to Json.
+     * @return array
+     */
+    public function toFormattedArray() {
+        $res = [];
+        foreach($this->reports as $report) {
+            $res[] = $report->toArray();
+        }
+
+        return $res;
     }
 }

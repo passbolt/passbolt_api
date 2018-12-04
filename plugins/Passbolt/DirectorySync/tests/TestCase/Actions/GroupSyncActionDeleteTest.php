@@ -28,6 +28,11 @@ class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->initAction();
+    }
+
+    private function initAction()
+    {
         $this->action = new GroupSyncAction();
         $this->action->getDirectory()->setGroups([]);
     }
@@ -543,7 +548,9 @@ class GroupSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncGroupDelete_Case14a_Null_Success_Null_Ok_Null_WithIgnoreConfig()
     {
-        Configure::write('passbolt.plugins.directorySync.jobs.groups.delete', false);
+        $this->disableSyncOperation('groups', 'delete');
+        $this->initAction();
+
         $this->mockDirectoryEntryGroup('marketing');
         $reports = $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.marketing'), ['deleted' => false]);

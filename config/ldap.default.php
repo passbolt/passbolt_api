@@ -31,6 +31,15 @@ return [
                 // If not specified, the first admin user found will be used.
                 'defaultGroupAdminUser' => 'email@domain.com',
 
+                // Will list only users that are part of the given parent group (recursively).
+                // 'usersParentGroup' => 'groupName',
+
+                // Will list only groups that are part of the given parent group (recursively).
+                // 'groupsParentGroup' => 'groupName',
+
+                // Will return enabled users only. (only available in case of active directory).
+                'enabledUsersOnly' => false,
+
                 // 'fieldsMapping' => [
                 //      // Override the mapping here.
                 //      // Needed mainly if using openldap.

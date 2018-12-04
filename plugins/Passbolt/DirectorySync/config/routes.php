@@ -16,24 +16,37 @@ use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
-if (file_exists(CONFIG . 'ldap.php') || Configure::read('passbolt.plugins.directorySync.test') === true) {
-    Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
-        $routes->setExtensions(['json']);
+Router::plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
 
-        $routes->connect('/ignore/toggle/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'toggle'])
-               ->setPass(['foreign_model', 'foreign_key'])
-               ->setMethods(['GET']);
+    $routes->connect('/ignore/toggle/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'toggle'])
+            ->setPass(['foreign_model', 'foreign_key'])
+            ->setMethods(['GET']);
 
-        $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'view'])
-               ->setPass(['foreign_model', 'foreign_key'])
-               ->setMethods(['GET']);
+    $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'view'])
+            ->setPass(['foreign_model', 'foreign_key'])
+            ->setMethods(['GET']);
 
-        $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'add'])
-               ->setPass(['foreign_model', 'foreign_key'])
-               ->setMethods(['POST']);
+    $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'add'])
+            ->setPass(['foreign_model', 'foreign_key'])
+            ->setMethods(['POST']);
 
-        $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'delete'])
-               ->setPass(['foreign_model', 'foreign_key'])
-               ->setMethods(['DELETE']);
-    });
-}
+    $routes->connect('/ignore/:foreign_model/:foreign_key', ['controller' => 'DirectoryIgnore', 'action' => 'delete'])
+            ->setPass(['foreign_model', 'foreign_key'])
+            ->setMethods(['DELETE']);
+
+    $routes->connect('/settings', ['controller' => 'DirectorySettings', 'action' => 'view'])
+            ->setMethods(['GET']);
+
+    $routes->connect('/settings', ['controller' => 'DirectorySettings', 'action' => 'update'])
+            ->setMethods(['POST', 'PUT']);
+
+    $routes->connect('/settings', ['controller' => 'DirectorySettings', 'action' => 'disable'])
+            ->setMethods(['DELETE']);
+
+    $routes->connect('/synchronize', ['controller' => 'DirectorySync', 'action' => 'synchronize'])
+           ->setMethods(['GET']);
+
+    $routes->connect('/synchronize/dry-run', ['controller' => 'DirectorySync', 'action' => 'dryRun'])
+           ->setMethods(['GET']);
+});

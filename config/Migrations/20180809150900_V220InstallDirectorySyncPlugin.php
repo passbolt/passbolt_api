@@ -26,8 +26,9 @@ class V220InstallDirectorySyncPlugin extends PluginMigration
     public function up()
     {
         parent::up();
+        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
         $migrations = new Migrations([
-            'connection' => defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default',
+            'connection' => $connectionName,
             'plugin' => 'Passbolt/DirectorySync',
         ]);
         $migrations->migrate();

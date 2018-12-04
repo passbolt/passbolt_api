@@ -30,6 +30,7 @@ use LdapTools\Object\LdapObjectType;
  */
 class LdapDirectory implements DirectoryInterface
 {
+    private $directorySettings;
     private $ldap;
     private $groups;
     private $users;
@@ -37,13 +38,14 @@ class LdapDirectory implements DirectoryInterface
 
     /**
      * LdapDirectory constructor.
+     * @param DirectoryOrgSettings $settings The directory settings
      * @throws \Exception if connection cannot be established
      */
-    public function __construct()
+    public function __construct(DirectoryOrgSettings $settings)
     {
-        $config = Configure::read('passbolt.plugins.directorySync.ldap');
-        $config = (new Configuration())->loadFromArray($config);
-        $this->ldap = new LdapManager($config);
+        $this->directorySettings = $settings;
+        $ldapConfig = (new Configuration())->loadFromArray($this->directorySettings->getLdapSettings());
+        $this->ldap = new LdapManager($ldapConfig);
         $this->ldap->getConnection();
         $this->groups = [];
         $this->users = [];
@@ -68,7 +70,7 @@ class LdapDirectory implements DirectoryInterface
 
             // Set custom object class if configured.
             $objectType = $schema->getObjectType();
-            $customClass = Configure::read('passbolt.plugins.directorySync.' . $objectType . 'ObjectClass');
+            $customClass = $this->directorySettings->getObjectClass($objectType);
             $connectionType = $this->ldap->getConnection()->getConfig()->getLdapType();
             if (isset($customClass) && $connectionType == LdapConnection::TYPE_OPENLDAP) {
                 $schema->setObjectClass($customClass);
@@ -86,7 +88,7 @@ class LdapDirectory implements DirectoryInterface
     public function getDNFullPath(string $ldapObjectType)
     {
         $paths = [];
-        $paths['additionalPath'] = Configure::read('passbolt.plugins.directorySync.' . $ldapObjectType . 'Path');
+        $paths['additionalPath'] = $this->directorySettings->getObjectPath($ldapObjectType);
         $paths['baseDN'] = $this->ldap->getConnection()->getConfig()->getBaseDn();
 
         return ltrim(implode(',', $paths), ',');
@@ -119,7 +121,7 @@ class LdapDirectory implements DirectoryInterface
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
             throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
         }
-        $mapping = Configure::read('passbolt.plugins.directorySync.fieldsMapping.' . $type);
+        $mapping = $this->directorySettings->getFieldsMapping($type);
 
         return $mapping;
     }
@@ -132,12 +134,24 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
         $selectFields = array_values($mappingRules);
+        $fromGroup = $this->directorySettings->getUsersParentGroup();
+        $enabledUsersOnly = $this->directorySettings->getEnabledUsersOnly();
 
         $query = $this->ldap->buildLdapQuery();
-        $users = $query
+        $usersQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::USER))
             ->select($selectFields)
-            ->fromUsers()
+            ->fromUsers();
+
+        if (!empty($fromGroup)) {
+            $usersQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
+        }
+
+        if (!empty($enabledUsersOnly) && $enabledUsersOnly == true) {
+            $usersQuery->andWhere(['enabled' => true]);
+        }
+
+        $users = $usersQuery
             ->getLdapQuery()
             ->getResult();
 
@@ -168,13 +182,19 @@ class LdapDirectory implements DirectoryInterface
     {
         $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
         $selectFields = array_values($mappingRules);
+        $fromGroup = $this->directorySettings->getGroupsParentGroup();
 
         $query = $this->ldap->buildLdapQuery();
-        $groups = $query
+        $groupsQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::GROUP))
             ->select($selectFields)
-            ->fromGroups()
-            ->getLdapQuery()
+            ->fromGroups();
+
+        if (!empty($fromGroup)) {
+            $groupsQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
+        }
+
+        $groups = $groupsQuery->getLdapQuery()
             ->getResult();
 
         foreach ($groups as $group) {

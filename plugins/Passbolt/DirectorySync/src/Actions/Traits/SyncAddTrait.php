@@ -17,12 +17,11 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 use Cake\Utility\Inflector;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
-use Passbolt\DirectorySync\Utility\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
@@ -74,7 +73,7 @@ trait SyncAddTrait
 
         // If it's a group. We need to process the group users.
         if (self::ENTITY_TYPE == Alias::MODEL_GROUPS) {
-            if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.update')) {
+            if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'update')) {
                 return;
             }
             $this->handleGroupUsersEdit($data, $entry, $existingEntity);
@@ -91,7 +90,7 @@ trait SyncAddTrait
      */
     public function handleAddIgnore(array $data, DirectoryEntry $entry = null, Entity $existingEntity = null, bool $ignoreEntity)
     {
-        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+        if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
         }
 
@@ -126,7 +125,7 @@ trait SyncAddTrait
      */
     public function handleAddNew(array $data, DirectoryEntry $entry = null)
     {
-        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+        if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
         }
 
@@ -173,7 +172,7 @@ trait SyncAddTrait
      */
     public function handleAddDeleted(array $data, DirectoryEntry $entry = null, Entity $existingEntity)
     {
-        if (!Configure::read('passbolt.plugins.directorySync.jobs.' . strtolower(self::ENTITY_TYPE) . '.create')) {
+        if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower(self::ENTITY_TYPE), 'create')) {
             return;
         }
 

@@ -14,8 +14,8 @@
  */
 namespace App\Test\Lib\Utility;
 
-use App\Utility\UserAccessControl;
 use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 
 trait UserAccessControlTrait

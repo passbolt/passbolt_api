@@ -16,6 +16,8 @@ namespace Passbolt\DirectorySync\Shell;
 
 use App\Shell\AppShell;
 use Cake\Core\Configure;
+use Cake\Routing\Router;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectorySyncShell extends AppShell
 {
@@ -39,12 +41,13 @@ class DirectorySyncShell extends AppShell
     public function initialize()
     {
         parent::initialize();
-        if (!file_exists(CONFIG . 'ldap.php') && !Configure::read('passbolt.plugins.directorySync.test')) {
-            $this->err(__('Could not read the ldap config file'));
+        $this->directoryOrgSettings = DirectoryOrgSettings::get();
+        if (!$this->directoryOrgSettings->isEnabled()) {
+            $this->err(__('The ldap integration is not configured'));
             $this->info(
                 __(
-                    'To fix this problem, you need to copy {0} into {1} and edit the configuration options inside.',
-                    [CONFIG . 'ldap.default.php', CONFIG . 'ldap.php']
+                    'To fix this problem, you need to configure ldap: {0}.',
+                    [Router::url('/app/administration/users-directory', true)]
                 )
             );
             $this->abort(__('aborting'));

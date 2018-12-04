@@ -16,7 +16,7 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Error\Exception\ValidationException;
 use App\Shell\AppShell;
-use Passbolt\DirectorySync\Utility\ActionReport;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
