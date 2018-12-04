@@ -2,14 +2,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.6.0] - 2018-12-04
 ### Added
-- PASSBOLT-3130: As AD I can configure my user directory integration from the administration panel
-- PASSBOLT-3235: As AD I can synchronize my user directory from the administration panel
+- PASSBOLT-3130: As an admin I can configure my user directory integration from the administration panel
+- PASSBOLT-3235: As an admin I can synchronize my user directory from the administration panel
 - PASSBOLT-3218: As an admin I can configure the multi factor authentication providers for my organization from the admin panel.
+- PASSBOLT-3150: As an admin I can filter out inactive accounts from the directory synchronization.
+- PASSBOLT-3141: As an admin I can filter out users that are not part of a group in ldap from the directory synchronization.
 
 ### Improved
-- As DEV I can test the fields of my form
+- As a developer I can test the fields of my form
 
 ## [2.5.0] - 2018-11-14
 ### Added
