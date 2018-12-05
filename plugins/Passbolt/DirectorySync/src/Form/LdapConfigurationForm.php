@@ -127,8 +127,7 @@ class LdapConfigurationForm extends Form
             ->utf8('password', __('The password should be a valid utf8 string.'));
 
         $validator
-            ->requirePresence('base_dn', 'create', __('A base DN is required.'))
-            ->notEmpty('base_dn', __('A base DN is required.'))
+            ->allowEmpty('base_dn', __('Base DN can be empty.'))
             ->utf8('base_dn', __('The base DN should be a valid utf8 string.'));
 
         $validator
