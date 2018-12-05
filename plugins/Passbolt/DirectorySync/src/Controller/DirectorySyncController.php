@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Controller;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
 use Cake\Network\Exception\ForbiddenException;
+use Cake\Network\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
 class DirectorySyncController extends DirectoryController
@@ -45,7 +46,11 @@ class DirectorySyncController extends DirectoryController
      */
     public function synchronize()
     {
-        $res = $this->_synchronize(false);
+        try {
+            $res = $this->_synchronize(false);
+        } catch (\Exception $e) {
+            throw new InternalErrorException('The synchronization failed. ' . $e->getMessage());
+        }
         $this->success(__('The synchronization was done successfully.'), $res);
     }
 
@@ -55,7 +60,11 @@ class DirectorySyncController extends DirectoryController
      */
     public function dryRun()
     {
-        $res = $this->_synchronize(true);
+        try {
+            $res = $this->_synchronize(true);
+        } catch (\Exception $e) {
+            throw new InternalErrorException('The simulation failed. ' . $e->getMessage());
+        }
         $this->success(__('The simulation was done successfully.'), $res);
     }
 
@@ -65,11 +74,12 @@ class DirectorySyncController extends DirectoryController
      *
      * @return array reports list in array format
      */
-    protected function _synchronize(bool $dryRun = true) {
+    protected function _synchronize(bool $dryRun = true)
+    {
         $res = [];
         $allSyncAction = new AllSyncAction();
         $reports = $allSyncAction->execute($dryRun);
-        foreach($reports as $type => $report) {
+        foreach ($reports as $type => $report) {
             $res[$type] = $report->toFormattedArray();
         }
 
