@@ -299,12 +299,20 @@ class LdapConfigurationForm extends Form
 
         $User = TableRegistry::get('Users');
         if (isset($settings['defaultUser'])) {
-            $username = $User->find()->where(['Users.username' => $settings['defaultUser']])->first()->get('id');
-            $settings['defaultUser'] = $username;
+            $defaultUser = $User->find()->where(['Users.username' => $settings['defaultUser']])->first();
+            if (empty($defaultUser)) {
+                $settings['defaultUser'] = '';
+            } else {
+                $settings['defaultUser'] = $defaultUser->get('id');
+            }
         }
         if (isset($settings['defaultGroupAdminUser'])) {
-            $username = $User->find()->where(['Users.username' => $settings['defaultGroupAdminUser']])->first()->get('id');
-            $settings['defaultGroupAdminUser'] = $username;
+            $defaultGroupAdminUser = $User->find()->where(['Users.username' => $settings['defaultGroupAdminUser']])->first();
+            if (empty($defaultGroupAdminUser)) {
+                $settings['defaultGroupAdminUser'] = '';
+            } else {
+                $settings['defaultGroupAdminUser'] = $defaultGroupAdminUser->get('id');
+            }
         }
 
         foreach (self::$configurationMapping as $prop => $propVal) {
