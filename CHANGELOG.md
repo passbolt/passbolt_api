@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.6.1]
 ### Improved
 - PASSBOLT-3273: Username and password should not be compulsory in email settings, in web installer
 
@@ -611,7 +611,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.6.1...HEAD
+[2.6.0]: https://github.com/passbolt/passbolt_api/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/passbolt/passbolt_api/compare/v2.4.0...v2.5.0
 [2.4.0]: https://github.com/passbolt/passbolt_api/compare/v2.3.0...v2.4.0
