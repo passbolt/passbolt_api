@@ -75,12 +75,12 @@ class EmailConfigurationForm extends Form
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmpty('username', __('A username is required.'))
+            ->allowEmpty('username')
             ->utf8('username', __('The username is not a valid utf8 string.'));
 
         $validator
             ->requirePresence('password', 'create', __('A password is required.'))
-            ->notEmpty('password', __('A password is required.'))
+            ->allowEmpty('password')
             ->utf8('password', __('The host is not a valid utf8 string.'));
 
         $validator
