@@ -17,6 +17,7 @@ namespace Passbolt\DirectorySync\Controller;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
@@ -62,7 +63,11 @@ class DirectorySettingsController extends DirectoryController
             $errors = $form->errors();
             throw new CustomValidationException('The settings are not valid', $errors);
         }
-        $form->execute($data);
+        try {
+            $form->execute($data);
+        } catch (\Exception $e) {
+            throw new BadRequestException('The settings cannot be saved. ' . $e->getMessage());
+        }
 
         $uac = $this->User->getAccessControl();
         $settings = LdapConfigurationForm::formatFormDataToOrgSettings($data);

@@ -108,8 +108,7 @@ class LdapConfigurationFormTest extends AppTestCase
     {
         $ldapSettings = self::getDummyFormData();
         $testCases = [
-            'required' => self::getRequirePresenceTestCases(),
-            'notEmpty' => self::getNotEmptyTestCases(),
+            'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases()
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'base_dn', $ldapSettings, $testCases);

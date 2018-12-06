@@ -48,8 +48,8 @@ return [
         'default' => [
             'host' => '<?= $config['email']['host'] ?>',
             'port' => <?= $config['email']['port'] ?>,
-            'username' => '<?= $config['email']['username'] ?>',
-            'password' => '<?= $config['email']['password'] ?>',
+            'username' => <?= empty($config['email']['username']) ? 'null' : "'{$config['email']['username']}'" ?>,
+            'password' => <?= empty($config['email']['password']) ? 'null' : "'{$config['email']['password']}'" ?>,
             // Is this a secure connection? true if yes, null if no.
             'tls' => <?= $config['email']['tls'] ? 'true' : 'null' ?>,
             //'timeout' => 30,

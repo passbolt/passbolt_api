@@ -127,8 +127,7 @@ class LdapConfigurationForm extends Form
             ->utf8('password', __('The password should be a valid utf8 string.'));
 
         $validator
-            ->requirePresence('base_dn', 'create', __('A base DN is required.'))
-            ->notEmpty('base_dn', __('A base DN is required.'))
+            ->allowEmpty('base_dn', __('Base DN can be empty.'))
             ->utf8('base_dn', __('The base DN should be a valid utf8 string.'));
 
         $validator
@@ -299,12 +298,20 @@ class LdapConfigurationForm extends Form
 
         $User = TableRegistry::get('Users');
         if (isset($settings['defaultUser'])) {
-            $username = $User->find()->where(['Users.username' => $settings['defaultUser']])->first()->get('id');
-            $settings['defaultUser'] = $username;
+            $defaultUser = $User->find()->where(['Users.username' => $settings['defaultUser']])->first();
+            if (empty($defaultUser)) {
+                $settings['defaultUser'] = '';
+            } else {
+                $settings['defaultUser'] = $defaultUser->get('id');
+            }
         }
         if (isset($settings['defaultGroupAdminUser'])) {
-            $username = $User->find()->where(['Users.username' => $settings['defaultGroupAdminUser']])->first()->get('id');
-            $settings['defaultGroupAdminUser'] = $username;
+            $defaultGroupAdminUser = $User->find()->where(['Users.username' => $settings['defaultGroupAdminUser']])->first();
+            if (empty($defaultGroupAdminUser)) {
+                $settings['defaultGroupAdminUser'] = '';
+            } else {
+                $settings['defaultGroupAdminUser'] = $defaultGroupAdminUser->get('id');
+            }
         }
 
         foreach (self::$configurationMapping as $prop => $propVal) {
