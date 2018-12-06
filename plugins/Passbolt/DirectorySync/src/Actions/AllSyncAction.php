@@ -25,7 +25,7 @@ class AllSyncAction
      */
     public function syncUsers()
     {
-        $userSyncAction = new userSyncAction();
+        $userSyncAction = new UserSyncAction();
         $reports = $userSyncAction->execute();
 
         return $reports;
@@ -37,7 +37,7 @@ class AllSyncAction
      */
     public function syncGroups()
     {
-        $groupSyncAction = new groupSyncAction();
+        $groupSyncAction = new GroupSyncAction();
         $reports = $groupSyncAction->execute();
 
         return $reports;
