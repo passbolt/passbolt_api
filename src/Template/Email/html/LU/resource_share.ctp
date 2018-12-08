@@ -52,6 +52,6 @@ if (Configure::read('passbolt.email.show.secret')) {
     ]);
 }
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/', true),
-    'text' => __('log in passbolt')
+    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'text' => __('view it in passbolt')
 ]);
