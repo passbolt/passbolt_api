@@ -42,6 +42,35 @@ trait PermissionsModelTrait
     }
 
     /**
+     * Add permission.
+     * @param string $aco Aco
+     * @param string $aco_foreign_key Target aco
+     * @param string $aro Aro
+     * @param string $aro_foreign_key Target aro
+     * @param int $type The type of permissions
+     */
+    public function addPermission($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type = Permission::OWNER)
+    {
+        $saveOptions = [
+            'validate' => 'default',
+            'accessibleFields' => [
+                '*' => true
+            ],
+        ];
+        $data = [
+            'aco' => $aco,
+            'aco_foreign_key' => $aco_foreign_key,
+            'aro' => $aro,
+            'aro_foreign_key' => $aro_foreign_key,
+            'type' => $type
+        ];
+        $permission = $this->Permissions->newEntity($data, $saveOptions);
+        $this->Permissions->save($permission);
+
+        return $permission;
+    }
+
+    /**
      * Asserts that an object has all the attributes a permission should have.
      *
      * @param object $permission
@@ -50,5 +79,32 @@ trait PermissionsModelTrait
     {
         $attributes = ['id', 'aro', 'aro_foreign_key', 'aco', 'aco_foreign_key', 'type', 'created', 'modified'];
         $this->assertObjectHasAttributes($attributes, $permission);
+    }
+
+    /**
+     * Assert an aro has the expected permission for a given aco
+     * @param string $acoForeignKey
+     * @param string $aroForeignKey
+     * @param string $type
+     */
+    protected function assertPermission($acoForeignKey, $aroForeignKey, $type)
+    {
+        $permission = $this->Permissions->find()->where([
+            'aco_foreign_key' => $acoForeignKey,
+            'aro_foreign_key' => $aroForeignKey,
+            'type' => $type,
+        ])->first();
+        $this->assertNotEmpty($permission);
+    }
+
+    /**
+     * Assert a permission does not exist
+     * @param $acoForeignKey
+     * @param $aroForeignKey
+     */
+    protected function assertPermissionNotExist($acoForeignKey, $aroForeignKey)
+    {
+        $permission = $this->Permissions->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
+        $this->assertEmpty($permission);
     }
 }

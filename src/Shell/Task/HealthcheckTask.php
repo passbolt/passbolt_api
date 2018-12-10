@@ -189,11 +189,11 @@ class HealthcheckTask extends AppShell
             __('The temporary directory and its content are writable.'),
             __('The temporary directory and its content are not writable.'),
             [
-                __('Ensure the temporary directory and its content are writable by the user the webserver user.'),
+                __('Ensure the temporary directory and its content are writable by the webserver user.'),
                 __('you can try:'),
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'tmp',
-                'sudo chmod 775 $(find ' . ROOT . 'tmp -type d)',
-                'sudo chmod 664 $(find ' . ROOT . 'tmp -type f)',
+                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . TMP,
+                'sudo chmod 775 $(find ' . TMP . ' -type d)',
+                'sudo chmod 664 $(find ' . TMP . ' -type f)',
             ]
         );
         $this->assert(
@@ -493,17 +493,13 @@ class HealthcheckTask extends AppShell
     }
 
     /**
-     * Warn GPG settings are in order
+     * Warn GPG environment is in order
      *
      * @param array $checks existing results
      * @return void
      */
-    public function assertGpg($checks = null)
+    public function assertGpgEnv($checks = null)
     {
-        if (!isset($checks)) {
-            $checks = Healthchecks::gpg();
-        }
-        $this->title(__('GPG Configuration'));
         $this->assert(
             $checks['gpg']['lib'],
             __('PHP GPG Module is installed and loaded.'),
@@ -511,27 +507,6 @@ class HealthcheckTask extends AppShell
             __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php'),
             __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php.')
         );
-        if ($checks['gpg']['gpgKey']) {
-            $this->assert(
-                $checks['gpg']['gpgKeyNotDefault'],
-                __('The server gpg key is not the default one'),
-                __('Do not use the default gpg key for the server'),
-                [
-                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
-                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
-                ]
-            );
-        } else {
-            $this->assert(
-                $checks['gpg']['gpgKey'],
-                __('The server gpg key is set'),
-                __('The server gpg key is not set'),
-                [
-                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
-                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
-                ]
-            );
-        }
         $this->assert(
             $checks['gpg']['gpgHome'],
             __('The environment variable GNUPGHOME is set to {0}.', $checks['gpg']['info']['gpgHome']),
@@ -555,6 +530,42 @@ class HealthcheckTask extends AppShell
                     __('you can try:'),
                     'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
                     'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
+                ]
+            );
+        }
+    }
+
+    /**
+     * Warn GPG settings are in order
+     *
+     * @param array $checks existing results
+     * @return void
+     */
+    public function assertGpg($checks = null)
+    {
+        if (!isset($checks)) {
+            $checks = Healthchecks::gpg();
+        }
+        $this->title(__('GPG Configuration'));
+        $this->assertGpgEnv($checks);
+        if ($checks['gpg']['gpgKey']) {
+            $this->assert(
+                $checks['gpg']['gpgKeyNotDefault'],
+                __('The server gpg key is not the default one'),
+                __('Do not use the default gpg key for the server'),
+                [
+                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
+                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
+                ]
+            );
+        } else {
+            $this->assert(
+                $checks['gpg']['gpgKey'],
+                __('The server gpg key is set'),
+                __('The server gpg key is not set'),
+                [
+                    __('Create a key, export it and add the fingerprint to config/passbolt.php'),
+                    __('See. https://www.passbolt.com/help/tech/install#toc_gpg')
                 ]
             );
         }

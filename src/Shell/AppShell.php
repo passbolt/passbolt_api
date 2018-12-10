@@ -14,6 +14,7 @@
  */
 namespace App\Shell;
 
+use App\Shell\AppShellBootstrap;
 use Cake\Console\Shell;
 
 /**
@@ -24,6 +25,19 @@ use Cake\Console\Shell;
  */
 class AppShell extends Shell
 {
+    /**
+     * Initializes the Shell
+     * acts as constructor for subclasses
+     * allows configuration of tasks prior to shell execution
+     *
+     * @return void
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        AppShellBootstrap::init();
+    }
 
     /**
      * Display a banner

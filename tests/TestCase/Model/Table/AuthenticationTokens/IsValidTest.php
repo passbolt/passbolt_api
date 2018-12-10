@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
@@ -26,6 +26,7 @@ class IsValidTest extends AppTestCase
     public $AuthenticationTokens;
 
     public $fixtures = ['app.Base/authentication_tokens', 'app.Base/users'];
+    use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
@@ -33,61 +34,101 @@ class IsValidTest extends AppTestCase
         $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
     }
 
-    public function testIsValidWrongUserIdFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidWrongUserIdFail()
     {
         $result = $this->AuthenticationTokens->isValid('nope', UuidFactory::uuid());
         $this->assertFalse($result);
     }
 
-    public function testIsValidWrongTokenIdFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidWrongTokenIdFail()
     {
         $result = $this->AuthenticationTokens->isValid(UuidFactory::uuid(), 'nope');
         $this->assertFalse($result);
     }
 
-    public function testIsValidTokenDoesNotExistFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidTokenDoesNotExistFail()
     {
         $result = $this->AuthenticationTokens->isValid(UuidFactory::uuid(), UuidFactory::uuid('user.id.ada'));
         $this->assertFalse($result);
     }
 
-    public function testIsValidUserDoesNotExistFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidUserDoesNotExistFail()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
         $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid());
         $this->assertFalse($result);
     }
 
-    public function testIsValidNotSameUserFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidNotSameUserFail()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_REGISTER);
         $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid('user.id.betty'));
         $this->assertFalse($result);
     }
 
-    public function testIsValidTokenInactiveFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidTokenInactiveFail()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
-        $t->active = false;
-        $this->AuthenticationTokens->save($t);
-        $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid('user.id.ada'));
+        $userId = UuidFactory::uuid('user.id.ada');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN, 'inactive');
+        $result = $this->AuthenticationTokens->isValid($tokenInactive, UuidFactory::uuid('user.id.ada'));
         $this->assertFalse($result);
     }
 
-    public function testIsValidTokenExpiredFail()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidTokenExpiredFail()
     {
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.expired'));
-        $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid('user.id.ruth'));
+        $userId = UuidFactory::uuid('user.id.ruth');
+        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_REGISTER, 'expired');
+        $result = $this->AuthenticationTokens->isValid($tokenInactive, $userId);
         $this->assertFalse($result);
 
         // token should now be marked as inactive
-        $t = $this->AuthenticationTokens->get(UuidFactory::uuid('token.id.expired'));
-        $this->assertFalse($t->active);
+        $token = $this->AuthenticationTokens->find('all')->where(['token' => $tokenInactive])->first();
+        $this->assertFalse($token->active);
     }
 
-    public function testIsValidTokenSuccess()
+    /**
+     * @group model
+     * @group AuthenticationTokens
+     * @group AuthenticationTokensIsValid
+     */
+    public function testAuthenticationTokensIsValidTokenSuccess()
     {
-        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'));
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_LOGIN);
         $result = $this->AuthenticationTokens->isValid($t->token, UuidFactory::uuid('user.id.ada'));
         $this->assertTrue($result);
     }

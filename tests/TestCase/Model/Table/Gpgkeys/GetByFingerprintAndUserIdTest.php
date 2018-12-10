@@ -15,9 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
-use App\Error\Exception\ValidationRuleException;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;

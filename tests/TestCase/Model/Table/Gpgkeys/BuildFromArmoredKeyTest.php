@@ -15,7 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\ValidationException;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\UuidFactory;
@@ -49,7 +49,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public function testbuildEntityFromArmoredKeyWrongKey()
     {
-        $this->expectException(ValidationRuleException::class);
+        $this->expectException(ValidationException::class);
         $this->Gpgkeys->buildEntityFromArmoredKey('nope', UuidFactory::uuid('user.id.ada'));
     }
 
@@ -75,7 +75,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
         $armoredKey = str_replace('F', '0', $armoredKey);
         $armoredKey = str_replace('A', '1', $armoredKey);
 
-        $this->expectException(ValidationRuleException::class);
+        $this->expectException(ValidationException::class);
         $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, UuidFactory::uuid('user.id.ada'));
     }
 }

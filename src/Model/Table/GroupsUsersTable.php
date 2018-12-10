@@ -14,7 +14,7 @@
  */
 namespace App\Model\Table;
 
-use App\Error\Exception\ValidationRuleException;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;
@@ -158,7 +158,7 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return array of group uuid
+     * @return \Cake\ORM\Query
      */
     public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId)
     {
@@ -166,41 +166,22 @@ class GroupsUsersTable extends Table
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        // SELECT group_id AS `group_id`,
-        //      (SUM(is_admin)) AS `count_admin`,
-        //      (COUNT(user_id)) AS `count_user`
-        // FROM groups_users
-        // WHERE group_id IN (
-        //      SELECT group_id
-        //      FROM groups_users
-        //      WHERE (user_id = $user_id AND is_admin=1)
-        // )
-        // GROUP BY group_id
-        // HAVING count_admin=1 AND count_user > 1;
+        // R = All the non empty groups where the user given as parameter is the sole manager
+        //
+        // Details:
+        // USER, the user given as parameter
+        // GROUPS, all groups that have entries in the groups table
+        // GROUPS_USER_IS_SOLE_MANAGER, all groups the user is sole manager
+        // GROUPS_USER_ONLY_MEMBER, all groups that have only USER has member
+        // R = GROUPS_USER_IS_SOLE_MANAGER - GROUPS_USER_ONLY_MEMBER, all the non empty groups where the user given as parameter is the sole manager
 
-        $subquery = $this->find();
-        $subquery
-            ->select(['group_id'])
-            ->where([
-                'user_id' => $userId,
-                'is_admin' => true
-            ]);
+        // GROUPS_USER_ONLY_MEMBER
+        $groupsUserOnlyMember = $this->findGroupsWhereUserOnlyMember($userId);
 
-        $query = $this->find();
-        $query
-            ->select([
-                'group_id' => 'group_id',
-                'count_admin' => $query->func()->sum('is_admin'),
-                'count_user' => $query->func()->count('user_id')
-            ])
-            ->where(['group_id IN' => $subquery])
-            ->group('group_id')
-            ->having(['count_admin' => 1, 'count_user >' => 1]);
-
-        $result = $query->all()->toArray();
-        $result = Hash::extract($result, '{n}.group_id');
-
-        return $result;
+        // (R)
+        return $this->findGroupsWhereUserIsSoleManager($userId)
+            // GROUPS_USER_IS_SOLE_MANAGER - GROUPS_USER_ONLY_MEMBER
+            ->where(['group_id NOT IN' => $groupsUserOnlyMember]);
     }
 
     /**
@@ -208,7 +189,7 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return array of group uuid
+     * @return \Cake\ORM\Query
      */
     public function findGroupsWhereUserIsSoleManager(string $userId)
     {
@@ -216,39 +197,43 @@ class GroupsUsersTable extends Table
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        // SELECT group_id AS `group_id`,
-        //      (SUM(is_admin)) AS `count_admin`
-        // FROM groups_users
-        // WHERE group_id IN (
-        //      SELECT group_id
-        //      FROM groups_users
-        //      WHERE (user_id = $user_id AND is_admin=1)
-        // )
-        // GROUP BY group_id
-        // HAVING count_admin=1;
+        // R = All the groups where the user given as parameter is the sole manager
+        //
+        // Details:
+        // USER, the user given as parameter
+        // OTHER_USERS, all users that are not the USER
+        // GROUPS, all groups that have entries in the groups table
+        // GROUPS_USER_IS_MANAGER, all groups the user is manager
+        // GROUPS_OTHER_USER_ARE_MANAGER, all groups that have OTHER_USERS has manager (it can include the groups where the USER is manager)
+        // R = GROUPS_USER_IS_MANAGER - GROUPS_OTHER_USER_ARE_MANAGER, all groups that have only the USER has manager
 
-        $subquery = $this->find();
-        $subquery
-            ->select(['group_id'])
+        // (GROUPS_OTHER_USER_ARE_MANAGER)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id <> USER
+        // AND is_admin = true
+        $groupsOtherUsersAreManager = $this->find()
+            ->select(['group_id'])->distinct()
             ->where([
-                'user_id' => $userId,
+                'user_id <>' => $userId,
                 'is_admin' => true
             ]);
 
-        $query = $this->find();
-        $query
-            ->select([
-                'group_id' => 'group_id',
-                'count_admin' => $query->func()->sum('is_admin')
+        // (R)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id = USER
+        // AND is_admin = true
+        // AND group_id NOT IN (GROUPS_OTHER_USER_IS_MANAGER)
+        return $this->find()
+            ->select(['group_id'])
+            // R = GROUPS_USER_IS_MANAGER
+            ->where([
+                'user_id' => $userId,
+                'is_admin' => true
             ])
-            ->where(['group_id IN' => $subquery])
-            ->group('group_id')
-            ->having(['count_admin' => 1]);
-
-        $result = $query->all()->toArray();
-        $result = Hash::extract($result, '{n}.group_id');
-
-        return $result;
+            // R = R - GROUPS_OTHER_USER_ARE_MANAGER
+            ->where(['group_id NOT IN' => $groupsOtherUsersAreManager]);
     }
 
     /**
@@ -257,7 +242,7 @@ class GroupsUsersTable extends Table
      * The user should be the manager at the point but we might as well cast a larger net
      *
      * @param string $userId user uuid
-     * @return array of group uuid
+     * @return \Cake\ORM\Query
      */
     public function findGroupsWhereUserOnlyMember(string $userId)
     {
@@ -265,38 +250,40 @@ class GroupsUsersTable extends Table
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        // SELECT group_id AS `group_id`,
-        //      (COUNT(user_id)) AS `count_user`
-        // FROM groups_users
-        // WHERE group_id IN (
-        //      SELECT group_id
-        //      FROM groups_users
-        //      WHERE (user_id = $user_id)
-        // )
-        // GROUP BY group_id
-        // HAVING count_user=1;
+        // R = All the groups where the user given as parameter is the only member
+        //
+        // Details:
+        // USER, the user given as parameter
+        // OTHER_USERS, all users that are not the USER
+        // GROUPS, all groups that have entries in the groups table
+        // GROUPS_USER_IS_MEMBER, all groups the user is member
+        // GROUPS_OTHER_USER_ARE_MEMBER, all groups that have OTHER_USERS has member (it can include the groups where the USER is member)
+        // R = GROUPS_USER_IS_MEMBER - GROUPS_OTHER_USER_ARE_MEMBER, all groups that have only the USER has member
 
-        $subquery = $this->find();
-        $subquery
-            ->select(['group_id'])
+        // (GROUPS_OTHER_USER_ARE_MEMBER)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id <> USER
+        $groupsOtherUsers = $this->find()
+            ->select(['group_id'])->distinct()
             ->where([
-                'user_id' => $userId
+                'user_id <>' => $userId
             ]);
 
-        $query = $this->find();
-        $query
-            ->select([
-                'group_id' => 'group_id',
-                'count_user' => $query->func()->count('user_id')
-            ])
-            ->where(['group_id IN' => $subquery])
-            ->group('group_id')
-            ->having(['count_user' => 1]);
+        // (R)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id = USER
+        // AND group_id NOT IN (GROUPS_OTHER_USER_ARE_MEMBER)
+        $query = $this->find()
+            ->select(['group_id'])->distinct()
+            ->where([
+                'user_id' => $userId,
+                // GROUPS_USER_IS_MEMBER - GROUPS_OTHER_USER_ARE_MEMBER
+                'group_id NOT IN' => $groupsOtherUsers
+            ]);
 
-        $result = $query->all()->toArray();
-        $result = Hash::extract($result, '{n}.group_id');
-
-        return $result;
+        return $query;
     }
 
     /**
@@ -304,7 +291,7 @@ class GroupsUsersTable extends Table
      * Useful to know which group to delete when deleting a user
      *
      * @param string $userId user uuid
-     * @return array of group uuid
+     * @return \Cake\ORM\Query
      */
     public function findGroupsWhereUserNotOnlyMember(string $userId)
     {
@@ -312,38 +299,45 @@ class GroupsUsersTable extends Table
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        // SELECT group_id AS `group_id`,
-        //      (COUNT(user_id)) AS `count_user`
-        // FROM groups_users
-        // WHERE group_id IN (
-        //      SELECT group_id
-        //      FROM groups_users
-        //      WHERE (user_id = $user_id)
-        // )
-        // GROUP BY group_id
-        // HAVING count_user>1;
+        // R = All the groups where the user given as parameter is the only member
+        //
+        // Details:
+        // USER, the user given as parameter
+        // GROUPS, all groups that have entries in the groups table
+        // GROUPS_USER_ONLY_MEMBER, all groups the user is only member
+        // GROUPS_USER_IS_MEMBER, all groups the user is member
+        // R = GROUPS_USER_IS_MEMBER - GROUPS_USER_ONLY_MEMBER, all non empty groups that have the USER has member
 
-        $subquery = $this->find();
-        $subquery
-            ->select(['group_id'])
+        // (GROUPS_USER_ONLY_MEMBER)
+        $groupsUserOnlyMember = $this->findGroupsWhereUserOnlyMember($userId);
+
+        // (R)
+        // SELECT group_id
+        // FROM groups_users
+        // WHERE user_id = USER
+        // AND group_id NOT IN (GROUPS_USER_ONLY_MEMBER)
+        $query = $this->find()
+            ->select(['group_id'])->distinct()
             ->where([
-                'user_id' => $userId
+                'user_id' => $userId,
+                // GROUPS_USER_IS_MEMBER - GROUPS_USER_ONLY_MEMBER
+                'group_id NOT IN' => $groupsUserOnlyMember
             ]);
 
-        $query = $this->find();
-        $query
-            ->select([
-                'group_id' => 'group_id',
-                'count_user' => $query->func()->count('user_id')
-            ])
-            ->where(['group_id IN' => $subquery])
-            ->group('group_id')
-            ->having(['count_user >' => 1]);
+        return $query;
+    }
 
-        $result = $query->all()->toArray();
-        $result = Hash::extract($result, '{n}.group_id');
-
-        return $result;
+    /**
+     * Get the list of groups where the user is member
+     *
+     * @param string $userId user uuid
+     * @return \Cake\ORM\Query
+     */
+    public function findGroupsWhereUserIsMember(string $userId)
+    {
+        return $this->find()
+            ->select('group_id')
+            ->where(['user_id' => $userId]);
     }
 
     /**
@@ -405,9 +399,9 @@ class GroupsUsersTable extends Table
      *      'delete' => true,
      *  ]
      *
-     * @throw ValidationRuleException If a change try to modify a group user that is not in the list of groups users
-     * @throw ValidationRuleException If a change does not validate when calling patchEntity
-     * @throw ValidationRuleException If a change does not validate when calling newEntity
+     * @throw CustomValidationException If a change try to modify a group user that is not in the list of groups users
+     * @throw CustomValidationException If a change does not validate when calling patchEntity
+     * @throw CustomValidationException If a change does not validate when calling newEntity
      * @return array The list of groups users entities patched with the changes
      */
     public function patchEntitiesWithChanges($entities = [], $changes = [], $groupId = null, array $options = [])
@@ -433,7 +427,7 @@ class GroupsUsersTable extends Table
                     $errors = ['id' => [
                         'group_user_exists' => __('The membership does not exist.', $change['id'])
                     ]];
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
 
                 // Delete case.
@@ -445,7 +439,7 @@ class GroupsUsersTable extends Table
                     $this->patchEntity($entities[$groupUserKey], $change, $options);
                     $errors = $entities[$groupUserKey]->getErrors();
                     if (!empty($errors)) {
-                        throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                        throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                     }
                 }
             } elseif ($canAdd) {
@@ -462,13 +456,36 @@ class GroupsUsersTable extends Table
                 $groupUser = $this->newEntity($change, $options);
                 $errors = $groupUser->getErrors();
                 if (!empty($errors)) {
-                    throw new ValidationRuleException(__('Validation error.'), [$changeKey => $errors]);
+                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
                 $entities[] = $groupUser;
             }
         }
 
         return $entities;
+    }
+
+    /**
+     * Return a groupUser entity.
+     * @param array $data entity data
+     *
+     * @return \App\Model\Entity\GroupsUser
+     */
+    public function buildEntity(array $data)
+    {
+        if (!isset($data['is_admin'])) {
+            $data['is_admin'] = false;
+        }
+
+        return $this->newEntity($data, [
+            'accessibleFields' => [
+                'group_id' => true,
+                'user_id' => true,
+                'is_admin' => true,
+                'created' => true,
+                'created_by' => true,
+            ],
+        ]);
     }
 
     /**

@@ -15,6 +15,7 @@
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
+use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
@@ -231,23 +232,13 @@ class FindIndexTest extends AppTestCase
         // Get all resources with permissions.
         $expectedResourcesIds = [];
         foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
-            if ($resourcePermission > 0) {
+            if ($resourcePermission >= Permission::READ && $resourcePermission < Permission::OWNER) {
                 $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
             }
         }
-        // Filter resources, remove all resources created by Ada.
-        $expectedResourcesIds = $this->Resources->find()
-            ->where([
-                'id IN' => $expectedResourcesIds,
-                'created_by <>' => $userId
-            ])
-            ->all()
-            ->extract('id')
-            ->toArray();
         sort($expectedResourcesIds);
 
-        $this->assertCount(count($expectedResourcesIds), $resourcesIds);
-        $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
+        $this->assertEquals($resourcesIds, $expectedResourcesIds);
     }
 
     public function testPermissions()

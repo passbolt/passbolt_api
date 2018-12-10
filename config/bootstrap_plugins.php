@@ -21,3 +21,15 @@ use Cake\Core\Plugin;
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Export')) {
     Plugin::load('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
 }
+
+// Add remember me plugin if present.
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
+    Plugin::load('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
+}
+
+// Add tags plugin if present.
+if (defined('PASSBOLT_IS_CONFIGURED') && !PASSBOLT_IS_CONFIGURED) {
+    if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'WebInstaller')) {
+        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+    }
+}

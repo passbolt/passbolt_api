@@ -27,9 +27,10 @@ class V200MigrateEmailsTable extends AbstractMigration
     public function up()
     {
         $this->dropTable('email_queue');
+        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
         $migrations = new Migrations([
-            'connection' => 'default',
             'plugin' => 'EmailQueue',
+            'connection' => $connectionName
         ]);
         $migrations->migrate();
     }
