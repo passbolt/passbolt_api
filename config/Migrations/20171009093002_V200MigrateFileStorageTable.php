@@ -31,8 +31,9 @@ class V200MigrateFileStorageTable extends AbstractMigration
      */
     public function up()
     {
+        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
         $migrations = new Migrations([
-            'connection' => 'default',
+            'connection' => $connectionName,
             'plugin' => 'Burzum/FileStorage',
         ]);
         // If the table file_storage exists, we prevent the initial migration to happen.
@@ -43,13 +44,13 @@ class V200MigrateFileStorageTable extends AbstractMigration
                 ->changeColumn('id', 'char', ['limit' => 36])
                 ->save();
             $migrations->markMigrated(self::$fileStorageMigrations['initial_migration'], [
-                'connection' => defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default'
+                'connection' => $connectionName
             ]);
         }
         // Continue with the next plugin migrations.
         $migrations->migrate([
             'target' => self::$fileStorageMigrations['fixing_mime_type_field'],
-            'connection' => defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default'
+            'connection' => $connectionName
         ]);
 
         // Transform "ProfileAvatar" into "Avatar" in existing db data.

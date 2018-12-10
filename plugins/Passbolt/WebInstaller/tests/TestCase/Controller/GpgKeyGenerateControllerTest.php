@@ -27,7 +27,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
         $this->initWebInstallerSession();
     }
 
-    public function testViewSuccess()
+    public function testWebInstallerGpgKeyGenerateViewSuccess()
     {
         $this->get('/install/gpg_key');
         $data = ($this->_getBodyAsString());
@@ -35,7 +35,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
         $this->assertContains('Create a new GPG key for your server', $data);
     }
 
-    public function testPostSuccess()
+    public function testWebInstallerGpgKeyGeneratePostSuccess()
     {
         $postData = [
             'name' => 'Aurore Avarguès-Weber',
@@ -48,7 +48,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
         $this->assertSession($postData, 'webinstaller.gpg');
     }
 
-    public function testPostError_InvalidData()
+    public function testWebInstallerGpgKeyGeneratePostError_InvalidData()
     {
         $postData = [
             'name' => 'Aurore Avarguès-Weber',

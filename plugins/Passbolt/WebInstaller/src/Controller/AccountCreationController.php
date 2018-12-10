@@ -14,11 +14,9 @@
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use App\Model\Entity\Role;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
+use Passbolt\WebInstaller\Form\AccountCreationForm;
 
 class AccountCreationController extends WebInstallerController
 {
@@ -43,7 +41,7 @@ class AccountCreationController extends WebInstallerController
             return $this->indexPost();
         }
 
-        $this->set('user', null);
+        $this->set('formExecuteResult', null);
         $this->render('Pages/account_creation');
     }
 
@@ -53,38 +51,38 @@ class AccountCreationController extends WebInstallerController
      */
     protected function indexPost()
     {
-        $data = $this->request->getData();
-        $this->webInstaller->setSettingsAndSave('first_user', $data);
-
         try {
-            $this->validateData($data);
+            $data = $this->getAndValidateData();
         } catch (Exception $e) {
             return $this->_error($e->getMessage());
         }
 
+        $this->webInstaller->setSettingsAndSave('first_user', $data);
         $this->goToNextStep();
     }
 
     /**
      * Get and validate the posted data.
-     * @param array $data The posted data
      * @throws Exception If the user is not valid
      * @return array
      */
-    protected function validateData($data)
+    protected function getAndValidateData()
     {
-        // Set the default database configuration, so the models loaded after can be used on it.
-        $this->webInstaller->initDatabaseConnection();
-        $this->loadModel('Users');
+        $data = $this->request->getData();
+        $accountCreationForm = new AccountCreationForm();
+        $isValid = $accountCreationForm->execute($data);
+        $this->set('formExecuteResult', $accountCreationForm);
 
-        $data['role_id'] = UuidFactory::uuid(); // Temporary role id
-        $user = $this->Users->buildEntity($data);
-        $this->set('user', $user);
-        $errors = $user->getErrors();
-        if (!empty($errors)) {
+        if (!$isValid) {
             throw new Exception(__('The data entered are not correct'));
         }
 
-        return $data;
+        return [
+            'username' => $data['username'],
+            'profile' => [
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+            ]
+        ];
     }
 }

@@ -68,6 +68,10 @@ class MigrateTask extends AppShell
         $cmd = $this->_formatCmd('migrations migrate');
         $result = ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
 
+        // Clean cache
+        $cmd = $this->_formatCmd('cache clear_all');
+        $this->dispatchShell($cmd);
+
         return $result;
     }
 

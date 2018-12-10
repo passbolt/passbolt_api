@@ -12,26 +12,23 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+namespace App\Test\Lib\Utility;
 
-use Migrations\AbstractMigration;
+use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
+use App\Utility\UuidFactory;
 
-use Migrations\Migrations;
-
-class V200MigrateEmailsTable extends AbstractMigration
+trait UserAccessControlTrait
 {
     /**
-     * Up
+     * Asserts that an object has specified attributes.
      *
-     * @return void
+     * @param string $user ada, betty, etc.
+     * @param string $role optional
+     * @return UserAccessControl
      */
-    public function up()
+    public function mockUserAccessControl($user, $role = Role::GUEST)
     {
-        $this->dropTable('email_queue');
-        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
-        $migrations = new Migrations([
-            'plugin' => 'EmailQueue',
-            'connection' => $connectionName
-        ]);
-        $migrations->migrate();
+        return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
     }
 }
