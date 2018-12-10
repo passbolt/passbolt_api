@@ -22,38 +22,6 @@ use Cake\ORM\TableRegistry;
 class HomeController extends AppController
 {
     /**
-     * Before filter
-     *
-     * @param Event $event An Event instance
-     * @return \Cake\Http\Response|null
-     */
-    public function beforeFilter(Event $event)
-    {
-        $this->Auth->allow([
-            'notConfigured',
-        ]);
-
-        return parent::beforeFilter($event);
-    }
-
-    /**
-     * Not configured page.
-     *
-     * Is displayed instead of any other page if passbolt is ont configured.
-     *
-     * @return void
-     */
-    public function notConfigured()
-    {
-        $this->viewBuilder()
-            ->setLayout('default')
-            ->setTemplatePath('/Home')
-            ->setTemplate('not_configured');
-
-        $this->success();
-    }
-
-    /**
      * Password workspace page action
      *
      * @return void

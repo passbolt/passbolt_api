@@ -19,11 +19,11 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Cake\Datasource\EntityInterface;
 
 /**
  * AuthenticationTokens Model

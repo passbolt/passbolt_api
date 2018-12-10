@@ -27,3 +27,10 @@ if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'RememberMe')) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'AccountSettings')) {
     Plugin::load('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
 }
+
+// Add tags plugin if present.
+if (defined('PASSBOLT_IS_CONFIGURED') && !PASSBOLT_IS_CONFIGURED) {
+    if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'WebInstaller')) {
+        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+    }
+}
