@@ -134,7 +134,7 @@ EOF";
      */
     protected static function generateKeyCmdV1($keyData)
     {
-        $cmd = "gpg --batch --gen-key <<EOF
+        $cmd = "gpg --batch --no-tty --gen-key <<EOF
 Key-Type: 1
 Key-Length: 2048
 Name-Real: {$keyData['name']}" . (isset($keyData['comment']) && !empty($keyData['comment']) ? "
