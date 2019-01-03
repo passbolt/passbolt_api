@@ -18,9 +18,30 @@ use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 
-class SecretsDataTask extends \PassboltTestData\Shell\Task\Base\SecretsDataTask
+class SecretsDataTask extends DataTask
 {
     public $entityName = 'Secrets';
+    protected $gpgkeys = [];
+
+    /**
+     * @inheritDoc
+     */
+    public function execute()
+    {
+        $this->loadModel('Gpgkeys');
+        $this->loadModel('Secrets');
+
+        // Retrieve the key info.
+        // As a default key can be shared among user, the encryption will require the key fingerprint.
+        // As the key meta data are already stored in db, get the meta data from the db and avoid performance issue
+        // by avoiding any gpg extra parsing.
+        $gpgkeys = $this->Gpgkeys->find()->all();
+        foreach ($gpgkeys as $gpgkey) {
+            $this->gpgkeys[$gpgkey->user_id] = $gpgkey->fingerprint;
+        }
+
+        return parent::execute();
+    }
 
     /**
      * Get encrypted secrets
@@ -34,21 +55,59 @@ class SecretsDataTask extends \PassboltTestData\Shell\Task\Base\SecretsDataTask
         $this->loadModel('Users');
         $this->loadModel('Resources');
 
-        $user = $this->Users->findById(UuidFactory::uuid('user.id.user_0'))->first();
-        $password = 'Nous sommes partout';
-        $armoredPassword = $this->_encrypt($password, $user);
-
-        $resources = $this->Resources->findIndex($user->id);
-        foreach ($resources as $resource) {
-            $secrets[] = [
-                'id' => UuidFactory::uuid("secret.id.{$resource->id}-{$user->id}"),
-                'user_id' => $user->id,
-                'resource_id' => $resource->id,
-                'data' => $armoredPassword,
-                'created_by' => $user->id
-            ];
+        $users = $this->Users->findIndex(Role::USER);
+        foreach ($users as $user) {
+            $resources = $this->Resources->findIndex($user->id);
+            foreach ($resources as $resource) {
+                $armoredPassword = $this->_encrypt('dummy password', $user);
+                $secrets[] = [
+                    'id' => UuidFactory::uuid("secret.id.{$resource->id}-{$user->id}"),
+                    'user_id' => $user->id,
+                    'resource_id' => $resource->id,
+                    'data' => $armoredPassword,
+                    'created_by' => $user->id,
+                    'created' => date('Y-m-d H:i:s'),
+                    'modified' => date('Y-m-d H:i:s'),
+                ];
+            }
         }
 
         return $secrets;
+    }
+
+    /**
+     * Encrypt passwords
+     *
+     * @param string $text password
+     * @param \Cake\ORM\Entity $user User
+     * @return array
+     */
+    protected function _encrypt($text, $user)
+    {
+        static $keyImported = [];
+        static $encrypted = [];
+        $keyFingerprint = $this->gpgkeys[$user->id];
+
+        // Import the user public key.
+        if (!isset($keyImported[$keyFingerprint])) {
+            // Retrieve the user key file.
+            $GpgkeyTask = $this->Tasks->load('PassboltTestData.Base/GpgkeysData');
+            $GpgkeyTask->params = $this->params;
+            $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user->id);
+
+            exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
+            $keyImported[$keyFingerprint] = true;
+        }
+
+        // Encrypt the text.
+        if (!isset($encrypted[$keyFingerprint][$text])) {
+            $command = "echo -n " . escapeshellarg($text) . " | gpg --encrypt -r " . $keyFingerprint . " -a --trust-model always";
+            exec($command, $output);
+
+            // Return the armored message.
+            $encrypted[$keyFingerprint][$text] = implode("\n", $output);
+        }
+
+        return $encrypted[$keyFingerprint][$text];
     }
 }

@@ -18,6 +18,7 @@ use App\Utility\Gpg;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\DataTask;
+use Passbolt\WebInstaller\Utility\Gpg as WebinstallerGpg;
 
 class GpgkeysDataTask extends DataTask
 {
@@ -32,16 +33,41 @@ class GpgkeysDataTask extends DataTask
     public function getGpgkeyPath($userId)
     {
         $Users = TableRegistry::get('Users');
-        $user = $Users->find('all')->where(['id' => $userId])->first();
+        $user = $Users->find('all')->contain(['Profiles'])->where(['Users.id' => $userId])->first();
         $prefix = $user->username;
         $uprefix = explode('@', $prefix);
-        if (file_exists(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key')) {
-            $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key';
-        } else {
+        $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key';
+
+        if (!file_exists($keyFileName)) {
             $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'passbolt_dummy_key.asc';
+            // Generate a new key.
+            // This code can be useful when we need to generate keys.
+            // By definition a gpg key should be unique and a owned by only one user.
+            // $privateKeyPath = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_private.key';
+            // $this->generateKey($user, $keyFileName, $privateKeyPath);
         }
 
         return $keyFileName;
+    }
+
+    /**
+     * Generate and export a user key.
+     *
+     * @param User $user The user entity to generate the key for
+     * @param string $publicKeyPath The public key path
+     * @param string $privateKeyPath The private key path
+     * @return void
+     */
+    public function generateAndExportGpgKeys($user, $publicKeyPath, $privateKeyPath)
+    {
+        $gpgSettings = [
+            'name' => $user->profile->first_name . ' ' . $user->profile->last_name,
+            'email' => $user->username,
+            'comment' => ''
+        ];
+        $fingerprint = WebinstallerGpg::generateKey($gpgSettings);
+        WebinstallerGpg::exportPublicArmoredKey($fingerprint, $publicKeyPath);
+        WebinstallerGpg::exportPrivateArmoredKey($fingerprint, $privateKeyPath, $user->username);
     }
 
     /**
@@ -86,7 +112,7 @@ class GpgkeysDataTask extends DataTask
                     'type' => $info['type'],
                     'expires' => !empty($info['expires']) ? date('Y-m-d H:i:s', $info['expires']) : null,
                     'key_created' => date('Y-m-d H:i:s', $info['key_created']),
-                    'deleted' => false,
+                    'deleted' => 0,
                     'created' => date('Y-m-d H:i:s'),
                     'modified' => date('Y-m-d H:i:s')
                 ];

@@ -14,6 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Large;
 
+use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use PassboltTestData\Lib\DataTask;
@@ -23,16 +24,54 @@ class ResourcesDataTask extends DataTask
     public $entityName = 'Resources';
 
     /**
-     * Get the resource data
+     * Get the resources data
      *
      * @return array
      */
     public function getData()
     {
-        $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources');
+        $resources = [];
+        $resources = array_merge($resources, $this->getResourcesScenarioForEachUser());
+        $resources = array_merge($resources, $this->getResourcesScenarioForGroupAllUsers());
+
+        return $resources;
+    }
+
+    public function getResourcesScenarioForEachUser()
+    {
+        $this->loadModel('Users');
+
+        // Resources by person
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_foreach_user');
+        $users = $this->Users->findIndex(Role::USER);
+        foreach ($users as $user) {
+            for ($i = 0; $i < $max; $i++) {
+                $userId = $user->id;
+                $username = $user->username;
+                $resources[] = [
+                    'id' => UuidFactory::uuid("resource.id.resource_{$i}_for_each_user_{$userId}"),
+                    'name' => "Resource for $username $i",
+                    'username' => "username_$i",
+                    'uri' => 'http://www.passbolt.com/',
+                    'description' => 'The password manager your team was waiting for.',
+                    'deleted' => 0,
+                    'created_by' => $userId,
+                    'modified_by' => $userId,
+                    'created' => date('Y-m-d H:i:s', strtotime('-2 days')),
+                    'modified' => date('Y-m-d H:i:s', strtotime('-1 days')),
+                ];
+            }
+        }
+
+        return $resources;
+    }
+
+    public function getResourcesScenarioForGroupAllUsers()
+    {
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_for_group_all_users');
         for ($i = 0; $i < $max; $i++) {
             $resources[] = [
-                'id' => UuidFactory::uuid("resource.id.resource_$i"),
+                'id' => UuidFactory::uuid("resource.id.resource_{$i}_group_all_users"),
                 'name' => "Resource $i",
                 'username' => "username_$i",
                 'uri' => 'http://www.passbolt.com/',

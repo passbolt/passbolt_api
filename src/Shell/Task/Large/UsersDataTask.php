@@ -36,6 +36,8 @@ class UsersDataTask extends DataTask
             'role_id' => UuidFactory::uuid('role.id.admin'),
             'active' => 1,
             'deleted' => 0,
+            'created' => date('Y-m-d H:i:s'),
+            'modified' => date('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
@@ -45,10 +47,12 @@ class UsersDataTask extends DataTask
             'role_id' => UuidFactory::uuid('role.id.anonymous'),
             'active' => 1,
             'deleted' => 0,
+            'created' => date('Y-m-d H:i:s'),
+            'modified' => date('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin')
         ];
-        $max = Configure::read('PassboltTestData.scenarios.large.install.count');
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count.users');
         for ($i = 0; $i < $max; $i++) {
             $users[] = [
                 'id' => UuidFactory::uuid('user.id.user_' . $i),
@@ -56,6 +60,8 @@ class UsersDataTask extends DataTask
                 'role_id' => UuidFactory::uuid('role.id.user'),
                 'active' => 1,
                 'deleted' => 0,
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
                 'created_by' => UuidFactory::uuid('user.id.admin'),
                 'modified_by' => UuidFactory::uuid('user.id.admin')
             ];

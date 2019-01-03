@@ -60,6 +60,5 @@ class AvatarsDataTask extends DataTask
                 }
             }
         }
-        $this->out('Data for entity "' . $this->entityName . '" inserted (' . $count . ')');
     }
 }

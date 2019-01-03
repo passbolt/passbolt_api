@@ -36,7 +36,9 @@ class ProfilesDataTask extends DataTask
             'date_of_birth' => '1970-01-01',
             'title' => 'Mr',
             'first_name' => 'Admin',
-            'last_name' => 'User'
+            'last_name' => 'User',
+            'created' => date('Y-m-d H:i:s'),
+            'modified' => date('Y-m-d H:i:s'),
         ];
         $profiles[] = [
             'id' => UuidFactory::uuid('profile.id.anonymous'),
@@ -45,7 +47,9 @@ class ProfilesDataTask extends DataTask
             'date_of_birth' => '1980-12-10',
             'title' => 'Mr',
             'first_name' => 'Anonymous',
-            'last_name' => 'User'
+            'last_name' => 'User',
+            'created' => date('Y-m-d H:i:s'),
+            'modified' => date('Y-m-d H:i:s'),
         ];
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.users');
         for ($i = 0; $i < $max; $i++) {
@@ -57,6 +61,8 @@ class ProfilesDataTask extends DataTask
                 'title' => '',
                 'first_name' => 'First name ' . $i,
                 'last_name' => 'Last name ' . $i,
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
             ];
         }
 

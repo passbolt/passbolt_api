@@ -16,13 +16,18 @@
 namespace PassboltTestData\Lib;
 
 use Cake\Console\Shell;
+use Cake\Core\Configure;
 use Exception;
+use PassboltTestData\Lib\SaveStrategy\SaveEntity;
+use PassboltTestData\Lib\SaveStrategy\SaveMany;
+use PassboltTestData\Lib\SaveStrategy\SaveSqlInfile;
 
 /**
  * Data shell task.
  */
 abstract class DataTask extends Shell
 {
+
     /**
      * The entity name the data task target.
      * @var null
@@ -49,6 +54,7 @@ abstract class DataTask extends Shell
      */
     public function execute()
     {
+        $startTime = time();
         if (is_null($this->entityName)) {
             throw new Exception('Entity name not defined');
         }
@@ -61,52 +67,73 @@ abstract class DataTask extends Shell
             $this->_Entity->deleteAll([]);
         }
 
-        $conn = \Cake\Datasource\ConnectionManager::get('default');
-        $conn->logQueries(true);
+        // $conn = \Cake\Datasource\ConnectionManager::get('default');
+        // $conn->logQueries(true);
 
         // Insert the data in the db.
         $data = $this->getData();
-        foreach ($data as $row) {
-            try {
-                $this->saveEntity($row);
-            } catch (Exception $e) {
-                $this->err(sprintf('Data "%s" from "%s" could not be inserted', $row[array_keys($row)[0]]['id'], $this->entityName));
-                $this->err(print_r($row, true));
-                $this->warn($e->getMessage());
-            }
+        try {
+            $this->save($data);
+            // old fashion way (can be useful for debugging)
+            // return $this->saveOneByOne();
+            $endTime = time();
+            $dtF = new \DateTime("@$startTime");
+            $dtT = new \DateTime("@$endTime");
+            $diff = $dtF->diff($dtT)->format('%im %ss');
+            $this->out('Data for entity "' . $this->entityName . '" inserted (' . count($data) . ') in ' . $diff);
+        } catch (Exception $e) {
+            $this->err(sprintf('Data for %s cannot be imported', $this->entityName));
+            $this->warn($e->getMessage());
+
+            return false;
         }
-        $this->out('Data for entity "' . $this->entityName . '" inserted (' . count($data) . ')');
 
         return true;
     }
 
     /**
-     * Insert an entity.
+     * Display the progress bar
+     * @param int $total Number total of tasks
+     * @return Progress
+     */
+    public function displayProgressBar($total)
+    {
+        $progress = null;
+
+        if ($total > 1) {
+            $progress = $this->helper('Progress');
+            $progress->init([
+                'total' => $total,
+                'width' => 50,
+            ]);
+            $progress->draw();
+        }
+
+        return $progress;
+    }
+
+    /**
+     * Save data.
      *
-     * @param array $data entity request data
-     * @throws Exception if the entity can not be validated or saved
+     * @param {array} $data The data to save
      * @return void
      */
-    public function saveEntity($data)
+    public function save(array $data = [])
     {
-        $entity = $this->_Entity->newEntity();
-        $entity->accessible('*', true);
-        $entity->set($data);
-
-        $errors = $entity->getErrors();
-        if ($errors) {
-            $this->out('Unable to validate the entity data');
-            $this->out(json_encode($errors));
-            $this->out(json_encode($data));
-            throw new Exception('Unable to save the entity data');
+        $saveStrategy = Configure::read('PassboltTestData.saveStrategy');
+        switch ($saveStrategy) {
+            default:
+            case 'default':
+                $strategy = new SaveEntity($this);
+                break;
+            case 'many':
+                $strategy = new SaveMany($this);
+                break;
+            case 'sqlInfile':
+                $strategy = new SaveSqlInfile($this);
+                break;
         }
 
-        if (!$this->_Entity->save($entity, ['checkRules' => false, 'atomic' => false])) {
-            $errors = $entity->getErrors();
-            $this->out('Unable to save the entity');
-            $this->out(json_encode($errors));
-            $this->out(json_encode($data));
-            throw new Exception('Unable to save the entity data');
-        }
+        $strategy->save($data);
     }
 }

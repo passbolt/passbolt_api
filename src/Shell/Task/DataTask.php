@@ -52,9 +52,10 @@ class DataTask extends Shell
     public function main()
     {
         $shellTtasks = $this->_getShellTasks();
+        $startTime = time();
 
         foreach ($shellTtasks as $shellTask) {
-            if(Configure::read('passbolt.edition') === 'ce') {
+            if (Configure::read('passbolt.edition') === 'ce') {
                 if (strpos($shellTask, 'PassboltTestData.Pro') !== false) {
                     continue;
                 }
@@ -70,12 +71,17 @@ class DataTask extends Shell
                 if (method_exists($task, "afterExecute")) {
                     $task->afterExecute();
                 }
-            } catch(\Exception $exception) {
+            } catch (\Exception $exception) {
+                var_dump($exception->getMessage());
                 $this->out(__('Could not load task {0}, skipping.', $shellTask));
             }
         }
 
-        $this->out('<success>' . __('Data inserted successfully') . '</success>');
+        $endTime = time();
+        $dtF = new \DateTime("@$startTime");
+        $dtT = new \DateTime("@$endTime");
+        $diff = $dtF->diff($dtT)->format('%im %ss');
+        $this->out('<success>' . __('Data inserted successfully in ' . $diff) . '</success>');
 
         return true;
     }

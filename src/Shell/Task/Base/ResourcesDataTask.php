@@ -344,16 +344,6 @@ class ResourcesDataTask extends DataTask
             'id' => UuidFactory::uuid('resource.id.stealjs'),
             'name' => 'StealJs',
             'username' => 'stealjs',
-            'uri' => 'stealjs.com/',
-            'description' => 'Futuristic JavaScript dependency loader and builder.',
-            'deleted' => 0,
-            'created_by' => UuidFactory::uuid('user.id.yvonne'),
-            'modified_by' => UuidFactory::uuid('user.id.yvonne')
-        ];
-        $resources[] = [
-            'id' => UuidFactory::uuid('resource.id.stealjs'),
-            'name' => 'StealJs',
-            'username' => 'stealjs',
             'uri' => 'stealjs.com',
             'description' => 'Futuristic JavaScript dependency loader and builder.',
             'deleted' => 0,

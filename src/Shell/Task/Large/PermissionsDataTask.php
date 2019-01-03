@@ -18,6 +18,7 @@ use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
 use PassboltTestData\Lib\PermissionMatrix;
+use Cake\Core\Configure;
 
 class PermissionsDataTask extends DataTask
 {
@@ -31,36 +32,63 @@ class PermissionsDataTask extends DataTask
     public function getData()
     {
         $permissions = [];
-        $permissions = array_merge($permissions, $this->getUsersResourcesPermissions());
+        $permissions = array_merge($permissions, $this->getPermissionsScenarioForEachUser());
+        $permissions = array_merge($permissions, $this->getPermissionsScenarioForGroupAllUsers());
 
         return $permissions;
     }
 
-    /**
-     * Get the resource user permissions association data
-     *
-     * @return array
-     */
-    private function getUsersResourcesPermissions()
+    private function getPermissionsScenarioForEachUser()
     {
         $this->loadModel('Users');
         $this->loadModel('Resources');
         $permissions = [];
 
-        $userId = UuidFactory::uuid('user.id.user_0');
-        $resources = $this->Resources->find()->all();
-        foreach ($resources as $resource) {
-            $acoId = $resource->id;
-            $aroId = $userId;
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_foreach_user');
+        $users = $this->Users->findIndex(Role::USER);
+        foreach ($users as $user) {
+            for ($i = 0; $i < $max; $i++) {
+                $aroId = $user->id;
+                $acoId = UuidFactory::uuid("resource.id.resource_{$i}_for_each_user_{$aroId}");
+                $permissions[] = [
+                    'id' => UuidFactory::uuid("permission.id.$acoId-$aroId"),
+                    'aco' => 'Resource',
+                    'aco_foreign_key' => $acoId,
+                    'aro' => 'User',
+                    'aro_foreign_key' => $aroId,
+                    'type' => 15,
+                    'created' => date('Y-m-d H:i:s'),
+                    'modified' => date('Y-m-d H:i:s'),
+                    'created_by' => $aroId,
+                    'modified_by' => $aroId
+                ];
+            }
+        }
+
+        return $permissions;
+    }
+
+    private function getPermissionsScenarioForGroupAllUsers()
+    {
+        $this->loadModel('Users');
+        $this->loadModel('Resources');
+        $permissions = [];
+
+        $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_for_group_all_users');
+        for ($i = 0; $i < $max; $i++) {
+            $acoId = UuidFactory::uuid("resource.id.resource_{$i}_group_all_users");
+            $aroId = UuidFactory::uuid('group.id.all_users');
             $permissions[] = [
                 'id' => UuidFactory::uuid("permission.id.$acoId-$aroId"),
                 'aco' => 'Resource',
                 'aco_foreign_key' => $acoId,
-                'aro' => 'User',
+                'aro' => 'Group',
                 'aro_foreign_key' => $aroId,
                 'type' => 15,
-                'created_by' => $userId,
-                'modified_by' => $userId
+                'created' => date('Y-m-d H:i:s'),
+                'modified' => date('Y-m-d H:i:s'),
+                'created_by' => $aroId,
+                'modified_by' => $aroId
             ];
         }
 

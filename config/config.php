@@ -15,6 +15,15 @@
 
 return [
     'PassboltTestData' => [
+        /*
+         * Save strategy can improve significantly the performance of the import.
+         * - default: Save the entity one by one using the cake table model
+         * - saveMany: Save the entities by batch
+         * - sqlInfile: Save the entities using the sql LOAD DATA INFILE primitive.
+         *   This strategy can significantly improve the performance.
+         *   This strategy requires the mysql user to have some privilegies to access the LOAD DATA INFILE primitive.
+         */
+        'saveStrategy' => 'default',
         'scenarios' => [
             'default' => [
                 'install' => [
@@ -92,15 +101,30 @@ return [
             ],
             'large' => [
                 'install' => [
-                    'count' => 300,
+                    'count' => [
+                        'chunk_size' => 1000,
+                        'users' => 50,
+                        'groups' => 100,
+                        'resources_for_group_all_users' => 500,
+                        'resources_foreach_user' => 50,
+                        'tags_personal' => 1,
+                        'tags_shared' => 2
+                    ],
                     'shellTasks' => [
                         'PassboltTestData.Base/RolesData',
                         'PassboltTestData.Large/UsersData',
-                    ]
-                ],
-                'fixturize' => [
-                    'shellTasks' => [
-                        'PassboltTestData.Large/UsersData',
+                        'PassboltTestData.Large/ProfilesData',
+                        'PassboltTestData.Base/AvatarsData',
+                        'PassboltTestData.Base/GpgkeysData',
+                        'PassboltTestData.Large/GroupsData',
+                        'PassboltTestData.Large/GroupsUsersData',
+                        'PassboltTestData.Large/ResourcesData',
+                        'PassboltTestData.Large/PermissionsData',
+                        'PassboltTestData.Large/FavoritesData',
+                        'PassboltTestData.Large/CommentsData',
+                        'PassboltTestData.Large/SecretsData',
+                        'PassboltTestData.Large/TagsData',
+                        'PassboltTestData.Large/ResourcesTagsData'
                     ]
                 ]
             ]
