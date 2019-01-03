@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.6.1]
 ### Improved
 - PASSBOLT-3273: Username and password should not be compulsory in email settings, in web installer
+- PASSBOLT-3247: Add a large dummy data scenario to the passbolt_test_data module
 
 ### Fixed
 - PASSBOLT-3281: LDAP: fixed case issue in AllSync tasks calls
