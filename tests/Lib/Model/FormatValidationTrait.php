@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SARL (https://www.passbolt.com)
@@ -116,6 +117,57 @@ trait FormatValidationTrait
                 } else {
                     $this->assertEquals(false, (bool)$save, __("The test for {0}:{1} = {2} is not expected to save data", $fieldName, $testCaseName, $testCaseData));
                     $errors = $entity->getErrors();
+                    $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
+                    $this->assertNotEmpty(
+                        Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
+                        __("The test {0}:{1} = {2} should have returned an error on the rule {3} but did not.", $fieldName, $testCaseName, $testCaseData, $testCase['rule_name'])
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Assert that a field passes the format validation according to the test cases given.
+     *
+     * Beware, this function tests only the format validation rules. The custom rules
+     * defined in buildRules will not be tested.
+     *
+     * @param \Cake\ORM\Table $entityTable the entityTable object
+     * @param string $fieldName field name to be validated
+     * @param array $entityData data to populate the entity with. Add 'id' if you want to test an update.
+     * @param array $entityOptions entity options used at the creation
+     * @param array $testCases the test cases to run
+     *   a test case array is composed as follow:
+     *   [
+     *     '$name' => [
+     *       [
+     *         'rule_name' => 'uuid',
+     *         'test_cases' => [
+     *           'string1' => true, // Defines a value that should validate
+     *           'string2' => false // Defines a value that shouldn't validate
+     *         ]
+     *       ],
+     *       [....]
+     *     ]
+     *   ]
+     * @return void
+     */
+    public function assertFormFieldFormatValidation($FormClass, $fieldName, $formData, $testCases)
+    {
+    //    $context = isset($entityData['id']) ? 'update' : 'create';
+        foreach ($testCases as $testCaseName => $testCase) {
+            foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
+                $formData = array_merge($formData, [$fieldName => $testCaseData]);
+                $formData = $this->_adjustEntityData($formData);
+                $form = new $FormClass();
+                $validate = $form->validate($formData);
+
+                if ($expectedResult == true) {
+                    $this->assertEquals(true, (bool)$validate, __("The test for {0}:{1} = {2} is expected to validate", $fieldName, $testCaseName, $testCaseData));
+                } else {
+                    $this->assertEquals(false, (bool)$validate, __("The test for {0}:{1} = {2} is not expected to not validate", $fieldName, $testCaseName, $testCaseData));
+                    $errors = $form->errors();
                     $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
@@ -381,6 +433,28 @@ trait FormatValidationTrait
                 self::getStringMask('alphaASCII', 0) => true,
                 self::getStringMask('alphaASCII', $max) => true,
                 self::getStringMask('alphaASCII', $max + 1) => false,
+            ],
+        ];
+
+        return $test;
+    }
+
+    /**
+     * Test cases for range validation rule.
+     *
+     * @param int $min minimum
+     * @param int $max maximum
+     * @return array
+     */
+    public static function getRangeTestCases($min, $max)
+    {
+        $test = [
+            'rule_name' => 'range',
+            'test_cases' => [
+                $min - 1 => false,
+                $min => true,
+                $max => true,
+                $max + 1 => false
             ],
         ];
 

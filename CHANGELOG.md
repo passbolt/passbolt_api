@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+- Username and password should not be compulsory in email settings, in web installer
+- PASSBOLT-3247: Add a large dummy data scenario to the passbolt_test_data module
 
 ## [2.5.0] - 2018-11-14
 ### Added
