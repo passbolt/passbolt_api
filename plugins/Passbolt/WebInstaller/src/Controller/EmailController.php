@@ -153,7 +153,7 @@ class EmailController extends WebInstallerController
         $transportConfig['className'] = $customTransportClassName;
         $transportConfig['host'] = $data['host'];
         $transportConfig['port'] = $data['port'];
-        $transportConfig['username'] =  empty($data['username']) ? null : $data['username'];
+        $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
         $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
         $transportConfig['tls'] = ($data['tls'] == '1' ? true : null);
         Email::setConfigTransport(self::TRANSPORT_CONFIG_NAME, $transportConfig);

@@ -51,6 +51,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         foreach ($fails as $case => $url) {
             $this->get($url);
             $this->assertResponseCode(404, 'Setup start should fail with 404 on case: ' . $case);
+            $this->_response = null; // Free the memory usage.
         }
     }
 
@@ -75,6 +76,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         foreach ($fails as $case => $url) {
             $this->get($url);
             $this->assertResponseCode(400, 'Setup start should fail with 400 on case: ' . $case);
+            $this->_response = null; // Free the memory usage.
         }
     }
 

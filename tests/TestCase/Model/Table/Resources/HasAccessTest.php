@@ -50,9 +50,9 @@ class HasAccessTest extends AppTestCase
                 $resourceId = UuidFactory::uuid("resource.id.$resourceAlias");
                 $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
                 if ($permissionType == 0) {
-                    $this->assertFalse($hasAccess);
+                    $this->assertFalse($hasAccess, "$userAlias should not have access to $resourceAlias");
                 } else {
-                    $this->assertTrue($hasAccess);
+                    $this->assertTrue($hasAccess, "$userAlias should have access to $resourceAlias");
                 }
             }
         }

@@ -261,34 +261,23 @@ trait ResourcesFindersTrait
             return $type >= $permissionType;
         });
 
-        // Retrieve the groups ids the user is member of.
-        $groupsIds = $this->_findGroupsByUserId($userId)
-            ->extract('id')
-            ->toArray();
+        // Retrieve the groups ids the user is member of in a subquery.
+        $groupsIdsSubQuery = $this->_findGroupsByUserId($userId)
+            ->select('Groups.id');
 
         // In a subquery retrieve the highest permission.
         $permissionSubquery = $this->association('Permissions')
             ->find()
-            ->select('Permissions.id');
-
-        // A permission is defined directly for the user and for a given resource.
-        $where = [
-            'Permissions.aco_foreign_key = Resources.id',
-            'Permissions.aro_foreign_key' => $userId,
-            'Permissions.type IN' => $allowedPermissionTypes,
-        ];
-
-        // A permission is defined for a group the user is member of and for a given resource.
-        if (!empty($groupsIds)) {
-            $where = [
-                'OR' => [ $where, [
-                    'Permissions.aco_foreign_key = Resources.id',
-                    'Permissions.aro_foreign_key IN' => $groupsIds,
-                    'Permissions.type IN' => $allowedPermissionTypes,
-                ]]];
-        }
-        $permissionSubquery->where($where);
-        $permissionSubquery->order(['Permissions.type' => 'DESC'])
+            ->select('Permissions.id')
+            ->where([
+                'Permissions.aco_foreign_key = Resources.id',
+                'OR' => [
+                    ['Permissions.aro_foreign_key' => $userId],
+                    ['Permissions.aro_foreign_key IN' => $groupsIdsSubQuery],
+                ],
+                'Permissions.type IN' => $allowedPermissionTypes,
+            ])
+            ->order(['Permissions.type' => 'DESC'])
             ->limit(1);
 
         // Filter the Resources query by permissions.
