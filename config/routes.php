@@ -294,6 +294,17 @@ Router::scope('/users', function ($routes) {
 });
 
 /**
+ * Secrets prefixed routes
+ */
+Router::scope('/secrets', function ($routes) {
+    $routes->setExtensions(['json']);
+
+    $routes->connect('/resource/:resourceId', ['prefix' => 'Secrets', 'controller' => 'SecretsView', 'action' => 'view'])
+        ->setPass(['resourceId'])
+        ->setMethods(['GET']);
+});
+
+/**
  * Settings prefixed routes
  */
 Router::scope('/settings', function ($routes) {
