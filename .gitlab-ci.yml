@@ -245,6 +245,8 @@ selenium-firefox:
   extends: .test-selenium
   variables:
     SELENIUM_BROWSER: "firefox"
+  only:
+    - tags
 
 # To uncomment when chrome will be stable
 #selenium-chrome:
