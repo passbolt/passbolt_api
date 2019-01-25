@@ -246,7 +246,7 @@ selenium-firefox:
   variables:
     SELENIUM_BROWSER: "firefox"
   only:
-    - chat
+    - tags
 
 # To uncomment when chrome will be stable
 #selenium-chrome:
