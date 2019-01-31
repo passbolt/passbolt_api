@@ -237,7 +237,10 @@ trait GroupUsersSyncTrait
 
             // The user should be added only if it doesn't already belong to the existing group_users in db.
             $userId = $directoryGroupUserEntriesByDn[$userDn]->foreign_key;
-            if (in_array($userId, $dbUserIdsInGroup)) {
+            if ($userId === null) {
+                // The user has been deleted and the group user entry now points to nothing.
+                continue;
+            } else if (in_array($userId, $dbUserIdsInGroup)) {
                 // Do nothing. It is taken care of by syncGroupUsers.
                 continue;
             }
@@ -338,10 +341,12 @@ trait GroupUsersSyncTrait
             $saveResult = $this->Groups->save($group);
             if (!$saveResult) {
                 $errors = $group->getErrors();
-                if (isset($errors['groups_users'][1]['user_id']['user_is_active'])) {
-                    $msg = __('The user {0} could not be added to group {1} because it is not active yet.', $u->username, $group->name);
-                } elseif (isset($errors['groups_users'][1]['user_id']['user_is_not_soft_deleted'])) {
+                $isNotActive = isset($errors['groups_users'][1]['user_id']['user_is_active']);
+                $isDeleted = isset($errors['groups_users'][1]['user_id']['user_is_not_soft_deleted']);
+                if ($isNotActive && $isDeleted || $isDeleted) {
                     $msg = __('The user {0} could not be added to group {1} because it is deleted.', $u->username, $group->name);
+                } elseif ($isNotActive) {
+                    $msg = __('The user {0} could not be added to group {1} because it is not active yet.', $u->username, $group->name);
                 } else {
                     $msg = __('The user {0} could not be added to the group {1} because some validation issues.', $u->username, $group->name);
                 }

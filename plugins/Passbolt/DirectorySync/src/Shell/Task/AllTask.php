@@ -60,11 +60,11 @@ class AllTask extends SyncTask
             return false;
         }
 
-        $this->model = 'Groups';
-        $this->_displayReports($reports['groups']);
-
         $this->model = 'Users';
         $this->_displayReports($reports['users']);
+
+        $this->model = 'Groups';
+        $this->_displayReports($reports['groups']);
 
         return true;
     }

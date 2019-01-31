@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [unreleased]
+### Fixed
+- PASSBOLT-3406: LDAP: Fix bug "user_id is null when a user that is associated to a group is deleted"
+
 ## [2.6.1]
 ### Improved
 - PASSBOLT-3273: Username and password should not be compulsory in email settings, in web installer
