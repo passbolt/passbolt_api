@@ -973,9 +973,8 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);
         $this->assertDirectoryEntryExists(['id' => UuidFactory::uuid('ldap.user.id.ada')]);
-        $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_ERROR, 'type' => 'SyncError'];
+        $expectedReport = ['action' => Alias::ACTION_CREATE, 'model' => Alias::MODEL_USERS, 'status' => Alias::STATUS_SYNC, 'type' => Alias::MODEL_USERS];
         $this->assertReport($reports[0], $expectedReport);
-        $this->assertOrphanDirectoryEntryExists($data['id']);
     }
 
     /**

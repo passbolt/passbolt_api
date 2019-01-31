@@ -625,4 +625,27 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'child_key' => UuidFactory::uuid('ldap.user.id.frances'),
         ]);
     }
+
+    /**
+     * Unit test for PASSBOLT-3406
+     *
+     * foreignKey becomes null after a user is deleted and the sync is done once.
+     * Expected: no exception should be thrown
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_foreignKeyIsNull() {
+        $userEntry = $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'sofia', 'foreign_key' => 'null'], Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('freelancer');
+        $this->mockDirectoryGroupData('freelancer', [
+            'group_users' => [
+                $userEntry->directory_name
+            ]
+        ]);
+        $this->mockDirectoryRelationGroupUser('freelancer', 'sofia');
+        $reports = $this->action->execute();
+        $this->assertEmpty($reports);
+    }
 }

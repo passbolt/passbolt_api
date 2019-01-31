@@ -49,8 +49,8 @@ class AllSyncAction
      */
     public function syncAll()
     {
-        $groupReports = $this->syncGroups();
         $userReports = $this->syncUsers();
+        $groupReports = $this->syncGroups();
         $res = [
             'users' => $userReports,
             'groups' => $groupReports,
