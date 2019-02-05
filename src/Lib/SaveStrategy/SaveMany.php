@@ -72,7 +72,7 @@ class SaveMany
     {
         $entities = $this->shell->_Entity->newEntities($data, ['accessibleFields' => ['*' => true], 'validate' => false]);
         foreach ($entities as $entity) {
-            $entity->accessible('*', true);
+            $entity->setAccess('*', true);
         }
         $this->shell->_Entity->saveMany($entities, ['checkRules' => false, 'atomic' => false]);
     }

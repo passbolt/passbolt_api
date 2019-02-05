@@ -68,7 +68,7 @@ class SaveEntity
     public function saveEntity(array $data = [])
     {
         $entity = $this->shell->_Entity->newEntity();
-        $entity->accessible('*', true);
+        $entity->setAccess('*', true);
         $entity->set($data);
 
         $errors = $entity->getErrors();
