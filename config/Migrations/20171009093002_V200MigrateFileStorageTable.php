@@ -31,40 +31,40 @@ class V200MigrateFileStorageTable extends AbstractMigration
      */
     public function up()
     {
-        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
-        $migrations = new Migrations([
-            'connection' => $connectionName,
-            'plugin' => 'Burzum/FileStorage',
-        ]);
-        // If the table file_storage exists, we prevent the initial migration to happen.
-        // We can do this because the table structure remains the same between the 2 versions.
-        $exists = $this->hasTable('file_storage');
-        if ($exists) {
-            $this->table('file_storage')
-                ->changeColumn('id', 'char', ['limit' => 36])
-                ->save();
-            $migrations->markMigrated(self::$fileStorageMigrations['initial_migration'], [
-                'connection' => $connectionName
-            ]);
-        }
-        // Continue with the next plugin migrations.
-        $migrations->migrate([
-            'target' => self::$fileStorageMigrations['fixing_mime_type_field'],
-            'connection' => $connectionName
-        ]);
-
-        // Transform "ProfileAvatar" into "Avatar" in existing db data.
-        $FileStorage = TableRegistry::get('FileStorage');
-        $avatars = $FileStorage->find()->all();
-        foreach ($avatars as $key => $avatar) {
-            $avatar = $FileStorage->patchEntity(
-                $avatar,
-                [
-                    'model' => 'Avatar',
-                    'path' => str_replace('ProfileAvatar', 'Avatar', $avatar->path)
-                ]
-            );
-            $FileStorage->save($avatar);
-        }
+//        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
+//        $migrations = new Migrations([
+//            'connection' => $connectionName,
+//            'plugin' => 'Burzum/FileStorage',
+//        ]);
+//        // If the table file_storage exists, we prevent the initial migration to happen.
+//        // We can do this because the table structure remains the same between the 2 versions.
+//        $exists = $this->hasTable('file_storage');
+//        if ($exists) {
+//            $this->table('file_storage')
+//                ->changeColumn('id', 'char', ['limit' => 36])
+//                ->save();
+//            $migrations->markMigrated(self::$fileStorageMigrations['initial_migration'], [
+//                'connection' => $connectionName
+//            ]);
+//        }
+//        // Continue with the next plugin migrations.
+//        $migrations->migrate([
+//            'target' => self::$fileStorageMigrations['fixing_mime_type_field'],
+//            'connection' => $connectionName
+//        ]);
+//
+//        // Transform "ProfileAvatar" into "Avatar" in existing db data.
+//        $FileStorage = TableRegistry::get('FileStorage');
+//        $avatars = $FileStorage->find()->all();
+//        foreach ($avatars as $key => $avatar) {
+//            $avatar = $FileStorage->patchEntity(
+//                $avatar,
+//                [
+//                    'model' => 'Avatar',
+//                    'path' => str_replace('ProfileAvatar', 'Avatar', $avatar->path)
+//                ]
+//            );
+//            $FileStorage->save($avatar);
+//        }
     }
 }

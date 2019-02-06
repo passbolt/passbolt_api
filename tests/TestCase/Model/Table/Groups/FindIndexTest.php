@@ -26,13 +26,13 @@ class FindIndexTest extends AppTestCase
 {
     public $Groups;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users', 'app.Base/profiles', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
-        $this->Groups = TableRegistry::get('Groups', $config);
+        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
     public function tearDown()
@@ -131,7 +131,7 @@ class FindIndexTest extends AppTestCase
 
         foreach ($groups as $group) {
             $this->assertNotEmpty($group->user_count);
-            $expectedCount = $this->Groups->association('GroupsUsers')->find()
+            $expectedCount = $this->Groups->getAssociation('GroupsUsers')->find()
                 ->where(['GroupsUsers.group_id' => $group->id])->count();
             $this->assertEquals($expectedCount, $group->user_count);
         }

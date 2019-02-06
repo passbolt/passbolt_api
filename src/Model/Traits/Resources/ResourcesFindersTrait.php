@@ -260,7 +260,7 @@ trait ResourcesFindersTrait
             ->select('Groups.id');
 
         // In a subquery retrieve the highest permission.
-        $permissionSubquery = $this->association('Permissions')
+        $permissionSubquery = $this->getAssociation('Permissions')
             ->find()
             ->select('Permissions.id')
             ->where([
@@ -347,8 +347,8 @@ trait ResourcesFindersTrait
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        return $this->association('Permissions')
-            ->association('Groups')
+        return $this->getAssociation('Permissions')
+            ->getAssociation('Groups')
             ->find()
             ->innerJoinWith('Users')
             ->where([

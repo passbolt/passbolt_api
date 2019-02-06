@@ -146,7 +146,7 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
-            $Gpgkeys = TableRegistry::get('Gpgkeys');
+            $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
             $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
 

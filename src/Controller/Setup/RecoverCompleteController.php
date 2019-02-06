@@ -15,8 +15,8 @@
 namespace App\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
 class RecoverCompleteController extends SetupCompleteController

@@ -15,8 +15,7 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
     </div>
     <!-- main -->
     <?= $this->Form->create($formExecuteResult); ?>
-<?
-$this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error hidden" aria-live="polite"></div></div>']); ?>
+    <?php $this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error hidden" aria-live="polite"></div></div>']); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -24,17 +23,17 @@ $this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{requ
                     <h3><?= __('Create a new GPG key for your server'); ?></h3>
                     <?= $this->Flash->render() ?>
                     <?php
-                    echo $this->Form->input('public_key_armored', ['type' => 'hidden']);
-                    echo $this->Form->input('private_key_armored', ['type' => 'hidden']);
-                    echo $this->Form->input('fingerprint', ['type' => 'hidden']);
-                    echo $this->Form->input('name', [
+                    echo $this->Form->control('public_key_armored', ['type' => 'hidden']);
+                    echo $this->Form->control('private_key_armored', ['type' => 'hidden']);
+                    echo $this->Form->control('fingerprint', ['type' => 'hidden']);
+                    echo $this->Form->control('name', [
                         'required' => 'required',
                         'placeholder' => __('My company server name'),
                         'label' => __('Server Name'),
                         'class' => 'required fluid'
                     ]);
 
-                    echo $this->Form->input('email', [
+                    echo $this->Form->control('email', [
                         'required' => 'required',
                         'type' => 'text',
                         'placeholder' => __('admin@your-server.com'),
@@ -42,7 +41,7 @@ $this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{requ
                         'class' => 'required fluid'
                     ]);
 
-                    echo $this->Form->input('comment', [
+                    echo $this->Form->control('comment', [
                         'placeholder' => __('add a comment (optional)'),
                         'label' => __('Comment'),
                         'class' => 'fluid'

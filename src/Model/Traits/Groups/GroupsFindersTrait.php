@@ -35,7 +35,7 @@ trait GroupsFindersTrait
      */
     private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
     {
-        $permissionQuery = $this->association('Permissions')
+        $permissionQuery = $this->getAssociation('Permissions')
                                 ->find()
                                 ->select(['Permissions.aro_foreign_key'])
                                 ->where([
@@ -165,7 +165,7 @@ trait GroupsFindersTrait
     private function _containUserCount(Query $query)
     {
         // Count the members of the groups in a subquery.
-        $subQuery = $this->association('GroupsUsers')->find();
+        $subQuery = $this->getAssociation('GroupsUsers')->find();
         $subQuery->select(['count' => $subQuery->func()->count('*')])
                  ->where(['GroupsUsers.group_id = Groups.id']);
 
@@ -199,7 +199,7 @@ trait GroupsFindersTrait
         }
 
         // Find all the groups that have the given users.
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $subQuery = $GroupsUsers->find()
                                 ->select([
                                     'GroupsUsers.group_id',

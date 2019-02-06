@@ -16,7 +16,7 @@ namespace App\Controller\Setup;
 
 use App\Controller\Setup\SetupStartController;
 use App\Model\Entity\AuthenticationToken;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 
 class RecoverStartController extends SetupStartController
 {

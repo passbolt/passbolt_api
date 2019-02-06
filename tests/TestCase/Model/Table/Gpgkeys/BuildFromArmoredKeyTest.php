@@ -27,12 +27,12 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public $Gpgkeys;
 
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function tearDown()
@@ -55,7 +55,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public function testbuildEntityFromArmoredKeySuccess()
     {
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, UuidFactory::uuid('user.id.ada'));
         $this->assertNotEmpty($k);
         $attributes = [
@@ -68,7 +68,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public function testbuildEntityFromArmoredKeyInvalidKeyError()
     {
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         // mess up the key a little bit
         $armoredKey = str_replace('0', 'F', $armoredKey);

@@ -46,7 +46,7 @@ trait GroupsEmailTrait
         if (!Configure::read('passbolt.email.send.group.user.add')) {
             return;
         }
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($group->created_by);
 
         $userIds = Hash::extract($group->groups_users, '{n}.user_id');
@@ -79,7 +79,7 @@ trait GroupsEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($deletedBy);
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         $userNames = $Users->find()->select(['id', 'username'])->where(['id IN' => $usersIds])->all();
@@ -117,7 +117,7 @@ trait GroupsEmailTrait
         string $modifiedById
     ) {
         // Get the details of whoever did the changes
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $modifiedBy = $Users->findFirstForEmail($modifiedById);
 
         $this->sendAddUserGroupUpdateEmail($event, $group, $addedGroupsUsers, $modifiedBy);
@@ -150,7 +150,7 @@ trait GroupsEmailTrait
 
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($addedGroupsUsers, '{n}.user_id');
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $users = $Users->find()
             ->select(['id', 'username'])
             ->where(['id IN' => $usersIds])
@@ -184,7 +184,7 @@ trait GroupsEmailTrait
 
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($updatedGroupsUsers, '{n}.user_id');
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $users = $Users->find()
             ->select(['id', 'username'])
             ->where(['id IN' => $usersIds])
@@ -218,7 +218,7 @@ trait GroupsEmailTrait
 
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($removedGroupsUsers, '{n}.user_id');
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $users = $Users->find()
             ->select(['id', 'username'])
             ->where(['id IN' => $usersIds])
@@ -257,7 +257,7 @@ trait GroupsEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $whoIsAdmin = [];
         $usersIds = [];
         $addedUsersIds = $removedUsersIds = $updatedUsersIds = [];
@@ -337,10 +337,10 @@ trait GroupsEmailTrait
         }
 
         // Get group managers of group.
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $adminGroupUsers = $GroupsUsers->find()->where(['group_id' => $group->id, 'is_admin' => true])->contain(['Users'])->all();
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($accessControl->userId());
 
         $subject = __("{0} requested you to add members to {1}", $admin->profile->first_name, $group->name);
@@ -369,7 +369,7 @@ trait GroupsEmailTrait
             return [];
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
 
         return $Users->find()
             ->contain('Profiles')

@@ -19,7 +19,7 @@ use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Http\Exception\ForbiddenException;
 
 class HealthcheckIndexController extends AppController
 {

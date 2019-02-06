@@ -18,22 +18,26 @@ namespace App\Test\TestCase\Model\Table\GroupsUsers;
 use App\Model\Table\GroupsUsersTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
     public $GroupsUsers;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers', $config);
+        $config = TableRegistry::getTableLocator()->exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers', $config);
     }
 
     public function tearDown()

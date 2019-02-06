@@ -22,9 +22,9 @@ use Cake\Core\Configure;
 class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/resources', 'app.Base/secrets',
-        'app.Base/favorites', 'app.Base/email_queue', 'app.Base/profiles', 'app.Base/roles',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars', 'app.Base/gpgkeys',
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
+        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Gpgkeys',
     ];
 
     public function testResourcesDeleteNotificationDisabled()

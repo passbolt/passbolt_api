@@ -18,22 +18,24 @@ namespace App\Test\TestCase\Model\Table\Permissions;
 use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
+    use PermissionsModelTrait;
 
     public $Permissions;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/permissions', 'app.Base/resources', 'app.Base/users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-        $this->Permissions = TableRegistry::get('Permissions', $config);
+        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     public function tearDown()

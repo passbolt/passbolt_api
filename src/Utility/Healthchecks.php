@@ -104,7 +104,7 @@ class Healthchecks
         }
 
         // check number of admin user
-        $User = TableRegistry::get('Users');
+        $User = TableRegistry::getTableLocator()->get('Users');
         try {
             $i = $User->find('all')
                 ->contain(['Roles'])

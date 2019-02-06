@@ -357,9 +357,3 @@ Router::scope('/setup', function ($routes) {
 Router::scope('/app', function ($routes) {
     $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view']);
 });
-
-/**
- * Load all plugin routes. See the Plugin documentation on
- * how to customize the loading of plugin routes.
- */
-Plugin::routes();

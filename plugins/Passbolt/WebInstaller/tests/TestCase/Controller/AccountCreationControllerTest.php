@@ -14,8 +14,6 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
@@ -24,7 +22,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
-        $this->initWebInstallerSession(['database' => Configure::read('Testing.Datasources.test')]);
+        $this->initWebInstallerSession(['database' => $this->getTestDatasourceFromConfig()]);
     }
 
     public function testWebInstallerAccountCreationViewSuccess()

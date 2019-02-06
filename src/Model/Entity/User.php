@@ -94,7 +94,7 @@ class User extends Entity
      */
     protected function _getAuthenticationTokensQuery()
     {
-        $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $tokenQuery = $AuthenticationTokens
             ->find()
             ->select([

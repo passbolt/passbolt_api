@@ -16,12 +16,18 @@
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
 class UsersIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups_users', 'app.Base/avatars'];
+    use GroupsUsersModelTrait;
+
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Avatars'
+    ];
 
     public function testUsersIndexGetSuccess()
     {
@@ -249,11 +255,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         // too long
         $lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
         $this->getJson('/users.json?filter[search]=' . $lorem);
-        $this->assertError('400');
+        $this->assertError(400);
         // not utf8
         $emo = '🔥🔥🔥';
         $this->getJson('/users.json?filter[search]=' . $emo);
-        $this->assertError('400');
+        $this->assertError(400);
     }
 
     public function testUsersIndexFilterByHasAccessSuccess()

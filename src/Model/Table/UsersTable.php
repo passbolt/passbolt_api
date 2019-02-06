@@ -25,7 +25,7 @@ use App\Model\Traits\Users\UsersFindersTrait;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -111,30 +111,25 @@ class UsersTable extends Table
     {
         $validator
             ->uuid('id', __('User id by must be a valid UUID.'))
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmpty('username', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
             ->email('username', Configure::read('passbolt.email.validate.mx'), __('The username should be a valid email address.'));
 
         $validator
-            ->boolean('active')
-            ->notEmpty('active');
+            ->boolean('active');
 
         $validator
-            ->uuid('role_id')
-            ->requirePresence('role_id', 'create')
-            ->notEmpty('role_id');
+            ->uuid('role_id', __('Role id by must be a valid UUID.'))
+            ->requirePresence('role_id', 'create');
 
         $validator
-            ->boolean('deleted')
-            ->notEmpty('deleted');
+            ->boolean('deleted');
 
         $validator
-            ->requirePresence('profile', 'create')
-            ->notEmpty('profile');
+            ->requirePresence('profile', 'create');
 
         return $validator;
     }
@@ -360,7 +355,7 @@ class UsersTable extends Table
         // transferred to other people already (ref. checkRules)
         $resourceIds = $this->Permissions->findResourcesOnlyUserCanAccess($user->id, true)->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
-            $Resources = TableRegistry::get('Resources');
+            $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }
 
@@ -380,11 +375,11 @@ class UsersTable extends Table
         $this->Permissions->deleteAll(['aro_foreign_key' => $user->id]);
 
         // Delete all secrets
-        $Secrets = TableRegistry::get('Secrets');
+        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $Secrets->deleteAll(['user_id' => $user->id]);
 
         // Delete all favorites
-        $Favorites = TableRegistry::get('Favorites');
+        $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll(['user_id' => $user->id]);
 
         // Mark user as deleted
@@ -435,7 +430,7 @@ class UsersTable extends Table
         }
 
         // Generate an authentication token
-        $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
 
         // Generate event data

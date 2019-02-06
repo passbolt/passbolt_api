@@ -20,10 +20,10 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
@@ -320,6 +320,10 @@ class GroupsUpdateController extends AppController
     {
         $groupPatchOptions = [];
         $groupsUsersPatchOptions = [];
+
+        // Handle modify_by
+        $groupPatchOptions['accessibleFields']['modified_by'] = true;
+        $data['modified_by'] = $this->User->id();
 
         // An administrator can update the group name.
         // An administrator can update the group members roles.

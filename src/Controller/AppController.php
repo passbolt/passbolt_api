@@ -15,12 +15,11 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
-use App\Controller\Events\UserRegistrationListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Utility\Text;
 
@@ -39,11 +38,15 @@ class AppController extends Controller
      * Initialization hook method.
      * Used to add common initialization code like loading components.
      *
+     * @throws \Exception If a component class cannot be found.
      * @return void
      */
     public function initialize()
     {
-        $this->loadComponent('RequestHandler');
+        parent::initialize();
+        $this->loadComponent('RequestHandler', [
+            'enableBeforeRedirect' => false,
+        ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
 

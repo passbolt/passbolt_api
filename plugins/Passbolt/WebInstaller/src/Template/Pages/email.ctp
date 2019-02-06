@@ -19,13 +19,15 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                         <div class="col12">
                             <h3><?= __('Email configuration'); ?></h3>
                             <?= $this->Flash->render() ?>
-                            <?= $this->Form->input('sender_name', [
+                            <?= $this->Form->control('sender_name', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('admin or company name'),
                                 'label' => __('Sender name'),
                                 'class' => 'required fluid',
                             ]); ?>
-                            <?= $this->Form->input('sender_email', [
+                            <?= $this->Form->control('sender_email', [
+                                'type' => 'email',
                                 'required' => 'required',
                                 'placeholder' => __('email@company.com'),
                                 'label' => __('Sender email'),
@@ -34,7 +36,8 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                             ]); ?>
 
                             <h3><?= __('SMTP server configuration'); ?></h3>
-                            <?= $this->Form->input('host', [
+                            <?= $this->Form->control('host', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('host name or ip address'),
                                 'label' => __('SMTP host'),
@@ -42,23 +45,26 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                             ]); ?>
                             <div class="input text required">
                                 <label for="tls"><?= __('Use TLS?'); ?></label>
-                                <?= $this->Form->select('tls',
-                                    ['1' => 'Yes', '0' => 'No'],
-                                    ['default' => '1', 'class' => 'required fluid']
-                                ); ?>
+                                <?= $this->Form->control('tls', [
+                                    'options' => ['1' => 'Yes', '0' => 'No'],
+                                    'default' => '1',
+                                    'class' => 'required fluid'
+                                ]); ?>
                             </div>
-                            <?= $this->Form->input('port', [
+                            <?= $this->Form->control('port', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('port'),
                                 'label' => __('Port'),
                                 'class' => 'required fluid',
                                 'default' => '587']); ?>
-                            <?= $this->Form->input('username', [
+                            <?= $this->Form->control('username', [
+                                'type' => 'text',
                                 'placeholder' => __('username'),
                                 'label' => __('Username'),
                                 'class' => 'fluid',
                             ]); ?>
-                            <?= $this->Form->input('password', [
+                            <?= $this->Form->control('password', [
                                 'placeholder' => __('password'),
                                 'label' => __('Password'),
                                 'class' => 'fluid',
@@ -109,7 +115,7 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                     <?php endif; ?>
                     <div class="input text required">
                         <?php
-                        echo $this->Form->input('email_test_to', [
+                        echo $this->Form->control('email_test_to', [
                             'placeholder' => __('Your email address'),
                             'label' => false,
                             'class' => 'required fluid',

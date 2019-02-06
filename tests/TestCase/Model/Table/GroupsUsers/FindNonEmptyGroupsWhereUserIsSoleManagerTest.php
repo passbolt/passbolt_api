@@ -24,12 +24,12 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindNonEmptyGroupsWhereUserIsSoleManagerTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     public function tearDown()

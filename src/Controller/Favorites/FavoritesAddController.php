@@ -17,8 +17,8 @@ namespace App\Controller\Favorites;
 
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class FavoritesAddController extends AppController

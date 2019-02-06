@@ -24,13 +24,13 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions', 'app.Base/users', 'app.Base/secrets'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users', 'app.Base/Secrets'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     /*
@@ -59,7 +59,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
      *   => expected result: only the secrets the user does not have already access through another source should be
      *      requested for encryption
      */
-    public function testAsGroupManagerSuccess()
+    public function testGroupsUpdateDryRunAsGroupManagerSuccess()
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -108,6 +108,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         // Update the group users.
         $this->authenticateAs('jean');
         $this->putJson("/groups/$groupId/dry-run.json", ['groups_users' => $changes]);
+
         $this->assertSuccess();
         $result = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertNotEmpty($result);
@@ -152,7 +153,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty(array_diff($expectedSecretsToEncryptIds, $secretsToEncryptIds));
     }
 
-    public function testAsAdminSuccess()
+    public function testGroupsUpdateDryRunAsAdminSuccess()
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -176,12 +177,12 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($result['dry-run']['Secrets']);
     }
 
-    public function testCannotModifyNotAccessibleFields()
+    public function testGroupsUpdateDryRunCannotModifyNotAccessibleFields()
     {
         $this->markTestIncomplete();
     }
 
-    public function testErrorNotValidId()
+    public function testGroupsUpdateDryRunErrorNotValidId()
     {
         $this->authenticateAs('ada');
         $groupId = 'invalid-id';
@@ -189,7 +190,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The group id is not valid.');
     }
 
-    public function testErrorDoesNotExistGroup()
+    public function testGroupsUpdateDryRunErrorDoesNotExistGroup()
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid();
@@ -197,7 +198,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testErrorGroupIsSoftDeleted()
+    public function testGroupsUpdateDryRunErrorGroupIsSoftDeleted()
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.deleted');
@@ -205,7 +206,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testErrorAccessDenied()
+    public function testGroupsUpdateDryRunErrorAccessDenied()
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->authenticateAs('ada');
@@ -213,7 +214,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
-    public function testErrorNotAuthenticated()
+    public function testGroupsUpdateDryRunErrorNotAuthenticated()
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $postData = [];
@@ -221,7 +222,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
-    public function testErrorCsrfToken()
+    public function testGroupsUpdateDryRunErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('admin');

@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users', 'app.Base/resources'];
+    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources'];
 
     /**
      * Test subject
@@ -39,8 +39,8 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function testFindShardResourceUserIsSoleOwner_OwnsNothing_DelUserCase0()

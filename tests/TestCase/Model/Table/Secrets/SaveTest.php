@@ -30,15 +30,15 @@ class SaveTest extends AppTestCase
     public $Secrets;
 
     public $fixtures = [
-        'app.Base/resources', 'app.Base/secrets', 'app.Base/permissions',
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users'
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Permissions',
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Secrets = TableRegistry::get('Secrets');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
     public function tearDown()

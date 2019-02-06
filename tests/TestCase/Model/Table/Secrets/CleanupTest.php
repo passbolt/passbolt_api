@@ -26,8 +26,8 @@ class CleanupTest extends AppTestCase
     public $Secrets;
     public $Groups;
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups_users', 'app.Base/groups', 'app.Base/permissions',
-        'app.Base/resources', 'app.Base/secrets'
+        'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Permissions',
+        'app.Base/Resources', 'app.Base/Secrets'
     ];
     public $options;
 
@@ -36,7 +36,7 @@ class CleanupTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Secrets = TableRegistry::get('Secrets');
+        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->options = ['accessibleFields' => [
            'resource_id' => true,
            'user_id' => true,

@@ -16,11 +16,7 @@ namespace App\Test\Lib;
 
 use App\Model\Entity\Role;
 use App\Test\Lib\Model\AvatarsModelTrait;
-use App\Test\Lib\Model\CommentsModelTrait;
-use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
-use App\Test\Lib\Model\GroupsModelTrait;
-use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
@@ -31,19 +27,19 @@ use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\Routing\Router;
+use Cake\TestSuite\TestCase;
+use Cake\TestSuite\IntegrationTestTrait;
 use PHPUnit\Framework\Assert;
+use Zend\Diactoros\Response\RedirectResponse;
 
-abstract class AppIntegrationTestCase extends IntegrationTestCase
+abstract class AppIntegrationTestCase extends TestCase
 {
+    use IntegrationTestTrait;
     use ArrayTrait;
     use AvatarsModelTrait;
-    use CommentsModelTrait;
     use EntityTrait;
-    use FavoritesModelTrait;
     use GpgkeysModelTrait;
-    use GroupsModelTrait;
-    use GroupsUsersModelTrait;
     use ObjectTrait;
     use PermissionsModelTrait;
     use ProfilesModelTrait;
@@ -81,6 +77,18 @@ abstract class AppIntegrationTestCase extends IntegrationTestCase
         parent::setUp();
         $this->initAvatarEvents();
         $this->enableCsrfToken();
+    }
+
+    /**
+     *
+     */
+    public function assertZendRedirect(string $url)
+    {
+        $this->assertTrue($this->_response instanceof RedirectResponse);
+        $url = Router::url($url, true);
+        $location = $this->_response->getHeader('location');
+        $this->assertNotEmpty($location);
+        $this->assertEquals($url, $location[0]);
     }
 
     /**

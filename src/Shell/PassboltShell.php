@@ -30,10 +30,9 @@ class PassboltShell extends AppShell
         'Migrate',
         'MysqlExport',
         'MysqlImport',
-        'PassboltTestData.Data',
-        'PassboltTestData.fixturize',
         'RegisterUser',
         'SendTestEmail',
+        'PassboltTestData.Data'
     ];
 
     /**

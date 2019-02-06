@@ -22,15 +22,15 @@ use Cake\ORM\TableRegistry;
 
 class RecoverCompleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/authentication_tokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'];
     public $AuthenticationTokens;
     use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
-        $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
-        $this->Users = TableRegistry::get('Users');
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
         parent::setUp();
     }
 
@@ -43,7 +43,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $data = [
             'authenticationtoken' => [
                 'token' => $t->token
@@ -69,7 +69,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
         $url = '/setup/completeRecovery/' . UuidFactory::uuid('user.id.ada') . '.json';
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $data = [
             'AuthenticationToken' => [
                 'token' => $t->token
@@ -195,7 +195,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ada'), AuthenticationToken::TYPE_RECOVER);
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ada') . '.json';
 
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
         $fails = [
             'empty array' => [

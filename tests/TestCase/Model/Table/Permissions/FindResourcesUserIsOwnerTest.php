@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class FindResourcesUserIsOwnerTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users', 'app.Base/resources'];
+    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources'];
 
     /**
      * Test subject
@@ -39,7 +39,7 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
     }
 
     public function testFindResourcesUserIsOwner_OwnsNothing_DelUserCase0()

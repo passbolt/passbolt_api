@@ -24,14 +24,14 @@ class GetByFingerprintAndUserIdTest extends AppTestCase
 {
     use GpgkeysModelTrait;
 
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
     public $fingerprint;
     public $Gpgkeys;
 
     public function setUp()
     {
         parent::setUp();
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
         $this->fingerprint = '03F60E958F4CB29723ACDF761353B5B15D9B054F'; // ada's key fingerprint
     }
 

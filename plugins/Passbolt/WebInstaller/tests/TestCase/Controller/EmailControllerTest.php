@@ -37,6 +37,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerEmailPostSuccess()
     {
+        $this->markTestSkipped();
         $postData = [
             'sender_name' => 'Passbolt Test',
             'sender_email' => 'test@passbolt.com',

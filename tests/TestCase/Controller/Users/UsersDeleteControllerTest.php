@@ -16,6 +16,8 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -25,22 +27,25 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
     public $GroupsUsers;
     public $Permissions;
 
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
+
     public $fixtures = [
-            'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-            'app.Base/resources', 'app.Base/secrets',
-            'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
-        ];
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Resources', 'app.Base/Secrets',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
+    ];
 
     public function setUp()
     {
             parent::setUp();
-            $this->Users = TableRegistry::get('Users');
-            $this->GroupsUsers = TableRegistry::get('GroupsUsers');
-            $this->Permissions = TableRegistry::get('Permissions');
-            $this->Resources = TableRegistry::get('Resources');
-            $this->Secrets = TableRegistry::get('Secrets');
-            $this->Favorites = TableRegistry::get('Favorites');
-            $this->Groups = TableRegistry::get('Groups');
+            $this->Users = TableRegistry::getTableLocator()->get('Users');
+            $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+            $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+            $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+            $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
+            $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
+            $this->Groups = TableRegistry::getTableLocator()->get('Groups');
     }
 
     public function testUsersDeleteDryRunSuccess()

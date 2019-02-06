@@ -36,7 +36,7 @@ class HasResourceAccessRule
         }
         $resourceId = $entity->get($options['resourceField']);
         $userId = $entity->get($options['userField']);
-        $Resources = TableRegistry::get('Resources');
+        $Resources = TableRegistry::getTableLocator()->get('Resources');
         $permissionType = Hash::get($options, 'permissionType', Permission::READ);
 
         return $Resources->hasAccess($userId, $resourceId, $permissionType);

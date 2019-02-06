@@ -80,12 +80,12 @@ class AuthenticationTokensTable extends Table
         $validator
             ->uuid('token')
             ->requirePresence('token', 'create')
-            ->notEmpty('token');
+            ->allowEmptyString('token', false, __('Then authentication token should not be empty.'));
 
         $validator
             ->scalar('type')
             ->requirePresence('type', 'create')
-            ->notEmpty('type')
+            ->allowEmptyString('token', false, __('Then authentication type should not be empty.'))
             ->add('type', ['type' => [
                 'rule' => [$this, 'isValidAuthenticationTokenType'],
                 'message' => __('This authentication type is not supported.')
@@ -94,12 +94,11 @@ class AuthenticationTokensTable extends Table
         $validator
             ->uuid('user_id')
             ->requirePresence('user_id', 'create')
-            ->notEmpty('user_id');
+            ->allowEmptyString('user_id', false, __('Then authentication user id should not be empty.'));
 
         $validator
             ->boolean('active')
-            ->requirePresence('active', 'create')
-            ->notEmpty('active');
+            ->requirePresence('active', true);
 
         return $validator;
     }

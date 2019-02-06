@@ -14,14 +14,14 @@
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\TestSuite\IntegrationTestCase;
 
-class AuthLogoutControllerTest extends IntegrationTestCase
+class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
-    public function testCheckLogoutLoggedIn()
+    public function testAuthLogoutLoggedIn()
     {
         $this->session([
             'Auth' => [
@@ -36,15 +36,15 @@ class AuthLogoutControllerTest extends IntegrationTestCase
         $this->assertRedirect('/auth/login');
     }
 
-    public function testCheckLogoutNotLoggedIn()
+    public function testAuthLogoutNotLoggedIn()
     {
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
 
-    public function testCheckLogoutRedirect()
+    public function testAuthLogoutRedirect()
     {
         $this->get('/logout');
-        $this->assertRedirect('/auth/logout');
+        $this->assertZendRedirect('/auth/logout');
     }
 }

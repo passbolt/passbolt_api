@@ -27,7 +27,7 @@ class CleanupTest extends AppTestCase
     public $Favorites;
     public $Groups;
     public $fixtures = [
-        'app.Base/users', 'app.Alt0/permissions', 'app.Base/resources', 'app.Base/favorites'
+        'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Favorites'
     ];
     public $options;
 
@@ -36,7 +36,7 @@ class CleanupTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Favorites = TableRegistry::get('Favorites');
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $this->options = ['accessibleFields' => [
             'user_id' => true,
             'foreign_model' => true,

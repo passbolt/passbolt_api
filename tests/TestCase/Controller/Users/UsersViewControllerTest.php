@@ -16,11 +16,14 @@
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 
 class UsersViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/avatars', 'app.Base/groups_users'];
+    use GroupsUsersModelTrait;
+
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/GroupsUsers'];
 
     public function testUsersViewGetSuccess()
     {

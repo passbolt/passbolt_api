@@ -17,7 +17,7 @@ namespace App\Controller\Setup;
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 
 class SetupStartController extends AppController

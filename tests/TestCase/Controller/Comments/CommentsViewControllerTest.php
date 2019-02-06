@@ -16,13 +16,19 @@
 namespace App\Test\TestCase\Controller\Comments;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\CommentsModelTrait;
 use App\Utility\UuidFactory;
 
 class CommentsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/permissions', 'app.Base/resources', 'app.Base/comments'];
+    use CommentsModelTrait;
 
-    public function testSuccess()
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments'
+    ];
+
+    public function testCommentsViewSuccess()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
@@ -41,7 +47,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
     }
 
-    public function testApiV1Success()
+    public function testCommentsViewApiV1Success()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
@@ -61,7 +67,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('Creator', $this->_responseJsonBody[0]);
     }
 
-    public function testContainSuccess()
+    public function testCommentsViewContainSuccess()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
@@ -78,7 +84,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->creator);
     }
 
-    public function testContainApiV1Success()
+    public function testCommentsViewContainApiV1Success()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
@@ -96,31 +102,31 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->Creator);
     }
 
-    public function testErrorNotFound()
+    public function testCommentsViewErrorNotFound()
     {
         $this->authenticateAs('ada');
         // jquery is soft deleted. Hence, not reachable.
         $resourceId = UuidFactory::uuid('Resource.id.jquery');
         $this->getJson("/comments/resource/$resourceId.json");
-        $this->assertError('404', 'Could not find comments for the requested model');
+        $this->assertError(404, 'Could not find comments for the requested model');
     }
 
-    public function testErrorWrongModelNameParameter()
+    public function testCommentsViewErrorWrongModelNameParameter()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
         $this->getJson("/comments/WrongModelName/$resourceId.json");
-        $this->assertError('500', 'Invalid model name');
+        $this->assertError(500, 'Invalid model name');
     }
 
-    public function testErrorWrongUuidParameter()
+    public function testCommentsViewErrorWrongUuidParameter()
     {
         $this->authenticateAs('ada');
         $this->getJson("/comments/resource/wrong-uuid.json");
-        $this->assertError('500', 'Invalid id');
+        $this->assertError(500, 'Invalid id');
     }
 
-    public function testErrorNotAuthenticated()
+    public function testCommentsViewErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/comments/resource/$resourceId.json");

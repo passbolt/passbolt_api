@@ -26,13 +26,13 @@ class PatchEntitiesWithChangesTest extends AppTestCase
     public $Groups;
     public $GroupsUsers;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Groups = TableRegistry::get('Groups');
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     public function tearDown()

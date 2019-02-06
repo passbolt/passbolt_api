@@ -23,8 +23,8 @@ use Cake\Validation\Validation;
 class AuthLoginControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens',
-        'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
+        'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars'
     ];
     public $keyid;
     public $gpg;
@@ -240,7 +240,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $uuid = UuidFactory::uuid();
 
         // Use betty public key instead of server
-        $wrongPublicKey = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'betty_public.key';
+        $wrongPublicKey = FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key';
         $keyInfo = $this->_gpg->import(file_get_contents($wrongPublicKey));
         $this->serverKeyId = $keyInfo['fingerprint'];
         $token = 'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0';
@@ -313,7 +313,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertTrue($length == 36, 'Decrypted User Auth Token: wrong token data length');
 
         // Check if there is a valid AuthToken in store
-        $AuthToken = TableRegistry::get('AuthenticationTokens');
+        $AuthToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $isValid = $AuthToken->isValid($uuid, UuidFactory::uuid('user.id.ada'));
         $this->assertTrue($isValid, 'There should a valid auth token');
 
@@ -362,7 +362,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->serverKeyId = $keyInfo['fingerprint'];
 
         // Import the key of ada.
-        $keyInfo = $this->_gpg->import(file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_private_nopassphrase.key'));
+        $keyInfo = $this->_gpg->import(file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'));
         $this->adaKeyId = $keyInfo['fingerprint'];
     }
 

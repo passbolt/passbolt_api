@@ -12,31 +12,7 @@
  * @since         0.10.8
  * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
-
 $isCli = PHP_SAPI === 'cli';
-
-/*
- *  Baseline checks
- */
-if (version_compare(PHP_VERSION, '7.0.0') < 0) {
-    trigger_error('Your PHP version must be equal or higher than 7.0.0 to use Passbolt.', E_USER_ERROR);
-}
-
-if (!extension_loaded('intl')) {
-    trigger_error('You must enable the intl extension to use Passbolt.', E_USER_ERROR);
-}
-
-if (!extension_loaded('mbstring')) {
-    trigger_error('You must enable the mbstring extension to use Passbolt.', E_USER_ERROR);
-}
-
-if (!extension_loaded('gnupg')) {
-    trigger_error('You must enable the gnupg extension to use Passbolt.', E_USER_ERROR);
-}
-
-if (!(extension_loaded('gd') || extension_loaded('imagick'))) {
-    trigger_error('You must enable the gd or imagick extensions to use Passbolt.', E_USER_ERROR);
-}
 
 /*
  * Configure paths required to find CakePHP + general filepath
@@ -59,15 +35,14 @@ use Cake\Cache\Cache;
 use Cake\Console\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
-use Cake\Core\Plugin;
 use Cake\Database\Type;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
+use Cake\Http\ServerRequest;
 use Cake\Log\Log;
 use Cake\Mailer\Email;
-use Cake\Network\Request;
+use Cake\Mailer\TransportFactory;
 use Cake\Utility\Security;
-use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 
 /*
  * Read configuration file and inject configuration into various
@@ -93,13 +68,6 @@ try {
 }
 
 /*
- * Define if passbolt is configured.
- */
-if (!defined('TEST_IS_RUNNING') && file_exists(PLUGINS . DS . 'Passbolt' . DS . 'WebInstaller')) {
-    define('PASSBOLT_IS_CONFIGURED', WebInstallerMiddleware::isConfigured());
-}
-
-/*
  * Load an environment local configuration file.
  * You can use a file like app_local.php to provide local overrides to your
  * shared configuration.
@@ -113,6 +81,7 @@ if (!defined('TEST_IS_RUNNING') && file_exists(PLUGINS . DS . 'Passbolt' . DS . 
 if (Configure::read('debug')) {
     Configure::write('Cache._cake_model_.duration', '+2 minutes');
     Configure::write('Cache._cake_core_.duration', '+2 minutes');
+    Configure::write('Cache._cake_routes_.duration', '+2 seconds');
 }
 
 /*
@@ -169,7 +138,7 @@ if (!Configure::read('App.fullBaseUrl')) {
 
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
-Email::setConfigTransport(Configure::consume('EmailTransport'));
+TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Email::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
@@ -184,14 +153,12 @@ Security::setSalt(Configure::consume('Security.salt'));
 /*
  * Setup detectors for mobile and tablet.
  */
-Request::addDetector('mobile', function ($request) {
+ServerRequest::addDetector('mobile', function ($request) {
     $detector = new \Detection\MobileDetect();
-
     return $detector->isMobile();
 });
-Request::addDetector('tablet', function ($request) {
+ServerRequest::addDetector('tablet', function ($request) {
     $detector = new \Detection\MobileDetect();
-
     return $detector->isTablet();
 });
 
@@ -223,48 +190,6 @@ Type::build('timestamp')
 //Inflector::rules('transliteration', ['/å/' => 'aa']);
 
 /*
- * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
- * Uncomment one of the lines below, as you need. make sure you read the documentation on Plugin to use more
- * advanced ways of loading plugins
- *
- * Plugin::loadAll(); // Loads all plugins at once
- * Plugin::load('Migrations'); //Loads a single plugin named Migrations
- *
- */
-
-/*
- * Only try to load DebugKit in development mode
- * Debug Kit should not be installed on a production system
- */
-if (Configure::read('debug') && Configure::read('debugKit')) {
-    Plugin::load('DebugKit', ['bootstrap' => true]);
-}
-
-/*
- * Enable Migration Plugin
- */
-Plugin::load('Migrations');
-
-/*
- * Enable EmailQueue plugin
- */
-Plugin::load('EmailQueue');
-
-/*
- * Enable FileStorage plugin
- */
-Plugin::load('Burzum/FileStorage');
-require_once(CONFIG . DS . 'file_storage.php');
-
-/*
- * Only try to load selenium helper in development mode
- */
-if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
-    Plugin::load('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
-    Plugin::load('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
-}
-
-/*
  * Gpg Config
  */
 if (Configure::read('passbolt.gpg.putenv')) {
@@ -278,9 +203,47 @@ $uid = posix_getuid();
 $user = posix_getpwuid($uid);
 define('PROCESS_USER', $user['name']);
 
-if (file_exists(__DIR__ . '/bootstrap_plugins.php')) {
-    require __DIR__ . '/bootstrap_plugins.php';
-}
-
 // Are we running passbolt pro?
 define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
+
+/*
+ * File storage and images config
+ */
+// Image storage paths.
+Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public');
+Configure::write('ImageStorage.publicPath', 'img' . DS . 'public');
+
+// Image versions configuration.
+Configure::write('FileStorage', [
+    // Configure the `basePath` for the Local adapter, not needed when not using it
+    'basePath' => APP . 'FileStorage' . DS,
+    'imageDefaults' => [
+        'Avatar' => [
+            'medium' =>  'img' . DS . 'avatar' . DS . 'user_medium.png',
+            'small' =>  'img' . DS . 'avatar' . DS . 'user.png',
+        ]
+    ],
+    // Configure image versions on a per model base
+    'imageSizes' => [
+        'Avatar' => [
+            'medium' => [
+                'thumbnail' => [
+                    'mode' => 'outbound',
+                    'width' => 200,
+                    'height' => 200
+                ],
+            ],
+            'small' => [
+                'thumbnail' => [
+                    'mode' => 'outbound',
+                    'width' => 80,
+                    'height' => 80
+                ],
+                'crop' => [
+                    'width' => 80,
+                    'height' => 80
+                ],
+            ],
+        ]
+    ]
+]);

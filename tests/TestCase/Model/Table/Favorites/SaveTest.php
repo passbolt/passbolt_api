@@ -17,6 +17,7 @@ namespace App\Test\TestCase\Model\Table\Favorites;
 
 use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -24,16 +25,17 @@ use Cake\ORM\TableRegistry;
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
+    use FavoritesModelTrait;
 
     public $Favorites;
 
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/favorites', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Favorites') ? [] : ['className' => FavoritesTable::class];
-        $this->Favorites = TableRegistry::get('Favorites', $config);
+        $config = TableRegistry::getTableLocator()->exists('Favorites') ? [] : ['className' => FavoritesTable::class];
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites', $config);
     }
 
     public function tearDown()

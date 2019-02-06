@@ -18,9 +18,9 @@ use App\Controller\AppController;
 use App\Controller\Component\QueryStringComponent;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
 class UsersEditController extends AppController

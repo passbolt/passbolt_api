@@ -26,7 +26,7 @@ class SaveTest extends AppTestCase
 
     public $Users;
 
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
 
     protected function getEntityDefaultOptions()
     {
@@ -45,7 +45,7 @@ class SaveTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Users = TableRegistry::get('Users');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
     public function testUsersSaveCreateSuccess()

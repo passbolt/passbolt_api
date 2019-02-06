@@ -22,7 +22,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Ramsey\Uuid\Uuid;
@@ -217,7 +217,7 @@ class RegisterUserTask extends AppShell
     protected function _notifyUser($user)
     {
         // Display the token in console for convenience
-        $AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->getByUserId($user->id);
         $this->_success(
             __(

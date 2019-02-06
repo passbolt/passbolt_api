@@ -50,7 +50,7 @@ trait ShareEmailTrait
         $userIds = Hash::extract($changes['secrets'], '{n}.user_id');
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
-            $Users = TableRegistry::get('Users');
+            $Users = TableRegistry::getTableLocator()->get('Users');
             $owner = $Users->findFirstForEmail($ownerId);
             $this->sendNewShareEmail($event, $resource, $changes['secrets'], $userIds, $owner);
         }
@@ -72,7 +72,7 @@ trait ShareEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $users = $Users->find()
             ->select(['id', 'username'])
             ->where(['id IN' => $userIds])

@@ -15,7 +15,7 @@
 namespace App\Utility;
 
 use App\Model\Entity\Role;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
 /**

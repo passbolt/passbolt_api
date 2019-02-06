@@ -29,13 +29,13 @@ class UpdateTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/users', 'app.Base/roles', 'app.Base/gpgkeys', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/permissions', 'app.Base/resources', 'app.Base/secrets'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Resources = TableRegistry::get('Resources');
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
         $this->gpg = new Gpg();
     }
 

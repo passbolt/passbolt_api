@@ -16,28 +16,31 @@ namespace App\Test\TestCase\Controller\Groups;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class GroupsDeleteControllerTest extends AppIntegrationTestCase
 {
+    use GroupsModelTrait;
+
     public $Groups;
     public $GroupsGroups;
     public $Permissions;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/resources', 'app.Base/favorites', 'app.Base/secrets',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-        'app.Base/email_queue'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
+        'app.Base/EmailQueue'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Groups = TableRegistry::get('Groups');
-        $this->GroupsGroups = TableRegistry::get('GroupsGroups');
-        $this->Permissions = TableRegistry::get('Permissions');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->GroupsGroups = TableRegistry::getTableLocator()->get('GroupsGroups');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
     }
 
     public function testGroupsDeleteDryRunSuccess()

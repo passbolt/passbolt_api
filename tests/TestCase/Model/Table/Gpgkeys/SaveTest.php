@@ -26,12 +26,12 @@ class SaveTest extends AppTestCase
 {
     public $Gpgkeys;
 
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function tearDown()
@@ -218,7 +218,7 @@ class SaveTest extends AppTestCase
 
     public function testGpgkeysValidationisParsableArmoredPublicKey()
     {
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKey));
 
         $armoredKeySplit = str_split($armoredKey, 300);
@@ -231,7 +231,7 @@ class SaveTest extends AppTestCase
     public function testGpgkeysRulesUniqueFingerprint()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
         $this->Gpgkeys->save($k);

@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites'];
 
     public function testDeleteSuccess()
     {
@@ -29,7 +29,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
         $this->assertSuccess();
-        $Favorites = TableRegistry::get('Favorites');
+        $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $deletedFavorite = $Favorites->find('all')->where(['Favorites.id' => $favoriteId])->first();
         $this->assertempty($deletedFavorite);
     }

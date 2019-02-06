@@ -34,7 +34,7 @@ class IsActiveRule
         }
 
         try {
-            $Table = TableRegistry::get($options['table']);
+            $Table = TableRegistry::getTableLocator()->get($options['table']);
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
 

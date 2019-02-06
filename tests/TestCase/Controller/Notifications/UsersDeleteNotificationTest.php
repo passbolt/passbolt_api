@@ -26,9 +26,9 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
     public $Permissions;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/resources', 'app.Base/email_queue', 'app.Base/favorites',
-        'app.Base/groups_users', 'app.Base/permissions', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Resources', 'app.Base/EmailQueue', 'app.Base/Favorites', 'app.Base/Secrets',
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars'
     ];
 
     public function testUsersDeleteNotificationSuccess()

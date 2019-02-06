@@ -42,14 +42,19 @@ class LegacyJsonView extends View
      */
     public function render($view = null, $layout = null)
     {
+
         $jsonOptions = self::getJsonOptions();
         $body = $this->viewVars['body'];
 
         if (isset($body)) {
             if (isset($this->viewVars['error'])) {
                 $error = $this->viewVars['error'];
-                $table = $error->getTable();
-                $body = LegacyApiHelper::formatErrors($body, $table);
+                if (method_exists($error, 'getTable')) {
+                    $table = $error->getTable();
+                    $body = LegacyApiHelper::formatErrors($body, $table);
+                } else {
+                    $body = '';
+                }
             } else {
                 // What kind of body are we dealing with
                 $isEntity = (get_parent_class($body) === 'Cake\ORM\Entity');

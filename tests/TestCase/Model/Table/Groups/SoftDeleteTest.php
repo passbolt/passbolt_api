@@ -30,20 +30,20 @@ class SoftDeleteTest extends AppTestCase
     public $Secrets;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/profiles',
-        'app.Base/gpgkeys', 'app.Base/resources', 'app.Base/favorites', 'app.Alt0/secrets',
-        'app.Alt0/groups_users', 'app.Alt0/permissions'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
+        'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Favorites', 'app.Alt0/Secrets',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Users = TableRegistry::get('Users');
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
-        $this->Resources = TableRegistry::get('Resources');
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Secrets = TableRegistry::get('Secrets');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
     public function testGroupsSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelGroupCase0()

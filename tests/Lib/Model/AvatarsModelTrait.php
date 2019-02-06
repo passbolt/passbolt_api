@@ -37,10 +37,10 @@ trait AvatarsModelTrait
      */
     protected function initAvatarEvents()
     {
-        $localFileStorageListener = new LocalFileStorageListener();
-        EventManager::instance()->on($localFileStorageListener);
-
-        $imageProcessingListener = new ImageProcessingListener();
-        EventManager::instance()->on($imageProcessingListener);
+//        $localFileStorageListener = new LocalFileStorageListener();
+//        EventManager::instance()->on($localFileStorageListener);
+//
+//        $imageProcessingListener = new ImageProcessingListener();
+//        EventManager::instance()->on($imageProcessingListener);
     }
 }
