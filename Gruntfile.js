@@ -54,10 +54,12 @@ module.exports = function(grunt) {
   /**
    * Register project specific grunt tasks
    */
+  grunt.registerTask('default', ['dependencies-update', 'styleguide-update', 'appjs-update']);
   grunt.registerTask('appjs-update', 'copy:appjs');
   grunt.registerTask('appjs-watch', ['watch:node-modules-appjs']);
   grunt.registerTask('appjs-watch-browser-sync', ['browserSync:appjs', 'watch:node-modules-appjs']);
   grunt.registerTask('styleguide-update', 'copy:styleguide');
+  grunt.registerTask('dependencies-update', 'copy:dependencies');
 
   /**
    * Tasks definition
@@ -80,6 +82,15 @@ module.exports = function(grunt) {
     },
 
     copy: {
+      dependencies: {
+        files: [{
+          // Openpgp
+          cwd: paths.node_modules + 'openpgp/dist',
+          src: ['openpgp.min.js'],
+          dest: paths.js + 'vendors',
+          expand: true
+        }]
+      },
       appjs: {
         files: [{
           cwd: paths.node_modules_appjs + 'dist',

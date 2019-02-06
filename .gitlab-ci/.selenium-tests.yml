@@ -1,0 +1,117 @@
+.selenium_functions: &selenium_functions |
+  # Initialize ssh and required keys
+  function initialize_ssh() {
+    # Launch ssh-agent and add private key in it.
+    which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+    eval $(ssh-agent -s)
+    echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+    # Create the SSH directory and give it the right permissions
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  }
+
+  # Connect to controller and start selenium server as well as passbolt instances.
+  function start_selenium_instances() {
+    ssh ubuntu@"$SELENIUM_TEST_CONTROLLER_IP" -p 22 -tt "\
+    aws ec2 start-instances --instance-ids $SELENIUM_AWS_INSTANCE_IDS \
+    && aws ec2 wait instance-running --instance-ids $SELENIUM_AWS_INSTANCE_IDS \
+    && ./aws-get-server.sh \
+    && exit; \
+    "
+  }
+
+  function execute_selenium_tests() {
+    # Launch test suite container.
+    # DO NOT ALTER THE EXTRA EMPTY LINES. (They help leaving the job).
+    ssh ubuntu@"$SELENIUM_TEST_EXECUTOR_IP" -p 22 -tt "\
+    sudo ./passbolt_docker_dev/bin/launch-selenium.sh \
+    --browser=$SELENIUM_BROWSER \
+    --passbolt-branch=$SELENIUM_PASSBOLT_BRANCH \
+    --passbolt-selenium-branch=$SELENIUM_PASSBOLT_SELENIUM_BRANCH \
+    --passbolt-extension-branch=$SELENIUM_PASSBOLT_EXTENSION_BRANCH \
+    --passbolt-repository=$SELENIUM_PASSBOLT_REPOSITORY \
+    --passbolt-selenium-repository=$SELENIUM_PASSBOLT_SELENIUM_REPOSITORY \
+    --passbolt-firefox-repository=$SELENIUM_PASSBOLT_EXTENSION_REPOSITORY \
+    --passbolt-instances=$SELENIUM_INSTANCES \
+    --testsuite=$SELENIUM_TESTSUITE_FILTER \
+    --group=$SELENIUM_GROUP_FILTER \
+    --exclude-group=$SELENIUM_EXCLUDE_GROUP_FILTER \
+    --filter=$SELENIUM_TEST_FILTER \
+    --use-individual-selenium=1 \
+    --video-on-fail=$SELENIUM_VIDEO \
+    && echo '\n\n' \
+    && exit \
+    "
+  }
+
+  function retrieve_selenium_test_results() {
+    # Retrieve test results from container through SCP.
+    echo "$SSH_PRIVATE_KEY" > /tmp/ssh_key.key && chmod 600 /tmp/ssh_key.key
+    mkdir ./phpunit
+    scp -i /tmp/ssh_key.key ubuntu@"$SELENIUM_TEST_EXECUTOR_IP":/home/phpunit/log/selenium/*.xml ./phpunit/
+    rm -fr /tmp/ssh_key.key
+  }
+
+  function stop_selenium_instances() {
+    ssh ubuntu@"$SELENIUM_TEST_CONTROLLER_IP" -p 22 -tt "\
+    aws ec2 stop-instances --instance-ids i-f6229f63 \
+    && aws ec2 stop-instances --instance-ids $SELENIUM_AWS_INSTANCE_IDS \
+    && aws ec2 wait instance-stopped --instance-ids i-f6229f63 \
+    && aws ec2 wait instance-stopped --instance-ids $SELENIUM_AWS_INSTANCE_IDS \
+    && exit; \
+    "
+  }
+
+  function set_branches() {
+    # TODO
+    apt-get install git -y
+    USERNAME=''
+    TOKEN=''
+    BRANCH='develop'
+    BRANCH_EXIST=`git ls-remote --heads https://$USERNAME:$TOKEN@gitlab.com/kevinmuller/passbolt-selenium-test-ci.git master | wc -l`
+    if ($BRANCH_EXIST); then
+      BRANCH='master'
+    fi
+    echo $BRANCH
+  }
+
+.test-selenium:
+  stage: test
+  image: php:7.2-fpm
+  variables:
+    SELENIUM_PASSBOLT_BRANCH: "$CI_COMMIT_REF_NAME"
+    SELENIUM_PASSBOLT_REPOSITORY: "git@gitlab.com:passbolt/passbolt-pro-api.git"
+    SELENIUM_PASSBOLT_SELENIUM_BRANCH: "develop"
+    SELENIUM_PASSBOLT_SELENIUM_REPOSITORY: "git@gitlab.com:passbolt/passbolt-selenium.git"
+    SELENIUM_PASSBOLT_EXTENSION_BRANCH: "develop"
+    SELENIUM_PASSBOLT_EXTENSION_REPOSITORY: "git@gitlab.com:passbolt/passbolt-browser-extension.git"
+    SELENIUM_VIDEO: "1"
+    SELENIUM_TESTSUITE_FILTER: ""
+    SELENIUM_GROUP_FILTER: ""
+    SELENIUM_BROWSER: "firefox"
+    SELENIUM_EXCLUDE_GROUP_FILTER: "skip,chrome-only,unstable,broken"
+    SELENIUM_TEST_FILTER: ""
+    SELENIUM_INSTANCES: "10"
+    SELENIUM_AWS_INSTANCE_IDS: '"i-07a224bc9dccd5d72" "i-0f2c0eae14f1e5afb" "i-09fa03a67ab207a0f" "i-0a682464ed6d9e9df" "i-0d41f73fcfe51d862" "i-0ce60b490bdc0a88b" "i-0e6d70ecfb59a6773" "i-00b5f648d9c4ebd6d" "i-0ca1c8024ef3245df" "i-03dbc0bd4a2a85312"'
+    # SELENIUM_TEST_CONTROLLER_IP: ""  ## Defined in the repo
+    # SELENIUM_TEST_EXECUTOR_IP: ""    ## Defined in the repo
+
+  before_script:
+    - *selenium_functions
+
+  script:
+     - initialize_ssh
+     - start_selenium_instances
+     - execute_selenium_tests
+     - retrieve_selenium_test_results
+     - stop_selenium_instances
+
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - phpunit/*.xml
+
+

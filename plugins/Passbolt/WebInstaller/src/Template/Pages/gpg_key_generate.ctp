@@ -1,5 +1,7 @@
 <?php
 use Cake\Routing\Router;
+$this->Html->script('vendors/openpgp.min.js', ['block' => 'scriptBottom']);
+$this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', [
     'title' => __('Create a new server key or {0} an existing one.', [
@@ -13,6 +15,8 @@ use Cake\Routing\Router;
     </div>
     <!-- main -->
     <?= $this->Form->create($formExecuteResult); ?>
+<?
+$this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error hidden" aria-live="polite"></div></div>']); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
@@ -20,31 +24,29 @@ use Cake\Routing\Router;
                     <h3><?= __('Create a new GPG key for your server'); ?></h3>
                     <?= $this->Flash->render() ?>
                     <?php
-                    echo $this->Form->input('name',
-                        [
-                            'required' => 'required',
-                            'placeholder' => __('My company server name'),
-                            'label' => __('Server Name'),
-                            'class' => 'required fluid'
-                        ]
-                    );
+                    echo $this->Form->input('public_key_armored', ['type' => 'hidden']);
+                    echo $this->Form->input('private_key_armored', ['type' => 'hidden']);
+                    echo $this->Form->input('fingerprint', ['type' => 'hidden']);
+                    echo $this->Form->input('name', [
+                        'required' => 'required',
+                        'placeholder' => __('My company server name'),
+                        'label' => __('Server Name'),
+                        'class' => 'required fluid'
+                    ]);
 
-                    echo $this->Form->input('email',
-                        [
-                            'required' => 'required',
-                            'placeholder' => __('admin@your-server.com'),
-                            'label' => __('Server Email'),
-                            'class' => 'required fluid',
-                        ]
-                    );
+                    echo $this->Form->input('email', [
+                        'required' => 'required',
+                        'type' => 'text',
+                        'placeholder' => __('admin@your-server.com'),
+                        'label' => __('Server Email'),
+                        'class' => 'required fluid'
+                    ]);
 
-                    echo $this->Form->input('comment',
-                        [
-                            'placeholder' => __('add a comment (optional)'),
-                            'label' => __('Comment'),
-                            'class' => 'fluid'
-                        ]
-                    );
+                    echo $this->Form->input('comment', [
+                        'placeholder' => __('add a comment (optional)'),
+                        'label' => __('Comment'),
+                        'class' => 'fluid'
+                    ]);
                     ?>
                 </div>
                 <div class="col4 last">
@@ -59,9 +61,10 @@ use Cake\Routing\Router;
                     <div class="input select required">
                         <label for="KeyLength">Key Length</label>
                         <select name="data[Key][length]" id="KeyLength" disabled="disabled" class="fluid">
-                            <option value="1024" >1024</option>
+                            <option value="1024">1024</option>
                             <option value="2048" selected="selected">2048</option>
-                            <option value="3076" >3076</option>
+                            <option value="3072">3072</option>
+                            <option value="4096">4096</option>
                         </select>
                     </div>
 
@@ -75,7 +78,7 @@ use Cake\Routing\Router;
             <div class="row last">
                 <div class="input-wrapper">
                     <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <button type="submit" id="next" class="button primary next big"><?= __('Next'); ?> </button>
                 </div>
             </div>
         </div>

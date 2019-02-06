@@ -42,6 +42,7 @@ class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
             $this->get($uri);
             $this->assertResponseCode(302);
             $this->assertRedirectContains('/install');
+            $this->_response = null; // Free the memory usage.
         }
     }
 
