@@ -3,8 +3,21 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Added
+- PASSBOLT-2995: As LU I should be able to copy the permalink of a password
+
+### Improved
+- PASSBOLT-3403: As LU I should export only selected passwords
+- PASSBOLT-3397: Remove the list of secrets from the API request while loading the list of passwords
+- PASSBOLT-3319: As LU I should retrieve a secret when I'm editing it
+- PASSBOLT-3318: As LU I should retrieve a secret when I'm copying it
+- PASSBOLT-3317: Display significant information as soon as possible while opening the application
+- PASSBOLT-3312: As GM adding a user to a group I should see a relevant feedback in case of network/proxy errors
+- PASSBOLT-3314: Improve the performance of the application by adding missing indexes
+
 ### Fixed
 - PASSBOLT-3406: LDAP: Fix bug "user_id is null when a user that is associated to a group is deleted"
+- PASSBOLT-3363: The webinstaller should not use the exec php primitive to create/import the gpg server key
 
 ## [2.6.1]
 ### Improved
