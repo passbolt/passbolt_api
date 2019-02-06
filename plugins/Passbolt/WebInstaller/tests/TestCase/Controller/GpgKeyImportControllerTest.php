@@ -17,6 +17,7 @@ namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
+use Passbolt\WebInstaller\Test\TestCase\Utility\GpgKeyFormTest;
 
 class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
 {
@@ -37,9 +38,7 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerGpgKeyImportPostSuccess()
     {
-        $postData = [
-            'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_prod_unsecure_private.key')
-        ];
+        $postData = GpgKeyFormTest::getDummyData();
         $this->post('/install/gpg_key_import', $postData);
         $this->assertResponseCode(302);
         $this->assertRedirectContains('install/email');
@@ -48,49 +47,24 @@ class GpgKeyImportControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerGpgKeyImportPostError_InvalidData()
     {
-        $postData = [
-            'armored_key' => 'invalid-key'
-        ];
+        $postData = GpgKeyFormTest::getDummyData([
+            'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E'
+        ]);
         $this->post('/install/gpg_key_import', $postData);
         $data = ($this->_getBodyAsString());
         $this->assertResponseOk();
-        $this->assertContains('The key is not valid', $data);
-        $this->assertContains('The key is not a valid private key', $data);
+        $this->assertContains('The data entered are not correct', $data);
     }
 
     public function testWebInstallerGpgKeyImportPostError_PublicKey()
     {
-        $postData = [
-            'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_prod_unsecure_public.key')
-        ];
+        $postData = GpgKeyFormTest::getDummyData([
+            'public_key_armored' => GpgKeyFormTest::getDummyData()['private_key_armored']
+        ]);
         $this->post('/install/gpg_key_import', $postData);
         $data = ($this->_getBodyAsString());
         $this->assertResponseOk();
-        $this->assertContains('The key is not valid', $data);
-        $this->assertContains('The key is not a valid private key', $data);
-    }
-
-    public function testWebInstallerGpgKeyImportPostError_PrivateKeyWithExpiryDate()
-    {
-        $postData = [
-            'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_private.key')
-        ];
-        $this->post('/install/gpg_key_import', $postData);
-        $data = ($this->_getBodyAsString());
-        $this->assertResponseOk();
-        $this->assertContains('The key is not valid', $data);
-        $this->assertContains('The key cannot have an expiry date', $data);
-    }
-
-    public function testWebInstallerGpgKeyImportPostError_PrivateKeyProtectedWithSecret()
-    {
-        $postData = [
-            'armored_key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'server_test_no_expiry_with_secret_private.key')
-        ];
-        $this->post('/install/gpg_key_import', $postData);
-        $data = ($this->_getBodyAsString());
-        $this->assertResponseOk();
-        $this->assertContains('The key is not valid', $data);
-        $this->assertContains('The key cannot be used to encrypt/decrypt', $data);
+        $this->assertContains('The data entered are not correct', $data);
+        $this->assertContains('The key is not a valid public key', $data);
     }
 }

@@ -16,7 +16,8 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Passbolt\WebInstaller\Form\GpgKeyImportForm;
+use Cake\Utility\Hash;
+use Passbolt\WebInstaller\Form\GpgKeyForm;
 
 class GpgKeyImportController extends WebInstallerController
 {
@@ -72,11 +73,13 @@ class GpgKeyImportController extends WebInstallerController
      */
     protected function validateData($data)
     {
-        $form = new GpgKeyImportForm();
+        $form = new GpgKeyForm();
         $confIsValid = $form->execute($data);
         $this->set('formExecuteResult', $form);
         if (!$confIsValid) {
-            throw new Exception(__('The key is not valid.'));
+            $errors = Hash::flatten($form->errors());
+            $errorMessage = implode('; ', $errors);
+            throw new Exception(__('The data entered are not correct: {0}', $errorMessage));
         }
     }
 }

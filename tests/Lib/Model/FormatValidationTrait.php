@@ -155,7 +155,6 @@ trait FormatValidationTrait
      */
     public function assertFormFieldFormatValidation($FormClass, $fieldName, $formData, $testCases)
     {
-    //    $context = isset($entityData['id']) ? 'update' : 'create';
         foreach ($testCases as $testCaseName => $testCase) {
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = array_merge($formData, [$fieldName => $testCaseData]);
@@ -352,6 +351,25 @@ trait FormatValidationTrait
                 self::getStringMask('alphaRussian', $length) => true,
                 self::getStringMask('special', $length) => true,
                 self::getStringMask('html', $length) => true,
+            ],
+        ];
+
+        return $test;
+    }
+
+    /**
+     * Test cases for ascii validation rule.
+     *
+     * @param int $length default 255
+     * @return array
+     */
+    public static function getAsciiTestCases($length = 255)
+    {
+        $test = [
+            'rule_name' => '_ascii',
+            'test_cases' => [
+                self::getStringMask('alphaASCII', $length) => true,
+                self::getStringMask('alphaASCIIUpper', $length) => true
             ],
         ];
 

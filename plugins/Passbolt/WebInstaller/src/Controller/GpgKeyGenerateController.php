@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -16,7 +16,8 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Passbolt\WebInstaller\Form\GpgKeyGenerateForm;
+use Cake\Utility\Hash;
+use Passbolt\WebInstaller\Form\GpgKeyForm;
 
 class GpgKeyGenerateController extends WebInstallerController
 {
@@ -72,10 +73,12 @@ class GpgKeyGenerateController extends WebInstallerController
      */
     protected function validateData($data)
     {
-        $form = new GpgKeyGenerateForm();
+        $form = new GpgKeyForm();
         if (!$form->execute($data)) {
             $this->set('formExecuteResult', $form);
-            throw new Exception(__('The data entered are not correct'));
+            $errors = Hash::flatten($form->errors());
+            $errorMessage = implode('; ', $errors);
+            throw new Exception(__('The data entered are not correct: {0}', $errorMessage));
         }
     }
 }
