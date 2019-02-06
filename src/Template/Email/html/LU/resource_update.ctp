@@ -25,7 +25,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $resource->modified,
-        'text' => __('{0} has updated the password {1}', null, Purifier::clean($resource->name))
+        'text' => __('{0} updated the password {1}', null, Purifier::clean($resource->name))
     ])
 ]);
 
