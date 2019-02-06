@@ -17,7 +17,7 @@ namespace Passbolt\WebInstaller\Utility;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
-use App\Utility\Gpg as AppGpg;
+use App\Utility\Gpg;
 use Cake\Core\Configure;
 use Cake\Network\Session;
 use Cake\ORM\TableRegistry;
@@ -114,7 +114,6 @@ class WebInstaller
     public function install()
     {
         $this->initDatabaseConnection();
-        $this->generateGpgKey();
         $this->importGpgKey();
         $this->writePassboltConfigFile();
         $this->installDatabase();
@@ -136,45 +135,18 @@ class WebInstaller
     }
 
     /**
-     * Generate the gpg key
-     * @return void
-     */
-    public function generateGpgKey()
-    {
-        $gpgSettings = $this->getSettings('gpg');
-        if (!isset($gpgSettings['name'])) {
-            return;
-        }
-
-        $fingerprint = Gpg::generateKey($gpgSettings);
-        Gpg::exportPublicArmoredKey($fingerprint, Configure::read('passbolt.gpg.serverKey.public'));
-        Gpg::exportPrivateArmoredKey($fingerprint, Configure::read('passbolt.gpg.serverKey.private'));
-        $gpgSettings += [
-            'fingerprint' => $fingerprint,
-            'public' => Configure::read('passbolt.gpg.serverKey.public'),
-            'private' => Configure::read('passbolt.gpg.serverKey.private')
-        ];
-        $this->setSettings('gpg', $gpgSettings);
-    }
-
-    /**
-     * Import the server gpg key into the gpg keyring.
-     * Generate it if information provided.
+     * Import the server gpg key
      * @return void
      */
     public function importGpgKey()
     {
         $gpgSettings = $this->getSettings('gpg');
-        if (!isset($gpgSettings['armored_key'])) {
-            return;
-        }
-
-        $gpg = new AppGpg();
-        $fingerprint = $gpg->importKeyIntoKeyring($gpgSettings['armored_key']);
-        Gpg::exportPublicArmoredKey($fingerprint, Configure::read('passbolt.gpg.serverKey.public'));
-        Gpg::exportPrivateArmoredKey($fingerprint, Configure::read('passbolt.gpg.serverKey.private'));
+        $gpg = new Gpg();
+        $gpg->importKeyIntoKeyring($gpgSettings['private_key_armored']);
+        file_put_contents(Configure::read('passbolt.gpg.serverKey.public'), $gpgSettings['public_key_armored']);
+        file_put_contents(Configure::read('passbolt.gpg.serverKey.private'), $gpgSettings['private_key_armored']);
         $gpgSettings += [
-            'fingerprint' => $fingerprint,
+            'fingerprint' => $gpgSettings['fingerprint'],
             'public' => Configure::read('passbolt.gpg.serverKey.public'),
             'private' => Configure::read('passbolt.gpg.serverKey.private')
         ];

@@ -1,7 +1,7 @@
 <?php
 use Cake\Routing\Router;
-$this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
-$this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
+$this->Html->script('vendors/openpgp.min.js', ['block' => 'scriptBottom']);
+$this->Html->script('web_installer/gpg_key_import', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element(
     'header', [
@@ -15,18 +15,28 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
         <?= $this->element('navigation', ['selectedSection' => 'server_keys']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($formExecuteResult); ?>
+    <?
+    echo $this->Form->create($formExecuteResult);
+    echo $this->Form->input('public_key_armored', ['type' => 'hidden']);
+    echo $this->Form->input('private_key_armored', ['type' => 'hidden']);
+    echo $this->Form->input('fingerprint', ['type' => 'hidden']);
+    ?>
+
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col6">
                     <h3><?= __('Copy paste the private key below'); ?></h3>
                     <?= $this->Flash->render() ?>
-                    <div class="input textarea gpgkey">
-                        <?= $this->Form->control('armored_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>
-                    </div>
+                    <?= $this->Form->control('armored_key', [
+                        'type' => 'textarea',
+                        'templates' => [
+                            'inputContainer' => '<div class="input {{type}}{{required}} gpgkey">{{content}} <div class="message error hidden" aria-live="polite"></div></div>'
+                        ]
+                    ]); ?>
                     <div class="input file">
-                        <a role="button" class="button" id="key-chooser"><?= __('Browse'); ?></a>
+                        <input type="file" accept="text/plain,.key" id="key-file" class="hidden">
+                        <a class="button" id="key-file-button" for="fileElem"><?= __('Browse'); ?></a>
                         <span class="help-text"><?= __('Or select a file from your computer'); ?></span>
                     </div>
                 </div>
@@ -34,7 +44,7 @@ $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
             <div class="row last">
                 <div class="input-wrapper">
                     <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big disabled" disabled="disabled" value="<?= __('Next'); ?>">
+                    <button type="submit" id="next" class="button primary next big"><?= __('Next'); ?> </button>
                 </div>
             </div>
         </div>
