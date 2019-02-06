@@ -25,7 +25,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $resource->modified,
-        'text' => __('{0} have updated the password {1}', null, Purifier::clean($resource->name))
+        'text' => __('{0} updated the password {1}', null, Purifier::clean($resource->name))
     ])
 ]);
 
@@ -49,6 +49,6 @@ if (Configure::read('passbolt.email.show.secret')) {
     ]);
 }
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/', true),
-    'text' => __('log in passbolt')
+    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'text' => __('view it in passbolt')
 ]);
