@@ -77,7 +77,7 @@ class UserAgentsTable extends Table
     public function browserName(string $ua = null)
     {
         if ($ua == null) {
-            $ua = Purifier::clean(env('HTTP_USER_AGENT'), 'nohtml');
+            $ua = Purifier::clean(env('HTTP_USER_AGENT'));
         }
         $browserName = 'undefined';
         try {
