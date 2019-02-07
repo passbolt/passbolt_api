@@ -48,8 +48,7 @@
         "donatj/phpuseragentparser": "^0.7.0",
         "lorenzo/cakephp-email-queue": "^3.1",
         "burzum/file-storage": "1.2.1",
-        "burzum/cakephp-imagine-plugin": "2.1.1",
-        "ezyang/htmlpurifier": "dev-master"
+        "burzum/cakephp-imagine-plugin": "2.1.1"
     },
     "require-dev": {
         "psy/psysh": "@stable",
