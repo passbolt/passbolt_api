@@ -87,7 +87,7 @@ class AuthLoginController extends AppController
                 if (isset($debug) && count($debug) === 1) {
                     $message .= ' ' . $debug[0];
                 }
-                $this->error($message, json_encode($this->request));
+                $this->error($message);
             }
         }
     }

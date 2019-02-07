@@ -17,26 +17,16 @@ namespace App\Utility;
 class Purifier
 {
     /**
-     * Purify a html string using HTMLPurifier
+     * Purify a html string
      * @param mixed $html html to clean
      * @return mixed
      */
-    public static function clean($html)
+    public static function clean(string $html = null)
     {
-        $config = \HTMLPurifier_Config::createDefault();
-        $cacheDir = CACHE . '/htmlpurifier/definition_cache';
-        if (!is_dir($cacheDir)) {
-            mkdir($cacheDir, 0770, true);
-        }
-        $config->set('Cache.SerializerPath', $cacheDir);
-        $purifier = new \HTMLPurifier($config);
-        if (is_string($html)) {
-            return $purifier->purify($html);
-        }
-        if (is_array($html)) {
-            return $purifier->purifyArray($html);
+        if (is_null($html)) {
+            return null;
         }
 
-        return null;
+        return htmlspecialchars($html, ENT_QUOTES);
     }
 }

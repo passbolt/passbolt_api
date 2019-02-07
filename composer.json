@@ -49,7 +49,6 @@
         "lorenzo/cakephp-email-queue": "^3.1",
         "burzum/file-storage": "1.2.1",
         "burzum/cakephp-imagine-plugin": "2.1.1",
-        "ezyang/htmlpurifier": "dev-master",
         "ldaptools/ldaptools": "^0.25.2",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
