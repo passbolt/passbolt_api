@@ -26,6 +26,7 @@ class Purifier
         if (is_null($html)) {
             return null;
         }
+
         return htmlspecialchars($html, ENT_QUOTES);
     }
 }
