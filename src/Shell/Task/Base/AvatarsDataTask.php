@@ -50,9 +50,12 @@ class AvatarsDataTask extends DataTask
 
                 $entity = $this->Avatars->newEntity();
                 $entity = $this->Avatars->patchEntity($entity, $data);
-                $avatar = $this->Avatars->save($entity);
+                if (!$this->Avatars->save($entity))  {
+                    $errors = $entity->getErrors();
+                } else {
+                    $count++;
+                }
 
-                $errors = $avatar->getErrors();
                 if (!empty($errors)) {
                     $this->out('Error inserting data for entity "' . $this->entityName);
                 } else {
