@@ -23,14 +23,14 @@ use Cake\ORM\TableRegistry;
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/authentication_tokens'
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'
     ];
     public $AuthenticationTokens;
     use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
-        $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         parent::setUp();
     }
 

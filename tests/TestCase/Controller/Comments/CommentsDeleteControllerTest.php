@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/comments'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments'];
 
     public function testDeleteSuccess()
     {
@@ -29,7 +29,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $commentId = UuidFactory::uuid('comment.id.apache-1');
         $this->deleteJson("/comments/$commentId.json?api-version=2");
         $this->assertSuccess();
-        $Comments = TableRegistry::get('Comments');
+        $Comments = TableRegistry::getTableLocator()->get('Comments');
         $deletedComment = $Comments->find('all')->where(['Comments.id' => $commentId])->first();
         $this->assertempty($deletedComment);
     }

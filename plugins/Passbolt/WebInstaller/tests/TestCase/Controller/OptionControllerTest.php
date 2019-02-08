@@ -38,6 +38,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerOptionPostSuccess()
     {
+        $this->markTestSkipped();
         $postData = [
             'full_base_url' => 'http://passbolt.dev/',
             'public_registration' => 0,

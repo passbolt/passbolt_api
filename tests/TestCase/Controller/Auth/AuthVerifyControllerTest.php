@@ -15,11 +15,14 @@
 namespace App\Test\TestCase\Controller\Auth;
 
 use Cake\Core\Configure;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
-class AuthVerifyControllerTest extends IntegrationTestCase
+class AuthVerifyControllerTest extends TestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens'];
+    use IntegrationTestTrait;
+
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
 
     public function testUserVerifyGetSuccess()
     {

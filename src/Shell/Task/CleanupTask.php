@@ -114,7 +114,7 @@ class CleanupTask extends AppShell
 
         $totalErrorCount = 0;
         foreach ($cleanups as $tableName => $tableCleanup) {
-            $table = TableRegistry::get($tableName);
+            $table = TableRegistry::getTableLocator()->get($tableName);
             foreach ($tableCleanup as $i => $cleanupName) {
                 $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
                 $recordCount = $table->{$cleanupMethod}($dryRun);

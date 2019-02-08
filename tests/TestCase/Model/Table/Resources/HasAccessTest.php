@@ -25,13 +25,13 @@ class HasAccessTest extends AppTestCase
 {
     public $Resources;
 
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Resources') ? [] : ['className' => ResourcesTable::class];
-        $this->Resources = TableRegistry::get('Resources', $config);
+        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
     }
 
     public function tearDown()

@@ -19,8 +19,8 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 
 class UsersRecoverController extends AppController
 {

@@ -102,52 +102,52 @@ class ResourcesTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
             ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->notEmpty('name', __('The name cannot be empty.'));
+            ->allowEmptyString('name', false, __('The name cannot be empty.'));
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
             ->maxLength('username', 64, __('The username length should be maximum {0} characters.', 64))
-            ->allowEmpty('username');
+            ->allowEmptyString('username');
 
         $validator
             ->utf8('uri', __('The uri is not a valid utf8 string (emoticons excluded).'))
             ->maxLength('uri', 1024, __('The uri length should be maximum {0} characters.', 1024))
-            ->allowEmpty('uri');
+            ->allowEmptyString('uri');
 
         $validator
             ->utf8Extended('description', __('The description is not a valid utf8 string.'))
             ->maxLength('description', 10000, __('The description length should be maximum {0} characters.', 10000))
-            ->allowEmpty('description');
+            ->allowEmptyString('description');
 
         $validator
             ->boolean('deleted')
-            ->notEmpty('deleted');
+            ->allowEmptyString('deleted', false);
 
         $validator
             ->uuid('created_by')
             ->requirePresence('created_by', 'create')
-            ->notEmpty('created_by');
+            ->allowEmptyString('created_by', false);
 
         $validator
             ->uuid('modified_by')
             ->requirePresence('modified_by', 'create')
-            ->notEmpty('modified_by');
+            ->allowEmptyString('modified_by', false);
 
         // Associated fields
         $validator
             ->requirePresence('permissions', 'create', __('The permissions are required.'))
-            ->notEmpty('permissions', __('The permissions cannot be empty.'))
+            ->allowEmptyString('permissions', false, __('The permissions cannot be empty.'))
             ->hasAtMost('permissions', 1, __('Only the permission of the owner must be provided.'), 'create');
 
         $validator
             ->requirePresence('secrets', 'create', __('A secret is required.'))
-            ->notEmpty('secrets', __('The secret cannot be empty.'), 'create')
+            ->allowEmptyString('secrets', false, __('The secret cannot be empty.'))
             ->hasAtMost('secrets', 1, __('Only the secret of the owner must be provided.'), 'create');
 
         return $validator;
@@ -237,7 +237,7 @@ class ResourcesTable extends Table
         }
 
         // Retrieve the users who are allowed to access the resource.
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $usersFindOptions['filter']['has-access'] = [$entity->id];
         $allowedUsersIds = $Users->findIndex(Role::USER, $usersFindOptions)
             ->extract('id')
@@ -274,7 +274,7 @@ class ResourcesTable extends Table
         if (!Validation::uuid($resourceId)) {
             throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
         }
-        if (!$this->association('Permissions')->isValidPermissionType($permissionType)) {
+        if (!$this->getAssociation('Permissions')->isValidPermissionType($permissionType)) {
             throw new \InvalidArgumentException(__('The permission type should be in the list of allowed permission type.'));
         }
 
@@ -341,11 +341,11 @@ class ResourcesTable extends Table
         }
 
         // Remove all the associated permissions.
-        $this->association('Permissions')
+        $this->getAssociation('Permissions')
             ->deleteAll(['Permissions.aco_foreign_key' => $resource->id]);
 
         // Remove all the associated favorites.
-        $this->association('Favorites')
+        $this->getAssociation('Favorites')
             ->deleteAll(['Favorites.foreign_key' => $resource->id]);
 
         return true;
@@ -473,7 +473,7 @@ class ResourcesTable extends Table
         // A weird bug make the passage by reference of the variables not working as expected.
         // The variable ($changesReferences) changes made in patchEntitiesWithChanges are not visible in the current
         // scope when using $this->Permission->patchEntitiesWithChanges().
-        $Permissions = TableRegistry::get('Permissions');
+        $Permissions = TableRegistry::getTableLocator()->get('Permissions');
 
         // Patch the permission entities with the changes.
         try {
@@ -637,7 +637,7 @@ class ResourcesTable extends Table
             return;
         }
 
-        $Favorites = TableRegistry::get('Favorites');
+        $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll([
             'foreign_key' => $resourceId,
             'user_id IN' => $usersId
@@ -653,17 +653,17 @@ class ResourcesTable extends Table
      */
     public function softDeleteAll($resourceIds, $cascade = true)
     {
-        $Resources = TableRegistry::get('Resources');
+        $Resources = TableRegistry::getTableLocator()->get('Resources');
         $Resources->updateAll(['deleted' => true], ['id IN' => $resourceIds]);
 
         if ($cascade) {
-            $Favorites = TableRegistry::get('Favorites');
+            $Favorites = TableRegistry::getTableLocator()->get('Favorites');
             $Favorites->deleteAll(['foreign_key IN' => $resourceIds]);
 
-            $Secrets = TableRegistry::get('Secrets');
+            $Secrets = TableRegistry::getTableLocator()->get('Secrets');
             $Secrets->deleteAll(['resource_id IN' => $resourceIds]);
 
-            $Permissions = TableRegistry::get('Permissions');
+            $Permissions = TableRegistry::getTableLocator()->get('Permissions');
             $Permissions->deleteAll(['aco_foreign_key IN' => $resourceIds]);
         }
     }

@@ -15,15 +15,13 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
-use Burzum\FileStorage\Model\Table\ImageStorageTable;
-use Burzum\FileStorage\Storage\StorageManager;
 use Cake\Collection\CollectionInterface;
-use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
+use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-class AvatarsTable extends ImageStorageTable
+class AvatarsTable extends Table
 {
     /**
      * Initialize method
@@ -41,15 +39,15 @@ class AvatarsTable extends ImageStorageTable
         ]);
 
         // Reload behavior with our settings.
-        $this->removeBehavior('UploadValidator');
-        $this->addBehavior('Burzum/FileStorage.UploadValidator', [
-            // In debug mode, we disable localFile so that we can test the file upload.
-            'localFile' => Configure::read('debug') > 0 ? false : true,
-            'validate' => true,
-            'allowedExtensions' => [
-                'jpg', 'jpeg', 'png', 'gif'
-            ]
-        ]);
+//        $this->removeBehavior('UploadValidator');
+//        $this->addBehavior('Burzum/FileStorage.UploadValidator', [
+//            // In debug mode, we disable localFile so that we can test the file upload.
+//            'localFile' => Configure::read('debug') > 0 ? false : true,
+//            'validate' => true,
+//            'allowedExtensions' => [
+//                'jpg', 'jpeg', 'png', 'gif'
+//            ]
+//        ]);
 
         $this->setTable('file_storage');
     }
@@ -63,8 +61,8 @@ class AvatarsTable extends ImageStorageTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->notEmpty('file', __('File should not be empty'))
-            ->requirePresence('file', __('A file is required'));
+            ->requirePresence('file', __('A file is required'))
+            ->allowEmptyString('file', false, __('File should not be empty'));
 
         return $validator;
     }
@@ -77,17 +75,13 @@ class AvatarsTable extends ImageStorageTable
      * @param array $options options
      * @return bool
      */
-    public function afterSave(Event $event, EntityInterface $entity, $options)
+    public function afterSave(Event $event, EntityInterface $entity, \ArrayObject $options)
     {
         // If there was an existing avatar, we delete it.
-        $formerAvatarToCleanUp = $this->getFormerAvatar($entity);
-        if (!empty($formerAvatarToCleanUp)) {
-            $this->deleteAvatar($formerAvatarToCleanUp);
-        }
-
-        $afterSave = parent::afterSave($event, $entity, $options);
-
-        return $afterSave;
+//        $formerAvatarToCleanUp = $this->getFormerAvatar($entity);
+//        if (!empty($formerAvatarToCleanUp)) {
+//            $this->deleteAvatar($formerAvatarToCleanUp);
+//        }
     }
 
     /**
@@ -121,22 +115,22 @@ class AvatarsTable extends ImageStorageTable
     public function deleteAvatar($avatar)
     {
         // Delete the versions of the file.
-        $operations = Configure::read('FileStorage.imageSizes.Avatar');
-        $Event = new Event('ImageVersion.removeVersion', $this, [
-            'record' => $avatar,
-            'storage' => StorageManager::getAdapter($avatar->adapter),
-            'operations' => $operations
-        ]);
-        $this->getEventManager()->dispatch($Event);
-
-        // Get the path of the file.
-        $imagePath = $avatar->path . str_replace('-', '', $avatar->id) . '.' . $avatar->extension;
-        $fullImagePath = Configure::read('ImageStorage.basePath') . DS . $imagePath;
-
-        // If file exists, delete it.
-        if (file_exists($fullImagePath)) {
-            StorageManager::getAdapter($avatar->adapter)->delete($imagePath);
-        }
+//        $operations = Configure::read('FileStorage.imageSizes.Avatar');
+//        $Event = new Event('ImageVersion.removeVersion', $this, [
+//            'record' => $avatar,
+//            'storage' => StorageManager::getAdapter($avatar->adapter),
+//            'operations' => $operations
+//        ]);
+//        $this->getEventManager()->dispatch($Event);
+//
+//        // Get the path of the file.
+//        $imagePath = $avatar->path . str_replace('-', '', $avatar->id) . '.' . $avatar->extension;
+//        $fullImagePath = Configure::read('ImageStorage.basePath') . DS . $imagePath;
+//
+//        // If file exists, delete it.
+//        if (file_exists($fullImagePath)) {
+//            StorageManager::getAdapter($avatar->adapter)->delete($imagePath);
+//        }
 
         return $this->delete($avatar);
     }
@@ -144,13 +138,13 @@ class AvatarsTable extends ImageStorageTable
     /**
      * BeforeMarshal callback.
      * It enforces the data related to this model and the adapter to be used.
+     *
      * @param Event $event the event
-     * @param \ArrayAccess $data data
-     * @return void
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
      */
-    public function beforeMarshal(Event $event, \ArrayAccess $data)
+    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
-        parent::beforeMarshal($event, $data);
         $data['adapter'] = 'Local';
         $data['model'] = 'Avatar';
     }
@@ -164,11 +158,11 @@ class AvatarsTable extends ImageStorageTable
     public static function formatResults($avatars)
     {
         return $avatars->map(function ($avatar) {
-            if (empty($avatar)) {
+           // if (empty($avatar)) {
                 // If avatar is empty, we instantiate one.
                 // The virtual field will take care of retrieving the default avatar.
                 $avatar = new Avatar();
-            }
+            //}
 
             return $avatar;
         });

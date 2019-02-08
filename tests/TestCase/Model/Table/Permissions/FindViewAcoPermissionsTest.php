@@ -24,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindViewAcoPermissionsTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/permissions', 'app.Base/profiles', 'app.Base/resources', 'app.Base/users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users'];
 
     /**
      * Test subject
@@ -41,8 +41,8 @@ class FindViewAcoPermissionsTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-        $this->Permissions = TableRegistry::get('Permissions', $config);
+        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     public function testContainUser()
@@ -76,7 +76,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
 
     public function testPermissions()
     {
-        $resources = $this->Permissions->association('Resources')->find()->all();
+        $resources = $this->Permissions->getAssociation('Resources')->find()->all();
         foreach ($resources as $resource) {
             // Retrieve the expected users & groups permissions for the resource.
             $expectedUsersResourcesPermissions = PermissionMatrix::getUsersResourcePermissions($resource->id);

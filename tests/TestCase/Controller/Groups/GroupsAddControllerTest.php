@@ -27,15 +27,15 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     public $Groups;
 
     public $fixtures = [
-        'app.Base/groups', 'app.Base/users', 'app.Base/groups_users', 'app.Base/profiles', 'app.Base/roles',
-        'app.Base/email_queue', 'app.Base/avatars'
+        'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Base/EmailQueue', 'app.Base/Avatars'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
-        $this->Groups = TableRegistry::get('Groups', $config);
+        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
     protected function _getDummyPostData($data = [])
@@ -127,7 +127,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             'group name invalid' => [
                 'errorField' => 'Group.name.utf8Extended',
                 'errorMessage' => 'The name is not a valid utf8 string.',
-                'data' => $this->_getDummyPostData(['Group' => ['name' => 1234]])
+                'data' => $this->_getDummyPostData(['Group' => ['name' => ['test']]])
             ],
             'at least one group manager' => [
                 'errorField' => 'GroupUsers.at_least_one_admin',

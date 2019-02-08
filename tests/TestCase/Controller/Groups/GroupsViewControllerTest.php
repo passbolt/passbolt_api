@@ -16,13 +16,21 @@
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 
 class GroupsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/gpgkeys', 'app.Base/permissions'];
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
-    public function testSuccess()
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups',
+        'app.Base/GroupsUsers', 'app.Base/Gpgkeys', 'app.Base/Permissions'
+    ];
+
+    public function testGroupsViewSuccess()
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -39,7 +47,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody);
     }
 
-    public function testApiV1Success()
+    public function testGroupsViewApiV1Success()
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -55,7 +63,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('User', $this->_responseJsonBody);
     }
 
-    public function testContainSuccess()
+    public function testGroupsViewContainSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1';
@@ -95,7 +103,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($this->_responseJsonBody->my_group_user);
     }
 
-    public function testContainApiV1SSuccess()
+    public function testGroupsViewContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[modifier]=1&contain[user]=1&contain[group_user]=1&contain[group_user.user.profile]=1';
@@ -118,13 +126,13 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertProfileAttributes($this->_responseJsonBody->GroupUser[0]->User->Profile);
     }
 
-    public function testErrorNotAuthenticated()
+    public function testGroupsViewErrorNotAuthenticated()
     {
         $this->getJson('/groups.json');
         $this->assertAuthenticationError();
     }
 
-    public function testErrorNotValidId()
+    public function testGroupsViewErrorNotValidId()
     {
         $this->authenticateAs('ada');
         $groupId = 'invalid-id';
@@ -132,7 +140,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The group id is not valid.');
     }
 
-    public function testErrorNotFound()
+    public function testGroupsViewErrorNotFound()
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('not-found');
@@ -140,7 +148,7 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testErrorDeletedGroup()
+    public function testGroupsViewErrorDeletedGroup()
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid('group.id.deleted');

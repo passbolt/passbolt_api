@@ -24,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindResourcesOnlyGroupCanAccessTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users'];
+    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers'];
 
     /**
      * Test subject
@@ -41,7 +41,7 @@ class FindResourcesOnlyGroupCanAccessTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
     }
 
     public function testFindOnlyGroupCanAccessSuccess()

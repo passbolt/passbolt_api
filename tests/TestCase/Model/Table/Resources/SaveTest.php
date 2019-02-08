@@ -28,13 +28,13 @@ class SaveTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/users', 'app.Base/permissions', 'app.Base/resources', 'app.Base/secrets'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Resources') ? [] : ['className' => ResourcesTable::class];
-        $this->Resources = TableRegistry::get('Resources', $config);
+        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
     }
 
     public function tearDown()

@@ -108,7 +108,7 @@ class WebInstaller
 
     /**
      * Install passbolt.
-     * @throws Exception
+     * @throws \Exception
      * @return void
      */
     public function install()
@@ -179,15 +179,15 @@ class WebInstaller
 
     /**
      * Install database.
-     * @throws Exception The database cannot be installed
+     * @throws \Exception The database cannot be installed
      * @return void
      */
     public function installDatabase()
     {
         $migrations = new Migrations();
-        $migrated = $migrations->migrate(['connection' => DatabaseConfiguration::getDefaultConfigName()]);
+        $migrated = $migrations->migrate(['connection' => 'default']);
         if (!$migrated) {
-            throw new Exception('The database cannot be installed');
+            throw new \Exception('The database cannot be installed');
         }
     }
 
@@ -204,7 +204,7 @@ class WebInstaller
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $userData['deleted'] = false;
         $userData['role_id'] = $Users->Roles->getIdByName(Role::ADMIN);
 

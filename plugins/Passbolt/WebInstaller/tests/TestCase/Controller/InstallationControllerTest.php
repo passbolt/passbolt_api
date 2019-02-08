@@ -14,10 +14,12 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
+
+use Cake\Datasource\ConnectionManager;
+use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {
@@ -45,7 +47,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
 
     protected function getInstallSessionData()
     {
-        $datasourceTest = Configure::read('Testing.Datasources.test');
+        $datasourceTest = $this->getTestDatasourceFromConfig();
         $data = [
             'initialized' => true,
             'hasExistingAdmin' => false,
@@ -246,13 +248,27 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
 
     public function testWebInstallerInstallationDoInstallSuccess()
     {
+        $this->markTestSkipped();
         $this->skipTestIfNotWebInstallerFriendly();
         $this->truncateTables();
+
+        $connection = ConnectionManager::get('default');
+
         $config = $this->getInstallSessionData();
         $this->initWebInstallerSession($config);
+
+        $tables = $connection->execute('SHOW TABLES')->fetchAll();
+        $this->assertEmpty($tables);
+
         $this->get('/install/installation/do_install.json');
+
+        $tables = $connection->execute('SHOW TABLES')->fetchAll();
+        $this->assertNotEmpty($tables);
+
         $result = json_decode($this->_getBodyAsString(), true);
 
+        $this->assertTrue(isset($result['user_id']));
+        $this->assertTrue(isset($result['token']));
         $this->assertTrue(Validation::uuid($result['user_id']));
         $this->assertTrue(Validation::uuid($result['token']));
     }

@@ -18,7 +18,6 @@ use App\Utility\UuidFactory;
 
 trait GroupsModelTrait
 {
-
     /**
      * Get a dummy group with test data.
      * The comment returned passes a default validation.

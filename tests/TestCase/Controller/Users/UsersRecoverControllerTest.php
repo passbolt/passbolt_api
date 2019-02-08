@@ -18,7 +18,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
 
     public $fails = [
         'cannot recover with username that is empty' => [
@@ -101,7 +101,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     {
         foreach ($this->fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
-            $this->assertError('400', $data['error']);
+            $this->assertError(400, $data['error']);
         }
     }
 

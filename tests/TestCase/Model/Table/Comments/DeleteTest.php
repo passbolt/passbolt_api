@@ -26,13 +26,13 @@ class DeleteTest extends AppTestCase
 {
     public $Comments;
 
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/comments', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Comments') ? [] : ['className' => CommentsTable::class];
-        $this->Comments = TableRegistry::get('Comments', $config);
+        $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
+        $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
     }
 
     public function tearDown()

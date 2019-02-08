@@ -16,6 +16,7 @@
 namespace App\Test\TestCase\Controller\Share;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\Gpg;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -23,12 +24,18 @@ use Cake\Utility\Hash;
 
 class ShareSearchControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/roles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
+    use GroupsModelTrait;
+
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles',
+        'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Resources', 'app.Base/Permissions'
+    ];
 
     public function setUp()
     {
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->gpg = new Gpg();
         parent::setUp();
     }

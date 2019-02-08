@@ -24,12 +24,12 @@ use Cake\Utility\Hash;
 
 class ShareDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/roles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
 
     public function setUp()
     {
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->gpg = new Gpg();
         parent::setUp();
     }

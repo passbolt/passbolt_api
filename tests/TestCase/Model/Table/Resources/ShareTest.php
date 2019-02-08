@@ -28,18 +28,18 @@ class ShareTest extends AppTestCase
     public $Resources;
 
     public $fixtures = [
-        'app.Base/permissions', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites',
-        'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/groups_users', 'app.Base/groups'
+        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Groups'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Favorites = TableRegistry::get('Favorites');
-        $this->Resources = TableRegistry::get('Resources');
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Users = TableRegistry::get('Users');
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
     public function tearDown()

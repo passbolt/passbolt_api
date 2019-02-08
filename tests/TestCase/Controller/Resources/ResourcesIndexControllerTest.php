@@ -17,15 +17,18 @@ namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
+    use FavoritesModelTrait;
+
     public $fixtures = [
-        'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources',
-        'app.Base/secrets', 'app.Base/favorites', 'app.Base/permissions', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars'
     ];
 
     public function testSuccess()

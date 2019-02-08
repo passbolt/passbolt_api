@@ -18,9 +18,9 @@ namespace App\Controller\Comments;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 

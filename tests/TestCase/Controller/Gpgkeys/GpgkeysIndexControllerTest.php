@@ -20,7 +20,7 @@ use Cake\ORM\TableRegistry;
 
 class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/gpgkeys'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys'];
 
     public function testGpgkeysIndexNotAllowedError()
     {
@@ -38,7 +38,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 
     public function testGpgKeysIndexModifiedAfterSuccess()
     {
-        $Gpgkeys = TableRegistry::get('Gpgkeys');
+        $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
 
         // Find a key at a given time and modify it
         $t = Time::parse('now');

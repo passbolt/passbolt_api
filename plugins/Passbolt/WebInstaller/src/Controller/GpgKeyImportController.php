@@ -77,7 +77,7 @@ class GpgKeyImportController extends WebInstallerController
         $confIsValid = $form->execute($data);
         $this->set('formExecuteResult', $form);
         if (!$confIsValid) {
-            $errors = Hash::flatten($form->errors());
+            $errors = Hash::flatten($form->getErrors());
             $errorMessage = implode('; ', $errors);
             throw new Exception(__('The data entered are not correct: {0}', $errorMessage));
         }

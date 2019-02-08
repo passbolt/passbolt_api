@@ -36,7 +36,7 @@ trait AuthenticationTokenModelTrait
      */
     protected function saveDummyAuthToken(array $data)
     {
-        $authToken = TableRegistry::get('AuthenticationTokens');
+        $authToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $authToken->newEntity(
             $data,
             ['accessibleFields' => [

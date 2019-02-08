@@ -24,7 +24,7 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindResourcesOnlyUserCanAccessTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users', 'app.Base/resources', 'app.Base/users', 'app.Base/groups'];
+    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Groups'];
 
     /**
      * Test subject
@@ -41,7 +41,7 @@ class FindResourcesOnlyUserCanAccessTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
     }
 
     public function testFindOnlyUserCanAccess_SoleOwnerNotShared()

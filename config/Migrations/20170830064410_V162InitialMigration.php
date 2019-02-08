@@ -997,6 +997,6 @@ class V162InitialMigration extends AbstractMigration
                 'modified' => '2012-07-04 13:39:25',
             ],
         ];
-        $this->insert('roles', $rolesData);
+        $this->table('roles')->insert($rolesData)->save();
     }
 }

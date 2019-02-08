@@ -37,8 +37,9 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerDatabasePostSuccess()
     {
+        $this->markTestSkipped();
         $this->truncateTables();
-        $postData = Configure::read('Testing.Datasources.test');
+        $postData = $this->getTestDatasourceFromConfig();
         $this->post('/install/database', $postData);
         $this->assertResponseCode(302);
         $this->assertRedirectContains('/install/gpg_key');
@@ -48,7 +49,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerDatabasePostError_InvalidData()
     {
-        $postData = Configure::read('Testing.Datasources.test');
+        $postData = $this->getTestDatasourceFromConfig();
         $postData['port'] = 'invalid-port';
         $this->post('/install/database', $postData);
         $data = ($this->_getBodyAsString());
@@ -58,7 +59,8 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerDatabasePostError_CannotConnectToTheDatabase()
     {
-        $postData = Configure::read('Testing.Datasources.test');
+        $this->markTestSkipped();
+        $postData = $this->getTestDatasourceFromConfig();
         $postData['username'] = 'invalid-username';
         $this->post('/install/database', $postData);
         $data = ($this->_getBodyAsString());

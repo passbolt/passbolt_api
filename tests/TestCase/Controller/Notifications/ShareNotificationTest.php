@@ -22,9 +22,9 @@ use App\Utility\UuidFactory;
 class ShareNotificationTest extends ShareControllerTest
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/gpgkeys', 'app.Base/profiles', 'app.Base/roles',
-        'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions', 'app.Base/secrets',
-        'app.Base/email_queue', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
+        'app.Base/EmailQueue', 'app.Base/Avatars'
     ];
 
     public function testShareNotificationSuccess()

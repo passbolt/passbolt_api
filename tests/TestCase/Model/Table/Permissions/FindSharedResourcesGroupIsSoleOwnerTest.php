@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/permissions', 'app.Alt0/groups_users'];
+    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers'];
 
     /**
      * Test subject
@@ -39,7 +39,7 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
     }
 
     public function testFindSharedResourceGroupIsSoleOwner_OwnsNothing_DelGroupCase0()

@@ -96,7 +96,7 @@ trait UsersFindersTrait
         // The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
         // To do so, add an extra join.
         $query->join([
-            'table' => $this->association('Permissions')->getTable(),
+            'table' => $this->getAssociation('Permissions')->getTable(),
             'alias' => 'PermissionsFilterAccess',
             'type' => 'INNER',
             'conditions' => ['PermissionsFilterAccess.aco_foreign_key' => $resourceId],

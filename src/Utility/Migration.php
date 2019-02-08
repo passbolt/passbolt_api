@@ -16,6 +16,7 @@ namespace App\Utility;
 
 use Cake\Core\Configure;
 use Cake\Http\Client;
+use Cake\Http\Client\Response;
 use Migrations\Migrations;
 
 class Migration
@@ -29,10 +30,6 @@ class Migration
      */
     public static function needMigration()
     {
-        // don't show migrations when running tests
-        if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
-            return false;
-        }
         $Migrations = new Migrations();
         $migrations = $Migrations->status();
         foreach ($migrations as $i => $migration) {
@@ -75,7 +72,7 @@ class Migration
             } catch (\Exception $e) {
                 throw new \Exception(__('Could not connect to github repository'));
             }
-            $tags = json_decode($results->body, true);
+            $tags = json_decode($results->getStringBody(), true);
             if (!isset($tags[0]) || !isset($tags[0]['name'])) {
                 throw new \Exception(__('Could not read tag information on github repository'));
             }

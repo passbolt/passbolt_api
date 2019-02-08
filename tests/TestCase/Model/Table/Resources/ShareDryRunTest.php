@@ -27,12 +27,12 @@ class ShareDryRunTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/permissions', 'app.Base/resources', 'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups_users', 'app.Base/groups'];
+    public $fixtures = ['app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/GroupsUsers', 'app.Base/Groups'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown()

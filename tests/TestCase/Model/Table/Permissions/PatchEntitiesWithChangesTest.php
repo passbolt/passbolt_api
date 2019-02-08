@@ -27,13 +27,13 @@ class PatchEntitiesWithChangesTest extends AppTestCase
     public $Resources;
     public $Permissions;
 
-    public $fixtures = ['app.Base/permissions', 'app.Base/resources'];
+    public $fixtures = ['app.Base/Permissions', 'app.Base/Resources'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown()

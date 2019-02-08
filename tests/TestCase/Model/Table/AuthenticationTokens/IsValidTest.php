@@ -25,13 +25,13 @@ class IsValidTest extends AppTestCase
 {
     public $AuthenticationTokens;
 
-    public $fixtures = ['app.Base/authentication_tokens', 'app.Base/users'];
+    public $fixtures = ['app.Base/AuthenticationTokens', 'app.Base/Users'];
     use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
         parent::setUp();
-        $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
     }
 
     /**

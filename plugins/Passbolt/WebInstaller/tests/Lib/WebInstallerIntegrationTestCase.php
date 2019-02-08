@@ -15,45 +15,62 @@
 namespace Passbolt\WebInstaller\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\Core\Configure;
-use Cake\Core\Plugin;
+use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
+use Cake\Http\Exception\InternalErrorException;
 
 class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 {
     use ConfigurationTrait;
     use DatabaseTrait;
 
+    protected $_recover;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->_recover = false;
+    }
+
     public function tearDown()
     {
         parent::tearDown();
-
-        // Revert the test database configuration.
-        ConnectionManager::drop('test');
-        ConnectionManager::setConfig('test', Configure::read('Testing.Datasources.test'));
+        if ($this->_recover) {
+            ConnectionManager::setConfig('test', self::getTestDatasourceFromConfig());
+        }
     }
 
     public function mockPassboltIsNotconfigured()
     {
-        if (defined('PASSBOLT_IS_CONFIGURED')) {
-            return;
-        }
-
-        // Mock the bootstrap behavior
-        // When passbolt is not configured, the WebInstaller plugin should be loaded
-        define('PASSBOLT_IS_CONFIGURED', false);
-        Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+        $this->_recover = true;
+        ConnectionManager::drop('test');
     }
 
-    public function mockPassboltIsconfigured()
-    {
-        if (defined('PASSBOLT_IS_CONFIGURED')) {
-            return;
+    public function getTestDatasourceFromConfig() {
+        $engine = new PhpConfig();
+        try {
+            $appValues = $engine->read('app');
+        } catch(\Exception $exception) {
+            throw new InternalErrorException('config/app.php is missing an needed for this test.');
+        }
+        try {
+            $passboltValues = $engine->read('passbolt');
+        } catch(\Exception $exception) {
         }
 
-        // Mock the bootstrap behavior
-        // When passbolt is configured, the WebInstaller plugin should not be loaded
-        define('PASSBOLT_IS_CONFIGURED', true);
+        if (isset($passboltValues['Datasources']['test']) && $passboltValues['Datasources']['test']) {
+            $config = array_merge($appValues['Datasources']['test'], $passboltValues['Datasources']['test']);
+        } else {
+            if (!isset($passboltValues['Datasources']['test']) && !isset($passboltValues['Datasources']['test'])) {
+                throw new InternalErrorException('A test connection is missing in Datasources config.');
+            }
+            if(!isset($passboltValues['Datasources']['test'])) {
+                $config = $passboltValues['Datasources']['test'];
+            } else {
+                $config = $appValues['Datasources']['test'];
+            }
+        }
+        return $config;
     }
 
     public function initWebInstallerSession(array $options = [])

@@ -18,8 +18,8 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use Cake\Event\Event;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 
 class GroupsAddController extends AppController

@@ -18,7 +18,7 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Event\Event;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Http\Exception\ForbiddenException;
 
 class UsersAddController extends UsersRegisterController
 {

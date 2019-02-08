@@ -166,7 +166,7 @@ trait FormatValidationTrait
                     $this->assertEquals(true, (bool)$validate, __("The test for {0}:{1} = {2} is expected to validate", $fieldName, $testCaseName, $testCaseData));
                 } else {
                     $this->assertEquals(false, (bool)$validate, __("The test for {0}:{1} = {2} is not expected to not validate", $fieldName, $testCaseName, $testCaseData));
-                    $errors = $form->errors();
+                    $errors = $form->getErrors();
                     $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),

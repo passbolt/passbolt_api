@@ -19,7 +19,7 @@ use Cake\Core\Configure;
 
 class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
 
     public function testHealthcheckIndexOk()
     {

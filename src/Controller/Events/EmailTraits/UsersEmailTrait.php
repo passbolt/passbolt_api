@@ -66,7 +66,7 @@ trait UsersEmailTrait
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
         }
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $user = $Users->findFirstForEmail($user->id);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_self';
@@ -89,7 +89,7 @@ trait UsersEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($adminId);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_admin';
@@ -115,12 +115,12 @@ trait UsersEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $deletedBy = $Users->findFirstForEmail($deletedById);
         $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
         $template = 'GM/user_delete';
 
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $groupManagers = $GroupsUsers->find()
             ->select()
             ->contain(['Users', 'Groups'])

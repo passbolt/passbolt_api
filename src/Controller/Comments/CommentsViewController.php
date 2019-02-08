@@ -18,8 +18,8 @@ namespace App\Controller\Comments;
 use App\Controller\AppController;
 use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class CommentsViewController extends AppController
@@ -57,9 +57,7 @@ class CommentsViewController extends AppController
         try {
             $comments = $this->Comments->findViewForeignComments($this->User->id(), $foreignModelName, $foreignKey, $options);
         } catch (RecordNotFoundException $e) {
-            throw new NotFoundException(__('Could not find comments for the requested model'));
-        } catch (\Exception $e) {
-            throw new InternalErrorException(__('Could not retrieve the comments'));
+            throw new NotFoundException(__('Could not find comments for the requested model.'));
         }
 
         $this->success(__('The operation was successful.'), $comments);

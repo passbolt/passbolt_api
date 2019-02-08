@@ -26,7 +26,7 @@ class CleanupTest extends AppTestCase
 
     public $GroupsUsers;
     public $Groups;
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
     public $options;
 
     use CleanupTrait;
@@ -34,9 +34,9 @@ class CleanupTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Users = TableRegistry::get('Users');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->options = ['accessibleFields' => [
             'group_id' => true,
             'user_id' => true,

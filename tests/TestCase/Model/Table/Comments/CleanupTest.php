@@ -25,7 +25,7 @@ class CleanupTest extends AppTestCase
     public $Comments;
     public $Groups;
     public $fixtures = [
-        'app.Base/users', 'app.Alt0/permissions', 'app.Base/resources', 'app.Base/Comments'
+        'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Comments'
     ];
     public $options;
 
@@ -34,7 +34,7 @@ class CleanupTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Comments = TableRegistry::get('Comments');
+        $this->Comments = TableRegistry::getTableLocator()->get('Comments');
         $this->options = ['accessibleFields' => [
             'user_id' => true,
             'foreign_model' => true,

@@ -17,7 +17,6 @@ namespace App\Model\Table;
 use App\Utility\Purifier;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use UserAgentParser\Exception\NoResultFoundException;
 use UserAgentParser\Provider\DonatjUAParser;
 
 /**
@@ -58,12 +57,12 @@ class UserAgentsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->scalar('name')
             ->utf8('name', __('The user agent should be a UTF8 compatible string.'))
-            ->allowEmpty('name');
+            ->allowEmptyString('name');
 
         return $validator;
     }

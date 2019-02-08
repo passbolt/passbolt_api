@@ -17,8 +17,8 @@ namespace App\Controller\Comments;
 
 use App\Controller\AppController;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class CommentsDeleteController extends AppController

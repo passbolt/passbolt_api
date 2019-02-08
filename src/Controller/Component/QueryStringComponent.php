@@ -16,7 +16,7 @@ namespace App\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Core\Exception\Exception;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
 

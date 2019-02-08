@@ -31,7 +31,8 @@ class V200DropUnusedTables extends AbstractMigration
             ->drop();
 
         if ($this->hasTable('cake_sessions')) {
-            $this->dropTable('cake_sessions');
+            $this->table('cake_sessions')
+                ->drop();
         }
     }
 }

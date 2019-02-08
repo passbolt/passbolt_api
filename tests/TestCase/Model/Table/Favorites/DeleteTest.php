@@ -25,13 +25,13 @@ class DeleteTest extends AppTestCase
 {
     public $Favorites;
 
-    public $fixtures = ['app.Base/users', 'app.Base/favorites'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Favorites'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Favorites') ? [] : ['className' => FavoritesTable::class];
-        $this->Favorites = TableRegistry::get('Favorites', $config);
+        $config = TableRegistry::getTableLocator()->exists('Favorites') ? [] : ['className' => FavoritesTable::class];
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites', $config);
     }
 
     public function tearDown()

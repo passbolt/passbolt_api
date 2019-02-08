@@ -16,24 +16,30 @@
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions',
-        'app.Base/users', 'app.Base/secrets', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/favorites', 'app.Base/avatars', 'app.Base/email_queue'];
+    use GroupsUsersModelTrait;
+    use GroupsModelTrait;
+
+    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
+        'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Favorites', 'app.Base/Avatars', 'app.Base/EmailQueue'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Favorites = TableRegistry::get('Favorites');
-        $this->Groups = TableRegistry::get('Groups');
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     protected function getValidSecret()
@@ -60,6 +66,7 @@ hcciUFw5
      */
     public function testAsGMUpdateMembersRoleSuccess()
     {
+
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');
@@ -81,6 +88,7 @@ hcciUFw5
         // Update the group users.
         $this->authenticateAs('jean');
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+
         $this->assertSuccess();
 
         // Jean and Nancy should still have access to the resources.

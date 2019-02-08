@@ -95,7 +95,7 @@ trait PermissionsFindersTrait
             // ACOS_ONLY_ACCESSIBLE_BY_USER, all the ACOS that are only accessible by the user and the groups he is the only member
             // R = ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS - ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS - ACOS_ONLY_ACCESSIBLE_BY_USER
 
-            $GroupsUsers = TableRegistry::get('GroupsUsers');
+            $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
             // (USER_AND_SOLE_MANAGER_GROUPS)
             $groupsSoleManager = $GroupsUsers->findGroupsWhereUserIsSoleManager($userId)->extract('group_id')->toArray();
             // (R = ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS)
@@ -299,7 +299,7 @@ trait PermissionsFindersTrait
 
         $arosIds = [$userId];
         if ($checkGroupsUsers) {
-            $GroupsUsers = TableRegistry::get('GroupsUsers');
+            $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
             $groups = $GroupsUsers->findGroupsWhereUserOnlyMember($userId)->extract('group_id')->toArray();
             $arosIds = array_merge($arosIds, $groups);
         }

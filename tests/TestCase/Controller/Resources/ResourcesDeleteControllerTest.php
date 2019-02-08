@@ -24,13 +24,13 @@ use Cake\Utility\Hash;
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/profiles', 'app.Base/gpgkeys',
-        'app.Base/secrets', 'app.Base/permissions', 'app.Base/roles', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Gpgkeys',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
     ];
 
     public function setUp()
     {
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->gpg = new Gpg();
         parent::setUp();
     }

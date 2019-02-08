@@ -16,6 +16,7 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\Exception;
 use Cake\Mailer\Email;
+use Cake\Mailer\TransportFactory;
 use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
@@ -149,14 +150,14 @@ class EmailController extends WebInstallerController
      */
     protected function _setTransport($customTransportClassName, $data)
     {
-        $transportConfig = Email::getConfigTransport('default');
+        $transportConfig = TransportFactory::getConfig('default');
         $transportConfig['className'] = $customTransportClassName;
         $transportConfig['host'] = $data['host'];
         $transportConfig['port'] = $data['port'];
         $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
         $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
         $transportConfig['tls'] = ($data['tls'] == '1' ? true : null);
-        Email::setConfigTransport(self::TRANSPORT_CONFIG_NAME, $transportConfig);
+        TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME, $transportConfig);
         $this->email->setTransport(self::TRANSPORT_CONFIG_NAME);
     }
 

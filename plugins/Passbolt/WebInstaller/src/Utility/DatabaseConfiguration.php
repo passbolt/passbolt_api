@@ -21,9 +21,9 @@ use Cake\Utility\Hash;
 
 class DatabaseConfiguration
 {
-
     /**
      * Build a database configuration
+     *
      * @param array $data form data
      * @return array
      */
@@ -45,26 +45,26 @@ class DatabaseConfiguration
 
     /**
      * Set the default database config
+     *
      * @param array $config The config to set
      * @return void
      */
     public static function setDefaultConfig($config)
     {
-        $defaultConfigName = self::getDefaultConfigName();
-        ConnectionManager::drop($defaultConfigName);
+        ConnectionManager::drop('default');
         $dbConfig = self::buildConfig($config);
-        ConnectionManager::setConfig($defaultConfigName, $dbConfig);
+        ConnectionManager::setConfig('default', $dbConfig);
     }
 
     /**
      * Test database connection.
+     *
      * @throws Exception when a connection cannot be established
      * @return bool
      */
     public static function testConnection()
     {
-        $defaultConfigName = self::getDefaultConfigName();
-        $connection = ConnectionManager::get($defaultConfigName);
+        $connection = ConnectionManager::get('default');
 
         try {
             $connection->execute('SHOW TABLES')->fetchAll('assoc');
@@ -76,22 +76,13 @@ class DatabaseConfiguration
     }
 
     /**
-     * Get the default configuration name.
-     * @return string "test" if the tests are executed, "default" otherwise.
-     */
-    public static function getDefaultConfigName()
-    {
-        return defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test' : 'default';
-    }
-
-    /**
      * Get the database tables names
+     *
      * @return array
      */
     public static function getTables()
     {
-        $defaultConfigName = self::getDefaultConfigName();
-        $connection = ConnectionManager::get($defaultConfigName);
+        $connection = ConnectionManager::get('default');
         $tables = $connection->execute('SHOW TABLES')->fetchAll();
 
         return Hash::extract($tables, '{n}.0');
@@ -99,6 +90,7 @@ class DatabaseConfiguration
 
     /**
      * Validate the database schema.
+     *
      * @throws Exception If the database schema does not validate
      * @return void
      */

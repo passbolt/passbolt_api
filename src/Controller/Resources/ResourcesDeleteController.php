@@ -21,10 +21,10 @@ use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
@@ -60,7 +60,7 @@ class ResourcesDeleteController extends AppController
 
         // Get the list of users who have access to the resource
         // useful to do now to notify users later, since it wont be possible to after delete
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
 

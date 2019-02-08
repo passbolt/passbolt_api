@@ -25,14 +25,14 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
     public $Comments;
 
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/comments', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Comments') ? [] : ['className' => CommentsTable::class];
-        $this->Comments = TableRegistry::get('Comments', $config);
-        $this->Resources = TableRegistry::get('Resources');
+        $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
+        $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function testUpdateApiV1Success()

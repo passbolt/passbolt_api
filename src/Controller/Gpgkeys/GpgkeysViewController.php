@@ -16,8 +16,8 @@ namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class GpgkeysViewController extends AppController

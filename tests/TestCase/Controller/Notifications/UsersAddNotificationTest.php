@@ -22,15 +22,15 @@ use Cake\ORM\TableRegistry;
 class UsersAddNotificationTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/roles',
-        'app.Base/profiles', 'app.Base/email_queue', 'app.Base/authentication_tokens', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
+        'app.Base/Profiles', 'app.Base/EmailQueue', 'app.Base/AuthenticationTokens', 'app.Base/Avatars'
     ];
 
     public function testUserAddNotificationDisabled()
     {
         Configure::write('passbolt.email.send.user.create', false);
         $this->authenticateAs('admin');
-        $roles = TableRegistry::get('Roles');
+        $roles = TableRegistry::getTableLocator()->get('Roles');
         $this->postJson('/users.json', [
                 'username' => 'new@passbolt.com',
                 'role_id' => $roles->getIdByName(Role::ADMIN),
@@ -51,7 +51,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
     {
         Configure::write('passbolt.email.send.user.create', true);
         $this->authenticateAs('admin');
-        $roles = TableRegistry::get('Roles');
+        $roles = TableRegistry::getTableLocator()->get('Roles');
         $this->postJson('/users.json', [
             'username' => 'new.user@passbolt.com',
             'role_id' => $roles->getIdByName(Role::ADMIN),

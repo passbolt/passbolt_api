@@ -14,11 +14,10 @@
  */
 namespace App\Model\Entity;
 
-use Burzum\FileStorage\Model\Entity\ImageStorage;
 use Cake\Core\Configure;
-use Cake\Event\Event;
+use Cake\ORM\Entity;
 
-class Avatar extends ImageStorage
+class Avatar extends Entity
 {
     protected $_virtual = ['url'];
 
@@ -71,54 +70,10 @@ class Avatar extends ImageStorage
      */
     public function getAvatarUrl($avatar, $version = null, $options = [])
     {
-        // Default options.
-        $defaultOptions = [
-            'version' => 'small',
-        ];
-        $options = array_merge($options, $defaultOptions);
-
-        // If image is empty, we return the default avatar.
-        if (empty($avatar) || empty($avatar->id)) {
-            // Return fallback images.
-            $avatarDefaults = Configure::read('FileStorage.imageDefaults.Avatar');
-            if (isset($avatarDefaults[$version])) {
-                return $avatarDefaults[$version];
-            }
-
-            return false;
-        }
-
-        if (!empty($version)) {
-            $hash = Configure::read('FileStorage.imageHashes.' . $avatar->model . '.' . $version);
-            if (empty($hash)) {
-                if (empty($avatar->model) || !isset($avatar->model)) {
-                    $avatar->model = 'undefined';
-                }
-                throw new \InvalidArgumentException(
-                    __d(
-                        'file_storage',
-                        'No valid version key (%s %s) passed!',
-                        $avatar->model,
-                        $version
-                    )
-                );
-            }
+        if ($version == 'small') {
+            return 'img/avatar/user.png';
         } else {
-            $hash = null;
-        }
-
-        $Event = new Event('ImageVersion.getVersions', $this, [
-                'hash' => $hash,
-                'image' => $avatar,
-                'version' => $version,
-                'options' => $options
-            ]);
-        $this->getEventManager()->dispatch($Event);
-
-        if ($Event->isStopped()) {
-            return Configure::read('ImageStorage.publicPath') . $this->normalizePath($Event->data['path']);
-        } else {
-            return false;
+            return 'img/avatar/user_medium.png';
         }
     }
 
