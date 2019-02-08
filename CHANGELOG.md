@@ -14,9 +14,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-3317: Display significant information as soon as possible while opening the application
 - PASSBOLT-3312: As GM adding a user to a group I should see a relevant feedback in case of network/proxy errors
 - PASSBOLT-3314: Improve the performance of the application by adding missing indexes
+- PASSBOLT-2974: As LU I should be able to follow links targeting passwords from my emails
 
 ### Fixed
 - PASSBOLT-3363: The webinstaller should not use the exec php primitive to create/import the gpg server key
+- PASSBOLT-3370: Auth verify error should not leak data
+- PASSBOLT-3368 Fix html injection in email
 
 ## [2.5.0] - 2018-11-14
 ### Added
