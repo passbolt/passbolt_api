@@ -35,7 +35,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
-    public function testUpdateApiV1Success()
+    public function testCommentsUpdateApiV1Success()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -61,7 +61,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($nowTime - $modifiedTime < 1000);
     }
 
-    public function testUpdateApiV2Success()
+    public function testCommentsUpdateApiV2Success()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -85,7 +85,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($nowTime - $modifiedTime < 1000);
     }
 
-    public function testErrorCsrfToken()
+    public function testCommentsUpdateErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('irene', Role::USER);
@@ -94,7 +94,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testUpdateErrorInvalidCommentId()
+    public function testCommentsUpdateErrorInvalidCommentId()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -109,7 +109,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUpdateErrorContentEmpty()
+    public function testCommentsUpdateErrorContentEmpty()
     {
         $this->authenticateAs('irene', Role::USER);
         $putData = [
@@ -124,7 +124,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($this->_responseJsonBody->Comment->content);
     }
 
-    public function testUpdateRuleValidationCommentDoesNotExist()
+    public function testCommentsUpdateRuleValidationCommentDoesNotExist()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -139,7 +139,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUpdateRuleValidationCommentNotOwner()
+    public function testCommentsUpdateRuleValidationCommentNotOwner()
     {
         $this->authenticateAs('ada', Role::USER);
         $commentContent = 'updated comment content';
@@ -154,7 +154,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUpdateNotAccessibleFields()
+    public function testCommentsUpdateNotAccessibleFields()
     {
         $this->authenticateAs('irene', Role::USER);
         $comment = [
@@ -184,7 +184,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($comment['modified_by'], $commentUpdated->modified_by);
     }
 
-    public function testAddErrorNotAuthenticated()
+    public function testCommentsUpdateErrorNotAuthenticated()
     {
         $postData = [];
         $resourceId = UuidFactory::uuid('comment.id.apache-1');

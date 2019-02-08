@@ -199,10 +199,6 @@ class UsersTable extends Table
             'errorField' => 'id',
             'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
         ]);
-//        $rules->addDelete(new IsNotSoleManagerOfGroupOwningSharedResourcesRule(), 'soleManagerOfGroupOwnerOfSharedResource', [
-//            'errorField' => 'id',
-//            'message' => __('This user is the only admin of one (or more) group that is the sole owner of shared resources.')
-//        ]);
 
         return $rules;
     }

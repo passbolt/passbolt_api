@@ -24,7 +24,7 @@ class AuthVerifyControllerTest extends TestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
 
-    public function testUserVerifyGetSuccess()
+    public function testAuthVerifyControllerUserGetSuccess()
     {
         $this->get('/auth/verify.json');
         $data = json_decode($this->_getBodyAsString());
@@ -35,7 +35,7 @@ class AuthVerifyControllerTest extends TestCase
     /**
      * Test error 500 if config is invalid
      */
-    public function testVerifyBadConfig()
+    public function testAuthVerifyControllerBadConfig()
     {
         Configure::write('passbolt.gpg.serverKey.public', 'wrong');
         $this->get('/auth/verify.json');
@@ -48,7 +48,7 @@ class AuthVerifyControllerTest extends TestCase
     /**
      * Test that the passbolt instance public keys is available in the address provided in the headers
      */
-    public function testGetServerPublicKey()
+    public function testAuthVerifyControllerGetServerPublicKey()
     {
         // get the server public key
         $this->get('/auth/login');

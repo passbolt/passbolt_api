@@ -57,7 +57,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->markTestIncomplete();
     }
 
-    public function testFavoritesErrorCsrfToken()
+    public function testFavoritesAddErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('dame');

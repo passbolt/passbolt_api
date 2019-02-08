@@ -16,14 +16,22 @@ namespace App;
 
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
+use Burzum\FileStorage\Storage\Listener\BaseListener;
+use Burzum\FileStorage\Storage\Listener\ImageProcessingListener;
+use Burzum\FileStorage\Storage\Listener\LocalListener;
+use Burzum\FileStorage\Storage\StorageManager;
+use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
+use Cake\Log\Log;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
+use BadMethodCallException;
 
 class Application extends BaseApplication
 {
@@ -123,10 +131,37 @@ class Application extends BaseApplication
      * @return $this
      */
     protected function addVendorPlugins() {
-        // Enable EmailQueue plugin
         $this->addPlugin('EmailQueue');
-
+        $this->addPlugin('Burzum/FileStorage', ['bootstrap' => false]);
+        $this->addPlugin('Burzum/Imagine');
+        self::initImageListeners();
         return $this;
+    }
+
+    /**
+     * initImageListeners
+     *
+     * @return void
+     */
+    static public function initImageListeners()
+    {
+        // Attach the event listeners
+        $listener = new LocalListener();
+        EventManager::instance()->on($listener);
+
+        $listener = new ImageProcessingListener();
+        EventManager::instance()->on($listener);
+
+        $listener = new BaseListener([ 'imageProcessing' => true, 'pathBuilderOptions' => []]);
+        EventManager::instance()->on($listener);
+
+        StorageUtils::generateHashes();
+
+        StorageManager::config('Local', [
+            'adapterOptions' => [Configure::read('ImageStorage.basePath')],
+            'adapterClass' => '\Gaufrette\Adapter\Local',
+            'class' => '\Gaufrette\Filesystem'
+        ]);
     }
 
     /**

@@ -23,7 +23,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments'];
 
-    public function testDeleteSuccess()
+    public function testCommentsDeleteSuccess()
     {
         $this->authenticateAs('irene');
         $commentId = UuidFactory::uuid('comment.id.apache-1');
@@ -34,7 +34,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertempty($deletedComment);
     }
 
-    public function testErrorCsrfToken()
+    public function testCommentsDeleteErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('irene');
@@ -43,7 +43,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testDeleteErrorNotValidId()
+    public function testCommentsDeleteErrorNotValidId()
     {
         $this->authenticateAs('irene');
         $commentId = 'invalid-id';
@@ -51,7 +51,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The comment id is not valid.');
     }
 
-    public function testDeleteErrorCommentsNotFound()
+    public function testCommentsDeleteErrorCommentsNotFound()
     {
         $this->authenticateAs('irene');
         $commentId = UuidFactory::uuid();
@@ -59,7 +59,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The comment does not exist.');
     }
 
-    public function testDeleteErrorCommentsNotOwner()
+    public function testCommentsDeleteErrorCommentsNotOwner()
     {
         $this->authenticateAs('jean');
         $commentId = UuidFactory::uuid('comment.id.apache-1');
@@ -67,7 +67,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The comment does not exist.');
     }
 
-    public function testDeleteErrorNotAuthenticated()
+    public function testCommentsDeleteErrorNotAuthenticated()
     {
         $commentId = UuidFactory::uuid('comment.id.apache-1');
         $this->deleteJson("/comments/$commentId.json?api-version=2");

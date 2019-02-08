@@ -144,23 +144,16 @@ Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
 
 /*
- * The default crypto extension in 3.0 is OpenSSL.
- * If you are migrating from 2.x uncomment this code to
- * use a more compatible Mcrypt based implementation
- */
-//Security::engine(new \Cake\Utility\Crypto\Mcrypt());
-
-/*
  * Setup detectors for mobile and tablet.
  */
-ServerRequest::addDetector('mobile', function ($request) {
-    $detector = new \Detection\MobileDetect();
-    return $detector->isMobile();
-});
-ServerRequest::addDetector('tablet', function ($request) {
-    $detector = new \Detection\MobileDetect();
-    return $detector->isTablet();
-});
+//ServerRequest::addDetector('mobile', function ($request) {
+//    $detector = new \Detection\MobileDetect();
+//    return $detector->isMobile();
+//});
+//ServerRequest::addDetector('tablet', function ($request) {
+//    $detector = new \Detection\MobileDetect();
+//    return $detector->isTablet();
+//});
 
 /*
  * Enable immutable time objects in the ORM.
@@ -170,24 +163,10 @@ ServerRequest::addDetector('tablet', function ($request) {
  * locale specific date formats. For details see
  * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
  */
-Type::build('time')
-    ->useImmutable();
-Type::build('date')
-    ->useImmutable();
-Type::build('datetime')
-    ->useImmutable();
-Type::build('timestamp')
-    ->useImmutable();
-
-/*
- * Custom Inflector rules, can be set to correctly pluralize or singularize
- * table, model, controller names or whatever other string is passed to the
- * inflection functions.
- */
-//Inflector::rules('plural', ['/^(inflect)or$/i' => '\1ables']);
-//Inflector::rules('irregular', ['red' => 'redlings']);
-//Inflector::rules('uninflected', ['dontinflectme']);
-//Inflector::rules('transliteration', ['/å/' => 'aa']);
+Type::build('time')->useImmutable();
+Type::build('date')->useImmutable();
+Type::build('datetime')->useImmutable();
+Type::build('timestamp')->useImmutable();
 
 /*
  * Gpg Config
@@ -206,44 +185,4 @@ define('PROCESS_USER', $user['name']);
 // Are we running passbolt pro?
 define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
 
-/*
- * File storage and images config
- */
-// Image storage paths.
-Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public');
-Configure::write('ImageStorage.publicPath', 'img' . DS . 'public');
-
-// Image versions configuration.
-Configure::write('FileStorage', [
-    // Configure the `basePath` for the Local adapter, not needed when not using it
-    'basePath' => APP . 'FileStorage' . DS,
-    'imageDefaults' => [
-        'Avatar' => [
-            'medium' =>  'img' . DS . 'avatar' . DS . 'user_medium.png',
-            'small' =>  'img' . DS . 'avatar' . DS . 'user.png',
-        ]
-    ],
-    // Configure image versions on a per model base
-    'imageSizes' => [
-        'Avatar' => [
-            'medium' => [
-                'thumbnail' => [
-                    'mode' => 'outbound',
-                    'width' => 200,
-                    'height' => 200
-                ],
-            ],
-            'small' => [
-                'thumbnail' => [
-                    'mode' => 'outbound',
-                    'width' => 80,
-                    'height' => 80
-                ],
-                'crop' => [
-                    'width' => 80,
-                    'height' => 80
-                ],
-            ],
-        ]
-    ]
-]);
+require __DIR__ . '/file_storage.php';

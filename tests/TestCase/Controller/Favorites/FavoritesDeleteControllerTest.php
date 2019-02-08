@@ -23,7 +23,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites'];
 
-    public function testDeleteSuccess()
+    public function testFavoritesDeleteSuccess()
     {
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
@@ -34,7 +34,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertempty($deletedFavorite);
     }
 
-    public function testErrorCsrfToken()
+    public function testFavoritesDeleteErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('dame');
@@ -43,7 +43,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testDeleteErrorNotValidId()
+    public function testFavoritesDeleteErrorNotValidId()
     {
         $this->authenticateAs('dame');
         $favoriteId = 'invalid-id';
@@ -51,7 +51,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The favorite id is not valid.');
     }
 
-    public function testDeleteErrorFavoritesNotFound()
+    public function testFavoritesDeleteErrorFavoritesNotFound()
     {
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid();
@@ -59,7 +59,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The favorite does not exist.');
     }
 
-    public function testDeleteErrorFavoritesOfSomeoneElse()
+    public function testFavoritesDeleteErrorFavoritesOfSomeoneElse()
     {
         $this->authenticateAs('ada');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
@@ -67,7 +67,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The favorite does not exist.');
     }
 
-    public function testDeleteErrorNotAuthenticated()
+    public function testFavoritesDeleteErrorNotAuthenticated()
     {
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");

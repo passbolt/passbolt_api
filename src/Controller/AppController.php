@@ -72,13 +72,6 @@ class AppController extends Controller
         $emails = new EmailNotificationsListener();
         EventManager::instance()->on($emails);
 
-        /*
-         * Enable the following components for recommended CakePHP security settings.
-         * see http://book.cakephp.org/3.0/en/controllers/components/security.html
-         */
-        // $this->loadComponent('Security');
-        // $this->loadComponent('Csrf');
-
         // Tell the browser to force HTTPS use
         if (Configure::read('passbolt.ssl.force')) {
             $this->response = $this->response

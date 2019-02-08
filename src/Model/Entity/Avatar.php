@@ -14,10 +14,12 @@
  */
 namespace App\Model\Entity;
 
+use Burzum\FileStorage\Model\Entity\ImageStorage;
 use Cake\Core\Configure;
-use Cake\ORM\Entity;
+use Cake\Event\Event;
+use Cake\Http\Exception\InternalErrorException;
 
-class Avatar extends Entity
+class Avatar extends ImageStorage
 {
     protected $_virtual = ['url'];
 
@@ -55,6 +57,7 @@ class Avatar extends Entity
         // Add path for each available size.
         foreach ($sizes as $size => $filters) {
             $url = $this->getAvatarUrl($this, $size);
+            //$url = "test.jpg";
             $avatarsPath[$size] = $url ? $url : '';
         }
         // Transform original model to add paths.
@@ -70,10 +73,58 @@ class Avatar extends Entity
      */
     public function getAvatarUrl($avatar, $version = null, $options = [])
     {
-        if ($version == 'small') {
-            return 'img/avatar/user.png';
+        // Default options.
+        $defaultOptions = [
+            'version' => 'small',
+        ];
+        $options = array_merge($options, $defaultOptions);
+
+        // If image is empty, we return the default avatar.
+        if (empty($avatar) || empty($avatar->id)) {
+            // Return fallback images.
+            $avatarDefaults = Configure::read('FileStorage.imageDefaults.Avatar');
+            if (isset($avatarDefaults[$version])) {
+                return $avatarDefaults[$version];
+            }
+
+            return false;
+        }
+
+        if (!empty($version)) {
+            $hash = Configure::read('FileStorage.imageHashes.' . $avatar->model . '.' . $version);
+            if (empty($hash)) {
+                if (empty($avatar->model) || !isset($avatar->model)) {
+                    $avatar->model = 'undefined';
+                }
+                throw new \InvalidArgumentException(
+                    __d(
+                        'file_storage',
+                        'No valid version key (%s %s) passed!',
+                        $avatar->model,
+                        $version
+                    )
+                );
+            }
         } else {
-            return 'img/avatar/user_medium.png';
+            $hash = null;
+        }
+
+        $event = new Event('ImageVersion.getVersions', $this, [
+            'hash' => $hash,
+            'image' => $avatar,
+            'version' => $version,
+            'options' => $options
+        ]);
+        $this->getEventManager()->dispatch($event);
+
+        if ($event->isStopped()) {
+            $path = $event->getData('path');
+            if ($path === null) {
+                throw new InternalErrorException('Could not find image data path.');
+            }
+            return Configure::read('ImageStorage.publicPath') .  $this->normalizePath($path);
+        } else {
+            return false;
         }
     }
 
