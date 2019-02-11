@@ -14,15 +14,13 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
-use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
 use LdapTools\Configuration;
 use LdapTools\Connection\LdapConnection;
 use LdapTools\Event\Event;
 use LdapTools\Event\LdapObjectSchemaEvent;
 use LdapTools\LdapManager;
-use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
+use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 /**
  * Directory factory class
@@ -32,9 +30,9 @@ class LdapDirectory implements DirectoryInterface
 {
     private $directorySettings;
     private $ldap;
-    private $groups;
-    private $users;
     private $mappingRules;
+    private $directoryType;
+    private $directoryResults = null;
 
     /**
      * LdapDirectory constructor.
@@ -47,9 +45,9 @@ class LdapDirectory implements DirectoryInterface
         $ldapConfig = (new Configuration())->loadFromArray($this->directorySettings->getLdapSettings());
         $this->ldap = new LdapManager($ldapConfig);
         $this->ldap->getConnection();
-        $this->groups = [];
-        $this->users = [];
+        $this->directoryType = $this->getDirectoryType();
         $this->mappingRules = $this->getMappingRules();
+        $this->directoryResults = new DirectoryResults($this->mappingRules);
 
         $this->customizeSchema();
     }
@@ -95,19 +93,18 @@ class LdapDirectory implements DirectoryInterface
     }
 
     /**
-     * Get field value.
-     * @param LdapObject $object object
-     * @param string $fieldName field name
-     *
-     * @return mixed
+     * Get directory type.
+     * @return string
      */
-    public function getFieldValue($object, $fieldName)
+    public function getDirectoryType()
     {
-        $mappingRules = $this->getMappingRules()[$object->getType()];
-        $fieldEquivalent = $mappingRules[$fieldName];
-        $call = 'get' . ucfirst($fieldEquivalent);
+        if (isset($this->directoryType)) {
+            return $this->directoryType;
+        }
 
-        return $object->{$call}();
+        $this->directoryType = $this->ldap->getConnection()->getConfig()->getLdapType();
+
+        return $this->directoryType;
     }
 
     /**
@@ -117,7 +114,7 @@ class LdapDirectory implements DirectoryInterface
      */
     public function getMappingRules()
     {
-        $type = $this->ldap->getConnection()->getConfig()->getLdapType();
+        $type = $this->getDirectoryType();
         if ($type !== LdapConnection::TYPE_AD && $type !== LdapConnection::TYPE_OPENLDAP) {
             throw new \Exception(__('Config error: the type of directory can be only ad or openldap'));
         }
@@ -127,14 +124,67 @@ class LdapDirectory implements DirectoryInterface
     }
 
     /**
-     * Return users
-     * @return array
+     * Set directory results.
+     * @param DirectoryResults $results results
+     * @return void
      */
-    public function getUsers()
+    public function setDirectoryResults(DirectoryResults $results)
     {
+        $this->directoryResults = $results;
+    }
+
+    /**
+     * Get directory results.
+     * @return DirectoryResults|null
+     */
+    public function getDirectoryResults()
+    {
+        return $this->directoryResults;
+    }
+
+    /**
+     * Get directory results with filtered applied (as per filters defined in the config).
+     * @return DirectoryResults directory results
+     * @throws \Exception
+     */
+    public function getFilteredDirectoryResults()
+    {
+        $directoryResults = $this->fetchDirectoryData();
+        $users = $directoryResults->getUsersAsArray();
+        $groups = $directoryResults->getGroupsAsArray();
+
+        $usersFromGroup = $this->directorySettings->getUsersParentGroup();
+        if (!empty($usersFromGroup)) {
+            $filteredUsers = $directoryResults->getRecursivelyFromParentGroup(LdapObjectType::USER, $usersFromGroup);
+            $users = $filteredUsers->getUsersAsArray();
+        }
+
+        $groupsFromGroup = $this->directorySettings->getGroupsParentGroup();
+        if (!empty($groupsFromGroup)) {
+            $filteredGroups = $directoryResults->getRecursivelyFromParentGroup(LdapObjectType::GROUP, $groupsFromGroup);
+            $groups = $filteredGroups->getGroupsAsArray();
+        }
+
+        $directoryResults = new DirectoryResults($this->mappingRules);
+        $directoryResults->initializeWithEntries($users, $groups);
+
+        return $directoryResults;
+    }
+
+    /**
+     * Fetch and initialize all users that are in the provided DN.
+     *
+     * @return array list of users.
+     * @throws \Exception
+     */
+    private function _fetchAndInitializeUsers()
+    {
+        if (!empty($this->users)) {
+            return $this->users;
+        }
+
         $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
         $selectFields = array_values($mappingRules);
-        $fromGroup = $this->directorySettings->getUsersParentGroup();
         $enabledUsersOnly = $this->directorySettings->getEnabledUsersOnly();
 
         $query = $this->ldap->buildLdapQuery();
@@ -143,46 +193,31 @@ class LdapDirectory implements DirectoryInterface
             ->select($selectFields)
             ->fromUsers();
 
-        if (!empty($fromGroup)) {
-            $usersQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
-        }
-
         if (!empty($enabledUsersOnly) && $enabledUsersOnly == true) {
             $usersQuery->andWhere(['enabled' => true]);
         }
 
-        $users = $usersQuery
+        $ldapUsers = $usersQuery
             ->getLdapQuery()
             ->getResult();
 
-        foreach ($users as $user) {
-            $this->users[] = [
-                'id' => $this->getFieldValue($user, 'id'),
-                'directory_name' => $user->getDn(),
-                'directory_created' => new FrozenTime($this->getFieldValue($user, 'created')),
-                'directory_modified' => new FrozenTime($this->getFieldValue($user, 'modified')),
-                'user' => [
-                    'username' => $this->getFieldValue($user, 'username'),
-                    'profile' => [
-                        'first_name' => $this->getFieldValue($user, 'firstname'),
-                        'last_name' => $this->getFieldValue($user, 'lastname'),
-                    ]
-                ]
-            ];
-        }
-
-        return $this->users;
+        return $ldapUsers;
     }
 
     /**
-     * Get a list of groups
-     * @return array
+     * Fetch and initialize all groups that are in the provided DN.
+     *
+     * @return array collection of groups entry.
+     * @throws \Exception
      */
-    public function getGroups()
+    private function _fetchAndInitializeGroups()
     {
+        if (!empty($this->groups)) {
+            return $this->groups;
+        }
+
         $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
         $selectFields = array_values($mappingRules);
-        $fromGroup = $this->directorySettings->getGroupsParentGroup();
 
         $query = $this->ldap->buildLdapQuery();
         $groupsQuery = $query
@@ -190,29 +225,52 @@ class LdapDirectory implements DirectoryInterface
             ->select($selectFields)
             ->fromGroups();
 
-        if (!empty($fromGroup)) {
-            $groupsQuery->where($query->filter()->isRecursivelyMemberOf($fromGroup));
+        $ldapGroups = $groupsQuery->getLdapQuery()
+                                       ->getResult();
+
+        return $ldapGroups;
+    }
+
+    /**
+     * Fetch directory data and cache it.
+     * @return DirectoryResults|null
+     * @throws \Exception
+     */
+    public function fetchDirectoryData()
+    {
+        if ($this->directoryResults->isEmpty()) {
+            $ldapGroups = $this->_fetchAndInitializeGroups();
+            $ldapUsers = $this->_fetchAndInitializeUsers();
+            $this->directoryResults->initializeWithLdapResults($ldapUsers, $ldapGroups);
         }
 
-        $groups = $groupsQuery->getLdapQuery()
-            ->getResult();
+        return $this->directoryResults;
+    }
 
-        foreach ($groups as $group) {
-            $groups = $group->getGroups();
-            $members = $this->getFieldValue($group, 'users');
-            $this->groups[] = [
-                'id' => $this->getFieldValue($group, 'id'),
-                'directory_name' => $group->getDn(),
-                'directory_created' => new FrozenTime($this->getFieldValue($group, 'created')),
-                'directory_modified' => new FrozenTime($this->getFieldValue($group, 'modified')),
-                'group' => [
-                    'name' => $this->getFieldValue($group, 'name'),
-                    'groups' => is_array($groups) ? $groups : [],
-                    'users' => is_array($members) ? $members : [],
-                ]
-            ];
-        }
+    /**
+     * Get users and filter them according to configured rules.
+     *
+     * @return array list of users formatted as entries.
+     * @throws \Exception
+     */
+    public function getUsers()
+    {
+        $directoryResults = $this->getFilteredDirectoryResults();
+        $users = $directoryResults->getUsersAsArray();
 
-        return $this->groups;
+        return $users;
+    }
+
+    /**
+     * Get a list of groups and filter them according to the configured filters.
+     * @return array list of groups formatted as entries.
+     * @throws \Exception
+     */
+    public function getGroups()
+    {
+        $directoryResults = $this->getFilteredDirectoryResults();
+        $groups = $directoryResults->getGroupsAsArray();
+
+        return $groups;
     }
 }

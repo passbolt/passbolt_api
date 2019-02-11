@@ -240,7 +240,7 @@ trait GroupUsersSyncTrait
             if ($userId === null) {
                 // The user has been deleted and the group user entry now points to nothing.
                 continue;
-            } else if (in_array($userId, $dbUserIdsInGroup)) {
+            } elseif (in_array($userId, $dbUserIdsInGroup)) {
                 // Do nothing. It is taken care of by syncGroupUsers.
                 continue;
             }

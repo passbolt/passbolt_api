@@ -29,7 +29,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
 {
-   public $fixtures = [
+    public $fixtures = [
        'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
        'app.Base/favorites', 'app.Base/email_queue', 'app.Base/organization_settings',
@@ -37,7 +37,7 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
        'plugin.passbolt/directorySync.base/directoryIgnore',
        'plugin.passbolt/directorySync.base/directoryRelations',
        'plugin.passbolt/directorySync.directoryReports',
-   ];
+    ];
 
     public function setUp()
     {

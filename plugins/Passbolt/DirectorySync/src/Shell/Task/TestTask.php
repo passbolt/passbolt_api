@@ -60,6 +60,7 @@ class TestTask extends AppShell
      * Main shell entry point
      *
      * @return bool true if successful
+     * @throws \Exception
      */
     public function main()
     {
@@ -104,7 +105,76 @@ class TestTask extends AppShell
         $data['groups'] = $validGroups;
         $this->displayValidObjects($data);
 
+        $tree = $ldapDirectory->getFilteredDirectoryResults()->getFlattenedTree();
+        $this->displayFlattenedTree($tree);
+
         return true;
+    }
+
+    /**
+     * Display flattened tree.
+     * @param array $flattenedTree flattened tree content.
+     * @return void
+     */
+    protected function displayFlattenedTree($flattenedTree)
+    {
+        $output = [];
+        $output[] = __('<info>Root</info>');
+        foreach ($flattenedTree as $row) {
+            if ($row->isUser()) {
+                $output[] = ' ' . '|- ' . $this->_userToString($row);
+            } else {
+                $level = $row->level;
+                $output[] = ' ' . str_repeat('|  ', $row->level) . '|- ' . "<info>{$this->_groupToString($row)}</info>";
+                foreach ($row->group['users'] as $user) {
+                    $output[] = ' ' . str_repeat('|  ', $level + 1) . '|- ' . $this->_userToString($user);
+                }
+            }
+        }
+
+        $io = $this->getIo();
+        $io->out($io->nl(1));
+        $this->info(__('The entities are organized with the following structure'));
+        $io->out($io->nl(1));
+        foreach ($output as $o) {
+            $io->out($o);
+        }
+        $io->out($io->nl(1));
+    }
+
+    /**
+     * Convert a group to a string.
+     * @param mixed $group group
+     *
+     * @return string|null
+     */
+    protected function _groupToString($group)
+    {
+        $groupStr = __(
+            '{0} ({1} members)',
+            $group['group']['name'],
+            count($group['group']['users'])
+        );
+
+        return $groupStr;
+    }
+
+    /**
+     * Convert a user to a string.
+     * @param mixed $user user
+     *
+     * @return string|null
+     */
+    protected function _userToString($user)
+    {
+        $userStr = __(
+            '{0} {1} ({2})',
+            $user['user']['profile']['first_name'],
+            $user['user']['profile']['last_name'],
+            $user['user']['username']
+        );
+
+        return $userStr;
     }
 
     /**
@@ -121,22 +191,13 @@ class TestTask extends AppShell
         for ($i = 0; $i < $maxEntries; $i++) {
             // Handle user.
             $groupStr = '';
-            if (isset($data['groups'][$i]) && isset($data['groups'][$i]['group'])) {
-                $groupStr = __(
-                    '{0} ({1} members)',
-                    $data['groups'][$i]['group']['name'],
-                    count($data['groups'][$i]['group']['users'])
-                );
+            if (isset($data['groups'][$i]) && isset($data['groups'][$i])) {
+                $groupStr = $this->_groupToString($data['groups'][$i]);
             }
 
             $userStr = '';
-            if (isset($data['users'][$i]) && isset($data['users'][$i]['user'])) {
-                $userStr = __(
-                    '{0} {1} ({2})',
-                    $data['users'][$i]['user']['profile']['first_name'],
-                    $data['users'][$i]['user']['profile']['last_name'],
-                    $data['users'][$i]['user']['username']
-                );
+            if (isset($data['users'][$i]) && isset($data['users'][$i])) {
+                $userStr = $this->_userToString($data['users'][$i]);
             }
 
             $output[] = [$groupStr, $userStr];
@@ -144,6 +205,7 @@ class TestTask extends AppShell
 
         $this->info(__('The following groups and users have been found'));
         $io = $this->getIo();
+        $io->out($io->nl(1));
         $io->helper('Table')->output($output);
     }
 }
