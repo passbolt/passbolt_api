@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-2995: As LU I should be able to copy the permalink of a password
 
 ### Improved
+- PASSBOLT-3401: LDAP: Improve output given by command 'directory_sync test'
 - PASSBOLT-3403: As LU I should export only selected passwords
 - PASSBOLT-3397: Remove the list of secrets from the API request while loading the list of passwords
 - PASSBOLT-3319: As LU I should retrieve a secret when I'm editing it
@@ -18,9 +19,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - PASSBOLT-3406: LDAP: Fix bug "user_id is null when a user that is associated to a group is deleted"
+- PASSBOLT-3401: LDAP: fix 'filters groupsParentGroup and usersParentGroup are not compatible with openldap'
 - PASSBOLT-3363: The webinstaller should not use the exec php primitive to create/import the gpg server key
 - PASSBOLT-3370: Auth verify error should not leak data
-- PASSBOLT-3368 Fix html injection in email
+- PASSBOLT-3368: Fix html injection in email
 
 ## [2.6.1]
 ### Improved
