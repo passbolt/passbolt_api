@@ -38,7 +38,7 @@ class SecretsViewController extends AppController
         }
         $this->loadModel('Secrets');
 
-        // Retrieve the resource.
+        // Retrieve the secret.
         $uac = $this->User->getAccessControl();
         $secret = $this->Secrets->findByResourceUser($resourceId, $uac->userId())->first();
         if (empty($secret)) {
