@@ -99,7 +99,8 @@ class ActionReport implements \Serializable
      * Transform ActionReport to array.
      * @return array the action report transformed.
      */
-    public function toArray() {
+    public function toArray()
+    {
         return [
             'message' => $this->message,
             'model' => $this->model,

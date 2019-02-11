@@ -224,9 +224,10 @@ class ActionReportCollection implements \Serializable, \Iterator, \ArrayAccess, 
      * Transform a collection of reports to Json.
      * @return array
      */
-    public function toFormattedArray() {
+    public function toFormattedArray()
+    {
         $res = [];
-        foreach($this->reports as $report) {
+        foreach ($this->reports as $report) {
             $res[] = $report->toArray();
         }
 
