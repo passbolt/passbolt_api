@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
-## [2.7.0]
+## [2.7.0] - 2019-02-12
 ### Added
 - PASSBOLT-2995: As LU I should be able to copy the permalink of a password
 
