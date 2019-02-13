@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.7.2] - 2019-02-13
+### Fixed
+- PASSBOLT-3417: LDAP: fix regression "settings cannot be saved through the UI".
+
 ## [2.7.1] - 2019-02-13
 ### Fixed
 - PASSBOLT-3416: Fix the uses of php shortags in the webinstaller template files
