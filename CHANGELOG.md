@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.7.1] - 2019-02-13
+### Fixed
+- PASSBOLT-3416: Fix the uses of php shortags in the webinstaller template files
+
 ## [2.7.0] - 2019-02-12
 ### Added
 - PASSBOLT-2995: As LU I should be able to copy the permalink of a password
@@ -636,7 +640,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.7.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...HEAD
+[2.7.1]: https://github.com/passbolt/passbolt_api/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/passbolt/passbolt_api/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/passbolt/passbolt_api/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...v2.6.0
