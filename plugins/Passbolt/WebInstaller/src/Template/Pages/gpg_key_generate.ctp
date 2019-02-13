@@ -15,8 +15,7 @@ $this->Html->script('web_installer/gpg_key_generate', ['block' => 'scriptBottom'
     </div>
     <!-- main -->
     <?= $this->Form->create($formExecuteResult); ?>
-<?
-$this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error hidden" aria-live="polite"></div></div>']); ?>
+    <?php $this->Form->setTemplates(['inputContainer' => '<div class="input {{type}}{{required}}">{{content}} <div class="message error hidden" aria-live="polite"></div></div>']); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">

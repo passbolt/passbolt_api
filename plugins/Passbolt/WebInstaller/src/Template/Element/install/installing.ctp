@@ -1,4 +1,4 @@
-<? use Cake\Routing\Router; ?>
+<?php use Cake\Routing\Router; ?>
 <div id="js-install-installing" class="grid grid-responsive-12">
     <div class="row">
         <div class="col7">

@@ -1,6 +1,6 @@
 {
   "name": "passbolt_api",
-  "version": "2.7.0",
+  "version": "2.7.1",
   "description": "The backend application for the open source password manager for teams",
   "repository": {
     "url": "https://github.com/passbolt/passbolt_api"
