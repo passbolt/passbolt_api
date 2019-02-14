@@ -72,6 +72,7 @@ class DirectoryResults
      * @param LdapObjectCollection $ldapUsers ldap users
      * @param LdapObjectCollection $ldapGroups ldap groups
      * @return void
+     * @throws \Exception
      */
     public function initializeWithLdapResults(LdapObjectCollection $ldapUsers, LdapObjectCollection $ldapGroups)
     {

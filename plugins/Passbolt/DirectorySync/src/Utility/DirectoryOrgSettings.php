@@ -44,15 +44,15 @@ class DirectoryOrgSettings
     public function __construct(array $settings = [])
     {
         $this->OrganizationSetting = TableRegistry::get('OrganizationSettings');
-        $this->settings = $settings;
 
         // If settings is not empty, we merge with the plugin default settings.
         // It is important to leave settings empty if no settings are set. This permits
         // to check when no settings have been set at all.
-        $pluginDefaultSettings = self::getDefaultSettings();
         if (!empty($settings)) {
-            $this->settings = Hash::merge($pluginDefaultSettings, $settings);
+            $pluginDefaultSettings = self::getDefaultSettings();
+            $settings = Hash::merge($pluginDefaultSettings, $settings);
         }
+        $this->settings = $settings;
     }
 
     /**
