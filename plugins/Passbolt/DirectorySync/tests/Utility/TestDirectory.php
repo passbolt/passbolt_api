@@ -15,6 +15,7 @@
 namespace Passbolt\DirectorySync\Test\Utility;
 
 use Cake\Core\Configure;
+use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 
 /**
@@ -25,6 +26,7 @@ class TestDirectory implements DirectoryInterface
     protected $users;
     protected $groups;
     protected $path;
+    protected $directoryResults = null;
 
     /**
      * Constructor
@@ -45,6 +47,7 @@ class TestDirectory implements DirectoryInterface
             $this->users = [];
             $this->groups = [];
         }
+        $this->directoryResults = new DirectoryResults([]);
     }
 
     /**
@@ -57,7 +60,9 @@ class TestDirectory implements DirectoryInterface
             $this->groups = $this->read('Groups');
         }
 
-        return $this->groups;
+        $dr = $this->getFilteredDirectoryResults();
+
+        return $dr->getGroupsAsArray();
     }
 
     /**
@@ -66,11 +71,35 @@ class TestDirectory implements DirectoryInterface
      */
     public function getUsers()
     {
+        $this->getFilteredDirectoryResults();
         if (!isset($this->users)) {
             $this->users = $this->read('Users');
         }
 
-        return $this->users;
+        $dr = $this->getFilteredDirectoryResults();
+
+        return $dr->getUsersAsArray();
+    }
+
+    /**
+     * Get directory results with filtered applied (as per filters defined in the config).
+     * @return DirectoryResults directory results
+     * @throws \Exception
+     */
+    public function getFilteredDirectoryResults()
+    {
+        if (!isset($this->users)) {
+            $this->users = $this->read('Users');
+        }
+        if (!isset($this->groups)) {
+            $this->groups = $this->read('Groups');
+        }
+
+        $this->directoryResults->initializeWithEntries($this->users, $this->groups);
+
+        // TODO: actually do the filtering.
+
+        return $this->directoryResults;
     }
 
     /**
@@ -79,6 +108,7 @@ class TestDirectory implements DirectoryInterface
     public function setUsers($users)
     {
         $this->users = $users;
+        $this->directoryResults->initializeWithEntries($this->users, []);
     }
 
     /**
@@ -87,6 +117,7 @@ class TestDirectory implements DirectoryInterface
     public function setGroups($groups)
     {
         $this->groups = $groups;
+        $this->directoryResults->initializeWithEntries([], $groups);
     }
 
     /**

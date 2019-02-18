@@ -15,15 +15,18 @@
 namespace Passbolt\DirectorySync\Controller;
 
 use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\ForbiddenException;
+use Cake\View\ViewVarsTrait;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
+use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectorySettingsController extends DirectoryController
 {
+    use ViewVarsTrait;
+
     /**
      * Retrieve the settings
      *
@@ -78,6 +81,50 @@ class DirectorySettingsController extends DirectoryController
     }
 
     /**
+     * Test provided settings without saving them, and return directory results.
+     *
+     * @return void
+     */
+    public function test()
+    {
+        if (!$this->User->isAdmin()) {
+            throw new ForbiddenException(__('You are not authorized to access that location'));
+        }
+
+        $data = $this->request->getData();
+        $form = new LdapConfigurationForm();
+        if (!$form->validate($data)) {
+            $errors = $form->errors();
+            throw new CustomValidationException('The settings are not valid', $errors);
+        }
+        try {
+            $form->execute($data);
+        } catch (\Exception $e) {
+            throw new BadRequestException('The settings provided are incorrect. ' . $e->getMessage());
+        }
+
+        try {
+            $settings = LdapConfigurationForm::formatFormDataToOrgSettings($data);
+            $orgSettings = new DirectoryOrgSettings($settings);
+            $directory = DirectoryFactory::get($orgSettings);
+            $outputData = [
+                'users' => $directory->getUsers(),
+                'groups' => $directory->getGroups(),
+            ];
+        } catch (\Exception $e) {
+            throw new BadRequestException('The users and groups cannot be retrieved. ' . $e->getMessage());
+        }
+
+        try {
+            $outputData['tree'] = $directory->getFilteredDirectoryResults()->getTree();
+        } catch (\Exception $e) {
+            throw new BadRequestException('The directory structure cannot be retrieved. ' . $e->getMessage());
+        }
+
+        $this->success(__('The operation was successful.'), $outputData);
+    }
+
+    /**
      * Disable the ldap integration.
      *
      * @return void
@@ -89,7 +136,7 @@ class DirectorySettingsController extends DirectoryController
         }
 
         $uac = $this->User->getAccessControl();
-        $directoryOrgSettings = DirectoryOrgSettings::disable($uac);
+        DirectoryOrgSettings::disable($uac);
 
         $this->success(__('The operation was successful.'));
     }

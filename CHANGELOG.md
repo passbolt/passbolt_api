@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Improved
+- PASSBOLT-3327: LDAP: Improve administration UI
+- PASSBOLT-3328: LDAP: Add test connection option
 
 ## [2.7.2] - 2019-02-13
 ### Fixed

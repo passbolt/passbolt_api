@@ -19,6 +19,7 @@ use App\Model\Entity\Role;
 
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -40,6 +41,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.directorySync.test', 'Nested');
         $this->disableDirectoryIntegration();
     }
 
@@ -186,5 +188,45 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->authenticateAs('dame');
         $this->deleteJson("/directorysync/settings.json?api-version=2");
         $this->assertError(403);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Test
+     */
+    public function testDirectorySync_DirectorySettingsController_Test_InvalidSettings()
+    {
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData['domain_name'] = '';
+        $this->authenticateAs('admin');
+        $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
+        $this->assertError(400);
+        $errors = json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertNotEmpty($errors);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Test
+     */
+    public function testDirectorySync_DirectorySettingsController_Test_Success()
+    {
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->assertFalse($directoryOrgSettings->isEnabled());
+
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $this->authenticateAs('admin');
+        $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
+        $this->assertSuccess();
+        $this->assertTrue(isset($this->_responseJsonBody->users));
+        $this->assertEquals(count($this->_responseJsonBody->users), 4);
+        $this->assertTrue(isset($this->_responseJsonBody->groups));
+        $this->assertEquals(count($this->_responseJsonBody->groups), 4);
+        $this->assertTrue(isset($this->_responseJsonBody->tree));
+        $this->assertEquals(count($this->_responseJsonBody->tree), 1);
     }
 }
