@@ -41,6 +41,12 @@ class DirectorySyncShell extends AppShell
     public function initialize()
     {
         parent::initialize();
+
+        $isLdapLoaded = extension_loaded('ldap');
+        if (!$isLdapLoaded) {
+            $this->abort(__('Error: the ldap extension is not installed'));
+        }
+
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         if (!$this->directoryOrgSettings->isEnabled()) {
             $this->err(__('The ldap integration is not configured'));
