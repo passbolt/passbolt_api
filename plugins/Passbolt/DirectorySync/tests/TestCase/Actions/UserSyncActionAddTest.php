@@ -968,7 +968,7 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySyncUserAdd_Case38_Invalid_Error_Active()
     {
-        $data = $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com');
+        $data = $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', '2018-07-07 03:56:42', '2018-07-07 03:56:42');
         $this->mockOrphanDirectoryEntryUser(['fname' => 'ada']);
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);

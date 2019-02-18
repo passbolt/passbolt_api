@@ -116,7 +116,7 @@ class DirectorySettingsController extends DirectoryController
         }
 
         try {
-            $outputData['tree'] = $directory->getFilteredDirectoryResults()->getFlattenedTree();
+            $outputData['tree'] = $directory->getFilteredDirectoryResults()->getTree();
         } catch (\Exception $e) {
             throw new BadRequestException('The directory structure cannot be retrieved. ' . $e->getMessage());
         }
