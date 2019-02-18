@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Fixed
+- PASSBOLT-3409: LDAP: Fix "error should be explicit when ldap module is not installed"
+
 ### Improved
 - PASSBOLT-3327: LDAP: Improve administration UI
 - PASSBOLT-3328: LDAP: Add test connection option
