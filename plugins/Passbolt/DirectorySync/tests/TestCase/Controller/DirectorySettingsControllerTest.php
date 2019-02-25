@@ -125,6 +125,34 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySyncController_DirectorySettingsController
      * @group DirectorySyncController_DirectorySettingsController_Update
      */
+    public function testDirectorySync_DirectorySettingsController_Update_Empty_Username_Password_Success()
+    {
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->assertFalse($directoryOrgSettings->isEnabled());
+
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData['username'] = '';
+        $formData['password'] = '';
+        $this->authenticateAs('admin');
+        $this->putJson("/directorysync/settings.json?api-version=2", $formData);
+        $this->assertSuccess();
+
+        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
+        $this->assertNotEmpty($settings);
+
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $ldapSettings = $directoryOrgSettings->getLdapSettings();
+        $this->assertFalse(isset($ldapSettings['domains']['org_domain']['username']));
+        $this->assertFalse(isset($ldapSettings['domains']['org_domain']['password']));
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Update
+     */
     public function testDirectorySync_DirectorySettingsController_Update_InvalidSettings()
     {
         $formData = LdapConfigurationFormTest::getDummyFormData();

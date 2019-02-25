@@ -117,13 +117,11 @@ class LdapConfigurationForm extends Form
             ->utf8('domain_name', __('The domain name should be a valid utf8 string.'));
 
         $validator
-            ->requirePresence('username', 'create', __('A username is required.'))
-            ->notEmpty('username', __('A username is required.'))
+            ->allowEmpty('username', __('Username can be empty.'))
             ->utf8('username', __('The username should be a valid utf8 string.'));
 
         $validator
-            ->requirePresence('password', 'create', __('A password is required.'))
-            ->notEmpty('password', __('A password is required.'))
+            ->allowEmpty('password', __('Password can be empty.'))
             ->utf8('password', __('The password should be a valid utf8 string.'));
 
         $validator
