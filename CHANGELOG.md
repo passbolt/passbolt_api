@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [unreleased]
 ### Fixed
 - PASSBOLT-3409: LDAP: Fix "error should be explicit when ldap module is not installed"
+- PASSBOLT-3443: LDAP: Fix 'in settings, username and password should not be compulsory fields'
 
 ### Improved
 - PASSBOLT-3327: LDAP: Improve administration UI
