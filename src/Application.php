@@ -158,7 +158,7 @@ class Application extends BaseApplication
         StorageUtils::generateHashes();
 
         StorageManager::config('Local', [
-            'adapterOptions' => [Configure::read('ImageStorage.basePath')],
+            'adapterOptions' => [Configure::read('ImageStorage.basePath'), true],
             'adapterClass' => '\Gaufrette\Adapter\Local',
             'class' => '\Gaufrette\Filesystem'
         ]);

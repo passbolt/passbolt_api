@@ -16,7 +16,7 @@
 use Migrations\AbstractMigration;
 use Migrations\Migrations;
 
-class V280AdditionalEmailMigration extends AbstractMigration
+class V280AdditionalFileStorageMigration extends AbstractMigration
 {
     /**
      * Up
@@ -25,15 +25,11 @@ class V280AdditionalEmailMigration extends AbstractMigration
      */
     public function up()
     {
-        // Add error message
-        $table = $this->table('email_queue');
-        $table->addColumn('error', 'text', [
-            'default' => null,
-            'null' => true,
-        ]);
-        $table->update();
+        $this->table('file_storage', ['id' => false, 'primary_key' => 'id'])
+            ->changeColumn('extension', 'string', ['limit' => 32, 'null' => true, 'default' => null])
+            ->update();
 
-        $this->table('email_queue_phinxlog')->drop()->save();
+        $this->table('burzum_file_storage_phinxlog')->drop()->save();
     }
 
     /**

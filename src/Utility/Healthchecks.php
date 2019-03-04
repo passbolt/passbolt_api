@@ -299,8 +299,8 @@ class Healthchecks
         // Extra tables for passbolt v2.
         if ($version == 2) {
             $tables = array_merge($tables, [
-                'burzum_file_storage_phinxlog',
-                'email_queue_phinxlog',
+                //'burzum_file_storage_phinxlog', // dropped in v2.8
+                //'email_queue_phinxlog',
                 'phinxlog',
             ]);
         }
