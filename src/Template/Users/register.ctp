@@ -60,7 +60,7 @@ $formContext = [
                     </p>
                     <div class="submit-wrapper">
                         <input type="submit" class="button primary big" value="<?= __('register'); ?>">
-                        <a href="<?= Router::url('/login'); ?>" class="secondary"><?= __('already a member?'); ?></a>
+                        <a href="<?= Router::url('/login', true); ?>" class="secondary"><?= __('already a member?'); ?></a>
                     </div>
                 </fieldset>
                 <?= $this->Form->end();?>

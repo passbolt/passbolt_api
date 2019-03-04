@@ -14,7 +14,7 @@
  */
 use App\Utility\Purifier;
 use Cake\Routing\Router;
-
+Router::fullBaseUrl($body['fullBaseUrl']);
 $user = $body['user'];
 $token = $body['token'];
 

@@ -14,7 +14,7 @@
  */
 use App\Utility\Purifier;
 use Cake\Routing\Router;
-
+Router::fullBaseUrl($body['fullBaseUrl']);
 $admin = $body['admin'];
 $group = $body['group'];
 

@@ -21,10 +21,10 @@ use Cake\Core\Configure;
         <nav>
             <div class="top navigation primary">
                 <ul>
-                    <li class="left"><a href="<?= Router::url('/') ?>"><span><?= __('home') ?></span></a></li>
-                    <li class="right"><a href="<?= Router::url('/auth/login') ?>"><span><?= __('login') ?></span></a></li>
+                    <li class="left"><a href="<?= Router::url('/', true) ?>"><span><?= __('home') ?></span></a></li>
+                    <li class="right"><a href="<?= Router::url('/auth/login', true) ?>"><span><?= __('login') ?></span></a></li>
 <?php if (Configure::read('passbolt.registration.public') === true) : ?>
-                    <li class="right"><a href="<?= Router::url('/users/register') ?>"><span><?= __('register') ?></span></a></li>
+                    <li class="right"><a href="<?= Router::url('/users/register', true) ?>"><span><?= __('register') ?></span></a></li>
 <?php endif; ?>
                 </ul>
             </div>

@@ -15,7 +15,7 @@
 use App\Utility\Purifier;
 use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
-
+Router::fullBaseUrl($body['fullBaseUrl']);
 $admin = $body['admin'];
 $group = $body['group'];
 

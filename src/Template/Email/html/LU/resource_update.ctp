@@ -15,7 +15,7 @@
 use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
-
+Router::fullBaseUrl($body['fullBaseUrl']);
 $user = $body['user'];
 $resource = $body['resource'];
 echo $this->element('Email/module/avatar',[
