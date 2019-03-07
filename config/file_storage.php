@@ -2,8 +2,8 @@
 use Cake\Core\Configure;
 
 // File storage and images
-Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS . 'images' . DS);
-Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS . 'images' . DS);
+Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
+Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
 Configure::write('FileStorage', array(
     // Configure the `basePath` for the Local adapter, not needed when not using it
     'basePath' => APP . 'FileStorage' . DS,

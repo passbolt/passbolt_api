@@ -604,8 +604,8 @@ class HealthcheckTask extends AppShell
         );
         $this->assert(
             $checks['gpg']['gpgKeyPublicInKeyring'],
-            __('The server public key defined in the config/passbolt.php is in the keyring.'),
-            __('The server public key defined in the config/passbolt.php is not in the keyring'),
+            __('The server public key defined in the config/passbolt.php (or environment variables) is in the keyring.'),
+            __('The server public key defined in the config/passbolt.php (or environment variables) is not in the keyring'),
             [
                 __('Import the private server key in the keyring of the webserver user.'),
                 __('you can try:'),

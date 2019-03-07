@@ -18,7 +18,6 @@ use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use Burzum\FileStorage\Storage\Listener\BaseListener;
 use Burzum\FileStorage\Storage\Listener\ImageProcessingListener;
-use Burzum\FileStorage\Storage\Listener\LocalListener;
 use Burzum\FileStorage\Storage\StorageManager;
 use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\Configure;
@@ -27,11 +26,9 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
-use Cake\Log\Log;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
-use BadMethodCallException;
 
 class Application extends BaseApplication
 {
@@ -145,18 +142,13 @@ class Application extends BaseApplication
      */
     static public function initImageListeners()
     {
-        // Attach the event listeners
-        $listener = new LocalListener();
-        EventManager::instance()->on($listener);
-
         $listener = new ImageProcessingListener();
         EventManager::instance()->on($listener);
 
-        $listener = new BaseListener([ 'imageProcessing' => true, 'pathBuilderOptions' => []]);
+        $listener = new BaseListener([ 'imageProcessing' => true]);
         EventManager::instance()->on($listener);
 
         StorageUtils::generateHashes();
-
         StorageManager::config('Local', [
             'adapterOptions' => [Configure::read('ImageStorage.basePath'), true],
             'adapterClass' => '\Gaufrette\Adapter\Local',
