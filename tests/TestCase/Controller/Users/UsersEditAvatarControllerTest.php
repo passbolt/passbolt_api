@@ -16,10 +16,7 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Burzum\FileStorage\Event\ImageProcessingListener;
-use Burzum\FileStorage\Event\LocalFileStorageListener;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
@@ -32,12 +29,13 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->loadPlugins(['Burzum/FileStorage', 'Burzum/Imagine']);
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
     }
 
     public function testUsersEditAvatarSuccess()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Not possible to fake file upload, issue with validation');
         $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
 
         $ireneAvatar = $this->Avatars->find()
@@ -52,7 +50,9 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 'avatar' => [
                     'file' => [
                         'tmp_name' => $adaAvatar,
-                        'name' => 'irene.png',
+                        'filesize' => 170049, // filesize in bytes
+                        'error' => \UPLOAD_ERR_OK, // upload (error) status
+                        'filename' => 'ada.png', // upload filename
                     ]
                 ]
             ]
@@ -62,8 +62,8 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
         $ireneAvatar = $this->Avatars
             ->find()
-            ->where(['user_id' => UuidFactory::uuid('user.id.irene')]);
-
+            ->where(['user_id' => UuidFactory::uuid('user.id.irene')])
+            ->first();
         $this->assertEquals(1, $ireneAvatar->count(), 'After the test, Irene should have an avatar');
         $this->assertEquals('Local', $ireneAvatar->first()->adapter, 'Avatar adapter should be set to Local');
         $this->assertEquals('Avatar', $ireneAvatar->first()->model, 'File Storage model should be set to Avatar');
@@ -84,9 +84,8 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarWrongFileFormat()
     {
-        $this->markTestSkipped();
-        $filesDirectory = ROOT . DS . 'plugins' . DS . 'PassboltTestData' . DS . 'data';
-        $pdfFile = $filesDirectory . DS . 'sample.pdf';
+        $filesDirectory = TESTS . 'Fixtures' . DS . 'Avatar';
+        $pdfFile = $filesDirectory . DS . 'minimal.pdf';
 
         $avatarCountsBefore = $this->Avatars->find()->count();
 
@@ -96,15 +95,17 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
             'profile' => [
                 'avatar' => [
                     'file' => [
-                        'tmp_name' => $pdfFile,
-                        'name' => 'sample.pdf',
+                        'tmp_file' => $pdfFile,
+                        'name' => 'minimal.pdf',
                     ]
                 ]
             ]
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
         $this->assertError(400, 'Could not validate user data.');
-        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->extension);
+        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validExtension);
+        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validMimeType);
+        $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validUploadedFile);
 
         $avatarCountsAfter = $this->Avatars->find()->count();
         $this->assertEquals($avatarCountsBefore, $avatarCountsAfter, "The number of avatars in db should be same before and after the test");
@@ -112,7 +113,6 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarNoDataProvided()
     {
-        $this->markTestSkipped();
         $this->authenticateAs('irene');
         $data = [
             'id' => UuidFactory::uuid('user.id.irene'),
@@ -127,7 +127,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarCantOverrideData()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped('Not possible to fake file upload, issue with validation');
         $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
 
         $this->authenticateAs('irene');

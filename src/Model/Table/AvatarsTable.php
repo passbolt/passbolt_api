@@ -17,7 +17,6 @@ namespace App\Model\Table;
 use App\Model\Entity\Avatar;
 use Burzum\FileStorage\Model\Table\FileStorageTable;
 use Burzum\FileStorage\Storage\ImageVersionsTrait;
-use Burzum\FileStorage\Storage\StorageManager;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
@@ -57,12 +56,17 @@ class AvatarsTable extends FileStorageTable
         $validator
             ->requirePresence('file', __('A file is required'))
             ->allowEmptyString('file', false, __('File should not be empty'))
-            ->add('file', 'validMimType', [
+            ->add('file', 'validMimeType', [
                 'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/gif']],
             ])
             ->add('file', 'validExtension', [
                 'rule' => ['extension', ['png', 'jpg', 'gif']]
+            ])
+            ->add('file', 'validUploadedFile', [
+                'rule' => ['uploadedFile', ['optional' => false]],
+                'message' => 'File is no valid uploaded file'
             ]);
+
         return $validator;
     }
 
@@ -72,8 +76,8 @@ class AvatarsTable extends FileStorageTable
      *
      * @param Event $event the event
      * @param EntityInterface $entity entity
-     * @param array $options options
-     * @return bool
+     * @param \ArrayObject $options options
+     * @return void
      */
     public function afterSave(Event $event, EntityInterface $entity, \ArrayObject $options)
     {
@@ -87,28 +91,8 @@ class AvatarsTable extends FileStorageTable
             ->first();
 
         if (!empty($formerAvatar)) {
-            $this->deleteAvatar($formerAvatar);
+            $this->delete($formerAvatar);
         }
-    }
-
-    /**
-     * Delete a profile avatar and all its associated versions from the database and the file system.
-     *
-     * @param \App\Model\Entity\Avatar $avatar the profile avatar entity
-     * @return bool|mixed
-     */
-    public function deleteAvatar($avatar)
-    {
-        // Get the path of the file.
-        $imagePath = $avatar->path . str_replace('-', '', $avatar->id) . '.' . $avatar->extension;
-        $fullImagePath = Configure::read('ImageStorage.basePath') . DS . $imagePath;
-
-        // If file exists, delete it.
-        if (file_exists($fullImagePath)) {
-            StorageManager::get($avatar->adapter)->delete($imagePath);
-        }
-
-        return $this->delete($avatar);
     }
 
     /**
@@ -118,10 +102,11 @@ class AvatarsTable extends FileStorageTable
      * @param Event $event the event
      * @param \ArrayObject $data data
      * @param \ArrayObject $options options
+     * @return void
      */
     public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
-        $data['adapter'] = 'Local';
+        $data['adapter'] = Configure::read('ImageStorage.adapter');
         $data['model'] = 'Avatar';
     }
 

@@ -15,8 +15,8 @@
 namespace App\Middleware;
 
 use App\Auth\GpgAuthenticate;
-use Cake\Http\ServerRequest;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 
 class GpgAuthHeadersMiddleware
 {

@@ -18,16 +18,14 @@ namespace App\Test\TestCase\Controller\Groups;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
-use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
-    use GroupsUsersModelTrait;
     use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
     public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
@@ -66,7 +64,6 @@ hcciUFw5
      */
     public function testGroupsUpdateAsGMUpdateMembersRoleSuccess()
     {
-
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $userJId = UuidFactory::uuid('user.id.jean');

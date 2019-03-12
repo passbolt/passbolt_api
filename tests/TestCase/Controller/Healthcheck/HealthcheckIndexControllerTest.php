@@ -23,7 +23,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexOk()
     {
-        $this->markTestSkipped();
         $this->get('/healthcheck');
         $this->assertResponseContains('Passbolt API Status');
         $this->assertResponseOk();
@@ -31,7 +30,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexJsonOk()
     {
-        $this->markTestSkipped();
         $this->getJson('/healthcheck.json');
         $this->assertResponseSuccess();
         $attributes = [

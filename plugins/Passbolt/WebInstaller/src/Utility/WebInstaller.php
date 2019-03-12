@@ -19,6 +19,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Utility\Gpg;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Network\Session;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -184,8 +185,8 @@ class WebInstaller
      */
     public function installDatabase()
     {
-        $migrations = new Migrations();
-        $migrated = $migrations->migrate(['connection' => 'default']);
+        $migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
+        $migrated = $migrations->migrate();
         if (!$migrated) {
             throw new \Exception('The database cannot be installed');
         }

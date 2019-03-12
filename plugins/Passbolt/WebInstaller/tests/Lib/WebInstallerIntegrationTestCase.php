@@ -15,6 +15,7 @@
 namespace Passbolt\WebInstaller\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\InternalErrorException;
@@ -25,6 +26,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     use DatabaseTrait;
 
     protected $_recover;
+    protected $_configured;
 
     public function setUp()
     {
@@ -36,26 +38,32 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     {
         parent::tearDown();
         if ($this->_recover) {
-            ConnectionManager::setConfig('test', self::getTestDatasourceFromConfig());
+            if ($this->_configured !== null) {
+                Configure::write('passbolt.webInstaller.configured', $this->_configured);
+            } else {
+                Configure::delete('passbolt.webInstaller.configured');
+            }
         }
     }
 
     public function mockPassboltIsNotconfigured()
     {
         $this->_recover = true;
-        ConnectionManager::drop('test');
+        $this->_configured = Configure::read('passbolt.webInstaller.configured');
+        Configure::write('passbolt.webInstaller.configured', false);
     }
 
-    public function getTestDatasourceFromConfig() {
+    public function getTestDatasourceFromConfig()
+    {
         $engine = new PhpConfig();
         try {
             $appValues = $engine->read('app');
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             throw new InternalErrorException('config/app.php is missing an needed for this test.');
         }
         try {
             $passboltValues = $engine->read('passbolt');
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
         }
 
         if (isset($passboltValues['Datasources']['test']) && $passboltValues['Datasources']['test']) {
@@ -64,12 +72,13 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
             if (!isset($passboltValues['Datasources']['test']) && !isset($passboltValues['Datasources']['test'])) {
                 throw new InternalErrorException('A test connection is missing in Datasources config.');
             }
-            if(!isset($passboltValues['Datasources']['test'])) {
+            if (!isset($passboltValues['Datasources']['test'])) {
                 $config = $passboltValues['Datasources']['test'];
             } else {
                 $config = $appValues['Datasources']['test'];
             }
         }
+
         return $config;
     }
 
@@ -77,5 +86,13 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     {
         $session = ['initialized' => true] + $options;
         $this->session(['webinstaller' => $session]);
+    }
+
+    public function restoreTestConnection()
+    {
+        // Some test may drop the default test connection and replace it
+        // with something invalid, we rebuild test connection after each tests
+        ConnectionManager::drop('test');
+        ConnectionManager::setConfig('test', $this->getTestDatasourceFromConfig());
     }
 }

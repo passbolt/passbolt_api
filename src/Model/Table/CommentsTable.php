@@ -115,7 +115,7 @@ class CommentsTable extends Table
 
         $validator
             ->uuid('parent_id', __('parent_ud should be a uuid'))
-            ->allowEmptyString('parent_id',true);
+            ->allowEmptyString('parent_id', true);
 
         $validator
             ->ascii('foreign_model')

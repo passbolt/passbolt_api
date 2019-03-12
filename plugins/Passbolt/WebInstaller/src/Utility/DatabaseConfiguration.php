@@ -51,9 +51,13 @@ class DatabaseConfiguration
      */
     public static function setDefaultConfig($config)
     {
-        ConnectionManager::drop('default');
+        // usefull in tests where 'default' name is mapped to config 'test'
+        // here we need the original config name after aliasing
+        // so that we drop/rebuild the test config and not the default one
+        $configName = ConnectionManager::get('default')->configName();
+        ConnectionManager::drop($configName);
         $dbConfig = self::buildConfig($config);
-        ConnectionManager::setConfig('default', $dbConfig);
+        ConnectionManager::setConfig($configName, $dbConfig);
     }
 
     /**

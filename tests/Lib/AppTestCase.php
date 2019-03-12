@@ -34,7 +34,6 @@ class AppTestCase extends TestCase
     // Do not load all the traits here
     // load them were needed instead
     use ArrayTrait;
-    use AvatarsModelTrait;
     use CommentsModelTrait;
     use EntityTrait;
     use FavoritesModelTrait;
@@ -55,7 +54,6 @@ class AppTestCase extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->initAvatarEvents();
     }
 
     /**

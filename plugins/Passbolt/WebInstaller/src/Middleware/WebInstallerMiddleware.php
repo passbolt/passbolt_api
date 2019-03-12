@@ -14,11 +14,12 @@
  */
 namespace Passbolt\WebInstaller\Middleware;
 
-use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\ServerRequest;
-use Cake\Http\Response;
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 
 class WebInstallerMiddleware
 {
@@ -55,8 +56,12 @@ class WebInstallerMiddleware
      */
     public static function isConfigured()
     {
+        if (Configure::read('passbolt.webInstaller.configured') !== null) {
+            return Configure::read('passbolt.webInstaller.configured');
+        }
         try {
             $connection = ConnectionManager::get('default')->config();
+
             return (!empty($connection) && !empty($connection['database']));
         } catch (MissingDatasourceConfigException $exception) {
             return false;

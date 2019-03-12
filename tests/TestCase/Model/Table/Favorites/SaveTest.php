@@ -24,8 +24,8 @@ use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
-    use FormatValidationTrait;
     use FavoritesModelTrait;
+    use FormatValidationTrait;
 
     public $Favorites;
 

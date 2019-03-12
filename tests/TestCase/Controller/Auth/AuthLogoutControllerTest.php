@@ -16,10 +16,25 @@ namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Cake\Routing\Router;
+use Zend\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
+
+    /**
+     * Check if a redirection is of type ZendRedirect
+     * Usefull for high level routes redirections / route alias testing
+     */
+    public function assertZendRedirect(string $url)
+    {
+        $this->assertTrue($this->_response instanceof RedirectResponse);
+        $url = Router::url($url, true);
+        $location = $this->_response->getHeader('location');
+        $this->assertNotEmpty($location);
+        $this->assertEquals($url, $location[0]);
+    }
 
     public function testAuthLogoutLoggedIn()
     {

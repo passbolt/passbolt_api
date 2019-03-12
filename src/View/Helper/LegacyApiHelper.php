@@ -14,11 +14,11 @@
  */
 namespace App\View\Helper;
 
-use Cake\Utility\Inflector;
-use Cake\View\Helper;
-use Cake\ORM\Table;
 use Cake\ORM\Entity;
 use Cake\ORM\Query;
+use Cake\ORM\Table;
+use Cake\Utility\Inflector;
+use Cake\View\Helper;
 
 use InvalidArgumentException;
 
@@ -166,7 +166,7 @@ class LegacyApiHelper extends Helper
             // Example: Groups.groups_users
             try {
                 $association = $table->getAssociation(Inflector::camelize($property));
-            } catch(InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException $exception) {
                 // In the case the property is not an association.
                 // Example: Groups.name
                 $className = substr($table->getEntityClass(), strrpos($table->getEntityClass(), '\\') + 1);

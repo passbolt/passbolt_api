@@ -37,20 +37,9 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerEmailPostSuccess()
     {
-        $this->markTestSkipped();
-        $postData = [
-            'sender_name' => 'Passbolt Test',
-            'sender_email' => 'test@passbolt.com',
-            'host' => 'unreachable_host',
-            'tls' => true,
-            'port' => 587,
-            'username' => 'test@passbolt.com',
-            'password' => 'password'
-        ];
-        $this->post('/install/email', $postData);
-        $this->assertResponseCode(302);
-        $this->assertRedirectContains('install/options');
-        $this->assertSession($postData, 'webinstaller.email');
+        // Problem how to test valid config in the test without
+        // leaking credentials :)
+        $this->markTestIncomplete();
     }
 
     public function testWebInstallerEmailPostError_InvalidData()

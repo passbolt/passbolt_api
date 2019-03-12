@@ -16,9 +16,7 @@ namespace App\Controller;
 
 use Cake\Event\Event;
 use Cake\Routing\Router;
-use Cake\Utility\Hash;
 use Cake\Utility\Text;
-use Cake\Error\Debugger;
 
 /**
  * Error Handling Controller

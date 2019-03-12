@@ -24,8 +24,8 @@ use Cake\ORM\TableRegistry;
 
 class UpdateTest extends AppTestCase
 {
-    use FormatValidationTrait;
     use CommentsModelTrait;
+    use FormatValidationTrait;
 
     public $Comments;
 

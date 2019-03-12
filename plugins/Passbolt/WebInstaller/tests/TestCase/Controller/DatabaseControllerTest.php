@@ -14,8 +14,6 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class DatabaseControllerTest extends WebInstallerIntegrationTestCase
@@ -23,8 +21,15 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->truncateTables();
         $this->mockPassboltIsNotconfigured();
         $this->initWebInstallerSession();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->restoreTestConnection();
     }
 
     public function testWebInstallerDatabaseViewSuccess()
@@ -37,14 +42,13 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerDatabasePostSuccess()
     {
-        $this->markTestSkipped();
-        $this->truncateTables();
         $postData = $this->getTestDatasourceFromConfig();
         $this->post('/install/database', $postData);
         $this->assertResponseCode(302);
         $this->assertRedirectContains('/install/gpg_key');
-        $this->assertSession($postData, 'webinstaller.database');
-        $this->assertSession(false, 'webinstaller.hasAdmin');
+        // Not testable on redirect
+        // $this->assertSession($postData, 'webinstaller.database');
+        // $this->assertSession(false, 'webinstaller.hasAdmin');
     }
 
     public function testWebInstallerDatabasePostError_InvalidData()
@@ -59,7 +63,8 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerDatabasePostError_CannotConnectToTheDatabase()
     {
-        $this->markTestSkipped();
+        // This breaks further test
+        // Sessions is carried over to next test...
         $postData = $this->getTestDatasourceFromConfig();
         $postData['username'] = 'invalid-username';
         $this->post('/install/database', $postData);

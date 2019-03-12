@@ -109,7 +109,7 @@ class Avatar extends ImageStorage
                 throw new InternalErrorException('Could not find image data path.');
             }
 
-            return Configure::read('ImageStorage.publicPath') .  $this->normalizePath($path);
+            return Configure::read('ImageStorage.publicPath') . $this->normalizePath($path);
         }
 
         return $this->getFallbackUrl($version);
@@ -133,13 +133,14 @@ class Avatar extends ImageStorage
      * @param string $version small or medium
      * @return mixed string|false if no default defined
      */
-    public function getFallBackImage(string $version)
+    public function getFallBackUrl(string $version)
     {
         // Return fallback images.
         $avatarDefaults = Configure::read('FileStorage.imageDefaults.Avatar');
         if (isset($avatarDefaults[$version])) {
             return $avatarDefaults[$version];
         }
+
         return false;
     }
 }

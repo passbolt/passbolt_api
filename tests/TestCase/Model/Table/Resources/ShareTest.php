@@ -68,7 +68,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testSuccess()
+    public function testShareSuccess()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -144,7 +144,7 @@ hcciUFw5
         }
     }
 
-    public function testLostAccessFavoritesDeleted()
+    public function testShareLostAccessFavoritesDeleted()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -182,7 +182,7 @@ hcciUFw5
      * The format validation is done by the Permissions model.
      * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
      */
-    public function testValidationError()
+    public function testShareValidationError()
     {
         $resourceApacheId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -262,7 +262,7 @@ hcciUFw5
         }
     }
 
-    public function testErrorRuleResourceIsNotSoftDeleted()
+    public function testShareErrorRuleResourceIsNotSoftDeleted()
     {
         $resourceId = UuidFactory::uuid('resource.id.jquery');
         $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);

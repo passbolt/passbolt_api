@@ -32,8 +32,11 @@ class PassboltConfiguration
         $this->viewBuilder();
         $settings = $this->sanitize($settings);
         $this->set(['config' => $settings]);
-        $configView = $this->createView();
-        $contents = $configView->render('Passbolt/WebInstaller.Config/passbolt', 'ajax');
+        $configView = $this->createView()
+            ->setPlugin('Passbolt/WebInstaller')
+            ->setTemplate('Config/passbolt')
+            ->setLayout('ajax');
+        $contents = $configView->render();
 
         return "<?php\n$contents";
     }

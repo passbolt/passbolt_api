@@ -306,18 +306,18 @@ class UsersTable extends Table
         }
 
         $entity = $this->patchEntity($user, $data, [
-                'validate' => 'update',
-                'accessibleFields' => $accessibleUserFields,
-                'associated' => [
-                    'Profiles' => [
-                        'validate' => 'update',
-                        'accessibleFields' => $accessibleProfileFields,
-                        'associated' => [
-                            'Avatars'
-                        ]
+            'validate' => 'update',
+            'accessibleFields' => $accessibleUserFields,
+            'associated' => [
+                'Profiles' => [
+                    'validate' => 'update',
+                    'accessibleFields' => $accessibleProfileFields,
+                    'associated' => [
+                        'Avatars'
                     ]
                 ]
-            ]);
+            ]
+        ]);
 
         return $entity;
     }

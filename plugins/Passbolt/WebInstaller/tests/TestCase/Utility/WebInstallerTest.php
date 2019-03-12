@@ -20,7 +20,6 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -58,7 +57,6 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityInitDatabaseConnectionError()
     {
-        $this->markTestIncomplete('Cannot be tested, the PDO Exception is not caught by the DatabaseConfiguration::testConnection function when executed in a testsuite. Isolating the tests make it working but break other tests such as the GpgGenerateKey tests.');
         $webInstaller = new WebInstaller(null);
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $databaseSettings['host'] = 'invalid-host';
@@ -67,11 +65,11 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $connection = ConnectionManager::get('test');
         $connected = DatabaseConfiguration::testConnection($connection);
         $this->assertFalse($connected);
+        $this->restoreTestConnection();
     }
 
     public function testWebInstallerUtilityGpgImportKeySuccess()
     {
-        $this->markTestSkipped();
         $webInstaller = new WebInstaller(null);
         $gpgSettings = GpgKeyFormTest::getDummyData();
         $webInstaller->setSettings('gpg', $gpgSettings);
@@ -87,7 +85,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityWritePassboltConfigFileSuccess()
     {
-        $this->markTestSkipped();
+        $this->loadPlugins(['Passbolt/WebInstaller']);
         $webInstaller = new WebInstaller(null);
 
         // Add the database configuration.
@@ -127,7 +125,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityInstallDatabaseSuccess()
     {
-        $this->markTestSkipped();
+        $this->loadPlugins(['Migrations']);
         $webInstaller = new WebInstaller(null);
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $webInstaller->setSettings('database', $databaseSettings);
@@ -144,12 +142,11 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerUtilityCreateFirstUserSuccess()
     {
-        $this->markTestSkipped();
+        $this->loadPlugins(['Migrations']);
         $webInstaller = new WebInstaller(null);
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $webInstaller->setSettings('database', $databaseSettings);
         $webInstaller->initDatabaseConnection();
-        $this->truncateTables();
         $webInstaller->installDatabase();
         $Users = TableRegistry::getTableLocator()->get('Users');
         $roleAdminId = $Users->Roles->getIdByName(Role::ADMIN);

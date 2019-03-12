@@ -39,7 +39,7 @@ class HealthcheckIndexController extends AppController
     /**
      * Index
      * Display information about the passbolt instance
-     * It is only available in debug mode or for logged in administrators
+     * It is only available in debug mode and for logged in administrators
      *
      * @return void
      */

@@ -61,21 +61,18 @@ class FindTest extends AppTestCase
 
     public function testFindContainExistingAvatar()
     {
-        $this->markTestSkipped();
+        $this->loadPlugins(['Burzum/FileStorage', 'Burzum/Imagine']);
         $Users = TableRegistry::getTableLocator()->get('Users');
         $adaUser = $Users->find()
             ->where(['Users.id' => UuidFactory::uuid('user.id.ada')])
             ->contain([
-                'Profiles' => [
-                    'Avatars' => AvatarsTable::addContainAvatar()
-                ]
+                'Profiles' => AvatarsTable::addContainAvatar()
             ])
             ->first();
-
-//        $this->assertTrue(!empty(Hash::get($adaUser, 'profile.avatar.url.medium')));
-//        $this->assertTrue(!empty(Hash::get($adaUser, 'profile.avatar.url.small')));
-//        $this->assertNotEquals(Hash::get($adaUser, 'profile.avatar.url.small'), Configure::read('FileStorage.imageDefaults.Avatar.small'));
-//        $this->assertNotEquals(Hash::get($adaUser, 'profile.avatar.url.medium'), Configure::read('FileStorage.imageDefaults.Avatar.medium'));
-//        $this->assertTextContains('img/public/images/Avatar', Hash::get($adaUser, 'profile.avatar.url.medium'));
+        $this->assertTrue(!empty(Hash::get($adaUser, 'profile.avatar.url.medium')));
+        $this->assertTrue(!empty(Hash::get($adaUser, 'profile.avatar.url.small')));
+        $this->assertNotEquals(Hash::get($adaUser, 'profile.avatar.url.small'), Configure::read('FileStorage.imageDefaults.Avatar.small'));
+        $this->assertNotEquals(Hash::get($adaUser, 'profile.avatar.url.medium'), Configure::read('FileStorage.imageDefaults.Avatar.medium'));
+        $this->assertTextContains('img/public/Avatar', Hash::get($adaUser, 'profile.avatar.url.medium'));
     }
 }

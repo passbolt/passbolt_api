@@ -1,7 +1,10 @@
 <?php
 use Cake\Core\Configure;
+use Burzum\FileStorage\Storage\StorageUtils;
+use Burzum\FileStorage\Storage\StorageManager;
 
 // File storage and images
+Configure::write('ImageStorage.adapter', 'Local');
 Configure::write('ImageStorage.basePath', WWW_ROOT . 'img' . DS . 'public' . DS);
 Configure::write('ImageStorage.publicPath', 'img' . DS . 'public' . DS);
 Configure::write('FileStorage', array(
@@ -37,3 +40,10 @@ Configure::write('FileStorage', array(
         ]
     ]
 ));
+
+StorageUtils::generateHashes();
+StorageManager::config(Configure::read('ImageStorage.adapter'), [
+    'adapterOptions' => [Configure::read('ImageStorage.basePath'), true],
+    'adapterClass' => '\Gaufrette\Adapter\Local',
+    'class' => '\Gaufrette\Filesystem'
+]);

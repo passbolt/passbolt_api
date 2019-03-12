@@ -127,5 +127,4 @@ class DatabaseHealthchecks
 
         return $checks;
     }
-
 }

@@ -28,13 +28,13 @@ trait ConfigurationTrait
      */
     protected function skipTestIfNotWebInstallerFriendly()
     {
-        if ($this->isWebInstallerFriendly()) {
-            $this->markTestSkipped();
+        if (!$this->isWebInstallerFriendly()) {
+            $this->markTestSkipped('Config directory not writable, skipping test');
         }
     }
 
     /*
-     * The environment is considered as production like if :
+     * The environment is considered as production (and not friendly) like if :
      * - config/passbolt.php not writable
      * - or config/license not writable
      */
@@ -45,16 +45,16 @@ trait ConfigurationTrait
         $passboltConfigPath = CONFIG . 'passbolt.php';
         $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
         if (!$passboltConfigFileIsWritable) {
-            return true;
+            return false;
         }
 
         $passboltLicensePath = CONFIG . 'license';
         $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
         if (!$passboltLicenseFileIsWritable) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /*
@@ -81,9 +81,11 @@ trait ConfigurationTrait
      */
     protected function restoreConfiguration()
     {
-        if ($this->isWebInstallerFriendly()) {
+        if (!$this->isWebInstallerFriendly()) {
             return;
         }
+        chmod(CONFIG . 'license', 0777);
+        chmod(CONFIG . 'passbolt.php', 0777);
 
         if (isset($this->backupConfig['passboltConfig'])) {
             file_put_contents(CONFIG . 'passbolt.php', $this->backupConfig['passboltConfig']);

@@ -16,11 +16,16 @@
 namespace App\Test\TestCase\Model\Table\Avatars;
 
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 
 class CreateTest extends AppTestCase
 {
+    use AvatarsModelTrait;
+
     public $Avatars;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars'];
@@ -28,61 +33,59 @@ class CreateTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->loadPlugins(['Burzum/FileStorage', 'Burzum/Imagine']);
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
+
+        // delete default ada avatar / it may not be reachable
+        $connection = ConnectionManager::get('test');
+        $connection->delete('file_storage', ['user_id' => UuidFactory::uuid('user.id.ada')]);
     }
 
     public function tearDown()
     {
-        unset($this->Avatars);
         parent::tearDown();
     }
 
     private function _createAvatar($name = 'ada')
     {
         $userAvatarFullPath = FIXTURES . 'Avatar' . DS . $name . '.png';
-
         $data = [
             'file' => [
                 'tmp_name' => $userAvatarFullPath,
+                'error' => 0,
+                'type' => 'image/png',
                 'name' => $name . '.png',
             ],
             'user_id' => UuidFactory::uuid('user.id.' . $name),
             'foreign_key' => UuidFactory::uuid('profile.id.' . $name),
         ];
 
-        $entity = $this->Avatars->newEntity();
-        $entity = $this->Avatars->patchEntity($entity, $data);
-        $avatar = $this->Avatars->save($entity);
+        $newAvatar = $this->Avatars->newEntity($data, ['validate' => false]);
+        if (!$this->Avatars->save($newAvatar)) {
+            $this->fail('Could not create avatar for testing');
+        }
 
-        return $avatar;
+        return $newAvatar->toArray();
     }
 
     public function testCreateAvatarFileIsCreated()
     {
-        $this->markTestSkipped();
-        $avatar = $this->_createAvatar('ada');
-        $errors = $avatar->getErrors();
+        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
 
-        $this->assertTrue(empty($errors));
-        $avatar = $avatar->toArray();
+        $avatar = $this->_createAvatar('ada');
         $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['small']));
         $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['medium']));
     }
 
     public function testCreateAvatarDeleteFormerVersionAfterCreate()
     {
-        $this->markTestSkipped();
+        $this->assertNotEmpty(Configure::read('ImageStorage.publicPath'));
         $avatar = $this->_createAvatar('ada');
-        $errors = $avatar->getErrors();
-        $this->assertTrue(empty($errors));
-        $avatar = $avatar->toArray();
+
         $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['small']));
         $this->assertTrue(file_exists(WWW_ROOT . $avatar['url']['medium']));
 
         $avatar1 = $this->_createAvatar('ada');
-        $errors = $avatar1->getErrors();
-        $this->assertTrue(empty($errors));
-        $avatar1 = $avatar1->toArray();
         $this->assertTrue(file_exists(WWW_ROOT . $avatar1['url']['small']));
         $this->assertTrue(file_exists(WWW_ROOT . $avatar1['url']['medium']));
 

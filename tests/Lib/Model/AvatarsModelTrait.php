@@ -15,10 +15,6 @@
 
 namespace App\Test\Lib\Model;
 
-use Burzum\FileStorage\Event\ImageProcessingListener;
-use Burzum\FileStorage\Event\LocalFileStorageListener;
-use Cake\Event\EventManager;
-
 trait AvatarsModelTrait
 {
     /**
@@ -30,17 +26,5 @@ trait AvatarsModelTrait
     {
         $this->assertObjectHasAttributes(['url'], $avatar);
         $this->assertObjectHasAttributes(['small', 'medium'], $avatar->url);
-    }
-
-    /**
-     * Initialize events that are necessary for Avatar to function.
-     */
-    protected function initAvatarEvents()
-    {
-//        $localFileStorageListener = new LocalFileStorageListener();
-//        EventManager::instance()->on($localFileStorageListener);
-//
-//        $imageProcessingListener = new ImageProcessingListener();
-//        EventManager::instance()->on($imageProcessingListener);
     }
 }

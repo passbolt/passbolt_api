@@ -18,13 +18,15 @@ use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class WebInstallerMiddlewareTest extends WebInstallerIntegrationTestCase
 {
-    public function testWebInstallerMiddleware_testConfiguredRedirect() {
+    public function testWebInstallerMiddleware_testConfiguredRedirect()
+    {
         $this->get('/users');
         $this->assertResponseCode(302);
         $this->assertRedirectContains('/auth/login');
     }
 
-    public function testWebInstallerMiddleware_testConfiguredForbidden() {
+    public function testWebInstallerMiddleware_testConfiguredForbidden()
+    {
         $this->get('/install');
         $this->assertResponseCode(403);
     }

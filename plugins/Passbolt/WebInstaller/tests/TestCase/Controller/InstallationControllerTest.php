@@ -14,12 +14,9 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
-
-use Cake\Datasource\ConnectionManager;
-use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {
@@ -27,6 +24,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
+        $this->truncateTables();
         $this->initWebInstallerSession();
         $this->backupConfiguration();
     }
@@ -35,14 +33,6 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::tearDown();
         $this->restoreConfiguration();
-    }
-
-    public function testWebInstallerInstallationViewSuccess()
-    {
-        $this->get('/install/installation');
-        $data = ($this->_getBodyAsString());
-        $this->assertResponseOk();
-        $this->assertContains('Installing', $data);
     }
 
     protected function getInstallSessionData()
@@ -246,12 +236,19 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         return $data;
     }
 
+    public function testWebInstallerInstallationViewSuccess()
+    {
+        $config = $this->getInstallSessionData();
+        $this->initWebInstallerSession($config);
+        $this->get('/install/installation');
+        $data = ($this->_getBodyAsString());
+        $this->assertResponseOk();
+        $this->assertContains('Installing', $data);
+    }
+
     public function testWebInstallerInstallationDoInstallSuccess()
     {
-        $this->markTestSkipped();
         $this->skipTestIfNotWebInstallerFriendly();
-        $this->truncateTables();
-
         $connection = ConnectionManager::get('default');
 
         $config = $this->getInstallSessionData();

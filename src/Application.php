@@ -16,14 +16,9 @@ namespace App;
 
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
-use Burzum\FileStorage\Storage\Listener\BaseListener;
-use Burzum\FileStorage\Storage\Listener\ImageProcessingListener;
-use Burzum\FileStorage\Storage\StorageManager;
-use Burzum\FileStorage\Storage\StorageUtils;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
-use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -110,13 +105,15 @@ class Application extends BaseApplication
      *
      * @return $this
      */
-    protected function addCorePlugins() {
+    protected function addCorePlugins()
+    {
         // Debug Kit should not be installed on a production system
         if (Configure::read('debug') && Configure::read('debugKit')) {
             $this->addPlugin('DebugKit', ['bootstrap' => true]);
         }
         // Enable Migration Plugin
         $this->addPlugin('Migrations');
+
         return $this;
     }
 
@@ -127,33 +124,13 @@ class Application extends BaseApplication
      *
      * @return $this
      */
-    protected function addVendorPlugins() {
-        $this->addPlugin('EmailQueue');
-        $this->addPlugin('Burzum/FileStorage', ['bootstrap' => false]);
-        $this->addPlugin('Burzum/Imagine');
-        self::initImageListeners();
-        return $this;
-    }
-
-    /**
-     * initImageListeners
-     *
-     * @return void
-     */
-    static public function initImageListeners()
+    protected function addVendorPlugins()
     {
-        $listener = new ImageProcessingListener();
-        EventManager::instance()->on($listener);
+        $this->addPlugin('EmailQueue');
+        $this->addPlugin('Burzum/FileStorage');
+        $this->addPlugin('Burzum/Imagine');
 
-        $listener = new BaseListener([ 'imageProcessing' => true]);
-        EventManager::instance()->on($listener);
-
-        StorageUtils::generateHashes();
-        StorageManager::config('Local', [
-            'adapterOptions' => [Configure::read('ImageStorage.basePath'), true],
-            'adapterClass' => '\Gaufrette\Adapter\Local',
-            'class' => '\Gaufrette\Filesystem'
-        ]);
+        return $this;
     }
 
     /**
@@ -161,7 +138,8 @@ class Application extends BaseApplication
      *
      * @return $this
      */
-    protected function addPassboltPlugins() {
+    protected function addPassboltPlugins()
+    {
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $this->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
             $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
@@ -179,6 +157,7 @@ class Application extends BaseApplication
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
         }
+
         return $this;
     }
 
@@ -189,7 +168,8 @@ class Application extends BaseApplication
      *
      * @return $this
      */
-    protected function addCliPlugins() {
+    protected function addCliPlugins()
+    {
         try {
             Application::addPlugin('Bake');
         } catch (MissingPluginException $e) {
@@ -198,5 +178,4 @@ class Application extends BaseApplication
 
         return $this;
     }
-
 }

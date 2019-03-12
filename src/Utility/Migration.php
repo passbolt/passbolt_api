@@ -15,8 +15,8 @@
 namespace App\Utility;
 
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
-use Cake\Http\Client\Response;
 use Migrations\Migrations;
 
 class Migration
@@ -30,7 +30,7 @@ class Migration
      */
     public static function needMigration()
     {
-        $Migrations = new Migrations();
+        $Migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
         $migrations = $Migrations->status();
         foreach ($migrations as $i => $migration) {
             if ($migration['status'] === 'down') {
