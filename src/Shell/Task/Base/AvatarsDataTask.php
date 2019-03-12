@@ -42,21 +42,17 @@ class AvatarsDataTask extends DataTask
                 $data = [
                     'file' => [
                         'tmp_name' => $userAvatarFullPath,
+                        'error' => 0,
+                        'type' => 'image/png',
                         'name' => strtolower($user->profile->first_name) . '.png',
                     ],
                     'user_id' => $user->id,
                     'foreign_key' => $user->profile->id,
                 ];
 
-                $entity = $this->Avatars->newEntity();
-                $entity = $this->Avatars->patchEntity($entity, $data);
-                if (!$this->Avatars->save($entity))  {
-                    $errors = $entity->getErrors();
-                } else {
-                    $count++;
-                }
-
-                if (!empty($errors)) {
+                $entity = $this->Avatars->newEntity($data, ['validate' => false]);
+                $avatar = $this->Avatars->save($entity, ['checkRules' => false]);
+                if (!$avatar) {
                     $this->out('Error inserting data for entity "' . $this->entityName);
                 } else {
                     $count++;
