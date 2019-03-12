@@ -15,7 +15,7 @@ $this->Html->script('web_installer/gpg_key_import', ['block' => 'scriptBottom'])
         <?= $this->element('navigation', ['selectedSection' => 'server_keys']) ?>
     </div>
     <!-- main -->
-    <?
+    <?php
     echo $this->Form->create($formExecuteResult);
     echo $this->Form->input('public_key_armored', ['type' => 'hidden']);
     echo $this->Form->input('private_key_armored', ['type' => 'hidden']);
