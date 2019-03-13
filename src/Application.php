@@ -147,13 +147,9 @@ class Application extends BaseApplication
 
         // Add remember me plugin if present.
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
 
-        // Add image plugin if present.
-        if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'ImageStorage')) {
-            $this->addPlugin('Passbolt/ImageStorage', ['bootstrap' => true, 'routes' => false]);
-        }
-
-        // Add tags plugin if present.
+        // Add tags plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
         }
