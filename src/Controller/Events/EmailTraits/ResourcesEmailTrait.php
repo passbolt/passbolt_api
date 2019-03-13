@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -46,7 +46,7 @@ trait ResourcesEmailTrait
         if (!Configure::read('passbolt.email.send.password.create')) {
             return;
         }
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $user = $Users->findFirstForEmail($resource->created_by);
         $subject = __("You added the password {0}", $resource->name);
         $template = 'LU/resource_create';
@@ -66,13 +66,13 @@ trait ResourcesEmailTrait
         if (!Configure::read('passbolt.email.send.password.update')) {
             return;
         }
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $owner = $Users->findFirstForEmail($resource->modified_by);
         $subject = __("{0} edited the password {1}", $owner->profile->first_name, $resource->name);
         $template = 'LU/resource_update';
 
         // Get the users that can access this resource
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
 
@@ -97,7 +97,7 @@ trait ResourcesEmailTrait
         if (!Configure::read('passbolt.email.send.password.delete')) {
             return;
         }
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($deletedBy);
 
         // if there is nobody or just one user, give it up

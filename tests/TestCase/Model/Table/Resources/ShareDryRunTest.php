@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -27,12 +27,12 @@ class ShareDryRunTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/permissions', 'app.Base/resources', 'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/groups_users', 'app.Base/groups'];
+    public $fixtures = ['app.Base/Permissions', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/GroupsUsers', 'app.Base/Groups'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function tearDown()

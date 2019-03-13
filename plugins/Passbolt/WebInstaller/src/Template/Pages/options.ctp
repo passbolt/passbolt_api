@@ -18,8 +18,8 @@ use Cake\Routing\Router;
                             <h3><?= __('Options'); ?></h3>
                             <?= $this->Flash->render() ?>
                             <?php
-                            echo $this->Form->input('full_base_url',
-                                [
+                                echo $this->Form->control('full_base_url', [
+                                    'type' => 'text',
                                     'required' => 'required',
                                     'placeholder' => __('Full Base Url'),
                                     'label' => __('Full base url'),
@@ -27,28 +27,28 @@ use Cake\Routing\Router;
                                     'templates' => [
                                         'inputContainer' => '<div class="input text required">{{content}}<div class="message">' . __('This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash.') . '</div></div>',
                                     ]
-                                ]
-                            );
+                                ]);
                             ?>
                             <div class="input text required">
                                 <label for="PublicRegistration"><?= __('Allow public registration?'); ?></label>
                                 <?php
-                                echo $this->Form->select(
-                                    'public_registration',
-                                    ['1' => 'Yes', '0' => 'No'],
-                                    ['default' => '0', 'class' => 'required fluid']
-                                );
+                                    echo $this->Form->control(
+                                        'public_registration', [
+                                        'options' => ['1' => 'Yes', '0' => 'No'],
+                                        'default' => '0',
+                                        'class' => 'required fluid'
+                                    ]);
                                 ?>
                                 <div class="message"><?= __('Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea.') ?></div>
                             </div>
                             <div class="input text required">
                                 <label for="ForceSsl"><?= __('Force SSL?'); ?></label>
                                 <?php
-                                echo $this->Form->select(
-                                    'force_ssl',
-                                    ['1' => 'Yes', '0' => 'No'],
-                                    ['default' => isset($force_ssl) ? $force_ssl : 0, 'class' => 'required fluid']
-                                );
+                                    echo $this->Form->control('force_ssl', [
+                                        'options' => ['1' => 'Yes', '0' => 'No'],
+                                        'default' => isset($force_ssl) ? $force_ssl : 0,
+                                        'class' => 'required fluid'
+                                    ]);
                                 ?>
                                 <div class="message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If Force SSL is active, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
                             </div>

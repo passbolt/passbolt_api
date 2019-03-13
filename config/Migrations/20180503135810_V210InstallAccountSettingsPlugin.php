@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 
+use Cake\Datasource\ConnectionManager;
 use Migrations\AbstractMigration;
 use Migrations\Migrations;
 
@@ -26,7 +27,7 @@ class V210InstallAccountSettingsPlugin extends AbstractMigration
     public function up()
     {
         $migrations = new Migrations([
-            'connection' => 'default',
+            'connection' => ConnectionManager::get('default')->configName(),
             'plugin' => 'Passbolt/AccountSettings',
         ]);
         $migrations->migrate();

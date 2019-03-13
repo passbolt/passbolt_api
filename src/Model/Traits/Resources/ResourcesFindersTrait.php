@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -88,7 +88,7 @@ trait ResourcesFindersTrait
             $query->formatResults(function (CollectionInterface $results) {
                 return $results->map(function ($row) {
                     $row['permission'] = $row['_matchingData']['Permission'];
-                    unset($row['_matchingData']['Permission']);
+                    unset($row['_matchingData']);
 
                     return $row;
                 });
@@ -255,34 +255,23 @@ trait ResourcesFindersTrait
             return $type >= $permissionType;
         });
 
-        // Retrieve the groups ids the user is member of.
-        $groupsIds = $this->_findGroupsByUserId($userId)
-            ->extract('id')
-            ->toArray();
+        // Retrieve the groups ids the user is member of in a subquery.
+        $groupsIdsSubQuery = $this->_findGroupsByUserId($userId)
+            ->select('Groups.id');
 
         // In a subquery retrieve the highest permission.
-        $permissionSubquery = $this->association('Permissions')
+        $permissionSubquery = $this->getAssociation('Permissions')
             ->find()
-            ->select('Permissions.id');
-
-        // A permission is defined directly for the user and for a given resource.
-        $where = [
-            'Permissions.aco_foreign_key = Resources.id',
-            'Permissions.aro_foreign_key' => $userId,
-            'Permissions.type IN' => $allowedPermissionTypes,
-        ];
-
-        // A permission is defined for a group the user is member of and for a given resource.
-        if (!empty($groupsIds)) {
-            $where = [
-                'OR' => [ $where, [
-                    'Permissions.aco_foreign_key = Resources.id',
-                    'Permissions.aro_foreign_key IN' => $groupsIds,
-                    'Permissions.type IN' => $allowedPermissionTypes,
-                ]]];
-        }
-        $permissionSubquery->where($where);
-        $permissionSubquery->order(['Permissions.type' => 'DESC'])
+            ->select('Permissions.id')
+            ->where([
+                'Permissions.aco_foreign_key = Resources.id',
+                'OR' => [
+                    ['Permissions.aro_foreign_key' => $userId],
+                    ['Permissions.aro_foreign_key IN' => $groupsIdsSubQuery],
+                ],
+                'Permissions.type IN' => $allowedPermissionTypes,
+            ])
+            ->order(['Permissions.type' => 'DESC'])
             ->limit(1);
 
         // Filter the Resources query by permissions.
@@ -358,8 +347,8 @@ trait ResourcesFindersTrait
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        return $this->association('Permissions')
-            ->association('Groups')
+        return $this->getAssociation('Permissions')
+            ->getAssociation('Groups')
             ->find()
             ->innerJoinWith('Users')
             ->where([

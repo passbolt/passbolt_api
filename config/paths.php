@@ -64,7 +64,7 @@ define('TESTS', ROOT . DS . 'tests' . DS);
 /**
  * Path to the fixtures directory.
  */
-define('FIXTURES', TESTS . DS . 'Fixture' . DS);
+define('FIXTURES', TESTS . 'Fixture' . DS);
 
 /**
  * Path to the temporary files directory.

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -15,16 +15,18 @@
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
-use Burzum\FileStorage\Model\Table\ImageStorageTable;
-use Burzum\FileStorage\Storage\StorageManager;
+use Burzum\FileStorage\Model\Table\FileStorageTable;
+use Burzum\FileStorage\Storage\ImageVersionsTrait;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Validation\Validator;
 
-class AvatarsTable extends ImageStorageTable
+class AvatarsTable extends FileStorageTable
 {
+    use ImageVersionsTrait;
+
     /**
      * Initialize method
      *
@@ -40,17 +42,6 @@ class AvatarsTable extends ImageStorageTable
             'conditions' => ['model' => 'Avatar']
         ]);
 
-        // Reload behavior with our settings.
-        $this->removeBehavior('UploadValidator');
-        $this->addBehavior('Burzum/FileStorage.UploadValidator', [
-            // In debug mode, we disable localFile so that we can test the file upload.
-            'localFile' => Configure::read('debug') > 0 ? false : true,
-            'validate' => true,
-            'allowedExtensions' => [
-                'jpg', 'jpeg', 'png', 'gif'
-            ]
-        ]);
-
         $this->setTable('file_storage');
     }
 
@@ -63,8 +54,18 @@ class AvatarsTable extends ImageStorageTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->notEmpty('file', __('File should not be empty'))
-            ->requirePresence('file', __('A file is required'));
+            ->requirePresence('file', __('A file is required'))
+            ->allowEmptyString('file', false, __('File should not be empty'))
+            ->add('file', 'validMimeType', [
+                'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/gif']],
+            ])
+            ->add('file', 'validExtension', [
+                'rule' => ['extension', ['png', 'jpg', 'gif']]
+            ])
+            ->add('file', 'validUploadedFile', [
+                'rule' => ['uploadedFile', ['optional' => false]],
+                'message' => 'File is no valid uploaded file'
+            ]);
 
         return $validator;
     }
@@ -72,33 +73,16 @@ class AvatarsTable extends ImageStorageTable
     /**
      * Implements afterSave() callback.
      * Mainly used to delete former versions of avatars
+     *
      * @param Event $event the event
      * @param EntityInterface $entity entity
-     * @param array $options options
-     * @return bool
+     * @param \ArrayObject $options options
+     * @return void
      */
-    public function afterSave(Event $event, EntityInterface $entity, $options)
+    public function afterSave(Event $event, EntityInterface $entity, \ArrayObject $options)
     {
         // If there was an existing avatar, we delete it.
-        $formerAvatarToCleanUp = $this->getFormerAvatar($entity);
-        if (!empty($formerAvatarToCleanUp)) {
-            $this->deleteAvatar($formerAvatarToCleanUp);
-        }
-
-        $afterSave = parent::afterSave($event, $entity, $options);
-
-        return $afterSave;
-    }
-
-    /**
-     * Get former avatar, if any, for a given profile.
-     * (The former avatar will be considered obsolete).
-     * @param \App\Model\Entity\Avatar $entity the avatar entity that has been created
-     * @return array|\Cake\Datasource\EntityInterface|null
-     */
-    public function getFormerAvatar($entity)
-    {
-        $profileAvatarEntity = $this->find()
+        $formerAvatar = $this->find()
             ->where([
                 'foreign_key' => $entity->foreign_key,
                 'id <>' => $entity->id,
@@ -106,52 +90,23 @@ class AvatarsTable extends ImageStorageTable
             ])
             ->first();
 
-        if (empty($profileAvatarEntity)) {
-            return null;
+        if (!empty($formerAvatar)) {
+            $this->delete($formerAvatar);
         }
-
-        return $profileAvatarEntity;
-    }
-
-    /**
-     * Delete a profile avatar and all its associated versions from the database and the file system.
-     * @param \App\Model\Entity\Avatar $avatar the profile avatar entity
-     * @return bool|mixed
-     */
-    public function deleteAvatar($avatar)
-    {
-        // Delete the versions of the file.
-        $operations = Configure::read('FileStorage.imageSizes.Avatar');
-        $Event = new Event('ImageVersion.removeVersion', $this, [
-            'record' => $avatar,
-            'storage' => StorageManager::getAdapter($avatar->adapter),
-            'operations' => $operations
-        ]);
-        $this->getEventManager()->dispatch($Event);
-
-        // Get the path of the file.
-        $imagePath = $avatar->path . str_replace('-', '', $avatar->id) . '.' . $avatar->extension;
-        $fullImagePath = Configure::read('ImageStorage.basePath') . DS . $imagePath;
-
-        // If file exists, delete it.
-        if (file_exists($fullImagePath)) {
-            StorageManager::getAdapter($avatar->adapter)->delete($imagePath);
-        }
-
-        return $this->delete($avatar);
     }
 
     /**
      * BeforeMarshal callback.
      * It enforces the data related to this model and the adapter to be used.
+     *
      * @param Event $event the event
-     * @param \ArrayAccess $data data
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, \ArrayAccess $data)
+    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
-        parent::beforeMarshal($event, $data);
-        $data['adapter'] = 'Local';
+        $data['adapter'] = Configure::read('ImageStorage.adapter');
         $data['model'] = 'Avatar';
     }
 

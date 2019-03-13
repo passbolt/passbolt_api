@@ -15,7 +15,6 @@
 namespace Passbolt\AccountSettings\Controller\Themes;
 
 use App\Controller\AppController;
-use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
 class ThemesIndexController extends AppController

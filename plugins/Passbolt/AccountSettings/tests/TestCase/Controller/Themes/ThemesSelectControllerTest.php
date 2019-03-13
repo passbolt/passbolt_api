@@ -24,14 +24,14 @@ class ThemesSelectControllerTest extends AccountSettingsPluginIntegrationTestCas
     public $AccountSettings;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/profiles',
-        'plugin.passbolt/accountSettings.accountSettings'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
+        'plugin.Passbolt/AccountSettings.AccountSettings'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->AccountSettings = TableRegistry::get('AccountSettings');
+        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
     }
 
     public function testThemesSelectSuccess()

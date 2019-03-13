@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
@@ -24,9 +24,9 @@ use Cake\Routing\Router;
 class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/permissions', 'app.Base/favorites',
-        //'app.Base/groups_users', 'app.Base/groups', 'app.Base/secrets',
-        'app.Base/gpgkeys', 'app.Base/authentication_tokens', 'app.Base/avatars', 'app.Base/email_queue'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
+        //'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Secrets',
+        'app.Base/Gpgkeys', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue'
     ];
 
     /**
@@ -56,12 +56,12 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseContains('class="page register thank-you"');
 
         // Get and check user
-        $this->Users = TableRegistry::get('Users');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
         $user = $this->Users->findByUsername($email)->first();
         $this->assertFalse($user->active);
 
         // There should be one valid auth tokens
-        $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $tokens = $this->AuthenticationTokens
             ->findByUserId($user->id)->order(['created' => 'DESC'])
             ->all()->toArray();
@@ -92,7 +92,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, [
             'AuthenticationToken' => ['token' => $tokens[0]['token']],
-            'Gpgkey' => ['key' => file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key')]
+            'Gpgkey' => ['key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key')]
         ]);
         $this->assertSuccess();
 
