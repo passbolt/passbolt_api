@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Utility\UserAction;
 use Cake\Event\Event;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -58,10 +59,11 @@ class ErrorController extends AppController
             $action = $this->request->getParam('action');
             $this->set([
                 'header' => [
-                    'id' => Text::uuid(),
+                    'id' => UserAction::getInstance()->getUserActionId(),
                     'status' => 'error',
                     'servertime' => time(),
                     'title' => 'app_' . $prefix . '_' . $action . '_error',
+                    'action' => UserAction::getInstance()->getActionId(),
                     'message' => $this->viewVars['message'],
                     'url' => Router::url(),
                     'code' => $this->viewVars['code'],

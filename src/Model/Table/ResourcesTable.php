@@ -80,11 +80,13 @@ class ResourcesTable extends Table
         ]);
         $this->hasOne('Permission', [
             'className' => 'Permissions',
-            'foreignKey' => 'aco_foreign_key'
+            'foreignKey' => 'aco_foreign_key',
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aco_foreign_key',
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
+            // Important so that we can track the delete event and log it.
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id',

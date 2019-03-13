@@ -16,6 +16,7 @@ namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
 use App\Controller\Events\UserRegistrationListener;
+use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -62,6 +63,9 @@ class AppController extends Controller
                 'plugin' => null
             ],
         ]);
+
+        // Init user action.
+        UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
 
         /*
          * Global event listeners
@@ -110,12 +114,14 @@ class AppController extends Controller
     {
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
+
         $this->set([
             'header' => [
-                'id' => Text::uuid(),
+                'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'success',
                 'servertime' => time(),
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
                 'code' => 200,
@@ -141,12 +147,14 @@ class AppController extends Controller
         }
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
+
         $this->set([
             'header' => [
-                'id' => Text::uuid(),
+                'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'error',
                 'servertime' => time(),
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
                 'code' => $errorCode

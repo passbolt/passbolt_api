@@ -29,3 +29,8 @@ if (defined('PASSBOLT_IS_CONFIGURED') && !PASSBOLT_IS_CONFIGURED) {
         Plugin::load('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
     }
 }
+
+// Add AuditLog plugin if present
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Log')) {
+    Plugin::load('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
+}

@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Network\Exception\BadRequestException;
 use Cake\Network\Exception\InternalErrorException;
 use Cake\Network\Exception\NotFoundException;
@@ -89,6 +90,7 @@ class ShareController extends AppController
             $this->_handleValidationError($resource);
             throw new InternalErrorException(__('Could not update the password permissions. Please try again later.'));
         }
+
         $this->_notifyUsers($resource, $data);
         $this->success(__('The operation was successful.'));
     }

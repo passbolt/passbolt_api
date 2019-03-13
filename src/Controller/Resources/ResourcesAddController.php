@@ -162,7 +162,7 @@ class ResourcesAddController extends AppController
      */
     protected function _notifyUser(Resource $resource)
     {
-        $event = new Event('ResourcesAddController.addPost.success', $this, ['resource' => $resource]);
+        $event = new Event('ResourcesAddController.addPost.success', $this, ['resource' => $resource, 'accessControl' => $this->User->getAccessControl()]);
         $this->getEventManager()->dispatch($event);
     }
 }
