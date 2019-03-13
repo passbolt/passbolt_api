@@ -57,9 +57,10 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
                     'foreign_key' => $oldAvatar->foreign_key,
                 ];
 
-                $newAvatar = $Avatars->newEntity($data);
-                $Avatars->save($newAvatar);
-
+                $newAvatar = $Avatars->newEntity($data, ['validate' => false]);
+                if(!$Avatars->save($newAvatar)) {
+                    echo __("Could not save avatar for user {0}, resetting to default.\n", $oldAvatar->user_id);
+                }
             }
         }
         $oldFolder = new Folder($publicPath . 'images');
