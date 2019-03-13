@@ -88,7 +88,7 @@ trait ResourcesFindersTrait
             $query->formatResults(function (CollectionInterface $results) {
                 return $results->map(function ($row) {
                     $row['permission'] = $row['_matchingData']['Permission'];
-                    unset($row['_matchingData']['Permission']);
+                    unset($row['_matchingData']);
 
                     return $row;
                 });
