@@ -145,9 +145,10 @@ class Application extends BaseApplication
             $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
-        // Add remember me plugin if present.
+        // Add Common plugins.
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
 
         // Add tags plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
