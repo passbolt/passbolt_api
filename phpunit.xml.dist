@@ -17,6 +17,7 @@
             <directory>./tests/TestCase</directory>
             <directory>./plugins/PassboltSeleniumApi/tests/TestCase</directory>
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>

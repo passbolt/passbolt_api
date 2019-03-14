@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class ResourcesViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites', 'app.Base/permissions', 'app.Base/avatars'];
+    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites', 'app.Base/permissions', 'app.Base/avatars', 'app.Base/secret_accesses'];
 
     public function testSuccess()
     {

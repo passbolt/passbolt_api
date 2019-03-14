@@ -23,7 +23,6 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Network\Exception\NotFoundException;
 use Cake\Routing\Router;
-use Cake\Utility\Text;
 
 /**
  * Application Controller
@@ -35,7 +34,6 @@ use Cake\Utility\Text;
  */
 class AppController extends Controller
 {
-
     /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.

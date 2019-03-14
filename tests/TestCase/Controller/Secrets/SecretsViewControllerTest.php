@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 
 class SecretsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/secrets'];
+    public $fixtures = ['app.Base/users', 'app.Base/secrets', 'app.Base/secret_accesses'];
 
     public function testSuccess()
     {
