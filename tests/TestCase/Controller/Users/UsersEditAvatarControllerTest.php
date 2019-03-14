@@ -57,7 +57,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ]
             ]
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertSuccess();
 
         $ireneAvatar = $this->Avatars
@@ -101,7 +101,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ]
             ]
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertError(400, 'Could not validate user data.');
         $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validExtension);
         $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->validMimeType);
@@ -120,7 +120,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 'avatar' => []
             ]
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertError(400, 'Could not validate user data.');
         $this->assertNotEmpty($this->_responseJsonBody->User->profile->avatar->file->_required);
     }
@@ -152,7 +152,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ]
             ]
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json?api-version=v1', $data);
         $this->assertSuccess();
 
         $ireneAvatar = $this->Avatars

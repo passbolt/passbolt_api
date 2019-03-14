@@ -45,7 +45,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             ],
         ];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
         $this->assertSuccess();
 
         $comment = $this->Comments->find()
@@ -104,7 +104,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             ],
         ];
         $commentId = 'testBadUuid';
-        $this->putJson("/comments/$commentId.json", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
         $this->assertError(400, 'The comment id is not valid.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -118,7 +118,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             ],
         ];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
         $this->assertError(400, 'Could not validate comment data.');
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertNotEmpty($this->_responseJsonBody->Comment->content);
@@ -134,7 +134,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             ],
         ];
         $commentId = UuidFactory::uuid('comment.id.notexist');
-        $this->putJson("/comments/$commentId.json", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
         $this->assertError(404, 'The comment does not exist.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -149,7 +149,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             ],
         ];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
         $this->assertError(403, 'You are not allowed to edit this comment.');
         $this->assertEmpty($this->_responseJsonBody);
     }
@@ -168,7 +168,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         ];
         $putData = ['Comment' => $comment];
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$commentId.json", $putData);
+        $this->putJson("/comments/$commentId.json?api-version=v1", $putData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -188,7 +188,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
     {
         $postData = [];
         $resourceId = UuidFactory::uuid('comment.id.apache-1');
-        $this->putJson("/comments/$resourceId.json", $postData);
+        $this->putJson("/comments/$resourceId.json?api-version=v1", $postData);
         $this->assertAuthenticationError();
     }
 }

@@ -81,7 +81,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->postJson("/share/simulate/resource/$resourceId.json", $data);
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1", $data);
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertNotEmpty($this->_responseJsonBody->changes);
         $addedUsers = $this->_responseJsonBody->changes->added;
@@ -161,7 +161,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
     {
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $this->authenticateAs('ada');
-        $this->postJson("/share/simulate/resource/$resourceId.json");
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertNotEmpty($this->_responseJsonBody->changes);
         $this->assertEmpty($this->_responseJsonBody->changes->added);
@@ -172,7 +172,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->postJson("/share/simulate/resource/$resourceId.json");
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
@@ -180,7 +180,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->postJson("/share/simulate/resource/$resourceId.json");
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -188,7 +188,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->postJson("/share/simulate/resource/$resourceId.json");
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -206,7 +206,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         foreach ($testCases as $testCase) {
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
-            $this->postJson("/share/simulate/resource/$resourceId.json");
+            $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
             $this->assertError(404, 'The resource does not exist.');
         }
     }
@@ -214,7 +214,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
     public function testErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson("/share/simulate/resource/$resourceId.json");
+        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v1");
         $this->assertAuthenticationError();
     }
 }

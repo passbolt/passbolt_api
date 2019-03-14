@@ -150,6 +150,12 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
 
+        // Allow switching on / off tags plugin
+        $tagsEnabled = Configure::read('passbolt.plugins.tags.enabled');
+        if (!isset($tagsEnabled) || $tagsEnabled) {
+            $this->addPlugin('Passbolt/Tags', ['bootstrap' => true, 'routes' => true]);
+        }
+
         // Add tags plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);

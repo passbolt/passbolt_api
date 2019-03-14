@@ -19,6 +19,7 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 
 class ResourcesAddController extends AppController
@@ -46,6 +47,9 @@ class ResourcesAddController extends AppController
                 'secret' => true, 'permission' => true
             ]
         ];
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $options['contain']['tag'] = true;
+        }
         $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
 
         $this->_notifyUser($resource);

@@ -49,7 +49,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     public function testGroupsIndexApiV1Success()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/groups.json');
+        $this->getJson('/groups.json?api-version=v1');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
 
@@ -159,7 +159,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
 
     public function testGroupsIndexErrorNotAuthenticated()
     {
-        $this->getJson('/groups.json');
+        $this->getJson('/groups.json?api-version=v1');
         $this->assertAuthenticationError();
     }
 }

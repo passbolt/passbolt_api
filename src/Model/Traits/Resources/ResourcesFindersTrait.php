@@ -18,6 +18,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
 use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\Validation\Validation;
 
 trait ResourcesFindersTrait
@@ -73,6 +74,11 @@ trait ResourcesFindersTrait
         // If shared with group.
         if (isset($options['filter']['is-shared-with-group'])) {
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
+        }
+
+        // If plugin tag is present and request contains tags
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
         }
 
         /*

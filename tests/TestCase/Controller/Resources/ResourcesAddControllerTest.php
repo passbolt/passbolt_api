@@ -156,7 +156,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->authenticateAs('ada');
         $userId = UuidFactory::uuid('user.id.ada');
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json", $data);
+        $this->postJson("/resources.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // Check the server response.
@@ -248,7 +248,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     public function testResourcesAddErrorNotAuthenticated()
     {
         $data = $this->_getDummyPostData();
-        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->postJson("/resources.json?api-version=v1", $data);
         $this->assertAuthenticationError();
     }
 }

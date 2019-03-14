@@ -152,7 +152,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
         foreach ($fails as $case => $data) {
-            $this->post('/users/register.json', $data);
+            $this->post('/users/register.json?api-version=v1', $data);
             $result = json_decode($this->_getBodyAsString());
             $this->assertEquals('400', $result->header->code, 'Validation should fail when ' . $case);
             $this->assertResponseError();
@@ -179,7 +179,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        $this->post('/users/register.json', $data);
+        $this->post('/users/register.json?api-version=v1', $data);
         $result = json_decode($this->_getBodyAsString());
         $this->assertEquals('400', $result->header->code, 'Validation should fail when the username already exists in db');
         $this->assertResponseError();

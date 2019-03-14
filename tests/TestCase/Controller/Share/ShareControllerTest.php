@@ -105,7 +105,7 @@ hcciUFw5
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json", $data);
+        $this->putJson("/share/resource/$resourceId.json?api-version=v1", $data);
         $this->assertSuccess();
 
         // Load the resource.
@@ -209,7 +209,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/share/resource/$resourceId.json");
+        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
         $this->assertError(400, 'The resource id is not valid.');
     }
 
@@ -217,7 +217,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->putJson("/share/resource/$resourceId.json");
+        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -225,7 +225,7 @@ hcciUFw5
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->putJson("/share/resource/$resourceId.json");
+        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
         $this->assertError(404, 'The resource does not exist.');
     }
 
@@ -243,7 +243,7 @@ hcciUFw5
         foreach ($testCases as $testCase) {
             $this->authenticateAs($testCase['userAlias']);
             $resourceId = $testCase['resourceId'];
-            $this->putJson("/share/resource/$resourceId.json");
+            $this->putJson("/share/resource/$resourceId.json?api-version=v1");
             $this->assertError(404, 'The resource does not exist.');
         }
     }
@@ -251,7 +251,7 @@ hcciUFw5
     public function testErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->putJson("/share/resource/$resourceId.json");
+        $this->putJson("/share/resource/$resourceId.json?api-version=v1");
         $this->assertAuthenticationError();
     }
 }

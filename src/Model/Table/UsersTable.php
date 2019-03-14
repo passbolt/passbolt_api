@@ -378,6 +378,14 @@ class UsersTable extends Table
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll(['user_id' => $user->id]);
 
+        // Delete all tags
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
+            $ResourcesTags->deleteAll(['user_id' => $user->id]);
+            $Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+            $Tags->deleteAllUnusedTags();
+        }
+
         // Mark user as deleted
         $user->deleted = true;
         if (!$this->save($user, ['checkRules' => false])) {

@@ -32,7 +32,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
     {
         Configure::write('passbolt.email.send.group.delete', false);
         $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json');
+        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v1');
         $this->assertResponseSuccess();
 
         // check email notification
@@ -48,7 +48,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
     {
         Configure::write('passbolt.email.send.group.delete', true);
         $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json');
+        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json?api-version=v1');
         $this->assertResponseSuccess();
 
         // check email notification

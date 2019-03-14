@@ -47,7 +47,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('irene');
         $commentId = 'invalid-id';
-        $this->deleteJson("/comments/$commentId.json");
+        $this->deleteJson("/comments/$commentId.json?api-version=v1");
         $this->assertError(400, 'The comment id is not valid.');
     }
 
@@ -55,7 +55,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('irene');
         $commentId = UuidFactory::uuid();
-        $this->deleteJson("/comments/$commentId.json");
+        $this->deleteJson("/comments/$commentId.json?api-version=v1");
         $this->assertError(404, 'The comment does not exist.');
     }
 
@@ -63,7 +63,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('jean');
         $commentId = UuidFactory::uuid('comment.id.apache-1');
-        $this->deleteJson("/comments/$commentId.json");
+        $this->deleteJson("/comments/$commentId.json?api-version=v1");
         $this->assertError(404, 'The comment does not exist.');
     }
 

@@ -50,7 +50,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     public function testApiV1Success()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json');
+        $this->getJson('/resources.json?api-version=v1');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
 
@@ -109,7 +109,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[secret]=1';
-        $this->getJson("/resources.json?$urlParameter");
+        $this->getJson("/resources.json?$urlParameter&api-version=v1");
         $this->assertSuccess();
 
         // Expected fields.
@@ -222,7 +222,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testIndexErrorNotAuthenticated()
     {
-        $this->getJson('/resources.json');
+        $this->getJson('/resources.json?api-version=v1');
         $this->assertAuthenticationError();
     }
 }

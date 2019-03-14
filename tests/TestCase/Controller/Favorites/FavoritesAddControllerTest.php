@@ -44,7 +44,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/favorites/resource/$resourceId.json");
+        $this->postJson("/favorites/resource/$resourceId.json?api-version=v1");
         $this->assertSuccess();
 
         // Expected fields.
@@ -70,7 +70,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
-        $this->postJson("/favorites/resource/$resourceId.json");
+        $this->postJson("/favorites/resource/$resourceId.json?api-version=v1");
         $this->assertError(400, 'The resource id is not valid.');
     }
 

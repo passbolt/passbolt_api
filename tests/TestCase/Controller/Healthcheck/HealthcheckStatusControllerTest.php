@@ -29,7 +29,7 @@ class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckStatusJsonOk()
     {
-        $this->getJson('/healthcheck/status.json');
+        $this->getJson('/healthcheck/status.json?api-version=v1');
         $this->assertResponseSuccess();
         $this->assertEquals($this->_responseJson->header->message, 'OK');
         $this->assertEquals($this->_responseJson->body, 'OK');

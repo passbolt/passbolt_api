@@ -29,6 +29,7 @@ use App\Test\Lib\Utility\ErrorTrait;
 use App\Test\Lib\Utility\JsonRequestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 
@@ -77,6 +78,7 @@ abstract class AppIntegrationTestCase extends TestCase
     {
         parent::setUp();
         $this->enableCsrfToken();
+        Configure::write('passbolt.plugins.tags.enabled', false);
     }
 
     /**

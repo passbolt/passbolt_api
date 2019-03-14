@@ -88,7 +88,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
         foreach ($success as $case => $data) {
             $this->authenticateAs('admin');
-            $this->postJson('/groups.json', $data);
+            $this->postJson('/groups.json?api-version=v1', $data);
             $this->assertResponseSuccess();
 
             // Check that the groups and its sub-models are saved as expected.
@@ -166,7 +166,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 
         foreach ($errors as $caseLabel => $case) {
             $this->authenticateAs('admin');
-            $this->postJson('/groups.json', $case['data']);
+            $this->postJson('/groups.json?api-version=v1', $case['data']);
             $this->assertError($responseCode, $responseMessage);
             $arr = json_decode(json_encode($this->_responseJsonBody), true);
             $this->assertEquals($case['errorMessage'], Hash::get($arr, $case['errorField']));
@@ -182,14 +182,14 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('dame');
         $postData = [];
-        $this->postJson("/groups.json", $postData);
+        $this->postJson("/groups.json?api-version=v1", $postData);
         $this->assertForbiddenError();
     }
 
     public function testGroupsAddErrorNotAuthenticated()
     {
         $postData = [];
-        $this->postJson("/groups.json", $postData);
+        $this->postJson("/groups.json?api-version=v1", $postData);
         $this->assertAuthenticationError();
     }
 

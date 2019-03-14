@@ -30,9 +30,9 @@ use Cake\Validation\Validator;
 /**
  * Permissions Model
  *
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Groups
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Resources
- * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsTo $Resources
+ * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
  * @method \App\Model\Entity\Permission get($primaryKey, $options = [])
  * @method \App\Model\Entity\Permission newEntity($data = null, array $options = [])
