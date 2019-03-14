@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.4.0
@@ -18,8 +18,8 @@ use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\FrozenTime;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
@@ -52,7 +52,7 @@ class MfaAccountSettings
      */
     public static function get(UserAccessControl $uac)
     {
-        $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+        $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
         $decodedJson = json_decode($settings->value, true);
 
@@ -67,7 +67,7 @@ class MfaAccountSettings
      */
     public function __construct(UserAccessControl $uac, array $settings = null)
     {
-        $this->AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+        $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $this->uac = $uac;
         $this->settings = $settings;
         $this->errors = null;
@@ -178,7 +178,7 @@ class MfaAccountSettings
         $data['verified'] = FrozenTime::now();
         $mfaAccountSettings = null;
         try {
-            $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+            $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
             $settings = $AccountSettings->getFirstPropertyOrFail($uac->getId(), MfaSettings::MFA);
             $decodedJson = json_decode($settings->value, true);
             $mfaAccountSettings = new MfaAccountSettings($uac, $decodedJson);

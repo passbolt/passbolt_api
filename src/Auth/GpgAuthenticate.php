@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -18,10 +18,10 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Exception;
@@ -175,7 +175,7 @@ class GpgAuthenticate extends BaseAuthenticate
         );
 
         // generate the authentication token
-        $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
+        $this->_AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!isset($authenticationToken->token)) {
             return $this->_error(__('Failed to create token.'));
@@ -247,7 +247,7 @@ class GpgAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        $this->_AuthenticationToken = TableRegistry::get('AuthenticationTokens');
+        $this->_AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
 
         return true;
     }
@@ -320,7 +320,7 @@ class GpgAuthenticate extends BaseAuthenticate
         $keyid = strtoupper($this->_data['keyid']);
 
         // validate the fingerprint format
-        $Gpgkeys = TableRegistry::get('Gpgkeys');
+        $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
         if (!$Gpgkeys->isValidFingerprintRule($keyid)) {
             $this->_debug('Invalid fingerprint.');
 
@@ -328,7 +328,7 @@ class GpgAuthenticate extends BaseAuthenticate
         }
 
         // try to find the user
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $user = $Users->find('auth', ['fingerprint' => $keyid])->first();
         if (empty($user)) {
             $this->_debug('User not found.');

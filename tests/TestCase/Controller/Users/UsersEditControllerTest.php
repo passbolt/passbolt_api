@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/avatars'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars'];
 
     public function testUsersEditMissingCsrfTokenError()
     {
@@ -45,7 +45,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $data = [];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.nope') . '.json', $data);
-        $this->assertError('403', 'You are not authorized to access that location.');
+        $this->assertError(403, 'You are not authorized to access that location.');
     }
 
     public function testUsersEditAdminBadIdError()
@@ -53,7 +53,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('admin');
         $data = [];
         $this->postJson('/users/notauuid.json', $data);
-        $this->assertError('400', 'The user id must be a valid uuid.');
+        $this->assertError(400, 'The user id must be a valid uuid.');
     }
 
     public function testUsersEditUsersNoDataIdError()
@@ -61,7 +61,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $data = [];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
-        $this->assertError('400', 'Some user data must be provided.');
+        $this->assertError(400, 'Some user data must be provided.');
     }
 
     public function testUsersEditUsersDataNotMatchError()
@@ -71,7 +71,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.betty')
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
-        $this->assertError('400', 'Some user data must be provided.');
+        $this->assertError(400, 'Some user data must be provided.');
     }
 
     public function testUsersEditUsersDoesNotExistError()
@@ -84,7 +84,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             ]
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.sofia') . '.json', $data);
-        $this->assertError('400', 'The user does not exist or has been deleted.');
+        $this->assertError(400, 'The user does not exist or has been deleted.');
     }
 
     public function testUsersEditUsersValidationFailsError()
@@ -97,7 +97,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             ]
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
-        $this->assertError('400', 'Could not validate user data.');
+        $this->assertError(400, 'Could not validate user data.');
         $error = $this->_responseJsonBody->User->profile->first_name->utf8;
         $this->assertEquals($error, 'First name should be a valid utf8 string.');
     }
@@ -109,7 +109,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => UuidFactory::uuid('user.id.ada'),
             'profile' => [
                 'first_name' => 'ada edited'
-            ]
+            ],
         ];
         $this->postJson('/users/' . UuidFactory::uuid('user.id.ada') . '.json', $data);
         $this->assertSuccess();

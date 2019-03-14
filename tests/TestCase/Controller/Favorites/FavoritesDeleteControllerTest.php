@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -21,20 +21,22 @@ use Cake\ORM\TableRegistry;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites'
+    ];
 
-    public function testDeleteSuccess()
+    public function testFavoritesDeleteSuccess()
     {
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
         $this->assertSuccess();
-        $Favorites = TableRegistry::get('Favorites');
+        $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $deletedFavorite = $Favorites->find('all')->where(['Favorites.id' => $favoriteId])->first();
         $this->assertempty($deletedFavorite);
     }
 
-    public function testErrorCsrfToken()
+    public function testFavoritesDeleteErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('dame');
@@ -43,7 +45,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testDeleteErrorNotValidId()
+    public function testFavoritesDeleteErrorNotValidId()
     {
         $this->authenticateAs('dame');
         $favoriteId = 'invalid-id';
@@ -51,7 +53,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The favorite id is not valid.');
     }
 
-    public function testDeleteErrorFavoritesNotFound()
+    public function testFavoritesDeleteErrorFavoritesNotFound()
     {
         $this->authenticateAs('dame');
         $favoriteId = UuidFactory::uuid();
@@ -59,7 +61,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The favorite does not exist.');
     }
 
-    public function testDeleteErrorFavoritesOfSomeoneElse()
+    public function testFavoritesDeleteErrorFavoritesOfSomeoneElse()
     {
         $this->authenticateAs('ada');
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
@@ -67,7 +69,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The favorite does not exist.');
     }
 
-    public function testDeleteErrorNotAuthenticated()
+    public function testFavoritesDeleteErrorNotAuthenticated()
     {
         $favoriteId = UuidFactory::uuid('favorite.id.dame-apache');
         $this->deleteJson("/favorites/$favoriteId.json?api-version=2");

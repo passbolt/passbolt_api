@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -17,6 +17,7 @@ namespace App\Model\Entity;
 use Burzum\FileStorage\Model\Entity\ImageStorage;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Exception\InternalErrorException;
 
 class Avatar extends ImageStorage
 {
@@ -58,6 +59,7 @@ class Avatar extends ImageStorage
             $url = $this->getAvatarUrl($this, $size);
             $avatarsPath[$size] = $url ? $url : '';
         }
+
         // Transform original model to add paths.
         return $avatarsPath;
     }
@@ -69,57 +71,48 @@ class Avatar extends ImageStorage
      * @param array $options options
      * @return bool|string
      */
-    public function getAvatarUrl($avatar, $version = null, $options = [])
+    public function getAvatarUrl(Avatar $avatar, string $version = 'small', array $options = [])
     {
         // Default options.
-        $defaultOptions = [
-            'version' => 'small',
-        ];
+        $defaultOptions = ['version' => 'small'];
         $options = array_merge($options, $defaultOptions);
 
         // If image is empty, we return the default avatar.
         if (empty($avatar) || empty($avatar->id)) {
-            // Return fallback images.
-            $avatarDefaults = Configure::read('FileStorage.imageDefaults.Avatar');
-            if (isset($avatarDefaults[$version])) {
-                return $avatarDefaults[$version];
-            }
-
-            return false;
+            return $this->getFallbackUrl($version);
         }
 
+        $hash = null;
         if (!empty($version)) {
             $hash = Configure::read('FileStorage.imageHashes.' . $avatar->model . '.' . $version);
             if (empty($hash)) {
                 if (empty($avatar->model) || !isset($avatar->model)) {
                     $avatar->model = 'undefined';
                 }
-                throw new \InvalidArgumentException(
-                    __d(
-                        'file_storage',
-                        'No valid version key (%s %s) passed!',
-                        $avatar->model,
-                        $version
-                    )
-                );
+                $msg = __('No valid version key ({0} {1}) passed!', $avatar->model, $version);
+                throw new \InvalidArgumentException($msg);
             }
-        } else {
-            $hash = null;
         }
 
-        $Event = new Event('ImageVersion.getVersions', $this, [
-                'hash' => $hash,
-                'image' => $avatar,
-                'version' => $version,
-                'options' => $options
-            ]);
-        $this->getEventManager()->dispatch($Event);
+        $params = [
+            'hash' => $hash,
+            'image' => $avatar,
+            'version' => $version,
+            'options' => $options,
+        ];
+        $event = new Event('ImageVersion.getVersions', $this, $params);
+        $this->getEventManager()->dispatch($event);
 
-        if ($Event->isStopped()) {
-            return Configure::read('ImageStorage.publicPath') . $this->normalizePath($Event->data['path']);
-        } else {
-            return false;
+        if ($event->isStopped()) {
+            $path = $event->getData('path');
+            if ($path === null) {
+                throw new InternalErrorException('Could not find image data path.');
+            }
+
+            return Configure::read('ImageStorage.publicPath') . $this->normalizePath($path);
         }
+
+        return $this->getFallbackUrl($version);
     }
 
     /**
@@ -129,8 +122,25 @@ class Avatar extends ImageStorage
      * @param string $path a file path like\this\one
      * @return string a file path like/this/one
      */
-    public function normalizePath($path)
+    public function normalizePath(string $path)
     {
         return str_replace('\\', '/', $path);
+    }
+
+    /**
+     * Return default avatar
+     *
+     * @param string $version small or medium
+     * @return mixed string|false if no default defined
+     */
+    public function getFallBackUrl(string $version)
+    {
+        // Return fallback images.
+        $avatarDefaults = Configure::read('FileStorage.imageDefaults.Avatar');
+        if (isset($avatarDefaults[$version])) {
+            return $avatarDefaults[$version];
+        }
+
+        return false;
     }
 }

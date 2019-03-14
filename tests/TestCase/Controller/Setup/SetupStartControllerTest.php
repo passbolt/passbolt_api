@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -22,13 +22,13 @@ use Cake\ORM\TableRegistry;
 
 class SetupStartControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/authentication_tokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'];
     public $AuthenticationTokens;
     use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
-        $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         parent::setUp();
     }
 
@@ -48,6 +48,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         foreach ($fails as $case => $url) {
             $this->get($url);
             $this->assertResponseCode(404, 'Setup start should fail with 404 on case: ' . $case);
+            $this->_response = null; // Free the memory usage.
         }
     }
 
@@ -74,6 +75,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         foreach ($fails as $case => $url) {
             $this->get($url);
             $this->assertResponseCode(400, 'Setup start should fail with 400 on case: ' . $case);
+            $this->_response = null; // Free the memory usage.
         }
     }
 

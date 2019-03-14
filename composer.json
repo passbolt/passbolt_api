@@ -19,37 +19,36 @@
         "help": "https://www.passbolt.com/help",
         "source": "https://github.com/passbolt/passbolt"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/passbolt/migrations.git",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/passbolt/passbolt_selenium_api.git",
-            "no-api": true
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/passbolt/passbolt_test_data.git",
-            "no-api": true
-        }
+  "repositories": [
+      {
+        "type": "vcs",
+        "url": "https://github.com/passbolt/passbolt_selenium_api.git",
+        "no-api": true
+      },
+      {
+        "type": "vcs",
+        "url": "https://github.com/passbolt/passbolt_test_data.git",
+        "no-api": true
+      },
+      {
+        "type": "vcs",
+        "url": "https://github.com/stripthis/cakephp-file-storage.git",
+        "no-api": true
+      }
     ],
     "require": {
         "php": ">=7.0",
-        "cakephp/cakephp": "3.5.*",
+        "cakephp/cakephp": "^3.7",
+        "cakephp/migrations": "^2.1",
+        "cakephp/plugin-installer": "^1.1",
         "mobiledetect/mobiledetectlib": "2.*",
-        "cakephp/migrations": "1.7.1001",
-        "cakephp/plugin-installer": "~1.0",
         "ramsey/uuid": "^3.7",
         "singpolyma/openpgp-php": "^0.3.0",
         "thadafinser/user-agent-parser": "^2.0",
-        "donatj/phpuseragentparser": "^0.10.0",
-        "lorenzo/cakephp-email-queue": "^3.1",
-        "burzum/file-storage": "1.2.1",
-        "burzum/cakephp-imagine-plugin": "2.1.1",
-        "ezyang/htmlpurifier": "dev-master",
+        "donatj/phpuseragentparser": "^0.7.0",
+        "lorenzo/cakephp-email-queue": "^3.2.0",
+        "burzum/cakephp-file-storage": "2.0.x-dev",
+        "burzum/cakephp-imagine-plugin": "3.x-dev",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
         "enygma/yubikey": "^3.3",
@@ -61,16 +60,15 @@
         "cakephp/bake": "~1.1",
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
-        "satooshi/php-coveralls": "~1.0",
-        "passbolt/passbolt_selenium_api": "dev-master",
-        "passbolt/passbolt_test_data": "dev-master"
+        "passbolt/passbolt_selenium_api": "dev-feature/cake37",
+        "passbolt/passbolt_test_data": "dev-feature/cake37"
     },
     "autoload": {
         "psr-4": {
-          "App\\": "src",
-          "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
-          "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
-          "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
+            "App\\": "src",
+            "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
+            "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
+            "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src"
         }
     },
@@ -78,6 +76,7 @@
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
+            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests"
@@ -88,10 +87,10 @@
             "App\\Console\\Installer::postInstall"
         ],
         "install-dev": [
-          "@composer install --dev",
-          "npm install",
-          "./node_modules/.bin/grunt appjs-update",
-          "./node_modules/.bin/grunt styleguide-update"
+            "@composer install --dev",
+            "npm install",
+            "./node_modules/.bin/grunt appjs-update",
+            "./node_modules/.bin/grunt styleguide-update"
         ],
         "post-create-project-cmd": "App\\Console\\Installer::postInstall",
         "post-autoload-dump": "Cake\\Composer\\Installer\\PluginInstaller::postAutoloadDump",
