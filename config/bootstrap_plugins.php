@@ -34,3 +34,8 @@ if (defined('PASSBOLT_IS_CONFIGURED') && !PASSBOLT_IS_CONFIGURED) {
 if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'Log')) {
     Plugin::load('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
 }
+
+if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'AuditLog')) {
+    Plugin::load('Passbolt/AuditLog', ['bootstrap' => true, 'routes' => true]);
+}
+
