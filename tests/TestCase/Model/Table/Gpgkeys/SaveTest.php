@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -26,12 +26,12 @@ class SaveTest extends AppTestCase
 {
     public $Gpgkeys;
 
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function tearDown()
@@ -218,7 +218,7 @@ class SaveTest extends AppTestCase
 
     public function testGpgkeysValidationisParsableArmoredPublicKey()
     {
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
         $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKey));
 
         $armoredKeySplit = str_split($armoredKey, 300);
@@ -231,7 +231,7 @@ class SaveTest extends AppTestCase
     public function testGpgkeysRulesUniqueFingerprint()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, $userId);
         $this->Gpgkeys->save($k);

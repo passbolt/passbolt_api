@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -30,8 +30,8 @@ class CleanupTest extends AppTestCase
     public $options;
 
     public $fixtures = [
-        'app.Base/groups', 'app.Base/users', 'app.Alt0/groups_users',
-        'app.Alt0/permissions', 'app.Base/resources'
+        'app.Base/Groups', 'app.Base/Users', 'app.Alt0/GroupsUsers',
+        'app.Alt0/Permissions', 'app.Base/Resources'
     ];
 
     use CleanupTrait;
@@ -39,10 +39,10 @@ class CleanupTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Users = TableRegistry::get('Users');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->options = ['accessibleFields' => [
             'aco' => true,
             'aco_foreign_key' => true,

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
@@ -28,13 +28,13 @@ trait ConfigurationTrait
      */
     protected function skipTestIfNotWebInstallerFriendly()
     {
-        if ($this->isWebInstallerFriendly()) {
-            $this->markTestSkipped();
+        if (!$this->isWebInstallerFriendly()) {
+            $this->markTestSkipped('Config directory not writable, skipping test');
         }
     }
 
     /*
-     * The environment is considered as production like if :
+     * The environment is considered as production (and not friendly) like if :
      * - config/passbolt.php not writable
      * - or config/license not writable
      */
@@ -45,16 +45,16 @@ trait ConfigurationTrait
         $passboltConfigPath = CONFIG . 'passbolt.php';
         $passboltConfigFileIsWritable = file_exists($passboltConfigPath) ? is_writable($passboltConfigPath) : $configFolderWritable;
         if (!$passboltConfigFileIsWritable) {
-            return true;
+            return false;
         }
 
         $passboltLicensePath = CONFIG . 'license';
         $passboltLicenseFileIsWritable = file_exists($passboltLicensePath) ? is_writable($passboltLicensePath) : $configFolderWritable;
         if (!$passboltLicenseFileIsWritable) {
-            return true;
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     /*
@@ -81,9 +81,13 @@ trait ConfigurationTrait
      */
     protected function restoreConfiguration()
     {
-        if ($this->isWebInstallerFriendly()) {
+        if (!$this->isWebInstallerFriendly()) {
             return;
         }
+        if (file_exists(CONFIG . 'license')) {
+            chmod(CONFIG . 'license', 0777);
+        }
+        chmod(CONFIG . 'passbolt.php', 0777);
 
         if (isset($this->backupConfig['passboltConfig'])) {
             file_put_contents(CONFIG . 'passbolt.php', $this->backupConfig['passboltConfig']);

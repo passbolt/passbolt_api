@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -15,12 +15,11 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
-use App\Controller\Events\UserRegistrationListener;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 use Cake\Utility\Text;
 
@@ -39,11 +38,15 @@ class AppController extends Controller
      * Initialization hook method.
      * Used to add common initialization code like loading components.
      *
+     * @throws \Exception If a component class cannot be found.
      * @return void
      */
     public function initialize()
     {
-        $this->loadComponent('RequestHandler');
+        parent::initialize();
+        $this->loadComponent('RequestHandler', [
+            'enableBeforeRedirect' => false,
+        ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
 
@@ -68,13 +71,6 @@ class AppController extends Controller
          */
         $emails = new EmailNotificationsListener();
         EventManager::instance()->on($emails);
-
-        /*
-         * Enable the following components for recommended CakePHP security settings.
-         * see http://book.cakephp.org/3.0/en/controllers/components/security.html
-         */
-        // $this->loadComponent('Security');
-        // $this->loadComponent('Csrf');
 
         // Tell the browser to force HTTPS use
         if (Configure::read('passbolt.ssl.force')) {

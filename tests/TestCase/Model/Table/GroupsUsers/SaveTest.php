@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -18,22 +18,26 @@ namespace App\Test\TestCase\Model\Table\GroupsUsers;
 use App\Model\Table\GroupsUsersTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
 {
     use FormatValidationTrait;
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
     public $GroupsUsers;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers', $config);
+        $config = TableRegistry::getTableLocator()->exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers', $config);
     }
 
     public function tearDown()

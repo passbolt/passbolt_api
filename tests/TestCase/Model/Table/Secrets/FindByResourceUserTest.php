@@ -22,7 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class FindByResourceUserTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/secrets'];
+    public $fixtures = ['app.Base/Secrets'];
 
     /**
      * Test subject
@@ -39,11 +39,11 @@ class FindByResourceUserTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Secrets') ? [] : ['className' => SecretsTable::class];
-        $this->Secrets = TableRegistry::get('Secrets', $config);
+        $config = TableRegistry::getTableLocator()->exists('Secrets') ? [] : ['className' => SecretsTable::class];
+        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets', $config);
     }
 
-    public function testSecretExists()
+    public function testSecretTableFindByResourceUserTestExists()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -55,7 +55,7 @@ class FindByResourceUserTest extends AppTestCase
         $this->assertEquals($userId, $secret->user_id);
     }
 
-    public function testSecretNotExist()
+    public function testSecretTableFindByResourceUserTestNotExist()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $resourceId = UuidFactory::uuid('resource.id.april');

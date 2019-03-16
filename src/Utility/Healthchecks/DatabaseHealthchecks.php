@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.1.2
@@ -48,7 +48,7 @@ class DatabaseHealthchecks
     {
         $checks['database']['connect'] = false;
         try {
-            $connection = ConnectionManager::get(self::getConnectionName());
+            $connection = ConnectionManager::get('default');
             $connection->connect();
             $checks['database']['connect'] = true;
         } catch (MissingConnectionException $connectionError) {
@@ -73,7 +73,7 @@ class DatabaseHealthchecks
     public static function supportedBackend($checks = [])
     {
         $checks['database']['supportedBackend'] = false;
-        $connection = ConnectionManager::get(self::getConnectionName());
+        $connection = ConnectionManager::get('default');
         $config = $connection->config();
         if ($config['driver'] === 'Cake\Database\Driver\Mysql') {
             $checks['database']['supportedBackend'] = true;
@@ -91,8 +91,9 @@ class DatabaseHealthchecks
     public static function tableCount($checks = [])
     {
         $checks['database']['info']['tablesCount'] = 0;
+        $checks['database']['tablesCount'] = false;
         try {
-            $connection = ConnectionManager::get(self::getConnectionName());
+            $connection = ConnectionManager::get('default');
             $tables = $connection->execute('show tables')->fetchAll('assoc');
 
             if (isset($tables) && count($tables)) {
@@ -116,7 +117,7 @@ class DatabaseHealthchecks
     {
         $checks['database']['defaultContent'] = false;
         try {
-            $Roles = TableRegistry::get('Roles');
+            $Roles = TableRegistry::getTableLocator()->get('Roles');
             if (!empty($Roles)) {
                 $i = $Roles->find('all')->count();
                 $checks['database']['defaultContent'] = ($i > 3);
@@ -125,21 +126,5 @@ class DatabaseHealthchecks
         }
 
         return $checks;
-    }
-
-    /**
-     * Get the db connection name
-     * @return string
-     */
-    protected static function getConnectionName()
-    {
-        // Do not use default connection when test are running
-        // Otherwise tables may be dropped
-        $connectionName = 'default';
-        if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
-            $connectionName = 'test';
-        }
-
-        return $connectionName;
     }
 }

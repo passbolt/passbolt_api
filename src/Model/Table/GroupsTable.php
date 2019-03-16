@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -21,7 +21,7 @@ use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Groups\GroupsFindersTrait;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -94,27 +94,27 @@ class GroupsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
             ->lengthBetween('name', [0, 255], __('The name length should be maximum {0} characters.', 255))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->notEmpty('name', __('The name cannot be empty.'));
+            ->allowEmptyString('name', false, __('The name cannot be empty.'));
 
         $validator
             ->boolean('deleted')
-            ->notEmpty('deleted');
+            ->requirePresence('deleted', 'create');
 
         $validator
             ->uuid('created_by')
             ->requirePresence('created_by', 'create')
-            ->notEmpty('created_by');
+            ->allowEmptyString('created_by', false);
 
         $validator
             ->uuid('modified_by')
-            ->requirePresence('modified_by', 'create')
-            ->notEmpty('modified_by');
+            ->requirePresence('modified_by', true, __('Modified by field is required.'))
+            ->allowEmptyString('modified_by', false);
 
         return $validator;
     }
@@ -286,10 +286,10 @@ class GroupsTable extends Table
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
-        $Permissions = TableRegistry::get('Permissions');
+        $Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id)->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
-            $Resources = TableRegistry::get('Resources');
+            $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
         }
 
@@ -299,7 +299,7 @@ class GroupsTable extends Table
         // Delete all permissions
         // Delete all the secrets that lost permissions in the process
         $Permissions->deleteAll(['aro_foreign_key' => $group->id]);
-        $Secrets = TableRegistry::get('Secrets');
+        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $Secrets->cleanupHardDeletedPermissions();
 
         // Mark group as deleted

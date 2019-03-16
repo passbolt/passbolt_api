@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -23,9 +23,9 @@ use Cake\ORM\TableRegistry;
 class UsersRegisterControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/permissions',
-        'app.Base/groups_users', 'app.Base/groups', 'app.Base/favorites', 'app.Base/secrets',
-        'app.Base/authentication_tokens', 'app.Base/avatars', 'app.Base/email_queue'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
+        'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
+        'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue'
     ];
 
     public function testUsersRegisterGetSuccess()
@@ -65,7 +65,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $this->assertResponseSuccess();
 
             // Check user was saved
-            $users = TableRegistry::get('Users');
+            $users = TableRegistry::getTableLocator()->get('Users');
             $query = $users->find()->where(['username' => $data['username']]);
             $this->assertEquals(1, $query->count());
             $user = $query->first();
@@ -73,12 +73,12 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             $this->assertFalse($user->deleted);
 
             // Check profile exist
-            $profiles = TableRegistry::get('Profiles');
+            $profiles = TableRegistry::getTableLocator()->get('Profiles');
             $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
             $this->assertEquals(1, $query->count());
 
             // Check role exist
-            $roles = TableRegistry::get('Roles');
+            $roles = TableRegistry::getTableLocator()->get('Roles');
             $role = $roles->get($user->get('role_id'));
             $this->assertEquals(Role::USER, $role->name);
         }
@@ -185,7 +185,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertResponseError();
 
         // 2) Soft delete the existing user.
-        $users = TableRegistry::get('Users');
+        $users = TableRegistry::getTableLocator()->get('Users');
         $user = $users->find()
             ->where(['username' => 'ping@passbolt.com'])
             ->first();
@@ -201,7 +201,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     public function testUsersRegisterCannotModifyNotAccessibleFields()
     {
         // Not allowed to edit: id, active, deleted, created, modified, role_id
-        $roles = TableRegistry::get('Roles');
+        $roles = TableRegistry::getTableLocator()->get('Roles');
         $adminRoleId = $roles->getIdByName(Role::ADMIN);
         $userRoleId = $roles->getIdByName(Role::USER);
         $date = '1983-04-01 23:34:45';
@@ -224,7 +224,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->post('/users/register', $data);
         $this->assertResponseSuccess();
 
-        $users = TableRegistry::get('Users');
+        $users = TableRegistry::getTableLocator()->get('Users');
         $user = $users->find()->where(['username' => $data['username']])->first();
 
         $this->assertNotEquals($user->id, $userId);
