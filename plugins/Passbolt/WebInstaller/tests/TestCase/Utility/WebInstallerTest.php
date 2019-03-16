@@ -50,8 +50,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $databaseSettings = $this->getTestDatasourceFromConfig();
         $webInstaller->setSettings('database', $databaseSettings);
         $webInstaller->initDatabaseConnection();
-        $connection = ConnectionManager::get('test');
-        $connected = DatabaseConfiguration::testConnection($connection);
+        $connected = DatabaseConfiguration::testConnection();
         $this->assertTrue($connected);
     }
 
@@ -62,8 +61,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $databaseSettings['host'] = 'invalid-host';
         $webInstaller->setSettings('database', $databaseSettings);
         $webInstaller->initDatabaseConnection();
-        $connection = ConnectionManager::get('test');
-        $connected = DatabaseConfiguration::testConnection($connection);
+        $connected = DatabaseConfiguration::testConnection();
         $this->assertFalse($connected);
         $this->restoreTestConnection();
     }

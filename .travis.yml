@@ -4,8 +4,8 @@ dist: trusty
 
 sudo: required
 
-services:
-  - postgresql
+#services:
+#  - postgresql
 
 env:
   global:
@@ -31,15 +31,18 @@ matrix:
   fast_finish: true
 
   include:
-    # PHP 7.0 - MYSQL 5.6 + COVERAGE
+    # Default / DEBIAN 9 - Stretch
+    # PHP 7.0 - MARIADB 10.1
     - php: 7.0
-      env: PHPUNIT=1 COVERAGE=1 DB=mysql DB_VERSION=5.6
+      env: PHPUNIT=1 COVERAGE=1 DB=mariadb DB_VERSION=10.1
       addons: &php7_addon
+        mariadb: '10.1'
         apt:
           packages:
             - *common_pkg
 
-    # PHP 7.0 - MYSQL 5.7
+    # Ubuntu - 18.x
+    # PHP 7.2 - MYSQL 5.7
     - php: 7.0
       env: PHPUNIT=1 DB=mysql DB_VERSION=5.7
       addons: *php7_addon
@@ -52,6 +55,7 @@ matrix:
         - sudo mysql_upgrade
         - sudo service mysql restart
 
+    # Minimal
     # PHP 7.0 - MARIADB 5.5
     - php: 7.0
       env: PHPUNIT=1 DB=mariadb DB_VERSION=5.5
@@ -61,8 +65,8 @@ matrix:
           packages:
             - *common_pkg
 
-    # PHP 7.0 - MARIADB 10.1
-    - php: 7.0
+    # PHP 7.2 - MARIADB 10.1
+    - php: 7.2
       env: PHPUNIT=1 DB=mariadb DB_VERSION=10.1
       addons: &php7_addon
         mariadb: '10.1'
@@ -79,8 +83,9 @@ matrix:
           packages:
             - *common_pkg
 
-    # PHP 7.0 - MARIADB 10.3
-    - php: 7.0
+    # Debian - Buster (Testing)
+    # PHP 7.3 - MARIADB 10.3
+    - php: 7.3
       env: PHPUNIT=1 DB=mariadb DB_VERSION=10.3
       addons: &php7_addon
         mariadb: '10.3'
@@ -89,33 +94,18 @@ matrix:
             - *common_pkg
 
     # PHP 7.0 - POSTGRESQL 9.2
-    - php: 7.0
-      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.2 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
-      addons: *php7_addon
+#    - php: 7.0
+#      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.2 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
+#      addons: *php7_addon
 
     # PHP 7.0 - POSTGRESQL 9.4
-    - php: 7.0
-      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.4 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
-      addons:
-        postgresql: "9.4"
-        apt:
-          packages:
-            - *common_pkg
-
-    # PHP 7.1 - MYSQL 5.6
-    - php: 7.1
-      env: PHPUNIT=1 DB=mysql DB_VERSION=5.6
-      addons: *php7_addon
-
-    # PHP 7.2 - MYSQL 5.6
-    - php: 7.2
-      env: PHPUNIT=1 DB=mysql DB_VERSION=5.6
-      addons: *php7_addon
-
-    # PHP 7.3 - MYSQL 5.6
-    - php: 7.3
-      env: PHPUNIT=1 DB=mysql DB_VERSION=5.6
-      addons: *php7_addon
+#    - php: 7.0
+#      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.4 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
+#      addons:
+#        postgresql: "9.4"
+#        apt:
+#          packages:
+#            - *common_pkg
 
     # PHPCS
     - php: 7.0
@@ -123,23 +113,19 @@ matrix:
       addons: *php7_addon
 
   allow_failures:
-    # PHP 7.0 - POSTGRESQL 9.2
-    - php: 7.0
-      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.2 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
-
-    # PHP 7.0 - POSTGRESQL 9.4
-    - php: 7.0
-      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.4 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
-
-    # PHP 7.3 - MYSQL 5.6
-    - php: 7.3
-      env: PHPUNIT=1 DB=mysql DB_VERSION=5.6
+#    # PHP 7.0 - POSTGRESQL 9.2
+#    - php: 7.0
+#      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.2 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
+#
+#    # PHP 7.0 - POSTGRESQL 9.4
+#    - php: 7.0
+#      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.4 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
 
 before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE IF NOT EXISTS passbolt_test;'; fi"
   - sh -c "if [ '$DB' = 'mariadb' ]; then mysql -e 'CREATE DATABASE IF NOT EXISTS passbolt_test;'; fi"
-  - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS passbolt_test;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'CREATE DATABASE passbolt_test;' -U postgres; fi"
+#  - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'DROP DATABASE IF EXISTS passbolt_test;' -U postgres; fi"
+#  - sh -c "if [ '$DB' = 'postgresql' ]; then psql -c 'CREATE DATABASE passbolt_test;' -U postgres; fi"
   - composer global require hirak/prestissimo
   - composer install --no-interaction
   - echo yes | pecl install gnupg

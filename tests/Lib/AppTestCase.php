@@ -29,7 +29,7 @@ use App\Test\Lib\Utility\EntityTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use Cake\TestSuite\TestCase;
 
-class AppTestCase extends TestCase
+abstract class AppTestCase extends TestCase
 {
     // Do not load all the traits here
     // load them were needed instead
