@@ -50,6 +50,13 @@ trait EntitiesHistoryTrait
                 ],
             ],
         ],
+        'ResourcesIndex.index' => [
+            'models' => [
+                'SecretAccesses' => [
+                    EntityHistory::CRUD_CREATE,
+                ],
+            ],
+        ],
         'ResourcesUpdate.update' => [
             'models' => [
                 'Resources' => [
