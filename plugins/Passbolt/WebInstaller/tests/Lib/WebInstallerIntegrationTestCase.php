@@ -66,13 +66,13 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         } catch (\Exception $exception) {
         }
 
-        if (isset($passboltValues['Datasources']['test']) && $passboltValues['Datasources']['test']) {
+        if (isset($appValues['Datasources']['test']) && isset($passboltValues['Datasources']['test'])) {
             $config = array_merge($appValues['Datasources']['test'], $passboltValues['Datasources']['test']);
         } else {
-            if (!isset($passboltValues['Datasources']['test']) && !isset($passboltValues['Datasources']['test'])) {
+            if (!isset($appValues['Datasources']['test']) && !isset($passboltValues['Datasources']['test'])) {
                 throw new InternalErrorException('A test connection is missing in Datasources config.');
             }
-            if (!isset($passboltValues['Datasources']['test'])) {
+            if (!isset($appValues['Datasources']['test'])) {
                 $config = $passboltValues['Datasources']['test'];
             } else {
                 $config = $appValues['Datasources']['test'];
