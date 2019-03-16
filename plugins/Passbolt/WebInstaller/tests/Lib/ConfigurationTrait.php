@@ -87,8 +87,9 @@ trait ConfigurationTrait
         if (file_exists(CONFIG . 'license')) {
             chmod(CONFIG . 'license', 0777);
         }
-        chmod(CONFIG . 'passbolt.php', 0777);
-
+        if (file_exists(CONFIG . 'passbolt.php')) {
+            chmod(CONFIG . 'passbolt.php', 0777);
+        }
         if (isset($this->backupConfig['passboltConfig'])) {
             file_put_contents(CONFIG . 'passbolt.php', $this->backupConfig['passboltConfig']);
         }
