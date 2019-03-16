@@ -17,7 +17,7 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 use Cake\Utility\Inflector;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;

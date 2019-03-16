@@ -35,8 +35,8 @@ class TestTask extends AppShell
     {
         parent::initialize();
         $this->DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
-        $this->Users = TableRegistry::get('Users');
-        $this->Groups = TableRegistry::get('Groups');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
     }
 
     /**

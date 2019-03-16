@@ -1,31 +1,36 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
 namespace App\View\Helper;
 
+use Cake\ORM\Entity;
+use Cake\ORM\Query;
+use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
+
+use InvalidArgumentException;
 
 class LegacyApiHelper extends Helper
 {
     /**
      * Return entity name
      *
-     * @param object $entity Cake\ORM\Entity
+     * @param Entity $entity Cake\ORM\Entity
      * @return bool|string
      */
-    public static function getEntityName($entity)
+    public static function getEntityName(Entity $entity)
     {
         // example: App\Model\User becomes User
         return substr(get_class($entity), strrpos(get_class($entity), '\\') + 1);
@@ -57,11 +62,11 @@ class LegacyApiHelper extends Helper
     /**
      * Format an entity to an array
      *
-     * @param object $entity Cake\ORM\Entity
+     * @param Entity $entity Cake\ORM\Entity
      * @param string $name see getEntityName
      * @return array new entity
      */
-    public static function formatEntity($entity, $name)
+    public static function formatEntity(Entity $entity, string $name)
     {
         $result = [];
         foreach ($entity->visibleProperties() as $property) {
@@ -72,7 +77,7 @@ class LegacyApiHelper extends Helper
             } elseif (is_object($value) && is_a($value, 'Cake\Chronos\ChronosInterface')) {
                 // example: modified
                 $result[$name][$property] = $value->toDateTimeString();
-            } elseif (is_object($value) && $value instanceof \Cake\ORM\Entity) {
+            } elseif (is_object($value) && $value instanceof Entity) {
                 // example: gpgkey, scafolded model
                 $subEntityName = self::formatModelName($property);
                 $formattedEntity = self::formatEntity($value, $subEntityName);
@@ -113,7 +118,7 @@ class LegacyApiHelper extends Helper
     /**
      * Format a result set to an array
      *
-     * @param object $resultSet Cake\ORM\Query
+     * @param Query|array $resultSet Cake\ORM\Query
      * @return array new result set
      */
     public static function formatResultSet($resultSet)
@@ -136,14 +141,14 @@ class LegacyApiHelper extends Helper
      * @param \Cake\ORM\Table $table table
      * @return array new result set
      */
-    public static function formatErrors($errors, $table)
+    public static function formatErrors($errors, Table $table)
     {
         $results = [];
 
         // If the error data is a result set / the result of a find
         // Render normally
-        if ($errors instanceof \Cake\ORM\ResultSet) {
-            $results[$table->table()] = LegacyApiHelper::formatResultSet($errors);
+        if ($errors instanceof Query) {
+            $results[$table->getTable()] = LegacyApiHelper::formatResultSet($errors);
 
             return $results;
         }
@@ -159,11 +164,11 @@ class LegacyApiHelper extends Helper
 
             // If the property is an association, retrieve the table.
             // Example: Groups.groups_users
-            $association = $table->association(Inflector::camelize($property));
-
-            // In the case the property is not an association.
-            // Example: Groups.name
-            if (is_null($association)) {
+            try {
+                $association = $table->getAssociation(Inflector::camelize($property));
+            } catch (InvalidArgumentException $exception) {
+                // In the case the property is not an association.
+                // Example: Groups.name
                 $className = substr($table->getEntityClass(), strrpos($table->getEntityClass(), '\\') + 1);
                 $resultKey = self::formatModelName(Inflector::underscore($className));
                 $results[$resultKey][$property] = $propertyErrors;

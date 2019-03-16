@@ -17,21 +17,22 @@ use Cake\Routing\Router;
                         <div class="col12">
                             <h3><?= __('Database configuration'); ?></h3>
                             <?= $this->Flash->render() ?>
-                            <div class="input text required">
-                                <label for="type">Type</label>
-                                <?= $this->Form->select('type',
-                                    ['mysql' => 'MySQL / MariaDB'],
-                                    ['default' => 'mysql', 'class' => 'required fluid']
-                                ); ?>
-                            </div>
-                            <?= $this->Form->input('host', [
+                            <?= $this->Form->control('type', [
+                                'type' => 'select',
+                                'options' => ['mysql' => 'MySQL / MariaDB'],
+                                'default' => 'mysql',
+                                'class' => 'required fluid'
+                            ]); ?>
+                            <?= $this->Form->control('host', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('host name or ip address'),
                                 'label' => __('Host'),
                                 'class' => 'required fluid'
                             ]); ?>
 
-                            <?= $this->Form->input('port', [
+                            <?= $this->Form->control('port', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('port'),
                                 'label' => __('Port'),
@@ -39,21 +40,24 @@ use Cake\Routing\Router;
                                 'default' => '3306',
                             ]); ?>
 
-                            <?= $this->Form->input('username', [
+                            <?= $this->Form->control('username', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('username'),
                                 'label' => __('Username'),
                                 'class' => 'required fluid',
                             ]); ?>
 
-                            <?= $this->Form->input('password', [
+                            <?= $this->Form->control('password', [
+                                'type' => 'password',
                                 'placeholder' => __('password'),
                                 'label' => __('Password'),
                                 'class' => 'fluid',
                                 'type' => 'password',
                             ]); ?>
 
-                            <?= $this->Form->input('database', [
+                            <?= $this->Form->control('database', [
+                                'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('database name'),
                                 'label' => __('Database name'),

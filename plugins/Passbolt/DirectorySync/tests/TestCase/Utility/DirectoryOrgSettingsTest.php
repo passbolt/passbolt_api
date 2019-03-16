@@ -29,9 +29,9 @@ class DirectoryOrgSettingsTest extends AppTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        'app.Base/organization_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
+        'app.Base/OrganizationSettings',
+        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Roles'
     ];
 
     public static function getDummySettings()
@@ -90,7 +90,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $this->assertEquals(preg_match('/BEGIN PGP MESSAGE/', Hash::get($settings, 'ldap.domains.org_domain.password')), 1);
     }

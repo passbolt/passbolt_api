@@ -15,29 +15,19 @@
 
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
-use App\Model\Entity\Role;
-
-use App\Test\Lib\Utility\UserAccessControlTrait;
-use App\Utility\UuidFactory;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use Passbolt\DirectorySync\Test\TestCase\Form\LdapConfigurationFormTest;
-use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
-use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
 {
-    public $fixtures = [
-       'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
-       'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-       'app.Base/favorites', 'app.Base/email_queue', 'app.Base/organization_settings',
-       'plugin.passbolt/directorySync.base/directoryEntries',
-       'plugin.passbolt/directorySync.base/directoryIgnore',
-       'plugin.passbolt/directorySync.base/directoryRelations',
-       'plugin.passbolt/directorySync.directoryReports',
-    ];
+   public $fixtures = [
+       'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
+       'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
+       'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
+       'plugin.Passbolt/DirectorySync.Base/DirectoryEntries',
+       'plugin.Passbolt/DirectorySync.Base/DirectoryIgnore',
+       'plugin.Passbolt/DirectorySync.Base/DirectoryRelations',
+       'plugin.Passbolt/DirectorySync.DirectoryReports',
+   ];
 
     public function setUp()
     {

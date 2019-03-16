@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -22,15 +22,15 @@ use Cake\ORM\TableRegistry;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/authentication_tokens'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'];
     public $AuthenticationTokens;
     use AuthenticationTokenModelTrait;
 
     public function setUp()
     {
-        $this->AuthenticationTokens = TableRegistry::get('AuthenticationTokens');
-        $this->Users = TableRegistry::get('Users');
-        $this->Gpgkeys = TableRegistry::get('Gpgkeys');
+        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
         parent::setUp();
     }
 
@@ -43,7 +43,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
             'AuthenticationToken' => [
                 'token' => $t->token
@@ -77,7 +77,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
     {
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
             'authenticationtoken' => [
                 'token' => $t->token
@@ -176,7 +176,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
         $url = '/users/validateAccount/' . UuidFactory::uuid('user.id.ruth') . '.json';
 
-        $armoredKey = file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ruth_public.key');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
         $fails = [
             'empty array' => [

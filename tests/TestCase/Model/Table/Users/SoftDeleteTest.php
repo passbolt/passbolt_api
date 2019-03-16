@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -30,21 +30,21 @@ class SoftDeleteTest extends AppTestCase
     public $Secrets;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/favorites',
-        'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/resources', 'app.Base/secrets',
-        'app.Alt0/groups_users', 'app.Alt0/permissions'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
+        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Secrets',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Users = TableRegistry::get('Users');
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
-        $this->Resources = TableRegistry::get('Resources');
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Secrets = TableRegistry::get('Secrets');
-        $this->Favorites = TableRegistry::get('Favorites');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
     }
 
     public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()

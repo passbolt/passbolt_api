@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -28,15 +28,15 @@ class SoftDeleteTest extends AppTestCase
     public $Resources;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users',
-        'app.Base/resources', 'app.Base/favorites', 'app.Base/secrets',
-        'app.Base/permissions'];
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
+        'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Resources') ? [] : ['className' => ResourcesTable::class];
-        $this->Resources = TableRegistry::get('Resources', $config);
+        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
     }
 
     public function tearDown()
@@ -59,15 +59,15 @@ class SoftDeleteTest extends AppTestCase
         $resource = $this->Resources->get($resourceId);
         $this->assertTrue($resource->deleted);
         // No favorites in db.
-        $favorites = $this->Resources->association('Favorites')
+        $favorites = $this->Resources->getAssociation('Favorites')
             ->find()->where(['Favorites.foreign_key' => $resource->id])->toArray();
         $this->assertEmpty($favorites);
         // No permissions in db.
-        $permissions = $this->Resources->association('Permissions')
+        $permissions = $this->Resources->getAssociation('Permissions')
             ->find()->where(['Permissions.aco_foreign_key' => $resource->id])->toArray();
         $this->assertEmpty($permissions);
         // No secrets in db.
-        $secrets = $this->Resources->association('Secrets')
+        $secrets = $this->Resources->getAssociation('Secrets')
             ->find()->where(['Secrets.resource_id' => $resource->id])->toArray();
         $this->assertEmpty($secrets);
     }

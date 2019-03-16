@@ -18,10 +18,10 @@ namespace Passbolt\DirectorySync\Controller;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class DirectoryIgnoreController extends DirectoryController

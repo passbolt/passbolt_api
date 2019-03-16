@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -22,9 +22,9 @@ use Cake\Core\Configure;
 class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/resources', 'app.Base/secrets', 'app.Base/gpgkeys',
-        'app.Base/favorites', 'app.Base/email_queue', 'app.Base/profiles', 'app.Base/roles',
-        'app.Base/groups_users', 'app.Base/permissions', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Gpgkeys',
+        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars'
     ];
 
     public function testResourcesUpdateNotificationDisabled()
@@ -64,12 +64,12 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
         // check email notification
         $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
         $this->assertResponseCode(200);
-        $this->assertResponseContains('have updated the password');
+        $this->assertResponseContains('updated the password');
 
         // email should be send to self as backup
         $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
         $this->assertResponseCode(200);
-        $this->assertResponseContains('have updated the password');
+        $this->assertResponseContains('updated the password');
     }
 
     public function testResourcesUpdateNotificationSettings()

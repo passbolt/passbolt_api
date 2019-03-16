@@ -17,8 +17,8 @@ namespace Passbolt\DirectorySync\Controller;
 
 use App\Model\Entity\Role;
 use Cake\Event\Event;
-use Cake\Network\Exception\ForbiddenException;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
 class DirectorySyncController extends DirectoryController

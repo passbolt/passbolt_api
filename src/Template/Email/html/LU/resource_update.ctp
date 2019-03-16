@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -15,7 +15,7 @@
 use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
-
+Router::fullBaseUrl($body['fullBaseUrl']);
 $user = $body['user'];
 $resource = $body['resource'];
 echo $this->element('Email/module/avatar',[
@@ -25,7 +25,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $resource->modified,
-        'text' => __('{0} have updated the password {1}', null, Purifier::clean($resource->name))
+        'text' => __('{0} updated the password {1}', null, Purifier::clean($resource->name))
     ])
 ]);
 
@@ -49,6 +49,6 @@ if (Configure::read('passbolt.email.show.secret')) {
     ]);
 }
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/', true),
-    'text' => __('log in passbolt')
+    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'text' => __('view it in passbolt')
 ]);

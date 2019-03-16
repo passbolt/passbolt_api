@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -23,7 +23,7 @@ use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -106,44 +106,44 @@ class CommentsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', 'create');
 
         $validator
             ->uuid('user_id', __('user_id should be a uuid'))
-            ->notEmpty('user_id', __('The user_id should not be empty'))
+            ->allowEmptyString('user_id', false, __('The user_id should not be empty'))
             ->requirePresence('user_id', 'create', __('A user_id is required'));
 
         $validator
             ->uuid('parent_id', __('parent_ud should be a uuid'))
-            ->allowEmpty('parent_id');
+            ->allowEmptyString('parent_id', true);
 
         $validator
             ->ascii('foreign_model')
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __('The foreign_model provided is not supported'))
             ->requirePresence('foreign_model', 'create', __('A foreign_model is required'))
-            ->notEmpty('foreign_model', __('The foreign_model should not be empty'));
+            ->allowEmptyString('foreign_model', false, __('The foreign_model should not be empty'));
 
         $validator
             ->uuid('foreign_key', __('foreign_key should be a uuid'))
             ->requirePresence('foreign_key', 'create', __('A foreign_key is required'))
-            ->notEmpty('foreign_key', __('The foreign_key should not be empty'));
+            ->allowEmptyString('foreign_key', false, __('The foreign_key should not be empty'));
 
         $validator
             ->scalar('content')
             ->requirePresence('content', __('A content is required'))
-            ->notEmpty('content', __('The content should not be empty'))
+            ->allowEmptyString('content', false, __('The content should not be empty'))
             ->utf8Extended('content', __('The content is not a valid utf8 string (emoticons excluded)'))
             ->lengthBetween('content', [1, 255], __('The content length should be between {0} and {1} characters.', 1, 255));
 
         $validator
             ->uuid('created_by', __('created_by should be a uuid'))
             ->requirePresence('created_by', 'create', __('A created_by is required'))
-            ->notEmpty('created_by', __('The created_by should not be empty'));
+            ->allowEmptyString('created_by', false, __('The created_by should not be empty'));
 
         $validator
             ->uuid('modified_by', __('modified_by should be a uuid'))
-            ->requirePresence('modified_by', 'update', __('A modified_by is required'))
-            ->notEmpty('modified_by', 'update');
+            ->requirePresence('modified_by', true, __('A modified_by is required'))
+            ->allowEmptyString('modified_by', false, __('A modified_by is required'));
 
         return $validator;
     }
@@ -224,7 +224,7 @@ class CommentsTable extends Table
 
         // Retrieve the resource.
         // This will break if the resource doesn't exist, if it is soft deleted, or if the user is not allowed to access it.
-        $ResourcesTable = TableRegistry::get('Resources');
+        $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $foreignModelLookup = $ResourcesTable->findView($userId, $foreignKey)->first();
         if (empty($foreignModelLookup)) {
             throw new RecordNotFoundException(__('The foreign model does not exist.'));

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -96,7 +96,7 @@ trait UsersFindersTrait
         // The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
         // To do so, add an extra join.
         $query->join([
-            'table' => $this->association('Permissions')->getTable(),
+            'table' => $this->getAssociation('Permissions')->getTable(),
             'alias' => 'PermissionsFilterAccess',
             'type' => 'INNER',
             'conditions' => ['PermissionsFilterAccess.aco_foreign_key' => $resourceId],

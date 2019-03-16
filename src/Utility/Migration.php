@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -15,6 +15,7 @@
 namespace App\Utility;
 
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
 use Migrations\Migrations;
 
@@ -29,11 +30,7 @@ class Migration
      */
     public static function needMigration()
     {
-        // don't show migrations when running tests
-        if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
-            return false;
-        }
-        $Migrations = new Migrations();
+        $Migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
         $migrations = $Migrations->status();
         foreach ($migrations as $i => $migration) {
             if ($migration['status'] === 'down') {
@@ -75,7 +72,7 @@ class Migration
             } catch (\Exception $e) {
                 throw new \Exception(__('Could not connect to github repository'));
             }
-            $tags = json_decode($results->body, true);
+            $tags = json_decode($results->getStringBody(), true);
             if (!isset($tags[0]) || !isset($tags[0]['name'])) {
                 throw new \Exception(__('Could not read tag information on github repository'));
             }

@@ -71,7 +71,7 @@ trait GroupUsersSyncTrait
         $toRemove = $this->retrieveUsersToRemove($data);
         $toSync = $this->retrieveUsersToSync($data, $group);
 
-        $Resources = TableRegistry::get('Resources');
+        $Resources = TableRegistry::getTableLocator()->get('Resources');
 
         if (!empty($toAdd)) {
             // Check if group has access to passwords already.

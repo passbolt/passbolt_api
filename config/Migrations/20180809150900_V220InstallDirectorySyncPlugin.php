@@ -13,8 +13,9 @@
  * @since         2.2.0
  */
 
-use Migrations\Migrations;
 use App\Utility\PluginMigration;
+use Cake\Datasource\ConnectionManager;
+use Migrations\Migrations;
 
 class V220InstallDirectorySyncPlugin extends PluginMigration
 {
@@ -26,9 +27,8 @@ class V220InstallDirectorySyncPlugin extends PluginMigration
     public function up()
     {
         parent::up();
-        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
         $migrations = new Migrations([
-            'connection' => $connectionName,
+            'connection' => ConnectionManager::get('default')->configName(),
             'plugin' => 'Passbolt/DirectorySync',
         ]);
         $migrations->migrate();

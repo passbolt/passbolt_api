@@ -21,9 +21,8 @@ use App\Model\Table\OrganizationSettingsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\UnauthorizedException;
+use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -45,7 +44,7 @@ class OrganizationSettingsTableTest extends AppTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/organization_settings',
+        'app.Base/OrganizationSettings',
     ];
 
     /**

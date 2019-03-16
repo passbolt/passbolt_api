@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -26,13 +26,13 @@ class FindIndexTest extends AppTestCase
 {
     public $Groups;
 
-    public $fixtures = ['app.Base/groups', 'app.Base/users', 'app.Base/groups_users', 'app.Base/profiles', 'app.Base/permissions'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Permissions'];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Groups') ? [] : ['className' => GroupsTable::class];
-        $this->Groups = TableRegistry::get('Groups', $config);
+        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
     public function tearDown()
@@ -131,7 +131,7 @@ class FindIndexTest extends AppTestCase
 
         foreach ($groups as $group) {
             $this->assertNotEmpty($group->user_count);
-            $expectedCount = $this->Groups->association('GroupsUsers')->find()
+            $expectedCount = $this->Groups->getAssociation('GroupsUsers')->find()
                 ->where(['GroupsUsers.group_id' => $group->id])->count();
             $this->assertEquals($expectedCount, $group->user_count);
         }

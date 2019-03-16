@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -47,7 +47,7 @@ trait CommentsEmailTrait
         }
 
         // Find the users that have access to the resource (including via their groups)
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_key]]];
         $users = $Users->findIndex(Role::USER, $options)->all();
         if (count($users) < 2) {
@@ -55,7 +55,7 @@ trait CommentsEmailTrait
             return;
         }
 
-        $Resources = TableRegistry::get('Resources');
+        $Resources = TableRegistry::getTableLocator()->get('Resources');
         $creator = $Users->findFirstForEmail($comment->created_by);
         $resource = $Resources->get($comment->foreign_key);
 

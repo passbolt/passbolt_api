@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
@@ -15,31 +15,34 @@
 namespace Passbolt\WebInstaller\Middleware;
 
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
+use Cake\Datasource\Exception\MissingDatasourceConfigException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 
 class WebInstallerMiddleware
 {
     /**
-     * Redirect to the webinstaller if passbolt is not configured and the user is trying to access any entry points
-     * which is not a webinstaller entry point.
+     * Checks and sets the CSRF token depending on the HTTP verb.
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Message\ResponseInterface $response The response.
+     * @param \Cake\Http\ServerRequest $request The request.
+     * @param \Cake\Http\Response $response The response.
      * @param callable $next Callback to invoke the next middleware.
-     * @return \Psr\Http\Message\ResponseInterface A response
+     * @return \Cake\Http\Response A response
      */
-    public function __invoke($request, $response, $next)
+    public function __invoke(ServerRequest $request, Response $response, $next)
     {
         $uri = $request->getRequestTarget();
         $targetInstallPage = preg_match('/^\/install/', $uri);
 
-        if (!PASSBOLT_IS_CONFIGURED && !$targetInstallPage) {
+        if (!self::isConfigured() && !$targetInstallPage) {
             return $response
                 ->withStatus(302)
                 ->withLocation('/install');
-        } elseif (PASSBOLT_IS_CONFIGURED && $targetInstallPage) {
-            return $response
-                ->withStatus(302)
-                ->withLocation('/');
+        }
+        if (self::isConfigured() && $targetInstallPage) {
+            throw new ForbiddenException();
         }
 
         return $next($request, $response);
@@ -53,17 +56,15 @@ class WebInstallerMiddleware
      */
     public static function isConfigured()
     {
-        if (defined('TEST_IS_RUNNING') && TEST_IS_RUNNING) {
-            return true;
+        if (Configure::read('passbolt.webInstaller.configured') !== null) {
+            return Configure::read('passbolt.webInstaller.configured');
         }
+        try {
+            $connection = ConnectionManager::get('default')->config();
 
-        $datasourceUsername = Configure::read('Datasources.default.username');
-        $datasourcePassword = Configure::read('Datasources.default.password');
-        $datasourceDatabase = Configure::read('Datasources.default.database');
-        if (!empty($datasourceUsername) || !empty($datasourcePassword) || !empty($datasourceDatabase)) {
-            return true;
+            return (!empty($connection) && !empty($connection['database']));
+        } catch (MissingDatasourceConfigException $exception) {
+            return false;
         }
-
-        return false;
     }
 }

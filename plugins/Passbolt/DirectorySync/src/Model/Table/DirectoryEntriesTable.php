@@ -18,11 +18,9 @@ use App\Error\Exception\ValidationException;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\ORM\Entity;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 

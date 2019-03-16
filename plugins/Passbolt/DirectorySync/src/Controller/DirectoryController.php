@@ -16,8 +16,8 @@
 namespace Passbolt\DirectorySync\Controller;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\ServiceUnavailableException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 abstract class DirectoryController extends AppController

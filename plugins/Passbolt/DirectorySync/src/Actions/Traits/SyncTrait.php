@@ -14,9 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Actions\Traits;
 
-use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Utility\Alias;

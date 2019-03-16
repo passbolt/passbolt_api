@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -66,7 +66,7 @@ trait UsersEmailTrait
         if (!Configure::read('passbolt.email.send.user.create')) {
             return;
         }
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $user = $Users->findFirstForEmail($user->id);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_self';
@@ -89,7 +89,7 @@ trait UsersEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($adminId);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_admin';
@@ -115,12 +115,12 @@ trait UsersEmailTrait
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $deletedBy = $Users->findFirstForEmail($deletedById);
         $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
         $template = 'GM/user_delete';
 
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $groupManagers = $GroupsUsers->find()
             ->select()
             ->contain(['Users', 'Groups'])

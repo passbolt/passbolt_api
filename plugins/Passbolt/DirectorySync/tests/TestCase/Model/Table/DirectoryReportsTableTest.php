@@ -36,7 +36,7 @@ class DirectoryReportsTableTest extends TestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('DirectoryReports') ? [] : ['className' => DirectoryReportsTable::class];
-        $this->DirectoryReports = TableRegistry::get('DirectoryReports', $config);
+        $this->DirectoryReports = TableRegistry::getTableLocator()->get('DirectoryReports', $config);
     }
 
     /**

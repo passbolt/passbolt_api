@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -73,20 +73,6 @@ class InstallTask extends AppShell
             ->addOption('admin-last-name', [
                 'help' => __('Admin\' last name. If interactive mode enabled, and no-admin not set, it will be requested')
             ]);
-//            ->addOption('delete-avatars', [
-//                'help' => 'Delete existing public avatars',
-//                'default' => 'true',
-//                'short' => 'a',
-//            ])
-//            ->addOption('send-anonymous-statistics', [
-//                'help' => 'Whether or not anonymous usage statistics should be sent to passbolt servers.
-//              (Check our privacy policy for more information: https://www.passbolt.com/privacy#statistics).',
-//                'default' => '',
-//                'choices' => [
-//                    'true',
-//                    'false',
-//                ],
-//            ])
 
         return $parser;
     }
@@ -351,7 +337,7 @@ class InstallTask extends AppShell
             }
         } catch (Exception $e) {
             $this->_error($e->getMessage());
-            $this->_error(__('Please run ./app/Console/cake passbolt healthcheck for more information and help.'));
+            $this->_error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'));
 
             return false;
         }
@@ -360,7 +346,7 @@ class InstallTask extends AppShell
         $checks = Healthchecks::database();
         if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
             $this->_error(__('There are some issues with the database configuration.'));
-            $this->_error(__('Please run ./app/Console/cake passbolt healthcheck for more information and help.'));
+            $this->_error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'));
 
             return false;
         }

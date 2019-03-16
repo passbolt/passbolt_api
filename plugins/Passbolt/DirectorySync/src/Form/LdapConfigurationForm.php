@@ -222,7 +222,7 @@ class LdapConfigurationForm extends Form
      */
     public function isValidAdmin(string $value, array $context = null)
     {
-        $User = TableRegistry::get('Users');
+        $User = TableRegistry::getTableLocator()->get('Users');
         $exist = $User->find()->contain(['Roles'])->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0, 'Roles.name' => Role::ADMIN])->count();
         if ($exist) {
             return true;
@@ -240,7 +240,7 @@ class LdapConfigurationForm extends Form
      */
     public function isValidUser(string $value, array $context = null)
     {
-        $User = TableRegistry::get('Users');
+        $User = TableRegistry::getTableLocator()->get('Users');
         $exist = $User->find()->where(['Users.id' => $value, 'Users.active' => 1, 'Users.deleted' => 0])->count();
         if ($exist) {
             return true;
@@ -263,7 +263,7 @@ class LdapConfigurationForm extends Form
             return $data;
         }
 
-        $User = TableRegistry::get('Users');
+        $User = TableRegistry::getTableLocator()->get('Users');
         $data['default_user'] = $User->find()->where(['Users.id' => $data['default_user']])->first()->get('username');
         $data['default_group_admin_user'] = $User->find()->where(['Users.id' => $data['default_group_admin_user']])->first()->get('username');
 
@@ -294,7 +294,7 @@ class LdapConfigurationForm extends Form
             return $data;
         }
 
-        $User = TableRegistry::get('Users');
+        $User = TableRegistry::getTableLocator()->get('Users');
         if (isset($settings['defaultUser'])) {
             $defaultUser = $User->find()->where(['Users.username' => $settings['defaultUser']])->first();
             if (empty($defaultUser)) {

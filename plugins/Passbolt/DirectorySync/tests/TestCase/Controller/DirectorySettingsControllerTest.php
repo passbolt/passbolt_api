@@ -33,9 +33,9 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        'app.Base/organization_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
+        'app.Base/OrganizationSettings',
+        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Roles'
     ];
 
     public function setUp()
@@ -111,7 +111,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->putJson("/directorysync/settings.json?api-version=2", $formData);
         $this->assertSuccess();
 
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $this->assertNotEmpty($settings);
 
@@ -137,7 +137,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->putJson("/directorysync/settings.json?api-version=2", $formData);
         $this->assertSuccess();
 
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $this->assertNotEmpty($settings);
 
@@ -198,7 +198,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         // Disable the directory integration
         $this->deleteJson("/directorysync/settings.json?api-version=2");
         $this->assertSuccess();
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $this->expectException(RecordNotFoundException::class);
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $directoryOrgSettings = DirectoryOrgSettings::get();

@@ -19,14 +19,10 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\OrganizationSetting;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Log\Log;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\UnauthorizedException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
 /**

@@ -16,8 +16,8 @@ namespace Passbolt\DirectorySync\Controller;
 
 use App\Error\Exception\CustomValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\ForbiddenException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\View\ViewVarsTrait;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
@@ -63,7 +63,7 @@ class DirectorySettingsController extends DirectoryController
         $data = $this->request->getData();
         $form = new LdapConfigurationForm();
         if (!$form->validate($data)) {
-            $errors = $form->errors();
+            $errors = $form->getErrors();
             throw new CustomValidationException('The settings are not valid', $errors);
         }
         try {
@@ -94,7 +94,7 @@ class DirectorySettingsController extends DirectoryController
         $data = $this->request->getData();
         $form = new LdapConfigurationForm();
         if (!$form->validate($data)) {
-            $errors = $form->errors();
+            $errors = $form->getErrors();
             throw new CustomValidationException('The settings are not valid', $errors);
         }
         try {

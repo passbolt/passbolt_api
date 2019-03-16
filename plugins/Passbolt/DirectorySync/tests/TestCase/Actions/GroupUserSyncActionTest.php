@@ -501,7 +501,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $dateBeforeGroupModification = $dateGroupModification->subDays(1);
 
         // Update corresponding GroupUser so it is created before.
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
             $dateBeforeGroupModification->format('Y-m-d H:i:s'),
             UuidFactory::uuid('group.id.freelancer'),
@@ -546,7 +546,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $dateAfterGroupModification = $dateGroupModification->addDays(1);
 
         // Update corresponding GroupUser so it is created before.
-        $GroupsUsers = TableRegistry::get('GroupsUsers');
+        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
         $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
             $dateAfterGroupModification->format('Y-m-d H:i:s'),
             UuidFactory::uuid('group.id.marketing'),

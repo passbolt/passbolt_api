@@ -30,9 +30,9 @@ class LdapConfigurationFormTest extends AppTestCase
     use FormatValidationTrait;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
-        'app.Base/groups_users', 'app.Base/permissions', 'app.Base/avatars',
-        'app.Base/favorites', 'app.Base/organization_settings'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Avatars',
+        'app.Base/Favorites', 'app.Base/OrganizationSettings'
     ];
 
     public static function getDummyFormData()

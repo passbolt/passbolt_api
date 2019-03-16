@@ -2,13 +2,13 @@
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -155,7 +155,6 @@ trait FormatValidationTrait
      */
     public function assertFormFieldFormatValidation($FormClass, $fieldName, $formData, $testCases)
     {
-    //    $context = isset($entityData['id']) ? 'update' : 'create';
         foreach ($testCases as $testCaseName => $testCase) {
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = array_merge($formData, [$fieldName => $testCaseData]);
@@ -167,7 +166,7 @@ trait FormatValidationTrait
                     $this->assertEquals(true, (bool)$validate, __("The test for {0}:{1} = {2} is expected to validate", $fieldName, $testCaseName, $testCaseData));
                 } else {
                     $this->assertEquals(false, (bool)$validate, __("The test for {0}:{1} = {2} is not expected to not validate", $fieldName, $testCaseName, $testCaseData));
-                    $errors = $form->errors();
+                    $errors = $form->getErrors();
                     $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
@@ -352,6 +351,25 @@ trait FormatValidationTrait
                 self::getStringMask('alphaRussian', $length) => true,
                 self::getStringMask('special', $length) => true,
                 self::getStringMask('html', $length) => true,
+            ],
+        ];
+
+        return $test;
+    }
+
+    /**
+     * Test cases for ascii validation rule.
+     *
+     * @param int $length default 255
+     * @return array
+     */
+    public static function getAsciiTestCases($length = 255)
+    {
+        $test = [
+            'rule_name' => '_ascii',
+            'test_cases' => [
+                self::getStringMask('alphaASCII', $length) => true,
+                self::getStringMask('alphaASCIIUpper', $length) => true
             ],
         ];
 
