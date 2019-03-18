@@ -15,11 +15,14 @@
     <testsuites>
         <testsuite name="App Test Suite">
             <directory>./tests/TestCase</directory>
+<<<<<<< HEAD
             <directory>./plugins/PassboltSeleniumApi/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Tags/tests/TestCase</directory>
             <directory>./plugins/Passbolt/License/tests/TestCase</directory>
             <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/DirectorySync/tests/TestCase</directory>
+=======
+>>>>>>> common
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
             <directory>./plugins/Passbolt/MultiFactorAuthentication/tests/TestCase</directory>
         </testsuite>
@@ -37,11 +40,10 @@
         </listener>
     </listeners>
 
-    <!-- Ignore vendor tests in code coverage reports -->
     <filter>
         <whitelist>
             <directory suffix=".php">./src/</directory>
-            <directory suffix=".php">./plugins/*/src/</directory>
+            <directory suffix=".php">./plugins/WebInstaller/src/</directory>
         </whitelist>
     </filter>
 </phpunit>
