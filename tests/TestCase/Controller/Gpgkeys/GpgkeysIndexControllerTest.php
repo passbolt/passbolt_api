@@ -26,14 +26,14 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 
     public function testGpgkeysIndexNotAllowedError()
     {
-        $this->getJson('/gpgkeys.json?api-version=v1');
+        $this->getJson('/gpgkeys.json');
         $this->assertAuthenticationError();
     }
 
     public function testGpgkeysIndexSuccess()
     {
         $this->authenticateAs('ada');
-        $this->getJson('/gpgkeys.json?api-version=v1');
+        $this->getJson('/gpgkeys.json');
         $this->assertSuccess();
         $this->assertGreaterThan(20, count($this->_responseJsonBody));
     }
@@ -51,7 +51,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 
         // Find the keys modified since then
         $this->authenticateAs('ada');
-        $this->getJson('/gpgkeys.json?api-version=v1&filter[modified-after]=' . $t->toUnixString());
+        $this->getJson('/gpgkeys.json?filter[modified-after]=' . $t->toUnixString());
         $this->assertSuccess();
         $this->assertCount(1, $this->_responseJsonBody);
     }

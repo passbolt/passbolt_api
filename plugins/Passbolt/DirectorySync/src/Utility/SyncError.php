@@ -14,7 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Entity;
 
 /**

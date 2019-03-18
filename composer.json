@@ -52,7 +52,8 @@
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
         "enygma/yubikey": "^3.3",
-        "duosecurity/duo_php": "^1.0"
+        "duosecurity/duo_php": "^1.0",
+        "ldaptools/ldaptools": "^0.25.2"
     },
     "require-dev": {
         "psy/psysh": "@stable",
@@ -67,6 +68,7 @@
         "psr-4": {
             "App\\": "src",
             "Passbolt\\AccountSettings\\": "./plugins/Passbolt/AccountSettings/src",
+            "Passbolt\\DirectorySync\\": "./plugins/Passbolt/DirectorySync/src",
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src"
@@ -76,8 +78,8 @@
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
-            "PassboltSeleniumApi\\Test\\": "./plugins/PassboltSeleniumApi/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/Passbolt/AccountSettings/tests",
+            "Passbolt\\DirectorySync\\Test\\": "./plugins/Passbolt/DirectorySync/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests"
         }

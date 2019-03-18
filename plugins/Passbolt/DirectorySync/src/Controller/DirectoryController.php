@@ -16,7 +16,8 @@
 namespace Passbolt\DirectorySync\Controller;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\ServiceUnavailableException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 abstract class DirectoryController extends AppController
@@ -36,6 +37,11 @@ abstract class DirectoryController extends AppController
      */
     public function initialize()
     {
+        $isLdapLoaded = extension_loaded('ldap');
+        if (!$isLdapLoaded) {
+            throw new InternalErrorException('The PHP ldap extension is not loaded.');
+        }
+
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         parent::initialize();
     }

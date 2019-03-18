@@ -15,7 +15,6 @@
 namespace Passbolt\DirectorySync\Actions\Reports;
 
 use Cake\I18n\FrozenTime;
-use Cake\Network\Exception\InternalErrorException;
 use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
 

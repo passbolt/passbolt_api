@@ -77,7 +77,7 @@ trait AssertDirectoryTrait
      */
     public function assertDirectoryEntryExistsForUser($where)
     {
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $u = $Users->find()->where($where)->first();
 
         $where = ['foreign_model' => Alias::MODEL_USERS, 'foreign_key' => $u->id];
@@ -93,7 +93,7 @@ trait AssertDirectoryTrait
      */
     public function assertDirectoryEntryExistsForGroup($where)
     {
-        $Groups = TableRegistry::get('Groups');
+        $Groups = TableRegistry::getTableLocator()->get('Groups');
         $g = $Groups->find()->where($where)->first();
 
         $where = ['foreign_model' => Alias::MODEL_GROUPS, 'foreign_key' => $g->id];

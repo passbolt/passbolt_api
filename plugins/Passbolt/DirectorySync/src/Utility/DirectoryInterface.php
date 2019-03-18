@@ -27,4 +27,10 @@ interface DirectoryInterface
      * @return mixed
      */
     public function getGroups();
+
+    /**
+     * Get filtered directory results.
+     * @return mixed
+     */
+    public function getFilteredDirectoryResults();
 }

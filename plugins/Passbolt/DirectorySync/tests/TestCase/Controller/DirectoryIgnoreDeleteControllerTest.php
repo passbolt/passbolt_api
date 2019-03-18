@@ -22,11 +22,11 @@ use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 class DirectoryIgnoreDeleteControllerTest extends DirectorySyncIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/secrets', 'app.Base/roles',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Base/avatars',
-        'app.Base/favorites', 'app.Base/email_queue', 'app.Base/organization_settings',
-        'plugin.passbolt/directorySync.base/directoryEntries',
-        'plugin.passbolt/directorySync.base/directoryIgnore',
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
+        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
+        'plugin.Passbolt/DirectorySync.Base/DirectoryEntries',
+        'plugin.Passbolt/DirectorySync.Base/DirectoryIgnore',
     ];
 
     /**

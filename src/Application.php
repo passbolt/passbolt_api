@@ -27,7 +27,6 @@ use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 
 class Application extends BaseApplication
 {
-
     /**
      * Setup the PSR-7 middleware passbolt application will use.
      *
@@ -154,6 +153,11 @@ class Application extends BaseApplication
         $mfaDisabled = Configure::read('passbolt.plugins.multiFactorAuthentication.disabled');
         if (!isset($mfaDisabled) || !$mfaDisabled) {
             $this->addPlugin('Passbolt/MultiFactorAuthentication', ['bootstrap' => true, 'routes' => true]);
+        }
+
+        $ldapEnabled = Configure::read('passbolt.plugins.directorySync.enabled');
+        if (!isset($ldapEnabled) || $ldapEnabled) {
+            $this->addPlugin('Passbolt/DirectorySync', ['bootstrap' => true, 'routes' => true]);
         }
 
         // Add tags plugin if not configured.

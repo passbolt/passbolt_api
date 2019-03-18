@@ -19,6 +19,7 @@ use App\Model\Entity\Role;
 
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -32,14 +33,15 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        'app.Base/organization_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
+        'app.Base/OrganizationSettings',
+        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Roles'
     ];
 
     public function setUp()
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.directorySync.test', 'Nested');
         $this->disableDirectoryIntegration();
     }
 
@@ -109,12 +111,40 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->putJson("/directorysync/settings.json?api-version=2", $formData);
         $this->assertSuccess();
 
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $this->assertNotEmpty($settings);
 
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertTrue($directoryOrgSettings->isEnabled());
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Update
+     */
+    public function testDirectorySync_DirectorySettingsController_Update_Empty_Username_Password_Success()
+    {
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->assertFalse($directoryOrgSettings->isEnabled());
+
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData['username'] = '';
+        $formData['password'] = '';
+        $this->authenticateAs('admin');
+        $this->putJson("/directorysync/settings.json?api-version=2", $formData);
+        $this->assertSuccess();
+
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
+        $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
+        $this->assertNotEmpty($settings);
+
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $ldapSettings = $directoryOrgSettings->getLdapSettings();
+        $this->assertFalse(isset($ldapSettings['domains']['org_domain']['username']));
+        $this->assertFalse(isset($ldapSettings['domains']['org_domain']['password']));
     }
 
     /**
@@ -168,7 +198,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         // Disable the directory integration
         $this->deleteJson("/directorysync/settings.json?api-version=2");
         $this->assertSuccess();
-        $OrganizationSettings = TableRegistry::get('OrganizationSettings');
+        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $this->expectException(RecordNotFoundException::class);
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $directoryOrgSettings = DirectoryOrgSettings::get();
@@ -186,5 +216,45 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->authenticateAs('dame');
         $this->deleteJson("/directorysync/settings.json?api-version=2");
         $this->assertError(403);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Test
+     */
+    public function testDirectorySync_DirectorySettingsController_Test_InvalidSettings()
+    {
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData['domain_name'] = '';
+        $this->authenticateAs('admin');
+        $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
+        $this->assertError(400);
+        $errors = json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertNotEmpty($errors);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Test
+     */
+    public function testDirectorySync_DirectorySettingsController_Test_Success()
+    {
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->assertFalse($directoryOrgSettings->isEnabled());
+
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $this->authenticateAs('admin');
+        $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
+        $this->assertSuccess();
+        $this->assertTrue(isset($this->_responseJsonBody->users));
+        $this->assertEquals(count($this->_responseJsonBody->users), 4);
+        $this->assertTrue(isset($this->_responseJsonBody->groups));
+        $this->assertEquals(count($this->_responseJsonBody->groups), 4);
+        $this->assertTrue(isset($this->_responseJsonBody->tree));
+        $this->assertEquals(count($this->_responseJsonBody->tree), 1);
     }
 }

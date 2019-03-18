@@ -15,8 +15,8 @@
 
 use Migrations\AbstractMigration;
 use Cake\Core\Configure;
-use Cake\Filesystem\Folder;
 use Cake\Datasource\ConnectionManager;
+use Cake\Filesystem\Folder;
 use Cake\ORM\TableRegistry;
 
 class V280FileDirectoryPathsMigrations extends AbstractMigration

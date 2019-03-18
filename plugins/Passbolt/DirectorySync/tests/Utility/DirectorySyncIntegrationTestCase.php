@@ -35,25 +35,30 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     use UserAccessControlTrait;
 
     public $fixtures = [
-        'app.Base/users',
-        'app.Base/profiles',
-        'app.Base/groups',
-        'app.Base/authentication_tokens',
-        'app.Base/secrets',
-        'app.Base/roles',
-        'app.Base/resources',
-        'app.Alt0/groups_users',
-        'app.Alt0/permissions',
-        'app.Base/avatars',
-        'app.Base/favorites',
-        'app.Base/email_queue',
-        'app.Base/organization_settings',
-        'plugin.passbolt/directorySync.base/directoryEntries',
-        'plugin.passbolt/directorySync.base/directoryIgnore',
-        'plugin.passbolt/directorySync.base/directoryRelations',
-        'plugin.passbolt/directorySync.directoryReports',
-        'plugin.passbolt/directorySync.directoryReportsItems',
+        'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Groups',
+        'app.Base/AuthenticationTokens',
+        'app.Base/Secrets',
+        'app.Base/Roles',
+        'app.Base/Resources',
+        'app.Alt0/GroupsUsers',
+        'app.Alt0/Permissions',
+        'app.Base/Avatars',
+        'app.Base/Favorites',
+        'app.Base/EmailQueue',
+        'app.Base/OrganizationSettings',
+        'plugin.Passbolt/DirectorySync.Base/DirectoryEntries',
+        'plugin.Passbolt/DirectorySync.Base/DirectoryIgnore',
+        'plugin.Passbolt/DirectorySync.Base/DirectoryRelations',
+        'plugin.Passbolt/DirectorySync.DirectoryReports',
+        'plugin.Passbolt/DirectorySync.DirectoryReportsItems',
     ];
+
+    public $Groups;
+    public $Users;
+    public $DirectoryEntries;
+    public $directoryOrgSettings;
 
     /**
      * @var \Passbolt\DirectorySync\Utility\SyncAction
@@ -63,10 +68,11 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        Configure::load('Passbolt/DirectorySync.config', 'default', true);
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Users = TableRegistry::get('Users');
-        $this->DirectoryEntries = TableRegistry::get('DirectoryEntries');
+//        Configure::load('Passbolt/DirectorySync.config', 'default', true);
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->DirectoryEntries = TableRegistry::getTableLocator()->get('DirectoryEntries');
+        Configure::write('passbolt.plugins.directorySync.enabled', true);
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
     }

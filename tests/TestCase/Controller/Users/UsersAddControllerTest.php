@@ -36,7 +36,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'allowed'
             ]
         ];
-        $this->postJson('/users.json?api-version=v1', $data);
+        $this->postJson('/users.json', $data);
         $this->assertAuthenticationError();
     }
 
@@ -50,7 +50,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'allowed'
             ]
         ];
-        $this->postJson('/users.json?api-version=v1', $data);
+        $this->postJson('/users.json', $data);
         $this->assertError(403, 'Only administrators can add new users.');
     }
 
