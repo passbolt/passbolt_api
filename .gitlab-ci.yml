@@ -113,16 +113,6 @@ php7.2:
     PHP_VERSION: "7.2"
     PHP_CONTAINER: "php:7.2-fpm"
 
-php7.2-coverage:
-  extends: .build-php
-  variables:
-    PHP_VERSION: "7.2-coverage"
-    PHP_CONTAINER: "php:7.2-fpm"
-    PECL_PASSBOLT_EXTENSIONS: "xdebug gnupg redis mcrypt"
-  only:
-    - develop
-    - master
-
 php7.3:
   extends: .build-php
   variables:
@@ -288,20 +278,6 @@ php7.2-mariadb5:
   only:
     - develop
     - master
-
-php7.2-mysql5.7-coverage:
-  extends: .test-mysql
-  services:
-  - name: mysql:5.7
-    command:
-      - /bin/bash
-      - -c
-      - |
-        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
-  variables:
-    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml --coverage-text --colors=never
-  image: $CI_REGISTRY_IMAGE:7.2-coverage
 
 php7.2-mysql5.6:
   extends: .test-mysql
