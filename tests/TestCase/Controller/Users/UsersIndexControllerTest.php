@@ -153,11 +153,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?api-version=v1&order[]=User.created');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
+        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $this->_responseJsonBody[0]->User->id);
 
         $this->getJson('/users.json?api-version=v1&order[]=User.created DESC&order[]=User.username ASC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.admin'));
+        $this->assertEquals(UuidFactory::uuid('user.id.admin'), $this->_responseJsonBody[0]->User->id);
     }
 
     public function testUsersIndexOrderByModified()
@@ -165,11 +165,11 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?api-version=v1&order[]=User.modified');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.ada'));
+        $this->assertEquals(UuidFactory::uuid('user.id.ada'), $this->_responseJsonBody[0]->User->id);
 
         $this->getJson('/users.json?api-version=v1&order[]=User.modified DESC&order[]=User.username ASC');
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody[0]->User->id, UuidFactory::uuid('user.id.admin'));
+        $this->assertEquals(UuidFactory::uuid('user.id.admin'), $this->_responseJsonBody[0]->User->id);
     }
 
     public function testUsersIndexOrderByError()

@@ -222,8 +222,8 @@ class UsersFixture extends TestFixture
                 'username' => 'adele@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2018-11-03 05:01:55',
-                'modified' => '2018-12-03 05:01:55'
+                'created' => '2018-11-03 06:01:55',
+                'modified' => '2018-12-03 06:01:55'
             ],
             [
                 'id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
