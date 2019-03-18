@@ -77,7 +77,7 @@ trait ResourcesFindersTrait
         }
 
         // If plugin tag is present and request contains tags
-        if (Configure::read('passbolt.plugins.tags')) {
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
             $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
         }
 

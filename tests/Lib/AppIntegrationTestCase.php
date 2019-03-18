@@ -32,7 +32,6 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
-use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -79,6 +78,7 @@ abstract class AppIntegrationTestCase extends TestCase
     {
         parent::setUp();
         $this->enableCsrfToken();
+        Configure::write('passbolt.plugins.tags.enabled', false);
         Configure::write('passbolt.plugins.multiFactorAuthentication.disabled', true);
     }
 

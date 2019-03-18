@@ -39,9 +39,9 @@ class TagsTableTest extends TagTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',
-        'app.Alt0/groups_users', 'app.Alt0/permissions',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
     ];
 
     /**
@@ -53,7 +53,7 @@ class TagsTableTest extends TagTestCase
     {
         parent::setUp();
         $config = TableRegistry::exists('Tags') ? [] : ['className' => TagsTable::class];
-        $this->Tags = TableRegistry::get('Tags', $config);
+        $this->Tags = TableRegistry::getTableLocator()->get('Tags', $config);
     }
 
     /**

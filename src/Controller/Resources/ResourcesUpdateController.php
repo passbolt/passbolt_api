@@ -73,7 +73,7 @@ class ResourcesUpdateController extends AppController
         $options = [
             'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true]
         ];
-        if (Configure::read('passbolt.plugins.tags')) {
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
             $options['contain']['tag'] = true;
         }
         $output = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();

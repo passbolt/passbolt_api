@@ -15,15 +15,12 @@
 namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\Permission;
-use App\Model\Entity\Resource;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 
@@ -243,8 +240,8 @@ class TagsTable extends Table
         }
         $errors = [];
         foreach ($collection as $i => $tag) {
-            if ($tag->errors()) {
-                $errors[$i] = $tag->errors();
+            if ($tag->getErrors()) {
+                $errors[$i] = $tag->getErrors();
             }
         }
         if (!empty($errors)) {

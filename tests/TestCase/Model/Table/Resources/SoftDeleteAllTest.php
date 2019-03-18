@@ -28,15 +28,15 @@ class SoftDeleteAllTest extends AppTestCase
     public $Resources;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/favorites', 'app.Base/groups_users',
-        'app.Base/resources', 'app.Base/permissions'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/GroupsUsers',
+        'app.Base/Resources', 'app.Base/Permissions'
     ];
 
     public function setUp()
     {
         parent::setUp();
         $config = TableRegistry::exists('Resources') ? [] : ['className' => ResourcesTable::class];
-        $this->Resources = TableRegistry::get('Resources', $config);
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
     }
 
     public function tearDown()

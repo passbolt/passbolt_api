@@ -28,8 +28,6 @@ abstract class TagPluginIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        Configure::write('passbolt.plugins.tags', [
-            'version' => '1.0.0'
-        ]);
+        Configure::write('passbolt.plugins.tags.enabled', true);
     }
 }

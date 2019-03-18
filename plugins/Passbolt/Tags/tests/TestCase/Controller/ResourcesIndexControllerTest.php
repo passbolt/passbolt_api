@@ -21,9 +21,10 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',
-        'app.Alt0/groups_users', 'app.Alt0/permissions',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+    ];
 
     // Success with currect personal and shared tags for resource with direct and group permissions
     public function testTagResourcesIndexContainSuccess()

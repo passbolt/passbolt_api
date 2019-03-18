@@ -16,9 +16,9 @@ namespace Passbolt\Tags\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\Permission;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class ResourcesTagsAddController extends AppController

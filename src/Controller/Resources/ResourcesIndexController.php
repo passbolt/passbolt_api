@@ -36,7 +36,7 @@ class ResourcesIndexController extends AppController
             'order' => ['Resource.modified']
         ];
 
-        if (Configure::read('passbolt.plugins.tags')) {
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
             $whitelist['contain'][] = 'tag';
             $whitelist['filter'][] = 'has-tag';
         }

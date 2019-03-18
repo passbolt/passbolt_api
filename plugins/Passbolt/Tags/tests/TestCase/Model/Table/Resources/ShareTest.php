@@ -28,18 +28,18 @@ class ShareTest extends TagTestCase
     public $ResourcesTags;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/resources', 'app.Base/favorites',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Alt0/secrets',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/Resources', 'app.Base/Favorites',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Resources = TableRegistry::get('Resources');
-        $this->ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
     }
 
     public function tearDown()

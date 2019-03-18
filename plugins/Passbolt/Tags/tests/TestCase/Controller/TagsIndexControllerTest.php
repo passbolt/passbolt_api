@@ -20,9 +20,10 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class TagIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',
-        'app.Alt0/groups_users', 'app.Alt0/permissions',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+    ];
 
     // A user not logged in should not be able to see tags
     public function testTagIndexNotLoggedIn()

@@ -23,9 +23,10 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/resources', 'app.Base/groups',
-        'app.Alt0/groups_users', 'app.Alt0/permissions',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'];
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
+    ];
 
     // A "not found" error is returned if the resource does not exist
     public function testResourcesTagsAddResourceDoesNotExistError()
@@ -162,7 +163,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $results = Hash::extract($response->body, '{n}.slug');
         $this->assertEquals($results, []);
 
-        $ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+        $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
         $rt = $ResourcesTags->query()
             ->where([
                 'resource_id' => $resourceId,
@@ -184,7 +185,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
 
         // Check tag cleanup
         // #bravo and alpha should still be there
-        $this->Tags = TableRegistry::get('Passbolt/Tags.Tags');
+        $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
         $this->Tags->get(UuidFactory::uuid('tag.id.#bravo'));
         $this->Tags->get(UuidFactory::uuid('tag.id.alpha'));
 

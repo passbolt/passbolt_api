@@ -30,17 +30,17 @@ class SoftDeleteTest extends TagTestCase
     public $Users;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/favorites',
-        'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/resources',
-        'app.Alt0/groups_users', 'app.Alt0/permissions',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
+        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Users = TableRegistry::get('Users');
-        $this->Tags = TableRegistry::get('Passbolt/Tags.Tags');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
     public function testUsersSoftDeleteAlsoDeletePersonalTagsSuccess()

@@ -87,7 +87,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         ];
 
         foreach ($success as $case => $data) {
-            $this->postJson('/users.json?api-version=v1', $data);
+            $this->postJson('/users.json', $data);
             $this->assertResponseSuccess();
 
             // Check user was saved
@@ -140,7 +140,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             ]
         ];
 
-        $this->postJson('/users.json?api-version=v1', $data);
+        $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
 
         $users = TableRegistry::getTableLocator()->get('Users');
@@ -162,7 +162,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'Avarguès-Weber'
             ]
         ];
-        $this->postJson('/users.json?api-version=v1', $data);
+        $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
 
         $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
@@ -182,7 +182,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'Avarguès-Weber'
             ]
         ];
-        $this->postJson('/users.json?api-version=v1', $data);
+        $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
 
         $this->get('/seleniumtests/showlastemail/aurore@passbolt.com');
@@ -202,7 +202,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'lovelace'
             ]
         ];
-        $this->postJson('/users.json?api-version=v1', $data);
+        $this->postJson('/users.json', $data);
         $this->assertError(400, 'Could not validate user data.');
     }
 }

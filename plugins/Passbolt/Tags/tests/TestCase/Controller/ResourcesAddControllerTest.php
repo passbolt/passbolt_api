@@ -19,11 +19,13 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class ResourceAddControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/avatars', 'app.Base/roles',
-        'app.Base/groups', 'app.Alt0/groups_users',
-        'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites', 'app.Alt0/permissions',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags',
-        'app.Base/email_queue'];
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
+        'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Avatars',
+        'app.Base/Resources', 'app.Base/Favorites',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
+        'app.Base/EmailQueue'
+    ];
 
     protected function _getDummyPostData($data = [])
     {

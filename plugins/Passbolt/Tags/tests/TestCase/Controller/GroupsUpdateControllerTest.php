@@ -22,11 +22,13 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/profiles', 'app.Base/gpgkeys', 'app.Base/roles', 'app.Base/avatars',
-        'app.Base/resources', 'app.Base/favorites',
-        'app.Alt0/groups_users', 'app.Alt0/permissions', 'app.Alt0/secrets',
-        'plugin.passbolt/tags.Base/tags', 'plugin.passbolt/tags.Alt0/resourcesTags',
-        'app.Base/email_queue'];
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
+        'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Avatars',
+        'app.Base/Resources', 'app.Base/Favorites',
+        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
+        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
+        'app.Base/EmailQueue'
+    ];
 
     public $GroupsUsers;
     public $Resources;
@@ -35,9 +37,9 @@ class GroupsUpdateControllerTest extends TagPluginIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->GroupsUsers = TableRegistry::get('GroupsUsers');
-        $this->Resources = TableRegistry::get('Resources');
-        $this->ResourcesTags = TableRegistry::get('Passbolt/Tags.ResourcesTags');
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
     }
 
     public function tearDown()
