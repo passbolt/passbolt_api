@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -23,8 +23,8 @@ use Cake\ORM\TableRegistry;
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/roles',
-        'app.Base/profiles', 'app.Base/authentication_tokens', 'app.Base/avatars', 'app.Base/email_queue'
+        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
+        'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue'
     ];
 
     public function testUsersAddNotLoggedInError()
@@ -51,13 +51,13 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             ]
         ];
         $this->postJson('/users.json?api-version=v1', $data);
-        $this->assertError('403', 'Only administrators can add new users.');
+        $this->assertError(403, 'Only administrators can add new users.');
     }
 
     public function testUsersAddSuccess()
     {
         $this->authenticateAs('admin');
-        $roles = TableRegistry::get('Roles');
+        $roles = TableRegistry::getTableLocator()->get('Roles');
         $adminRoleId = $roles->getIdByName(Role::ADMIN);
         $userRoleId = $roles->getIdByName(Role::USER);
         $success = [
@@ -91,7 +91,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             $this->assertResponseSuccess();
 
             // Check user was saved
-            $users = TableRegistry::get('Users');
+            $users = TableRegistry::getTableLocator()->get('Users');
             $query = $users->find()->where(['username' => $data['username']]);
             $this->assertEquals(1, $query->count());
             $user = $query->first();
@@ -99,12 +99,12 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             $this->assertFalse($user->deleted);
 
             // Check profile exist
-            $profiles = TableRegistry::get('Profiles');
+            $profiles = TableRegistry::getTableLocator()->get('Profiles');
             $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
             $this->assertEquals(1, $query->count());
 
             // Check role exist
-            $roles = TableRegistry::get('Roles');
+            $roles = TableRegistry::getTableLocator()->get('Roles');
             $role = $roles->get($user->get('role_id'));
             if (!isset($data['role_id'])) {
                 $data['role_id'] = $userRoleId;
@@ -143,7 +143,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->postJson('/users.json?api-version=v1', $data);
         $this->assertResponseSuccess();
 
-        $users = TableRegistry::get('Users');
+        $users = TableRegistry::getTableLocator()->get('Users');
         $user = $users->find()->where(['username' => $data['username']])->first();
 
         $this->assertNotEquals($user->id, $userId);

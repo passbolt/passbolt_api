@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -16,14 +16,20 @@
 namespace App\Test\TestCase\Controller\Permissions;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/permissions', 'app.Base/profiles', 'app.Base/resources', 'app.Base/users', 'app.Base/avatars'];
+    use GroupsModelTrait;
 
-    public function testSuccess()
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions',
+        'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Avatars'
+    ];
+
+    public function testPermissionsViewSuccess()
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -38,7 +44,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('group', $this->_responseJsonBody[0]);
     }
 
-    public function testApiV1Success()
+    public function testPermissionsViewApiV1Success()
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -54,7 +60,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('Group', $this->_responseJsonBody[0]);
     }
 
-    public function testContainSuccess()
+    public function testPermissionsViewContainSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
@@ -85,7 +91,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($permission->group);
     }
 
-    public function testContainApiV1Success()
+    public function testPermissionsViewContainApiV1Success()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'api-version=v1&contain[group]=1&contain[user]=1&contain[user.profile]=1';
@@ -129,14 +135,14 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($permission->Group);
     }
 
-    public function testErrorNotAuthenticated()
+    public function testPermissionsViewErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->getJson("/permissions/resource/$resourceId.json?api-version=v1");
         $this->assertAuthenticationError();
     }
 
-    public function testErrorNotValidId()
+    public function testPermissionsViewErrorNotValidId()
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
@@ -144,7 +150,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The id is not valid for model Resource');
     }
 
-    public function testErrorSoftDeletedResource()
+    public function testPermissionsViewErrorSoftDeletedResource()
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -152,12 +158,12 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorResourceAccessDenied()
+    public function testPermissionsViewErrorResourceAccessDenied()
     {
         $resourceId = UuidFactory::uuid('resource.id.canjs');
 
         // Check that the resource exists.
-        $Resources = TableRegistry::get('Resources');
+        $Resources = TableRegistry::getTableLocator()->get('Resources');
         $resource = $Resources->get($resourceId);
         $this->assertNotNull($resource);
 

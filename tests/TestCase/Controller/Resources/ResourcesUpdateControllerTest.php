@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -23,12 +23,12 @@ use Cake\Utility\Hash;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/gpgkeys', 'app.Base/profiles', 'app.Base/roles', 'app.Base/groups', 'app.Base/groups_users',
-        'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites', 'app.Base/permissions', 'app.Base/email_queue', 'app.Base/avatars'];
+    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/EmailQueue', 'app.Base/Avatars'];
 
     public function setUp()
     {
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->gpg = new Gpg();
         parent::setUp();
     }

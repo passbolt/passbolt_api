@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -16,15 +16,21 @@
 namespace App\Test\TestCase\Controller\Groups;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class GroupsIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/profiles', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/permissions'];
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
-    public function testSuccess()
+    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups',
+        'app.Base/GroupsUsers', 'app.Base/Permissions'];
+
+    public function testGroupsIndexSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/groups.json?api-version=2');
@@ -40,7 +46,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody[0]);
     }
 
-    public function testApiV1Success()
+    public function testGroupsIndexApiV1Success()
     {
         $this->authenticateAs('ada');
         $this->getJson('/groups.json?api-version=v1');
@@ -56,7 +62,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('GroupUser', $this->_responseJsonBody[0]);
     }
 
-    public function testContainSuccess()
+    public function testGroupsIndexContainSuccess()
     {
         $this->authenticateAs('hedy');
         $urlParameter = 'contain[modifier]=1';
@@ -103,7 +109,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($groupB->my_group_user);
     }
 
-    public function testContainApiV1SSuccess()
+    public function testGroupsIndexContainApiV1SSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'api-version=v1';
@@ -128,7 +134,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($this->_responseJsonBody[0]->GroupUser[0]);
     }
 
-    public function testFilterHasUsersSuccess()
+    public function testGroupsIndexFilterHasUsersSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[has-users]=' . UuidFactory::uuid('user.id.irene');
@@ -140,7 +146,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
-    public function testFilterHasManagersSuccess()
+    public function testGroupsIndexFilterHasManagersSuccess()
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[has-managers]=' . UuidFactory::uuid('user.id.ping');
@@ -152,7 +158,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
-    public function testErrorNotAuthenticated()
+    public function testGroupsIndexErrorNotAuthenticated()
     {
         $this->getJson('/groups.json?api-version=v1');
         $this->assertAuthenticationError();

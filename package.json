@@ -9,7 +9,7 @@
     "passbolt",
     "API"
   ],
-  "author": "Passbolt SARL",
+  "author": "Passbolt SA",
   "license": "AGPL-3.0",
   "homepage": "https://www.passbolt.com",
   "devDependencies": {

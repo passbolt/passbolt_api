@@ -15,12 +15,10 @@ $this->Html->script('web_installer/gpg_key_import', ['block' => 'scriptBottom'])
         <?= $this->element('navigation', ['selectedSection' => 'server_keys']) ?>
     </div>
     <!-- main -->
-    <?
-    echo $this->Form->create($formExecuteResult);
-    echo $this->Form->input('public_key_armored', ['type' => 'hidden']);
-    echo $this->Form->input('private_key_armored', ['type' => 'hidden']);
-    echo $this->Form->input('fingerprint', ['type' => 'hidden']);
-    ?>
+    <?php echo $this->Form->create($formExecuteResult); ?>
+    <?php echo $this->Form->control('public_key_armored', ['type' => 'hidden']); ?>
+    <?php echo $this->Form->control('private_key_armored', ['type' => 'hidden']); ?>
+    <?php echo $this->Form->control('fingerprint', ['type' => 'hidden']); ?>
 
     <div class="panel middle">
         <div class="grid grid-responsive-12">

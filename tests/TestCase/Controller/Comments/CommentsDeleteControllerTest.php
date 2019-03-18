@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -21,20 +21,23 @@ use Cake\ORM\TableRegistry;
 
 class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/secrets', 'app.Base/comments'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Secrets', 'app.Base/Comments',
+    ];
 
-    public function testDeleteSuccess()
+    public function testCommentsDeleteSuccess()
     {
         $this->authenticateAs('irene');
         $commentId = UuidFactory::uuid('comment.id.apache-1');
         $this->deleteJson("/comments/$commentId.json?api-version=2");
         $this->assertSuccess();
-        $Comments = TableRegistry::get('Comments');
+        $Comments = TableRegistry::getTableLocator()->get('Comments');
         $deletedComment = $Comments->find('all')->where(['Comments.id' => $commentId])->first();
         $this->assertempty($deletedComment);
     }
 
-    public function testErrorCsrfToken()
+    public function testCommentsDeleteErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('irene');
@@ -43,7 +46,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testDeleteErrorNotValidId()
+    public function testCommentsDeleteErrorNotValidId()
     {
         $this->authenticateAs('irene');
         $commentId = 'invalid-id';
@@ -51,7 +54,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The comment id is not valid.');
     }
 
-    public function testDeleteErrorCommentsNotFound()
+    public function testCommentsDeleteErrorCommentsNotFound()
     {
         $this->authenticateAs('irene');
         $commentId = UuidFactory::uuid();
@@ -59,7 +62,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The comment does not exist.');
     }
 
-    public function testDeleteErrorCommentsNotOwner()
+    public function testCommentsDeleteErrorCommentsNotOwner()
     {
         $this->authenticateAs('jean');
         $commentId = UuidFactory::uuid('comment.id.apache-1');
@@ -67,7 +70,7 @@ class CommentsDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The comment does not exist.');
     }
 
-    public function testDeleteErrorNotAuthenticated()
+    public function testCommentsDeleteErrorNotAuthenticated()
     {
         $commentId = UuidFactory::uuid('comment.id.apache-1');
         $this->deleteJson("/comments/$commentId.json?api-version=2");

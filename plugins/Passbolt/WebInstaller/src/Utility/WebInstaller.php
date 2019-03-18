@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
@@ -19,6 +19,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Utility\Gpg;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Network\Session;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -108,7 +109,7 @@ class WebInstaller
 
     /**
      * Install passbolt.
-     * @throws Exception
+     * @throws \Exception
      * @return void
      */
     public function install()
@@ -179,15 +180,15 @@ class WebInstaller
 
     /**
      * Install database.
-     * @throws Exception The database cannot be installed
+     * @throws \Exception The database cannot be installed
      * @return void
      */
     public function installDatabase()
     {
-        $migrations = new Migrations();
-        $migrated = $migrations->migrate(['connection' => DatabaseConfiguration::getDefaultConfigName()]);
+        $migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
+        $migrated = $migrations->migrate();
         if (!$migrated) {
-            throw new Exception('The database cannot be installed');
+            throw new \Exception('The database cannot be installed');
         }
     }
 
@@ -204,7 +205,7 @@ class WebInstaller
             return;
         }
 
-        $Users = TableRegistry::get('Users');
+        $Users = TableRegistry::getTableLocator()->get('Users');
         $userData['deleted'] = false;
         $userData['role_id'] = $Users->Roles->getIdByName(Role::ADMIN);
 

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -21,9 +21,8 @@ use App\Model\Table\OrganizationSettingsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Network\Exception\UnauthorizedException;
+use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -45,7 +44,7 @@ class OrganizationSettingsTableTest extends AppTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/organization_settings',
+        'app.Base/OrganizationSettings',
     ];
 
     /**

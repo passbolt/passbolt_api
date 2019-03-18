@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -28,18 +28,18 @@ class ShareTest extends AppTestCase
     public $Resources;
 
     public $fixtures = [
-        'app.Base/permissions', 'app.Base/resources', 'app.Base/secrets', 'app.Base/favorites',
-        'app.Base/users', 'app.Base/profiles', 'app.Base/avatars', 'app.Base/gpgkeys', 'app.Base/roles',
-        'app.Base/groups_users', 'app.Base/groups'
+        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/GroupsUsers', 'app.Base/Groups'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Favorites = TableRegistry::get('Favorites');
-        $this->Resources = TableRegistry::get('Resources');
-        $this->Permissions = TableRegistry::get('Permissions');
-        $this->Users = TableRegistry::get('Users');
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
     }
 
     public function tearDown()
@@ -68,7 +68,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testSuccess()
+    public function testShareSuccess()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -144,7 +144,7 @@ hcciUFw5
         }
     }
 
-    public function testLostAccessAssociatedDataDeleted()
+    public function testShareLostAccessFavoritesDeleted()
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -182,7 +182,7 @@ hcciUFw5
      * The format validation is done by the Permissions model.
      * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
      */
-    public function testValidationError()
+    public function testShareValidationError()
     {
         $resourceApacheId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -262,7 +262,7 @@ hcciUFw5
         }
     }
 
-    public function testErrorRuleResourceIsNotSoftDeleted()
+    public function testShareErrorRuleResourceIsNotSoftDeleted()
     {
         $resourceId = UuidFactory::uuid('resource.id.jquery');
         $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);

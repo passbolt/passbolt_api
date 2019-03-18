@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -24,13 +24,13 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/permissions', 'app.Base/users', 'app.Base/secrets'];
+    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users', 'app.Base/Secrets'];
 
     public function setUp()
     {
         parent::setUp();
-        $this->Groups = TableRegistry::get('Groups');
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     /*
@@ -59,7 +59,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
      *   => expected result: only the secrets the user does not have already access through another source should be
      *      requested for encryption
      */
-    public function testAsGroupManagerSuccess()
+    public function testGroupsUpdateDryRunAsGroupManagerSuccess()
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -107,7 +107,8 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId/dry-run.json", ['groups_users' => $changes]);
+
         $this->assertSuccess();
         $result = json_decode(json_encode($this->_responseJsonBody), true);
         $this->assertNotEmpty($result);
@@ -152,7 +153,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty(array_diff($expectedSecretsToEncryptIds, $secretsToEncryptIds));
     }
 
-    public function testAsAdminSuccess()
+    public function testGroupsUpdateDryRunAsAdminSuccess()
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -166,7 +167,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 
         // Update the group name.
         $this->authenticateAs('admin');
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1", $data);
+        $this->putJson("/groups/$groupId/dry-run.json", $data);
         $this->assertSuccess();
 
         // No secrets should be requested nor source secrets given.
@@ -176,52 +177,52 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($result['dry-run']['Secrets']);
     }
 
-    public function testCannotModifyNotAccessibleFields()
+    public function testGroupsUpdateDryRunCannotModifyNotAccessibleFields()
     {
         $this->markTestIncomplete();
     }
 
-    public function testErrorNotValidId()
+    public function testGroupsUpdateDryRunErrorNotValidId()
     {
         $this->authenticateAs('ada');
         $groupId = 'invalid-id';
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1");
+        $this->putJson("/groups/$groupId/dry-run.json");
         $this->assertError(400, 'The group id is not valid.');
     }
 
-    public function testErrorDoesNotExistGroup()
+    public function testGroupsUpdateDryRunErrorDoesNotExistGroup()
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid();
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1");
+        $this->putJson("/groups/$groupId/dry-run.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testErrorGroupIsSoftDeleted()
+    public function testGroupsUpdateDryRunErrorGroupIsSoftDeleted()
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.deleted');
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1");
+        $this->putJson("/groups/$groupId/dry-run.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testErrorAccessDenied()
+    public function testGroupsUpdateDryRunErrorAccessDenied()
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->authenticateAs('ada');
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1");
+        $this->putJson("/groups/$groupId/dry-run.json");
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
-    public function testErrorNotAuthenticated()
+    public function testGroupsUpdateDryRunErrorNotAuthenticated()
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $postData = [];
-        $this->putJson("/groups/$groupId/dry-run.json?api-version=v1", $postData);
+        $this->putJson("/groups/$groupId/dry-run.json", $postData);
         $this->assertAuthenticationError();
     }
 
-    public function testErrorCsrfToken()
+    public function testGroupsUpdateDryRunErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('admin');

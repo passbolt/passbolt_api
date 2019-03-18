@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
@@ -17,7 +17,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 use App\Error\Exception\ValidationException;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\I18n\FrozenTime;
-use Cake\Network\Exception\BadRequestException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
@@ -29,9 +29,9 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class MfaAccountSettingsTest extends MfaIntegrationTestCase
 {
     public $fixtures = [
-        'plugin.passbolt/account_settings.account_settings',
-        'app.Base/authentication_tokens', 'app.Base/users',
-        'app.Base/roles'
+        'plugin.Passbolt/AccountSettings.AccountSettings',
+        'app.Base/AuthenticationTokens', 'app.Base/Users',
+        'app.Base/Roles'
     ];
 
     /**
@@ -45,7 +45,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+        $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
     }
 
     /**

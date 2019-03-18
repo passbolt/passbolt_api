@@ -1,21 +1,20 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
@@ -25,6 +24,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::setUp();
         $this->mockPassboltIsNotconfigured();
+        $this->truncateTables();
         $this->initWebInstallerSession();
         $this->backupConfiguration();
     }
@@ -35,17 +35,9 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
         $this->restoreConfiguration();
     }
 
-    public function testWebInstallerInstallationViewSuccess()
-    {
-        $this->get('/install/installation');
-        $data = ($this->_getBodyAsString());
-        $this->assertResponseOk();
-        $this->assertContains('Installing', $data);
-    }
-
     protected function getInstallSessionData()
     {
-        $datasourceTest = Configure::read('Testing.Datasources.test');
+        $datasourceTest = $this->getTestDatasourceFromConfig();
         $data = [
             'initialized' => true,
             'hasExistingAdmin' => false,
@@ -244,15 +236,36 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         return $data;
     }
 
+    public function testWebInstallerInstallationViewSuccess()
+    {
+        $config = $this->getInstallSessionData();
+        $this->initWebInstallerSession($config);
+        $this->get('/install/installation');
+        $data = ($this->_getBodyAsString());
+        $this->assertResponseOk();
+        $this->assertContains('Installing', $data);
+    }
+
     public function testWebInstallerInstallationDoInstallSuccess()
     {
         $this->skipTestIfNotWebInstallerFriendly();
-        $this->truncateTables();
+        $connection = ConnectionManager::get('default');
+
         $config = $this->getInstallSessionData();
         $this->initWebInstallerSession($config);
+
+        $tables = $connection->execute('SHOW TABLES')->fetchAll();
+        $this->assertEmpty($tables);
+
         $this->get('/install/installation/do_install.json');
+
+        $tables = $connection->execute('SHOW TABLES')->fetchAll();
+        $this->assertNotEmpty($tables);
+
         $result = json_decode($this->_getBodyAsString(), true);
 
+        $this->assertTrue(isset($result['user_id']));
+        $this->assertTrue(isset($result['token']));
         $this->assertTrue(Validation::uuid($result['user_id']));
         $this->assertTrue(Validation::uuid($result['token']));
     }

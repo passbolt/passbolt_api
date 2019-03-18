@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -24,9 +24,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
     public $Comments;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/resources', 'app.Base/comments', 'app.Base/profiles',
-        'app.Alt0/permissions', 'app.Alt0/groups_users', 'app.Base/roles',
-        'app.Base/email_queue', 'app.Base/avatars', 'app.Base/gpgkeys'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Comments', 'app.Base/Profiles',
+        'app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Roles',
+        'app.Base/EmailQueue', 'app.Base/Avatars', 'app.Base/Gpgkeys'
     ];
 
     public function testCommentsAddNotificationGroupSuccess()

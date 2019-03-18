@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -25,17 +25,20 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
     public $Comments;
 
-    public $fixtures = ['app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/comments', 'app.Base/permissions'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Comments', 'app.Base/Permissions'
+    ];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Comments') ? [] : ['className' => CommentsTable::class];
-        $this->Comments = TableRegistry::get('Comments', $config);
-        $this->Resources = TableRegistry::get('Resources');
+        $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
+        $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
-    public function testUpdateApiV1Success()
+    public function testCommentsUpdateApiV1Success()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -61,7 +64,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($nowTime - $modifiedTime < 1000);
     }
 
-    public function testUpdateApiV2Success()
+    public function testCommentsUpdateApiV2Success()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -85,7 +88,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($nowTime - $modifiedTime < 1000);
     }
 
-    public function testErrorCsrfToken()
+    public function testCommentsUpdateErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('irene', Role::USER);
@@ -94,7 +97,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testUpdateErrorInvalidCommentId()
+    public function testCommentsUpdateErrorInvalidCommentId()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -109,7 +112,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUpdateErrorContentEmpty()
+    public function testCommentsUpdateErrorContentEmpty()
     {
         $this->authenticateAs('irene', Role::USER);
         $putData = [
@@ -124,7 +127,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($this->_responseJsonBody->Comment->content);
     }
 
-    public function testUpdateRuleValidationCommentDoesNotExist()
+    public function testCommentsUpdateRuleValidationCommentDoesNotExist()
     {
         $this->authenticateAs('irene', Role::USER);
         $commentContent = 'updated comment content';
@@ -139,7 +142,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUpdateRuleValidationCommentNotOwner()
+    public function testCommentsUpdateRuleValidationCommentNotOwner()
     {
         $this->authenticateAs('ada', Role::USER);
         $commentContent = 'updated comment content';
@@ -154,7 +157,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testUpdateNotAccessibleFields()
+    public function testCommentsUpdateNotAccessibleFields()
     {
         $this->authenticateAs('irene', Role::USER);
         $comment = [
@@ -184,7 +187,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($comment['modified_by'], $commentUpdated->modified_by);
     }
 
-    public function testAddErrorNotAuthenticated()
+    public function testCommentsUpdateErrorNotAuthenticated()
     {
         $postData = [];
         $resourceId = UuidFactory::uuid('comment.id.apache-1');

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -23,8 +23,8 @@ use Cake\Validation\Validation;
 class AuthLoginControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens',
-        'app.Base/gpgkeys', 'app.Base/groups_users', 'app.Base/avatars'
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
+        'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars'
     ];
     public $keyid;
     public $gpg;
@@ -33,7 +33,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     protected $adaKeyId;
     protected $serverKeyId;
 
-    public function testUserLoginGetSuccess()
+    public function testAuthLoginControllerUserLoginGetSuccess()
     {
         $this->get('/auth/login');
         $data = ($this->_getBodyAsString());
@@ -44,7 +44,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Test getting login started with deleted account
      */
-    public function testUserLoginAsDeletedUserError()
+    public function testAuthLoginControllerUserLoginAsDeletedUserError()
     {
         $this->post('/auth/login', [
             'data' => [
@@ -61,7 +61,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      * Test error 500 if the GnuPG fingerprint config for the server is missing.
      * It can happen if a sysop overrides the GnuPG config for the server post installation.
      */
-    public function testLoginServerKeyFingerprintMissing()
+    public function testAuthLoginControllerLoginServerKeyFingerprintMissing()
     {
         Configure::delete('passbolt.gpg.serverKey.fingerprint');
         $this->post('/auth/login');
@@ -77,7 +77,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      * Test error 500 if the GnuPG fingerprint config for the server is invalid.
      * It can happen if a sysop changed the server key fingerprint without loading this key in the gpg keyring post installation.
      */
-    public function testLoginBadServerKeyFingerprint()
+    public function testAuthLoginControllerLoginBadServerKeyFingerprint()
     {
         $fingerprint = '0000000000000000000000000000000000000000';
         Configure::write('passbolt.gpg.serverKey.fingerprint', $fingerprint);
@@ -93,7 +93,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Test login without providing the csrf token
      */
-    public function testErrorCsrfToken()
+    public function testAuthLoginControllerErrorCsrfToken()
     {
         $this->markTestIncomplete();
     }
@@ -101,7 +101,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Check that GPGAuth headers are set everywhere
      */
-    public function testGetHeaders()
+    public function testAuthLoginControllerGetHeaders()
     {
         $this->get('/auth/login');
         $this->assertHeader('X-GPGAuth-Version', '1.3.0');
@@ -114,7 +114,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Check that GPGAuth headers are set everywhere
      */
-    public function testGetHeadersPost()
+    public function testAuthLoginControllerGetHeadersPost()
     {
         $this->post('/auth/login', [
             'data' => [
@@ -129,7 +129,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Test authentication with wrong user key fingerprint
      */
-    public function testAllStagesFingerprint()
+    public function testAuthLoginControllerAllStagesFingerprint()
     {
         $this->_gpgSetup(); // add ada's keys
         $fix = [
@@ -174,7 +174,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Stage 0. Verify server key
      */
-    public function testStage0MessageFormat()
+    public function testAuthLoginControllerStage0MessageFormat()
     {
         $this->_gpgSetup();
         $uuid = UuidFactory::uuid();
@@ -234,13 +234,13 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Stage 0. Verify server key is incorrect or changed
      */
-    public function testStage0WrongServerKey()
+    public function testAuthLoginControllerStage0WrongServerKey()
     {
         $this->_gpgSetup();
         $uuid = UuidFactory::uuid();
 
         // Use betty public key instead of server
-        $wrongPublicKey = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'betty_public.key';
+        $wrongPublicKey = FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key';
         $keyInfo = $this->_gpg->import(file_get_contents($wrongPublicKey));
         $this->serverKeyId = $keyInfo['fingerprint'];
         $token = 'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0';
@@ -268,7 +268,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Stage 1. Authenticate user
      */
-    public function testStage1UserToken()
+    public function testAuthLoginControllerStage1UserToken()
     {
         $this->_gpgSetup();
         $this->post('/auth/login', [
@@ -313,7 +313,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertTrue($length == 36, 'Decrypted User Auth Token: wrong token data length');
 
         // Check if there is a valid AuthToken in store
-        $AuthToken = TableRegistry::get('AuthenticationTokens');
+        $AuthToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $isValid = $AuthToken->isValid($uuid, UuidFactory::uuid('user.id.ada'));
         $this->assertTrue($isValid, 'There should a valid auth token');
 
@@ -362,7 +362,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->serverKeyId = $keyInfo['fingerprint'];
 
         // Import the key of ada.
-        $keyInfo = $this->_gpg->import(file_get_contents(PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'ada_private_nopassphrase.key'));
+        $keyInfo = $this->_gpg->import(file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'));
         $this->adaKeyId = $keyInfo['fingerprint'];
     }
 
