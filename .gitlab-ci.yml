@@ -176,7 +176,13 @@ php7.3-mariadb10.4:
   allow_failure: true
   extends: .test-mariadb
   services:
-    - mariadb:10.4
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.3
   only:
     - develop
@@ -186,7 +192,13 @@ php7.3-mysql5.7:
   allow_failure: true
   extends: .test-mysql
   services:
-    - mysql:5.7
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.3
   only:
     - develop
@@ -195,7 +207,13 @@ php7.3-mysql5.7:
 php7.2-mariadb10.4:
   extends: .test-mariadb
   services:
-    - mariadb:10.4
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -204,13 +222,25 @@ php7.2-mariadb10.4:
 php7.2-mariadb10.3:
   extends: .test-mariadb
   services:
-    - mariadb:10.3
+  - name: mariadb:10.3
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
 
 php7.2-mariadb10.2:
   extends: .test-mariadb
   services:
-    - mariadb:10.2
+  - name: mariadb:10.2
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -219,13 +249,25 @@ php7.2-mariadb10.2:
 php7.2-mariadb10.1:
   extends: .test-mariadb
   services:
-    - mariadb:10.1
+  - name: mariadb:10.1
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
 
 php7.2-mariadb10.0:
   extends: .test-mariadb
   services:
-    - mariadb:10.0
+  - name: mariadb:10.0
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -235,7 +277,13 @@ php7.2-mariadb5:
   allow_failure: true
   extends: .test-mariadb
   services:
-    - mariadb:5
+  - name: mariadb:5
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -244,7 +292,13 @@ php7.2-mariadb5:
 php7.2-mysql5.7-coverage:
   extends: .test-mysql
   services:
-    - mysql:5.7
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml --coverage-text --colors=never
   image: $CI_REGISTRY_IMAGE:7.2-coverage
@@ -252,7 +306,13 @@ php7.2-mysql5.7-coverage:
 php7.2-mysql5.6:
   extends: .test-mysql
   services:
-    - mysql:5.6
+  - name: mysql:5.6
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -262,7 +322,13 @@ php7.2-mysql5.5:
   allow_failure: true
   extends: .test-mysql
   services:
-    - mysql:5.5
+  - name: mysql:5.5
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -271,7 +337,13 @@ php7.2-mysql5.5:
 php7.1-mariadb10.4:
   extends: .test-mariadb
   services:
-    - mariadb:10.4
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.1
@@ -282,7 +354,13 @@ php7.1-mariadb10.4:
 php7.1-mysql5.7:
   extends: .test-mysql
   services:
-    - mysql:5.7
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.1
@@ -293,7 +371,13 @@ php7.1-mysql5.7:
 php7.0-mariadb10.4:
   extends: .test-mariadb
   services:
-    - mariadb:10.4
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.0
@@ -304,7 +388,13 @@ php7.0-mariadb10.4:
 php7.0-mariadb10.1:
   extends: .test-mariadb
   services:
-    - mariadb:10.1
+  - name: mariadb:10.1
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.0
@@ -312,7 +402,13 @@ php7.0-mariadb10.1:
 php7.0-mysql5.7:
   extends: .test-mysql
   services:
-    - mysql:5.7
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.0
@@ -321,7 +417,7 @@ php7.0-mysql5.7:
     - master
 
 # ---------------------------------------------------------------------------
-# Code quality
+# Code quality.
 # ---------------------------------------------------------------------------
 
 code_quality:

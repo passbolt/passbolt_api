@@ -3,7 +3,7 @@ FROM $CONTAINER_IMAGE
 
 ARG PASSBOLT_DEV_PACKAGES="libgpgme11-dev libpng-dev libjpeg62-turbo-dev libicu-dev libxslt1-dev libmcrypt-dev libldap2-dev unzip libgpgme11 libmcrypt4 mysql-client git libxml2-dev libsodium-dev libgmp-dev"
 ARG PHP_EXTENSIONS="gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
-ARG PECL_PASSBOLT_EXTENSIONS="xdebug gnupg redis mcrypt"
+ARG PECL_PASSBOLT_EXTENSIONS="gnupg redis mcrypt"
 ARG PECL_BASE_URL="https://pecl.php.net/get"
 ARG PHP_EXT_DIR="/usr/src/php/ext"
 
