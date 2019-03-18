@@ -145,10 +145,12 @@ class Application extends BaseApplication
         }
 
         // Add Common plugins.
-        $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
+        $this->addPlugin('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
 
         $mfaDisabled = Configure::read('passbolt.plugins.multiFactorAuthentication.disabled');
         if (!isset($mfaDisabled) || !$mfaDisabled) {

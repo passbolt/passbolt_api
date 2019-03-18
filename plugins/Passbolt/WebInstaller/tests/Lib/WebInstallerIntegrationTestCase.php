@@ -31,6 +31,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.tags.enabled', true);
         $this->_recover = false;
     }
 
