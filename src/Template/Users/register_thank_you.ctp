@@ -21,11 +21,11 @@ $this->assign('pageClass', 'register thank-you');
 <div class="grid">
     <div class="row">
         <div class="col6 push1 information">
-            <h2><?= __('Thank you'); ?></h2>
+            <h2><?php echo __('Thank you'); ?></h2>
             <p>
-                <?= __('Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.'); ?>
+                <?php echo __('Thank you for giving passbolt a test run! We just sent you an email, please follow the instructions to get started.'); ?>
             </p>
-            <?= $this->element('Public/disclaimer_legal'); ?>
+            <?php echo $this->element('Public/disclaimer_legal'); ?>
         </div>
         <div class="col4 push1 last">
             <div class="logo">
@@ -34,8 +34,8 @@ $this->assign('pageClass', 'register thank-you');
             <div class="register thank-you form feedback">
                 <div class="graphical-feedback"><i class="fa fa-envelope-o huge"></i></div>
                 <p>
-                    <strong><?= __('Email sent!'); ?></strong>
-                    <?= __('Please check your spam folder if you do not hear from us after a while.'); ?>
+                    <strong><?php echo __('Email sent!'); ?></strong>
+                    <?php echo __('Please check your spam folder if you do not hear from us after a while.'); ?>
                 </p>
             </div>
         </div>

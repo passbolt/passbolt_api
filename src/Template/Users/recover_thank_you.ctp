@@ -27,12 +27,12 @@ $this->assign('pageClass', 'recover thank-you');
             </p>
             <div class="message-wrapper">
                 <p class="message warning">
-                    <?= __('Recovery will only work if you have previously created an account on passbolt, followed the setup once and made a backup of your private key.'); ?>
+                    <?php echo __('Recovery will only work if you have previously created an account on passbolt, followed the setup once and made a backup of your private key.'); ?>
                 </p>
             </div>
             <p>
-                <?= __('Keep the backup of your private key handy.'); ?>
-                <?= __('Without it you will not be able to recover your account.'); ?>
+                <?php echo __('Keep the backup of your private key handy.'); ?>
+                <?php echo __('Without it you will not be able to recover your account.'); ?>
             </p>
         </div>
         <div class="col4 push1 last">
@@ -42,8 +42,8 @@ $this->assign('pageClass', 'recover thank-you');
             <div class="register thank-you form feedback">
                 <div class="graphical-feedback"><i class="fa fa-envelope-o huge"></i></div>
                 <p>
-                    <strong><?= __('Email sent!'); ?></strong>
-                    <?= __('Please check your spam folder if you do not hear from us after a while.'); ?>
+                    <strong><?php echo __('Email sent!'); ?></strong>
+                    <?php echo __('Please check your spam folder if you do not hear from us after a while.'); ?>
                 </p>
             </div>
         </div>

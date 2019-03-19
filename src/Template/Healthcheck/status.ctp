@@ -1,1 +1,1 @@
-<?= $body; ?>
+<?php echo $body; ?>

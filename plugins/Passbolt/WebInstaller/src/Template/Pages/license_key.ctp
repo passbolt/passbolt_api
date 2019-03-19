@@ -3,43 +3,43 @@ use Cake\Routing\Router;
 $this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/key_chooser', ['block' => 'scriptBottom']);
 ?>
-<?= $this->element('header', ['title' => __('Passbolt Pro activation.')]) ?>
+<?php echo $this->element('header', ['title' => __('Passbolt Pro activation.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'license_key']) ?>
+        <?php echo $this->element('navigation', ['selectedSection' => 'license_key']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($formExecuteResult); ?>
+    <?php echo $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col7">
                         <div class="row">
                             <div class="col12">
-                                <h3><?= __('Copy paste your Passbolt Pro subscription key here'); ?></h3>
-                                <?= $this->Flash->render() ?>
+                                <h3><?php echo __('Copy paste your Passbolt Pro subscription key here'); ?></h3>
+                                <?php echo $this->Flash->render() ?>
                                 <div class="input textarea gpgkey">
-                                    <?= $this->Form->control('license_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>
+                                    <?php echo $this->Form->control('license_key', ['type' => 'textarea', 'class' => ['key-content']]); ?>
                                 </div>
                                 <div class="input file">
-                                    <a role="button" class="button" id="key-chooser"><?= __('Browse'); ?></a>
-                                    <span class="help-text"><?= __('Or select a file from your computer'); ?></span>
+                                    <a role="button" class="button" id="key-chooser"><?php echo __('Browse'); ?></a>
+                                    <span class="help-text"><?php echo __('Or select a file from your computer'); ?></span>
                                 </div>
                             </div>
                         </div>
                 </div>
                 <div class="col5 last">
-                    <?= $this->element('sidebar/license_key_explanations') ?>
+                    <?php echo $this->element('sidebar/license_key_explanations') ?>
                 </div>
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big disabled" disabled="disabled" value="<?= __('Next'); ?>">
+                    <a href="<?php echo Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?php echo __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next big disabled" disabled="disabled" value="<?php echo __('Next'); ?>">
                 </div>
             </div>
         </div>
     </div>
-    <?= $this->Form->end(); ?>
+    <?php echo $this->Form->end(); ?>
 </div>

@@ -15,10 +15,10 @@
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 ?>
-<?= $this->element('Header/banner'); ?>
-    <meta name="description" content="<?= Configure::read('passbolt.meta.description'); ?>">
+<?php echo $this->element('Header/banner'); ?>
+    <meta name="description" content="<?php echo Configure::read('passbolt.meta.description'); ?>">
     <meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
-    <meta name="robots" content="<?= Configure::read('passbolt.meta.robots'); ?>">
+    <meta name="robots" content="<?php echo Configure::read('passbolt.meta.robots'); ?>">
     <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" type="image/png" href="<?= Router::url('/favicon.ico', true); ?>"/>
-    <base href="<?= Router::url('/', true); ?>">
+    <link rel="shortcut icon" type="image/png" href="<?php echo Router::url('/favicon.ico', true); ?>"/>
+    <base href="<?php echo Router::url('/', true); ?>">

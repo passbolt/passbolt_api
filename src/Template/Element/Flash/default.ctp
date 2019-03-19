@@ -7,4 +7,4 @@ if (!isset($params['escape']) || $params['escape'] !== false) {
     $message = h($message);
 }
 ?>
-<div class="<?= h($class) ?>" onclick="this.classList.add('hidden');"><?= $message ?></div>
+<div class="<?php echo h($class) ?>" onclick="this.classList.add('hidden');"><?php echo $message ?></div>

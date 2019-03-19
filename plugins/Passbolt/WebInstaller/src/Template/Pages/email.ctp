@@ -3,30 +3,30 @@ use Cake\Routing\Router;
 $this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
 ?>
-<?= $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
+<?php echo $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'emails']) ?>
+        <?php echo $this->element('navigation', ['selectedSection' => 'emails']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($formExecuteResult); ?>
+    <?php echo $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Email configuration'); ?></h3>
-                            <?= $this->Flash->render() ?>
-                            <?= $this->Form->control('sender_name', [
+                            <h3><?php echo __('Email configuration'); ?></h3>
+                            <?php echo $this->Flash->render() ?>
+                            <?php echo $this->Form->control('sender_name', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('admin or company name'),
                                 'label' => __('Sender name'),
                                 'class' => 'required fluid',
                             ]); ?>
-                            <?= $this->Form->control('sender_email', [
+                            <?php echo $this->Form->control('sender_email', [
                                 'type' => 'email',
                                 'required' => 'required',
                                 'placeholder' => __('email@company.com'),
@@ -35,8 +35,8 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'type' => 'email',
                             ]); ?>
 
-                            <h3><?= __('SMTP server configuration'); ?></h3>
-                            <?= $this->Form->control('host', [
+                            <h3><?php echo __('SMTP server configuration'); ?></h3>
+                            <?php echo $this->Form->control('host', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('host name or ip address'),
@@ -44,27 +44,27 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'class' => 'required fluid'
                             ]); ?>
                             <div class="input text required">
-                                <label for="tls"><?= __('Use TLS?'); ?></label>
-                                <?= $this->Form->control('tls', [
+                                <label for="tls"><?php echo __('Use TLS?'); ?></label>
+                                <?php echo $this->Form->control('tls', [
                                     'options' => ['1' => 'Yes', '0' => 'No'],
                                     'default' => '1',
                                     'class' => 'required fluid'
                                 ]); ?>
                             </div>
-                            <?= $this->Form->control('port', [
+                            <?php echo $this->Form->control('port', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('port'),
                                 'label' => __('Port'),
                                 'class' => 'required fluid',
                                 'default' => '587']); ?>
-                            <?= $this->Form->control('username', [
+                            <?php echo $this->Form->control('username', [
                                 'type' => 'text',
                                 'placeholder' => __('username'),
                                 'label' => __('Username'),
                                 'class' => 'fluid',
                             ]); ?>
-                            <?= $this->Form->control('password', [
+                            <?php echo $this->Form->control('password', [
                                 'placeholder' => __('password'),
                                 'label' => __('Password'),
                                 'class' => 'fluid',
@@ -88,15 +88,15 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                     <?php if(isset($test_email_status)): ?>
                         <?php if($test_email_status == true): ?>
                             <div class="message success">
-                                <?=  __('The test email has been sent successfully!') ?>
+                                <?php echo  __('The test email has been sent successfully!') ?>
                             </div>
                             <?php else: ?>
                         <div class="message error">
-                            <?= __('Email could not be sent:') ?>
-                            <strong><?= $test_email_error ?></strong>
+                            <?php echo __('Email could not be sent:') ?>
+                            <strong><?php echo $test_email_error ?></strong>
                             <?php if(!empty($test_email_trace)): ?>
                             <br/>
-                            <a href="#" class="see-trace"><?= __('See trace') ?></a>
+                            <a href="#" class="see-trace"><?php echo __('See trace') ?></a>
                             <div class="trace hidden">
                                 <?php
                                     foreach($test_email_trace as $trace_entry) {
@@ -122,17 +122,17 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                             'type' => 'email',
                         ]);
                         ?>
-                        <input type="submit" name="send_test_email" class="button" value="<?= __('Send test email'); ?>" >
+                        <input type="submit" name="send_test_email" class="button" value="<?php echo __('Send test email'); ?>" >
                     </div>
                 </div>
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <a href="<?php echo Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?php echo __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next big" value="<?php echo __('Next'); ?>">
                 </div>
             </div>
         </div>
     </div>
-    <?= $this->Form->end(); ?>
+    <?php echo $this->Form->end(); ?>
 </div>

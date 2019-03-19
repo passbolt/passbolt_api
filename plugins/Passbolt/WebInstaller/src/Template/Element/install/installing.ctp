@@ -2,7 +2,7 @@
 <div id="js-install-installing" class="grid grid-responsive-12">
     <div class="row">
         <div class="col7">
-            <h3><?= __('Installing') ?></h3>
+            <h3><?php echo __('Installing') ?></h3>
             <div class="progress-bar-wrapper">
                 <span class="progress-bar big infinite"><span class="progress "></span></span>
             </div>

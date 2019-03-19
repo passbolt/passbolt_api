@@ -4,11 +4,11 @@ use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
 $healtcheck = new HealthcheckHtmlHelper();
 ?>
-<?= $this->element('header', ['title' => __('Welcome to Passbolt Pro! Let\'s get started with the configuration.')]) ?>
+<?php echo $this->element('header', ['title' => __('Welcome to Passbolt Pro! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'system_check']) ?>
+        <?php echo $this->element('navigation', ['selectedSection' => 'system_check']) ?>
     </div>
     <!-- main -->
     <div class="panel middle">
@@ -26,7 +26,7 @@ $healtcheck = new HealthcheckHtmlHelper();
                     <?php
                     endif;
                     ?>
-                    <?= $this->Flash->render() ?>
+                    <?php echo $this->Flash->render() ?>
                     <?php
                     if ($data['system_ok']) {
                         echo '<div class="message success">' . __( 'Environment is configured correctly.' ) . '</div>';
@@ -67,7 +67,7 @@ $healtcheck = new HealthcheckHtmlHelper();
                     ?>
                 </div>
                 <div class="col5 last">
-                    <?= $this->element('sidebar/help_box') ?>
+                    <?php echo $this->element('sidebar/help_box') ?>
                 </div>
             </div>
             <div class="row last">
@@ -75,7 +75,7 @@ $healtcheck = new HealthcheckHtmlHelper();
                     <?php
                     if (isset($data['system_ok']) && $data['system_ok'] === true):
                     ?>
-                    <a href="<?= $nextStepUrl ?>" class="button primary next big"><?= __('Start configuration') ?></a>
+                    <a href="<?php echo $nextStepUrl ?>" class="button primary next big"><?php echo __('Start configuration') ?></a>
                     <?php else: ?>
                     <a href="#" onclick="javascript:location.reload(); return false;" class="button primary next big">Retry</a>
                     <?php

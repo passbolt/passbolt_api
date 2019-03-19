@@ -17,21 +17,21 @@ use Cake\Core\Configure;
 <!DOCTYPE html>
 <html class="passbolt no-js no-passboltplugin version" lang="en">
 <head>
-    <?= $this->Html->charset() ?>
+    <?php echo $this->Html->charset() ?>
 
-    <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
-    <?= $this->element('Header/meta') ?>
+    <title><?php echo Configure::read('passbolt.meta.title'); ?> | <?php echo $this->fetch('title') ?></title>
+    <?php echo $this->element('Header/meta') ?>
 
-    <?= $this->fetch('css') ?>
+    <?php echo $this->fetch('css') ?>
 </head>
 <body>
-<div id="container" class="page <?= $this->fetch('pageClass') ?>">
-<?= $this->element('Navigation/default'); ?>
+<div id="container" class="page <?php echo $this->fetch('pageClass') ?>">
+<?php echo $this->element('Navigation/default'); ?>
 <div id="content">
-<?= $this->fetch('content') ?>
+<?php echo $this->fetch('content') ?>
 
 </div>
-<?= $this->element('Footer/default'); ?>
+<?php echo $this->element('Footer/default'); ?>
 </div>
 </body>
 </html>

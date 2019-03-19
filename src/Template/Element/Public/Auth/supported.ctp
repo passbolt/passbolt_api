@@ -17,10 +17,10 @@ $browser = strtolower($userAgent['Browser']['name']);
 <div class="col6 push1 information">
     <h2><?php echo __('Download the plugin to get started!'); ?></h2>
     <div class="plugin-check-wrapper">
-        <div class="plugin-check <?= $browser ?> error">
+        <div class="plugin-check <?php echo $browser ?> error">
             <p class="message">
                 <?php echo __('An add-on is required to use passbolt.'); ?><br>
-                <a href="https://www.passbolt.com/download/<?= $browser ?>">
+                <a href="https://www.passbolt.com/download/<?php echo $browser ?>">
                     <?php echo __('Download it here'); ?>
                 </a>.
             </p>
@@ -40,7 +40,7 @@ $browser = strtolower($userAgent['Browser']['name']);
             <i class="fa fa-download huge" ></i>
         </div>
         <div class="actions-wrapper center">
-            <a class="button primary big" href="https://www.passbolt.com/download/<?= $browser ?>">
+            <a class="button primary big" href="https://www.passbolt.com/download/<?php echo $browser ?>">
                 <?php echo __('Download the plugin'); ?>
             </a>
         </div>

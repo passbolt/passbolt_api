@@ -1,19 +1,19 @@
-<?= $this->element('header', ['title' => __('Create your user account!')]) ?>
+<?php echo $this->element('header', ['title' => __('Create your user account!')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'first_user']) ?>
+        <?php echo $this->element('navigation', ['selectedSection' => 'first_user']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($formExecuteResult); ?>
+    <?php echo $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Admin user details'); ?></h3>
-                            <?= $this->Flash->render() ?>
+                            <h3><?php echo __('Admin user details'); ?></h3>
+                            <?php echo $this->Flash->render() ?>
                             <?php
                             echo $this->Form->control('first_name',
                                 [
@@ -53,10 +53,10 @@
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <input type="submit" class="button primary next big" value="<?php echo __('Next'); ?>">
                 </div>
             </div>
         </div>
     </div>
-    <?= $this->Form->end(); ?>
+    <?php echo $this->Form->end(); ?>
 </div>

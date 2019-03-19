@@ -37,7 +37,7 @@ canonicalize() {
 findCliPhp() {
     for TESTEXEC in php php-cli /usr/local/bin/php
     do
-        SAPI=`echo "<?= PHP_SAPI ?>" | $TESTEXEC 2>/dev/null`
+        SAPI=`echo "<?php echo PHP_SAPI ?>" | $TESTEXEC 2>/dev/null`
         if [ "$SAPI" = "cli" ]
         then
             echo $TESTEXEC

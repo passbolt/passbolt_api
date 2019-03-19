@@ -14,7 +14,7 @@
  */
 ?>
 <div class="col6 push1 information">
-    <h2><?= __('Download firefox!'); ?></h2>
+    <h2><?php echo __('Download firefox!'); ?></h2>
     <div class="plugin-check-wrapper">
         <div class="plugin-check firefox error">
             <p class="message">
@@ -26,7 +26,7 @@
         </div>
     </div>
     <p>
-        <?= __('Don\'t worry, we aim at enabling more browsers and phones in the future.'); ?>.
+        <?php echo __('Don\'t worry, we aim at enabling more browsers and phones in the future.'); ?>.
     </p>
 </div>
 <div class="col4 push1 last">
@@ -39,7 +39,7 @@
         </div>
         <div class="actions-wrapper center">
             <a class="button primary big" href="https://www.mozilla.org/firefox">
-                <?= __('Download Firefox'); ?>
+                <?php echo __('Download Firefox'); ?>
             </a>
         </div>
     </div>

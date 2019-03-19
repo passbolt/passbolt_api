@@ -11,8 +11,8 @@
             if($slug == $selectedSection)
                 $className = 'selected';
             ?>
-            <li class="<?= $className ?>">
-                <?= $i + 1 ?>. <?= $name ?>
+            <li class="<?php echo $className ?>">
+                <?php echo $i + 1 ?>. <?php echo $name ?>
             </li>
             <?php
             if($slug == $selectedSection) {

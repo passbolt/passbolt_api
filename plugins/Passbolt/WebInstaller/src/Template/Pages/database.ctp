@@ -1,29 +1,29 @@
 <?php
 use Cake\Routing\Router;
 ?>
-<?= $this->element('header', ['title' => __('Enter your database details.')]) ?>
+<?php echo $this->element('header', ['title' => __('Enter your database details.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'database']) ?>
+        <?php echo $this->element('navigation', ['selectedSection' => 'database']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($formExecuteResult); ?>
+    <?php echo $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Database configuration'); ?></h3>
-                            <?= $this->Flash->render() ?>
-                            <?= $this->Form->control('type', [
+                            <h3><?php echo __('Database configuration'); ?></h3>
+                            <?php echo $this->Flash->render() ?>
+                            <?php echo $this->Form->control('type', [
                                 'type' => 'select',
                                 'options' => ['mysql' => 'MySQL / MariaDB'],
                                 'default' => 'mysql',
                                 'class' => 'required fluid'
                             ]); ?>
-                            <?= $this->Form->control('host', [
+                            <?php echo $this->Form->control('host', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('host name or ip address'),
@@ -31,7 +31,7 @@ use Cake\Routing\Router;
                                 'class' => 'required fluid'
                             ]); ?>
 
-                            <?= $this->Form->control('port', [
+                            <?php echo $this->Form->control('port', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('port'),
@@ -40,7 +40,7 @@ use Cake\Routing\Router;
                                 'default' => '3306',
                             ]); ?>
 
-                            <?= $this->Form->control('username', [
+                            <?php echo $this->Form->control('username', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('username'),
@@ -48,7 +48,7 @@ use Cake\Routing\Router;
                                 'class' => 'required fluid',
                             ]); ?>
 
-                            <?= $this->Form->control('password', [
+                            <?php echo $this->Form->control('password', [
                                 'type' => 'password',
                                 'placeholder' => __('password'),
                                 'label' => __('Password'),
@@ -56,7 +56,7 @@ use Cake\Routing\Router;
                                 'type' => 'password',
                             ]); ?>
 
-                            <?= $this->Form->control('database', [
+                            <?php echo $this->Form->control('database', [
                                 'type' => 'text',
                                 'required' => 'required',
                                 'placeholder' => __('database name'),
@@ -74,11 +74,11 @@ use Cake\Routing\Router;
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <a href="<?php echo Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?php echo __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next big" value="<?php echo __('Next'); ?>">
                 </div>
             </div>
         </div>
     </div>
-    <?= $this->Form->end(); ?>
+    <?php echo $this->Form->end(); ?>
 </div>

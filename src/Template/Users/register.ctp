@@ -30,40 +30,40 @@ $formContext = [
 <div class="grid">
     <div class="row">
         <div class="col6 push1 information">
-            <h2><?= __('Try passbolt demo today!'); ?></h2>
+            <h2><?php echo __('Try passbolt demo today!'); ?></h2>
             <p>
-                <?= __('Enter your details in the form.'); ?>
+                <?php echo __('Enter your details in the form.'); ?>
 
-                <?= __('We will send you an email to get you started.'); ?>
+                <?php echo __('We will send you an email to get you started.'); ?>
 
             </p>
-<?= $this->element('Public/disclaimer_legal'); ?>
+<?php echo $this->element('Public/disclaimer_legal'); ?>
         </div>
         <div class="col4 push1 last">
             <div class="logo">
                 <h1><span>Passbolt</span></h1>
             </div>
             <div class="users register form">
-                <?= $this->Form->create($user, $formContext);?>
+                <?php echo $this->Form->create($user, $formContext);?>
 
                 <fieldset>
-                    <legend><?= __('Please enter your username and password'); ?></legend>
-                    <?= $this->Form->control('profile.first_name', ['placeholder' => __('First name')]); ?>
+                    <legend><?php echo __('Please enter your username and password'); ?></legend>
+                    <?php echo $this->Form->control('profile.first_name', ['placeholder' => __('First name')]); ?>
 
-                    <?= $this->Form->control('profile.last_name', ['placeholder' => __('Last name')]); ?>
+                    <?php echo $this->Form->control('profile.last_name', ['placeholder' => __('Last name')]); ?>
 
-                    <?= $this->Form->control('username', ['placeholder' => __('mail@domain.com')]); ?>
+                    <?php echo $this->Form->control('username', ['placeholder' => __('mail@domain.com')]); ?>
 
                     <p>
                         <input type="checkbox" name="disclaimer" id="disclaimer" value="value" required="required">
-                        <label for="disclaimer" style="font-size:.9em"><?= __('I understand the disclaimer. I agree with the Terms of Service and Privacy Policy.'); ?></label>
+                        <label for="disclaimer" style="font-size:.9em"><?php echo __('I understand the disclaimer. I agree with the Terms of Service and Privacy Policy.'); ?></label>
                     </p>
                     <div class="submit-wrapper">
-                        <input type="submit" class="button primary big" value="<?= __('register'); ?>">
-                        <a href="<?= Router::url('/login', true); ?>" class="secondary"><?= __('already a member?'); ?></a>
+                        <input type="submit" class="button primary big" value="<?php echo __('register'); ?>">
+                        <a href="<?php echo Router::url('/login', true); ?>" class="secondary"><?php echo __('already a member?'); ?></a>
                     </div>
                 </fieldset>
-                <?= $this->Form->end();?>
+                <?php echo $this->Form->end();?>
 
             </div>
         </div>

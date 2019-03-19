@@ -15,10 +15,10 @@
 ?>
 <div class="plugin-check-wrapper">
     <h3><?php echo __('Plugin check') ?></h3>
-    <div class="plugin-check <?= $browserName; ?> error">
+    <div class="plugin-check <?php echo $browserName; ?> error">
         <p class="message">
             <?php echo __('A web extension is required to use passbolt.'); ?><br>
-            <a href="https://www.passbolt.com/download/<?= $browserName; ?>" target="_blank" rel="noopener">
+            <a href="https://www.passbolt.com/download/<?php echo $browserName; ?>" target="_blank" rel="noopener">
                 <?php echo __('Download it here'); ?>
             </a>.
         </p>

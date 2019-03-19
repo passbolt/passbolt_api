@@ -13,11 +13,11 @@
  * @since         2.0.0
  */
 ?>
-<h3><?= __('Passbolt Cloud'); ?></h3>
-<p><?= __('Get passbolt in the cloud, hosted on our secure servers, while keeping 100% data ownership.'); ?></p>
+<h3><?php echo __('Passbolt Cloud'); ?></h3>
+<p><?php echo __('Get passbolt in the cloud, hosted on our secure servers, while keeping 100% data ownership.'); ?></p>
 <p>
     <a href="https://www.passbolt.com/services/cloud?pk_campaign=selfhosted&pk_kwd=cta_login" class="button dim passboltcloud" target="_blank" rel="noopener">
         <i class="fa fa-fw fa-cloud"></i>
-        <span><?= __('read more'); ?></span>
+        <span><?php echo __('read more'); ?></span>
     </a>
 </p>

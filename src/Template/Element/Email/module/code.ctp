@@ -45,7 +45,7 @@
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                     <tr>
                                         <td valign="top" class="textContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Courier, monospace;font-size: 11px;line-height: 125%;text-align: Left;padding-bottom: 20px;white-space:pre-wrap;">
-<?= $text; ?>
+<?php echo $text; ?>
                                         </td>
                                     </tr>
                                 </table>

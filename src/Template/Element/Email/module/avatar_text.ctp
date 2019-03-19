@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-?><span style="font-weight:bold;"><?= Purifier::clean($first_name); ?> <?php Purifier::clean($last_name); ?>
-     (<a href="mailto:<?= Purifier::clean($username); ?>" style="color:#888;text-decoration: underline;"><?= Purifier::clean($username); ?></a>)</span><br>
-<span style=""><?= $text ?></span><br>
-<span style="color:#888888"><?= $datetime->nice(); ?></span><br>
+?><span style="font-weight:bold;"><?php echo Purifier::clean($first_name); ?> <?php Purifier::clean($last_name); ?>
+     (<a href="mailto:<?php echo Purifier::clean($username); ?>" style="color:#888;text-decoration: underline;"><?php echo Purifier::clean($username); ?></a>)</span><br>
+<span style=""><?php echo $text ?></span><br>
+<span style="color:#888888"><?php echo $datetime->nice(); ?></span><br>

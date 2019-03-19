@@ -29,29 +29,29 @@ return [
         // A base URL to use for absolute links.
         // The url where the passbolt instance will be reachable to your end users.
         // This information is need to render images in emails for example
-        'fullBaseUrl' => '<?= $config['options']['full_base_url'] ?>',
+        'fullBaseUrl' => '<?php echo $config['options']['full_base_url'] ?>',
     ],
 
     // Database configuration.
     'Datasources' => [
         'default' => [
-            'host' => '<?= $config['database']['host'] ?>',
-            'port' => '<?= $config['database']['port'] ?>',
-            'username' => '<?= $config['database']['username'] ?>',
-            'password' => '<?= $config['database']['password'] ?>',
-            'database' => '<?= $config['database']['database'] ?>',
+            'host' => '<?php echo $config['database']['host'] ?>',
+            'port' => '<?php echo $config['database']['port'] ?>',
+            'username' => '<?php echo $config['database']['username'] ?>',
+            'password' => '<?php echo $config['database']['password'] ?>',
+            'database' => '<?php echo $config['database']['database'] ?>',
         ],
     ],
 
     // Email configuration.
     'EmailTransport' => [
         'default' => [
-            'host' => '<?= $config['email']['host'] ?>',
-            'port' => <?= $config['email']['port'] ?>,
-            'username' => <?= empty($config['email']['username']) ? 'null' : "'{$config['email']['username']}'" ?>,
-            'password' => <?= empty($config['email']['password']) ? 'null' : "'{$config['email']['password']}'" ?>,
+            'host' => '<?php echo $config['email']['host'] ?>',
+            'port' => <?php echo $config['email']['port'] ?>,
+            'username' => <?php echo empty($config['email']['username']) ? 'null' : "'{$config['email']['username']}'" ?>,
+            'password' => <?php echo empty($config['email']['password']) ? 'null' : "'{$config['email']['password']}'" ?>,
             // Is this a secure connection? true if yes, null if no.
-            'tls' => <?= $config['email']['tls'] ? 'true' : 'null' ?>,
+            'tls' => <?php echo $config['email']['tls'] ? 'true' : 'null' ?>,
             //'timeout' => 30,
             //'client' => null,
             //'url' => null,
@@ -60,7 +60,7 @@ return [
     'Email' => [
         'default' => [
             // Defines the default name and email of the sender of the emails.
-            'from' => ['<?= $config['email']['sender_email'] ?>' => '<?= $config['email']['sender_name'] ?>'],
+            'from' => ['<?php echo $config['email']['sender_email'] ?>' => '<?php echo $config['email']['sender_name'] ?>'],
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
         ],
@@ -73,16 +73,16 @@ return [
             // Main server key.
             'serverKey' => [
                 // Server private key fingerprint.
-                'fingerprint' => '<?= $config['gpg']['fingerprint'] ?>',
+                'fingerprint' => '<?php echo $config['gpg']['fingerprint'] ?>',
                 'public' => CONFIG . DS . 'gpg' . DS . 'serverkey.asc',
                 'private' => CONFIG . DS . 'gpg' . DS . 'serverkey_private.asc',
             ],
         ],
         'registration' => [
-            'public' => <?= $config['options']['public_registration'] ? 'true' : 'false' ?>,
+            'public' => <?php echo $config['options']['public_registration'] ? 'true' : 'false' ?>,
         ],
         'ssl' => [
-            'force' => <?= $config['options']['force_ssl'] ? 'true' : 'false' ?>,
+            'force' => <?php echo $config['options']['force_ssl'] ? 'true' : 'false' ?>,
         ]
     ],
 ];

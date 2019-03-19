@@ -25,31 +25,31 @@ $this->assign('page_classes', 'setup start');
     <div class="grid grid-responsive-12">
         <div class="row">
             <div class="col12 last intro">
-                <h1><?= __('Passbolt is not configured yet!') ?></h1>
-                <h2><?= __('If you see this page, it means that passbolt is present on your server but not configured. You can configure it using one of the two methods below.') ?></h2>
+                <h1><?php echo __('Passbolt is not configured yet!') ?></h1>
+                <h2><?php echo __('If you see this page, it means that passbolt is present on your server but not configured. You can configure it using one of the two methods below.') ?></h2>
             </div>
         </div>
         <div class="row">
             <div class="col6">
                 <div class="big-choice">
-                    <h3><?= __('Manual configuration') ?></h3>
+                    <h3><?php echo __('Manual configuration') ?></h3>
                     <p>
-                        <?= __('Choose this option if you want to configure passbolt step by step manually following the documentation.') ?>
+                        <?php echo __('Choose this option if you want to configure passbolt step by step manually following the documentation.') ?>
                     </p>
                     <a href="https://help.passbolt.com/hosting/install" target="_blank" rel="noopener" class="dim button">
-                        <i class="fa fa-cogs fa-fw"></i>  <?= __('Follow the documentation') ?>
+                        <i class="fa fa-cogs fa-fw"></i>  <?php echo __('Follow the documentation') ?>
                     </a>
                 </div>
             </div>
             <div class="col6 last">
                 <div class="big-choice">
-                    <div class="ribbon"><span><?= __('POPULAR') ?></span></div>
-                    <h3><?= __('Wizard configuration') ?></h3>
+                    <div class="ribbon"><span><?php echo __('POPULAR') ?></span></div>
+                    <h3><?php echo __('Wizard configuration') ?></h3>
                     <p>
-                        <?= __('Choose this option if you want to be guided by the configuration wizard and get started in no time.') ?>
+                        <?php echo __('Choose this option if you want to be guided by the configuration wizard and get started in no time.') ?>
                     </p>
-                    <a href="<?= Router::url('install/system_check') ?>" class="button primary">
-                        <i class="fa fa-magic fa-fw"></i> <?= __('Start the wizard') ?>
+                    <a href="<?php echo Router::url('install/system_check') ?>" class="button primary">
+                        <i class="fa fa-magic fa-fw"></i> <?php echo __('Start the wizard') ?>
                     </a>
                 </div>
             </div>

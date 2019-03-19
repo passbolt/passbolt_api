@@ -20,6 +20,6 @@ $this->assign('page_classes', 'setup install');
         </div>
     </div>
     <div class="col2_3">
-        <h2 id="js_step_title"><?= $title; ?></h2>
+        <h2 id="js_step_title"><?php echo $title; ?></h2>
     </div>
 </div>

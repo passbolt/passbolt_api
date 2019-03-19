@@ -18,7 +18,7 @@ use App\Utility\Purifier;
 <?php foreach ($groups as $group): ?>
     <tr>
         <td style="width:15px;">&bull;</td>
-        <td><?= Purifier::clean($group->name); ?></td>
+        <td><?php echo Purifier::clean($group->name); ?></td>
     </tr>
 <?php endforeach; ?>
 </table>

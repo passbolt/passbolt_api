@@ -21,6 +21,6 @@
         <div class="progress-bar-wrapper">
             <span class="progress-bar big infinite"><span class="progress "></span></span>
         </div>
-        <p class="details"><?= __('loading, please wait...'); ?></p>
+        <p class="details"><?php echo __('loading, please wait...'); ?></p>
     </div>
 </div>

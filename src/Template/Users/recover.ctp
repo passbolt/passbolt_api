@@ -28,19 +28,19 @@ $formContext = [
 <div class="grid">
     <div class="row">
         <div class="col6 push1 information">
-            <h2><?= __('Recover an existing account!'); ?></h2>
+            <h2><?php echo __('Recover an existing account!'); ?></h2>
             <p>
-                <?= __('You can use the account recovery to install passbolt on a new machine (or if you reinstalled your browser, etc).'); ?>
-                <?= __('Enter your email address and we will send you an email to get started.'); ?>
+                <?php echo __('You can use the account recovery to install passbolt on a new machine (or if you reinstalled your browser, etc).'); ?>
+                <?php echo __('Enter your email address and we will send you an email to get started.'); ?>
             </p>
             <div class="message-wrapper">
                 <p class="message warning">
-                    <?= __('Recovery will only work if you have previously created an account on passbolt, followed the setup once and made a backup of your private key.'); ?>
+                    <?php echo __('Recovery will only work if you have previously created an account on passbolt, followed the setup once and made a backup of your private key.'); ?>
                 </p>
             </div>
             <p>
-                <?= __('Keep the backup of your private key handy.'); ?>
-                <?= __('Without it you will not be able to recover your account.'); ?>
+                <?php echo __('Keep the backup of your private key handy.'); ?>
+                <?php echo __('Without it you will not be able to recover your account.'); ?>
             </p>
         </div>
         <div class="col4 push1 last">
@@ -48,18 +48,18 @@ $formContext = [
                 <h1><span>Passbolt</span></h1>
             </div>
             <div class="users register form">
-                <?= $this->Form->create($user, $formContext);?>
+                <?php echo $this->Form->create($user, $formContext);?>
 
                 <fieldset>
-                    <legend><?= __('Enter your email'); ?></legend>
+                    <legend><?php echo __('Enter your email'); ?></legend>
 
-                    <?= $this->Form->control('username'); ?>
+                    <?php echo $this->Form->control('username'); ?>
 
                     <div class="submit-wrapper">
-                        <input type="submit" class="button primary big" value="<?= __('start recovery'); ?>">
+                        <input type="submit" class="button primary big" value="<?php echo __('start recovery'); ?>">
                     </div>
                 </fieldset>
-                <?= $this->Form->end();?>
+                <?php echo $this->Form->end();?>
             </div>
         </div>
     </div>

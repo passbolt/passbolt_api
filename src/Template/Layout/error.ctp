@@ -17,21 +17,21 @@ use Cake\Core\Configure;
 <!DOCTYPE html>
 <html class="passbolt no-js no-passboltplugin version" lang="en">
 <head>
-    <?= $this->Html->charset() ?>
+    <?php echo $this->Html->charset() ?>
 
-    <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
-    <?= $this->element('Header/meta') ?>
-    <?= $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]); ?>
-<?= $this->fetch('css') ?>
+    <title><?php echo Configure::read('passbolt.meta.title'); ?> | <?php echo $this->fetch('title') ?></title>
+    <?php echo $this->element('Header/meta') ?>
+    <?php echo $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]); ?>
+<?php echo $this->fetch('css') ?>
 </head>
 <body>
-<div id="container" class="error page <?= $this->fetch('pageClass') ?>">
-<?= $this->element('Navigation/default'); ?>
+<div id="container" class="error page <?php echo $this->fetch('pageClass') ?>">
+<?php echo $this->element('Navigation/default'); ?>
 <div id="content">
-<?= $this->Flash->render() ?>
-<?= $this->fetch('content') ?>
+<?php echo $this->Flash->render() ?>
+<?php echo $this->fetch('content') ?>
 </div>
-<?= $this->element('Footer/default'); ?>
+<?php echo $this->element('Footer/default'); ?>
 </div>
 </body>
 </html>

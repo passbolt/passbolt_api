@@ -22,15 +22,15 @@ $privacyPolicyUrl = Configure::read('passbolt.legal.privacy_policy.url');
 <?php if (isset($safeMode) && !$safeMode) : ?>
             <li class="error message"><a href="https://help.passbolt.com/faq/hosting/why-unsafe" title="terms of service">Unsafe mode</a></li>
 <?php endif; ?>
-            <li><a href="https://www.passbolt.com/terms" title="terms of service"><?= __('Terms'); ?></a></li>
+            <li><a href="https://www.passbolt.com/terms" title="terms of service"><?php echo __('Terms'); ?></a></li>
 <?php if (!empty($privacyPolicyUrl)) : ?>
-            <li><a href="<?php echo $privacyPolicyUrl ?>"><?= __('Privacy'); ?></a></li>
+            <li><a href="<?php echo $privacyPolicyUrl ?>"><?php echo __('Privacy'); ?></a></li>
 <?php endif; ?>
-            <li><a href="https://www.passbolt.com/credits"><?= __('Credits'); ?></a></li>
+            <li><a href="https://www.passbolt.com/credits"><?php echo __('Credits'); ?></a></li>
             <li id="version">
-                <a href="https://www.passbolt.com/credits" class="tooltip-left" data-tooltip="<?= $version; ?>">
+                <a href="https://www.passbolt.com/credits" class="tooltip-left" data-tooltip="<?php echo $version; ?>">
                     <i class="fa fa-heart-o"></i>
-                    <span class="visuallyhidden"><?= __('Versions'); ?></span>
+                    <span class="visuallyhidden"><?php echo __('Versions'); ?></span>
                 </a>
             </li>
         </ul>

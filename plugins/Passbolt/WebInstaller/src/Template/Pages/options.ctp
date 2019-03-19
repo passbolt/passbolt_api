@@ -1,22 +1,22 @@
 <?php
 use Cake\Routing\Router;
 ?>
-<?= $this->element('header', ['title' => __('Choose your preferences.')]) ?>
+<?php echo $this->element('header', ['title' => __('Choose your preferences.')]) ?>
 <div class="panel main ">
     <!-- wizard steps -->
     <div class="panel left">
-        <?= $this->element('navigation', ['selectedSection' => 'options']) ?>
+        <?php echo $this->element('navigation', ['selectedSection' => 'options']) ?>
     </div>
     <!-- main -->
-    <?= $this->Form->create($formExecuteResult); ?>
+    <?php echo $this->Form->create($formExecuteResult); ?>
     <div class="panel middle">
         <div class="grid grid-responsive-12">
             <div class="row">
                 <div class="col7">
                     <div class="row">
                         <div class="col12">
-                            <h3><?= __('Options'); ?></h3>
-                            <?= $this->Flash->render() ?>
+                            <h3><?php echo __('Options'); ?></h3>
+                            <?php echo $this->Flash->render() ?>
                             <?php
                                 echo $this->Form->control('full_base_url', [
                                     'type' => 'text',
@@ -30,7 +30,7 @@ use Cake\Routing\Router;
                                 ]);
                             ?>
                             <div class="input text required">
-                                <label for="PublicRegistration"><?= __('Allow public registration?'); ?></label>
+                                <label for="PublicRegistration"><?php echo __('Allow public registration?'); ?></label>
                                 <?php
                                     echo $this->Form->control(
                                         'public_registration', [
@@ -39,10 +39,10 @@ use Cake\Routing\Router;
                                         'class' => 'required fluid'
                                     ]);
                                 ?>
-                                <div class="message"><?= __('Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea.') ?></div>
+                                <div class="message"><?php echo __('Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea.') ?></div>
                             </div>
                             <div class="input text required">
-                                <label for="ForceSsl"><?= __('Force SSL?'); ?></label>
+                                <label for="ForceSsl"><?php echo __('Force SSL?'); ?></label>
                                 <?php
                                     echo $this->Form->control('force_ssl', [
                                         'options' => ['1' => 'Yes', '0' => 'No'],
@@ -50,7 +50,7 @@ use Cake\Routing\Router;
                                         'class' => 'required fluid'
                                     ]);
                                 ?>
-                                <div class="message"><?= __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If Force SSL is active, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
+                                <div class="message"><?php echo __('Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If Force SSL is active, your server has to be configured for HTTPS. It is highly recommended that you do so.') ?></div>
                             </div>
                         </div>
                     </div>
@@ -60,11 +60,11 @@ use Cake\Routing\Router;
             </div>
             <div class="row last">
                 <div class="input-wrapper">
-                    <a href="<?= Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?= __('Cancel'); ?></a>
-                    <input type="submit" class="button primary next big" value="<?= __('Next'); ?>">
+                    <a href="<?php echo Router::url($stepInfo['previous'], true); ?>" class="button cancel big"><?php echo __('Cancel'); ?></a>
+                    <input type="submit" class="button primary next big" value="<?php echo __('Next'); ?>">
                 </div>
             </div>
         </div>
     </div>
-    <?= $this->Form->end(); ?>
+    <?php echo $this->Form->end(); ?>
 </div>
