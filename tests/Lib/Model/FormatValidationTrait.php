@@ -16,6 +16,7 @@
 
 namespace App\Test\Lib\Model;
 
+use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
@@ -528,5 +529,10 @@ hcciUFw5
 -----END PGP MESSAGE-----' => true,
             ],
         ];
+    }
+
+    protected function _reloadValidationRules(Table $entityTable)
+    {
+        $entityTable->validationDefault($entityTable->getValidator());
     }
 }
