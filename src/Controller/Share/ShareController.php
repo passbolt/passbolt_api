@@ -89,6 +89,7 @@ class ShareController extends AppController
             $this->_handleValidationError($resource);
             throw new InternalErrorException(__('Could not update the password permissions. Please try again later.'));
         }
+
         $this->_notifyUsers($resource, $data);
         $this->success(__('The operation was successful.'));
     }

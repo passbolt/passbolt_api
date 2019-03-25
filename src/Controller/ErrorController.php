@@ -14,8 +14,10 @@
  */
 namespace App\Controller;
 
+use App\Utility\UserAction;
 use Cake\Event\Event;
 use Cake\Routing\Router;
+use Cake\Utility\Hash;
 use Cake\Utility\Text;
 
 /**
@@ -61,10 +63,11 @@ class ErrorController extends AppController
             $action = $this->request->getParam('action');
             $this->set([
                 'header' => [
-                    'id' => Text::uuid(),
+                    'id' => UserAction::getInstance()->getUserActionId(),
                     'status' => 'error',
                     'servertime' => time(),
                     'title' => 'app_' . $prefix . '_' . $action . '_error',
+                    'action' => UserAction::getInstance()->getActionId(),
                     'message' => $this->viewVars['message'],
                     'url' => Router::url(),
                     'code' => $this->viewVars['code'],
@@ -72,13 +75,11 @@ class ErrorController extends AppController
                 'body' => $body,
                 '_serialize' => ['header', 'body']
             ]);
+
             // render a legacy JSON view by default
             $apiVersion = $this->request->getQuery('api-version');
             if (!isset($apiVersion) || $apiVersion === 'v1') {
                 $this->viewBuilder()->setClassName('LegacyJson');
-                // pass additional error info like table
-                // useful to format error associations names
-                // $this->set('error', $error);
             }
         }
         $this->viewBuilder()->setTemplatePath('Error');

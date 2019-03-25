@@ -15,13 +15,14 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
+use App\Controller\Events\UserRegistrationListener;
+use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
-use Cake\Utility\Text;
 
 /**
  * Application Controller
@@ -33,7 +34,6 @@ use Cake\Utility\Text;
  */
 class AppController extends Controller
 {
-
     /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.
@@ -66,11 +66,21 @@ class AppController extends Controller
             ],
         ]);
 
+        // Init user action.
+        UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
+
         /*
          * Global event listeners
          */
         $emails = new EmailNotificationsListener();
         EventManager::instance()->on($emails);
+
+        /*
+         * Enable the following components for recommended CakePHP security settings.
+         * see http://book.cakephp.org/3.0/en/controllers/components/security.html
+         */
+        // $this->loadComponent('Security');
+        // $this->loadComponent('Csrf');
 
         // Tell the browser to force HTTPS use
         if (Configure::read('passbolt.ssl.force')) {
@@ -106,12 +116,14 @@ class AppController extends Controller
     {
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
+
         $this->set([
             'header' => [
-                'id' => Text::uuid(),
+                'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'success',
                 'servertime' => time(),
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
                 'code' => 200,
@@ -137,12 +149,14 @@ class AppController extends Controller
         }
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
+
         $this->set([
             'header' => [
-                'id' => Text::uuid(),
+                'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'error',
                 'servertime' => time(),
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
                 'code' => $errorCode
