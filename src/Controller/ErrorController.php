@@ -18,7 +18,6 @@ use App\Utility\UserAction;
 use Cake\Event\Event;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use Cake\Utility\Text;
 
 /**
  * Error Handling Controller

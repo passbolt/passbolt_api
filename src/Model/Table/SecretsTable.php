@@ -68,6 +68,8 @@ class SecretsTable extends Table
         $this->belongsTo('Resources');
         $this->belongsTo('Users');
 
+        $this->hasMany('SecretAccesses');
+
         $this->addBehavior('Timestamp');
     }
 
