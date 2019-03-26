@@ -16,7 +16,9 @@
 namespace Passbolt\AuditLog\Utility;
 
 use App\Model\Table\AvatarsTable;
+use App\Utility\UserAccessControl;
 use Cake\Datasource\Paginator;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
@@ -48,7 +50,10 @@ class ActionLogsFinder
                     'Profiles.last_name']]]);
 
         $query->innerJoinWith('Users.Profiles');
-        $query->contain('Users.Profiles.Avatars', AvatarsTable::addContainAvatar()['Avatars']);
+        $query->contain('Users.Profiles.Avatars', [
+            'fields' => new AvatarsTable(),
+            'queryBuilder' => AvatarsTable::addContainAvatar()['Avatars'],
+        ]);
 
         $query->contain(['EntitiesHistory.PermissionsHistory' => [
             'fields' => [
@@ -162,13 +167,35 @@ class ActionLogsFinder
     }
 
     /**
+     * Check if a given user has access to a resource.
+     * @param UserAccessControl $user user
+     * @param string $resourceId resource id
+     * @return bool whether or not he has access to the resource
+     */
+    protected function _checkUserCanAccessResource(UserAccessControl $user, string $resourceId) {
+        $Resource = TableRegistry::getTableLocator()->get('Resources');
+        $resource = $Resource->findView($user->userId(), $resourceId)->first();
+        if (empty($resource)) {
+            throw new NotFoundException(__('The resource does not exist.'));
+        }
+
+        return $resource;
+    }
+
+    /**
+     * find action logs for a given resource.
+     * @param UserAccessControl $user user
      * @param string $resourceId resource id
      * @param array $options options array
      *
      * @return array
      */
-    public function findForResource(string $resourceId, array $options = [])
+    public function findForResource(UserAccessControl $user, string $resourceId, array $options = [])
     {
+        // Check that user can access to resource.
+        $this->_checkUserCanAccessResource($user, $resourceId);
+
+        // Build query.
         $q = $this->_getBaseQuery();
         $q = $this->_filterQueryByResourceId($q, $resourceId);
         if (!empty($options)) {

@@ -71,7 +71,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         );
 
         $ActionLogsFinder = new ActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->findForResource(UuidFactory::uuid('resource.id.apache'));
+        $actionLogs = $ActionLogsFinder->findForResource($uac, UuidFactory::uuid('resource.id.apache'));
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Permissions.updated');
@@ -99,7 +99,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         );
 
         $ActionLogsFinder = new ActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->findForResource(UuidFactory::uuid('resource.id.apache'));
+        $actionLogs = $ActionLogsFinder->findForResource($uac, UuidFactory::uuid('resource.id.apache'));
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Permissions.updated');
@@ -127,7 +127,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         );
 
         $ActionLogsFinder = new ActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->findForResource(UuidFactory::uuid('resource.id.apache'));
+        $actionLogs = $ActionLogsFinder->findForResource($uac, UuidFactory::uuid('resource.id.apache'));
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Permissions.updated');

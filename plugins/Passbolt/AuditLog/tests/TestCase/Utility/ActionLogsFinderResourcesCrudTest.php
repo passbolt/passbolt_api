@@ -62,7 +62,7 @@ class ActionLogsFinderResourcesCrudTest extends LogIntegrationTestCase
         $this->simulateResourceCrud($uac, UuidFactory::uuid('resource.id.apache'), EntityHistory::CRUD_CREATE);
 
         $ActionLogsFinder = new ActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->findForResource(UuidFactory::uuid('resource.id.apache'));
+        $actionLogs = $ActionLogsFinder->findForResource($uac, UuidFactory::uuid('resource.id.apache'));
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Resources.created');
@@ -78,7 +78,7 @@ class ActionLogsFinderResourcesCrudTest extends LogIntegrationTestCase
         $this->simulateResourceCrud($uac, UuidFactory::uuid('resource.id.apache'), EntityHistory::CRUD_UPDATE);
 
         $ActionLogsFinder = new ActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->findForResource(UuidFactory::uuid('resource.id.apache'));
+        $actionLogs = $ActionLogsFinder->findForResource($uac, UuidFactory::uuid('resource.id.apache'));
 
         $this->assertEquals(count($actionLogs), 1);
         $this->assertEquals($actionLogs[0]['type'], 'Resources.updated');

@@ -15,18 +15,11 @@
 
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
-use App\Utility\UserAccessControl;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
-use App\Model\Entity\Role;
-use Passbolt\AuditLog\Utility\ActionLogsFinder;
-use Passbolt\AuditLog\Test\TestCase\Traits\ActionLogsOperationsTrait;
-use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
-class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
+class UserLogsControllerTest extends AppIntegrationTestCase
 {
-    use ActionLogsOperationsTrait;
-
     public $fixtures = [
         'app.Base/Users',
         'app.Base/Gpgkeys',
@@ -51,23 +44,22 @@ class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->PermissionsHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.PermissionsHistory');
     }
 
-    public function testActionLogsFinderResourceSecretUpdated()
+    public function testViewByResourceEmpty()
     {
-        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $this->simulateResourceSecretUpdate($uac, UuidFactory::uuid('resource.id.apache'));
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->getJson("/actionlog/resource/$resourceId.json?api-version=v2");
+        $this->assertSuccess();
+        $this->assertEmpty($this->_responseJsonBody);
+    }
 
-        $ActionLogsFinder = new ActionLogsFinder();
-        $actionLogs = $ActionLogsFinder->findForResource($uac, UuidFactory::uuid('resource.id.apache'));
-
-        $this->assertEquals(count($actionLogs), 1);
-
-        $this->assertEquals($actionLogs[0]['type'], 'Resource.Secrets.updated');
-        $this->assertTrue(isset($actionLogs[0]['data']));
-        $this->assertTrue(isset($actionLogs[0]['data']['resource']));
-        $this->assertTrue(isset($actionLogs[0]['data']['secrets']));
+    public function testViewByResourceUserDoesNotHavePermission()
+    {
+        $this->authenticateAs('betty');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $this->getJson("/actionlog/resource/$resourceId.json?api-version=v2");
+        $this->assertError(404, 'The resource does not exist.');
     }
 }

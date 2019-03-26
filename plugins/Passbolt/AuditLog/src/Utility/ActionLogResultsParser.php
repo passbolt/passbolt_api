@@ -255,6 +255,7 @@ class ActionLogResultsParser
             ->find()
             ->select(['Users.id', 'Users.username'])
             ->select($User->Profiles)
+            ->select($User->Profiles->Avatars)
             ->where(['Users.id' => $userId])
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->first();
