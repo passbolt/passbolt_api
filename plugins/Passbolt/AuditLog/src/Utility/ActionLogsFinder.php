@@ -22,7 +22,6 @@ use Cake\ORM\TableRegistry;
 
 class ActionLogsFinder
 {
-
     /**
      * Get base query
      * @param array $options options
@@ -31,7 +30,7 @@ class ActionLogsFinder
      */
     protected function _getBaseQuery(array $options = [])
     {
-        $ActionLog = TableRegistry::get('Passbolt/Log.ActionLogs');
+        $ActionLog = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $query = $ActionLog->find();
         $query->group('ActionLogs.id');
 

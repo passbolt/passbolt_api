@@ -99,8 +99,9 @@ trait EntitiesHistoryTrait
 
     /**
      * Entity associations initialize
-     * Initialize needed associations for the required models on the fly.
+     * Initialize needed associations for the required core models on the fly.
      * Example: we need to associate PermissionsHistory to Permissions in order to track the history.
+     *
      * @param Event $event the event
      * @return void
      */
@@ -124,11 +125,6 @@ trait EntitiesHistoryTrait
                 'foreignKey' => 'foreign_key'
             ]);
             $table->hasMany('Passbolt/Log.SecretAccesses');
-        }
-        if ($modelName == 'SecretAccesses') {
-            $table->belongsTo('Passbolt/Log.EntitiesHistory', [
-                'foreignKey' => 'foreign_key'
-            ]);
         }
     }
 
@@ -159,16 +155,16 @@ trait EntitiesHistoryTrait
             $modelDetailedHistory = $this->_hasTableDetailedHistory($table);
             if ($modelDetailedHistory) {
                 $foreignModel = $modelDetailedHistory;
-                $table->association($foreignModel)
+                $table->getAssociation($foreignModel)
                     ->create($entity->toArray());
 
                 $entityHistoryData['foreign_model'] = $foreignModel;
-                $table->association($foreignModel)
-                    ->association('EntitiesHistory')
+                $table->getAssociation($foreignModel)
+                    ->getAssociation('EntitiesHistory')
                     ->create($entityHistoryData, $userAction);
             } else {
                 // Else we populate directly entitiesHistory.
-                $table->association('EntitiesHistory')
+                $table->getAssociation('EntitiesHistory')
                     ->create($entityHistoryData, $userAction);
             }
         }

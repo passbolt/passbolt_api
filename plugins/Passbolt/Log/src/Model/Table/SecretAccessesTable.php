@@ -21,10 +21,6 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
-/**
- * Class SecretAccessesTable
- * @package App\Model\Table
- */
 class SecretAccessesTable extends Table
 {
     /**
@@ -56,6 +52,10 @@ class SecretAccessesTable extends Table
             'foreignKey' => 'resource_id',
             'className' => 'Resources',
             'joinType' => 'LEFT'
+        ]);
+        $this->belongsTo('EntitiesHistory', [
+            'className' => 'Passbolt/Log.EntitiesHistory',
+            'foreignKey' => 'foreign_key'
         ]);
     }
 

@@ -16,7 +16,6 @@
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
 use App\Model\Entity\Permission;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;

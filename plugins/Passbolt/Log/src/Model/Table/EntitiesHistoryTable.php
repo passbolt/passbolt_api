@@ -58,6 +58,7 @@ class EntitiesHistoryTable extends Table
         ]);
         $this->belongsTo('SecretAccesses', [
             'foreignKey' => 'foreign_key',
+            'className' => 'Passbolt/Log.SecretAccesses',
         ]);
     }
 

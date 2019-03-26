@@ -250,7 +250,7 @@ class ActionLogResultsParser
      */
     protected function _getUserObject(string $userId)
     {
-        $User = TableRegistry::get('Users');
+        $User = TableRegistry::getTableLocator()->get('Users');
         $u = $User
             ->find()
             ->select(['Users.id', 'Users.username'])
