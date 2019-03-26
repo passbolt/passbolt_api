@@ -123,6 +123,7 @@ trait EntitiesHistoryTrait
             $table->belongsTo('Passbolt/Log.SecretsHistory', [
                 'foreignKey' => 'foreign_key'
             ]);
+            $table->hasMany('Passbolt/Log.SecretAccesses');
         }
         if ($modelName == 'SecretAccesses') {
             $table->belongsTo('Passbolt/Log.EntitiesHistory', [

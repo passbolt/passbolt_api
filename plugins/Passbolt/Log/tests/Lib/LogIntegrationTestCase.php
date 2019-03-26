@@ -75,6 +75,8 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->Secrets->belongsTo('Passbolt/Log.SecretsHistory', [
             'foreignKey' => 'foreign_key'
         ]);
+        $this->Secrets->hasMany('Passbolt/Log.SecretAccesses');
+
         $this->SecretAccesses->belongsTo('Passbolt/Log.EntitiesHistory', [
             'foreignKey' => 'foreign_key'
         ]);
