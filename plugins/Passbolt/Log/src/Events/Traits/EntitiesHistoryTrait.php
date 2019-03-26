@@ -123,6 +123,7 @@ trait EntitiesHistoryTrait
             $table->belongsTo('Passbolt/Log.SecretsHistory', [
                 'foreignKey' => 'foreign_key'
             ]);
+            $table->hasMany('Passbolt/Log.SecretAccesses');
         }
         if ($modelName == 'SecretAccesses') {
             $table->belongsTo('Passbolt/Log.EntitiesHistory', [
@@ -158,17 +159,17 @@ trait EntitiesHistoryTrait
             $modelDetailedHistory = $this->_hasTableDetailedHistory($table);
             if ($modelDetailedHistory) {
                 $foreignModel = $modelDetailedHistory;
-                $table->getAssociation($foreignModel)
-                      ->create($entity->toArray());
+                $table->association($foreignModel)
+                    ->create($entity->toArray());
 
                 $entityHistoryData['foreign_model'] = $foreignModel;
-                $table->getAssociation($foreignModel)
-                      ->getAssociation('EntitiesHistory')
-                      ->create($entityHistoryData, $userAction);
+                $table->association($foreignModel)
+                    ->association('EntitiesHistory')
+                    ->create($entityHistoryData, $userAction);
             } else {
                 // Else we populate directly entitiesHistory.
-                $table->getAssociation('EntitiesHistory')
-                      ->create($entityHistoryData, $userAction);
+                $table->association('EntitiesHistory')
+                    ->create($entityHistoryData, $userAction);
             }
         }
     }

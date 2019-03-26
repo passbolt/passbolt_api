@@ -64,7 +64,8 @@
             "App\\": "src",
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
-            "Passbolt\\Log\\": "./plugins/Passbolt/Log/src"
+            "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
+            "Passbolt\\AuditLog\\": "./plugins/Passbolt/AuditLog/src"
         }
     },
     "autoload-dev": {
@@ -72,7 +73,8 @@
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
-            "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests"
+            "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
+            "Passbolt\\AuditLog\\Test\\": "./plugins/Passbolt/AuditLog/tests"
         }
     },
     "scripts": {

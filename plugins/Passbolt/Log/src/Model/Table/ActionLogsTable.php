@@ -118,7 +118,6 @@ class ActionLogsTable extends Table
      */
     public function create(UserAction $userAction, int $status)
     {
-
         $userId = $userAction->getUserAccessControl()->userId();
 
         // Create corresponding action.

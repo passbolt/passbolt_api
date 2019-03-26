@@ -12,7 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.8.0
  */
-
 namespace Passbolt\Log\Test\TestCase\Controller\Share;
 
 use App\Utility\UuidFactory;

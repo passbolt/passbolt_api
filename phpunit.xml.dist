@@ -17,6 +17,7 @@
             <directory>./tests/TestCase</directory>
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/AuditLog/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
@@ -37,6 +38,7 @@
             <directory suffix=".php">./src/</directory>
             <directory suffix=".php">./plugins/WebInstaller/src/</directory>
             <directory suffix=".php">./plugins/Log/src/</directory>
+            <directory suffix=".php">./plugins/AuditLog/src/</directory>
         </whitelist>
     </filter>
 </phpunit>
