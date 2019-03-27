@@ -21,6 +21,7 @@
             <directory>./plugins/Passbolt/MultiFactorAuthentication/tests/TestCase</directory>
             <directory>./plugins/Passbolt/Tags/tests/TestCase</directory>
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
+            <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
     </testsuites>
@@ -45,6 +46,7 @@
             <directory suffix=".php">./plugins/MultiFactorAuthentication/src/</directory>
             <directory suffix=".php">./plugins/Tags/src/</directory>
             <directory suffix=".php">./plugins/WebInstaller/src/</directory>
+            <directory suffix=".php">./plugins/Log/src/</directory>
         </whitelist>
     </filter>
 </phpunit>

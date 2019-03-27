@@ -17,6 +17,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
+use Cake\Http\Exception\InternalErrorException;
 
 class ResourcesIndexController extends AppController
 {
@@ -44,6 +45,36 @@ class ResourcesIndexController extends AppController
 
         // Retrieve the resources.
         $resources = $this->Resources->findIndex($this->User->id(), $options);
+        $this->_logSecretAccesses($resources->all()->toArray());
         $this->success(__('The operation was successful.'), $resources);
+    }
+
+    /**
+     * Log secrets accesses in secretAccesses table.
+     * @param array $resources resources
+     * @return void
+     */
+    protected function _logSecretAccesses(array $resources)
+    {
+        if (!$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
+            return;
+        }
+
+        foreach ($resources as $resource) {
+            if (!isset($resource->secrets)) {
+                continue;
+            }
+
+            foreach ($resource->secrets as $secret) {
+                try {
+                    $this->Resources
+                        ->getAssociation('Secrets')
+                        ->getAssociation('SecretAccesses')
+                        ->create($secret, $this->User->getAccessControl());
+                } catch (\Exception $e) {
+                    throw new InternalErrorException(__('Could not log secret access entry.'));
+                }
+            }
+        }
     }
 }

@@ -24,7 +24,10 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
 {
     use FavoritesModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
+        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/Avatars'
+    ];
 
     public function testSuccess()
     {

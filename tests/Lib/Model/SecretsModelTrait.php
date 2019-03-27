@@ -18,20 +18,9 @@ use App\Utility\UuidFactory;
 
 trait SecretsModelTrait
 {
-
-    /**
-     * Get a dummy secret with test data.
-     * The comment returned passes a default validation.
-     *
-     * @param array $data Custom data that will be merged with the default content.
-     * @return array Comment data
-     */
-    public static function getDummySecret($data = [])
+    public static function getDummySecretData(string $userId = null, string $data = null)
     {
-        $entityContent = [
-            'resource_id' => UuidFactory::uuid('resource.id.april'),
-            'user_id' => UuidFactory::uuid('user.id.ada'),
-            'data' => '-----BEGIN PGP MESSAGE-----
+        return '-----BEGIN PGP MESSAGE-----
 
 hQIMA1P90Qk1JHA+ARAAu3oaLzv/BfeukST6tYAkAID+xbt5dhsv4lxL3oSbo8Nm
 qmJQSVe6wmh8nZJjeHN4L7iCq8FEZpdCwrDbX1qIuqBFFO3vx6BJFOURG0JbI/E/
@@ -47,7 +36,22 @@ sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
 QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
 W3AI8+rWjK8MGH2T88hCYI/6
 =uahb
------END PGP MESSAGE-----'
+-----END PGP MESSAGE-----';
+    }
+
+    /**
+     * Get a dummy secret with test data.
+     * The comment returned passes a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array Comment data
+     */
+    public static function getDummySecret($data = [])
+    {
+        $entityContent = [
+            'resource_id' => UuidFactory::uuid('resource.id.april'),
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'data' => self::getDummySecretData(UuidFactory::uuid('user.id.ada'))
         ];
         $entityContent = array_merge($entityContent, $data);
 
