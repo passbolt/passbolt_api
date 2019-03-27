@@ -16,9 +16,12 @@ namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
+use Cake\TestSuite\IntegrationTestTrait;
 
 class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
+    use IntegrationTestTrait;
+
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
 
     public function testAuthVerifyControllerUserGetSuccess()

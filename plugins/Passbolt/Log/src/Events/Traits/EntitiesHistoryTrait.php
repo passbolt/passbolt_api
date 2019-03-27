@@ -161,16 +161,16 @@ trait EntitiesHistoryTrait
             if ($modelDetailedHistory) {
                 $foreignModel = $modelDetailedHistory;
                 $table->getAssociation($foreignModel)
-                    ->create($entity->toArray());
+                      ->create($entity->toArray());
 
                 $entityHistoryData['foreign_model'] = $foreignModel;
                 $table->getAssociation($foreignModel)
-                    ->getAssociation('EntitiesHistory')
-                    ->create($entityHistoryData, $userAction);
+                      ->getAssociation('EntitiesHistory')
+                      ->create($entityHistoryData, $userAction);
             } else {
                 // Else we populate directly entitiesHistory.
                 $table->getAssociation('EntitiesHistory')
-                    ->create($entityHistoryData, $userAction);
+                      ->create($entityHistoryData, $userAction);
             }
         }
     }

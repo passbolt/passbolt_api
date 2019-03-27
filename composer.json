@@ -32,7 +32,7 @@
         },
         {
           "type": "vcs",
-          "url": "https://github.com/stripthis/cakephp-file-storage.git",
+          "url": "https://github.com/passbolt/cakephp-file-storage.git",
           "no-api": true
         }
     ],

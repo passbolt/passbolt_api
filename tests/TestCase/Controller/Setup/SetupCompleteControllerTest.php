@@ -22,7 +22,10 @@ use Cake\ORM\TableRegistry;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'app.Base/AuthenticationTokens'
+    ];
     public $AuthenticationTokens;
     use AuthenticationTokenModelTrait;
 
@@ -88,6 +91,31 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson($url, $data);
         $this->assertSuccess();
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
+    public function testSetupCompleteErrorWithKeyBelongingToDeletedUser()
+    {
+        // Complete setup with sofia's key (deleted user)
+        $t = $this->AuthenticationTokens->generate(UuidFactory::uuid('user.id.ruth'), AuthenticationToken::TYPE_REGISTER);
+        $url = '/setup/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'sofia_public.key');
+        $data = [
+            'authenticationtoken' => [
+                'token' => $t->token
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey
+            ]
+        ];
+        $this->postJson($url, $data);
+        $this->assertError();
+        $this->assertNotEmpty($this->_responseJsonBody);
+        $this->assertContains('_isUnique', $this->_getBodyAsString());
     }
 
     /**

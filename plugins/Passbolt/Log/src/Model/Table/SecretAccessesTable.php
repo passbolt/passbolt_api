@@ -15,11 +15,11 @@ namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Secret;
-use App\Model\Entity\SecretAccess;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Log\Model\Entity\SecretAccess;
 
 class SecretAccessesTable extends Table
 {
