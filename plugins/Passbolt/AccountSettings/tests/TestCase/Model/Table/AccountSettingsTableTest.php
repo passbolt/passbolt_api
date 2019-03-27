@@ -50,8 +50,7 @@ class AccountSettingsTableTest extends AccountSettingsPluginTestCase
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('AccountSettings') ? [] : ['className' => AccountSettingsTable::class];
-        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings', $config);
+        $this->AccountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
     }
 
     /**

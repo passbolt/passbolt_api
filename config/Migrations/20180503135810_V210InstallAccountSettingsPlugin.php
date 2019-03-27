@@ -26,10 +26,33 @@ class V210InstallAccountSettingsPlugin extends AbstractMigration
      */
     public function up()
     {
-        $migrations = new Migrations([
-            'connection' => ConnectionManager::get('default')->configName(),
-            'plugin' => 'Passbolt/AccountSettings',
-        ]);
-        $migrations->migrate();
+        $this->table('account_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+            ->addColumn('id', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+            ])
+            ->addColumn('user_id', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+            ])
+            ->addColumn('property_id', 'char', [
+                'default' => null,
+                'limit' => 36,
+                'null' => false,
+            ])
+            ->addColumn('property', 'string', [
+                'default' => null,
+                'limit' => 256,
+                'null' => false,
+            ])
+            ->addColumn('value', 'string', [
+                'default' => null,
+                'limit' => 256,
+                'null' => false,
+            ])
+            ->addIndex(['user_id', 'property_id'])
+            ->create();
     }
 }

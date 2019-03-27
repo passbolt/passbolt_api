@@ -19,6 +19,7 @@ use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\TableRegistry;
 
 class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -30,8 +31,8 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 
     public function setUp()
     {
+        TableRegistry::getTableLocator()->clear();
         parent::setUp();
-        Configure::write('passbolt.plugins.tags.enabled', true);
         $this->_recover = false;
     }
 
