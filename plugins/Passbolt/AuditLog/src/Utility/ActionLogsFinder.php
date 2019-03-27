@@ -45,15 +45,20 @@ class ActionLogsFinder
                     'Users.username']]]);
 
         $query->contain(['Users.Profiles' => [
+                'Avatars' => [
+                    'queryBuilder' => AvatarsTable::addContainAvatar()['Avatars'],
+                    'fields' => [
+                        'Avatars.id',
+                        'Avatars.model',
+                        'Avatars.extension',
+                        'Avatars.path',
+                    ],
+                ],
                 'fields' => [
                     'Profiles.first_name',
                     'Profiles.last_name']]]);
 
         $query->innerJoinWith('Users.Profiles');
-        $query->contain('Users.Profiles.Avatars', [
-            'fields' => new AvatarsTable(),
-            'queryBuilder' => AvatarsTable::addContainAvatar()['Avatars'],
-        ]);
 
         $query->contain(['EntitiesHistory.PermissionsHistory' => [
             'fields' => [
