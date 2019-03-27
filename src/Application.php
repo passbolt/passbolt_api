@@ -150,7 +150,8 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
 
-        if (Configure::read('passbolt.plugins.log.enabled')) {
+        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+        if (!isset($logEnabled) || $logEnabled) {
             $this->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
         }
 

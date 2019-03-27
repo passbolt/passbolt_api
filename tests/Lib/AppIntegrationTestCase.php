@@ -78,7 +78,7 @@ abstract class AppIntegrationTestCase extends TestCase
     {
         parent::setUp();
         $this->enableCsrfToken();
-        Configure::write('passbolt.plugin.log.enabled', false);
+        Configure::write('passbolt.plugins.log.enabled', false);
     }
 
     /**
