@@ -15,10 +15,10 @@
 
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
-class UserLogsControllerTest extends AppIntegrationTestCase
+class UserLogsControllerTest extends LogIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users',
@@ -41,12 +41,7 @@ class UserLogsControllerTest extends AppIntegrationTestCase
         'plugin.Passbolt/Log.Base/SecretsHistory'
     ];
 
-    public function setUp()
-    {
-        parent::setUp();
-    }
-
-    public function testViewByResourceEmpty()
+    public function testUserLogsControllerViewByResourceEmpty()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
@@ -55,7 +50,7 @@ class UserLogsControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testViewByResourceUserDoesNotHavePermission()
+    public function testUserLogsControllerViewByResourceUserDoesNotHavePermission()
     {
         $this->authenticateAs('betty');
         $resourceId = UuidFactory::uuid('resource.id.bower');
