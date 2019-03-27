@@ -20,6 +20,7 @@ use App\Model\Table\SecretsTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAction;
 use Cake\Core\Configure;
+use Cake\ORM\AssociationCollection;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
 use Passbolt\Log\Model\Table\EntitiesHistoryTable;
@@ -52,9 +53,12 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.tags.enabled', true);
         Configure::write('passbolt.plugins.log.enabled', true);
 
         UserAction::destroy();
+
+        TableRegistry::getTableLocator()->clear();
 
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
@@ -80,5 +84,11 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->SecretAccesses->belongsTo('Passbolt/Log.EntitiesHistory', [
             'foreignKey' => 'foreign_key'
         ]);
+    }
+
+    public function tearDown()
+    {
+        // Remove dynamically added associations
+        TableRegistry::getTableLocator()->clear();
     }
 }

@@ -24,7 +24,6 @@
             <directory>./plugins/Passbolt/Log/tests/TestCase</directory>
             <directory>./plugins/Passbolt/AuditLog/tests/TestCase</directory>
         </testsuite>
-        <!-- Add plugin test suites here. -->
     </testsuites>
 
     <!-- Setup a listener for fixtures -->

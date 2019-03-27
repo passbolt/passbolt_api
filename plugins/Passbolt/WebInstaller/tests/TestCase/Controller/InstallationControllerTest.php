@@ -17,6 +17,7 @@ namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 use Cake\Datasource\ConnectionManager;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
+use Cake\ORM\TableRegistry;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {
@@ -33,6 +34,7 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     {
         parent::tearDown();
         $this->restoreConfiguration();
+        TableRegistry::getTableLocator()->clear();
     }
 
     protected function getInstallSessionData()
@@ -263,7 +265,6 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->assertNotEmpty($tables);
 
         $result = json_decode($this->_getBodyAsString(), true);
-
         $this->assertTrue(isset($result['user_id']));
         $this->assertTrue(isset($result['token']));
         $this->assertTrue(Validation::uuid($result['user_id']));

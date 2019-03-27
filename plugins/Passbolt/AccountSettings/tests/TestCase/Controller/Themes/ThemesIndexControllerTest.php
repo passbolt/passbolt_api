@@ -15,14 +15,15 @@
 
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Test\Lib\AccountSettingsPluginIntegrationTestCase;
 
-class ThemesIndexControllerTest extends AccountSettingsPluginIntegrationTestCase
+class ThemesIndexControllerTest extends AppIntegrationTestCase
 {
     public $AccountSettings;
 
     public $fixtures = [
+        'plugin.Passbolt/AccountSettings.AccountSettings',
         'app.Base/OrganizationSettings'
     ];
 
