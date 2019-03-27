@@ -15,6 +15,10 @@
 namespace App\Shell;
 
 use App\Controller\Events\EmailNotificationsListener;
+use App\Model\Entity\Role;
+use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
+use App\Utility\UuidFactory;
 use Cake\Event\EventManager;
 
 /**
@@ -42,6 +46,7 @@ class AppShellBootstrap
         if (!isset(self::$instance)) {
             self::$instance = new AppShellBootstrap();
             self::$instance->_bindEvents();
+            self::$instance->_initUserAction();
         }
 
         return self::$instance;
@@ -55,5 +60,25 @@ class AppShellBootstrap
     {
         $emails = new EmailNotificationsListener();
         EventManager::instance()->on($emails);
+    }
+
+    /**
+     * Init the UserAction component if it's not already initialized.
+     * This is to avoid errors while executing tasks that don't implement UserAction.
+     */
+    private function _initUserAction()
+    {
+        // Context will look like the example below:
+        // CMD passbolt install --no-admin
+        $args = $_SERVER['argv'];
+        $args[0] = 'CMD';
+        $context = implode(' ', $args);
+
+        try {
+            UserAction::getInstance();
+        } catch (\Exception $e) {
+            $uac = new UserAccessControl(Role::GUEST, null);
+            UserAction::getInstance($uac, 'shell', $context);
+        }
     }
 }

@@ -14,11 +14,11 @@
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 
-class AuthVerifyControllerTest extends TestCase
+class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
 
