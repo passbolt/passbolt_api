@@ -15,7 +15,7 @@
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
-use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -68,8 +68,7 @@ class SetupCompleteController extends AppController
         // Check business rules before saving
         $this->Gpgkeys->checkRules($gpgkey);
         if ($gpgkey->getErrors()) {
-            $this->set('errors', $gpgkey->getErrors());
-            throw new BadRequestException(__('The OpenPGP key data is not valid.'));
+            throw new ValidationException(__('The OpenPGP key data is not valid.'), $gpgkey, $this->Gpgkeys);
         }
 
         // Deactivate the authentication token
@@ -80,7 +79,6 @@ class SetupCompleteController extends AppController
 
         // Save user GPG key, rules were already checked
         if (!$this->Gpgkeys->save($gpgkey, ['checkRules' => false])) {
-            $this->set('errors', $gpgkey->getErrors());
             throw new InternalErrorException(__('Could not save the OpenPGP key data.'));
         }
 

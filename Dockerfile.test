@@ -1,0 +1,32 @@
+ARG CONTAINER_IMAGE=php:7.0-fpm
+FROM $CONTAINER_IMAGE
+
+ARG PASSBOLT_DEV_PACKAGES="libgpgme11-dev libpng-dev libjpeg62-turbo-dev libicu-dev libxslt1-dev libmcrypt-dev libldap2-dev unzip libgpgme11 libmcrypt4 mysql-client git libxml2-dev libsodium-dev libgmp-dev"
+ARG PHP_EXTENSIONS="gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
+ARG PECL_PASSBOLT_EXTENSIONS="gnupg redis mcrypt"
+ARG PECL_BASE_URL="https://pecl.php.net/get"
+ARG PHP_EXT_DIR="/usr/src/php/ext"
+
+RUN apt-get update \
+    && apt-get install -y $PASSBOLT_DEV_PACKAGES \
+    && docker-php-source extract \
+    && for i in $PECL_PASSBOLT_EXTENSIONS; do \
+         mkdir $PHP_EXT_DIR/$i; \
+         curl -sSL $PECL_BASE_URL/$i | tar zxf - -C $PHP_EXT_DIR/$i --strip-components 1; \
+       done \
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j4 $PHP_EXTENSIONS $PECL_PASSBOLT_EXTENSIONS \
+    && docker-php-ext-enable $PHP_EXTENSIONS $PECL_PASSBOLT_EXTENSIONS \
+    && docker-php-source delete \
+    && curl -o composer-setup.php https://getcomposer.org/installer \
+    && EXPECTED_SIGNATURE=$(curl -s https://composer.github.io/installer.sig) \
+    && ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');") \
+    && if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then \
+         >&2 echo 'ERROR: Invalid installer signature'; \
+         rm composer-setup.php; \
+         exit 1; \
+       fi \
+    && php composer-setup.php \
+    && mv composer.phar /usr/local/bin/composer \
+    && composer global require hirak/prestissimo

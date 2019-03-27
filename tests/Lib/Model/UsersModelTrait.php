@@ -14,6 +14,7 @@
  */
 namespace App\Test\Lib\Model;
 
+use App\Test\Fixture\Base\UsersFixture;
 use App\Utility\UuidFactory;
 
 trait UsersModelTrait
@@ -41,6 +42,30 @@ trait UsersModelTrait
         $entityContent = array_merge($entityContent, $data);
 
         return $entityContent;
+    }
+
+    /**
+     * Get dummy data to update a test user
+     * It merges it with a passable $override array
+     * and returns the final array
+     *
+     * @param array $override to override the test array
+     * @return array Update user data
+     */
+    public static function getUserUpdateData(array $override = [])
+    {
+        $updateData = [
+            'username' => 'user@domain.com',
+            'role_id' => UuidFactory::uuid('role.id.admin'),
+            'deleted' => true,
+            'active' => false,
+            'profile' => [
+                'first_name' => 'updated',
+                'last_name' => 'name'
+            ]
+        ];
+
+        return array_merge($updateData, $override);
     }
 
     /**
@@ -86,5 +111,38 @@ trait UsersModelTrait
     {
         $user = $this->Users->get($id);
         $this->assertFalse($user->deleted);
+    }
+
+    /**
+     * Creates and saves a dummy user to the DB
+     * and returns it's reference
+     */
+    protected function createTestUser()
+    {
+        $testUser = $this->Users->newEntity(self::getDummyUser(), static::getEntityDefaultOptions());
+
+        $errors = $testUser->getErrors();
+        $this->assertEmpty($errors);
+        $this->assertNotEmpty($testUser);
+
+        return $this->Users->save($testUser);
+    }
+
+    protected function getPersistedUser($random = true)
+    {
+        $fixture = new UsersFixture();
+
+        $index = 0;
+
+        if ($random) {
+            $index = array_rand($fixture->records);
+        }
+
+        return $fixture->records[$index];
+    }
+
+    protected function getNonExistingRoleId()
+    {
+        return UuidFactory::uuid('role.id.notexist');
     }
 }
