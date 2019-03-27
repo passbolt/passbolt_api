@@ -74,7 +74,8 @@
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/Passbolt/MultiFactorAuthentication/src",
             "Passbolt\\Tags\\": "./plugins/Passbolt/Tags/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
-            "Passbolt\\Log\\": "./plugins/Passbolt/Log/src"
+            "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
+            "Passbolt\\AuditLog\\": "./plugins/Passbolt/AuditLog/src"
         }
     },
     "autoload-dev": {
@@ -87,7 +88,8 @@
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/Passbolt/MultiFactorAuthentication/tests",
             "Passbolt\\Tags\\Test\\": "./plugins/Passbolt/Tags/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
-            "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests"
+            "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
+            "Passbolt\\AuditLog\\Test\\": "./plugins/Passbolt/AuditLog/tests"
         }
     },
     "scripts": {

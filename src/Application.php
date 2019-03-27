@@ -171,6 +171,7 @@ class Application extends BaseApplication
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         if (!isset($logEnabled) || $logEnabled) {
             $this->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
+            $this->addPlugin('Passbolt/AuditLog', ['bootstrap' => true, 'routes' => true]);
         }
 
         // Add tags plugin if not configured.
