@@ -46,7 +46,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
     public function setUp()
     {
         parent::setUp();
-        Configure::write('passbolt.plugins.multiFactorAuthentication.disabled', false);
+        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', true);
     }
 
     /**

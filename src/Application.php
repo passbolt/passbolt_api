@@ -151,8 +151,8 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
 
-        $mfaDisabled = Configure::read('passbolt.plugins.multiFactorAuthentication.disabled');
-        if (!isset($mfaDisabled) || !$mfaDisabled) {
+        $mfaEnabled = Configure::read('passbolt.plugins.multiFactorAuthentication.enabled');
+        if (!isset($mfaEnabled) || $mfaEnabled) {
             $this->addPlugin('Passbolt/MultiFactorAuthentication', ['bootstrap' => true, 'routes' => true]);
         }
 

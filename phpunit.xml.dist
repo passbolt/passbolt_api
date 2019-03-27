@@ -17,7 +17,6 @@
             <directory>./tests/TestCase</directory>
             <directory>./plugins/Passbolt/AccountSettings/tests/TestCase</directory>
             <directory>./plugins/Passbolt/MultiFactorAuthentication/tests/TestCase</directory>
-            <directory>./plugins/PassboltSeleniumApi/tests/TestCase</directory>
             <directory>./plugins/Passbolt/WebInstaller/tests/TestCase</directory>
         </testsuite>
         <!-- Add plugin test suites here. -->
@@ -34,11 +33,12 @@
         </listener>
     </listeners>
 
-    <!-- Ignore vendor tests in code coverage reports -->
     <filter>
         <whitelist>
             <directory suffix=".php">./src/</directory>
-            <directory suffix=".php">./plugins/*/src/</directory>
+            <directory suffix=".php">./plugins/Passbolt/AccountSettings/src</directory>
+            <directory suffix=".php">./plugins/Passbolt/MultiFactorAuthentication/src</directory>
+            <directory suffix=".php">./plugins/Passbolt/WebInstaller/src/</directory>
         </whitelist>
     </filter>
 </phpunit>
