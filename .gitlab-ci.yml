@@ -172,7 +172,7 @@ php7.3-mariadb10.4:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.3
   only:
     - develop
@@ -188,7 +188,7 @@ php7.3-mysql5.7:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.3
   only:
     - develop
@@ -203,7 +203,7 @@ php7.2-mariadb10.4:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -218,7 +218,7 @@ php7.2-mariadb10.3:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
 
 php7.2-mariadb10.2:
@@ -230,7 +230,7 @@ php7.2-mariadb10.2:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -245,7 +245,7 @@ php7.2-mariadb10.1:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
 
 php7.2-mariadb10.0:
@@ -257,7 +257,7 @@ php7.2-mariadb10.0:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -273,7 +273,7 @@ php7.2-mariadb5:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -288,7 +288,7 @@ php7.2-mysql5.6:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -304,7 +304,7 @@ php7.2-mysql5.5:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE:7.2
   only:
     - develop
@@ -319,7 +319,7 @@ php7.1-mariadb10.4:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.1
@@ -336,7 +336,7 @@ php7.1-mysql5.7:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /entrypoint.sh mysqld
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.1
@@ -353,7 +353,7 @@ php7.0-mariadb10.4:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.0
@@ -370,7 +370,7 @@ php7.0-mariadb10.1:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /docker-entrypoint.sh mysqld
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.0
@@ -384,7 +384,7 @@ php7.0-mysql5.7:
       - -c
       - |
         mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
-        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+        /entrypoint.sh mysqld
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
   image: $CI_REGISTRY_IMAGE:7.0
