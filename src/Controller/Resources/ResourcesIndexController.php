@@ -56,7 +56,7 @@ class ResourcesIndexController extends AppController
      */
     protected function _logSecretAccesses(array $resources)
     {
-        if (!$this->Resources->hasAssociation('SecretAccesses')) {
+        if (!$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
             return;
         }
 
