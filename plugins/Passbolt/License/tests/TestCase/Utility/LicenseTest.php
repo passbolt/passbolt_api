@@ -16,13 +16,43 @@
 namespace Passbolt\License\Test\TestCase\Utility;
 
 use App\Utility\UuidFactory;
-use Passbolt\License\Test\Lib\LicenseTestCase;
+use Cake\Core\Configure;
+use Cake\TestSuite\TestCase;
 use Passbolt\License\Utility\License;
 
-class LicenseTest extends LicenseTestCase
+class LicenseTest extends TestCase
 {
+    protected $baseTestPath;
 
-    public function testSuccessGetInfo()
+    /**
+     * setUp method
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loadPlugins(['Passbolt/License']);
+        $this->baseTestPath = PLUGINS . 'Passbolt' . DS . 'License' . DS . 'tests';
+        $licenseDevPublicKey = $this->baseTestPath . DS . 'data' . DS . 'gpg' . DS . 'license_dev_public.key';
+        Configure::write('passbolt.plugins.license.licenseKey.public', $licenseDevPublicKey);
+    }
+
+    /**
+     * Get a dummy license file.
+     * See tests/data/license
+     *
+     * @param string $scenario
+     * @return string
+     */
+    protected function _getDummyLicense(string $scenario = '')
+    {
+        $testDataPath = $this->baseTestPath . DS . 'data' . DS . 'license' . DS;
+
+        return file_get_contents($testDataPath . $scenario);
+    }
+
+    public function testLicenseSuccessGetInfo()
     {
         $licenseStr = $this->_getDummyLicense('license_dev');
         $license = new License($licenseStr);
@@ -32,15 +62,15 @@ class LicenseTest extends LicenseTestCase
             return $this->fail('The license does not validate: ' . $e->getMessage());
         }
 
-        $this->assertEquals(UuidFactory::uuid('license.id.passbolt-dev'), $licenseInfo['id']);
-        $this->assertEquals(UuidFactory::uuid('customer.id.passbolt-dev'), $licenseInfo['customer_id']);
+        $this->assertEquals('93c6987e-084f-4c22-b6f1-56dd8b2989b4', $licenseInfo['id']);
+        $this->assertEquals('a175f567-1474-4580-be8f-fb21afb031ea', $licenseInfo['customer_id']);
         $this->assertEquals(35, $licenseInfo['users']);
-        $this->assertEquals(UuidFactory::uuid('plan.id.passbolt-dev'), $licenseInfo['plan_id']);
-        $this->assertEquals('2019-03-25', $licenseInfo['expiry']);
-        $this->assertEquals('2018-03-26', $licenseInfo['created']);
+        $this->assertEquals('1161946b-b300-5119-9409-7b9246a3a5ab', $licenseInfo['plan_id']);
+        $this->assertEquals('2020-03-26T00:00:00+00:00', $licenseInfo['expiry']);
+        $this->assertEquals('2019-03-27T00:00:00+00:00', $licenseInfo['created']);
     }
 
-    public function testErrorGetInfo_InvalidFormat()
+    public function testLicenseErrorGetInfo_InvalidFormat()
     {
         $licensesStr = [
             'empty license' => '',
@@ -58,7 +88,7 @@ class LicenseTest extends LicenseTestCase
         }
     }
 
-    public function testErrorGetInfo_InvalidLicenseIssuer()
+    public function testLicenseErrorGetInfo_InvalidLicenseIssuer()
     {
         $licenseStr = $this->_getDummyLicense('license_issuer_ada');
         $license = new License($licenseStr);
@@ -69,7 +99,7 @@ class LicenseTest extends LicenseTestCase
         }
     }
 
-    public function testSuccessValidate()
+    public function testLicenseSuccessValidate()
     {
         $licenseStr = $this->_getDummyLicense('license_dev');
         $license = new License($licenseStr);
@@ -81,7 +111,7 @@ class LicenseTest extends LicenseTestCase
         $this->assertTrue(true);
     }
 
-    public function testErrorValidate_ExpiredLicense()
+    public function testLicenseErrorValidate_ExpiredLicense()
     {
         $licenseStr = $this->_getDummyLicense('license_expired');
         $license = new License($licenseStr);

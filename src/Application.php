@@ -152,8 +152,8 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
 
-        $mfaDisabled = Configure::read('passbolt.plugins.multiFactorAuthentication.disabled');
-        if (!isset($mfaDisabled) || !$mfaDisabled) {
+        $mfaEnabled = Configure::read('passbolt.plugins.multiFactorAuthentication.enabled');
+        if (!isset($mfaEnabled) || $mfaEnabled) {
             $this->addPlugin('Passbolt/MultiFactorAuthentication', ['bootstrap' => true, 'routes' => true]);
         }
 
