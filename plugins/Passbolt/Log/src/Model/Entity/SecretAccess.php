@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 
-namespace App\Model\Entity;
+namespace Passbolt\Log\Model\Entity;
 
 use Cake\ORM\Entity;
 
