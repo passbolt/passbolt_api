@@ -34,7 +34,10 @@ class ActionLogsFinder
     {
         $ActionLog = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
         $query = $ActionLog->find();
-        $query->distinct('ActionLogs.id');
+        $query->group([
+            'ActionLogs.id',
+            'EntitiesHistory.created'
+        ]);
 
         $query->contain(['Actions' => [
             'fields' => ['Actions.name']]]);
