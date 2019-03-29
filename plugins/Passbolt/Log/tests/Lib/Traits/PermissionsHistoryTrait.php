@@ -15,7 +15,8 @@ namespace Passbolt\Log\Test\Lib\Traits;
 
 trait PermissionsHistoryTrait
 {
-    public function assertPermissionHistoryExists($conditions) {
+    public function assertPermissionHistoryExists($conditions)
+    {
         $permissionHistory = $this->PermissionsHistory
             ->find()
             ->where($conditions)
@@ -25,19 +26,21 @@ trait PermissionsHistoryTrait
         return $permissionHistory;
     }
 
-    public function assertPermissionsHistoryCount($expectedCount) {
+    public function assertPermissionsHistoryCount($expectedCount)
+    {
         $entityHistoryCount = $this->EntitiesHistory
             ->find()
             ->count();
         $this->assertEquals($expectedCount, $entityHistoryCount);
     }
 
-    public function assertOnePermissionHistory() {
+    public function assertOnePermissionHistory()
+    {
         $this->assertPermissionsHistoryCount(1);
     }
 
-    public function assertPermissionsHistoryEmpty() {
+    public function assertPermissionsHistoryEmpty()
+    {
         $this->assertPermissionsHistoryCount(0);
     }
-
 }
