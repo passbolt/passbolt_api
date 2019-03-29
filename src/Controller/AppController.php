@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -16,13 +16,13 @@ namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
 use App\Controller\Events\UserRegistrationListener;
+use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
-use Cake\Utility\Text;
 
 /**
  * Application Controller
@@ -34,16 +34,19 @@ use Cake\Utility\Text;
  */
 class AppController extends Controller
 {
-
     /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.
      *
+     * @throws \Exception If a component class cannot be found.
      * @return void
      */
     public function initialize()
     {
-        $this->loadComponent('RequestHandler');
+        parent::initialize();
+        $this->loadComponent('RequestHandler', [
+            'enableBeforeRedirect' => false,
+        ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
 
@@ -62,6 +65,9 @@ class AppController extends Controller
                 'plugin' => null
             ],
         ]);
+
+        // Init user action.
+        UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
 
         /*
          * Global event listeners
@@ -110,12 +116,14 @@ class AppController extends Controller
     {
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
+
         $this->set([
             'header' => [
-                'id' => Text::uuid(),
+                'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'success',
                 'servertime' => time(),
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
                 'code' => 200,
@@ -141,12 +149,14 @@ class AppController extends Controller
         }
         $prefix = strtolower($this->request->getParam('prefix'));
         $action = $this->request->getParam('action');
+
         $this->set([
             'header' => [
-                'id' => Text::uuid(),
+                'id' => UserAction::getInstance()->getUserActionId(),
                 'status' => 'error',
                 'servertime' => time(),
                 'title' => 'app_' . $prefix . '_' . $action . '_success',
+                'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
                 'code' => $errorCode

@@ -2,13 +2,13 @@
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -16,6 +16,7 @@
 
 namespace App\Test\Lib\Model;
 
+use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
@@ -166,7 +167,7 @@ trait FormatValidationTrait
                     $this->assertEquals(true, (bool)$validate, __("The test for {0}:{1} = {2} is expected to validate", $fieldName, $testCaseName, $testCaseData));
                 } else {
                     $this->assertEquals(false, (bool)$validate, __("The test for {0}:{1} = {2} is not expected to not validate", $fieldName, $testCaseName, $testCaseData));
-                    $errors = $form->errors();
+                    $errors = $form->getErrors();
                     $this->assertNotEmpty($errors, __("The test {0}:{1} = {2} should have returned an error.", $fieldName, $testCaseName, $testCaseData));
                     $this->assertNotEmpty(
                         Hash::extract($errors, "$fieldName.{$testCase['rule_name']}"),
@@ -528,5 +529,10 @@ hcciUFw5
 -----END PGP MESSAGE-----' => true,
             ],
         ];
+    }
+
+    protected function _reloadValidationRules(Table $entityTable)
+    {
+        $entityTable->validationDefault($entityTable->getValidator());
     }
 }

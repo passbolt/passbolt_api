@@ -16,8 +16,11 @@
 namespace App\Controller\Secrets;
 
 use App\Controller\AppController;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\NotFoundException;
+use App\Model\Entity\Secret;
+use App\Utility\UserAccessControl;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 class SecretsViewController extends AppController
@@ -44,6 +47,23 @@ class SecretsViewController extends AppController
         if (empty($secret)) {
             throw new NotFoundException(__('The secret does not exist.'));
         }
+        $this->_logSecretAccesses($secret, $uac);
         $this->success(__('The operation was successful.'), $secret);
     }
+
+    /**
+     * Log secrets accesses in secretAccesses table.
+     * @param Secret $secret secret
+     * @return void
+     */
+    protected function _logSecretAccesses(Secret $secret, UserAccessControl $uac) {
+        try {
+            if($this->Secrets->hasAssociation('SecretAccesses')) {
+                $this->Secrets->getAssociation('SecretAccesses')->create($secret, $uac);
+            }
+        } catch (\Exception $e) {
+            throw new InternalErrorException(__('Could not log secret access entry.'));
+        }
+    }
+
 }

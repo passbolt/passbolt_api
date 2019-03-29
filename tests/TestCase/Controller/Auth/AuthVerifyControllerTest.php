@@ -1,27 +1,30 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Cake\TestSuite\IntegrationTestCase;
+use Cake\TestSuite\IntegrationTestTrait;
 
-class AuthVerifyControllerTest extends IntegrationTestCase
+class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/roles', 'app.Base/profiles', 'app.Base/authentication_tokens'];
+    use IntegrationTestTrait;
 
-    public function testUserVerifyGetSuccess()
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
+
+    public function testAuthVerifyControllerUserGetSuccess()
     {
         $this->get('/auth/verify.json');
         $data = json_decode($this->_getBodyAsString());
@@ -32,7 +35,7 @@ class AuthVerifyControllerTest extends IntegrationTestCase
     /**
      * Test error 500 if config is invalid
      */
-    public function testVerifyBadConfig()
+    public function testAuthVerifyControllerBadConfig()
     {
         Configure::write('passbolt.gpg.serverKey.public', 'wrong');
         $this->get('/auth/verify.json');
@@ -45,7 +48,7 @@ class AuthVerifyControllerTest extends IntegrationTestCase
     /**
      * Test that the passbolt instance public keys is available in the address provided in the headers
      */
-    public function testGetServerPublicKey()
+    public function testAuthVerifyControllerGetServerPublicKey()
     {
         // get the server public key
         $this->get('/auth/login');

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -24,13 +24,13 @@ use Cake\Utility\Hash;
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/profiles',
-        'app.Base/secrets', 'app.Base/permissions', 'app.Base/roles', 'app.Base/avatars', 'app.Base/favorites', 'app.Base/email_queue'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
     ];
 
     public function setUp()
     {
-        $this->Resources = TableRegistry::get('Resources');
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         parent::setUp();
     }
 
@@ -214,10 +214,6 @@ W3AI8+rWjK8MGH2T88hCYI/6
             'resource name is missing' => [
                 'errorField' => 'Resource.name._empty',
                 'data' => $this->_getDummyPostData(['Resource' => ['name' => null]])
-            ],
-            'resource name is not valid' => [
-                'errorField' => 'Resource.name.utf8Extended',
-                'data' => $this->_getDummyPostData(['Resource' => ['name' => 1234]])
             ],
             'secret must be provided' => [
                 'errorField' => 'Secrets._required',

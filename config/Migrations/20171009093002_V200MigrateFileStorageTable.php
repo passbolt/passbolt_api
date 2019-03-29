@@ -1,29 +1,21 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-
 use Migrations\AbstractMigration;
-use Migrations\Migrations;
-use Cake\ORM\TableRegistry;
 
 class V200MigrateFileStorageTable extends AbstractMigration
 {
-    public static $fileStorageMigrations = [
-        'initial_migration'         => '20141213004653',
-        'fixing_mime_type_field'    => '20160302083933',
-    ];
-
     /**
      * Up
      *
@@ -31,40 +23,22 @@ class V200MigrateFileStorageTable extends AbstractMigration
      */
     public function up()
     {
-        $connectionName = defined('TEST_IS_RUNNING') && TEST_IS_RUNNING ? 'test': 'default';
-        $migrations = new Migrations([
-            'connection' => $connectionName,
-            'plugin' => 'Burzum/FileStorage',
-        ]);
-        // If the table file_storage exists, we prevent the initial migration to happen.
-        // We can do this because the table structure remains the same between the 2 versions.
-        $exists = $this->hasTable('file_storage');
-        if ($exists) {
-            $this->table('file_storage')
-                ->changeColumn('id', 'char', ['limit' => 36])
-                ->save();
-            $migrations->markMigrated(self::$fileStorageMigrations['initial_migration'], [
-                'connection' => $connectionName
-            ]);
-        }
-        // Continue with the next plugin migrations.
-        $migrations->migrate([
-            'target' => self::$fileStorageMigrations['fixing_mime_type_field'],
-            'connection' => $connectionName
-        ]);
-
-        // Transform "ProfileAvatar" into "Avatar" in existing db data.
-        $FileStorage = TableRegistry::get('FileStorage');
-        $avatars = $FileStorage->find()->all();
-        foreach ($avatars as $key => $avatar) {
-            $avatar = $FileStorage->patchEntity(
-                $avatar,
-                [
-                    'model' => 'Avatar',
-                    'path' => str_replace('ProfileAvatar', 'Avatar', $avatar->path)
-                ]
-            );
-            $FileStorage->save($avatar);
-        }
+        // initial_migration & fixing_mime_type_field
+        $this->table('file_storage')->drop()->save();
+        $this->table('file_storage', ['id' => false, 'primary_key' => 'id'])
+            ->addColumn('id', 'char', ['limit' => 36])
+            ->addColumn('user_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->addColumn('foreign_key', 'char', ['limit' => 36, 'null' => true, 'default' => null])
+            ->addColumn('model', 'string', ['limit' => 128, 'null' => true, 'default' => null])
+            ->addColumn('filename', 'string', ['limit' => 255, 'null' => true, 'default' => null])
+            ->addColumn('filesize', 'integer', ['limit' => 16, 'null' => true, 'default' => null])
+            ->addColumn('mime_type', 'string', ['limit' => 128, 'null' => true, 'default' => null])
+            ->addColumn('extension', 'string', ['limit' => 5, 'null' => true, 'default' => null])
+            ->addColumn('hash', 'string', ['limit' => 64, 'null' => true, 'default' => null])
+            ->addColumn('path', 'string', ['null' => true, 'default' => null])
+            ->addColumn('adapter', 'string', ['limit' => 32, 'null' => true, 'default' => null])
+            ->addColumn('created', 'datetime', ['null' => true, 'default' => null])
+            ->addColumn('modified', 'datetime', ['null' => true, 'default' => null])
+            ->create();
     }
 }

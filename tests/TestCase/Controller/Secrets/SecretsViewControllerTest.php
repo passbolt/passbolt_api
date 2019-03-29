@@ -17,11 +17,12 @@ namespace App\Test\TestCase\Controller\Secrets;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class SecretsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/users', 'app.Base/secrets'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Secrets', 'plugin.Passbolt/Log.Base/SecretAccesses'
+    ];
 
     public function testSuccess()
     {

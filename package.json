@@ -9,7 +9,7 @@
     "passbolt",
     "API"
   ],
-  "author": "Passbolt SARL",
+  "author": "Passbolt SA",
   "license": "AGPL-3.0",
   "homepage": "https://www.passbolt.com",
   "devDependencies": {
@@ -18,6 +18,6 @@
     "grunt-contrib-watch": "^1.1.0",
     "openpgp": "^4.4.7",
     "passbolt-appjs": "^2.7.0",
-    "passbolt-styleguide": "^2.4.9"
+    "passbolt-styleguide": "^2.4.11"
   }
 }

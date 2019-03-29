@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -18,11 +18,12 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
-use Cake\Network\Exception\BadRequestException;
-use Cake\Network\Exception\InternalErrorException;
-use Cake\Network\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
@@ -84,7 +85,7 @@ class ResourcesUpdateController extends AppController
      * @param \Cake\Datasource\EntityInterface $resource Resource
      * @return void
      */
-    protected function _patchAndValidateEntity($resource)
+    protected function _patchAndValidateEntity(EntityInterface $resource)
     {
         $data = $this->_formatRequestData();
 
@@ -94,8 +95,10 @@ class ResourcesUpdateController extends AppController
         // Retrieve the existing secrets ids and use to ensure that cakephp will update the existing secretes.
         if (!empty($data['secrets'])) {
             foreach ($data['secrets'] as $key => $dataSecret) {
-                $arr = Hash::extract($resource->secrets, "{n}[user_id={$dataSecret['user_id']}].id");
-                $data['secrets'][$key]['id'] = reset($arr);
+                if (isset($dataSecret['user_id'])) {
+                    $arr = Hash::extract($resource->secrets, "{n}[user_id={$dataSecret['user_id']}].id");
+                    $data['secrets'][$key]['id'] = reset($arr);
+                }
             }
         }
 

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -16,6 +16,7 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\Exception;
 use Cake\Mailer\Email;
+use Cake\Mailer\TransportFactory;
 use Passbolt\WebInstaller\Form\EmailConfigurationForm;
 
 class EmailController extends WebInstallerController
@@ -149,14 +150,14 @@ class EmailController extends WebInstallerController
      */
     protected function _setTransport($customTransportClassName, $data)
     {
-        $transportConfig = Email::getConfigTransport('default');
+        $transportConfig = TransportFactory::getConfig('default');
         $transportConfig['className'] = $customTransportClassName;
         $transportConfig['host'] = $data['host'];
         $transportConfig['port'] = $data['port'];
         $transportConfig['username'] = empty($data['username']) ? null : $data['username'];
         $transportConfig['password'] = empty($data['password']) ? null : $data['password'];
         $transportConfig['tls'] = ($data['tls'] == '1' ? true : null);
-        Email::setConfigTransport(self::TRANSPORT_CONFIG_NAME, $transportConfig);
+        TransportFactory::setConfig(self::TRANSPORT_CONFIG_NAME, $transportConfig);
         $this->email->setTransport(self::TRANSPORT_CONFIG_NAME);
     }
 

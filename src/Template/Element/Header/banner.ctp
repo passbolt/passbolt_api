@@ -7,7 +7,7 @@
     /_/    \__,_/____/____/_.___/\____/_/\__/
 
     Open source password manager for teams
-    Copyright (c) Passbolt SARL (https://www.passbolt.com)
+    Copyright (c) Passbolt SA (https://www.passbolt.com)
 
 
     This program is free software: you can redistribute it and/or modify

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -28,17 +28,17 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
     public $Comments;
 
     public $fixtures = [
-        'app.Base/users', 'app.Base/groups', 'app.Base/groups_users', 'app.Base/resources', 'app.Base/comments',
-        'app.Base/permissions', 'app.Base/avatars', 'app.Base/roles', 'app.Base/profiles', 'app.Base/email_queue',
-        'app.Base/gpgkeys'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
+        'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/EmailQueue',
+        'app.Base/Gpgkeys'
     ];
 
     public function setUp()
     {
         parent::setUp();
-        $config = TableRegistry::exists('Comments') ? [] : ['className' => CommentsTable::class];
-        $this->Comments = TableRegistry::get('Comments', $config);
-        $this->Resources = TableRegistry::get('Resources');
+        $config = TableRegistry::getTableLocator()->exists('Comments') ? [] : ['className' => CommentsTable::class];
+        $this->Comments = TableRegistry::getTableLocator()->get('Comments', $config);
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function testCommentsAddSuccess()
@@ -100,7 +100,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals($commentContent, $comment->content);
     }
 
-    public function testErrorCsrfToken()
+    public function testCommentsAddErrorCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -109,7 +109,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testErrorInvalidResourceId()
+    public function testCommentsAddErrorInvalidResourceId()
     {
         $this->authenticateAs('ada');
         $commentContent = 'this is a test';
@@ -191,7 +191,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmpty($this->_responseJsonBody);
     }
 
-    public function testCannotModifyNotAccessibleFields()
+    public function testCommentsAddCannotModifyNotAccessibleFields()
     {
         $this->authenticateAs('ada');
         $createdDate = '2012-01-01 00:00:00';
