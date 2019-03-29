@@ -65,6 +65,7 @@ class AppShellBootstrap
     /**
      * Init the UserAction component if it's not already initialized.
      * This is to avoid errors while executing tasks that don't implement UserAction.
+     * @return void
      */
     private function _initUserAction()
     {

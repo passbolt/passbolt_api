@@ -15,7 +15,8 @@ namespace Passbolt\Log\Test\Lib\Traits;
 
 trait EntitiesHistoryTrait
 {
-    public function assertEntityHistoryExists($conditions) {
+    public function assertEntityHistoryExists($conditions)
+    {
         $entityHistory = $this->EntitiesHistory
             ->find()
             ->where($conditions)
@@ -25,7 +26,8 @@ trait EntitiesHistoryTrait
         return $entityHistory;
     }
 
-    public function assertEntitiesHistoryCount($count, $conditions = []) {
+    public function assertEntitiesHistoryCount($count, $conditions = [])
+    {
         $entityHistoryCount = $this->EntitiesHistory
             ->find()
             ->where($conditions)
@@ -33,11 +35,13 @@ trait EntitiesHistoryTrait
         $this->assertEquals($entityHistoryCount, $count);
     }
 
-    public function assertOneEntityHistory($conditions = []) {
+    public function assertOneEntityHistory($conditions = [])
+    {
         return $this->assertEntitiesHistoryCount(1, $conditions);
     }
 
-    public function assertEntitiesHistoryEmpty() {
+    public function assertEntitiesHistoryEmpty()
+    {
         return $this->assertEntitiesHistoryCount(0);
     }
 }

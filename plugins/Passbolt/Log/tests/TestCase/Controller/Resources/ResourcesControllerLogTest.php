@@ -24,7 +24,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles',
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
-        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites','app.Base/EmailQueue',
+        'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
         'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
         'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
         'plugin.Passbolt/Log.Base/SecretsHistory'
@@ -121,15 +121,15 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$adaId"),
                 'data' => self::getDummySecretData($adaId),
                 'user_id' => $adaId
-            ],[
+            ], [
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$bettyId"),
                 'data' => self::getDummySecretData($bettyId),
                 'user_id' => $bettyId
-            ],[
+            ], [
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$carolId"),
                 'data' => self::getDummySecretData($carolId),
                 'user_id' => $carolId
-            ],[
+            ], [
                 'id' => UuidFactory::uuid("secret.id.$resourceId-$dameId"),
                 'data' => self::getDummySecretData($dameId),
                 'user_id' => $dameId
@@ -185,6 +185,5 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         ];
         $this->assertOneEntityHistory();
         $this->assertEntityHistoryExists($expectedEntityHistory);
-
     }
 }

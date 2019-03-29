@@ -15,7 +15,8 @@ namespace Passbolt\Log\Test\Lib\Traits;
 
 trait ActionLogsTrait
 {
-    public function assertActionLogExists($conditions) {
+    public function assertActionLogExists($conditions)
+    {
         $actionLog = $this->ActionLogs
             ->find()
             ->where($conditions)
@@ -25,22 +26,26 @@ trait ActionLogsTrait
         return $actionLog;
     }
 
-    public function assertActionLogsCount($expectedCount) {
+    public function assertActionLogsCount($expectedCount)
+    {
         $actionLogCount = $this->ActionLogs
             ->find()
             ->count();
         $this->assertEquals($expectedCount, $actionLogCount);
     }
 
-    public function assertOneActionLog() {
+    public function assertOneActionLog()
+    {
         return $this->assertActionLogsCount(1);
     }
 
-    public function assertActionLogIdMatchesResponse($id, $response) {
+    public function assertActionLogIdMatchesResponse($id, $response)
+    {
         $this->assertEquals($id, $response->id, 'ActionLogId doesn\'t match response id');
     }
 
-    public function assertActionLogsEmpty() {
+    public function assertActionLogsEmpty()
+    {
         $this->assertActionLogsCount(0);
     }
 }
