@@ -84,7 +84,9 @@ class ResourcesTable extends Table
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aco_foreign_key',
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
+            // Important so that we can track the delete event and log it.
+            'cascadeCallbacks' => true
         ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id',
@@ -442,7 +444,7 @@ class ResourcesTable extends Table
         $beforeUsersIds = $this->Permissions->Users->findIndex(Role::USER, $findUsersOptions)->extract('id')->toArray();
 
         // Save the resource permissions.
-        $resource = $this->_updatePermissions($resource, $changesReferences);
+        $this->_updatePermissions($resource, $changesReferences);
 
         // Retrieve the users who have access to the resource after applying the changes.
         $afterUsersIds = $this->Permissions->Users->findIndex(Role::USER, $findUsersOptions)->extract('id')->toArray();

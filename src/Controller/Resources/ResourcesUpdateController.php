@@ -18,6 +18,7 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -84,7 +85,7 @@ class ResourcesUpdateController extends AppController
      * @param \Cake\Datasource\EntityInterface $resource Resource
      * @return void
      */
-    protected function _patchAndValidateEntity($resource)
+    protected function _patchAndValidateEntity(EntityInterface $resource)
     {
         $data = $this->_formatRequestData();
 
@@ -94,8 +95,10 @@ class ResourcesUpdateController extends AppController
         // Retrieve the existing secrets ids and use to ensure that cakephp will update the existing secretes.
         if (!empty($data['secrets'])) {
             foreach ($data['secrets'] as $key => $dataSecret) {
-                $arr = Hash::extract($resource->secrets, "{n}[user_id={$dataSecret['user_id']}].id");
-                $data['secrets'][$key]['id'] = reset($arr);
+                if (isset($dataSecret['user_id'])) {
+                    $arr = Hash::extract($resource->secrets, "{n}[user_id={$dataSecret['user_id']}].id");
+                    $data['secrets'][$key]['id'] = reset($arr);
+                }
             }
         }
 

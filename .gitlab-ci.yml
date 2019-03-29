@@ -57,19 +57,70 @@ variables:
   DOCKER_DRIVER: overlay2
   PASSBOLT_DEV_PACKAGES: "libgpgme11-dev libpng-dev libjpeg62-turbo-dev libicu-dev libxslt1-dev libmcrypt-dev libldap2-dev unzip libgpgme11 libmcrypt4 mysql-client git libxml2-dev libsodium-dev libgmp-dev"
   PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap sodium gmp"
-  PECL_PASSBOLT_EXTENSIONS: "xdebug gnupg redis mcrypt"
+  PECL_PASSBOLT_EXTENSIONS: "gnupg redis mcrypt"
   PECL_BASE_URL: "https://pecl.php.net/get"
   PHP_EXT_DIR: "/usr/src/php/ext"
   CODE_CLIMATE_DIR: ".code_climate_rules"
   CODE_CLIMATE_CAKE_PHP_URL: "https://github.com/cakephp/cakephp-codesniffer/archive/3.1.1.tar.gz"
+  CI_REGISTRY_IMAGE: registry.gitlab.com/passbolt/passbolt-pro-api/php
 
 stages:
+  - build
   - test
   - code_quality
 
 # ---------------------------------------------------------------------------
 # Tests
 # ---------------------------------------------------------------------------
+
+
+.build-php:
+  stage: build
+  variables:
+    PHP_VERSION: "7.0"
+    PHP_CONTAINER: "php:7.0-fpm"
+    DOCKER_HOST: "tcp://localhost:2375"
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:stable-dind
+  image: docker:stable
+  script:
+    - registry_login
+    - docker pull $PHP_CONTAINER || true
+    - docker pull $CI_REGISTRY_IMAGE:$PHP_VERSION || true
+    - docker build --build-arg CONTAINER_IMAGE="$PHP_CONTAINER" --build-arg PHP_EXTENSIONS="$PHP_EXTENSIONS" --build-arg PECL_PASSBOLT_EXTENSIONS="$PECL_PASSBOLT_EXTENSIONS" --cache-from $CI_REGISTRY_IMAGE:$PHP_VERSION --cache-from $PHP_CONTAINER --tag "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA" --tag "$CI_REGISTRY_IMAGE:$PHP_VERSION" -f Dockerfile.test .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:$PHP_VERSION
+
+php7.0:
+  variables:
+   PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
+  extends: .build-php
+
+php7.1:
+  extends: .build-php
+  variables:
+    PHP_VERSION: "7.1"
+    PHP_CONTAINER: "php:7.1-fpm"
+    PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
+  only:
+    - develop
+    - master
+
+php7.2:
+  extends: .build-php
+  variables:
+    PHP_VERSION: "7.2"
+    PHP_CONTAINER: "php:7.2-fpm"
+
+php7.3:
+  extends: .build-php
+  variables:
+    PHP_VERSION: "7.3"
+    PHP_CONTAINER: "php:7.3-fpm"
+  only:
+    - develop
+    - master
 
 .test-mariadb:
   stage: test
@@ -78,11 +129,11 @@ stages:
     DATASOURCES_DEFAULT_DATABASE: $MYSQL_DATABASE
     DATASOURCES_DEFAULT_USERNAME: $MYSQL_USER
     DATASOURCES_DEFAULT_PASSWORD: $MYSQL_PASSWORD
-    DATASOURCES_DEFAULT_HOST: mariadb
+    DATASOURCES_DEFAULT_HOST: 127.0.0.1
     DATASOURCES_TEST_DATABASE: $MYSQL_DATABASE
     DATASOURCES_TEST_USERNAME: $MYSQL_USER
     DATASOURCES_TEST_PASSWORD: $MYSQL_PASSWORD
-    DATASOURCES_TEST_HOST: mariadb
+    DATASOURCES_TEST_HOST: 127.0.0.1
     PASSBOLT_GPG_SERVER_KEY_PUBLIC: config/gpg/unsecure.key
     PASSBOLT_GPG_SERVER_KEY_PRIVATE: config/gpg/unsecure_private.key
     APP_FULL_BASE_URL: http://127.0.0.1
@@ -91,9 +142,13 @@ stages:
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
     PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
   script:
+    - sleep 15
     - setup_test_db
-    - setup_passbolt_test_dependencies
     - init_test_db
+    - cp config/app.default.php config/app.php
+    - composer install --dev --no-interaction
+    - gpg --import config/gpg/unsecure_private.key
+    - gpg --import config/gpg/unsecure.key
     - $PHPUNIT_COMMAND
   only:
     - branches
@@ -106,116 +161,239 @@ stages:
 
 .test-mysql:
   extends: .test-mariadb
-  variables:
-    DATASOURCES_DEFAULT_HOST: mysql
-    DATASOURCES_TEST_HOST: mysql
 
 php7.3-mariadb10.4:
   allow_failure: true
   extends: .test-mariadb
   services:
-    - mariadb:10.4
-  image: php:7.3-fpm
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.3
+  only:
+    - develop
+    - master
 
 php7.3-mysql5.7:
   allow_failure: true
   extends: .test-mysql
   services:
-    - mysql:5.7
-  image: php:7.3-fpm
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.3
+  only:
+    - develop
+    - master
 
 php7.2-mariadb10.4:
   extends: .test-mariadb
   services:
-    - mariadb:10.4
-  image: php:7.2-fpm
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
+  only:
+    - develop
+    - master
 
 php7.2-mariadb10.3:
   extends: .test-mariadb
   services:
-    - mariadb:10.3
-  image: php:7.2-fpm
+  - name: mariadb:10.3
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
 
 php7.2-mariadb10.2:
   extends: .test-mariadb
   services:
-    - mariadb:10.2
-  image: php:7.2-fpm
+  - name: mariadb:10.2
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
+  only:
+    - develop
+    - master
 
 php7.2-mariadb10.1:
   extends: .test-mariadb
   services:
-    - mariadb:10.1
-  image: php:7.2-fpm
+  - name: mariadb:10.1
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
 
 php7.2-mariadb10.0:
   extends: .test-mariadb
   services:
-    - mariadb:10.0
-  image: php:7.2-fpm
+  - name: mariadb:10.0
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
+  only:
+    - develop
+    - master
 
 php7.2-mariadb5:
   allow_failure: true
   extends: .test-mariadb
   services:
-    - mariadb:5
-  image: php:7.2-fpm
-
-php7.2-mysql5.7-coverage:
-  extends: .test-mysql
-  services:
-    - mysql:5.7
-  variables:
-    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml --coverage-text --colors=never
-  image: php:7.2-fpm
+  - name: mariadb:5
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
+  only:
+    - develop
+    - master
 
 php7.2-mysql5.6:
   extends: .test-mysql
   services:
-    - mysql:5.6
-  image: php:7.2-fpm
+  - name: mysql:5.6
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
+  only:
+    - develop
+    - master
 
 php7.2-mysql5.5:
   allow_failure: true
   extends: .test-mysql
   services:
-    - mysql:5.5
-  image: php:7.2-fpm
+  - name: mysql:5.5
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  image: $CI_REGISTRY_IMAGE:7.2
+  only:
+    - develop
+    - master
 
 php7.1-mariadb10.4:
   extends: .test-mariadb
   services:
-    - mariadb:10.4
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
-  image: php:7.1-fpm
+  image: $CI_REGISTRY_IMAGE:7.1
+  only:
+    - develop
+    - master
 
 php7.1-mysql5.7:
   extends: .test-mysql
   services:
-    - mysql:5.7
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
-  image: php:7.1-fpm
+  image: $CI_REGISTRY_IMAGE:7.1
+  only:
+    - develop
+    - master
 
 php7.0-mariadb10.4:
   extends: .test-mariadb
   services:
-    - mariadb:10.4
+  - name: mariadb:10.4
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
-  image: php:7.0-fpm
+  image: $CI_REGISTRY_IMAGE:7.0
+  only:
+    - develop
+    - master
+
+php7.0-mariadb10.1:
+  extends: .test-mariadb
+  services:
+  - name: mariadb:10.1
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /docker-entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
+  variables:
+    PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
+  image: $CI_REGISTRY_IMAGE:7.0
 
 php7.0-mysql5.7:
   extends: .test-mysql
   services:
-    - mysql:5.7
+  - name: mysql:5.7
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        /entrypoint.sh mysqld --innodb-flush-log-at-trx-commit=0 --innodb-lru-scan-depth=128 --innodb-file-per-table --innodb-flush-method=O_DIRECT --innodb-doublewrite=0
   variables:
     PHP_EXTENSIONS: "gd intl ldap pdo_mysql opcache xsl pcntl soap gmp"
-  image: php:7.0-fpm
+  image: $CI_REGISTRY_IMAGE:7.0
+  only:
+    - develop
+    - master
 
 # ---------------------------------------------------------------------------
-# Code quality
+# Code quality.
 # ---------------------------------------------------------------------------
 
 code_quality:
@@ -235,7 +413,6 @@ code_quality:
   except:
     variables:
       - $CODE_QUALITY_DISABLED
-
 
 # ---------------------------------------------------------------------------
 # Selenium tests

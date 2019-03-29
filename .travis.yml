@@ -140,7 +140,7 @@ script:
   - if [[ $PHPUNIT = 1 && $COVERAGE = 1 ]] ; then vendor/bin/phpunit --coverage-clover build/logs/clover.xml; fi
 
 after_success:
-  - if [[ $COVERAGE = 1 ]] ; then php vendor/bin/coveralls -v ; fi
+  - if [[ $COVERAGE = 1 ]] ; then bash <(curl -s https://codecov.io/bash); fi
 
 notifications:
   email: false

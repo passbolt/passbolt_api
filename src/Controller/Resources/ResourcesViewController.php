@@ -16,7 +16,9 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Model\Entity\Resource;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
@@ -47,6 +49,33 @@ class ResourcesViewController extends AppController
         if (empty($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
+
+        // Log secret access.
+        $this->_logSecretAccesses($resource);
+
         $this->success(__('The operation was successful.'), $resource);
+    }
+
+    /**
+     * Log secrets accesses in secretAccesses table.
+     * @param resource $resource resource
+     * @return void
+     */
+    protected function _logSecretAccesses(Resource $resource)
+    {
+        if (!isset($resource->secrets) || !$this->Resources->hasAssociation('SecretAccesses')) {
+            return;
+        }
+
+        foreach ($resource->secrets as $secret) {
+            try {
+                $this->Resources
+                    ->getAssociation('Secrets')
+                    ->getassociation('SecretAccesses')
+                    ->create($secret, $this->User->getAccessControl());
+            } catch (\Exception $e) {
+                throw new InternalErrorException(__('Could not log secret access entry.'));
+            }
+        }
     }
 }

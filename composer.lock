@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b11e128fa04eff7d3451f281ff69d07d",
-    "content-hash": "5826135af580cd6430dc1cd045f40442",
+    "hash": "12c5cb7d3409981289912e76e9b6506f",
+    "content-hash": "552ac9867cf271fb94979f91dd2d4584",
     "packages": [
         {
             "name": "aura/intl",
@@ -58,12 +58,12 @@
             "version": "2.0.x-dev",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stripthis/cakephp-file-storage.git",
+                "url": "https://github.com/passbolt/cakephp-file-storage.git",
                 "reference": "c0b3eefbe1d0a98fda5e9124f6404d0f64b8a7c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripthis/cakephp-file-storage/zipball/c0b3eefbe1d0a98fda5e9124f6404d0f64b8a7c2",
+                "url": "https://api.github.com/repos/passbolt/cakephp-file-storage/zipball/c0b3eefbe1d0a98fda5e9124f6404d0f64b8a7c2",
                 "reference": "c0b3eefbe1d0a98fda5e9124f6404d0f64b8a7c2",
                 "shasum": ""
             },
@@ -333,16 +333,16 @@
         },
         {
             "name": "cakephp/migrations",
-            "version": "2.1.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/migrations.git",
-                "reference": "b5148180a59b991dac3a74c3058dd5891dfc8961"
+                "reference": "96e3cc00ede11f28bb8bcefcab95f07c487177cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/migrations/zipball/b5148180a59b991dac3a74c3058dd5891dfc8961",
-                "reference": "b5148180a59b991dac3a74c3058dd5891dfc8961",
+                "url": "https://api.github.com/repos/cakephp/migrations/zipball/96e3cc00ede11f28bb8bcefcab95f07c487177cf",
+                "reference": "96e3cc00ede11f28bb8bcefcab95f07c487177cf",
                 "shasum": ""
             },
             "require": {
@@ -382,7 +382,7 @@
                 "cakephp",
                 "migrations"
             ],
-            "time": "2018-12-25 19:49:39"
+            "time": "2019-02-07 15:20:33"
         },
         {
             "name": "cakephp/plugin-installer",
@@ -1671,16 +1671,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.10.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19"
+                "reference": "82ebae02209c21113908c229e9883c419720738a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e3d826245268269cd66f8326bd8bc066687b4a19",
-                "reference": "e3d826245268269cd66f8326bd8bc066687b4a19",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/82ebae02209c21113908c229e9883c419720738a",
+                "reference": "82ebae02209c21113908c229e9883c419720738a",
                 "shasum": ""
             },
             "require": {
@@ -1692,7 +1692,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                    "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -1725,20 +1725,20 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2018-08-06 14:22:27"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.10.0",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494"
+                "reference": "fe5e94c604826c35a32fa832f35bd036b6799609"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/c79c051f5b3a46be09205c73b80b346e4153e494",
-                "reference": "c79c051f5b3a46be09205c73b80b346e4153e494",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/fe5e94c604826c35a32fa832f35bd036b6799609",
+                "reference": "fe5e94c604826c35a32fa832f35bd036b6799609",
                 "shasum": ""
             },
             "require": {
@@ -1750,7 +1750,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.9-dev"
+                    "dev-master": "1.11-dev"
                 }
             },
             "autoload": {
@@ -1784,7 +1784,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2018-09-21 13:07:52"
+            "time": "2019-02-06 07:57:58"
         },
         {
             "name": "symfony/yaml",
@@ -2079,16 +2079,16 @@
     "packages-dev": [
         {
             "name": "ajgl/breakpoint-twig-extension",
-            "version": "0.3.2",
+            "version": "0.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ajgarlag/AjglBreakpointTwigExtension.git",
-                "reference": "bb419d13775d8fb5cd03b31012eaf496b31b444f"
+                "reference": "81b9eee68417ff6a708e6ab63532febb41443335"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ajgarlag/AjglBreakpointTwigExtension/zipball/bb419d13775d8fb5cd03b31012eaf496b31b444f",
-                "reference": "bb419d13775d8fb5cd03b31012eaf496b31b444f",
+                "url": "https://api.github.com/repos/ajgarlag/AjglBreakpointTwigExtension/zipball/81b9eee68417ff6a708e6ab63532febb41443335",
+                "reference": "81b9eee68417ff6a708e6ab63532febb41443335",
                 "shasum": ""
             },
             "require": {
@@ -2135,7 +2135,7 @@
                 "breakpoint",
                 "twig"
             ],
-            "time": "2018-12-10 08:22:36"
+            "time": "2019-03-18 10:59:03"
         },
         {
             "name": "aptoma/twig-markdown",
@@ -2250,16 +2250,16 @@
         },
         {
             "name": "cakephp/bake",
-            "version": "1.9.2",
+            "version": "1.9.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "9949a6a867a17cf30996dfc9daceab1c63a7a9c1"
+                "reference": "ec975a5430834d284533fcad46cb3d75cdbb85e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/9949a6a867a17cf30996dfc9daceab1c63a7a9c1",
-                "reference": "9949a6a867a17cf30996dfc9daceab1c63a7a9c1",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/ec975a5430834d284533fcad46cb3d75cdbb85e0",
+                "reference": "ec975a5430834d284533fcad46cb3d75cdbb85e0",
                 "shasum": ""
             },
             "require": {
@@ -2294,7 +2294,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2019-01-02 12:59:40"
+            "time": "2019-03-27 10:26:53"
         },
         {
             "name": "cakephp/cakephp-codesniffer",
@@ -2539,16 +2539,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573"
+                "reference": "46d9139568ccb8d9e7cdd4539cab7347568a5e2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/c7cb9a2095a074d131b65a8a0cd294479d785573",
-                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573",
+                "url": "https://api.github.com/repos/composer/semver/zipball/46d9139568ccb8d9e7cdd4539cab7347568a5e2e",
+                "reference": "46d9139568ccb8d9e7cdd4539cab7347568a5e2e",
                 "shasum": ""
             },
             "require": {
@@ -2597,28 +2597,27 @@
                 "validation",
                 "versioning"
             ],
-            "time": "2016-08-30 16:08:34"
+            "time": "2019-03-19 17:25:45"
         },
         {
             "name": "composer/spdx-licenses",
-            "version": "1.5.0",
+            "version": "1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/spdx-licenses.git",
-                "reference": "7a9556b22bd9d4df7cad89876b00af58ef20d3a2"
+                "reference": "a1aa51cf3ab838b83b0867b14e56fc20fbd55b3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/7a9556b22bd9d4df7cad89876b00af58ef20d3a2",
-                "reference": "7a9556b22bd9d4df7cad89876b00af58ef20d3a2",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/a1aa51cf3ab838b83b0867b14e56fc20fbd55b3d",
+                "reference": "a1aa51cf3ab838b83b0867b14e56fc20fbd55b3d",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.2 || ^7.0"
+                "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5",
-                "phpunit/phpunit-mock-objects": "2.3.0 || ^3.0"
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || 6.5 - 7"
             },
             "type": "library",
             "extra": {
@@ -2658,7 +2657,7 @@
                 "spdx",
                 "validator"
             ],
-            "time": "2018-11-01 09:45:54"
+            "time": "2019-03-26 10:23:26"
         },
         {
             "name": "composer/xdebug-handler",
@@ -4698,16 +4697,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.4.0",
+            "version": "3.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "379deb987e26c7cd103a7b387aea178baec96e48"
+                "reference": "5b4333b4010625d29580eb4a41f1e53251be6baa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/379deb987e26c7cd103a7b387aea178baec96e48",
-                "reference": "379deb987e26c7cd103a7b387aea178baec96e48",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/5b4333b4010625d29580eb4a41f1e53251be6baa",
+                "reference": "5b4333b4010625d29580eb4a41f1e53251be6baa",
                 "shasum": ""
             },
             "require": {
@@ -4740,12 +4739,12 @@
                 }
             ],
             "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "http://www.squizlabs.com/php-codesniffer",
+            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
             "keywords": [
                 "phpcs",
                 "standards"
             ],
-            "time": "2018-12-19 23:57:18"
+            "time": "2019-03-19 03:22:27"
         },
         {
             "name": "symfony/finder",
@@ -4956,16 +4955,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.38.2",
+            "version": "v1.38.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "874adbd9222f928f6998732b25b01b41dff15b0c"
+                "reference": "7732e9e7017d751313811bd118de61302e9c8b35"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/874adbd9222f928f6998732b25b01b41dff15b0c",
-                "reference": "874adbd9222f928f6998732b25b01b41dff15b0c",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/7732e9e7017d751313811bd118de61302e9c8b35",
+                "reference": "7732e9e7017d751313811bd118de61302e9c8b35",
                 "shasum": ""
             },
             "require": {
@@ -5018,7 +5017,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2019-03-12 18:45:24"
+            "time": "2019-03-23 14:27:19"
         },
         {
             "name": "umpirsky/twig-php-function",
