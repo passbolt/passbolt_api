@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Improved
+- Username and password should not be compulsory in email settings, in web installer
 
 ## [2.7.1] - 2019-02-13
 ### Fixed
