@@ -29,8 +29,8 @@ use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTrait;
 
 abstract class LogIntegrationTestCase extends AppIntegrationTestCase
 {
-    use EntitiesHistoryTrait;
     use ActionLogsTrait;
+    use EntitiesHistoryTrait;
 
     /** @var ResourcesTable */
     protected $Resources;
