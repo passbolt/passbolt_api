@@ -54,16 +54,17 @@ class SecretsViewController extends AppController
     /**
      * Log secrets accesses in secretAccesses table.
      * @param Secret $secret secret
+     * @param UserAccessControl $uac user access control object
      * @return void
      */
-    protected function _logSecretAccesses(Secret $secret, UserAccessControl $uac) {
+    protected function _logSecretAccesses(Secret $secret, UserAccessControl $uac)
+    {
         try {
-            if($this->Secrets->hasAssociation('SecretAccesses')) {
+            if ($this->Secrets->hasAssociation('SecretAccesses')) {
                 $this->Secrets->getAssociation('SecretAccesses')->create($secret, $uac);
             }
         } catch (\Exception $e) {
             throw new InternalErrorException(__('Could not log secret access entry.'));
         }
     }
-
 }

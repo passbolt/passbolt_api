@@ -155,7 +155,7 @@ class SaveTest extends AppTestCase
 
     public function testValidationUsername()
     {
-        $checkMx =  Configure::read('passbolt.email.validate.mx');
+        $checkMx = Configure::read('passbolt.email.validate.mx');
 
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),

@@ -15,7 +15,9 @@
 use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
-Router::fullBaseUrl($body['fullBaseUrl']);
+if (PHP_SAPI === 'cli') {
+    Router::fullBaseUrl($body['fullBaseUrl']);
+}
 $creator = $body['creator'];
 $comment = $body['comment'];
 $resource = $body['resource'];

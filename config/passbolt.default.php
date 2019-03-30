@@ -41,9 +41,14 @@ return [
      */
     'App' => [
         // A base URL to use for absolute links.
-        // The url where the passbolt instance will be reachable to your end users.
-        // This information is need to render images in emails for example
+        // The fully qualified domain name (including protocol) to your application’s root
+        // e.g. where the passbolt instance will be reachable to your end users.
+        // This information is need to render images in emails for example.
         'fullBaseUrl' => 'https://www.passbolt.test',
+        // OPTIONAL you can specify the base directory the app resides in
+        // usefull for example if you are running passbolt in a subdirectory like localhost/passbolt
+        // Ensure your string starts with a / and does NOT end with a /
+        // 'base' => '/subdir'
     ],
 
     // Database configuration.

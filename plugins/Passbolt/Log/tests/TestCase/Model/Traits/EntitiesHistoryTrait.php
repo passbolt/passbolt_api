@@ -13,20 +13,10 @@
  */
 namespace Passbolt\Log\Test\TestCase\Model\Traits;
 
-use App\Utility\UserAccessControl;
-use App\Utility\UserAction;
-use App\Utility\UuidFactory;
-use Cake\Event\EventListenerInterface;
-use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
-use Cake\Core\Configure;
-use Cake\Utility\Hash;
-use Cake\Http\Response;
-use Cake\Log\Log;
-
 trait EntitiesHistoryTrait
 {
-    public function assertEntityHistoryExists($conditions) {
+    public function assertEntityHistoryExists($conditions)
+    {
         $entityHistory = $this->EntitiesHistory
             ->find()
             ->where($conditions)
@@ -37,7 +27,8 @@ trait EntitiesHistoryTrait
         return $entityHistory;
     }
 
-    public function assertEntitiesHistoryCount($count, $conditions = []) {
+    public function assertEntitiesHistoryCount($count, $conditions = [])
+    {
         $entityHistoryCount = $this->EntitiesHistory
             ->find()
             ->where($conditions)
@@ -46,11 +37,13 @@ trait EntitiesHistoryTrait
         $this->assertEquals($entityHistoryCount, $count);
     }
 
-    public function assertOneEntityHistory($conditions = []) {
+    public function assertOneEntityHistory($conditions = [])
+    {
         return $this->assertEntitiesHistoryCount(1, $conditions);
     }
 
-    public function assertEntitiesHistoryEmpty() {
+    public function assertEntitiesHistoryEmpty()
+    {
         return $this->assertEntitiesHistoryCount(0);
     }
 }

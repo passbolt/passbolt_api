@@ -62,7 +62,8 @@ variables:
   PHP_EXT_DIR: "/usr/src/php/ext"
   CODE_CLIMATE_DIR: ".code_climate_rules"
   CODE_CLIMATE_CAKE_PHP_URL: "https://github.com/cakephp/cakephp-codesniffer/archive/3.1.1.tar.gz"
-  CI_REGISTRY_IMAGE: registry.gitlab.com/passbolt/passbolt-pro-api/php
+  # Injected as environment variables
+  # CI_REGISTRY_IMAGE: registry.gitlab.com/passbolt/passbolt-pro-api/php
 
 stages:
   - build
