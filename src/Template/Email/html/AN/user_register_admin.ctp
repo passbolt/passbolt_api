@@ -14,7 +14,9 @@
  */
 use App\Utility\Purifier;
 use Cake\Routing\Router;
-Router::fullBaseUrl($body['fullBaseUrl']);
+if (PHP_SAPI === 'cli') {
+    Router::fullBaseUrl($body['fullBaseUrl']);
+}
 $user = $body['user'];
 $admin = $body['admin'];
 $token = $body['token'];

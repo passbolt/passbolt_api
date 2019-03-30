@@ -21,8 +21,8 @@ use App\Controller\Events\EmailTraits\ResourcesEmailTrait;
 use App\Controller\Events\EmailTraits\ShareEmailTrait;
 use App\Controller\Events\EmailTraits\UsersEmailTrait;
 use App\Utility\Purifier;
+use Cake\Core\Configure;
 use Cake\Event\EventListenerInterface;
-use Cake\Routing\Router;
 use EmailQueue\EmailQueue;
 
 class EmailNotificationsListener implements EventListenerInterface
@@ -71,7 +71,7 @@ class EmailNotificationsListener implements EventListenerInterface
      */
     protected function _send(string $to, string $subject, array $data, string $template)
     {
-        $data['body']['fullBaseUrl'] = rtrim(Router::url('/', true), '/');
+        $data['body']['fullBaseUrl'] = Configure::read('App.fullBaseUrl');
         $options = [
             'template' => $template,
             'subject' => Purifier::clean($subject),
