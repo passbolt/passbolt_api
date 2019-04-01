@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Improved
 - PB-2: Upgrade to CakePHP 3.7
+- PB-95: Implement Import / Export enable switch
 
 ### Fixed
 - PASSBOLT-2121: Fix passbolt should run in a subdirectory
