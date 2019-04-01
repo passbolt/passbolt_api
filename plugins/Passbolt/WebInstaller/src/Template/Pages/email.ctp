@@ -44,10 +44,10 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'class' => 'required fluid'
                             ]); ?>
                             <div class="input text required">
-                                <label for="tls"><?= __('Use TLS?'); ?></label>
                                 <?= $this->Form->control('tls', [
                                     'options' => ['1' => 'Yes', '0' => 'No'],
                                     'default' => '1',
+                                    'label' => __('Use TLS?'),
                                     'class' => 'required fluid'
                                 ]); ?>
                             </div>

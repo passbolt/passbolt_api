@@ -30,23 +30,23 @@ use Cake\Routing\Router;
                                 ]);
                             ?>
                             <div class="input text required">
-                                <label for="PublicRegistration"><?= __('Allow public registration?'); ?></label>
                                 <?php
                                     echo $this->Form->control(
                                         'public_registration', [
                                         'options' => ['1' => 'Yes', '0' => 'No'],
                                         'default' => '0',
+                                        'label' => __('Allow public registration?'),
                                         'class' => 'required fluid'
                                     ]);
                                 ?>
                                 <div class="message"><?= __('Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea.') ?></div>
                             </div>
                             <div class="input text required">
-                                <label for="ForceSsl"><?= __('Force SSL?'); ?></label>
                                 <?php
                                     echo $this->Form->control('force_ssl', [
                                         'options' => ['1' => 'Yes', '0' => 'No'],
                                         'default' => isset($force_ssl) ? $force_ssl : 0,
+                                        'label' => __('Force SSL?'),
                                         'class' => 'required fluid'
                                     ]);
                                 ?>
