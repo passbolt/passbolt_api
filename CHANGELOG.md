@@ -3,13 +3,19 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
-### Fixed
-- PASSBOLT-3409: LDAP: Fix "error should be explicit when ldap module is not installed"
-- PASSBOLT-3443: LDAP: Fix 'in settings, username and password should not be compulsory fields'
+### Added
+- PB-1: Audit Logs - Browse the resources and see the activity logs to see who is doing what on them
 
 ### Improved
 - PASSBOLT-3327: LDAP: Improve administration UI
 - PASSBOLT-3328: LDAP: Add test connection option
+- PB-2: Upgrade to CakePHP 3.7
+- PB-60: Performance - Add index on tags table
+
+### Fixed
+- PASSBOLT-3409: LDAP: Fix "error should be explicit when ldap module is not installed"
+- PASSBOLT-3443: LDAP: Fix "in settings, username and password should not be compulsory fields"
+- PASSBOLT-2121: Fix passbolt should run in a subdirectory
 
 ## [2.7.2] - 2019-02-13
 ### Fixed
@@ -651,7 +657,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.7.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...HEAD
+[2.8.0]: https://github.com/passbolt/passbolt_api/compare/v2.7.2...v2.8.0
 [2.7.2]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...v2.7.2
 [2.7.1]: https://github.com/passbolt/passbolt_api/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/passbolt/passbolt_api/compare/v2.6.1...v2.7.0
