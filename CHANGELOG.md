@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+
+## [2.8.0] - 2019-04-01
 ### Added
 - PB-1: Audit Logs - Browse the resources and see the activity logs to see who is doing what on them
 - PB-3: Quickaccess - Simplified app to access passwords from the browser extension
