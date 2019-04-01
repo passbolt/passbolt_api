@@ -31,7 +31,6 @@ class PassboltShell extends AppShell
         'MysqlExport',
         'MysqlImport',
         'Passbolt/License.LicenseCheck',
-        'PassboltTestData.Data',
         'RegisterUser',
         'SendTestEmail'
     ];
