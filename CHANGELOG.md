@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.8.1] - 2019-04-01
+### Fixed
+- Remove PassboltTestData dev tool call from PassboltShell
+
 ## [2.8.0] - 2019-04-01
 ### Added
 - PB-1: Audit Logs - Browse the resources and see the activity logs to see who is doing what on them
