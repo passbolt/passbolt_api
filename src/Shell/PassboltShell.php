@@ -31,8 +31,7 @@ class PassboltShell extends AppShell
         'MysqlExport',
         'MysqlImport',
         'RegisterUser',
-        'SendTestEmail',
-        'PassboltTestData.Data'
+        'SendTestEmail'
     ];
 
     /**
@@ -70,13 +69,6 @@ class PassboltShell extends AppShell
             'help' => __d('cake_console', 'Identify and fix database relational integrity issues.'),
             'parser' => $this->Cleanup->getOptionParser(),
         ]);
-
-        if (Configure::read('passbolt.plugins.passbolt_test_data')) {
-            $parser->addSubcommand('data', [
-                'help' => __d('cake_console', 'Populate database with predefined data set (development mode).'),
-                'parser' => $this->Data->getOptionParser(),
-            ]);
-        }
 
         $parser->addSubcommand('drop_tables', [
             'help' => __d('cake_console', 'Drop all the tables. Dangerous but useful for a full reinstall.'),
