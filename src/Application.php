@@ -89,8 +89,8 @@ class Application extends BaseApplication
         parent::bootstrap();
 
         $this->addCorePlugins()
-             ->addVendorPlugins()
-             ->addPassboltPlugins();
+            ->addVendorPlugins()
+            ->addPassboltPlugins();
 
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
@@ -144,12 +144,20 @@ class Application extends BaseApplication
             $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
+        $this->addPlugin('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
+        $this->addPlugin('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
+
+        // Add tags plugin if not configured.
+        if (!WebInstallerMiddleware::isConfigured()) {
+            $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+
+            return $this;
+        }
+
         // Add Common plugins.
         $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/License', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/Pro', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
 
         $mfaEnabled = Configure::read('passbolt.plugins.multiFactorAuthentication.enabled');
@@ -172,11 +180,6 @@ class Application extends BaseApplication
         if (!isset($logEnabled) || $logEnabled) {
             $this->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
             $this->addPlugin('Passbolt/AuditLog', ['bootstrap' => true, 'routes' => true]);
-        }
-
-        // Add tags plugin if not configured.
-        if (!WebInstallerMiddleware::isConfigured()) {
-            $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
         }
 
         return $this;
