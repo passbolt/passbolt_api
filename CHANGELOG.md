@@ -5,12 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [unreleased]
 ### Added
 - PB-1: Audit Logs - Browse the resources and see the activity logs to see who is doing what on them
+- PB-3: Quickaccess - Simplified app to access passwords from the browser extension
 
 ### Improved
 - PASSBOLT-3327: LDAP: Improve administration UI
 - PASSBOLT-3328: LDAP: Add test connection option
 - PB-2: Upgrade to CakePHP 3.7
 - PB-60: Performance - Add index on tags table
+- PB-95: Implement Import / Export enable switch
 
 ### Fixed
 - PASSBOLT-3409: LDAP: Fix "error should be explicit when ldap module is not installed"
