@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.8.2] - 2019-04-01
+### Fixed
+- Fix - Disable Auditlog when passbolt is not configured
+
 ## [2.8.1] - 2019-04-01
 ### Fixed
 - Remove PassboltTestData dev tool call from PassboltShell
@@ -601,7 +605,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...HEAD
+[2.8.2]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...v2.8.0
 [2.7.1]: https://github.com/passbolt/passbolt_api/compare/v2.7.0...v2.7.1
