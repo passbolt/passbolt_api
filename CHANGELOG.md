@@ -3,7 +3,19 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+
+## [2.8.0] - 2019-04-01
+### Added
+- Import your passwords from other password managers
+- Export your passwords to other password managers
+- PB-3: Quickaccess: Simplified app to access passwords from the browser extension
+
 ### Improved
+- PB-2: Upgrade to CakePHP 3.7
+
+### Fixed
+- PASSBOLT-2121: Fix passbolt should run in a subdirectory
+- Fix short tag use in the webinstaller server gpg key import screen
 - Username and password should not be compulsory in email settings, in web installer
 
 ## [2.7.1] - 2019-02-13
@@ -584,7 +596,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...HEAD
+[2.8.0]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...v2.8.0
 [2.7.1]: https://github.com/passbolt/passbolt_api/compare/v2.7.0...v2.7.1
 [2.7.0]: https://github.com/passbolt/passbolt_api/compare/v2.5.0...v2.7.0
 [2.5.0]: https://github.com/passbolt/passbolt_api/compare/v2.4.0...v2.5.0
