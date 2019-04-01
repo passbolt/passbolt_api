@@ -16,7 +16,9 @@ use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
-Router::fullBaseUrl($body['fullBaseUrl']);
+if (PHP_SAPI === 'cli') {
+    Router::fullBaseUrl($body['fullBaseUrl']);
+}
 $owner = $body['owner'];
 $resource = $body['resource'];
 $secret = $body['secret'];
