@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.8.3] - 2019-04-02
+### Fixed
+- PB-101: Fix version number
+- PB-104: Implement enable / disable config switch for import export in default config
+
 ## [2.8.2] - 2019-04-01
 ### Fixed
 - Fix - Disable Auditlog when passbolt is not configured
@@ -605,7 +610,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...HEAD
+[2.8.3]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/passbolt/passbolt_api/compare/v2.7.1...v2.8.0
