@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '2.8.1',
+        'version' => '2.8.3',
         'name' => 'Blue Monday'
     ]
 ];
