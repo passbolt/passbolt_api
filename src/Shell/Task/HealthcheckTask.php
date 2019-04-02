@@ -449,7 +449,7 @@ class HealthcheckTask extends AppShell
         $this->assert(
             $checks['application']['sslForce'],
             __('Passbolt is configured to force SSL use.'),
-            __('Passbot is not configured to force SSL use.'),
+            __('Passbolt is not configured to force SSL use.'),
             __('Set passbolt.ssl.force to true in config/passbolt.php.')
         );
         $this->assert(
