@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [unreleased]
 ### Fixed
 - GITHUB-315: Fix the permalink of the passwords
+- PB-147: Update appjs dependencies
 
 ## [2.8.3] - 2019-04-02
 ### Fixed
