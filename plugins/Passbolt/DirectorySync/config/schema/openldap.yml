@@ -1,0 +1,109 @@
+objects:
+    user:
+        # This is a LdapTools specific to refer to this object type overall.
+        type: user
+        # The LDAP objectClass
+        class: inetOrgPerson
+        converter_options:
+            group_membership:
+                groups:
+                    to_attribute: uniqueMember
+                    from_attribute: memberOf
+                    attribute: cn
+                    filter:
+                        objectClass: groupOfUniqueNames
+        # These are converters to be applied for going both to and from LDAP.
+        converters:
+             generalized_time:
+                 - 'created'
+                 - 'modified'
+             group_membership:
+                 - 'groups'
+        # This is the actual mapping of attribute names to what they really are in LDAP.
+        attributes:
+            cellPhone: mobile
+            city: l
+            company: company
+            country: c
+            created: createTimestamp
+            department: department
+            departmentNumber: departmentNumber
+            description: description
+            displayName: displayName
+            dn: dn
+            emailAddress: mail
+            employeeNumber: employeeNumber
+            fax: fax
+            firstName: givenName
+            groups: memberOf
+            homeDirectory: homeDirectory
+            homePhone: homePhone
+            initials: initials
+            ipPhone: ipPhone
+            lastName: sn
+            modified: modifyTimestamp
+            name: cn
+            pager: pager
+            password: password
+            phoneNumber: telephoneNumber
+            poBox: postOfficeBox
+            state: st
+            streetAddress: streetAddress
+            title: title
+            username: uid
+            zipCode: postalCode
+            guid: entryUuid
+        attributes_to_select:
+            - 'dn'
+            - 'guid'
+            - 'firstName'
+            - 'lastName'
+            - 'emailAddress'
+            - 'username'
+            - 'created'
+            - 'modified'
+        multivalued_attributes:
+            - 'groups'
+    group:
+        type: group
+        class: groupOfUniqueNames
+        converters:
+             generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            created: createTimestamp
+            description: description
+            name: cn
+            modified: modifyTimestamp
+            members: member
+            guid: entryUuid
+            dn: dn
+        multivalued_attributes:
+            - members
+        attributes_to_select:
+            - 'dn'
+            - 'guid'
+            - 'name'
+            - 'description'
+            - 'created'
+            - 'modified'
+            - 'members'
+    ou:
+        type: ou
+        class: organizationalUnit
+        converters:
+             generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            created: createTimestamp
+            dn: dn
+            modified: modifyTimestamp
+            name: ou
+        attributes_to_select:
+            - 'name'
+        default_values:
+            objectclass: [ 'top', 'organizationalUnit' ]
+        required_attributes:
+            - 'name'

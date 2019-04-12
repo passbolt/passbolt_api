@@ -250,6 +250,36 @@ class DirectoryOrgSettings
     }
 
     /**
+     * Get useEmailPrefixSuffix.
+     *
+     * @return mixed
+     */
+    public function getUseEmailPrefixSuffix()
+    {
+        return Hash::get($this->settings, "useEmailPrefixSuffix");
+    }
+
+    /**
+     * Get EmailPrefix.
+     *
+     * @return mixed
+     */
+    public function getEmailPrefix()
+    {
+        return Hash::get($this->settings, "emailPrefix");
+    }
+
+    /**
+     * Get EmailSuffix.
+     *
+     * @return mixed
+     */
+    public function getEmailSuffix()
+    {
+        return Hash::get($this->settings, "emailSuffix");
+    }
+
+    /**
      * Get the settings.
      *
      * @return array

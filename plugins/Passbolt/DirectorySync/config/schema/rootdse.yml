@@ -1,0 +1,53 @@
+objects:
+    general:
+        type: generic
+        filter:
+            present: objectClass
+        base_dn: ''
+        paging: false
+        scope: base
+        attributes:
+            configurationNamingContext: configurationNamingContext
+            defaultNamingContext: defaultNamingContext
+            schemaNamingContext: schemaNamingContext
+            supportedControl: supportedControl
+            namingContexts: namingContexts
+            rootDomainNamingContext: rootDomainNamingContext
+            supportedSaslMechanisms: supportedSaslMechanisms
+            supportedLdapPolicies: supportedLdapPolicies
+            supportedLdapVersion: supportedLdapVersion
+            vendorName: vendorName
+            vendorVersion: vendorVersion
+        multivalued_attributes:
+            - namingContexts
+            - supportedControl
+            - supportedSaslMechanisms
+            - supportedLdapPolicies
+            - supportedLdapVersion
+    ad:
+        type: ad
+        extends: generic
+        converters:
+             windows_generalized_time:
+                 - currentTime
+             bool:
+                - isSynchronized
+                - isGlobalCatalogReady
+             functional_level:
+                - domainFunctionalLevel
+                - forestFunctionalLevel
+                - dcFunctionalLevel
+        attributes:
+            isSynchronized: isSynchronized
+            isGlobalCatalogReady: isGlobalCatalogReady
+            domainFunctionality: domainFunctionality
+            forestFunctionality: forestFunctionality
+            domainControllerFunctionality: domainControllerFunctionality
+            domainFunctionalLevel: domainFunctionality
+            forestFunctionalLevel: forestFunctionality
+            dcFunctionalLevel: domainControllerFunctionality
+            dsServiceName: dsServiceName
+            currentTime: currentTime
+    openldap:
+        type: openldap
+        extends: generic

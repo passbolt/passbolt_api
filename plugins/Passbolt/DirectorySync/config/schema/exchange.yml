@@ -1,0 +1,521 @@
+objects:
+    server:
+        type: ExchangeServer
+        filter:
+            eq: [ objectClass, msExchExchangeServer ]
+            present: serverRole
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+             exchange_roles:
+                - 'roles'
+             exchange_version:
+                - 'version'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            roles: msExchCurrentServerRoles
+            sid: objectSid
+            version: serialNumber
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'version'
+            - 'roles'
+            - 'guid'
+            - 'legacyExchangeDn'
+        multivalued_attributes:
+            - roles
+            - objectClass
+    database:
+        type: ExchangeDatabase
+        filter:
+            eq: [ objectClass, msExchMDB ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             bool:
+                 - 'isBeingRestored'
+                 - 'mountOnStartup'
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            isBeingRestored: msexchdatabasebeingrestored
+            mountOnStartup: msexchedboffline
+            sid: objectSid
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+        multivalued_attributes:
+            - objectClass
+    recipient_policy:
+        type: ExchangeRecipientPolicy
+        filter:
+            eq: [ objectClass, msExchRecipientPolicy ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            sid: objectSid
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+        multivalued_attributes:
+            - objectClass
+    activesync_policy:
+        type: ExchangeActiveSyncPolicy
+        filter:
+            eq: [ objectClass, msExchMobileMailboxPolicy ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+             int:
+                 - 'passwordHistoryLimit'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            passwordHistoryLimit: msExchMobileDeviceNumberOfPreviousPasswordsDisallowed
+            sid: objectSid
+        attributes_to_select:
+            - 'name'
+            - 'passwordHistoryLimit'
+            - 'guid'
+            - 'dn'
+            - 'guid'
+    rbac_policy:
+        type: ExchangeRBACPolicy
+        filter:
+            eq: [ objectClass, msExchRBACPolicy ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            sid: objectSid
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+    transport_rule:
+        type: ExchangeTransportRule
+        filter:
+            eq: [ objectClass, msExchTransportRule ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            sid: objectSid
+            ruleXml: msExchTransportRuleXml
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+            - 'ruleXml'
+    exchange_dag:
+        type: ExchangeDAG
+        filter:
+            eq: [ objectClass, msExchMDBAvailabilityGroup ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            sid: objectSid
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+    exchange_owa:
+        type: ExchangeOWA
+        filter:
+            eq: [ objectClass, msExchOWAVirtualDirectory ]
+        base_dn: "%_configurationnamingcontext_%"
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            name: cn
+            created: whenCreated
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            sid: objectSid
+            url: msexchinternalhostname
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+    exchange_user:
+        type: ExchangeMailboxUser
+        extends_default: [ ad, user ]
+        filter:
+            present: msExchMailboxGUID
+        converter_options:
+            value_to_dn:
+                archiveDatabase:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: msExchMDB
+                mailboxDatabase:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: msExchMDB
+                mailboxServer:
+                    base_dn: "%_configurationnamingcontext_%"
+                    select: legacyExchangeDn
+                    legacy_dn: true
+                    filter:
+                        objectClass: msExchExchangeServer
+                activeSyncPolicy:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: msExchMobileMailboxPolicy
+                rbacPolicy:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: msExchRBACPolicy
+                retentionPolicy:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: msExchRecipientPolicy
+                sendOnBehalfOf:
+                    display_dn: true
+                    attribute: sAMAccountName
+                    filter:
+                        objectClass: person
+                showInAddressBooks:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: addressBookContainer
+            exchange_proxy_address:
+                defaultSmtpAddress:
+                    address_type: smtp
+                    is_default: true
+                smtpAddresses:
+                    address_type: smtp
+            enum:
+                recipientTypeDetails:
+                    enum: 'LdapTools\Enums\Exchange\RecipientTypeDetails'
+                recipientDisplayType:
+                    enum: 'LdapTools\Enums\Exchange\RecipientDisplayType'
+                mailboxStatus:
+                    enum: 'LdapTools\Enums\Exchange\ExchangeUserAccountControl'
+            flags:
+                _default:
+                    attribute:
+                        LdapTools\Enums\Exchange\ELCMailbox: 'msExchELCMailboxFlags'
+                        LdapTools\Enums\Exchange\MobileAccessControl: 'msExchOmaAdminWirelessEnable'
+                    default_value:
+                        LdapTools\Enums\Exchange\ELCMailbox: 'MRMEnabled'
+                        LdapTools\Enums\Exchange\MobileAccessControl: 'None'
+                activeSyncEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\MobileAccessControl::ActiveSyncDisabled'
+                    invert: true
+                activeSyncPushEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\MobileAccessControl::OutlookMobileAccessDisabled'
+                    invert: true
+                omaEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\MobileAccessControl::OutlookMobileAccessDisabled'
+                    invert: true
+                owaForDevicesEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\MobileAccessControl::OWAForDevicesDisabled'
+                    invert: true
+                retentionEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::RetentionEnabled'
+                mrmEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::MRMEnabled'
+                calendarLoggingDisabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::CalendarLoggingDisabled'
+                calendarLoggingEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::CalendarLoggingDisabled'
+                    invert: true
+                litigationEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::LitigationEnabled'
+                singleItemRecoveryEnabled:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::SingleItemRecoveryEnabled'
+                isArchiveDatabaseValid:
+                    flag_enum: 'LdapTools\Enums\Exchange\ELCMailbox::ArchiveDatabaseValid'
+        converters:
+             bool:
+                 - 'hideFromAddressBooks'
+                 - 'useDefaultQuota'
+             int:
+                 - 'quotaSizeProhibitSend'
+                 - 'quotaSizeProhibitAll'
+                 - 'quotaSizeWarning'
+             windows_guid:
+                 - 'archiveGuid'
+                 - 'mailboxGuid'
+             windows_generalized_time:
+                 - 'litigationDate'
+             windows_security:
+                 - 'mailboxSecurity'
+             value_to_dn:
+                 - 'archiveDatabase'
+                 - 'mailboxDatabase'
+                 - 'mailboxServer'
+                 - 'activeSyncPolicy'
+                 - 'rbacPolicy'
+                 - 'retentionPolicy'
+                 - 'showInAddressBooks'
+             exchange_proxy_address:
+                 - 'smtpAddresses'
+                 - 'defaultSmtpAddress'
+             enum:
+                 - 'recipientTypeDetails'
+                 - 'recipientDisplayType'
+                 - 'mailboxStatus'
+             exchange_object_version:
+                 - 'version'
+             exchange_recipient_policy:
+                 - 'recipientPolicies'
+             exchange_legacy_dn:
+                 - 'legacyExchangeDn'
+             flags:
+                 - 'activeSyncEnabled'
+                 - 'activeSyncPushEnabled'
+                 - 'omaEnabled'
+                 - 'owaForDevicesEnabled'
+                 - 'litigationEnabled'
+                 - 'mailboxDisabled'
+                 - 'mrmEnabled'
+                 - 'retentionEnabled'
+                 - 'singleItemRecoveryEnabled'
+                 - 'calendarLoggingEnabled'
+                 - 'calendarLoggingDisabled'
+        attributes:
+            activeSyncEnabled: msExchOmaAdminWirelessEnable
+            activeSyncPushEnabled: msExchOmaAdminWirelessEnable
+            activeSyncPolicy: msExchMobileMailboxPolicyLink
+            alias: mailNickname
+            archiveDatabase: msExchArchiveDatabaseLink
+            archiveGuid: msExchArchiveGUID
+            archiveHardQuota: msExchArchiveQuota
+            archiveName: msExchArchiveName
+            archiveWarnQuota: msExchArchiveWarnQuota
+            calenderLoggingEnabled: msExchELCMailboxFlags
+            calendarLoggingDisabled: msExchELCMailboxFlags
+            defaultSmtpAddress: proxyAddresses
+            hideFromAddressBooks: msExchHideFromAddressLists
+            isArchiveDatabaseValid: msExchELCMailboxFlags
+            language: msExchUserCulture
+            legacyExchangeDn: legacyExchangeDn
+            litigationDate: msexchLitigationHoldDate
+            litigationEnabled: msExchELCMailboxFlags
+            litigationOwner: msexchLitigationHoldOwner
+            mailboxDatabase: homeMDB
+            mailboxGuid: msExchMailboxGUID
+            mailboxSecurity: msExchMailboxSecurityDescriptor
+            mailboxServer: msExchHomeServerName
+            mailboxStatus: msExchUserAccountControl
+            mailTips: msExchSenderHintTranslations
+            mrmEnabled: msExchELCMailboxFlags
+            omaEnabled: msExchOmaAdminWirelessEnable
+            owaForDevicesEnabled: msExchOmaAdminWirelessEnable
+            quotaSizeWarning: mDBStorageQuota
+            quotaSizeProhibitSend: mDBOverQuotaLimit
+            quotaSizeProhibitAll: mDBOverHardQuotaLimit
+            rbacPolicy: msExchRBACPolicyLink
+            retentionEnabled: msExchELCMailboxFlags
+            retentionPolicy: msExchMailboxTemplateLink
+            recipientDisplayType: msExchRecipientDisplayType
+            recipientPolicies: msExchPoliciesIncluded
+            recipientTypeDetails:  msExchRecipientTypeDetails
+            sendOnBehalfOf: publicDelegates
+            showInAddressBooks: showInAddressBook
+            singleItemRecoveryEnabled: msExchELCMailboxFlags
+            smtpAddresses: proxyAddresses
+            useDefaultQuota: mDBUseDefaults
+            version: msExchVersion
+        multivalued_attributes:
+            - 'smtpAddresses'
+            - 'sendOnBehalfOf'
+            - 'showInAddressBooks'
+            - 'recipientPolicies'
+        default_values:
+            alias: "%username%"
+            defaultSmtpAddress: "%emailAddress%"
+            emailAddress: "%username%@%_domainname_%"
+            language: 'en-US'
+            legacyExchangeDn: 'auto:%username%'
+            mailboxGuid: 'auto'
+            mailboxSecurity: 'O:PSG:PSD:(A;CI;RCCC;;;PS)'
+            mrmEnabled: true
+            rbacPolicy: 'Default Role Assignment Policy'
+            recipientPolicies:
+                - 'Default Policy'
+            recipientDisplayType: 'ACLableMailboxUser'
+            recipientTypeDetails: 'UserMailbox'
+            showInAddressBooks:
+                - 'All Mailboxes(VLV)'
+                - 'All Recipients(VLV)'
+                - 'All Users'
+                - 'Default Global Address List'
+                - 'Mailboxes(VLV)'
+            mailboxStatus: 'Enabled'
+            useDefaultQuota: true
+            version: 'auto'
+        attributes_to_select:
+            - 'mailboxDatabase'
+            - 'mailboxServer'
+        required_attributes:
+            - 'mailboxDatabase'
+            - 'mailboxServer'
+            - 'mailboxGuid'
+            - 'defaultSmtpAddress'
+    exchange_contact:
+        type: ExchangeContact
+        extends_default: [ ad, contact ]
+        filter:
+            eq: [ msExchRecipientDisplayType, 6 ]
+        converter_options:
+            exchange_proxy_address:
+                defaultSmtpAddress:
+                    address_type: smtp
+                    is_default: true
+                smtpAddresses:
+                    address_type: smtp
+            enum:
+                recipientTypeDetails:
+                    enum: 'LdapTools\Enums\Exchange\RecipientTypeDetails'
+                recipientDisplayType:
+                    enum: 'LdapTools\Enums\Exchange\RecipientDisplayType'
+                status:
+                    enum: 'LdapTools\Enums\Exchange\ExchangeUserAccountControl'
+            value_to_dn:
+                showInAddressBooks:
+                    base_dn: "%_configurationnamingcontext_%"
+                    filter:
+                        objectClass: addressBookContainer
+        converters:
+             bool:
+                 - 'hideFromAddressBooks'
+                 - 'isMapiRecipient'
+             value_to_dn:
+                 - 'showInAddressBooks'
+             exchange_proxy_address:
+                 - 'smtpAddresses'
+                 - 'defaultSmtpAddress'
+             enum:
+                 - 'recipientDisplayType'
+                 - 'recipientTypeDetails'
+                 - 'status'
+             exchange_object_version:
+                 - 'version'
+             exchange_recipient_policy:
+                 - 'recipientPolicies'
+             exchange_legacy_dn:
+                 - 'legacyExchangeDn'
+             windows_account_name:
+                 - 'alias'
+        attributes:
+            alias: mailNickname
+            defaultSmtpAddress: proxyAddresses
+            hideFromAddressBooks: msExchHideFromAddressLists
+            isMapiRecipient: mAPIRecipient
+            recipientDisplayType: msExchRecipientDisplayType
+            recipientPolicies: msExchPoliciesIncluded
+            recipientTypeDetails:  msExchRecipientTypeDetails
+            showInAddressBooks: showInAddressBook
+            smtpAddresses: proxyAddresses
+            status: msExchUserAccountControl
+            version: msExchVersion
+        multivalued_attributes:
+            - 'smtpAddresses'
+            - 'showInAddressBooks'
+            - 'recipientPolicies'
+        default_values:
+            alias: "%name%"
+            defaultSmtpAddress: "%emailAddress%"
+            internetEncoding: '1310720'
+            isMapiRecipient: false
+            legacyExchangeDn: 'auto:%name%'
+            status: 'Enabled'
+            recipientPolicies:
+                - 'Default Policy'
+            recipientDisplayType: 'RemoteMailUser'
+            showInAddressBooks:
+                - 'All Contacts(VLV)'
+                - 'All Recipients(VLV)'
+                - 'All Contacts'
+                - 'Default Global Address List'
+            targetAddress: "SMTP:%defaultSmtpAddress%"
+            version: 'auto'
+        attributes_to_select:
+            - 'smtpAddresses'
+            - 'defaultSmtpAddress'

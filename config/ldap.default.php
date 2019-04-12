@@ -40,6 +40,15 @@ return [
                 // Will return enabled users only. (only available in case of active directory).
                 'enabledUsersOnly' => false,
 
+                // Define whether the email should be built from a prefix / suffix (to activate only if the email is not provided by default by the directory).
+                'useEmailPrefixSuffix' => false,
+
+                // Email prefix. Enter the directory attribute that should be used as a prefix. (final email will be concat(prefix, suffix)
+                //'emailPrefix' => 'fieldName',
+
+                // Email suffix. It should be the domain name of your organization.
+                //'emailSuffix' => '@domain.com',
+
                 // 'fieldsMapping' => [
                 //      // Override the mapping here.
                 //      // Needed mainly if using openldap.

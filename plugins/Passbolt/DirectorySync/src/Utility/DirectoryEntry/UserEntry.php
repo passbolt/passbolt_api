@@ -14,6 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
+use Passbolt\DirectorySync\Error\Exception\ValidationException;
+use Cake\Validation\Validation;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
 
@@ -54,6 +56,12 @@ class UserEntry extends DirectoryEntry
             ]
         ];
 
+        try {
+            $this->_validate();
+        } catch (ValidationException $e) {
+            throw new ValidationException($e->getMessage(), $ldapObject);
+        }
+
         return $this;
     }
 
@@ -77,7 +85,7 @@ class UserEntry extends DirectoryEntry
      * Build user entry from array.
      * @param array $data data
      *
-     * @return DirectoryEntry|void
+     * @return DirectoryEntry
      */
     public function buildFromArray(array $data)
     {
@@ -85,6 +93,10 @@ class UserEntry extends DirectoryEntry
         if (!empty($data)) {
             $this->user = $data['user'];
         }
+
+        $this->_validate();
+
+        return $this;
     }
 
     /**
@@ -98,6 +110,29 @@ class UserEntry extends DirectoryEntry
         $userEntry = new UserEntry($data);
 
         return $userEntry;
+    }
+
+    /**
+     * Validate user entry.
+     * @return bool
+     */
+    protected function _validate() {
+        parent::_validate();
+
+        if (empty($this->user['username'])) {
+            throw new ValidationException(__('UserEntry: email could not be retrieved'));
+        }
+        if(!Validation::email($this->user['username'], false)) {
+            throw new ValidationException(__('UserEntry: email is not a valid email id'));
+        }
+        if (empty($this->user['profile']['first_name'])) {
+            throw new ValidationException(__('UserEntry: first name could not be retrieved'));
+        }
+        if (empty($this->user['profile']['last_name'])) {
+            throw new ValidationException(__('UserEntry: last name could not be retrieved'));
+        }
+
+        return true;
     }
 
     /**

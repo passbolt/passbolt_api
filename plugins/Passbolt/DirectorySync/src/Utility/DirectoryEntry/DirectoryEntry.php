@@ -18,6 +18,8 @@ use ArrayAccess;
 use Cake\I18n\FrozenTime;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
+use LdapTools\Utilities\LdapUtilities;
+use Passbolt\DirectorySync\Error\Exception\ValidationException;
 
 abstract class DirectoryEntry implements ArrayAccess
 {
@@ -199,6 +201,35 @@ abstract class DirectoryEntry implements ArrayAccess
         $this->modified = new FrozenTime($this->getFieldValue('modified'));
 
         return $this;
+    }
+
+    /**
+     * Validate a DirectoryEntry object.
+     * @return bool
+     */
+    protected function _validate() {
+        if (empty($this->id)) {
+            throw new ValidationException(__('DirectoryEntry: id could not be retrieved'));
+        }
+        if (!LdapUtilities::isValidGuid($this->id)) {
+            throw new ValidationException(__('DirectoryEntry: id does not match the expected format'));
+        }
+
+        if (empty($this->dn)) {
+            throw new ValidationException(__('DirectoryEntry: dn could not be retrieved'));
+        }
+        if (!LdapUtilities::isValidLdapObjectDn($this->dn)) {
+            throw new ValidationException(__('DirectoryEntry: dn does not match the expected format'));
+        }
+
+        if (empty($this->created)) {
+            throw new ValidationException(__('DirectoryEntry: created could not be retrieved'));
+        }
+        if (empty($this->modified)) {
+            throw new ValidationException(__('DirectoryEntry: modified could not be retrieved'));
+        }
+
+        return true;
     }
 
     /**
