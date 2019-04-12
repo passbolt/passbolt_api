@@ -14,8 +14,13 @@
  */
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
+use App\Utility\UuidFactory;
+use Cake\Core\Configure;
+use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectCollection;
 use LdapTools\Object\LdapObjectType;
+use Passbolt\DirectorySync\Error\Exception\ValidationException;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * Class DirectoryResults
@@ -42,6 +47,11 @@ class DirectoryResults
     private $mappingRules;
 
     /**
+     * Directory settings
+     */
+    private $directorySettings;
+
+    /**
      * Groups
      * @var array
      */
@@ -54,6 +64,18 @@ class DirectoryResults
     private $users;
 
     /**
+     * Invalid users which will be ignored.
+     * @var
+     */
+    private $invalidUsers;
+
+    /**
+     * Invalid groups which will be ignored.
+     * @var
+     */
+    private $invalidGroups;
+
+    /**
      * DirectoryResults constructor.
      *
      * @param array $mappingRules mapping rules
@@ -61,10 +83,13 @@ class DirectoryResults
     public function __construct(array $mappingRules)
     {
         $this->mappingRules = $mappingRules;
+        $this->directorySettings = DirectoryOrgSettings::get();
         $this->ldapUsers = [];
         $this->ldapGroups = [];
         $this->users = [];
         $this->groups = [];
+        $this->invalidUsers = [];
+        $this->invalidGroups = [];
     }
 
     /**
@@ -79,13 +104,21 @@ class DirectoryResults
         $this->ldapGroups = $ldapGroups;
         $this->ldapUsers = $ldapUsers;
 
+        // Transform ldap users and groups according to config. (add emails or ids if missing).
+        $this->transformLdapUsers();
+        $this->transformLdapGroups();
+
+        // Populate users and groups with their corresponding entries.
         $this->_populateUsers();
         $this->_populateGroups();
+
+        // Process users and groups relationships.
         $this->_populateAllGroupsUsersDetails();
     }
 
     /**
      * Initialize results with list of entries.
+     * This function is mainly available for testing.
      * @param array $userEntries user entries
      * @param array $groupEntries group entries
      * @return void
@@ -112,6 +145,93 @@ class DirectoryResults
         $this->_populateAllGroupsUsersDetails();
     }
 
+
+    /**
+     * Transform ldap users.
+     * @return void
+     */
+    public function transformLdapUsers()
+    {
+        foreach ($this->ldapUsers as $ldapUser) {
+            $this->transformLdapUser($ldapUser);
+        }
+    }
+
+    /**
+     * Transform ldap groups.
+     * @return void
+     */
+    public function transformLdapGroups()
+    {
+        foreach ($this->ldapGroups as $ldapGroup) {
+            $this->transformLdapGroup($ldapGroup);
+        }
+    }
+
+    /**
+     * Transform one ldap group.
+     * Add a uuid if not present (based on cn)
+     * @param LdapObject $ldapGroup ldap group
+     *
+     * @return LdapObject ldap object
+     */
+    public function transformLdapGroup(LdapObject $ldapGroup)
+    {
+        $this->_transformId($ldapGroup);
+
+        return $ldapGroup;
+    }
+
+    /**
+     * Transform one ldap user.
+     * Add a uuid if not present (based on cn)
+     * Build an email if defined in the configuration.
+     * @param LdapObject $ldapUser ldap user
+     *
+     * @return LdapObject ldap object
+     */
+    public function transformLdapUser(LdapObject $ldapUser)
+    {
+        $this->_transformId($ldapUser);
+        $this->_transformEmail($ldapUser);
+
+        return $ldapUser;
+    }
+
+    /**
+     * Transform ldap object email based on provided configuration.
+     * @param LdapObject $ldapUser ldap user
+     * @return void
+     */
+    protected function _transformEmail(LdapObject $ldapUser)
+    {
+        $emailAttribute = $this->mappingRules[LdapObjectType::USER]['username'];
+        $useEmailPrefixSuffix = $this->directorySettings->getUseEmailPrefixSuffix();
+
+        if (!$ldapUser->has($emailAttribute) && $useEmailPrefixSuffix) {
+            $emailPrefix = $this->directorySettings->getEmailPrefix();
+            $prefix = $ldapUser->get($emailPrefix);
+            $suffix = $this->directorySettings->getEmailSuffix();
+            $ldapUser->set($emailAttribute, $prefix . $suffix);
+        }
+    }
+
+    /**
+     * Adds a uuid to the ldap object if not present and if a dn exists.
+     * @param LdapObject $ldapObject ldap object
+     *
+     * @return LdapObject ldap object
+     */
+    protected function _transformId(LdapObject $ldapObject)
+    {
+        $idAttribute = $this->mappingRules[$ldapObject->getType()]['id'];
+        if (!$ldapObject->has($idAttribute) && $ldapObject->has('dn')) {
+            $ldapObject->add($idAttribute, UuidFactory::uuid($ldapObject->getDn()));
+        }
+
+        return $ldapObject;
+    }
+
     /**
      * Populate groups list from Ldap results.
      * @return void
@@ -120,10 +240,37 @@ class DirectoryResults
     private function _populateGroups()
     {
         foreach ($this->ldapGroups as $ldapGroup) {
-            if (!isset($this->groups[$ldapGroup->getDn()])) {
-                $this->groups[$ldapGroup->getDn()] = GroupEntry::fromLdapObject($ldapGroup, $this->mappingRules);
+            try {
+                if (!isset($this->groups[$ldapGroup->getDn()])) {
+                    $this->groups[$ldapGroup->getDn()] = GroupEntry::fromLdapObject($ldapGroup, $this->mappingRules);
+                }
+            } catch(\Exception $e) {
+                $this->invalidGroups[] = [
+                    'object' => $ldapGroup,
+                    'error' => $e,
+                ];
             }
         }
+    }
+
+    /**
+     * Get invalid groups.
+     * Invalid groups are groups that do not match the expected format and that will be ignored.
+     * @return array
+     */
+    public function getInvalidGroups()
+    {
+        return $this->invalidGroups;
+    }
+
+    /**
+     * get invalid users.
+     * Invalid users are users that do not match the expected format and that will be ignored.
+     * @return array
+     */
+    public function getInvalidUsers()
+    {
+        return $this->invalidUsers;
     }
 
     /**
@@ -134,8 +281,15 @@ class DirectoryResults
     private function _populateUsers()
     {
         foreach ($this->ldapUsers as $ldapUser) {
-            if (!isset($this->users[$ldapUser->getDn()])) {
-                $this->users[$ldapUser->getDn()] = UserEntry::fromLdapObject($ldapUser, $this->mappingRules);
+            try {
+                if (!isset($this->users[$ldapUser->getDn()])) {
+                    $this->users[$ldapUser->getDn()] = UserEntry::fromLdapObject($ldapUser, $this->mappingRules);
+                }
+            } catch(\Exception $e) {
+                $this->invalidUsers[] = [
+                    'object' => $ldapUser,
+                    'error' => $e,
+                ];
             }
         }
     }

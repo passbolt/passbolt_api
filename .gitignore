@@ -7,6 +7,7 @@
 /config/gpg/serverkey_private.asc
 /config/license
 /config/ldap.php
+/config/DirectorySync/schema/*
 
 # Dependencies #
 ################

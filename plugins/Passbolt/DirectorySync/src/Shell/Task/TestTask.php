@@ -16,6 +16,7 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Shell\AppShell;
 use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Error\Exception\ValidationException;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
@@ -67,6 +68,7 @@ class TestTask extends AppShell
         try {
             $directoryOrgSettings = DirectoryOrgSettings::get();
             $ldapDirectory = new LdapDirectory($directoryOrgSettings);
+            $directoryResults = $ldapDirectory->getDirectoryResults();
             $data = [
                 'users' => $ldapDirectory->getUsers(),
                 'groups' => $ldapDirectory->getGroups(),
@@ -107,6 +109,10 @@ class TestTask extends AppShell
 
         $tree = $ldapDirectory->getFilteredDirectoryResults()->getFlattenedTree();
         $this->displayFlattenedTree($tree);
+
+        $data['users'] = $directoryResults->getInvalidUsers();
+        $data['groups'] = $directoryResults->getInvalidGroups();
+        $this->displayInvalidObjects($data);
 
         return true;
     }
@@ -207,5 +213,33 @@ class TestTask extends AppShell
         $io = $this->getIo();
         $io->out($io->nl(1));
         $io->helper('Table')->output($output);
+    }
+
+    /**
+     * Display invalid objects.
+     * @param array $data
+     * @return void
+     */
+    protected function displayInvalidObjects(array $data)
+    {
+        if (count($data['users'])) {
+            $this->hr();
+            $this->err(__('{0} users returned by your directory were invalid and had to be ignored', count($data['users'])));
+            $this->hr();
+            foreach($data['users'] as $user) {
+                $this->verbose(__('Error: ') . $user['error']->getMessage());
+                $this->verbose(print_r($user['object']->toArray(), true));
+            }
+        }
+
+        if (count($data['groups'])) {
+            $this->hr();
+            $this->err(__('{0} group(s) returned by your directory were invalid and had to be ignored', count($data['groups'])));
+            $this->hr();
+            foreach($data['groups'] as $group) {
+                $this->verbose(__('Error: ') . $group['error']->getMessage());
+                $this->verbose(print_r($group['object']->toArray(), true));
+            }
+        }
     }
 }
