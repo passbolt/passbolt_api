@@ -56,12 +56,6 @@ class UserEntry extends DirectoryEntry
             ]
         ];
 
-        try {
-            $this->_validate();
-        } catch (ValidationException $e) {
-            throw new ValidationException($e->getMessage(), $ldapObject);
-        }
-
         return $this;
     }
 
@@ -93,8 +87,6 @@ class UserEntry extends DirectoryEntry
         if (!empty($data)) {
             $this->user = $data['user'];
         }
-
-        $this->_validate();
 
         return $this;
     }
@@ -133,6 +125,13 @@ class UserEntry extends DirectoryEntry
         }
 
         return true;
+    }
+
+    /**
+     * Validate User entry.
+     */
+    public function validate() {
+        return $this->_validate();
     }
 
     /**

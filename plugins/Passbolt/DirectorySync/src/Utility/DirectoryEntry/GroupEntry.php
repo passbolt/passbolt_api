@@ -57,12 +57,6 @@ class GroupEntry extends DirectoryEntry
             'users' => [],
         ];
 
-        try {
-            $this->_validate();
-        } catch (ValidationException $e) {
-            throw new ValidationException($e->getMessage(), $ldapObject);
-        }
-
         return $this;
     }
 
@@ -106,8 +100,6 @@ class GroupEntry extends DirectoryEntry
             'users' => $users,
         ];
 
-        $this->_validate();
-
         return $this;
     }
 
@@ -122,6 +114,13 @@ class GroupEntry extends DirectoryEntry
         $groupEntry = new GroupEntry($data);
 
         return $groupEntry;
+    }
+
+    /**
+     * Validate Group entry.
+     */
+    public function validate() {
+        return $this->_validate();
     }
 
     /**
