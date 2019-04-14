@@ -242,7 +242,10 @@ class DirectoryResults
         foreach ($this->ldapGroups as $ldapGroup) {
             try {
                 if (!isset($this->groups[$ldapGroup->getDn()])) {
-                    $this->groups[$ldapGroup->getDn()] = GroupEntry::fromLdapObject($ldapGroup, $this->mappingRules);
+                    $groupEntry = GroupEntry::fromLdapObject($ldapGroup, $this->mappingRules);
+                    if ($groupEntry->validate()) {
+                        $this->groups[$ldapGroup->getDn()] = $groupEntry;
+                    }
                 }
             } catch(\Exception $e) {
                 $this->invalidGroups[] = [
@@ -283,7 +286,10 @@ class DirectoryResults
         foreach ($this->ldapUsers as $ldapUser) {
             try {
                 if (!isset($this->users[$ldapUser->getDn()])) {
-                    $this->users[$ldapUser->getDn()] = UserEntry::fromLdapObject($ldapUser, $this->mappingRules);
+                    $userEntry = UserEntry::fromLdapObject($ldapUser, $this->mappingRules);
+                    if ($userEntry->validate()) {
+                        $this->users[$ldapUser->getDn()] = $userEntry;
+                    }
                 }
             } catch(\Exception $e) {
                 $this->invalidUsers[] = [

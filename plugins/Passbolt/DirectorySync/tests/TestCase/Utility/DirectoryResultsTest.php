@@ -15,7 +15,6 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use LdapTools\Object\LdapObjectType;
-use Passbolt\DirectorySync\Actions\AllSyncAction;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;

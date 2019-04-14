@@ -197,8 +197,16 @@ abstract class DirectoryEntry implements ArrayAccess
 
         $this->id = $this->getFieldValue('id');
         $this->dn = $ldapObject->getDn();
-        $this->created = new FrozenTime($this->getFieldValue('created'));
-        $this->modified = new FrozenTime($this->getFieldValue('modified'));
+
+        $created = $this->getFieldValue('created');
+        if (!empty($created)) {
+            $this->created = new FrozenTime($created);
+        }
+
+        $modified = $this->getFieldValue('modified');
+        if (!empty($modified)) {
+            $this->modified = new FrozenTime($modified);
+        }
 
         return $this;
     }
