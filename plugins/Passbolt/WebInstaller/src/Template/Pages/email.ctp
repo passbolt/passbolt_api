@@ -1,6 +1,6 @@
 <?php
 use Cake\Routing\Router;
-$this->Html->script('jquery-3.3.1.min.js', ['block' => 'scriptBottom']);
+$this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
 $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
 ?>
 <?= $this->element('header', ['title' => __('Enter your SMTP server settings.')]) ?>
@@ -44,10 +44,10 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'class' => 'required fluid'
                             ]); ?>
                             <div class="input text required">
-                                <label for="tls"><?= __('Use TLS?'); ?></label>
                                 <?= $this->Form->control('tls', [
                                     'options' => ['1' => 'Yes', '0' => 'No'],
                                     'default' => '1',
+                                    'label' => __('Use TLS?'),
                                     'class' => 'required fluid'
                                 ]); ?>
                             </div>
