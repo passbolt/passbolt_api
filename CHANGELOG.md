@@ -3,11 +3,18 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Improved
+- PB-48: Performance - remove the creator/modifier from the resources workspace grid query
+- PB-159: Remove the usage of canjs connect-hydrate module
+
 ### Fixed
 - GITHUB-315: Fix the permalink of the passwords
-- PB-147: Update appjs dependencies
+- PB-147: Update appjs steal dependencies
 - PB-152: Fix webinstaller compatibily with Firefox ESR
 - GITHUB-299: Fix - Passwords are shown twice in workspace list
+- GITHUB-10: Selecting a group on the users workspace should not reset the grid "Last Logged In" column to "Never"
+- GITHUB-62: Sorting the users on the users workspace should not break the infinite scroll
+- PB-160: Update appjs jquery dependencies
 
 ## [2.8.3] - 2019-04-02
 ### Fixed
