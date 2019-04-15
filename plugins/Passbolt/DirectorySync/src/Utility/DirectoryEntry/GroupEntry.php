@@ -14,6 +14,8 @@
  */
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
+use LdapTools\Utilities\LdapUtilities;
+use Passbolt\DirectorySync\Error\Exception\ValidationException;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
 
@@ -112,6 +114,35 @@ class GroupEntry extends DirectoryEntry
         $groupEntry = new GroupEntry($data);
 
         return $groupEntry;
+    }
+
+    /**
+     * Validate Group entry.
+     */
+    public function validate() {
+        return $this->_validate();
+    }
+
+    /**
+     * Validate group entry.
+     * @return bool
+     */
+    protected function _validate() {
+        parent::_validate();
+
+        if (empty($this->group['name'])) {
+            throw new ValidationException(__('GroupEntry: name could not be retrieved'));
+        }
+
+        if (isset($this->group['members']) && !empty($this->group['members'])) {
+            foreach($this->group['members'] as $groupMember) {
+                if (!LdapUtilities::isValidLdapObjectDn($groupMember)) {
+                    throw new ValidationException(__('DirectoryEntry: a group member does not match the expected DN format'));
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

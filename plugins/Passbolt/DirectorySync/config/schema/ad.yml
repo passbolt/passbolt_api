@@ -1,0 +1,666 @@
+include_default: exchange
+objects:
+    user:
+        # This is a LdapTools specific to refer to this object type overall.
+        type: user
+        # The LDAP objectCategory
+        category: person
+        # The LDAP objectClass
+        class: user
+        converter_options:
+            lockout_time:
+                locked:
+                    bool: true
+            flags:
+                _default:
+                    default_value:
+                        LdapTools\Enums\AD\UserAccountControl: 'NormalAccount'
+                    attribute:
+                        LdapTools\Enums\AD\UserAccountControl: 'userAccountControl'
+                disabled:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::Disabled'
+                enabled:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::Disabled'
+                    invert: true
+                passwordIsReversible:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::EncryptedTextPwdAllowed'
+                passwordNeverExpires:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::PasswordNeverExpires'
+                smartCardRequired:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::SmartCardRequired'
+                trustedForAllDelegation:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::TrustedForDelegation'
+                trustedForAnyAuthDelegation:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::TrustedToAuthForDelegation'
+            value_to_dn:
+                exchangeMailboxDatabase:
+                    filter:
+                        objectClass: msExchMDB
+                exchangePolicyActiveSync:
+                    filter:
+                        objectClass: msExchMobileMailboxPolicy
+                exchangePolicyRBAC:
+                    filter:
+                        objectClass: msExchRBACPolicy
+                exchangePolicyRetention:
+                    filter:
+                        objectClass: msExchRecipientPolicy
+                exchangeSendOnBehalfOf:
+                    display_dn: true
+                    attribute: sAMAccountName
+                    filter:
+                        objectClass: person
+                groups:
+                    attribute: sAMAccountName
+                    filter:
+                        objectClass: group
+                manager:
+                    display_dn: true
+                    attribute: sAMAccountName
+                    or_filter: true
+                    filter:
+                        objectClass: contact
+                        objectCategory: person
+            exchange_proxy_address:
+                exchangeDefaultSmtpAddress:
+                    address_type: smtp
+                    is_default: true
+                exchangeSmtpAddresses:
+                    address_type: smtp
+        # These are converters to be applied for going both to and from LDAP.
+        converters:
+             bool:
+                 - 'exchangeHideFromGAL'
+             group_membership:
+                 - 'groups'
+             int:
+                 - 'badPasswordCount'
+                 - 'employeeNumber'
+             windows_guid:
+                 - 'exchangeMailboxGuid'
+                 - 'guid'
+             encode_windows_password:
+                 - 'password'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+             windows_time:
+                 - 'passwordLastSet'
+             flags:
+                 - 'disabled'
+                 - 'enabled'
+                 - 'passwordIsReversible'
+                 - 'passwordNeverExpires'
+                 - 'smartCardRequired'
+                 - 'trustedForAllDelegation'
+                 - 'trustedForAnyAuthDelegation'
+             password_must_change: [ passwordMustChange ]
+             value_to_dn:
+                - 'exchangeMailboxDatabase'
+                - 'exchangePolicyRBAC'
+                - 'exchangePolicyActiveSync'
+                - 'exchangePolicyRetention'
+                - 'manager'
+             exchange_proxy_address:
+                - 'exchangeSmtpAddresses'
+                - 'exchangeDefaultSmtpAddress'
+             logon_workstations: [ logonWorkstations ]
+             account_expires: [ accountExpirationDate ]
+             primary_group: [ primaryGroup ]
+             lockout_time:
+                - 'locked'
+                - 'lockedDate'
+        # This is the actual mapping of attribute names to what they really are in LDAP.
+        attributes:
+            accountExpirationDate: accountExpires
+            badPasswordCount: badPwdCount
+            city: l
+            company: company
+            country: c
+            created: whenCreated
+            department: department
+            description: description
+            division: division
+            disabled: userAccountControl
+            displayName: displayname
+            dn: distinguishedName
+            emailAddress: mail
+            employeeId: employeeId
+            employeeNumber: employeeNumber
+            enabled: userAccountControl
+            exchangeAlias: mailNickname
+            exchangeHideFromGAL: msExchHideFromAddressLists
+            exchangeMailboxDatabase: homeMDB
+            exchangeMailboxGuid: msExchMailboxGUID
+            exchangePolicyActiveSync: msExchMobileMailboxPolicyLink
+            exchangePolicyRBAC: msExchRBACPolicyLink
+            exchangePolicyRetention: msExchMailboxTemplateLink
+            exchangeSendOnBehalfOf: publicDelegates
+            exchangeSmtpAddresses: proxyAddresses
+            exchangeDefaultSmtpAddress: proxyAddresses
+            fax: facsimileTelephoneNumber
+            firstName: givenName
+            groups: memberOf
+            guid: objectGuid
+            homeDirectory: homeDirectory
+            homeDrive: homeDrive
+            homePage: wWWHomePage
+            homePhone: homePhone
+            initials: initials
+            ipPhone: ipPhone
+            lastName: sn
+            locked: lockoutTime
+            lockedDate: lockoutTime
+            logonWorkstations: userWorkstations
+            manager: manager
+            middleName: middleName
+            mobilePhone: mobile
+            modified: whenChanged
+            name: cn
+            notes: info
+            office: physicalDeliveryOfficeName
+            organization: o
+            otherFaxes: otherFacsimileTelephoneNumber
+            otherHomePhones: otherHomePhone
+            otherIpPhones: otherIpPhone
+            otherPagers: otherPager
+            otherPhoneNumbers: otherTelephoneNumber
+            pager: pager
+            password: unicodePwd
+            passwordIsReversible: userAccountControl
+            passwordLastSet: pwdLastSet
+            passwordNeverExpires: userAccountControl
+            passwordMustChange: pwdLastSet
+            phoneNumber: telephoneNumber
+            poBox: postOfficeBox
+            primaryGroup: primaryGroupID
+            profilePath: profilePath
+            scriptPath: scriptPath
+            servicePrincipalNames: servicePrincipalName
+            sid: objectSid
+            smartCardRequired: userAccountControl
+            state: st
+            streetAddress: streetAddress
+            title: title
+            trustedForAllDelegation: userAccountControl
+            trustedForAnyAuthDelegation: userAccountControl
+            username: sAMAccountName
+            upn: userPrincipalName
+            zipCode: postalCode
+        # These attributes will be forced into an array regardless of the number of results they return.
+        multivalued_attributes:
+            - logonWorkstations
+            - exchangeSmtpAddresses
+            - exchangeSendOnBehalfOf
+            - servicePrincipalNames
+            - groups
+            - objectClass
+            - otherFaxes
+            - otherHomePhones
+            - otherIpPhones
+            - otherPagers
+            - otherPhoneNumbers
+        # When querying LDAP via the LdapQueryBuilder or a Repository, retrieve these attributes by default.
+        attributes_to_select:
+            - 'name'
+            - 'firstName'
+            - 'lastName'
+            - 'username'
+            - 'emailAddress'
+            - 'dn'
+            - 'guid'
+        default_values:
+            name: "%username%"
+            displayName: "%username%"
+            firstName: "%username%"
+            upn: "%username%@%_domainname_%"
+            disabled: false
+            objectclass: [ 'top', 'person', 'organizationalPerson', 'user' ]
+        required_attributes:
+            - 'username'
+            - 'password'
+    group:
+        type: group
+        class: group
+        converters:
+             bool:
+                - 'exchangeHideFromGAL'
+                - 'exchangeInternalOnly'
+             exchange_proxy_address:
+                - 'exchangeSmtpAddresses'
+                - 'exchangeDefaultSmtpAddress'
+             group_membership:
+                 - 'groups'
+             group_type:
+                 - 'typeBuiltin'
+                 - 'typeSecurity'
+                 - 'typeDistribution'
+                 - 'scopeGlobal'
+                 - 'scopeUniversal'
+                 - 'scopeDomainLocal'
+             int:
+                 - 'exchangeAddressBookFlags'
+             value_to_dn:
+                 - 'managedBy'
+                 - 'members'
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        converter_options:
+            group_type:
+                typeBuiltin:
+                    flag_enum: 'LdapTools\Enums\AD\GroupType::BuiltinGroup'
+                typeSecurity:
+                    flag_enum: 'LdapTools\Enums\AD\GroupType::SecurityEnabled'
+                typeDistribution:
+                    flag_enum: 'LdapTools\Enums\AD\GroupType::SecurityEnabled'
+                    invert: true
+                scopeDomainLocal:
+                    flag_enum: 'LdapTools\Enums\AD\GroupType::DomainLocalGroup'
+                scopeGlobal:
+                    flag_enum: 'LdapTools\Enums\AD\GroupType::GlobalGroup'
+                scopeUniversal:
+                    flag_enum: 'LdapTools\Enums\AD\GroupType::UniversalGroup'
+            exchange_proxy_address:
+                exchangeSmtpAddresses:
+                    address_type: 'smtp'
+                exchangeDefaultSmtpAddress:
+                    address_type: 'smtp'
+                    is_default: true
+            value_to_dn:
+                members:
+                    display_dn: true
+                    attribute: sAMAccountName
+                    or_filter: true
+                    filter:
+                        objectClass: [ group, contact ]
+                        objectCategory: [ person, computer ]
+                managedBy:
+                    display_dn: true
+                    attribute: sAMAccountName
+                    or_filter: true
+                    filter:
+                        objectClass: group
+                        objectCategory: person
+        attributes:
+            accountName: sAMAccountName
+            created: whenCreated
+            description: description
+            displayName: displayname
+            dn: distinguishedName
+            emailAddress: mail
+            exchangeAddressBookFlags: msExchAddressBookFlags
+            exchangeAlias: mailNickname
+            exchangeHideFromGAL: msExchHideFromAddressLists
+            exchangeInternalOnly: msExchRequireAuthToSendTo
+            exchangeSmtpAddresses: proxyAddresses
+            exchangeDefaultSmtpAddress: proxyAddresses
+            groups: memberOf
+            guid: objectGuid
+            managedBy: managedBy
+            members: member
+            modified: whenChanged
+            name: cn
+            notes: info
+            sid: objectSid
+            typeBuiltin: groupType
+            typeSecurity: groupType
+            typeDistribution: groupType
+            scopeDomainLocal: groupType
+            scopeGlobal: groupType
+            scopeUniversal: groupType
+        multivalued_attributes:
+            - exchangeSmtpAddresses
+            - groups
+            - members
+            - objectClass
+        attributes_to_select:
+            - 'name'
+            - 'dn'
+            - 'guid'
+            - 'members'
+        default_values:
+            accountName: "%name%"
+            objectclass: "group"
+        required_attributes:
+            - 'name'
+    computer:
+        type: computer
+        category: computer
+        converters:
+             group_membership:
+                 - 'groups'
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+             flags:
+                 - 'disabled'
+                 - 'enabled'
+                 - 'trustedForAllDelegation'
+                 - 'trustedForAnyAuthDelegation'
+        converter_options:
+            flags:
+                _default:
+                    default_value:
+                        LdapTools\Enums\AD\UserAccountControl: 'WorkstationTrustAccount'
+                    attribute:
+                        LdapTools\Enums\AD\UserAccountControl: 'userAccountControl'
+                disabled:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::Disabled'
+                enabled:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::Disabled'
+                    invert: true
+                trustedForAllDelegation:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::TrustedForDelegation'
+                trustedForAnyAuthDelegation:
+                    flag_enum: 'LdapTools\Enums\AD\UserAccountControl::TrustedToAuthForDelegation'
+        attributes:
+            accountName: sAMAccountName
+            created: whenCreated
+            description: description
+            disabled: userAccountControl
+            dn: distinguishedName
+            dnsHostName: dNSHostName
+            enabled: userAccountControl
+            groups: memberOf
+            guid: objectGuid
+            location: location
+            modified: whenChanged
+            name: cn
+            notes: info
+            os: operatingSystem
+            osServicePack: operatingSystemServicePack
+            osVersion: operatingSystemVersion
+            sid: objectSid
+            trustedForAllDelegation: userAccountControl
+            trustedForAnyAuthDelegation: userAccountControl
+        multivalued_attributes:
+            - groups
+            - objectClass
+        attributes_to_select:
+            - 'name'
+            - 'os'
+            - 'dn'
+            - 'guid'
+        default_values:
+            accountName: "%name%"
+            disabled: false
+            objectclass: [ 'top', 'person', 'organizationalPerson', 'user', 'computer' ]
+        required_attributes:
+            - 'name'
+    contact:
+        type: contact
+        category: contact
+        converters:
+             bool:
+                - 'exchangeHideFromGAL'
+             exchange_proxy_address:
+                - 'exchangeSmtpAddresses'
+                - 'exchangeDefaultSmtpAddress'
+             group_membership:
+                 - 'groups'
+             value_to_dn:
+                 - 'manager'
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        converter_options:
+            exchange_proxy_address:
+                exchangeSmtpAddresses:
+                    address_type: 'smtp'
+                exchangeDefaultSmtpAddress:
+                    address_type: 'smtp'
+                    is_default: true
+            value_to_dn:
+                manager:
+                    display_dn: true
+                    attribute: sAMAccountName
+                    or_filter: true
+                    filter:
+                        objectClass: contact
+                        objectCategory: person
+        attributes:
+            created: whenCreated
+            description: description
+            displayName: displayName
+            dn: distinguishedName
+            emailAddress: mail
+            exchangeAlias: mailNickname
+            exchangeHideFromGAL: msExchHideFromAddressLists
+            exchangeSmtpAddresses: proxyAddresses
+            exchangeDefaultSmtpAddress: proxyAddresses
+            firstName: givenName
+            groups: memberOf
+            guid: objectGuid
+            lastName: sn
+            manager: manager
+            modified: whenChanged
+            name: cn
+            notes: info
+            phoneNumber: telephoneNumber
+            sid: objectSid
+        multivalued_attributes:
+            - exchangeSmtpAddresses
+            - groups
+            - objectClass
+        attributes_to_select:
+            - 'name'
+            - 'emailAddress'
+            - 'phoneNumber'
+            - 'dn'
+            - 'guid'
+        default_values:
+            displayName: "%name%"
+            objectclass: [ 'top', 'person', 'organizationalPerson', 'contact' ]
+        required_attributes:
+            - 'name'
+            - 'emailAddress'
+    ou:
+        type: ou
+        class: organizationalUnit
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+             gpo_link: [ gpoLinks ]
+             gpoptions: gpoInheritanceBlocked
+        attributes:
+            city: l
+            country: c
+            created: whenCreated
+            description: description
+            dn: distinguishedName
+            gpoLinks: gPLink
+            gpoInheritanceBlocked: gpOptions
+            guid: objectGuid
+            modified: whenChanged
+            name: ou
+            sid: objectSid
+            state: st
+            streetAddress: streetAddress
+            zipCode: postalCode
+        multivalued_attributes:
+            - gpoLinks
+            - objectClass
+        attributes_to_select:
+            - 'description'
+            - 'name'
+            - 'guid'
+            - 'sid'
+        default_values:
+            objectclass: [ 'top', 'organizationalUnit' ]
+        required_attributes:
+            - 'name'
+    container:
+        type: container
+        filter:
+            eq: [ objectCategory, container ]
+        converters:
+             windows_guid:
+                 - 'guid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        attributes:
+            created: whenCreated
+            description: description
+            dn: distinguishedName
+            guid: objectGuid
+            modified: whenChanged
+            name: cn
+        multivalued_attributes:
+            - objectClass
+        attributes_to_select:
+            - 'description'
+            - 'name'
+            - 'guid'
+        default_values:
+            objectclass: [ 'top', 'container' ]
+        required_attributes:
+            - 'name'
+    password_settings:
+        type: PSO
+        class: msDS-PasswordSettings
+        converters:
+             ad_time_span:
+                 - 'maximumPasswordAge'
+                 - 'minimumPasswordAge'
+                 - 'lockoutObservationWindow'
+                 - 'lockoutDuration'
+             bool:
+                 - 'passwordComplexity'
+                 - 'passwordReversibleEncryption'
+             int:
+                 - 'lockoutThreshold'
+                 - 'minimumPasswordLength'
+                 - 'passwordHistoryLength'
+                 - 'precedence'
+             value_to_dn:
+                 - 'appliesTo'
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        converter_options:
+            value_to_dn:
+                 appliesTo:
+                     display_dn: true
+                     attribute: sAMAccountName
+                     or_filter: true
+                     filter:
+                         objectClass: group
+                         objectCategory: person
+        attributes:
+            appliesTo: msDS-PSOAppliesTo
+            created: whenCreated
+            description: description
+            dn: distinguishedName
+            guid: objectGuid
+            lockoutDuration: msDS-LockoutDuration
+            lockoutObservationWindow: msDS-LockoutObservationWindow
+            lockoutThreshold: msDS-LockoutThreshold
+            maximumPasswordAge: msDS-MaximumPasswordAge
+            minimumPasswordAge: msDS-MinimumPasswordAge
+            minimumPasswordLength: msDS-MinimumPasswordLength
+            modified: whenChanged
+            name: cn
+            passwordComplexity: msDS-PasswordComplexityEnabled
+            passwordHistoryLength: msDS-PasswordHistoryLength
+            passwordReversibleEncryption: msDS-PasswordReversibleEncryptionEnabled
+            precedence: msDS-PasswordSettingsPrecedence
+            sid: objectSid
+        multivalued_attributes:
+            - objectClass
+            - appliesTo
+        attributes_to_select:
+            - 'description'
+            - 'name'
+            - 'guid'
+            - 'sid'
+        default_values:
+            objectclass: [ 'top', 'msDS-PasswordSettings' ]
+            passwordReversibleEncryption: false
+        default_container: 'CN=Password Settings Container,CN=System,%_defaultnamingcontext_%'
+        required_attributes:
+            - 'name'
+            - 'lockoutDuration'
+            - 'lockoutObservationWindow'
+            - 'lockoutThreshold'
+            - 'maximumPasswordAge'
+            - 'minimumPasswordAge'
+            - 'minimumPasswordLength'
+            - 'passwordComplexity'
+            - 'passwordHistoryLength'
+            - 'passwordReversibleEncryption'
+            - 'precedence'
+    deleted:
+        type: deleted
+        filter:
+            eq: [ isDeleted, true ]
+            present: lastKnownLocation
+        controls:
+            - [ 'ShowDeleted', true ]
+        paging: false
+        base_dn: "CN=Deleted Objects,%_defaultNamingContext_%"
+        converters:
+             bool:
+                 - 'isDeleted'
+             ldap_type:
+                 - 'schemaType'
+             windows_guid:
+                 - 'guid'
+             windows_sid:
+                 - 'sid'
+             windows_generalized_time:
+                 - 'created'
+                 - 'modified'
+        converter_options:
+            ldap_type:
+                schemaType:
+                    user: [ top, person, organizationalPerson, user ]
+                    group: [ top, group ]
+                    computer: [ top, person, organizationalPerson, user, computer ]
+                    contact: [ top, person, organizationalPerson, contact ]
+                    ou: [ top, organizationalUnit ]
+        attributes:
+            created: whenCreated
+            dn: distinguishedName
+            firstName: givenName
+            lastName: sn
+            guid: objectGuid
+            isDeleted: isDeleted
+            lastKnownLocation: lastKnownParent
+            lastKnownName: msds-lastKnownRdn
+            modified: whenChanged
+            name: cn
+            schemaType: objectClass
+            sid: objectSid
+            upn: userPrincipalName
+        attributes_to_select:
+            - 'name'
+            - 'guid'
+            - 'lastKnownLocation'
+            - 'lastKnownName'
+            - 'sid'
+            - 'schemaType'

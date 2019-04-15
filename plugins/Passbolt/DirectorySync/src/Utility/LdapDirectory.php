@@ -19,6 +19,7 @@ use LdapTools\Connection\LdapConnection;
 use LdapTools\Event\Event;
 use LdapTools\Event\LdapObjectSchemaEvent;
 use LdapTools\LdapManager;
+use LdapTools\Log\EchoLdapLogger;
 use LdapTools\Object\LdapObjectType;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
@@ -43,8 +44,18 @@ class LdapDirectory implements DirectoryInterface
     {
         $this->directorySettings = $settings;
         $ldapConfig = (new Configuration())->loadFromArray($this->directorySettings->getLdapSettings());
+
+        // Load custom schema folders if they exist.
+        // 1) first try to load the user custom schema folder if it exists in config/DirectorySync/schema
+        // 2) if not, try to load the plugin schema folder in DirectorySync/config/schema
+        // 3) if none of the above exists, stick to the default schema.
+        if (file_exists(CONFIG . 'DirectorySync' . DS . 'schema')) {
+            $ldapConfig->setSchemaFolder(CONFIG . 'DirectorySync' . DS . 'schema');
+        } elseif (file_exists(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'schema')) {
+            $ldapConfig->setSchemaFolder(PLUGINS . 'Passbolt' . DS . 'DirectorySync' . DS . 'config' . DS . 'schema');
+        }
+
         $this->ldap = new LdapManager($ldapConfig);
-        $this->ldap->getConnection();
         $this->directoryType = $this->getDirectoryType();
         $this->mappingRules = $this->getMappingRules();
         $this->directoryResults = new DirectoryResults($this->mappingRules);
@@ -183,14 +194,11 @@ class LdapDirectory implements DirectoryInterface
             return $this->users;
         }
 
-        $mappingRules = $this->getMappingRules()[LdapObjectType::USER];
-        $selectFields = array_values($mappingRules);
         $enabledUsersOnly = $this->directorySettings->getEnabledUsersOnly();
 
         $query = $this->ldap->buildLdapQuery();
         $usersQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::USER))
-            ->select($selectFields)
             ->fromUsers();
 
         if (!empty($enabledUsersOnly) && $enabledUsersOnly == true) {
@@ -216,17 +224,14 @@ class LdapDirectory implements DirectoryInterface
             return $this->groups;
         }
 
-        $mappingRules = $this->getMappingRules()[LdapObjectType::GROUP];
-        $selectFields = array_values($mappingRules);
-
         $query = $this->ldap->buildLdapQuery();
         $groupsQuery = $query
             ->setBaseDn($this->getDNFullPath(LdapObjectType::GROUP))
-            ->select($selectFields)
             ->fromGroups();
 
-        $ldapGroups = $groupsQuery->getLdapQuery()
-                                       ->getResult();
+        $ldapGroups = $groupsQuery
+            ->getLdapQuery()
+            ->getResult();
 
         return $ldapGroups;
     }
