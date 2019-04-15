@@ -15,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - GITHUB-10: Selecting a group on the users workspace should not reset the grid "Last Logged In" column to "Never"
 - GITHUB-62: Sorting the users on the users workspace should not break the infinite scroll
 - PB-160: Update appjs jquery dependencies
+- PB-163: Update jquery dependency
 
 ## [2.8.3] - 2019-04-02
 ### Fixed
