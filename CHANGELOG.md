@@ -18,6 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-163: Update jquery dependency
 - PB-171: Fix entities history trait should not trigger internal error if user action is undefined
 - PB-102: Fix install process should not create shema dump lock file
+- PB-204: Escape shell variables of the passbolt mysql export shell command
 
 ## [2.8.3] - 2019-04-02
 ### Fixed
