@@ -281,7 +281,7 @@ class InstallTask extends AppShell
         $this->out();
         $this->out(__('Install the schema and default data.'));
         $this->hr();
-        $cmd = $this->_formatCmd('migrations migrate');
+        $cmd = $this->_formatCmd('migrations migrate --no-lock');
 
         return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
     }
