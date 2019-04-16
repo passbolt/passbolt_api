@@ -144,7 +144,7 @@ trait EntitiesHistoryTrait
         $modelName = $table->getAlias();
         try {
             $userAction = UserAction::getInstance();
-        } catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             // preventing the app to fail if no user action is set
             // we consider the log operation is not needed
             return;
