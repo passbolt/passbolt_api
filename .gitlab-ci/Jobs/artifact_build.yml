@@ -8,7 +8,7 @@
     PECL_PASSBOLT_EXTENSIONS: "gnupg redis mcrypt"
     PHP_EXTENSIONS: "gd ldap intl pdo_mysql opcache xsl"
     UPSTREAM_COMMIT_SHA: latest
-    UPSTREAM_BRANCH: release-artifact-build
+    UPSTREAM_BRANCH: release
   trigger:
     # Gitlab doesnt support variable expansion in the project/branch fields
     # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
@@ -31,7 +31,6 @@ ce-trigger-build:
     PASSBOLT_FLAVOUR: ce
     PHP_EXTENSIONS: "gd intl pdo_mysql opcache xsl"
     UPSTREAM_COMMIT_SHA: latest
-    UPSTREAM_BRANCH: release-artifact-build
   trigger:
     # Gitlab doesnt support variable expansion in the project/branch fields
     # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
