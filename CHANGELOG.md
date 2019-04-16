@@ -16,6 +16,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - GITHUB-62: Sorting the users on the users workspace should not break the infinite scroll
 - PB-160: Update appjs jquery dependencies
 - PB-163: Update jquery dependency
+- PB-171: Fix entities history trait should not trigger internal error if user action is undefined
+- PB-102: Fix install process should not create shema dump lock file
 
 ## [2.8.3] - 2019-04-02
 ### Fixed
