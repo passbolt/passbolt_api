@@ -115,11 +115,11 @@ class MysqlExportTask extends AppShell
     protected function _mysqlDump($config, $dir, $file)
     {
         // Build the dump command.
-        $cmd = 'mysqldump -h' . $config['host'] . ' -u' . $config['username'];
+        $cmd = 'mysqldump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
         if (!empty($config['password'])) {
-            $cmd .= ' -p' . $config['password'];
+            $cmd .= ' -p' . escapeshellarg($config['password']);
         }
-        $cmd .= ' ' . $config['database'] . ' > ' . $dir . $file;
+        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
         $this->out('Saving backup file: ' . $dir . $file);
         exec($cmd, $output, $status);
 
