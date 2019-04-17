@@ -4,6 +4,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.8.4] - 2019-04-17
+### Improved
+- PB-48: Improve the performance by removing the creator/modifier from the passwords workspace grid query
+- PB-159: Remove the usage of canjs connect-hydrate module
+
+### Fixed
+- GITHUB-315: The permalink of password don't work anymore
+- PB-147: Update appjs steal dependencies
+- PB-152: The webinstaller should work with Firefox ESR
+- GITHUB-299: The passwords are shown twice in passwords workspace grid
+- GITHUB-10: Selecting a group on the users workspace should not reset the grid "Last Logged In" column to "Never"
+- GITHUB-62: Sorting the users on the users workspace should not break the infinite scroll
+- PB-160: Update appjs jquery dependencies
+- PB-163: Update jquery dependency
+- PB-171: Fix entities history trait should not trigger internal error if user action is undefined
+- PB-102: Fix install process should not create shema dump lock file
+- PB-204: Escape shell variables of the passbolt mysql export shell command
+
 ## [2.8.3] - 2019-04-02
 ### Fixed
 - PB-101: Fix version number
@@ -674,7 +692,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...HEAD
+[2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...v2.8.1
