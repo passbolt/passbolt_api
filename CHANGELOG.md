@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Improved
 - PB-48: Improve the performance by removing the creator/modifier from the passwords workspace grid query
 - PB-159: Remove the usage of canjs connect-hydrate module
+- PB-38: The Users Directory sync should work with FreeIPA
 
 ### Fixed
 - GITHUB-315: The permalink of password don't work anymore
