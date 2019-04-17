@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [unreleased]
+## [2.8.4] - 2019-04-17
 ### Improved
 - PB-48: Improve the performance by removing the creator/modifier from the passwords workspace grid query
 - PB-159: Remove the usage of canjs connect-hydrate module
@@ -626,7 +626,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...HEAD
+[2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/passbolt/passbolt_api/compare/v2.8.0...v2.8.1
