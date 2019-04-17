@@ -35,7 +35,7 @@ ce-trigger-build:
     # Gitlab doesnt support variable expansion in the project/branch fields
     # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
     #
-    project: passbolt/passbolt-docker
+    project: passbolt/passbolt_docker
     branch: prerelease
   except:
     variables:
