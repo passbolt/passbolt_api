@@ -20,8 +20,5 @@
     "openpgp": "^4.4.10",
     "passbolt-appjs": "^2.8.4",
     "passbolt-styleguide": "^2.8.1"
-  },
-  "dependencies": {
-    "npm": "^6.9.0"
   }
 }
