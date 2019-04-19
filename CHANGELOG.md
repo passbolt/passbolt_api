@@ -3,6 +3,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+## [2.8.5] - 2019-04-19
+### Fixed
+- PB-218: LDAP: Fix fields mapping for active directory
 
 ## [2.8.4] - 2019-04-17
 ### Improved
@@ -693,7 +696,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.8.5...HEAD
+[2.8.5]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...v2.8.3
 [2.8.2]: https://github.com/passbolt/passbolt_api/compare/v2.8.1...v2.8.2
