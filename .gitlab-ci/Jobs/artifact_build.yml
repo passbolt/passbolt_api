@@ -8,18 +8,26 @@
     PECL_PASSBOLT_EXTENSIONS: "gnupg redis mcrypt"
     PHP_EXTENSIONS: "gd ldap intl pdo_mysql opcache xsl"
     UPSTREAM_COMMIT_SHA: latest
-    UPSTREAM_BRANCH: release
+    UPSTREAM_BRANCH: PB-196
   trigger:
     # Gitlab doesnt support variable expansion in the project/branch fields
     # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
     #
     project: passbolt/passbolt_docker
-    branch: prerelease
+    branch: develop
   only:
-    - release
+    - feature/PB-196
   except:
     variables:
       - $PASSBOLT_FLAVOUR == "ce"
+
+tar-archive:
+  stage: release
+  script:
+    - tar -czvf $CI_PROJECT_NAME-$CI_COMMIT_SHA.tar.gz ./ --exclude=".[^/]*"
+  artifacts:
+    paths:
+      - $CI_PROJECT_NAME-$CI_COMMIT_SHA.tar.gz
 
 pro-trigger-build:
   extends: .build-template
