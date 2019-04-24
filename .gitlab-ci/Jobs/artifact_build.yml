@@ -8,6 +8,7 @@
         --form "ref=feature/PB-196" \
         --form "variables[PASSBOLT_FLAVOUR]=$PASSBOLT_FLAVOUR" \
         --form "variables[UPSTREAM_COMMIT_SHA]=$CI_COMMIT_SHA" \
+        --form "variables[UPSTREAM_PROJECT_ID]=$CI_PROJECT_ID" \
         "https://gitlab.com/api/v4/projects/$DOWNSTREAM_PROJECT_ID/trigger/pipeline"
   only:
     - feature/PB-196
