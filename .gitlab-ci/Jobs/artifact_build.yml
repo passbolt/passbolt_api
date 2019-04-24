@@ -5,7 +5,7 @@
       apk add --update curl && rm -rf /var/cache/apk/*
       curl --request POST \
         --form "token=$CI_JOB_TOKEN" \
-        --form ref=feature%2FPB-196 \
+        --form "ref=feature%2FPB-196" \
         --form "variables[PASSBOLT_FLAVOUR]=$PASSBOLT_FLAVOUR" \
         --form "variables[UPSTREAM_COMMIT_SHA]=$CI_COMMIT_SHA" \
         "https://gitlab.com/api/v4/projects/$DOWNSTREAM_PROJECT_ID/trigger/pipeline"
