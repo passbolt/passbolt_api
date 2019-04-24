@@ -2,6 +2,7 @@
   stage: test
   script:
     - |
+      apk add --update curl && rm -rf /var/cache/apk/*
       curl --request POST \
         --form "token=$CI_JOB_TOKEN" \
         --form ref=feature%2FPB-196 \
