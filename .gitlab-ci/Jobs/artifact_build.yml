@@ -1,14 +1,13 @@
 .build-template:
   stage: test
-  variables:
-    PASSBOLT_FLAVOUR: pro
-    UPSTREAM_COMMIT_SHA: pb-196
-  trigger:
-    # Gitlab doesnt support variable expansion in the project/branch fields
-    # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
-    #
-    project: passbolt/passbolt_docker
-    branch: feature/PB-196
+  script:
+    - |
+      curl --request POST \
+        --form "token=$CI_JOB_TOKEN" \
+        --form ref=feature%2FPB-196 \
+        --form "variables[PASSBOLT_FLAVOUR]=$PASSBOLT_FLAVOUR" \
+        --form "variables[UPSTREAM_COMMIT_SHA]=$CI_COMMIT_SHA" \
+        "https://gitlab.com/api/v4/projects/$DOWNSTREAM_PROJECT_ID/trigger/pipeline"
   only:
     - feature/PB-196
   except:
