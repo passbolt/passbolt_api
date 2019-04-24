@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [unreleased]
+### Fixed
+- PB-220: Upgrade to CakePHP 3.7.7
+
 ## [2.8.4] - 2019-04-17
 ### Improved
 - PB-48: Improve the performance by removing the creator/modifier from the passwords workspace grid query
