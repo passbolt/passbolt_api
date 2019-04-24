@@ -1,33 +1,19 @@
 .build-template:
   stage: test
   variables:
-    PASSBOLT_BASE_PACKAGES: "nginx gnupg libgpgme11 libmcrypt4 mysql-client supervisor cron"
-    PASSBOLT_DEV_PACKAGES: "libgpgme11-dev libldap2-dev libpng-dev libjpeg62-turbo-dev libicu-dev libxslt1-dev libmcrypt-dev unzip git"
     PASSBOLT_FLAVOUR: pro
-    PASSBOLT_URL: https://$CI_REGISTRY_USER:$CI_JOB_TOKEN@gitlab.com/passbolt/passbolt-$PASSBOLT_FLAVOUR-api.git
-    PECL_PASSBOLT_EXTENSIONS: "gnupg redis mcrypt"
-    PHP_EXTENSIONS: "gd ldap intl pdo_mysql opcache xsl"
-    UPSTREAM_COMMIT_SHA: latest
-    UPSTREAM_BRANCH: PB-196
+    UPSTREAM_COMMIT_SHA: pb-196
   trigger:
     # Gitlab doesnt support variable expansion in the project/branch fields
     # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
     #
     project: passbolt/passbolt_docker
-    branch: develop
+    branch: feature/PB-196
   only:
     - feature/PB-196
   except:
     variables:
       - $PASSBOLT_FLAVOUR == "ce"
-
-tar-archive:
-  stage: release
-  script:
-    - tar -czvf $CI_PROJECT_NAME-$CI_COMMIT_SHA.tar.gz ./ --exclude=".[^/]*"
-  artifacts:
-    paths:
-      - $CI_PROJECT_NAME-$CI_COMMIT_SHA.tar.gz
 
 pro-trigger-build:
   extends: .build-template
@@ -35,10 +21,8 @@ pro-trigger-build:
 ce-trigger-build:
   extends: .build-template
   variables:
-    PASSBOLT_DEV_PACKAGES: "libgpgme11-dev libpng-dev libjpeg62-turbo-dev libicu-dev libxslt1-dev libmcrypt-dev unzip git"
     PASSBOLT_FLAVOUR: ce
-    PHP_EXTENSIONS: "gd intl pdo_mysql opcache xsl"
-    UPSTREAM_COMMIT_SHA: latest
+    UPSTREAM_COMMIT_SHA: pb-196
   trigger:
     # Gitlab doesnt support variable expansion in the project/branch fields
     # https://gitlab.com/gitlab-org/gitlab-ce/issues/58290
