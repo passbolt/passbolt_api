@@ -616,7 +616,7 @@ class DirectoryResults
     }
 
     /**
-     * Lookup for a group by its name.
+     * Lookup for a group by its case insensitive name.
      * @param string $name group name
      *
      * @return array|null the corresponding GroupEntry
@@ -624,7 +624,7 @@ class DirectoryResults
     public function lookupGroupByGroupName(string $name)
     {
         foreach ($this->groups as $group) {
-            if ($group['group']['name'] === $name) {
+            if (strtolower($group['group']['name']) === strtolower($name)) {
                 return $group;
             }
         }
