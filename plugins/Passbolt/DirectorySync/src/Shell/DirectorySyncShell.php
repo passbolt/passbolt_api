@@ -42,6 +42,10 @@ class DirectorySyncShell extends AppShell
     {
         parent::initialize();
 
+        if (!$this->assertNotRoot()) {
+            $this->abort(__('aborting'));
+        }
+
         $isLdapLoaded = extension_loaded('ldap');
         if (!$isLdapLoaded) {
             $this->abort(__('Error: the ldap extension is not installed'));
