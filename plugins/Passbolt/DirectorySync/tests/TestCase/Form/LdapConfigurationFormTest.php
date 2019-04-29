@@ -50,6 +50,9 @@ class LdapConfigurationFormTest extends AppTestCase
             'user_path' => 'my user_path',
             'group_object_class' => 'my group_object_class',
             'user_object_class' => 'my user_object_class',
+            'use_email_prefix_suffix' => true,
+            'email_prefix' => 'uid',
+            'email_suffix' => '@passbolt.com',
             'default_user' => UuidFactory::uuid('user.id.admin'),
             'default_group_admin_user' => UuidFactory::uuid('user.id.ada'),
             'sync_users_create' => true,
@@ -233,6 +236,36 @@ class LdapConfigurationFormTest extends AppTestCase
             'utf8' => self::getUtf8TestCases()
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'user_path', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValidateError_UseEmailPrefixSuffix()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getBooleanTestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'use_email_prefix_suffix', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValidateError_EmailPrefix()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'email_prefix', $ldapSettings, $testCases);
+    }
+
+    public function testLdapConfigurationFormValidateError_EmailSuffix()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $testCases = [
+            'allowempty' => self::getAllowEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases()
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'email_suffix', $ldapSettings, $testCases);
     }
 
     public function testLdapConfigurationFormValidateError_SyncUsersCreate()

@@ -55,6 +55,9 @@ class LdapConfigurationForm extends Form
         'user_object_class' => 'userObjectClass',
         'group_path' => 'groupPath',
         'user_path' => 'userPath',
+        'use_email_prefix_suffix' => 'useEmailPrefixSuffix',
+        'email_prefix' => 'emailPrefix',
+        'email_suffix' => 'emailSuffix',
         'default_user' => 'defaultUser',
         'default_group_admin_user' => 'defaultGroupAdminUser',
         'users_parent_group' => 'usersParentGroup',
@@ -87,6 +90,9 @@ class LdapConfigurationForm extends Form
             ->addField('user_object_class', 'string')
             ->addField('group_path', 'string')
             ->addField('user_path', 'string')
+            ->addField('use_email_prefix_suffix', 'boolean')
+            ->addField('email_prefix', 'string')
+            ->addField('email_suffix', 'string')
             ->addField('default_user', 'string')
             ->addField('default_group_admin_user', 'string')
             ->addField('users_parent_group', 'string')
@@ -177,6 +183,18 @@ class LdapConfigurationForm extends Form
         $validator
             ->allowEmpty('user_path')
             ->utf8('user_path', __('User path should be a valid utf8 string.'));
+
+        $validator
+            ->allowEmpty('use_email_prefix_suffix')
+            ->boolean('use_email_prefix_suffix', __('UseEmailPrefixSuffix should be a boolean.'));
+
+        $validator
+            ->allowEmpty('email_prefix')
+            ->utf8('email_prefix', __('Email prefix should be a valid utf8 string.'));
+
+        $validator
+            ->allowEmpty('email_suffix')
+            ->utf8('email_suffix', __('Email suffix should be a valid utf8 string.'));
 
         $validator
             ->allowEmpty('users_parent_group', __('Users parent group cannot be empty.'))

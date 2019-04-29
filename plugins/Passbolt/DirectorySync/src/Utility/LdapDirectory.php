@@ -58,7 +58,7 @@ class LdapDirectory implements DirectoryInterface
         $this->ldap = new LdapManager($ldapConfig);
         $this->directoryType = $this->getDirectoryType();
         $this->mappingRules = $this->getMappingRules();
-        $this->directoryResults = new DirectoryResults($this->mappingRules);
+        $this->directoryResults = new DirectoryResults($this->mappingRules, $this->directorySettings);
 
         $this->customizeSchema();
     }

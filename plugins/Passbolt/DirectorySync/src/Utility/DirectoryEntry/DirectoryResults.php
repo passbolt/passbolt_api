@@ -79,11 +79,13 @@ class DirectoryResults
      * DirectoryResults constructor.
      *
      * @param array $mappingRules mapping rules
+     * @param DirectoryOrgSettings $settings settings. If null, will retrieve settings through standard way.
+     * @return void
      */
-    public function __construct(array $mappingRules)
+    public function __construct(array $mappingRules, DirectoryOrgSettings $settings = null)
     {
         $this->mappingRules = $mappingRules;
-        $this->directorySettings = DirectoryOrgSettings::get();
+        $this->directorySettings = $settings !== null ? $settings : DirectoryOrgSettings::get();
         $this->ldapUsers = [];
         $this->ldapGroups = [];
         $this->users = [];
