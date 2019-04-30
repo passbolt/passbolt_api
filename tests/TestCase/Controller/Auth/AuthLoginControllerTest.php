@@ -86,7 +86,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $data = $this->_getBodyAsString();
         $expect = 'An Internal Error Has Occurred';
         $this->assertContains($expect, $data);
-        $expect = 'The OpenPGP server key defined in the config could not be found in the GnuPG keyring.';
+        $expect = 'The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.';
         $this->assertContains($expect, $data);
     }
 

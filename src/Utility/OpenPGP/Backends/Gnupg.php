@@ -12,9 +12,11 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Utility;
+namespace App\Utility\OpenPGP\Backends;
 
 //use \Exception as Exception;
+use App\Utility\OpenPGP\OpenPGPBackend;
+use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use \OpenPGP as OpenPGP;
 use \OpenPGP_Message as OpenPGP_Message;
@@ -37,38 +39,22 @@ use \OpenPGP_PublicKeyPacket as OpenPGP_PublicKeyPacket;
  *  So for all encryption and decryption operations, we will prefer Php Gnupg.
  *
  */
-class Gpg
+class Gnupg implements OpenPGPBackend
 {
+    /**
+     * @var string fingerprint of the key set to decrypt
+     */
+    private $_decryptKey;
 
     /**
-     * Encryption key.
+     * @var string fingerprint of the key set to encrypt
      */
-    public $encryptKey = null;
+    private $_encryptKey;
 
     /**
-     * Encryption key info.
+     * @var string fingerprint of the key set to encrypt
      */
-    public $encryptKeyInfo = [];
-
-    /**
-     * Decryption key.
-     */
-    public $decryptKey = null;
-
-    /**
-     * Decryption key info.
-     */
-    public $decryptKeyInfo = [];
-
-    /**
-     * Signing key.
-     */
-    public $signKey = null;
-
-    /**
-     * Signing key info.
-     */
-    public $signKeyInfo = [];
+    private $_signKey;
 
     /**
      * Gpg object.
@@ -85,6 +71,11 @@ class Gpg
         if (!extension_loaded('gnupg')) {
             throw new Exception('PHP Gnupg library is not installed.');
         }
+
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+
         $this->_gpg = new \gnupg();
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
     }
@@ -96,16 +87,37 @@ class Gpg
      * @return bool
      * @throws Exception
      */
-    public function setEncryptKey($armoredKey)
+    public function setEncryptKey(string $armoredKey)
     {
         // Get the key info.
-        $this->encryptKeyInfo = $this->getPublicKeyInfo($armoredKey);
+        $encryptKeyInfo = $this->getPublicKeyInfo($armoredKey);
+        $fingerprint = $encryptKeyInfo['fingerprint'];
 
-        // Import key inside the keyring.
-        $this->importKeyIntoKeyring($armoredKey);
-
+        // Import key inside the keyring if it's not already there
+        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+            $this->importKeyIntoKeyring($armoredKey);
+        }
         // Store armored key.
-        $this->encryptKey = $armoredKey;
+        $this->_encryptKey = $fingerprint;
+        $this->_gpg->addencryptkey($fingerprint);
+
+        return true;
+    }
+
+    /**
+     * Set a key for encryption.
+     *
+     * @param string $fingerprint fingerprint
+     * @return bool
+     * @throws Exception
+     */
+    public function setEncryptKeyFromFingerprint(string $fingerprint)
+    {
+        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+            throw new Exception(__('Key {0} not found in the keyring', $fingerprint));
+        }
+        $this->_encryptKey = $fingerprint;
+        $this->_gpg->addencryptkey($fingerprint);
 
         return true;
     }
@@ -114,19 +126,63 @@ class Gpg
      * Set a key for decryption.
      *
      * @param string $armoredKey ASCII armored key data
-     * @return bool
-     * @throws Exception
+     * @param string $passphrase to decrypt secret key
+     * @throws exception if passphrase is not empty
+     * @throws exception this key cannot be used to decrypt
+     * @return bool true if success
      */
-    public function setDecryptKey($armoredKey)
+    public function setDecryptKey(string $armoredKey, string $passphrase)
     {
         // Get the key info.
-        $this->decryptKeyInfo = $this->getKeyInfo($armoredKey);
+        $decryptKeyInfo = $this->getKeyInfo($armoredKey);
+        $fingerprint = $decryptKeyInfo['fingerprint'];
 
+        // Import key inside the keyring if it's not already there
+        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+            $this->importKeyIntoKeyring($armoredKey);
+        }
+
+        // If a passphrase is provided, throw an exception.
+        if ($passphrase !== '') {
+            throw new Exception('Secret keys with a passphrase are not supported.');
+        }
+
+        // Add decrypt key.
+        $this->_decryptKey = $fingerprint;
+        if (!$this->_gpg->adddecryptkey($fingerprint, $passphrase)) {
+            throw new Exception('The secret key {0} cannot be used to decrypt.', $fingerprint);
+        }
+
+        return true;
+    }
+
+    /**
+     * Set a key for decryption.
+     *
+     * @param string $fingerprint fingerprint of a key in the keyring
+     * @throws Exception if the key cannot be found in the keyring
+     * @throws Exception if the key is using a passphrase
+     * @throws Exception if the key cannot be used to decrypt
+     * @return bool true if success
+     */
+    public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase = '')
+    {
+        // Get the key info.
         // Import key inside the keyring.
-        $this->importKeyIntoKeyring($armoredKey);
+        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+            throw new Exception(__('Key {0} not found in the keyring', $fingerprint));
+        }
 
-        // Store armored key.
-        $this->decryptKey = $armoredKey;
+        // If a passphrase is provided, throw an exception.
+        if ($passphrase !== '') {
+            throw new Exception('Secret keys with a passphrase are not supported.');
+        }
+
+        // Add decrypt key.
+        $this->_decryptKey = $fingerprint;
+        if (!$this->_gpg->adddecryptkey($fingerprint, $passphrase)) {
+            throw new Exception('The secret key {0} cannot be used to decrypt.', $fingerprint);
+        }
 
         return true;
     }
@@ -135,21 +191,53 @@ class Gpg
      * Set a key for signing.
      *
      * @param string $armoredKey ASCII armored key data
+     * @param string $passphrase passphrase
      * @return bool
      * @throws Exception
      */
-    public function setSignKey($armoredKey)
+    public function setSignKey(string $armoredKey, string $passphrase)
     {
         // Get the key info.
-        $this->signKeyInfo = $this->getKeyInfo($armoredKey);
+        $signKeyInfo = $this->getKeyInfo($armoredKey);
+        $fingerprint = $signKeyInfo['fingerprint'];
 
-        // Import key inside the keyring.
-        $this->importKeyIntoKeyring($armoredKey);
+        // Import key inside the keyring if needed
+        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+            $this->importKeyIntoKeyring($armoredKey);
+        }
+
+        // If a passphrase is provided, throw an exception.
+        if ($passphrase !== '') {
+            throw new Exception('Secret keys with a passphrase are not supported.');
+        }
 
         // Store armored key.
-        $this->signKey = $armoredKey;
+        $this->_signKey = $fingerprint;
+        $this->_gpg->addsignkey($fingerprint, $passphrase);
 
         return true;
+    }
+
+    /**
+     * Set key to be used for signing
+     *
+     * @throws Exception if the key is not already in the keyring
+     * @param string $fingerprint
+     * @param string $passphrase
+     */
+    public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase)
+    {
+        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+            throw new Exception(__('Key {0} not found in the keyring', $fingerprint));
+        }
+
+        // If a passphrase is provided, throw an exception.
+        if ($passphrase !== '') {
+            throw new Exception('Secret keys with a passphrase are not supported.');
+        }
+
+        $this->_signKey = $fingerprint;
+        $this->_gpg->addsignkey($fingerprint, $passphrase);
     }
 
     /**
@@ -159,7 +247,7 @@ class Gpg
      * @return mixed
      * @throws Exception
      */
-    public function getGpgMarker($armored)
+    private function getGpgMarker(string $armored)
     {
         $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armored, $values);
         if (!$isMarker || !isset($values[2])) {
@@ -178,7 +266,7 @@ class Gpg
      * @param string $armoredKey ASCII armored key data
      * @return bool true if valid, false otherwise
      */
-    public function isParsableArmoredPublicKeyRule($armoredKey)
+    public function isParsableArmoredPublicKey(string $armoredKey)
     {
         // First, we try to get the marker of the gpg message.
         try {
@@ -225,7 +313,7 @@ class Gpg
      * @param  string $armoredKey ASCII armored key data
      * @return bool
      */
-    public function isParsableArmoredPrivateKeyRule($armoredKey)
+    public function isParsableArmoredPrivateKey(string $armoredKey)
     {
         // First, we try to get the marker of the gpg message.
         try {
@@ -272,7 +360,7 @@ class Gpg
      * @param string $armored ASCII armored message data
      * @return bool true if valid, false otherwise
      */
-    public function isValidMessage($armored)
+    public function isValidMessage(string $armored)
     {
         // First, we try to get the marker of the message.
         try {
@@ -285,7 +373,7 @@ class Gpg
         if ($marker != 'PGP MESSAGE') {
             return false;
         }
-        // Try to unarmor the key.
+        // Try to unarmor the message.
         $unarmored = OpenPGP::unarmor($armored, $marker);
         // If we don't manage to unarmor the message, we consider it's not a valid one.
         if ($unarmored != false) {
@@ -302,10 +390,10 @@ class Gpg
      * @return array as described above
      * @throws Exception if the armored key is not parsable as public key
      */
-    public function getPublicKeyInfo($armoredKey)
+    public function getPublicKeyInfo(string $armoredKey)
     {
-        if ($this->isParsableArmoredPublicKeyRule($armoredKey) === false
-            && $this->isParsableArmoredPrivateKeyRule($armoredKey) === false) {
+        if ($this->isParsableArmoredPublicKey($armoredKey) === false
+            && $this->isParsableArmoredPrivateKey($armoredKey) === false) {
             throw new Exception('The public key could not be parsed.');
         }
 
@@ -331,13 +419,10 @@ class Gpg
      * @param string $armoredKey the ASCII armored key block
      * @return array as described above
      */
-    public function getKeyInfo($armoredKey)
+    public function getKeyInfo(string $armoredKey)
     {
         // Unarmor the key.
-        $keyUnarmored = OpenPGP::unarmor(
-            $armoredKey,
-            $this->getGpgMarker($armoredKey)
-        );
+        $keyUnarmored = OpenPGP::unarmor($armoredKey, $this->getGpgMarker($armoredKey));
 
         // Get the message.
         $msg = OpenPGP_Message::parse($keyUnarmored);
@@ -393,7 +478,7 @@ class Gpg
      * @param string $fingerprint key fingerpint
      * @return mixed
      */
-    public function getKeyInfoFromKeyring($fingerprint)
+    public function getKeyInfoFromKeyring(string $fingerprint)
     {
         // Return info read from the keyring.
         return $this->_gpg->keyinfo($fingerprint);
@@ -406,7 +491,7 @@ class Gpg
      * @return string fingerprint of the key
      * @throws Exception
      */
-    public function importKeyIntoKeyring($armoredKey)
+    public function importKeyIntoKeyring(string $armoredKey)
     {
         $import = $this->_gpg->import($armoredKey);
         if (!is_array($import)) {
@@ -417,21 +502,6 @@ class Gpg
     }
 
     /**
-     * Remove a key from the local keyring.
-     *
-     * @param string $fingerprint of the key
-     * @throws Exception
-     * @return void
-     */
-    public function removeKeyFromKeyring($fingerprint)
-    {
-        $deleting = $this->_gpg->deletekey($fingerprint, true);
-        if (!$deleting) {
-            throw new Exception('Could not delete the key.');
-        }
-    }
-
-    /**
      * Encrypt a text.
      *
      * @param string $text plain text to be encrypted.
@@ -439,24 +509,19 @@ class Gpg
      * @return mixed encrypted text
      * @throws Exception
      */
-    public function encrypt($text, $sign = false)
+    public function encrypt(string $text, bool $sign = false)
     {
-        // If no private key is set, throw exception.
-        if (empty($this->encryptKeyInfo)) {
+        // If no public key is set, throw exception.
+        if (empty($this->_encryptKey)) {
             throw new Exception('No public key was added');
         }
-
-        // Add encrypt key.
-        $this->_gpg->addencryptkey($this->encryptKeyInfo['fingerprint']);
 
         // If user wants to sign the message.
         if ($sign === true) {
             // If no sign key has been set before, throw an exception.
-            if (empty($this->signKeyInfo)) {
+            if (empty($this->_signKey)) {
                 throw new Exception('No sign key has been added.');
             }
-            // Add sign key.
-            $this->_gpg->addsignkey($this->signKeyInfo['fingerprint']);
             // Encrypt message.
             $encryptedText = $this->_gpg->encryptsign($text);
         } else {
@@ -472,7 +537,6 @@ class Gpg
      * Decrypt a text.
      *
      * @param string $text GPG block text to be decrypted.
-     * @param string $passphrase passphrase for the key.
      *  Warning : keys with passphrase is not currently supported. Leave this argument empty for now.
      *  This is a php gnupg limitation.
      * @param bool $verifySignature should signature be verified
@@ -480,22 +544,14 @@ class Gpg
      * @return mixed decrypted text if success, false if couldn't decrypt.
      * @throws Exception
      */
-    public function decrypt($text, $passphrase = '', $verifySignature = false, &$signatureInfo = [])
+    public function decrypt(string $text, bool $verifySignature = false, array &$signatureInfo = [])
     {
         $decrypted = false;
 
         // If no private key is set, throw exception.
-        if (empty($this->decryptKeyInfo)) {
+        if (empty($this->_decryptKey)) {
             throw new Exception('No private key was added.');
         }
-
-        // If a passphrase is provided, throw an exception.
-        if ($passphrase !== '') {
-            throw new Exception('Private keys with passphrase is not supported.');
-        }
-
-        // Add decrypt key.
-        $this->_gpg->adddecryptkey($this->decryptKeyInfo['fingerprint'], $passphrase);
 
         if ($verifySignature === false) {
             // Decrypt the text.
@@ -507,5 +563,62 @@ class Gpg
 
         // Return decrypted text.
         return $decrypted;
+    }
+
+    /**
+     * Setup server key
+     * Import server key in the keyring if necessary
+     *
+     * @param string|null $fingerprint fingerprint of server key
+     * @param string|null $keyFilePath full path to the secret key file
+     * @throw Exception if config is invalid
+     * @throw Exception server key cannot be read on file
+     * @throw Exception server key on file is not a valid private key
+     * @throw Exception server key fingerprint on file is not the same than in config
+     * @return bool true if success
+     */
+    public function setUpServerKey(string $fingerprint = null, string $keyFilePath = null) {
+        // Check if config contains fingerprint
+        if ($fingerprint === null) {
+            throw new Exception(__('The GnuPG config for the server is not available or incomplete.'));
+        }
+
+        // Check if key associated with fingerprint is in keyring
+        $info = $this->getKeyInfoFromKeyring($fingerprint);
+        if (!empty($info)) {
+            return true;
+        }
+
+        // If it's not in keyring try to import it
+        // Check if file containing the private key exist
+        if ($keyFilePath === null) {
+            throw new Exception(__('The secret key file is not defined.'));
+        }
+        $msg = __('The OpenPGP server key defined in the config could not be found in the GnuPG keyring and file system.');
+        if (!file_exists($keyFilePath)) {
+            throw new Exception($msg);
+        }
+        $privateKey = file_get_contents($keyFilePath);
+        if ($privateKey === false) {
+            throw new Exception($msg);
+        }
+        if (!$this->isParsableArmoredPrivateKey($privateKey)) {
+            $msg = __('The OpenPGP server key defined on file is not a valid private key.');
+            throw new Exception($msg);
+        }
+
+        // try to import it
+        $import = $this->importKeyIntoKeyring($privateKey);
+        $keyringFingerprint = $this->getKeyInfoFromKeyring($fingerprint);
+        if (empty($import)) {
+            $msg = __('The OpenPGP server key defined in the config could not be found in the GnuPG keyring and could not be imported.');
+            throw new Exception($msg);
+        }
+        if ($keyringFingerprint !== $fingerprint) {
+            $msg = __('The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.');
+            throw new Exception($msg);
+        }
+
+        return true;
     }
 }

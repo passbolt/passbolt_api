@@ -15,7 +15,7 @@
 namespace App\Shell\Task;
 
 use App\Shell\AppShell;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 
@@ -59,7 +59,7 @@ class KeyringInitTask extends AppShell
                 throw new Exception(__('Could not read the file: {0}', $filePath));
             }
             // Import the private key in the GPG keyring
-            $gpg = new Gpg();
+            $gpg = OpenPGPBackendFactory::get();
 
             $this->out('Importing ' . $filePath);
             $gpg->importKeyIntoKeyring($armoredKey);

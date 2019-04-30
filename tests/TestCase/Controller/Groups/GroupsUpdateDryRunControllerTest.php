@@ -15,9 +15,7 @@
 
 namespace App\Test\TestCase\Controller\Groups;
 
-use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Gpg;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
