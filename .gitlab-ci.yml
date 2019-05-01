@@ -12,3 +12,69 @@ include:
   - template: Code-Quality.gitlab-ci.yml
   - local: '/.gitlab-ci/Jobs/php_unit_tests.yml'
   - local: '/.gitlab-ci/Jobs/artifact_build.yml'
+
+local-debug:
+  variables:
+    # MySQL services variables
+    MYSQL_USER: user
+    MYSQL_PASSWORD: testing-password
+    MYSQL_ROOT_PASSWORD: testing-password2
+    MYSQL_DATABASE: test
+
+    # Passbolt unit test job common variables
+    DEBUG: "true"
+    DATASOURCES_DEFAULT_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_DEFAULT_USERNAME: $MYSQL_USER
+    DATASOURCES_DEFAULT_PASSWORD: $MYSQL_PASSWORD
+    DATASOURCES_DEFAULT_HOST: mariadb
+    DATASOURCES_TEST_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_TEST_USERNAME: $MYSQL_USER
+    DATASOURCES_TEST_PASSWORD: $MYSQL_PASSWORD
+    DATASOURCES_TEST_HOST: mariadb
+    PASSBOLT_GPG_SERVER_KEY_PUBLIC: config/gpg/unsecure.key
+    PASSBOLT_GPG_SERVER_KEY_PRIVATE: config/gpg/unsecure_private.key
+    APP_FULL_BASE_URL: http://127.0.0.1
+    PASSBOLT_REGISTRATION_PUBLIC: "true"
+    PASSBOLT_SELENIUM_ACTIVE: "true"
+    # This is the development dummy fingerprint
+    PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
+    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
+    INTERACTIVE: "true"
+  services:
+    - name: mariadb:10.4
+      command:
+        - /bin/bash
+        - -c
+        - |
+          mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+          docker-entrypoint.sh mysqld
+  image: test:php7.2-fpm
+  script:
+    - sleep 15
+    - init_test_db
+    - cp config/app.default.php config/app.php
+    - composer install --dev --no-interaction
+    - gpg --import config/gpg/unsecure_private.key
+    - gpg --import config/gpg/unsecure.key
+    - interactive_debug
+
+.custom_functions: &custom_functions |
+
+  function init_test_db() {
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON $DATASOURCES_TEST_DATABASE.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';"
+  }
+
+  function interactive_debug() {
+    if $INTERACTIVE; then
+      echo "======================================================================="
+      echo "Interactive session, please attach a tty to run tests in this container"
+      echo "Once you are done debugging please press CTRL+C to kill the session    "
+      echo "======================================================================="
+      sleep infinity
+    else
+      $PHPUNIT_COMMAND
+    fi
+  }
+
+before_script:
+  - *custom_functions
