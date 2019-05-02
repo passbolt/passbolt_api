@@ -57,7 +57,7 @@ class TestDirectory implements DirectoryInterface
     public function getGroups()
     {
         if (!isset($this->groups)) {
-            $this->groups = $this->read('Groups');
+            $this->groups = $this->getGroupsFixtures();
         }
 
         $dr = $this->getFilteredDirectoryResults();
@@ -73,7 +73,7 @@ class TestDirectory implements DirectoryInterface
     {
         $this->getFilteredDirectoryResults();
         if (!isset($this->users)) {
-            $this->users = $this->read('Users');
+            $this->users = $this->getUsersFixtures();
         }
 
         $dr = $this->getFilteredDirectoryResults();
@@ -89,10 +89,10 @@ class TestDirectory implements DirectoryInterface
     public function getFilteredDirectoryResults()
     {
         if (!isset($this->users)) {
-            $this->users = $this->read('Users');
+            $this->users = $this->getUsersFixtures();
         }
         if (!isset($this->groups)) {
-            $this->groups = $this->read('Groups');
+            $this->groups = $this->getGroupsFixtures();
         }
 
         $this->directoryResults->initializeWithEntries($this->users, $this->groups);
@@ -121,13 +121,31 @@ class TestDirectory implements DirectoryInterface
     }
 
     /**
+     * Get raw users fixtures.
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getUsersFixtures() {
+        return $this->_read('Users');
+    }
+
+    /**
+     * Get raw groups fixtures.
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getGroupsFixtures() {
+        return $this->_read('Groups');
+    }
+
+    /**
      * Read a user or group file as php array
      *
      * @param $file
      * @return mixed
      * @throws \Exception
      */
-    private function read($file)
+    private function _read($file)
     {
         $path = $this->path . DS . $file . '.php';
         if (!is_file($path) || !is_readable($path)) {

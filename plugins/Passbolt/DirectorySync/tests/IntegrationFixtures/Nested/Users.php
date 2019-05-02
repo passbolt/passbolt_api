@@ -69,4 +69,29 @@ return [
             ]
         ],
     ],
+    // These 2 last users are invalid due to a wrong email.
+    [
+        'id' => UuidFactory::uuid('ldap.user.id.user5'),
+        'directory_name' => 'CN=User5,OU=PassboltUsers,DC=passbolt,DC=local',
+        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'user' => [
+            'profile' => [
+                'first_name' => 'user',
+                'last_name' => 'five'
+            ]
+        ],
+    ],
+    [
+        'id' => UuidFactory::uuid('ldap.user.id.user6'),
+        'directory_name' => 'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
+        'directory_created' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'directory_modified' => new FrozenTime('2018-08-12 03:56:42.000000'),
+        'user' => [
+            'profile' => [
+                'first_name' => 'user',
+                'last_name' => 'six'
+            ]
+        ],
+    ],
 ];

@@ -15,11 +15,9 @@
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectCollection;
 use LdapTools\Object\LdapObjectType;
-use Passbolt\DirectorySync\Error\Exception\ValidationException;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
@@ -242,18 +240,13 @@ class DirectoryResults
     private function _populateGroups()
     {
         foreach ($this->ldapGroups as $ldapGroup) {
-            try {
-                if (!isset($this->groups[$ldapGroup->getDn()])) {
-                    $groupEntry = GroupEntry::fromLdapObject($ldapGroup, $this->mappingRules);
-                    if ($groupEntry->validate()) {
-                        $this->groups[$ldapGroup->getDn()] = $groupEntry;
-                    }
+            if (!isset($this->groups[$ldapGroup->getDn()])) {
+                $groupEntry = GroupEntry::fromLdapObject($ldapGroup, $this->mappingRules);
+                if (!empty($ldapGroup->getDn())) {
+                    $this->groups[$ldapGroup->getDn()] = $groupEntry;
+                } else {
+                    $this->invalidGroups[] = $groupEntry;
                 }
-            } catch(\Exception $e) {
-                $this->invalidGroups[] = [
-                    'object' => $ldapGroup,
-                    'error' => $e,
-                ];
             }
         }
     }
@@ -265,7 +258,13 @@ class DirectoryResults
      */
     public function getInvalidGroups()
     {
-        return $this->invalidGroups;
+        $invalidGroups = [];
+        foreach ($this->groups as $group) {
+            if ($group->hasErrors()) {
+                $invalidGroups[] = $group;
+            }
+        }
+        return array_merge($this->invalidGroups, $invalidGroups);
     }
 
     /**
@@ -275,7 +274,13 @@ class DirectoryResults
      */
     public function getInvalidUsers()
     {
-        return $this->invalidUsers;
+        $invalidUsers = [];
+        foreach ($this->users as $user) {
+            if ($user->hasErrors()) {
+                $invalidUsers[] = $user;
+            }
+        }
+        return array_merge($this->invalidUsers, $invalidUsers);
     }
 
     /**
@@ -286,18 +291,13 @@ class DirectoryResults
     private function _populateUsers()
     {
         foreach ($this->ldapUsers as $ldapUser) {
-            try {
-                if (!isset($this->users[$ldapUser->getDn()])) {
-                    $userEntry = UserEntry::fromLdapObject($ldapUser, $this->mappingRules);
-                    if ($userEntry->validate()) {
-                        $this->users[$ldapUser->getDn()] = $userEntry;
-                    }
+            if (!isset($this->users[$ldapUser->getDn()])) {
+                $userEntry = UserEntry::fromLdapObject($ldapUser, $this->mappingRules);
+                if (!empty($ldapUser->getDn())) {
+                    $this->users[$ldapUser->getDn()] = $userEntry;
+                } else {
+                    $this->invalidUsers[] = $userEntry;
                 }
-            } catch(\Exception $e) {
-                $this->invalidUsers[] = [
-                    'object' => $ldapUser,
-                    'error' => $e,
-                ];
             }
         }
     }
@@ -343,20 +343,42 @@ class DirectoryResults
 
     /**
      * Get users.
+     * @param bool $validOnly whether to return only valid users (without validation errors)
      * @return array
      */
-    public function getUsers()
+    public function getUsers(bool $validOnly = false)
     {
-        return $this->users;
+        if (!$validOnly) {
+            return $this->users;
+        }
+
+        $users = [];
+        foreach($this->users as $key => $user) {
+            if (!$user->hasErrors()) {
+                $users[$key] = $user;
+            }
+        }
+        return $users;
     }
 
     /**
      * Get groups.
+     * @param bool $validOnly whether to return only valid groups (without validation errors)
      * @return array
      */
-    public function getGroups()
+    public function getGroups(bool $validOnly = false)
     {
-        return $this->groups;
+        if (!$validOnly) {
+            return $this->groups;
+        }
+
+        $groups = [];
+        foreach($this->groups as $key => $group) {
+            if (!$group->hasErrors()) {
+                $groups[$key] = $group;
+            }
+        }
+        return $groups;
     }
 
     /**
@@ -553,8 +575,16 @@ class DirectoryResults
      */
     private function _getFlattenedChildrenRecursive(GroupEntry &$group, array &$flatTree, int $level)
     {
-        $group->level = $level;
-        $flatTree[] = $group;
+        $g = clone $group;
+        $g->level = $level;
+        $flatTree[] = $g;
+
+        foreach ($group['group']['users'] as $u) {
+            $user = clone $u;
+            $user->level = $level;
+            $flatTree[] = $user;
+        }
+
         foreach ($group['group']['groups'] as $g) {
             $this->_getFlattenedChildrenRecursive($g, $flatTree, ++ $level);
         }
@@ -572,7 +602,7 @@ class DirectoryResults
         foreach ($tree as $entity) {
             if ($entity->isUser()) {
                 $entity->level = $level;
-                $flatTree[] = $entity;
+                $flatTree[] = clone $entity;
             }
         }
         foreach ($tree as $entity) {
@@ -635,13 +665,15 @@ class DirectoryResults
     }
 
     /**
-     * Return the list of users in a simple array format.
+     * Return the list of valid users in a simple array format.
+     * @param bool $validOnly whether to return only valid users (without validation errors)
      * @return array array of users.
      */
-    public function getUsersAsArray()
+    public function getUsersAsArray(bool $validOnly = false)
     {
         $results = [];
-        foreach ($this->users as $user) {
+        $validUsers = $this->getUsers($validOnly);
+        foreach ($validUsers as $user) {
             $results[] = $user->toArray();
         }
 
@@ -649,13 +681,15 @@ class DirectoryResults
     }
 
     /**
-     * Return the list of groups in a simple array format.
+     * Return the list of valid groups in a simple array format.
+     * @param bool $validOnly whether to return only valid groups (without validation errors)
      * @return array array of groups.
      */
-    public function getGroupsAsArray()
+    public function getGroupsAsArray(bool $validOnly = false)
     {
         $results = [];
-        foreach ($this->groups as $group) {
+        $validGroups = $this->getGroups($validOnly);
+        foreach ($validGroups as $group) {
             $results[] = $group->toArray();
         }
 

@@ -68,10 +68,10 @@ class TestTask extends AppShell
         try {
             $directoryOrgSettings = DirectoryOrgSettings::get();
             $ldapDirectory = new LdapDirectory($directoryOrgSettings);
-            $directoryResults = $ldapDirectory->getDirectoryResults();
+            $directoryResults = $ldapDirectory->fetchDirectoryData();
             $data = [
-                'users' => $ldapDirectory->getUsers(),
-                'groups' => $ldapDirectory->getGroups(),
+                'users' => array_values($directoryResults->getUsers()),
+                'groups' => array_values($directoryResults->getGroups()),
             ];
         } catch (\Exception $e) {
              $this->err($e->getMessage());
@@ -79,40 +79,14 @@ class TestTask extends AppShell
             return false;
         }
 
-        $validUsers = [];
-        foreach ($data['users'] as $entryUser) {
-            $entryUser['foreign_model'] = Alias::MODEL_USERS;
-            $entry = $this->DirectoryEntries->buildEntityFromData($entryUser);
-            if (!empty($entry->getErrors())) {
-                $this->err(__('There was an error with a user entry'));
-                $this->err($entry->getErrors());
-                continue;
-            }
-            $validUsers[] = $entryUser;
-        }
-
-        $validGroups = [];
-        foreach ($data['groups'] as $entryGroup) {
-            $entryGroup['foreign_model'] = Alias::MODEL_GROUPS;
-            $entry = $this->DirectoryEntries->buildEntityFromData($entryGroup);
-            if (!empty($entry->getErrors())) {
-                $this->err(__('There was an error with a group entry'));
-                $this->err($entry->getErrors());
-                continue;
-            }
-            $validGroups[] = $entryGroup;
-        }
-
-        $data['users'] = $validUsers;
-        $data['groups'] = $validGroups;
-        $this->displayValidObjects($data);
+        $this->displayEntries($data);
 
         $tree = $ldapDirectory->getFilteredDirectoryResults()->getFlattenedTree();
         $this->displayFlattenedTree($tree);
 
         $data['users'] = $directoryResults->getInvalidUsers();
         $data['groups'] = $directoryResults->getInvalidGroups();
-        $this->displayInvalidObjects($data);
+        $this->displayInvalidEntries($data);
 
         return true;
     }
@@ -156,11 +130,15 @@ class TestTask extends AppShell
      */
     protected function _groupToString($group)
     {
-        $groupStr = __(
-            '{0} ({1} members)',
-            $group['group']['name'],
-            count($group['group']['users'])
-        );
+        if (!$group->hasErrors()) {
+            $groupStr = __(
+                '{0} ({1} members)',
+                $group['group']['name'],
+                count($group['group']['users'])
+            );
+        } else {
+            $groupStr = __('<error>{0}</error>', $group->dn);
+        }
 
         return $groupStr;
     }
@@ -173,12 +151,16 @@ class TestTask extends AppShell
      */
     protected function _userToString($user)
     {
-        $userStr = __(
-            '{0} {1} ({2})',
-            $user['user']['profile']['first_name'],
-            $user['user']['profile']['last_name'],
-            $user['user']['username']
-        );
+        if (!$user->hasErrors()) {
+            $userStr = __(
+                '{0} {1} ({2})',
+                $user['user']['profile']['first_name'],
+                $user['user']['profile']['last_name'],
+                $user['user']['username']
+            );
+        } else {
+            $userStr = __('<error>{0}</error>', $user->dn);
+        }
 
         return $userStr;
     }
@@ -188,7 +170,7 @@ class TestTask extends AppShell
      * @param array $data data
      * @return void
      */
-    protected function displayValidObjects($data)
+    protected function displayEntries($data)
     {
         $output = [];
         $output[] = [__('groups'), __('users')];
@@ -197,12 +179,12 @@ class TestTask extends AppShell
         for ($i = 0; $i < $maxEntries; $i++) {
             // Handle user.
             $groupStr = '';
-            if (isset($data['groups'][$i]) && isset($data['groups'][$i])) {
+            if (isset($data['groups'][$i])) {
                 $groupStr = $this->_groupToString($data['groups'][$i]);
             }
 
             $userStr = '';
-            if (isset($data['users'][$i]) && isset($data['users'][$i])) {
+            if (isset($data['users'][$i])) {
                 $userStr = $this->_userToString($data['users'][$i]);
             }
 
@@ -220,25 +202,26 @@ class TestTask extends AppShell
      * @param array $data
      * @return void
      */
-    protected function displayInvalidObjects(array $data)
+    protected function displayInvalidEntries(array $data)
     {
         if (count($data['users'])) {
             $this->hr();
-            $this->err(__('{0} users returned by your directory were invalid and had to be ignored', count($data['users'])));
+            $this->err(__('{0} users returned by your directory are invalid and will be ignored during synchronization', count($data['users'])));
+            $this->err(__('bin/cake directory_sync test --verbose for more details'));
             $this->hr();
             foreach($data['users'] as $user) {
-                $this->verbose(__('Error: ') . $user['error']->getMessage());
-                $this->verbose(print_r($user['object']->toArray(), true));
+                $this->verbose(__('Error: ') . $user->getErrorsAsString());
+                $this->verbose(json_encode($user->toArray(), JSON_PRETTY_PRINT));
             }
         }
 
         if (count($data['groups'])) {
             $this->hr();
-            $this->err(__('{0} group(s) returned by your directory were invalid and had to be ignored', count($data['groups'])));
+            $this->err(__('{0} group(s) returned by your directory are invalid and will be ignored during synchronization', count($data['groups'])));
             $this->hr();
             foreach($data['groups'] as $group) {
-                $this->verbose(__('Error: ') . $group['error']->getMessage());
-                $this->verbose(print_r($group['object']->toArray(), true));
+                $this->verbose(__('Error: ') . $group->getErrorsAsString());
+                $this->verbose(json_encode($group->toArray(), JSON_PRETTY_PRINT));
             }
         }
     }

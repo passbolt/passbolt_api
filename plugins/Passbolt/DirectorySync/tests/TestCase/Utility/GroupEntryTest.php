@@ -66,6 +66,7 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
+        $this->assertFalse($groupEntry->hasErrors());
         $this->assertEquals($groupEntry->group['name'], 'grouptest');
         $this->assertEquals($groupEntry->dn, 'CN=john,OU=posixGroups,OU=passbolt,OU=local');
         $this->assertEquals($groupEntry->id, UuidFactory::uuid('ldap.group.id.john'));
@@ -81,8 +82,9 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
         $this->assertEmpty($groupEntry->id);
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['id']);
     }
 
     public function testValidateErrorInvalidId()
@@ -92,8 +94,9 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['id']);
     }
 
     public function testValidateErrorNoDn()
@@ -103,8 +106,9 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['dn']);
     }
 
     public function testValidateErrorDnIsInvalid()
@@ -114,8 +118,9 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['dn']);
     }
 
     public function testValidateErrorNoCreated()
@@ -125,8 +130,9 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['created']);
     }
 
     public function testValidateErrorNoModified()
@@ -136,8 +142,9 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['modified']);
     }
 
     public function testValidateErrorNoName()
@@ -147,7 +154,8 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupEntry = new GroupEntry();
         $groupEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $groupEntry->validate();
+        $this->assertTrue($groupEntry->hasErrors());
+        $this->assertFalse($groupEntry->validate());
+        $this->assertNotEmpty($groupEntry->errors()['name']);
     }
 }

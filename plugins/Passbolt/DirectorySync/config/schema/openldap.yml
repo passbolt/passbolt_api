@@ -66,7 +66,7 @@ objects:
             - 'groups'
     group:
         type: group
-        class: posixGroup
+        class: groupOfNames
         converters:
              generalized_time:
                  - 'created'
