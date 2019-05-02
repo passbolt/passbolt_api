@@ -1,5 +1,30 @@
 .test-template:
   stage: test
+  variables:
+    # MySQL services variables
+    MYSQL_USER: user
+    MYSQL_PASSWORD: testing-password
+    MYSQL_ROOT_PASSWORD: testing-password2
+    MYSQL_DATABASE: test
+
+    # Passbolt unit test job common variables
+    DEBUG: "true"
+    DATASOURCES_DEFAULT_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_DEFAULT_USERNAME: $MYSQL_USER
+    DATASOURCES_DEFAULT_PASSWORD: $MYSQL_PASSWORD
+    DATASOURCES_DEFAULT_HOST: 127.0.0.1
+    DATASOURCES_TEST_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_TEST_USERNAME: $MYSQL_USER
+    DATASOURCES_TEST_PASSWORD: $MYSQL_PASSWORD
+    DATASOURCES_TEST_HOST: 127.0.0.1
+    PASSBOLT_GPG_SERVER_KEY_PUBLIC: config/gpg/unsecure.key
+    PASSBOLT_GPG_SERVER_KEY_PRIVATE: config/gpg/unsecure_private.key
+    APP_FULL_BASE_URL: http://127.0.0.1
+    PASSBOLT_REGISTRATION_PUBLIC: 1
+    PASSBOLT_SELENIUM_ACTIVE: 1
+    # This is the development dummy fingerprint
+    PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
+    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
   services:
   - name: $DATABASE_ENGINE_VERSION
     command:
