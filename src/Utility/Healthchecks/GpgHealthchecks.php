@@ -170,7 +170,8 @@ class GpgHealthchecks
                 $gpg = OpenPGPBackendFactory::get();
                 $keyInfo = $gpg->getKeyInfoFromKeyring(Configure::read('passbolt.gpg.serverKey.fingerprint'));
                 if (!empty($keyInfo)) {
-                    if ($keyInfo[0]['can_sign'] && $keyInfo[0]['can_encrypt']) {
+                    if (isset($keyInfo[0]['can_sign']) && isset($keyInfo[0]['can_encrypt'])
+                        && $keyInfo[0]['can_sign'] && $keyInfo[0]['can_encrypt']) {
                         $checks['gpg']['gpgKeyPublicInKeyring'] = true;
                     }
                 }

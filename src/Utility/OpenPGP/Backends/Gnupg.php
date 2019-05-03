@@ -94,7 +94,7 @@ class Gnupg implements OpenPGPBackend
         $fingerprint = $encryptKeyInfo['fingerprint'];
 
         // Import key inside the keyring if it's not already there
-        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+        if (!$this->isKeyInKeyring($fingerprint)) {
             $this->importKeyIntoKeyring($armoredKey);
         }
         // Store armored key.
@@ -113,7 +113,7 @@ class Gnupg implements OpenPGPBackend
      */
     public function setEncryptKeyFromFingerprint(string $fingerprint)
     {
-        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+        if (!$this->isKeyInKeyring($fingerprint)) {
             throw new Exception(__('Key {0} not found in the keyring', $fingerprint));
         }
         $this->_encryptKey = $fingerprint;
@@ -138,7 +138,7 @@ class Gnupg implements OpenPGPBackend
         $fingerprint = $decryptKeyInfo['fingerprint'];
 
         // Import key inside the keyring if it's not already there
-        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+        if (!$this->isKeyInKeyring($fingerprint)) {
             $this->importKeyIntoKeyring($armoredKey);
         }
 
@@ -169,7 +169,7 @@ class Gnupg implements OpenPGPBackend
     {
         // Get the key info.
         // Import key inside the keyring.
-        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+        if (!$this->isKeyInKeyring($fingerprint)) {
             throw new Exception(__('Key {0} not found in the keyring', $fingerprint));
         }
 
@@ -202,19 +202,21 @@ class Gnupg implements OpenPGPBackend
         $fingerprint = $signKeyInfo['fingerprint'];
 
         // Import key inside the keyring if needed
-        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+        if (!$this->isKeyInKeyring($fingerprint)) {
             $this->importKeyIntoKeyring($armoredKey);
         }
-
         // If a passphrase is provided, throw an exception.
         if ($passphrase !== '') {
-            throw new Exception('Secret keys with a passphrase are not supported.');
+            throw new Exception(__('Secret keys with a passphrase are not supported.'));
         }
 
         // Store armored key.
         $this->_signKey = $fingerprint;
-        $this->_gpg->addsignkey($fingerprint, $passphrase);
-
+        try {
+            $this->_gpg->addsignkey($fingerprint, $passphrase);
+        } catch (\Exception $e) {
+            throw new Exception(__('Could not use key {0} for signing.', $fingerprint));
+        }
         return true;
     }
 
@@ -227,7 +229,7 @@ class Gnupg implements OpenPGPBackend
      */
     public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
-        if ($this->getKeyInfoFromKeyring($fingerprint) === false) {
+        if (!$this->isKeyInKeyring($fingerprint)) {
             throw new Exception(__('Key {0} not found in the keyring', $fingerprint));
         }
 
@@ -476,19 +478,48 @@ class Gnupg implements OpenPGPBackend
      * Get key information from keyring
      *
      * @param string $fingerprint key fingerpint
-     * @return mixed
+     * @return array|false
      */
     public function getKeyInfoFromKeyring(string $fingerprint)
     {
-        // Return info read from the keyring.
-        return $this->_gpg->keyinfo($fingerprint);
+        try {
+            $results = $this->_gpg->keyinfo($fingerprint);
+        } catch(\Exception $e) {
+            return false;
+        }
+        if (empty($results)) {
+            return false;
+        }
+        return $results;
+    }
+
+    /**
+     * Is key currently in keyring
+     *
+     * @param string $fingerprint
+     * @return bool
+     */
+    public function isKeyInKeyring(string $fingerprint)
+    {
+        try {
+            $results = $this->_gpg->keyinfo($fingerprint);
+        } catch(\Exception $e) {
+            return false;
+        }
+        if ($results === false) {
+            return false;
+        }
+        if (empty($results)) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * Import a key into the local keyring.
      *
      * @param string $armoredKey the ASCII armored key block
-     * @return string fingerprint of the key
+     * @return array information about the key
      * @throws Exception
      */
     public function importKeyIntoKeyring(string $armoredKey)
@@ -498,7 +529,7 @@ class Gnupg implements OpenPGPBackend
             throw new Exception('Could not import the key.');
         }
 
-        return $import['fingerprint'];
+        return $import;
     }
 
     /**
@@ -584,8 +615,7 @@ class Gnupg implements OpenPGPBackend
         }
 
         // Check if key associated with fingerprint is in keyring
-        $info = $this->getKeyInfoFromKeyring($fingerprint);
-        if (!empty($info)) {
+        if ($this->isKeyInKeyring($fingerprint)) {
             return true;
         }
 
@@ -608,17 +638,11 @@ class Gnupg implements OpenPGPBackend
         }
 
         // try to import it
-        $import = $this->importKeyIntoKeyring($privateKey);
-        $keyringFingerprint = $this->getKeyInfoFromKeyring($fingerprint);
-        if (empty($import)) {
-            $msg = __('The OpenPGP server key defined in the config could not be found in the GnuPG keyring and could not be imported.');
-            throw new Exception($msg);
-        }
-        if ($keyringFingerprint !== $fingerprint) {
+        $this->importKeyIntoKeyring($privateKey);
+        if (!$this->isKeyInKeyring($fingerprint)) {
             $msg = __('The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.');
             throw new Exception($msg);
         }
-
         return true;
     }
 }

@@ -274,7 +274,9 @@ class GpgAuthenticate extends BaseAuthenticate
         try {
             $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
         } catch (Exception $exception) {
-            throw new InternalErrorException(__('The OpenPGP server key defined in the config cannot be used to decrypt.'));
+            $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
+            $msg .= $exception->getMessage();
+            throw new InternalErrorException($msg);
         }
     }
 

@@ -21,6 +21,7 @@ interface OpenPGPBackend {
     public function getKeyInfo(string $armoredKey);
     public function getPublicKeyInfo(string $armoredKey);
     public function getKeyInfoFromKeyring(string $fingerprint);
+    public function isKeyInKeyring(string $fingerprint);
 
     public function encrypt(string $text, bool $sign = false);
     public function decrypt(string $text, bool $verifySignature = false, array &$signatureInfo = []);
