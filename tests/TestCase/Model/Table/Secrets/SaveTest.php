@@ -66,7 +66,7 @@ class SaveTest extends AppTestCase
     /* FORMAT VALIDATION TESTS */
     /* ************************************************************** */
 
-    public function testValidationUserId()
+    public function testSecretsSaveValidationUserId()
     {
         $testCases = [
             'uuid' => self::getUuidTestCases(),
@@ -76,7 +76,7 @@ class SaveTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Secrets, 'user_id', self::getDummySecret(), self::getEntityDefaultOptions(), $testCases);
     }
 
-    public function testValidationResourceId()
+    public function testSecretsSaveValidationResourceId()
     {
         $testCases = [
             'uuid' => self::getUuidTestCases(),
@@ -86,7 +86,7 @@ class SaveTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Secrets, 'resource_id', self::getDummySecret(), self::getEntityDefaultOptions(), $testCases);
     }
 
-    public function testValidationData()
+    public function testSecretsSaveValidationData()
     {
         $testCases = [
             'isValidGpgMessage' => self::getGpgMessageTestCases(),
@@ -100,7 +100,7 @@ class SaveTest extends AppTestCase
     /* LOGIC VALIDATION TESTS */
     /* ************************************************************** */
 
-    public function testSuccess()
+    public function testSecretsSaveSuccess()
     {
         $data = self::getDummySecret();
         $options = self::getEntityDefaultOptions();

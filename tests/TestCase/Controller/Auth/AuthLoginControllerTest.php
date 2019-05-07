@@ -354,6 +354,10 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     {
         // Make sure the keys are in the keyring
         // if needed we add them for later use in the tests
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+
         $this->_gpg = new \gnupg();
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
 
