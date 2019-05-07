@@ -176,8 +176,6 @@ class GpgKeyForm extends Form
             $encryptedMessage = $gpg->encrypt($messageToEncrypt);
         } catch (Exception $e) {
             return false;
-        } catch (\Exception $e) {
-            return false;
         }
 
         return true;
@@ -201,8 +199,6 @@ class GpgKeyForm extends Form
             $gpg->setDecryptKey($check, '');
             $decryptedMessage = $gpg->decrypt($encryptedMessage, true);
         } catch (Exception $e) {
-            return false;
-        } catch (\Exception $e) {
             return false;
         }
 

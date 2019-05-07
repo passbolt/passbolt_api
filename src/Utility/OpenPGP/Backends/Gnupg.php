@@ -86,6 +86,9 @@ class Gnupg implements OpenPGPBackend
 
         $this->_gpg = new \gnupg();
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
+        $this->_encryptKey = null;
+        $this->_decryptKey = null;
+        $this->_signKey = null;
     }
 
     /**
@@ -101,11 +104,23 @@ class Gnupg implements OpenPGPBackend
         $encryptKeyInfo = $this->getPublicKeyInfo($armoredKey);
         $fingerprint = $encryptKeyInfo['fingerprint'];
 
-        // Import key inside the keyring if it's not already there
-        if (!$this->isKeyInKeyring($fingerprint)) {
+        try {
+            $this->_gpg->addencryptkey($fingerprint);
+            $this->_encryptKey = $fingerprint;
+        } catch(\Exception $e) {
+            // It didn't work, maybe only key is not in the keyring
+            // we import the key and retry
             $this->importKeyIntoKeyring($armoredKey);
+            try {
+                $this->_gpg->addencryptkey($fingerprint);
+                $this->_encryptKey = $fingerprint;
+            } catch(\Exception $e) {
+                $this->_encryptKey = null;
+                throw new Exception(__('The key {0} cannot be used to encrypt.', $fingerprint));
+            }
         }
-        return $this->setEncryptKeyFromFingerprint($fingerprint);
+
+        return true;
     }
 
     /**
@@ -119,10 +134,11 @@ class Gnupg implements OpenPGPBackend
     public function setEncryptKeyFromFingerprint(string $fingerprint)
     {
         $this->assertKeyInKeyring($fingerprint);
-        $this->_encryptKey = $fingerprint;
         try {
             $this->_gpg->addencryptkey($fingerprint);
+            $this->_encryptKey = $fingerprint;
         } catch(\Exception $e) {
+            $this->_encryptKey = null;
             throw new Exception(__('The key {0} cannot be used to encrypt.', $fingerprint));
         }
 
@@ -147,15 +163,21 @@ class Gnupg implements OpenPGPBackend
         $decryptKeyInfo = $this->getKeyInfo($armoredKey);
         $fingerprint = $decryptKeyInfo['fingerprint'];
 
-        // Import key inside the keyring if it's not already there
-        if (!$this->isKeyInKeyring($fingerprint)) {
+        try {
+            $this->_gpg->adddecryptkey($fingerprint, $passphrase);
+            $this->_decryptKey = $fingerprint;
+        } catch(\Exception $e) {
+            // It didn't work, maybe only key is not in the keyring
+            // we import the key and retry
             $this->importKeyIntoKeyring($armoredKey);
-        }
-
-        // Add decrypt key.
-        $this->_decryptKey = $fingerprint;
-        if (!$this->_gpg->adddecryptkey($fingerprint, $passphrase)) {
-            throw new Exception('The key {0} cannot be used to decrypt.', $fingerprint);
+            try {
+                $this->_gpg->adddecryptkey($fingerprint, $passphrase);
+                $this->_decryptKey = $fingerprint;
+            } catch(\Exception $e) {
+                $this->_decryptKey = null;
+                $msg = __('The key {0} cannot be used to decrypt.', $fingerprint);
+                throw new Exception( $msg . ' ' . $e->getMessage());
+            }
         }
 
         return true;
@@ -174,11 +196,12 @@ class Gnupg implements OpenPGPBackend
     public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
         $this->assertPassphraseEmpty($passphrase);
-        $this->assertKeyInKeyring($fingerprint);
 
-        // Add decrypt key.
-        $this->_decryptKey = $fingerprint;
-        if (!$this->_gpg->adddecryptkey($fingerprint, $passphrase)) {
+        try {
+            $this->_gpg->adddecryptkey($fingerprint, $passphrase);
+            $this->_decryptKey = $fingerprint;
+        } catch(\Exception $e) {
+            $this->_decryptKey = null;
             throw new Exception('The key {0} cannot be used to decrypt.', $fingerprint);
         }
 
@@ -203,12 +226,25 @@ class Gnupg implements OpenPGPBackend
         $signKeyInfo = $this->getKeyInfo($armoredKey);
         $fingerprint = $signKeyInfo['fingerprint'];
 
-        // Import key inside the keyring if needed
-        if (!$this->isKeyInKeyring($fingerprint)) {
+        try {
+            // The key is in the keyring try to use it as a sign key
+            $this->_gpg->addsignkey($fingerprint, $passphrase);
+            $this->_signKey = $fingerprint;
+        } catch(\Exception $e) {
+            // It didn't work, maybe only public key was in the keyring
+            // we try to re-import the key
             $this->importKeyIntoKeyring($armoredKey);
+            try {
+                $this->_gpg->addsignkey($fingerprint, $passphrase);
+                $this->_signKey = $fingerprint;
+            } catch(\Exception $e) {
+                $this->_signKey = null;
+                $msg = __('Could not use key {0} for signing.', $fingerprint);
+                throw new Exception( $msg . ' ' . $e->getMessage());
+            }
         }
 
-        return $this->setSignKeyFromFingerprint($fingerprint, $passphrase);
+        return true;
     }
 
     /**
@@ -224,12 +260,12 @@ class Gnupg implements OpenPGPBackend
     public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
         $this->assertPassphraseEmpty($passphrase);
-        $this->assertKeyInKeyring($fingerprint);
 
-        $this->_signKey = $fingerprint;
         try {
             $this->_gpg->addsignkey($fingerprint, $passphrase);
+            $this->_signKey = $fingerprint;
         } catch (\Exception $e) {
+            $this->_signKey = null;
             $msg = __('Could not use key {0} for signing.', $fingerprint);
             throw new Exception( $msg . ' ' . $e->getMessage());
         }
@@ -442,8 +478,10 @@ class Gnupg implements OpenPGPBackend
         } catch(\Exception $e) {
             return false;
         }
-
-        return !($results === false || empty($results));
+        if (empty($results)) {
+            return false;
+        }
+        return $results;
     }
 
     /**

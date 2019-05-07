@@ -19,6 +19,7 @@ use App\Utility\OpenPGP\Backends\Gnupg;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\TestSuite\TestCase;
+use Passbolt\WebInstaller\Test\TestCase\Utility\GpgKeyFormTest;
 
 class GnupgTest extends TestCase
 {
@@ -41,6 +42,20 @@ class GnupgTest extends TestCase
         if ($settings != $this->originalErrorSettings) {
             ini_set('error_reporting', $this->originalErrorSettings);
         }
+    }
+
+    public function testGnupgEncryptDecryptSuccess()
+    {
+        $keys = GpgKeyFormTest::getDummyData();
+        $this->gnupg->setEncryptKey($keys['public_key_armored']);
+        $this->gnupg->setSignKey($keys['private_key_armored'], '');
+
+        $messageToEncrypt = 'This is a test message.';
+        $encryptedMessage = $this->gnupg->encrypt($messageToEncrypt, true);
+        $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
+        $decryptedMessage = $this->gnupg->decrypt($encryptedMessage, true);
+
+        $this->assertEquals($messageToEncrypt, $decryptedMessage);
     }
 
     public function testGnupgSetEncryptKeySuccess()
