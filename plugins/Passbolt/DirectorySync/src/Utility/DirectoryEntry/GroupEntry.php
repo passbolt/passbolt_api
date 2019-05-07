@@ -156,6 +156,23 @@ class GroupEntry extends DirectoryEntry
             'group' => $this->group,
         ];
 
+        // Transform children into arrays too.
+        if (isset($extraData['group']['groups']) && !empty($extraData['group']['groups'])) {
+            foreach ($extraData['group']['groups'] as $key => $group) {
+                if (is_object($group)) {
+                    $extraData['group']['groups'][$key] = $group->toArray();
+                }
+            }
+        }
+
+        if (isset($extraData['group']['users']) && !empty($extraData['group']['users'])) {
+            foreach ($extraData['group']['users'] as $key => $user) {
+                if (is_object($user)) {
+                    $extraData['group']['users'][$key] = $user->toArray();
+                }
+            }
+        }
+
         return array_merge(parent::toArray(), $extraData);
     }
 

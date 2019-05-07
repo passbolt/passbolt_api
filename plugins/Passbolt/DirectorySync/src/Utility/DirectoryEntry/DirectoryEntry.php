@@ -299,11 +299,16 @@ abstract class DirectoryEntry implements ArrayAccess
     public function toArray()
     {
         $res = [
+            'type' => $this->type,
             'id' => $this->id,
             'directory_name' => $this->dn,
             'directory_created' => $this->created,
             'directory_modified' => $this->modified,
         ];
+
+        if ($this->hasErrors()) {
+            $res['errors'] = $this->errors();
+        }
 
         return $res;
     }

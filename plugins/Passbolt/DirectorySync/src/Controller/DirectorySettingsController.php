@@ -20,6 +20,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\View\ViewVarsTrait;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
+use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
@@ -107,18 +108,27 @@ class DirectorySettingsController extends DirectoryController
             $settings = LdapConfigurationForm::formatFormDataToOrgSettings($data);
             $orgSettings = new DirectoryOrgSettings($settings);
             $directory = DirectoryFactory::get($orgSettings);
+            $filteredDirectoryResults = $directory->getFilteredDirectoryResults();
             $outputData = [
-                'users' => $directory->getUsers(),
-                'groups' => $directory->getGroups(),
+                'users' => $this->_toArray(array_values($filteredDirectoryResults->getUsers())),
+                'groups' => $this->_toArray(array_values($filteredDirectoryResults->getGroups())),
             ];
         } catch (\Exception $e) {
             throw new BadRequestException('The users and groups cannot be retrieved. ' . $e->getMessage());
         }
 
         try {
-            $outputData['tree'] = $directory->getFilteredDirectoryResults()->getTree();
+            $outputData['tree'] = $this->_toArray($filteredDirectoryResults->getTree());
         } catch (\Exception $e) {
             throw new BadRequestException('The directory structure cannot be retrieved. ' . $e->getMessage());
+        }
+
+        try {
+            $invalidObjects = $filteredDirectoryResults->getInvalidGroups();
+            $invalidObjects = array_merge($invalidObjects, $filteredDirectoryResults->getInvalidUsers());
+            $outputData['errors'] = $this->_toArray($invalidObjects);
+        } catch (\Exception $e) {
+            throw new BadRequestException('There was an issue while retrieving the invalid entries. ' . $e->getMessage());
         }
 
         $this->success(__('The operation was successful.'), $outputData);
@@ -139,5 +149,17 @@ class DirectorySettingsController extends DirectoryController
         DirectoryOrgSettings::disable($uac);
 
         $this->success(__('The operation was successful.'));
+    }
+
+    /**
+     * Transform a list of entries to arrays, for output purpose.
+     * @param $entries
+     */
+    private function _toArray($entries) {
+        foreach($entries as $key => $entry) {
+            $entries[$key] = $entry->toArray();
+        }
+
+        return $entries;
     }
 }
