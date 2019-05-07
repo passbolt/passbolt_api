@@ -131,6 +131,7 @@ class SecretsTable extends Table
     public function isValidGpgMessageRule(string $check, array $context)
     {
         $gpg = OpenPGPBackendFactory::get();
+
         return $gpg->isValidMessage($check);
     }
 

@@ -42,7 +42,6 @@ class OpenPGPBackendFactory
                 return new Gnupg();
             default:
                 throw new InternalErrorException(__('This OpenPGP backend is not supported'));
-            break;
         }
     }
 
@@ -57,6 +56,7 @@ class OpenPGPBackendFactory
         if (self::$instance !== null) {
             return self::$instance;
         }
+
         return self::create(Configure::read('passbolt.gpg.backend'));
     }
 }

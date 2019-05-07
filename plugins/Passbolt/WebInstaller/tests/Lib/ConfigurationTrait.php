@@ -70,8 +70,8 @@ trait ConfigurationTrait
         if (file_exists(CONFIG . 'license')) {
             $this->backupConfig['license'] = file_get_contents(CONFIG . 'license');
         }
-        $this->backupConfig['public'] =  Configure::read('passbolt.gpg.serverKey.public');
-        $this->backupConfig['private'] =  Configure::read('passbolt.gpg.serverKey.private');
+        $this->backupConfig['public'] = Configure::read('passbolt.gpg.serverKey.public');
+        $this->backupConfig['private'] = Configure::read('passbolt.gpg.serverKey.private');
 
         // Write the keys
         Configure::write('passbolt.gpg.serverKey.public', TMP . 'tests' . DS . 'testkey.asc');

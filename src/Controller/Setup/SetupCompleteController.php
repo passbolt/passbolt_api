@@ -15,8 +15,8 @@
 namespace App\Controller\Setup;
 
 use App\Controller\AppController;
-use App\Error\Exception\ValidationException;
 use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;

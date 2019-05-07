@@ -250,6 +250,7 @@ class GpgAuthenticate extends BaseAuthenticate
 
             return false;
         }
+
         return true;
     }
 
@@ -264,12 +265,40 @@ class GpgAuthenticate extends BaseAuthenticate
         // check if the default key is set and available in gpg
         $this->_gpg = OpenPGPBackendFactory::create(Configure::read('passbolt.gpg.backend'));
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        try {
-            $this->_gpg->setUpServerKey($fingerprint, Configure::read('passbolt.gpg.serverKey.private'));
-        } catch (Exception $exception) {
-            throw new InternalErrorException($exception->getMessage());
+
+        // Check if config contains fingerprint
+        if ($fingerprint === null) {
+            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
         }
 
+        // Check if key associated with fingerprint is in keyring
+        if (!$this->_gpg->isKeyInKeyring($fingerprint)) {
+            $keyFilePath = Configure::read('passbolt.gpg.serverKey.private');
+            // If it's not in keyring try to import it
+            // Check if file containing the private key exist
+            if ($keyFilePath === null) {
+                throw new InternalErrorException(__('The secret key file is not defined.'));
+            }
+            $msg = __('The OpenPGP server key defined in the config could not be found in the GnuPG keyring and file system.');
+            if (!file_exists($keyFilePath)) {
+                throw new InternalErrorException($msg);
+            }
+            $privateKey = file_get_contents($keyFilePath);
+            if ($privateKey === false) {
+                throw new InternalErrorException($msg);
+            }
+            if (!$this->_gpg->isParsableArmoredPrivateKey($privateKey)) {
+                $msg = __('The OpenPGP server key defined on file is not a valid private key.');
+                throw new InternalErrorException($msg);
+            }
+
+            // try to import it
+            $this->_gpg->importKeyIntoKeyring($privateKey);
+            if (!$this->_gpg->isKeyInKeyring($fingerprint)) {
+                $msg = __('The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.');
+                throw new InternalErrorException($msg);
+            }
+        }
         // set the key to be used for decrypting
         try {
             $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
@@ -293,7 +322,7 @@ class GpgAuthenticate extends BaseAuthenticate
         if (empty($info)) {
             try {
                 $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);
-            } catch(Exception $exception) {
+            } catch (Exception $exception) {
                 throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
             }
             // check that the imported key match the fingerprint

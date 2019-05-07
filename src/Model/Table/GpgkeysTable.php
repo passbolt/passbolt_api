@@ -206,6 +206,7 @@ class GpgkeysTable extends Table
     public function isParsableArmoredPublicKey(string $value, array $context = null)
     {
         $gpg = OpenPGPBackendFactory::get();
+
         return $gpg->isParsableArmoredPublicKey($value);
     }
 

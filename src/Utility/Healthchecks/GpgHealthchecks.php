@@ -59,6 +59,7 @@ class GpgHealthchecks
         if (Configure::read('passbolt.gpg.backend') === OpenPGPBackendFactory::GNUPG) {
             $checks['gpg']['lib'] = (class_exists('gnupg'));
         }
+
         return $checks;
     }
 
@@ -97,6 +98,7 @@ class GpgHealthchecks
             $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
             $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
         }
+
         return $checks;
     }
 
@@ -153,6 +155,7 @@ class GpgHealthchecks
                 $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
             }
         }
+
         return $checks;
     }
 
@@ -177,6 +180,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
@@ -204,6 +208,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
@@ -232,6 +237,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
@@ -263,6 +269,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
@@ -292,6 +299,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
@@ -319,6 +327,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 
@@ -359,6 +368,7 @@ class GpgHealthchecks
                 }
             }
         }
+
         return $checks;
     }
 }

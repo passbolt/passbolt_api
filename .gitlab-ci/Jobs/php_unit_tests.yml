@@ -35,7 +35,6 @@
         docker-entrypoint.sh mysqld
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   script:
-    - sleep 15
     - init_test_db
     - cp config/app.default.php config/app.php
     - composer install --dev --no-interaction
