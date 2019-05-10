@@ -86,7 +86,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $data = $this->_getBodyAsString();
         $expect = 'An Internal Error Has Occurred';
         $this->assertContains($expect, $data);
-        $expect = 'The OpenPGP server key defined in the config could not be found in the GnuPG keyring.';
+        $expect = 'The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.';
         $this->assertContains($expect, $data);
     }
 
@@ -354,6 +354,10 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     {
         // Make sure the keys are in the keyring
         // if needed we add them for later use in the tests
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+
         $this->_gpg = new \gnupg();
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
 

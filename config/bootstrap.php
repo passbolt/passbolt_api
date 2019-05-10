@@ -169,13 +169,6 @@ Type::build('datetime')->useImmutable();
 Type::build('timestamp')->useImmutable();
 
 /*
- * Gpg Config
- */
-if (Configure::read('passbolt.gpg.putenv')) {
-    putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
-}
-
-/*
  * Set process user constant
  */
 $uid = posix_getuid();

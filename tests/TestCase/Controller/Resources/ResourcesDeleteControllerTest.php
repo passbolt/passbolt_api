@@ -16,7 +16,6 @@
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Gpg;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
@@ -31,7 +30,6 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     public function setUp()
     {
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->gpg = new Gpg();
         parent::setUp();
     }
 

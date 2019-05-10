@@ -108,7 +108,11 @@ return [
 
         // GPG Configuration.
         'gpg' => [
-            // Tell GPG where to find the keyring.
+            // Tell passbolt which OpenPGP backend to use
+            // Default is PHP-GNUPG with some help from OpenPGP-PHP
+            'backend' => env('PASSBOLT_GPG_BACKEND', 'Gnupg'),
+
+            // Tell passbolt where to find the GnuPG keyring.
             // If putenv is set to false, gnupg will use the default path ~/.gnupg.
             // For example :
             // - Apache on Centos it would be in '/usr/share/httpd/.gnupg'
