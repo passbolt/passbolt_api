@@ -25,7 +25,7 @@ return [
         'group' => [
             'name' => 'Administration',
             'members' => [
-                'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local'
+                'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local',
             ],
         ],
     ],
@@ -41,6 +41,7 @@ return [
                 'CN=CLevel,OU=PassboltUsers,DC=passbolt,DC=local',
                 'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
                 'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
+                'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local', // Invalid user
             ],
         ],
     ],
@@ -67,6 +68,20 @@ return [
             'name' => 'Developers',
             'members' => [
                 'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local',
+                'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
+            ],
+        ],
+    ],
+
+    [
+        'id' => UuidFactory::uuid('ldap.group.id.invalidgroup1'),
+        'directory_name' => 'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
+        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        // No name makes the group invalid
+        'group' => [
+            'members' => [
+
             ],
         ],
     ],

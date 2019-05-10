@@ -18,7 +18,6 @@ namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 use App\Model\Entity\Role;
 
 use App\Test\Lib\Utility\UserAccessControlTrait;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
@@ -251,10 +250,10 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->postJson("/directorysync/settings/test.json?api-version=2", $formData);
         $this->assertSuccess();
         $this->assertTrue(isset($this->_responseJsonBody->users));
-        $this->assertEquals(count($this->_responseJsonBody->users), 4);
+        $this->assertEquals(6, count($this->_responseJsonBody->users));
         $this->assertTrue(isset($this->_responseJsonBody->groups));
-        $this->assertEquals(count($this->_responseJsonBody->groups), 4);
+        $this->assertEquals(5, count($this->_responseJsonBody->groups));
         $this->assertTrue(isset($this->_responseJsonBody->tree));
-        $this->assertEquals(count($this->_responseJsonBody->tree), 1);
+        $this->assertEquals(1, count($this->_responseJsonBody->tree));
     }
 }

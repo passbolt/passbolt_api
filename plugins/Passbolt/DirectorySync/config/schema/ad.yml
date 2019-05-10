@@ -211,6 +211,8 @@ objects:
             - 'emailAddress'
             - 'dn'
             - 'guid'
+            - 'created'
+            - 'modified'
         default_values:
             name: "%username%"
             displayName: "%username%"
@@ -325,6 +327,8 @@ objects:
             - 'dn'
             - 'guid'
             - 'members'
+            - 'created'
+            - 'modified'
         default_values:
             accountName: "%name%"
             objectclass: "group"

@@ -30,19 +30,20 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');
         $this->userSyncAction = new UserSyncAction();
         $this->groupSyncAction = new GroupSyncAction();
-        $users = $this->userSyncAction->getDirectory()->getUsers();
+
+        // Load directory results with data.
+        $users = $this->userSyncAction->getDirectory()->getUsersFixtures();
+        $groups = $this->userSyncAction->getDirectory()->getGroupsFixtures();
+        $this->directoryResults = $DirectoryResults = new DirectoryResults([]);
+        $this->directoryResults->initializeWithEntries($users, $groups);
     }
 
     /**
      * Test that the groups users are properly retrieved and populated in the results.
      */
     public function testGroupUsersArePopulated() {
-        $groups = $this->userSyncAction->getDirectory()->getGroups();
-        $users = $this->userSyncAction->getDirectory()->getUsers();
-        $DirectoryResults = new DirectoryResults([]);
-        $DirectoryResults->initializeWithEntries($users, $groups);
-        $retrievedGroups = $DirectoryResults->getGroups();
-        $this->assertEquals(count($retrievedGroups), 4);
+        $retrievedGroups = $this->directoryResults->getGroups();
+        $this->assertEquals(5, count($retrievedGroups));
         $expectedGroupsUsers = [
             'CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local' => [
                 'groups' => [
@@ -57,6 +58,7 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
                 'users' => [
                     'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
                     'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
+                    'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
                 ],
             ],
             'CN=CLevel,OU=PassboltUsers,DC=passbolt,DC=local' => [
@@ -66,7 +68,9 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
                 ]
             ],
             'CN=Developers,OU=PassboltUsers,DC=passbolt,DC=local' => [
-                'groups' => [],
+                'groups' => [
+                    'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local'
+                ],
                 'users' => [
                     'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local'
                 ]
@@ -83,11 +87,7 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
      * test that the groups that are retrieved by function getRecursivelyFromParentGroup are correct.
      */
     public function testGroupsFromParentGroup() {
-        $groups = $this->userSyncAction->getDirectory()->getGroups();
-        $users = $this->userSyncAction->getDirectory()->getUsers();
-        $DirectoryResults = new DirectoryResults([]);
-        $DirectoryResults->initializeWithEntries($users, $groups);
-        $retrievedGroups = $DirectoryResults
+        $retrievedGroups = $this->directoryResults
             ->getRecursivelyFromParentGroup(LdapObjectType::GROUP, 'Administration')
             ->getGroups();
 
@@ -101,6 +101,7 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
                 'users' => [
                     'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
                     'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
+                    'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
                 ],
             ],
             'CN=CLevel,OU=PassboltUsers,DC=passbolt,DC=local' => [
@@ -118,30 +119,23 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
     }
 
     public function testUsersFromParentGroup() {
-        $groups = $this->userSyncAction->getDirectory()->getGroups();
-        $users = $this->userSyncAction->getDirectory()->getUsers();
-        $DirectoryResults = new DirectoryResults([]);
-        $DirectoryResults->initializeWithEntries($users, $groups);
-        $retrievedUsers = $DirectoryResults
+        $retrievedUsers = $this->directoryResults
             ->getRecursivelyFromParentGroup(LdapObjectType::USER, 'Administration')
             ->getUsers();
 
-        $this->assertEquals(count($retrievedUsers), 2);
+        $this->assertEquals(3, count($retrievedUsers));
 
         $expectedUsers = [
             'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
 
         $this->assertEquals($expectedUsers, array_keys($retrievedUsers));
     }
 
     public function testGetTree() {
-        $groups = $this->userSyncAction->getDirectory()->getGroups();
-        $users = $this->userSyncAction->getDirectory()->getUsers();
-        $DirectoryResults = new DirectoryResults([]);
-        $DirectoryResults->initializeWithEntries($users, $groups);
-        $tree = $DirectoryResults->getTree();
+        $tree = $this->directoryResults->getTree();
         $this->assertTrue(isset($tree['CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local']));
         $group1 = $tree['CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local'];
         $this->assertTrue(isset($group1['group']['groups']['CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local']));
@@ -150,17 +144,20 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
     }
 
     public function testGetFlattenedTree() {
-        $groups = $this->userSyncAction->getDirectory()->getGroups();
-        $users = $this->userSyncAction->getDirectory()->getUsers();
-        $DirectoryResults = new DirectoryResults([]);
-        $DirectoryResults->initializeWithEntries($users, $groups);
-        $flatTree = $DirectoryResults->getFlattenedTree();
+        $flatTree = $this->directoryResults->getFlattenedTree();
         $expectedEntities = [
             'CN=User4,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User5,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=CLevel,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=Developers,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local',
+            'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
         foreach($flatTree as $key => $entity) {
             $this->assertEquals($entity->dn, $expectedEntities[$key]);

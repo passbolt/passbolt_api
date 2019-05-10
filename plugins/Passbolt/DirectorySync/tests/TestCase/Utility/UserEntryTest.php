@@ -72,6 +72,7 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
+        $this->assertFalse($userEntry->hasErrors());
         $this->assertEquals($userEntry->user['username'], 'john.doe@passbolt.com');
         $this->assertEquals($userEntry->user['profile']['first_name'], 'john');
         $this->assertEquals($userEntry->user['profile']['last_name'], 'doe');
@@ -89,8 +90,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
         $this->assertEmpty($userEntry->id);
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['id']);
     }
 
     public function testValidateErrorInvalidId()
@@ -100,8 +102,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['id']);
     }
 
     public function testValidateErrorNoDn()
@@ -111,8 +114,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['dn']);
     }
 
     public function testValidateErrorDnIsInvalid()
@@ -122,8 +126,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['dn']);
     }
 
     public function testValidateErrorNoCreated()
@@ -133,8 +138,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['created']);
     }
 
     public function testValidateErrorNoModified()
@@ -144,8 +150,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['modified']);
     }
 
     public function testValidateErrorNoFirstName()
@@ -155,8 +162,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['first_name']);
     }
 
     public function testValidateErrorNoLastName()
@@ -166,8 +174,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['last_name']);
     }
 
     public function testValidateErrorNoEmailAddress()
@@ -177,8 +186,9 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['email']);
     }
 
     public function testValidateErrorInvalidEmailAddress()
@@ -188,7 +198,8 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userEntry = new UserEntry();
         $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules);
 
-        $this->expectException(ValidationException::class);
-        $userEntry->validate();
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['email']);
     }
 }

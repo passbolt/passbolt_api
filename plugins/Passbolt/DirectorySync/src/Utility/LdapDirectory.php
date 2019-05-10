@@ -19,7 +19,6 @@ use LdapTools\Connection\LdapConnection;
 use LdapTools\Event\Event;
 use LdapTools\Event\LdapObjectSchemaEvent;
 use LdapTools\LdapManager;
-use LdapTools\Log\EchoLdapLogger;
 use LdapTools\Object\LdapObjectType;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
@@ -58,7 +57,7 @@ class LdapDirectory implements DirectoryInterface
         $this->ldap = new LdapManager($ldapConfig);
         $this->directoryType = $this->getDirectoryType();
         $this->mappingRules = $this->getMappingRules();
-        $this->directoryResults = new DirectoryResults($this->mappingRules);
+        $this->directoryResults = new DirectoryResults($this->mappingRules, $this->directorySettings);
 
         $this->customizeSchema();
     }
@@ -176,7 +175,7 @@ class LdapDirectory implements DirectoryInterface
             $groups = $filteredGroups->getGroupsAsArray();
         }
 
-        $directoryResults = new DirectoryResults($this->mappingRules);
+        $directoryResults = new DirectoryResults($this->mappingRules, $this->directorySettings);
         $directoryResults->initializeWithEntries($users, $groups);
 
         return $directoryResults;
