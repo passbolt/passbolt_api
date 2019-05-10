@@ -537,6 +537,7 @@ class Gnupg implements OpenPGPBackend
         if ($sign === true) {
             $msg = __('Could not use the key to sign and encrypt.');
             $this->assertSignKey();
+            $this->assertEncryptKey();
             try {
                 $encryptedText = $this->_gpg->encryptsign($text);
             } catch (\Exception $e) {
@@ -547,7 +548,7 @@ class Gnupg implements OpenPGPBackend
             }
         } else {
             $msg = __('Could not use the key to encrypt.');
-            $this->assertSignKey();
+            $this->assertEncryptKey();
             try {
                 $encryptedText = $this->_gpg->encrypt($text);
             } catch (\Exception $e) {
