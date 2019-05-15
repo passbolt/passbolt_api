@@ -17,10 +17,12 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\TestCase\Controller\Resources\ResourcesAddControllerTest;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesAddNotificationTest extends ResourcesAddControllerTest
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Base/Favorites', 'app.Base/Permissions', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Avatars'
@@ -28,7 +30,8 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
 
     public function testResourcesAddNotificationDisabled()
     {
-        Configure::write('passbolt.email.send.password.create', false);
+        $this->setEmailNotificationSetting('send.password.create', false);
+
         $this->authenticateAs('ada');
         $data = $this->_getDummyPostData();
         $this->postJson("/resources.json", $data);
@@ -42,7 +45,8 @@ class ResourcesAddNotificationTest extends ResourcesAddControllerTest
 
     public function testResourcesAddNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.password.create', true);
+        $this->setEmailNotificationSetting('send.password.create', true);
+
         $this->authenticateAs('ada');
         $userId = UuidFactory::uuid('user.id.ada');
         $data = $this->_getDummyPostData();
