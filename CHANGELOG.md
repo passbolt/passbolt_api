@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.10.0] - 2019-05-15
+### Improved
+- PB-276: Merge organization settings code into CE. Ground work for administration features.
+
 ## [2.9.0] - 2019-04-24
 ### Fixed
 - PB-220: Upgrade to CakePHP 3.7.7
@@ -632,7 +636,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...HEAD
+[2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.9.0
 [2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
 [2.8.3]: https://github.com/passbolt/passbolt_api/compare/v2.8.2...v2.8.3
