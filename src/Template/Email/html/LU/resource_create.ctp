@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
@@ -33,19 +33,19 @@ echo $this->element('Email/module/avatar',[
 
 $text = __('Name: {0}', Purifier::clean($resource->name)) . '<br/>';
 
-if (Configure::read('passbolt.email.show.username')) {
+if (EmailNotificationSettings::get('show.username')) {
     $text .= __('Username: {0}', Purifier::clean($resource->username)) . '<br/>';
 }
-if (Configure::read('passbolt.email.show.uri')) {
+if (EmailNotificationSettings::get('show.uri')) {
     $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
 }
-if (Configure::read('passbolt.email.show.description')) {
+if (EmailNotificationSettings::get('show.description')) {
     $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-if (Configure::read('passbolt.email.show.secret')) {
+if (EmailNotificationSettings::get('show.secret')) {
     echo $this->element('Email/module/code', [
         'text' => $resource->secrets[0]->data
     ]);

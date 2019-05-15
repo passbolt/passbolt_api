@@ -16,11 +16,9 @@ namespace App\Controller\Events\EmailTraits;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use Cake\Core\Configure;
-use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait UsersEmailTrait
 {
@@ -63,7 +61,7 @@ trait UsersEmailTrait
      */
     public function sendSelfRegisteredEmail(Event $event, User $user, AuthenticationToken $token)
     {
-        if (!Configure::read('passbolt.email.send.user.create')) {
+        if (!EmailNotificationSettings::get('send.user.create')) {
             return;
         }
         $Users = TableRegistry::getTableLocator()->get('Users');
@@ -85,7 +83,7 @@ trait UsersEmailTrait
      */
     public function sendAdminRegisteredEmail(Event $event, User $user, AuthenticationToken $token, string $adminId)
     {
-        if (Configure::read('passbolt.email.send.user.create') === false) {
+        if (!EmailNotificationSettings::get('send.user.create')) {
             return;
         }
 
@@ -98,17 +96,17 @@ trait UsersEmailTrait
     }
 
     /**
-     * Send Register Email
+     * Send user delete email
      *
      * @param Event $event event
-     * @param \App\Model\Entity\User $user user that was deleted
+     * @param User $user user that was deleted
      * @param array $groupsIds that was deleted
      * @param string $deletedById User uuid of the admin who delete the user
      * @return void
      */
     public function sendUserDeleteEmail(Event $event, User $user, array $groupsIds, string $deletedById)
     {
-        if (Configure::read('passbolt.email.send.user.delete') === false) {
+        if (!EmailNotificationSettings::get('send.group.user.delete')) {
             return;
         }
         if (empty($groupsIds)) {
