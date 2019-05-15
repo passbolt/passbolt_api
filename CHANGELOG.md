@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [unreleased]
 
 ## [2.10.0] - 2019-05-15
+### Added
+- PB-165: As AD I should be able to change my organization email notification settings via an administration screen
+
 ### Improved
 - PB-276: Merge organization settings code into CE. Ground work for administration features.
 
