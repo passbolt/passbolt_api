@@ -11,7 +11,7 @@
         --form "variables[PASSBOLT_FLAVOUR]=$PASSBOLT_FLAVOUR" \
         --form "variables[UPSTREAM_COMMIT_SHA]=$CI_COMMIT_SHA" \
         --form "variables[UPSTREAM_PROJECT_ID]=$CI_PROJECT_ID" \
-        "https://gitlab.com/api/v4/projects/$DOWNSTREAM_PROJECT_ID/trigger/pipeline"
+        "https://gitlab.com/api/v4/projects/$TRIGGER_PROJECT_ID/trigger/pipeline"
   only:
     - release
   except:
@@ -19,15 +19,18 @@
       - $PASSBOLT_FLAVOUR == "ce"
 
 pro-trigger-build:
+  variables:
+    TRIGGER_PROJECT_ID: $DOWNSTREAM_PROJECT_ID
   extends: .build-template
 
 pro-vm-trigger-build:
   variables:
-    BRANCH: master
-    DOWNSTREAM_PROJECT_ID: $DOWNSTREAM_VM_PROJECT_ID
+    TRIGGER_PROJECT_ID: $DOWNSTREAM_VM_PROJECT_ID
   extends: .build-template
 
 ce-trigger-build:
+  variables:
+    TRIGGER_PROJECT_ID: $DOWNSTREAM_PROJECT_ID
   extends: .build-template
   except:
     variables:
@@ -36,8 +39,7 @@ ce-trigger-build:
 ce-do-trigger-build:
   extends: .build-template
   variables:
-    BRANCH: master
-    DOWNSTREAM_PROJECT_ID: $DOWNSTREAM_DO_PROJECT_ID
+    TRIGGER_PROJECT_ID: $DOWNSTREAM_DO_PROJECT_ID
   except:
     variables:
       - $PASSBOLT_FLAVOUR == "pro"
