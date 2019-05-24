@@ -4,7 +4,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.10.0] - 2019-05-15
+### Added
+- PB-165: As AD I should be able to change my organization email notification settings via an administration screen
+
+### Improved
+- PB-169: Implement email prefix/suffix on the User Directory Settings administration screen
+- PB-188: Implement ignored entries in "test connection" popup
+
+# Fixed
+- PB-231: LDAP - ignored entries should not be validated during test connection
+- PB-226: LDAP - Fix "Openldap doesn't work with UI configuration"
+- PB-37: LDAP - implement user feedback: usersParentGroup and groupsParentGroup filters should be case insensitive
+
 ## [2.9.0] - 2019-04-24
+### Fixed
 - PB-220: Upgrade to CakePHP 3.7.7
 
 ## [2.8.5] - 2019-04-19
@@ -700,7 +714,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...HEAD
+[2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.5...v2.9.0
 [2.8.5]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.8.5
 [2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
