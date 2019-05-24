@@ -68,6 +68,7 @@ class Gnupg implements OpenPGPBackend
     const MESSAGE_MARKER = 'PGP MESSAGE';
     const PUBLIC_KEY_MARKER = 'PGP PUBLIC KEY BLOCK';
     const PRIVATE_KEY_MARKER = 'PGP PRIVATE KEY BLOCK';
+    const SIGNED_MESSAGE_MARKER = 'PGP SIGNED MESSAGE';
 
     /**
      * Constructor.
@@ -359,6 +360,26 @@ class Gnupg implements OpenPGPBackend
     }
 
     /**
+     * Check if an ASCII armored signed message is parsable
+     *
+     * @param  string $armored ASCII armored signed message
+     * @return bool
+     */
+    public function isParsableArmoredSignedMessage($armored)
+    {
+        try {
+            $marker = $this->getGpgMarker($armored);
+        } catch (Exception $e) {
+            return false;
+        }
+        if ($marker !== self::SIGNED_MESSAGE_MARKER) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Check if a message is valid.
      *
      * To do this, we try to unarmor the message. If the operation is successful, then we consider that
@@ -504,7 +525,7 @@ class Gnupg implements OpenPGPBackend
      *
      * @param string $armoredKey the ASCII armored key block
      * @throws Exception if the key could not be imported
-     * @return array information about the key
+     * @return string key fingerprint
      */
     public function importKeyIntoKeyring(string $armoredKey)
     {
@@ -517,8 +538,11 @@ class Gnupg implements OpenPGPBackend
         if (!is_array($import)) {
             throw new Exception($msg);
         }
+        if (!isset($import['fingerprint'])) {
+            throw new Exception($msg);
+        }
 
-        return $import;
+        return $import['fingerprint'];
     }
 
     /**
@@ -589,80 +613,6 @@ class Gnupg implements OpenPGPBackend
         }
 
         return $decrypted;
-    }
-
-    /**
-     * Sign a text.
-     *
-     * @param string $text plain text to be encrypted.
-     * @throws Exception if no key was set to sign
-     * @throws Exception if there is an issue with the key to sign
-     * @return string signed text
-     */
-    public function sign(string $text)
-    {
-        $msg = __('Could not use the key to sign.');
-        $this->assertSignKey();
-        try {
-            $signedText = $this->_gpg->encryptsign($text);
-        } catch (\Exception $e) {
-            throw new Exception($msg . $e->getMessage());
-        }
-        if ($signedText === false) {
-            throw new Exception($msg);
-        }
-
-        return $signedText;
-    }
-
-    /**
-     * Verify an encrypted signed text.
-     *
-     * @param string $text encrypted signed text to be verified.
-     * @param string $signature (optional) the signature. In the case where the signature is not included in the encrypted text.
-     * @throws Exception if there is an issue while verifying the text
-     * @return string signature data
-     */
-    public function verify(string $text, string $signature = "")
-    {
-        $msg = __('Could not verify the message.');
-        try {
-            if (empty($signature)) {
-                $verifySignature = $this->_gpg->verify($text);
-            } else {
-                $verifySignature = $this->_gpg->verify($text, signature);
-            }
-        } catch (\Exception $e) {
-            throw new Exception($msg . $e->getMessage());
-        }
-        if ($verifySignature === false) {
-            throw new Exception($msg);
-        }
-
-        return $verifySignature;
-    }
-
-    /**
-     * Verify a clearsigned text.
-     *
-     * @param string $text clearsigned text to be verified.
-     * @param string $plainText (optional) The plain text. If this optional parameter is passed, it is filled with the plain text.
-     * @throws Exception if there is an issue while verifying the text
-     * @return string signature data
-     */
-    public function verifyClearsignedText(string $text, string &$plainText = "")
-    {
-        $msg = __('Could not verify the message.');
-        try {
-            $verifySignature = $this->_gpg->verify($text, false, $plainText);
-        } catch (\Exception $e) {
-            throw new Exception($msg . $e->getMessage());
-        }
-        if ($verifySignature === false) {
-            throw new Exception($msg);
-        }
-
-        return $verifySignature;
     }
 
     /**
@@ -752,5 +702,51 @@ class Gnupg implements OpenPGPBackend
         }
 
         return true;
+    }
+
+    /**
+     * Verify a signed message.
+     *
+     * @param string $armored The armored signed message to verify.
+     * @param string $fingerprint The fingerprint of the key to verify for.
+     * @param mixed $plainText (optional) if this parameter is passed, it will be filled with the plain text.
+     * @return void
+     * @throws Exception If the armored signed message cannot be verified.
+     */
+    public function verify($armored, $fingerprint, &$plainText = null)
+    {
+        $msg = __('The message cannot be verified.');
+        try {
+            $signature = $this->_gpg->verify($armored, false, $plainText);
+            if (empty($signature) || $signature[0]['fingerprint'] !== $fingerprint) {
+                throw new Exception($msg);
+            }
+        } catch (\Exception $e) {
+            throw new Exception($msg);
+        }
+    }
+
+    /**
+     * Sign a text.
+     *
+     * @param string $text plain text to be signed.
+     * @throws Exception if no key was set to sign
+     * @throws Exception if there is an issue with the key to sign
+     * @return string signed text
+     */
+    public function sign(string $text)
+    {
+        $msg = __('Could not sign the text. ');
+        $this->assertSignKey();
+        try {
+            $signedText = $this->_gpg->sign($text);
+        } catch (\Exception $e) {
+            throw new Exception($msg . $e->getMessage());
+        }
+        if ($signedText === false) {
+            throw new Exception($msg);
+        }
+
+        return $signedText;
     }
 }

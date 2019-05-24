@@ -181,4 +181,90 @@ zaZXtuDzZmnTOjWJm895TA==
             $this->assertEquals($expect, $result, __('Armored message test failed: {0}', $value));
         }
     }
+
+    public function testGnupgVerifySuccess()
+    {
+        $armoredSignedMessage = $this->getDummySignedMessage('betty');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
+        $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
+        $message = null;
+        $this->gnupg->verify($armoredSignedMessage, $fingerprint, $message);
+        $this->assertRegExp('/^Signed message/', $message);
+    }
+
+    public function testGnupgVerifyError()
+    {
+        $armoredSignedMessage = $this->getDummySignedMessage('betty');
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key');
+        $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
+        $this->expectException(Exception::class);
+        $this->gnupg->verify($armoredSignedMessage, $fingerprint);
+    }
+
+    public function testIsParsableArmoredSignedMessageSuccess()
+    {
+        $armoredSignedMessage = $this->getDummySignedMessage('betty');
+        $result = $this->gnupg->isParsableArmoredSignedMessage($armoredSignedMessage);
+        $this->assertTrue($result);
+    }
+
+    public function testIsParsableArmoredSignedMessageError()
+    {
+        $armoredSignedMessages = [
+            'empty message' => '',
+            'no gpg signed mark' => '---- invalid format ----',
+        ];
+
+        foreach ($armoredSignedMessages as $message) {
+            $result = $this->gnupg->isParsableArmoredSignedMessage($message);
+            $this->assertFalse($result);
+        }
+    }
+
+    protected function getDummySignedMessage($userAlias = '')
+    {
+        return '-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Signed message
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCgAvFiEEA/YOlY9MspcjrN92E1O1sV2bBU8FAlqzfJARHGFkYUBwYXNz
+Ym9sdC5jb20ACgkQE1O1sV2bBU+yIQ/9FYgjgvbwag9Cxyv4y0wQMOFGC21v8raE
+LqT2mH8g7mYt/4n2qQKslMZCKjwraUwPMPyRiAEyt52aWfjh9fIfwvczV3TerqoN
+0vtDCv65UY7SNItIuGYFDBrYl9d1a92I1LO3p6bD1mS0FXT1Zg7VPKBtmZHY3Iqr
+pRlhtkssgWYtvOsnnO9qnuyH8xXeYbzRO2oDuQrsHnHqQXs+J6Aha7b2W1VqsdQm
+jnUwl9Unxb7d2eEOO8Y2w9jV86V88u6qDGpGeDCOXu4M/FZqVbOZyH0PQztQyOH8
+SCqW/Q5wGxey42dKOmxHEmroly8ljkd1pMOdAsYU4+8Zjog6h7BmiVQUYKQj+V63
+/RnXGH5bCExKmsA7VMEbEruI+6lVIw19iuXikr6s+nwr4m2tmZYro2RMqxBqw+ZH
+1wLexpnJ5y5qhKB7b5Nhg6UCIJeUNiFz1yE4C3B9qiO8lmhoNoa2+bPATI/PbKZq
+fXMCQ9cC88YoVX6SLv9uV+oErfZ/vp2d59JiUz3/PHNKKr4wG/BDQsa37WLrcAs3
+gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
+19OfL7XtvDaK4aR/fMaAM6Vz+cxeFOJEGBGFNJkeU18jIE1EwsmcLt5q7+n+j9Mq
+0wIBq1JnEVs=
+=l/7T
+-----END PGP SIGNATURE-----';
+    }
+
+    public function testGnupgSignSuccess()
+    {
+        $keys = GpgKeyFormTest::getDummyData();
+        $this->gnupg->setSignKey($keys['private_key_armored'], '');
+        $keyInfo = $this->gnupg->getKeyInfo($keys['private_key_armored']);
+
+        $messageToSign = 'This is a test message.';
+        $signedMessage = $this->gnupg->sign($messageToSign);
+
+        $messageUnsigned = null;
+        $this->gnupg->verify($signedMessage, $keyInfo['fingerprint'], $messageUnsigned);
+
+        $this->assertEquals($messageToSign . "\n", $messageUnsigned);
+    }
+
+    public function testGnupgSignError()
+    {
+        $messageToSign = 'This is a test message.';
+        $this->expectException(Exception::class);
+        $this->gnupg->sign($messageToSign);
+    }
 }

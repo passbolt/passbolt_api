@@ -78,7 +78,7 @@ interface OpenPGPBackend
      *
      * @param string $armoredKey the ASCII armored key block
      * @throws Exception if the key could not be imported
-     * @return array information about the key
+     * @return string key fingerprint
      */
     public function importKeyIntoKeyring(string $armoredKey);
 
@@ -174,6 +174,17 @@ interface OpenPGPBackend
     public function decrypt(string $text, bool $verifySignature = false, array &$signatureInfo = []);
 
     /**
+     * Verify a signed message.
+     *
+     * @param string $armored The armored signed message to verify.
+     * @param string $fingerprint The fingerprint of the key to verify for.
+     * @param mixed $plainText (optional) The plain text.
+     * @return void
+     * @throws Exception If the armored signed message cannot be verified.
+     */
+    public function verify($armored, $fingerprint, &$plainText = null);
+
+    /**
      * Sign a text.
      *
      * @param string $text plain text to be signed.
@@ -182,23 +193,4 @@ interface OpenPGPBackend
      * @return string signed text
      */
     public function sign(string $text);
-
-    /**
-     * Verify an encrypted signed text.
-     *
-     * @param string $text encrypted signed text to be verified.
-     * @throws Exception if there is an issue while verifying the text
-     * @return string signature data
-     */
-    public function verify(string $text);
-
-    /**
-     * Verify a clearsigned text.
-     *
-     * @param string $text clearsigned text to be verified.
-     * @param string $plainText (optional) The plain text. If this optional parameter is passed, it is filled with the plain text.
-     * @throws Exception if there is an issue while verifying the text
-     * @return string signature data
-     */
-    public function verifyClearsignedText(string $text, string &$plainText = "");
 }
