@@ -93,7 +93,7 @@ class TagsFixture extends TestFixture
             [
                 'id' => UuidFactory::uuid('tag.id.hotel'),
                 'slug' => 'hotel',
-                'is_shared' => 1
+                'is_shared' => 0
             ],
             [
                 'id' => UuidFactory::uuid('tag.id.hindi'),

@@ -1,13 +1,13 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -15,28 +15,32 @@
 namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Tags\Model\Entity\Tag;
 
 /**
  * Tags Model
  *
  * @property \App\Model\Table\ResourcesTable|\Cake\ORM\Association\BelongsToMany $Resources
- * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
+ * @property ResourcesTagsTable|\Cake\ORM\Association\HasMany $ResourcesTags
  *
- * @method \App\Model\Entity\Tag get($primaryKey, $options = [])
- * @method \App\Model\Entity\Tag newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Tag[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Tag|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Tag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Tag[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Tag findOrCreate($search, callable $callback = null, $options = [])
+ * @method Tag get($primaryKey, $options = [])
+ * @method Tag newEntity($data = null, array $options = [])
+ * @method Tag[] newEntities(array $data, array $options = [])
+ * @method Tag|bool save(EntityInterface $entity, $options = [])
+ * @method Tag patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method Tag[] patchEntities($entities, array $data, array $options = [])
+ * @method Tag findOrCreate($search, callable $callback = null, $options = [])
  */
 class TagsTable extends Table
 {
@@ -95,11 +99,12 @@ class TagsTable extends Table
     }
 
     /**
+     * Find tags for index
      *
-     * @param string $userId uuid
-     * @return Query
+     * @param string $userId uuid of the user to find tags for.
+     * @return array Array of tags
      */
-    public function findIndex($userId)
+    public function findIndex(string $userId)
     {
         $tags = [];
         $resources = $this->Resources->findIndex($userId);
@@ -107,8 +112,14 @@ class TagsTable extends Table
 
         if (!empty($resourcesId)) {
             $tags = $this->find()
-                ->innerJoinWith('ResourcesTags', function (Query $q) use ($resourcesId) {
-                    return $q->where(['ResourcesTags.resource_id IN' => $resourcesId]);
+                ->innerJoinWith('ResourcesTags', function (Query $q) use ($resourcesId, $userId) {
+                    return $q->where([
+                        'ResourcesTags.resource_id IN' => $resourcesId,
+                        'OR' => [
+                            ['ResourcesTags.user_id =' => $userId],
+                            ['ResourcesTags.user_id IS NULL'],
+                        ]
+                    ]);
                 })
                 ->order('slug')
                 ->distinct();
@@ -276,5 +287,43 @@ class TagsTable extends Table
         }
 
         return 0;
+    }
+
+    /**
+     * Find or create a tag with the given slug
+     *
+     * @param string $slug The slug to search for
+     * @param UserAccessControl $control User Access Control
+     * @return mixed
+     */
+    public function findOrCreateTag(string $slug, UserAccessControl $control)
+    {
+        $tagExists = $this->findBySlug($slug)->first();
+
+        if (!$tagExists) {
+            if (mb_substr($slug, 0, 1) === '#' && !$control->isAdmin()) {
+                throw new ForbiddenException('You do not have the permission to create a shared tag.');
+            }
+
+            $isShared = mb_substr($slug, 0, 1) === '#';
+
+            $tagExists = $this->newEntity([
+                'slug' => $slug,
+                'is_shared' => $isShared,
+            ], [
+                'accessibleFields' => [
+                    'slug' => true,
+                    'is_shared' => true,
+                ]
+            ]);
+
+            if (!empty($tagExists->getErrors())) {
+                throw new CustomValidationException('Could not validate tag data.', $tagExists->getErrors());
+            }
+
+            $this->save($tagExists);
+        }
+
+        return $tagExists;
     }
 }
