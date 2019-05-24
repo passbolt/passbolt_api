@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Security;
 
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use PassboltTestData\Shell\Task\Base\GpgkeysDataTask;
 
@@ -31,12 +31,12 @@ class XssGpgkeysDataTask extends GpgkeysDataTask
     {
         $usersTask = new XssUsersDataTask();
         $users = $usersTask->getData();
-        $Gpg = new Gpg();
+        OpenPGPBackendFactory::get();
         $keys = [];
 
         foreach ($users as $user) {
             $keyRaw = $this->_getUserKey($user['id']);
-            $info = $Gpg->getPublicKeyInfo($keyRaw);
+            $info = $Gpg->getKeyInfo($keyRaw);
             $keys[] = [
                 'id' => UuidFactory::uuid('gpgkey.id.' . $user['id']),
                 'user_id' => $user['id'],

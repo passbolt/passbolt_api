@@ -14,7 +14,7 @@
  */
 namespace PassboltTestData\Shell\Task\Base;
 
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use PassboltTestData\Lib\DataTask;
@@ -92,7 +92,7 @@ class GpgkeysDataTask extends DataTask
     {
         $Users = TableRegistry::get('Users');
         $users = $Users->find('all');
-        $Gpg = new Gpg();
+        $Gpg = OpenPGPBackendFactory::get();
         $keys = [];
         // users to skip, like if they have not completed the setup for example
         $skip = [UuidFactory::uuid('user.id.ruth')];
@@ -100,7 +100,7 @@ class GpgkeysDataTask extends DataTask
         foreach ($users as $user) {
             if (!in_array($user->id, $skip)) {
                 $keyRaw = $this->_getUserKey($user->id);
-                $info = $Gpg->getPublicKeyInfo($keyRaw);
+                $info = $Gpg->getKeyInfo($keyRaw);
                 $keys[] = [
                     'id' => UuidFactory::uuid('gpgkey.id.' . $user->id),
                     'user_id' => $user->id,
