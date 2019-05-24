@@ -68,6 +68,7 @@ class Gnupg implements OpenPGPBackend
     const MESSAGE_MARKER = 'PGP MESSAGE';
     const PUBLIC_KEY_MARKER = 'PGP PUBLIC KEY BLOCK';
     const PRIVATE_KEY_MARKER = 'PGP PRIVATE KEY BLOCK';
+    const SIGNED_MESSAGE_MARKER = 'PGP SIGNED MESSAGE';
 
     /**
      * Constructor.
@@ -359,6 +360,26 @@ class Gnupg implements OpenPGPBackend
     }
 
     /**
+     * Check if an ASCII armored signed message is parsable
+     *
+     * @param  string $armored ASCII armored signed message
+     * @return bool
+     */
+    public function isParsableArmoredSignedMessage($armored)
+    {
+        try {
+            $marker = $this->getGpgMarker($armored);
+        } catch (Exception $e) {
+            return false;
+        }
+        if ($marker !== self::SIGNED_MESSAGE_MARKER) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Check if a message is valid.
      *
      * To do this, we try to unarmor the message. If the operation is successful, then we consider that
@@ -504,7 +525,7 @@ class Gnupg implements OpenPGPBackend
      *
      * @param string $armoredKey the ASCII armored key block
      * @throws Exception if the key could not be imported
-     * @return array information about the key
+     * @return string key fingerprint
      */
     public function importKeyIntoKeyring(string $armoredKey)
     {
@@ -517,8 +538,10 @@ class Gnupg implements OpenPGPBackend
         if (!is_array($import)) {
             throw new Exception($msg);
         }
-
-        return $import;
+        if (!isset($import['fingerprint'])) {
+            throw new Exception($msg);
+        }
+        return $import['fingerprint'];
     }
 
     /**
@@ -678,5 +701,27 @@ class Gnupg implements OpenPGPBackend
         }
 
         return true;
+    }
+
+    /**
+     * Verify a signed message.
+     *
+     * @param string $armored The armored signed message to verify.
+     * @param string $fingerprint The fingerprint of the key to verify for.
+     * @param mixed $plainText (optional) if this parameter is passed, it will be filled with the plain text.
+     * @return void
+     * @throws Exception If the armored signed message cannot be verified.
+     */
+    public function verify($armored, $fingerprint, &$plainText = null)
+    {
+        $msg = __('The message cannot be verified.');
+        try {
+            $signature = $this->_gpg->verify($armored, false, $plainText);
+            if (empty($signature) || $signature[0]['fingerprint'] !== $fingerprint) {
+                throw new Exception($msg);
+            }
+        } catch (\Exception $e) {
+            throw new Exception($msg);
+        }
     }
 }

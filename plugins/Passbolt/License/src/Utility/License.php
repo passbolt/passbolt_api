@@ -113,7 +113,7 @@ class License
             throw new \Exception(__('The license format is not valid.'));
         }
 
-        $isSignedMessage = $this->_gpg->isParsableArmoredSignedMessageRule($armoredSignedLicense);
+        $isSignedMessage = $this->_gpg->isParsableArmoredSignedMessage($armoredSignedLicense);
         if (!$isSignedMessage) {
             throw new \Exception(__('The license format is not valid.'));
         }
