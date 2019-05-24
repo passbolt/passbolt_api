@@ -1,0 +1,62 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.10.0
+ */
+namespace App\Utility\OpenPGP;
+
+use App\Utility\OpenPGP\Backends\Gnupg;
+use Cake\Core\Configure;
+use Cake\Http\Exception\InternalErrorException;
+
+class OpenPGPBackendFactory
+{
+
+    const GNUPG = 'Gnupg';
+
+    /**
+     * @var OpenPGPBackend
+     */
+    private static $instance = null;
+
+    /**
+     * Instantiate an OpenPGP Backend
+     *
+     * @param string $backend one of the supported backend
+     * @return OpenPGPBackend
+     * @throws InternalErrorException if backend if not supported
+     */
+    public static function create(string $backend = self::GNUPG)
+    {
+        switch ($backend) {
+            case self::GNUPG:
+                return new Gnupg();
+            default:
+                throw new InternalErrorException(__('This OpenPGP backend is not supported'));
+        }
+    }
+
+    /**
+     * Get a OpenPGP backend (Singleton pattern)
+     *
+     * @return OpenPGPBackend
+     * @throws InternalErrorException if backend if not supported
+     */
+    public static function get()
+    {
+        if (self::$instance !== null) {
+            return self::$instance;
+        }
+
+        return self::create(Configure::read('passbolt.gpg.backend'));
+    }
+}

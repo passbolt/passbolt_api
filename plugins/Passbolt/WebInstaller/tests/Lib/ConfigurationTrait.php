@@ -70,6 +70,8 @@ trait ConfigurationTrait
         if (file_exists(CONFIG . 'license')) {
             $this->backupConfig['license'] = file_get_contents(CONFIG . 'license');
         }
+        $this->backupConfig['public'] = Configure::read('passbolt.gpg.serverKey.public');
+        $this->backupConfig['private'] = Configure::read('passbolt.gpg.serverKey.private');
 
         // Write the keys
         Configure::write('passbolt.gpg.serverKey.public', TMP . 'tests' . DS . 'testkey.asc');
@@ -92,9 +94,17 @@ trait ConfigurationTrait
         }
         if (isset($this->backupConfig['passboltConfig'])) {
             file_put_contents(CONFIG . 'passbolt.php', $this->backupConfig['passboltConfig']);
+        } else {
+            if (file_exists(CONFIG . 'passbolt.php')) {
+                unlink(CONFIG . 'passbolt.php');
+            }
         }
         if (isset($this->backupConfig['license'])) {
             file_put_contents(CONFIG . 'license', $this->backupConfig['license']);
+        } else {
+            if (file_exists(CONFIG . 'license')) {
+                unlink(CONFIG . 'license');
+            }
         }
         if (file_exists(TMP . 'tests' . DS . 'testkey.asc')) {
             unlink(TMP . 'tests' . DS . 'testkey.asc');
@@ -102,5 +112,9 @@ trait ConfigurationTrait
         if (file_exists(TMP . 'tests' . DS . 'testkey_private.asc')) {
             unlink(TMP . 'tests' . DS . 'testkey_private.asc');
         }
+
+        // Write the keys
+        Configure::write('passbolt.gpg.serverKey.public', $this->backupConfig['public']);
+        Configure::write('passbolt.gpg.serverKey.private', $this->backupConfig['private']);
     }
 }

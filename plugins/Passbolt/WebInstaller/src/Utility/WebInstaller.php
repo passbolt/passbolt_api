@@ -17,7 +17,7 @@ namespace Passbolt\WebInstaller\Utility;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Network\Session;
@@ -142,7 +142,7 @@ class WebInstaller
     public function importGpgKey()
     {
         $gpgSettings = $this->getSettings('gpg');
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
         $gpg->importKeyIntoKeyring($gpgSettings['private_key_armored']);
         file_put_contents(Configure::read('passbolt.gpg.serverKey.public'), $gpgSettings['public_key_armored']);
         file_put_contents(Configure::read('passbolt.gpg.serverKey.private'), $gpgSettings['private_key_armored']);
@@ -234,9 +234,6 @@ class WebInstaller
      */
     public function changeConfigFolderPermission()
     {
-        if (defined('TEST_IS_RUNNING')) {
-            return;
-        }
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator(CONFIG),
             \RecursiveIteratorIterator::SELF_FIRST,

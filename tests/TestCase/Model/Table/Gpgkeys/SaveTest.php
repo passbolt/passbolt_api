@@ -219,13 +219,13 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationisParsableArmoredPublicKey()
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
-        $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKey));
+        $this->assertTrue($this->Gpgkeys->isParsableArmoredPublicKey($armoredKey));
 
         $armoredKeySplit = str_split($armoredKey, 300);
-        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKeySplit[0]));
+        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeySplit[0]));
 
         $armoredKeyCorrupt = str_replace('F', '0', $armoredKey);
-        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKeyRule($armoredKeyCorrupt));
+        $this->assertFalse($this->Gpgkeys->isParsableArmoredPublicKey($armoredKeyCorrupt));
     }
 
     public function testGpgkeysRulesUniqueFingerprint()
