@@ -14,7 +14,7 @@
  */
 namespace Passbolt\License\Utility;
 
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 
 class License
@@ -43,7 +43,7 @@ class License
     public function __construct($license)
     {
         $this->_license = $license;
-        $this->_gpg = new Gpg();
+        $this->_gpg = OpenPGPBackendFactory::get();
     }
 
     /**
