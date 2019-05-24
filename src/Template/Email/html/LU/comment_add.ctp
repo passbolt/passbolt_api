@@ -13,7 +13,7 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
@@ -33,7 +33,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-if (Configure::read('passbolt.email.show.comment')) {
+if (EmailNotificationSettings::get('show.comment')) {
     echo $this->element('Email/module/text', [
         'text' => Purifier::clean($comment->content)
     ]);

@@ -16,9 +16,9 @@ namespace App\Controller\Events\EmailTraits;
 
 use App\Model\Entity\Comment;
 use App\Model\Entity\Role;
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait CommentsEmailTrait
 {
@@ -42,7 +42,7 @@ trait CommentsEmailTrait
      */
     public function sendCommentAddEmail(Event $event, Comment $comment)
     {
-        if (!Configure::read('passbolt.email.send.comment.add')) {
+        if (!EmailNotificationSettings::get('send.comment.add')) {
             return;
         }
 

@@ -17,10 +17,12 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsAddNotificationTest extends AppIntegrationTestCase
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $Groups;
 
     public $fixtures = [
@@ -30,7 +32,8 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
 
     public function testGroupsUsersAddNotificationDisabled()
     {
-        Configure::write('passbolt.email.send.group.user.add', false);
+        $this->setEmailNotificationSetting('send.group.user.add', false);
+
         $this->authenticateAs('admin');
         $this->postJson('/groups.json?api-version=v1', [
             'Group' => ['name' => 'Temp Group'],
@@ -52,7 +55,8 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
 
     public function testGroupsUsersAddNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.group.user.add', true);
+        $this->setEmailNotificationSetting('send.group.user.add', true);
+
         $this->authenticateAs('admin');
         $this->postJson('/groups.json?api-version=v1', [
             'Group' => ['name' => 'Temp Group'],

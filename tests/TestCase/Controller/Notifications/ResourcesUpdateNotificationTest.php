@@ -17,10 +17,12 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\TestCase\Controller\Resources\ResourcesUpdateControllerTest;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Gpgkeys',
         'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
@@ -29,7 +31,7 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 
     public function testResourcesUpdateNotificationDisabled()
     {
-        Configure::write('passbolt.email.send.password.update', false);
+        $this->setEmailNotificationSetting('send.password.update', false);
 
         // Get and update resource
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -49,7 +51,7 @@ class ResourcesUpdateNotificationTest extends ResourcesUpdateControllerTest
 
     public function testResourcesUpdateNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.password.update', true);
+        $this->setEmailNotificationSetting('send.password.update', true);
 
         // Get and update resource
         $resourceId = UuidFactory::uuid('resource.id.apache');
