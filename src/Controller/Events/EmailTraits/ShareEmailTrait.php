@@ -16,10 +16,10 @@ namespace App\Controller\Events\EmailTraits;
 
 use App\Model\Entity\Resource;
 use App\Model\Entity\User;
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait ShareEmailTrait
 {
@@ -66,9 +66,9 @@ trait ShareEmailTrait
      * @param User $owner person who did the change
      * @return void
      */
-    public function sendNewShareEmail(Event $event, Resource $resource, array $secrets, array $userIds, \App\Model\Entity\User $owner)
+    public function sendNewShareEmail(Event $event, Resource $resource, array $secrets, array $userIds, User $owner)
     {
-        if (!Configure::read('passbolt.email.send.password.share')) {
+        if (!EmailNotificationSettings::get('send.password.share')) {
             return;
         }
 

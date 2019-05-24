@@ -15,15 +15,17 @@
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/EmailQueue', 'app.Base/Avatars'];
 
     public function testUsersRecoverNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.user.recover', true);
+        $this->setEmailNotificationSetting('send.user.recover', true);
 
         // setup
         $this->postJson('/users/recover.json', ['username' => 'ruth@passbolt.com']);
@@ -43,16 +45,18 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     public function testUsersRecoverNotificationDisabled()
     {
         // setup
-        Configure::write('passbolt.email.send.user.create', false);
-        $this->postJson('/users/recover.json', ['username' => 'ruth@passbolt.com']);
+        $this->setEmailNotificationSetting('send.user.create', false);
+
+        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
         $this->assertResponseCode(500);
         $this->assertResponseContains('No email was sent to this user.');
 
         // recovery
-        Configure::write('passbolt.email.send.user.recover', false);
-        $this->postJson('/users/recover.json', ['username' => 'ada@passbolt.com']);
+        $this->setEmailNotificationSetting('send.user.recover', false);
+
+        $this->postJson('/users/recover.json?api-version=v1', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
         $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
         $this->assertResponseCode(500);

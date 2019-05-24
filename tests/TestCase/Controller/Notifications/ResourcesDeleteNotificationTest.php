@@ -17,10 +17,12 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/Profiles', 'app.Base/Roles',
@@ -29,7 +31,8 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 
     public function testResourcesDeleteNotificationDisabled()
     {
-        Configure::write('passbolt.email.send.password.delete', false);
+        $this->setEmailNotificationSetting('send.password.delete', false);
+
         $this->authenticateAs('ada');
         $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
         $this->assertSuccess();
@@ -42,7 +45,8 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 
     public function testResourcesDeleteNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.password.delete', true);
+        $this->setEmailNotificationSetting('send.password.delete', true);
+
         $this->authenticateAs('ada');
         $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
         $this->assertSuccess();

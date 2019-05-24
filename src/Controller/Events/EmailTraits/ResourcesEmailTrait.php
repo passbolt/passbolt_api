@@ -16,10 +16,10 @@ namespace App\Controller\Events\EmailTraits;
 
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
-use Cake\Core\Configure;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait ResourcesEmailTrait
 {
@@ -43,7 +43,7 @@ trait ResourcesEmailTrait
      */
     public function sendResourceCreateEmail(Event $event, Resource $resource)
     {
-        if (!Configure::read('passbolt.email.send.password.create')) {
+        if (!EmailNotificationSettings::get('send.password.create')) {
             return;
         }
         $Users = TableRegistry::getTableLocator()->get('Users');
@@ -63,7 +63,7 @@ trait ResourcesEmailTrait
      */
     public function sendResourceUpdateEmail(Event $event, Resource $resource)
     {
-        if (!Configure::read('passbolt.email.send.password.update')) {
+        if (!EmailNotificationSettings::get('send.password.update')) {
             return;
         }
         $Users = TableRegistry::getTableLocator()->get('Users');
@@ -94,7 +94,7 @@ trait ResourcesEmailTrait
      */
     public function sendResourceDeleteEmail(Event $event, Resource $resource, string $deletedBy, ResultSetInterface $users)
     {
-        if (!Configure::read('passbolt.email.send.password.delete')) {
+        if (!EmailNotificationSettings::get('send.password.delete')) {
             return;
         }
         $Users = TableRegistry::getTableLocator()->get('Users');
