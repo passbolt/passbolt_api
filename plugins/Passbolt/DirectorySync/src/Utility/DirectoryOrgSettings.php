@@ -14,6 +14,7 @@
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -329,15 +330,14 @@ class DirectoryOrgSettings
         $gpgConfig = Configure::read('passbolt.gpg');
         $keyid = $gpgConfig['serverKey']['fingerprint'];
         $passphrase = $gpgConfig['serverKey']['passphrase'];
-        $gpg = new \gnupg();
-        $gpg->addencryptkey($keyid);
-        $gpg->addsignkey($keyid, $passphrase);
-
-        return $gpg->encryptsign($data);
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->setSignKeyFromFingerprint($keyid, $passphrase);
+        $gpg->setEncryptKeyFromFingerprint($keyid);
+        return $gpg->encrypt($data, true);
     }
 
     /**
-     * Undocumented function
+     * Decrypt the organization settings
      *
      * @param string $data The message to decrypt
      * @return string
@@ -347,9 +347,8 @@ class DirectoryOrgSettings
         $gpgConfig = Configure::read('passbolt.gpg');
         $keyid = $gpgConfig['serverKey']['fingerprint'];
         $passphrase = $gpgConfig['serverKey']['passphrase'];
-        $gpg = new \gnupg();
-        $gpg->adddecryptkey($keyid, $passphrase);
-
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->setDecryptKeyFromFingerprint($keyid, $passphrase);
         return $gpg->decrypt($data);
     }
 }
