@@ -18,7 +18,7 @@ namespace App\Test\TestCase\Controller\Share;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -35,7 +35,7 @@ class ShareControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->gpg = new Gpg();
+        $this->gpg = OpenPGPBackendFactory::get();
         parent::setUp();
     }
 

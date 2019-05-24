@@ -15,10 +15,9 @@
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
-use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -29,14 +28,17 @@ class UpdateTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'];
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
+        'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'
+    ];
 
     public function setUp()
     {
         parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        $this->gpg = new Gpg();
+        $this->gpg = OpenPGPBackendFactory::get();
     }
 
     public function tearDown()

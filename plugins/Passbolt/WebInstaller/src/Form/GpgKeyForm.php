@@ -14,8 +14,7 @@
  */
 namespace Passbolt\WebInstaller\Form;
 
-use App\Utility\Gpg;
-use Cake\Core\Configure;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Exception\Exception;
 use Cake\Form\Form;
 use Cake\Form\Schema;
@@ -103,8 +102,8 @@ class GpgKeyForm extends Form
      */
     public function checkIsPublicKey($check, array $context)
     {
-        $gpg = new Gpg();
-        if (!$gpg->isParsableArmoredPublicKeyRule($check)) {
+        $gpg = OpenPGPBackendFactory::get();
+        if (!$gpg->isParsableArmoredPublicKey($check)) {
             return false;
         }
         try {
@@ -125,8 +124,8 @@ class GpgKeyForm extends Form
      */
     public function checkIsPrivateKey($check, array $context)
     {
-        $gpg = new Gpg();
-        if (!$gpg->isParsableArmoredPrivateKeyRule($check)) {
+        $gpg = OpenPGPBackendFactory::get();
+        if (!$gpg->isParsableArmoredPrivateKey($check)) {
             return false;
         }
         try {
@@ -147,7 +146,7 @@ class GpgKeyForm extends Form
      */
     public function checkHasNoExpiry($check, array $context)
     {
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
         try {
             $keyInfo = $gpg->getKeyInfo($check);
         } catch (Exception $e) {
@@ -170,14 +169,12 @@ class GpgKeyForm extends Form
      */
     public function checkCanEncrypt($check, array $context)
     {
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
         try {
             $messageToEncrypt = 'open source password manager for teams';
             $gpg->setEncryptKey($check);
             $encryptedMessage = $gpg->encrypt($messageToEncrypt);
         } catch (Exception $e) {
-            return false;
-        } catch (\Exception $e) {
             return false;
         }
 
@@ -193,17 +190,15 @@ class GpgKeyForm extends Form
      */
     public function checkCanDecrypt($check, array $context)
     {
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
         try {
             $messageToEncrypt = 'open source password manager for teams';
             $gpg->setEncryptKey($check);
-            $gpg->setSignKey($check);
+            $gpg->setSignKey($check, '');
             $encryptedMessage = $gpg->encrypt($messageToEncrypt, true);
-            $gpg->setDecryptKey($check);
-            $decryptedMessage = $gpg->decrypt($encryptedMessage, '', true);
+            $gpg->setDecryptKey($check, '');
+            $decryptedMessage = $gpg->decrypt($encryptedMessage, true);
         } catch (Exception $e) {
-            return false;
-        } catch (\Exception $e) {
             return false;
         }
 
@@ -223,11 +218,14 @@ class GpgKeyForm extends Form
      */
     public function checkPublicPrivateFingerprints($check, array $context)
     {
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
         $privateKeyArmored = Hash::get($context, 'data.private_key_armored');
         $publicKeyArmored = Hash::get($context, 'data.public_key_armored');
 
-        if (!$gpg->isParsableArmoredPrivateKeyRule($privateKeyArmored) || !$gpg->isParsableArmoredPublicKeyRule($publicKeyArmored)) {
+        if ($privateKeyArmored === null || $publicKeyArmored === null) {
+            return false;
+        }
+        if (!$gpg->isParsableArmoredPrivateKey($privateKeyArmored) || !$gpg->isParsableArmoredPublicKey($publicKeyArmored)) {
             return false;
         }
 
