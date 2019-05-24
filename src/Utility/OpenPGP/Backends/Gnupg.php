@@ -592,6 +592,80 @@ class Gnupg implements OpenPGPBackend
     }
 
     /**
+     * Sign a text.
+     *
+     * @param string $text plain text to be encrypted.
+     * @throws Exception if no key was set to sign
+     * @throws Exception if there is an issue with the key to sign
+     * @return string signed text
+     */
+    public function sign(string $text)
+    {
+        $msg = __('Could not use the key to sign.');
+        $this->assertSignKey();
+        try {
+            $signedText = $this->_gpg->encryptsign($text);
+        } catch (\Exception $e) {
+            throw new Exception($msg . $e->getMessage());
+        }
+        if ($signedText === false) {
+            throw new Exception($msg);
+        }
+
+        return $signedText;
+    }
+
+    /**
+     * Verify an encrypted signed text.
+     *
+     * @param string $text encrypted signed text to be verified.
+     * @param string $signature (optional) the signature. In the case where the signature is not included in the encrypted text.
+     * @throws Exception if there is an issue while verifying the text
+     * @return string signature data
+     */
+    public function verify(string $text, string $signature = "")
+    {
+        $msg = __('Could not verify the message.');
+        try {
+            if (empty($signature)) {
+                $verifySignature = $this->_gpg->verify($text);
+            } else {
+                $verifySignature = $this->_gpg->verify($text, signature);
+            }
+        } catch (\Exception $e) {
+            throw new Exception($msg . $e->getMessage());
+        }
+        if ($verifySignature === false) {
+            throw new Exception($msg);
+        }
+
+        return $verifySignature;
+    }
+
+    /**
+     * Verify a clearsigned text.
+     *
+     * @param string $text clearsigned text to be verified.
+     * @param string $plainText (optional) The plain text. If this optional parameter is passed, it is filled with the plain text.
+     * @throws Exception if there is an issue while verifying the text
+     * @return string signature data
+     */
+    public function verifyClearsignedText(string $text, string &$plainText = "")
+    {
+        $msg = __('Could not verify the message.');
+        try {
+            $verifySignature = $this->_gpg->verify($text, false, $plainText);
+        } catch (\Exception $e) {
+            throw new Exception($msg . $e->getMessage());
+        }
+        if ($verifySignature === false) {
+            throw new Exception($msg);
+        }
+
+        return $verifySignature;
+    }
+
+    /**
      * Assert the passphrase is empty
      *
      * @param string $passphrase passphrase

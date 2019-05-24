@@ -172,4 +172,33 @@ interface OpenPGPBackend
      * @return string decrypted text
      */
     public function decrypt(string $text, bool $verifySignature = false, array &$signatureInfo = []);
+
+    /**
+     * Sign a text.
+     *
+     * @param string $text plain text to be signed.
+     * @throws Exception if no key was set to sign
+     * @throws Exception if there is an issue with the key to sign
+     * @return string signed text
+     */
+    public function sign(string $text);
+
+    /**
+     * Verify an encrypted signed text.
+     *
+     * @param string $text encrypted signed text to be verified.
+     * @throws Exception if there is an issue while verifying the text
+     * @return string signature data
+     */
+    public function verify(string $text);
+
+    /**
+     * Verify a clearsigned text.
+     *
+     * @param string $text clearsigned text to be verified.
+     * @param string $plainText (optional) The plain text. If this optional parameter is passed, it is filled with the plain text.
+     * @throws Exception if there is an issue while verifying the text
+     * @return string signature data
+     */
+    public function verifyClearsignedText(string $text, string &$plainText = "");
 }
