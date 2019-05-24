@@ -19,7 +19,6 @@ use App\Model\Entity\User;
 use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\GpgkeysTable;
 use App\Model\Table\UsersTable;
-use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
@@ -279,12 +278,13 @@ class GpgAuthenticate extends BaseAuthenticate
             if ($keyFilePath === null) {
                 throw new InternalErrorException(__('The secret key file is not defined.'));
             }
-            $msg = __('The OpenPGP server key defined in the config could not be found in the GnuPG keyring and file system.');
             if (!file_exists($keyFilePath)) {
+                $msg = __('The OpenPGP server key defined in the config is not found in the file system.');
                 throw new InternalErrorException($msg);
             }
             $privateKey = file_get_contents($keyFilePath);
             if ($privateKey === false) {
+                $msg = __('The OpenPGP server key defined in the config cannot be opened.');
                 throw new InternalErrorException($msg);
             }
             if (!$this->_gpg->isParsableArmoredPrivateKey($privateKey)) {

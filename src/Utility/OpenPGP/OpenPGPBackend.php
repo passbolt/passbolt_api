@@ -183,4 +183,14 @@ interface OpenPGPBackend
      * @throws Exception If the armored signed message cannot be verified.
      */
     public function verify($armored, $fingerprint, &$plainText = null);
+
+    /**
+     * Sign a text.
+     *
+     * @param string $text plain text to be signed.
+     * @throws Exception if no key was set to sign
+     * @throws Exception if there is an issue with the key to sign
+     * @return string signed text
+     */
+    public function sign(string $text);
 }

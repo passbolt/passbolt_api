@@ -201,14 +201,14 @@ zaZXtuDzZmnTOjWJm895TA==
         $this->gnupg->verify($armoredSignedMessage, $fingerprint);
     }
 
-    public function testisParsableArmoredSignedMessageSuccess()
+    public function testIsParsableArmoredSignedMessageSuccess()
     {
         $armoredSignedMessage = $this->getDummySignedMessage('betty');
         $result = $this->gnupg->isParsableArmoredSignedMessage($armoredSignedMessage);
         $this->assertTrue($result);
     }
 
-    public function testisParsableArmoredSignedMessageError()
+    public function testIsParsableArmoredSignedMessageError()
     {
         $armoredSignedMessages = [
             'empty message' => '',
@@ -244,5 +244,27 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
 0wIBq1JnEVs=
 =l/7T
 -----END PGP SIGNATURE-----';
+    }
+
+    public function testGnupgSignSuccess()
+    {
+        $keys = GpgKeyFormTest::getDummyData();
+        $this->gnupg->setSignKey($keys['private_key_armored'], '');
+        $keyInfo = $this->gnupg->getKeyInfo($keys['private_key_armored']);
+
+        $messageToSign = 'This is a test message.';
+        $signedMessage = $this->gnupg->sign($messageToSign);
+
+        $messageUnsigned = null;
+        $this->gnupg->verify($signedMessage, $keyInfo['fingerprint'], $messageUnsigned);
+
+        $this->assertEquals($messageToSign . "\n", $messageUnsigned);
+    }
+
+    public function testGnupgSignError()
+    {
+        $messageToSign = 'This is a test message.';
+        $this->expectException(Exception::class);
+        $this->gnupg->sign($messageToSign);
     }
 }
