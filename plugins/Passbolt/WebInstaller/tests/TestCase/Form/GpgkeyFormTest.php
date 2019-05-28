@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.7.0
  */
-namespace Passbolt\WebInstaller\Test\TestCase\Utility;
+namespace Passbolt\WebInstaller\Test\TestCase\Form;
 
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
@@ -22,7 +22,7 @@ class GpgKeyFormTest extends AppTestCase
 {
     use FormatValidationTrait;
 
-    public function testFieldPublicKeyArmored()
+    public function testGpgKeyFormTestFieldPublicKeyArmored()
     {
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
@@ -34,7 +34,7 @@ class GpgKeyFormTest extends AppTestCase
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'public_key_armored', self::getDummyData(), $testCases);
     }
 
-    public function testFieldPrivateKeyArmored()
+    public function testGpgKeyFormTestFieldPrivateKeyArmored()
     {
         $this->markTestSkipped('Test produce test output in CLI on Travis');
         $testCases = [
@@ -47,7 +47,7 @@ class GpgKeyFormTest extends AppTestCase
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'private_key_armored', self::getDummyData(), $testCases);
     }
 
-    public function testFieldFingerprint()
+    public function testGpgKeyFormTestFieldFingerprint()
     {
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),

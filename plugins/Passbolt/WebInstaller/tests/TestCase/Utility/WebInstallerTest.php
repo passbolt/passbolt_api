@@ -18,11 +18,11 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
+use Passbolt\WebInstaller\Test\TestCase\Form\GpgKeyFormTest;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 

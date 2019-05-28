@@ -19,7 +19,7 @@ use App\Utility\OpenPGP\Backends\Gnupg;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\TestSuite\TestCase;
-use Passbolt\WebInstaller\Test\TestCase\Utility\GpgKeyFormTest;
+use Passbolt\WebInstaller\Test\TestCase\Form\GpgKeyFormTest;
 
 class GnupgTest extends TestCase
 {
