@@ -29,11 +29,6 @@
             "type": "vcs",
             "url": "https://github.com/passbolt/passbolt_test_data.git",
             "no-api": true
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/passbolt/cakephp-file-storage.git",
-          "no-api": true
         }
     ],
     "require": {
@@ -47,7 +42,7 @@
         "thadafinser/user-agent-parser": "^2.0",
         "donatj/phpuseragentparser": "^0.7.0",
         "lorenzo/cakephp-email-queue": "^3.2.0",
-        "burzum/cakephp-file-storage": "2.0.x-dev",
+      "burzum/cakephp-file-storage": "^2.1.0",
         "burzum/cakephp-imagine-plugin": "3.x-dev",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
