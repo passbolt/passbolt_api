@@ -488,26 +488,6 @@ class Gnupg implements OpenPGPBackend
     }
 
     /**
-     * Get key information from keyring
-     *
-     * @param string $fingerprint key fingerpint
-     * @return array|false
-     */
-    public function getKeyInfoFromKeyring(string $fingerprint)
-    {
-        try {
-            $results = $this->_gpg->keyinfo($fingerprint);
-        } catch (\Exception $e) {
-            return false;
-        }
-        if (empty($results)) {
-            return false;
-        }
-
-        return $results;
-    }
-
-    /**
      * Is key currently in keyring
      *
      * @param string $fingerprint fingerprint
@@ -515,9 +495,16 @@ class Gnupg implements OpenPGPBackend
      */
     public function isKeyInKeyring(string $fingerprint)
     {
-        $results = $this->getKeyInfoFromKeyring($fingerprint);
+        try {
+            $results = $this->_gpg->keyinfo($fingerprint);
+        } catch (\Exception $e) {
+            return false;
+        }
+        if (empty($results) || $results === false) {
+            return false;
+        }
 
-        return !($results === false);
+        return true;
     }
 
     /**

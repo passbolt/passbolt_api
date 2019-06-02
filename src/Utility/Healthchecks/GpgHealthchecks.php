@@ -166,15 +166,13 @@ class GpgHealthchecks
     public static function gpgKeyInKeyring($checks = [])
     {
         $checks['gpg']['gpgKeyPublicInKeyring'] = false;
-        if ($checks['gpg']['gpgHome'] && Configure::read('passbolt.gpg.serverKey.fingerprint')) {
-            $gpg = OpenPGPBackendFactory::get();
-            $keyInfo = $gpg->getKeyInfoFromKeyring(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-            if (!empty($keyInfo)) {
-                if (isset($keyInfo[0]['can_sign']) && isset($keyInfo[0]['can_encrypt'])
-                    && $keyInfo[0]['can_sign'] && $keyInfo[0]['can_encrypt']) {
-                    $checks['gpg']['gpgKeyPublicInKeyring'] = true;
-                }
-            }
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        if ($checks['gpg']['gpgHome'] || $fingerprint === null) {
+            return $checks;
+        }
+        $gpg = OpenPGPBackendFactory::get();
+        if (!$gpg->isKeyInKeyring($fingerprint)) {
+            return $checks;
         }
 
         return $checks;
@@ -191,9 +189,9 @@ class GpgHealthchecks
         $checks['gpg']['canEncrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
-            $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
             $messageToEncrypt = 'test message';
             try {
+                $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
                 $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
                 if ($encryptedMessage !== false) {
                     $checks['gpg']['canEncrypt'] = true;
@@ -216,10 +214,12 @@ class GpgHealthchecks
         $checks['gpg']['canEncryptSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
-            $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-            $_gpg->setSignKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
             $messageToEncrypt = 'test message';
             try {
+                $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                $_gpg->setEncryptKeyFromFingerprint($fingerprint);
+                $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
                 if ($encryptedMessage2 !== false) {
                     $checks['gpg']['canEncryptSign'] = true;
@@ -243,10 +243,12 @@ class GpgHealthchecks
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             if ($checks['gpg']['canEncrypt']) {
                 $_gpg = OpenPGPBackendFactory::get();
-                $_gpg->setDecryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
-                $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
                 $messageToEncrypt = 'test message';
                 try {
+                    $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                    $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                    $_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
+                    $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                     $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
                     $decryptedMessage = $_gpg->decrypt($encryptedMessage);
                     if ($decryptedMessage === $messageToEncrypt) {
@@ -271,10 +273,12 @@ class GpgHealthchecks
         $checks['gpg']['canDecryptVerify'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
-            $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-            $_gpg->setSignKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
             $messageToEncrypt = 'test message';
             try {
+                $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                $_gpg->setEncryptKeyFromFingerprint($fingerprint);
+                $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
                 $decryptedMessage2 = $_gpg->decrypt($encryptedMessage2, true);
                 if ($decryptedMessage2 === $messageToEncrypt) {

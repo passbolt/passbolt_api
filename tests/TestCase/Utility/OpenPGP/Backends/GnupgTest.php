@@ -116,12 +116,6 @@ zaZXtuDzZmnTOjWJm895TA==
         $this->gnupg->setEncryptKeyFromFingerprint('2FC8945833C51946E937F9FED47B0811573EE67F');
     }
 
-    public function testGnupgGetKeyInfoFromKeyring()
-    {
-        $info = $this->gnupg->getKeyInfoFromKeyring('2FC8945833C51946E937F9FED47B0811573EE67F');
-        $this->assertFalse($info);
-    }
-
     public function testGnupgAssertGpgMarkerError_NoMarker()
     {
         $this->expectException(Exception::class);

@@ -135,14 +135,6 @@ interface OpenPGPBackend
     public function getPublicKeyInfo(string $armoredKey);
 
     /**
-     * Get key information from keyring
-     *
-     * @param string $fingerprint key fingerpint
-     * @return array|false
-     */
-    public function getKeyInfoFromKeyring(string $fingerprint);
-
-    /**
      * Is key currently in keyring
      *
      * @param string $fingerprint fingerprint

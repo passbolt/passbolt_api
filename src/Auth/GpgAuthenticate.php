@@ -19,6 +19,7 @@ use App\Model\Entity\User;
 use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\GpgkeysTable;
 use App\Model\Table\UsersTable;
+use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
@@ -318,16 +319,14 @@ class GpgAuthenticate extends BaseAuthenticate
      */
     private function _initUserKey(string $fingerprint)
     {
-        $info = $this->_gpg->getKeyInfoFromKeyring($fingerprint);
-        if (empty($info)) {
+        if (!$this->_gpg->isKeyInKeyring($fingerprint)) {
             try {
                 $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);
             } catch (Exception $exception) {
                 throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
             }
             // check that the imported key match the fingerprint
-            $info = $this->_gpg->getKeyInfoFromKeyring($fingerprint);
-            if (empty($info)) {
+            if (!$this->_gpg->isKeyInKeyring($fingerprint)) {
                 throw new InternalErrorException(__('GnuPGP does not return any information for the OpenPGP key of the user.'));
             }
         }
