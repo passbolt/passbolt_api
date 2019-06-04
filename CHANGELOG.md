@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+- PB-330: Don't execute the migration script V210InstallAccountSettingsPlugin if the table organization_settings already exists
 
 ## [2.10.0] - 2019-05-15
 ### Added

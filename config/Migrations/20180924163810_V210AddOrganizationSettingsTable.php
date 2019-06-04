@@ -25,6 +25,11 @@ class V210AddOrganizationSettingsTable extends AbstractMigration
      */
     public function up()
     {
+        // If coming from passbolt CE, the table could already exist.
+        if ($this->hasTable('organization_settings')) {
+            return;
+        }
+
         $this->table('organization_settings', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
             ->addColumn('id', 'char', [
                 'default' => null,
