@@ -1,19 +1,20 @@
 <?php
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
 namespace Passbolt\Tags\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -25,19 +26,18 @@ use Cake\Validation\Validator;
  * @property \Passbolt\Tags\Model\Table\TagsTable|\Cake\ORM\Association\BelongsTo $Tags
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  *
- * @method \App\Model\Entity\ResourcesTag get($primaryKey, $options = [])
- * @method \App\Model\Entity\ResourcesTag newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\ResourcesTag[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ResourcesTag|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ResourcesTag patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ResourcesTag[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\ResourcesTag findOrCreate($search, callable $callback = null, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity($data = null, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag|bool save(EntityInterface $entity, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] patchEntities($entities, array $data, array $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ResourcesTagsTable extends Table
 {
-
     /**
      * Initialize method
      *
@@ -111,5 +111,23 @@ class ResourcesTagsTable extends Table
         // $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
+    }
+
+    /**
+     * Update user tag
+     *
+     * @param string $userId User whose tags to update
+     * @param string $oldTagId Id of the tag that needs update
+     * @param string $newTagId New tag id
+     * @return int
+     */
+    public function updateUserTag(string $userId, string $oldTagId, string $newTagId)
+    {
+        return $this->updateAll([
+            'tag_id' => $newTagId
+        ], [
+            'tag_id' => $oldTagId,
+            'user_id' => $userId
+        ]);
     }
 }
