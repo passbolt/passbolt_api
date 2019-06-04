@@ -18,10 +18,18 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/', ['controller' => 'TagsIndex', 'action' => 'index'])
+    $routes->connect('/', ['prefix' => 'tags', 'controller' => 'TagsIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/:id', ['controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
+    $routes->connect('/:id', ['prefix' => 'tags', 'controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
+
+    $routes->connect('/:id', ['prefix' => 'tags', 'controller' => 'TagsUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT']);
+
+    $routes->connect('/:id', ['prefix' => 'tags', 'controller' => 'TagsDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });

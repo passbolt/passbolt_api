@@ -12,10 +12,11 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Tags\Controller;
+namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 use App\Model\Entity\Permission;
+use App\Model\Entity\Role;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
@@ -70,7 +71,8 @@ class ResourcesTagsAddController extends AppController
     private function patchTagsEntities($resource, $data)
     {
         $userId = $this->User->id();
-        $isOwner = $resource->permission->type === Permission::OWNER;
+        $isAdmin = $this->User->role() === Role::ADMIN;
+        $canUpdate = $resource->permission->type >= Permission::UPDATE;
 
         foreach ($resource->tags as $i => $tag) {
             // Do not patch tags owned by other users.
@@ -80,7 +82,7 @@ class ResourcesTagsAddController extends AppController
             $tagFoundIndex = array_search($tag->slug, $data);
             if ($tagFoundIndex === false) {
                 // If the user is not owner of the resource he cannot edit shared tags
-                if ($tag->is_shared && !$isOwner) {
+                if ($tag->is_shared && !$canUpdate) {
                     throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
                 } else {
                     unset($resource->tags[$i]);
@@ -90,8 +92,8 @@ class ResourcesTagsAddController extends AppController
             }
         }
 
-        // If the user is not owner of the resource he cannot edit shared tags
-        if (!$isOwner) {
+        // If the user does not have update permission on the resource he cannot edit shared tags
+        if (!$canUpdate) {
             if (!empty(preg_grep('/(^#|,#)/', $data))) {
                 throw new BadRequestException(__('You do not have the permission to edit shared tags on this resource.'));
             }
@@ -104,12 +106,18 @@ class ResourcesTagsAddController extends AppController
                 $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
                 unset($data[array_search($existingTag->slug, $data)]);
                 if ($notShared) {
-                    $existingTag->_joinData = new \StdClass();
                     $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([
                         'user_id' => $userId
                     ]);
                 }
                 array_push($resource->tags, $existingTag);
+            }
+        }
+
+        // Only Admins can create new shared tags
+        if (!empty(preg_grep('/(^#|,#)/', $data))) {
+            if (!$isAdmin) {
+                throw new BadRequestException(__('You do not have the permission to create new shared tags.'));
             }
         }
 

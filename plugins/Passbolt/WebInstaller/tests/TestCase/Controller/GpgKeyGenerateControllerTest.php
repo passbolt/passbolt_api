@@ -14,10 +14,8 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
-use Passbolt\WebInstaller\Test\TestCase\Utility\GpgKeyFormTest;
+use Passbolt\WebInstaller\Test\TestCase\Form\GpgKeyFormTest;
 
 class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
 {
