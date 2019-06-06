@@ -64,9 +64,6 @@ php7.3-mysql5.7:
     PHP_VERSION: "7.3"
     DATABASE_ENGINE_VERSION: "mysql:5.7"
   extends: .test-template
-  only:
-    - develop
-    - master
 
 php7.2-mariadb10.4:
   variables:
