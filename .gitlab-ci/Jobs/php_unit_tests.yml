@@ -119,10 +119,10 @@ php7.2-mariadb10.0:
     variables:
       - $TEST_DISABLED
 
-php7.2-mariadb5.7:
+php7.2-mysql5.7:
   variables:
     PHP_VERSION: "7.2"
-    DATABASE_ENGINE_VERSION: "mariadb:5.7"
+    DATABASE_ENGINE_VERSION: "mysql:5.7"
   extends: .test-template
 
 php7.2-mysql5.6:
