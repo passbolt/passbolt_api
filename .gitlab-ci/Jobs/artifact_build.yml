@@ -13,7 +13,8 @@
         --form "variables[UPSTREAM_PROJECT_ID]=$CI_PROJECT_ID" \
         "https://gitlab.com/api/v4/projects/$TRIGGER_PROJECT_ID/trigger/pipeline"
   only:
-    - release
+    refs:
+      - release
     variables:
       - $PASSBOLT_FLAVOUR == "pro"
 
