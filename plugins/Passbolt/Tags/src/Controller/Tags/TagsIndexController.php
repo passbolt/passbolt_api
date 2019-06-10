@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace Passbolt\Tags\Controller;
+namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 
