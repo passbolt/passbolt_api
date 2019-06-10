@@ -171,7 +171,7 @@ class GpgHealthchecks
             return $checks;
         }
         $gpg = OpenPGPBackendFactory::get();
-        if(!$gpg->isKeyInKeyring($fingerprint)) {
+        if (!$gpg->isKeyInKeyring($fingerprint)) {
             return $checks;
         }
 

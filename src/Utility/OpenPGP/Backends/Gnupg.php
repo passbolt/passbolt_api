@@ -503,6 +503,7 @@ class Gnupg implements OpenPGPBackend
         if (empty($results) || $results === false) {
             return false;
         }
+
         return true;
     }
 
