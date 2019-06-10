@@ -13,10 +13,10 @@
         --form "variables[UPSTREAM_PROJECT_ID]=$CI_PROJECT_ID" \
         "https://gitlab.com/api/v4/projects/$TRIGGER_PROJECT_ID/trigger/pipeline"
   only:
-    - release
-  except:
+    refs:
+      - release
     variables:
-      - $PASSBOLT_FLAVOUR == "ce"
+      - $PASSBOLT_FLAVOUR == "pro"
 
 pro-trigger-build:
   variables:
@@ -32,14 +32,14 @@ ce-trigger-build:
   variables:
     TRIGGER_PROJECT_ID: $DOWNSTREAM_PROJECT_ID
   extends: .build-template
-  except:
+  only:
     variables:
-      - $PASSBOLT_FLAVOUR == "pro"
+      - $PASSBOLT_FLAVOUR == "ce"
 
 ce-do-trigger-build:
   extends: .build-template
   variables:
     TRIGGER_PROJECT_ID: $DOWNSTREAM_DO_PROJECT_ID
-  except:
+  only:
     variables:
-      - $PASSBOLT_FLAVOUR == "pro"
+      - $PASSBOLT_FLAVOUR == "ce"
