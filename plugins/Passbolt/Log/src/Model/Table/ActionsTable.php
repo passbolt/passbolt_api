@@ -18,7 +18,7 @@ namespace Passbolt\Log\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Utility\UuidFactory;
 use Cake\Cache\Cache;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
