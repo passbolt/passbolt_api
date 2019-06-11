@@ -17,8 +17,8 @@ namespace Passbolt\AuditLog\Controller;
 
 use App\Controller\AppController;
 use Cake\Datasource\Exception\PageOutOfBoundsException;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Network\Exception\BadRequestException;
 use Cake\Validation\Validation;
 use Passbolt\AuditLog\Utility\ActionLogsFinder;
 
