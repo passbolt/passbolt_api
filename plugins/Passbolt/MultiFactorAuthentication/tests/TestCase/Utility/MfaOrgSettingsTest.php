@@ -434,5 +434,4 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         ]);
         $this->assertTrue(true);
     }
-
 }

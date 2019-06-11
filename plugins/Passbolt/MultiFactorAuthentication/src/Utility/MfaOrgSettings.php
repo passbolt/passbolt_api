@@ -74,7 +74,8 @@ class MfaOrgSettings
      * @param array $providers
      * @return array
      */
-    private function formatProviders(array $providers) {
+    private function formatProviders(array $providers)
+    {
         $result = $providers;
         if (count(array_filter(array_keys($providers), 'is_string')) > 0) {
             $result = [];
@@ -84,6 +85,7 @@ class MfaOrgSettings
                 }
             }
         }
+
         return $result;
     }
 
@@ -202,7 +204,8 @@ class MfaOrgSettings
      *
      * @return array
      */
-    public function getConfig() {
+    public function getConfig()
+    {
         $providers = $this->getEnabledProviders();
         $results = ['providers' => $providers];
         foreach ($providers as $provider) {
@@ -234,7 +237,8 @@ class MfaOrgSettings
      * @throws CustomValidationException if the data does not validate
      * @return bool if data validates
      */
-    public function validate(array $data) {
+    public function validate(array $data)
+    {
         if (!isset($data) || empty($data)) {
             throw new CustomValidationException(__('The MFA settings data cannot be empty.'));
         }
@@ -248,14 +252,14 @@ class MfaOrgSettings
                 case MfaSettings::PROVIDER_YUBIKEY:
                     try {
                         $this->validateYubikeySettings($data);
-                    } catch(CustomValidationException $exception) {
+                    } catch (CustomValidationException $exception) {
                         $errors = $exception->getErrors();
                     }
                     break;
                 case MfaSettings::PROVIDER_DUO:
                     try {
                         $this->validateDuoSettings($data);
-                    } catch(CustomValidationException $exception) {
+                    } catch (CustomValidationException $exception) {
                         $errors = $exception->getErrors();
                     }
                     break;
@@ -285,7 +289,8 @@ class MfaOrgSettings
      * @param array $data user provided input
      * @param UserAccessControl $uac user access control
      */
-    public function save(array $data, UserAccessControl $uac) {
+    public function save(array $data, UserAccessControl $uac)
+    {
         if (isset($data[MfaSettings::PROVIDERS])) {
             $data[MfaSettings::PROVIDERS] = $this->formatProviders($data[MfaSettings::PROVIDERS]);
         }

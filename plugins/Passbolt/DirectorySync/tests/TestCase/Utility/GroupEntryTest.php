@@ -48,13 +48,13 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $groupData = array_merge($groupData, $modify);
 
         // Remove elements that should be removed.
-        foreach($groupData as $key => $value) {
+        foreach ($groupData as $key => $value) {
             if ($value === null) {
                 unset($groupData[$key]);
             }
         }
 
-        $ldapObject = new LdapObject($groupData,LdapObjectType::GROUP);
+        $ldapObject = new LdapObject($groupData, LdapObjectType::GROUP);
 
         return $ldapObject;
     }
@@ -71,7 +71,6 @@ class GroupEntryTest extends DirectorySyncIntegrationTestCase
         $this->assertEquals($groupEntry->dn, 'CN=john,OU=posixGroups,OU=passbolt,OU=local');
         $this->assertEquals($groupEntry->id, UuidFactory::uuid('ldap.group.id.john'));
         $this->assertTrue($groupEntry->validate());
-
     }
 
     public function testValidateErrorNoId()

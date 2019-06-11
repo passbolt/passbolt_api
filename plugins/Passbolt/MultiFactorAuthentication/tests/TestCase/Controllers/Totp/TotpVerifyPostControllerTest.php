@@ -65,5 +65,4 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         ]);
         $this->assertResponseOk();
     }
-
 }

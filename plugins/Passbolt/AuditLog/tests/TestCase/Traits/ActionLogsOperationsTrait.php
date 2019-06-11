@@ -50,7 +50,6 @@ trait ActionLogsOperationsTrait
         ];
         $permissionHistoryCreated = $PermissionsHistory->create($permissionHistory);
 
-
         $entityHistory = [
             'foreign_model' => 'PermissionsHistory',
             'foreign_key' => $permissionHistoryCreated->id,

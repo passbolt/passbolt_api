@@ -180,7 +180,8 @@ class ActionLogsFinder
      * @param string $resourceId resource id
      * @return bool whether or not he has access to the resource
      */
-    protected function _checkUserCanAccessResource(UserAccessControl $user, string $resourceId) {
+    protected function _checkUserCanAccessResource(UserAccessControl $user, string $resourceId)
+    {
         $Resource = TableRegistry::getTableLocator()->get('Resources');
         $resource = $Resource->findView($user->userId(), $resourceId)->first();
         if (empty($resource)) {

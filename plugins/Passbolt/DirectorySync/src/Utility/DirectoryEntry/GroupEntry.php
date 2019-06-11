@@ -120,7 +120,8 @@ class GroupEntry extends DirectoryEntry
     /**
      * Validate Group entry.
      */
-    public function validate() {
+    public function validate()
+    {
         return $this->_validate();
     }
 
@@ -128,7 +129,8 @@ class GroupEntry extends DirectoryEntry
      * Validate group entry.
      * @return bool
      */
-    protected function _validate() {
+    protected function _validate()
+    {
         parent::_validate();
 
         if (empty($this->group['name'])) {
@@ -136,7 +138,7 @@ class GroupEntry extends DirectoryEntry
         }
 
         if (isset($this->group['members']) && !empty($this->group['members'])) {
-            foreach($this->group['members'] as $groupMember) {
+            foreach ($this->group['members'] as $groupMember) {
                 if (!LdapUtilities::isValidLdapObjectDn($groupMember)) {
                     $this->_addError('members', 'a group member does not match the expected DN format');
                 }

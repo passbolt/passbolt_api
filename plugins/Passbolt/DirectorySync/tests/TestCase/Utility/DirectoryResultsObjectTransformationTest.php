@@ -37,7 +37,8 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
      * Assert that entry ids are generated on the fly if not provided by the directory.
      * @throws \Exception
      */
-    public function testUserEntryIdProvidedIsNotTransformed() {
+    public function testUserEntryIdProvidedIsNotTransformed()
+    {
         Configure::write('passbolt.plugins.directorySync.enabled', true);
         $this->loadPlugins(['Passbolt/DirectorySync']);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
@@ -53,7 +54,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
             'created' => new FrozenTime(),
             'modified' => new FrozenTime(),
         ];
-        $ldapObject = new LdapObject($userData,LdapObjectType::USER);
+        $ldapObject = new LdapObject($userData, LdapObjectType::USER);
         $ldapUsers = new LdapObjectCollection();
         $ldapUsers->add($ldapObject);
         $ldapGroups = new LdapObjectCollection();
@@ -71,7 +72,8 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
      * Assert that entry ids are generated on the fly if not provided by the directory.
      * @throws \Exception
      */
-    public function testUserEntryTransformNoId() {
+    public function testUserEntryTransformNoId()
+    {
         Configure::write('passbolt.plugins.directorySync.enabled', true);
         $this->loadPlugins(['Passbolt/DirectorySync']);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
@@ -86,7 +88,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
             'created' => new FrozenTime(),
             'modified' => new FrozenTime(),
         ];
-        $ldapObject = new LdapObject($userData,LdapObjectType::USER);
+        $ldapObject = new LdapObject($userData, LdapObjectType::USER);
         $ldapUsers = new LdapObjectCollection();
         $ldapUsers->add($ldapObject);
         $ldapGroups = new LdapObjectCollection();
@@ -104,7 +106,8 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
      * Assert that emails are transformed on the fly if the configuration dictates it.
      * @throws \Exception
      */
-    public function testUserEntryTransformEmail() {
+    public function testUserEntryTransformEmail()
+    {
         Configure::write('passbolt.plugins.directorySync.enabled', true);
         $this->loadPlugins(['Passbolt/DirectorySync']);
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
@@ -120,7 +123,7 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
             'created' => new FrozenTime(),
             'modified' => new FrozenTime(),
         ];
-        $ldapObject = new LdapObject($userData,LdapObjectType::USER);
+        $ldapObject = new LdapObject($userData, LdapObjectType::USER);
         $ldapUsers = new LdapObjectCollection();
         $ldapUsers->add($ldapObject);
         $ldapGroups = new LdapObjectCollection();

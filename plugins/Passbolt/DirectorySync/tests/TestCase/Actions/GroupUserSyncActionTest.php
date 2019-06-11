@@ -16,7 +16,6 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Shell\AppShellBootstrap;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
@@ -25,15 +24,12 @@ use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
-use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 {
     use AssertDirectoryRelationsTrait;
     use AssertGroupsTrait;
     use AssertGroupUsersTrait;
-
-    // TODO: should break if default group admin doesn't exist, is deleted or !active.
 
     public function setUp()
     {
@@ -44,6 +40,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     /**
      * Init the action
      *
+     * @throws \Exception
      * @return void
      */
     public function initAction()
@@ -255,7 +252,6 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[0], $expectedReport);
         $this->assertGroupExist(UuidFactory::uuid('group.id.accounting'), ['deleted' => false]);
 
-        // TODO: understand why the relationId is still in the database with group_id => null. DO WE HAVE A DEEPER INTEGRITY ISSUE??
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => UuidFactory::uuid('user.id.betty')]);
         $this->assertDirectoryRelationNotExist($relation->id);
     }
@@ -272,7 +268,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     {
         // Ruth is a inactive user.
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'ruth', 'foreign_key' => UuidFactory::uuid('user.id.ruth')]);
-        $this->mockDirectoryUserData('ruth','ruth', 'ruth@passbolt.com');
+        $this->mockDirectoryUserData('ruth', 'ruth', 'ruth@passbolt.com');
         $this->mockDirectoryGroupData('newgroup', [
             'group_users' => [
                 $userEntry->directory_name
@@ -318,7 +314,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySyncGroupUser_Case11_Ok_Ok_Null_Null_Ok()
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
-        $this->mockDirectoryUserData('frances','frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
         $groupData = $this->mockDirectoryGroupData('newgroup', [
             'group_users' => [
                 $userEntry->directory_name
@@ -371,7 +367,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $groupEntry = $this->mockDirectoryEntryGroup('marketing');
-        $this->mockDirectoryUserData('frances','frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
         $groupData = $this->mockDirectoryGroupData('marketing', [
             'group_users' => [
                 $userEntry->directory_name
@@ -445,7 +441,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
         $this->mockDirectoryEntryGroup('accounting');
-        $this->mockDirectoryUserData('frances','frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
         $this->mockDirectoryGroupData('accounting', [
             'group_users' => [
                 $userEntry->directory_name
@@ -489,7 +485,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'grace', 'lname' => 'grace', 'foreign_key' => UuidFactory::uuid('user.id.grace')]);
         $groupEntry = $this->mockDirectoryEntryGroup('freelancer');
-        $this->mockDirectoryUserData('grace','grace', 'grace@passbolt.com');
+        $this->mockDirectoryUserData('grace', 'grace', 'grace@passbolt.com');
         $groupData = $this->mockDirectoryGroupData('freelancer', [
             'group_users' => [
                 $userEntry->directory_name
@@ -501,8 +497,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $dateBeforeGroupModification = $dateGroupModification->subDays(1);
 
         // Update corresponding GroupUser so it is created before.
-        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
+        $groupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $groupsUsers->getConnection()->execute("UPDATE {$groupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
             $dateBeforeGroupModification->format('Y-m-d H:i:s'),
             UuidFactory::uuid('group.id.freelancer'),
             UuidFactory::uuid('user.id.grace')
@@ -534,7 +530,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'nancy', 'lname' => 'nancy', 'foreign_key' => UuidFactory::uuid('user.id.nancy')], Alias::STATUS_SUCCESS);
         $groupEntry = $this->mockDirectoryEntryGroup('marketing');
-        $this->mockDirectoryUserData('nancy','nancy', 'nancy@passbolt.com');
+        $this->mockDirectoryUserData('nancy', 'nancy', 'nancy@passbolt.com');
         $groupData = $this->mockDirectoryGroupData('marketing', [
             'group_users' => [
                 $userEntry->directory_name
@@ -546,8 +542,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $dateAfterGroupModification = $dateGroupModification->addDays(1);
 
         // Update corresponding GroupUser so it is created before.
-        $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
-        $GroupsUsers->getConnection()->execute("UPDATE {$GroupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
+        $groupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $groupsUsers->getConnection()->execute("UPDATE {$groupsUsers->getTable()} SET created = ? WHERE group_id = ? AND user_id = ?", [
             $dateAfterGroupModification->format('Y-m-d H:i:s'),
             UuidFactory::uuid('group.id.marketing'),
             UuidFactory::uuid('user.id.nancy')
@@ -580,7 +576,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'ada', 'foreign_key' => UuidFactory::uuid('user.id.ada')], Alias::STATUS_SUCCESS);
         $this->mockDirectoryEntryGroup('freelancer');
-        $this->mockDirectoryUserData('ada','ada', 'ada@passbolt.com');
+        $this->mockDirectoryUserData('ada', 'ada', 'ada@passbolt.com');
         $this->mockDirectoryGroupData('freelancer', [
             'group_users' => [
                 $userEntry->directory_name
@@ -618,7 +614,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')], Alias::STATUS_SUCCESS);
         $this->mockDirectoryEntryGroup('freelancer');
-        $this->mockDirectoryUserData('frances','frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
         $this->mockDirectoryGroupData('freelancer', [
             'group_users' => [
                 $userEntry->directory_name
@@ -644,7 +640,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySyncGroupUser
      * @group DirectorySyncGroupUserAdd
      */
-    public function testDirectorySyncGroupUser_foreignKeyIsNull() {
+    public function testDirectorySyncGroupUser_foreignKeyIsNull()
+    {
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'sofia', 'lname' => 'sofia', 'foreign_key' => 'null'], Alias::STATUS_SUCCESS);
         $this->mockDirectoryEntryGroup('freelancer');
         $this->mockDirectoryGroupData('freelancer', [

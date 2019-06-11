@@ -143,7 +143,7 @@ class MfaOrgSettingsPostControllerTest extends MfaIntegrationTestCase
             'duo' => ['wrong' => 'config'],
             'yubikey' => ['clientId' => 'aaa', 'secretKey' => '123']
         ]);
-        $result = json_decode($this->_getBodyAsString(),true);
+        $result = json_decode($this->_getBodyAsString(), true);
         $this->assertTrue(isset($result['body']['duo']['salt']['notEmpty']));
         $this->assertTrue(isset($result['body']['duo']['secretKey']['notEmpty']));
         $this->assertTrue(isset($result['body']['duo']['hostName']['notEmpty']));

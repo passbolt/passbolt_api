@@ -89,7 +89,8 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
     {
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(
-            $uac,   @@@@@@
+            $uac,
+            @@@@@@
             'Resource',
             UuidFactory::uuid('resource.id.apache'),
             'User',

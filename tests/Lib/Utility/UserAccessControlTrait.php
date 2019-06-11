@@ -29,6 +29,6 @@ trait UserAccessControlTrait
      */
     public function mockUserAccessControl($user, $role = Role::GUEST)
     {
-       return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
+        return new UserAccessControl($role, UuidFactory::uuid('user.id.' . $user), $user . '@passbolt.com');
     }
 }

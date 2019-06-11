@@ -125,7 +125,8 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function getUsersFixtures() {
+    public function getUsersFixtures()
+    {
         return $this->_read('Users');
     }
 
@@ -134,7 +135,8 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function getGroupsFixtures() {
+    public function getGroupsFixtures()
+    {
         return $this->_read('Groups');
     }
 

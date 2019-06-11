@@ -333,6 +333,7 @@ class DirectoryOrgSettings
         $gpg = OpenPGPBackendFactory::get();
         $gpg->setSignKeyFromFingerprint($keyid, $passphrase);
         $gpg->setEncryptKeyFromFingerprint($keyid);
+
         return $gpg->encrypt($data, true);
     }
 
@@ -349,6 +350,7 @@ class DirectoryOrgSettings
         $passphrase = $gpgConfig['serverKey']['passphrase'];
         $gpg = OpenPGPBackendFactory::get();
         $gpg->setDecryptKeyFromFingerprint($keyid, $passphrase);
+
         return $gpg->decrypt($data);
     }
 }

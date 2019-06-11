@@ -32,12 +32,12 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
         $this->groupSyncAction = new GroupSyncAction();
     }
 
-
     /**
      * Test that the invalid users that are returned are correct.
      * Scenario: no filter, 2 invalid users should be returned.
      */
-    public function testIgnoredInvalidUsers() {
+    public function testIgnoredInvalidUsers()
+    {
         $groups = $this->userSyncAction->getDirectory()->getGroups(false);
         $users = $this->userSyncAction->getDirectory()->getUsers(false);
         $DirectoryResults = new DirectoryResults([]);
@@ -51,7 +51,7 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
             'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
 
-        foreach($invalidUsers as $key => $invalidUser) {
+        foreach ($invalidUsers as $key => $invalidUser) {
             $this->assertEquals($expectedUsers[$key], $invalidUser->dn);
         }
     }
@@ -60,7 +60,8 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
      * Test that the invalid users that are returned are correct.
      * Scenario: filter on parentGroup 'Administration', only 1 invalid users should be returned.
      */
-    public function testIgnoredInvalidUsersWithGroupFilter() {
+    public function testIgnoredInvalidUsersWithGroupFilter()
+    {
         $groups = $this->userSyncAction->getDirectory()->getGroups(false);
         $users = $this->userSyncAction->getDirectory()->getUsers(false);
         $DirectoryResults = new DirectoryResults([]);
@@ -76,7 +77,7 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
             'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
 
-        foreach($invalidUsers as $key => $invalidUser) {
+        foreach ($invalidUsers as $key => $invalidUser) {
             $this->assertEquals($expectedUsers[$key], $invalidUser->dn);
         }
     }
@@ -85,7 +86,8 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
      * Test that the invalid users that are returned are correct.
      * Scenario: no filter, 2 invalid users should be returned.
      */
-    public function testIgnoredInvalidGroups() {
+    public function testIgnoredInvalidGroups()
+    {
         $groups = $this->userSyncAction->getDirectory()->getGroups(false);
         $users = $this->userSyncAction->getDirectory()->getUsers(false);
         $DirectoryResults = new DirectoryResults([]);
@@ -98,7 +100,7 @@ class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
             'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
 
-        foreach($invalidGroups as $key => $invalidGroup) {
+        foreach ($invalidGroups as $key => $invalidGroup) {
             $this->assertEquals($expectedGroups[$key], $invalidGroup->dn);
         }
     }

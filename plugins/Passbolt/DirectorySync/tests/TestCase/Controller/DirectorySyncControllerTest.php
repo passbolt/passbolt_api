@@ -19,7 +19,7 @@ use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 
 class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
 {
-   public $fixtures = [
+    public $fixtures = [
        'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
        'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
@@ -27,7 +27,7 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
        'plugin.Passbolt/DirectorySync.Base/DirectoryIgnore',
        'plugin.Passbolt/DirectorySync.Base/DirectoryRelations',
        'plugin.Passbolt/DirectorySync.DirectoryReports',
-   ];
+    ];
 
     public function setUp()
     {

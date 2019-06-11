@@ -209,7 +209,7 @@ class TestTask extends AppShell
             $this->err(__('{0} users returned by your directory are invalid and will be ignored during synchronization', count($data['users'])));
             $this->err(__('bin/cake directory_sync test --verbose for more details'));
             $this->hr();
-            foreach($data['users'] as $user) {
+            foreach ($data['users'] as $user) {
                 $this->verbose(__('Error: ') . $user->getErrorsAsString());
                 $this->verbose(json_encode($user->toArray(), JSON_PRETTY_PRINT));
             }
@@ -219,7 +219,7 @@ class TestTask extends AppShell
             $this->hr();
             $this->err(__('{0} group(s) returned by your directory are invalid and will be ignored during synchronization', count($data['groups'])));
             $this->hr();
-            foreach($data['groups'] as $group) {
+            foreach ($data['groups'] as $group) {
                 $this->verbose(__('Error: ') . $group->getErrorsAsString());
                 $this->verbose(json_encode($group->toArray(), JSON_PRETTY_PRINT));
             }

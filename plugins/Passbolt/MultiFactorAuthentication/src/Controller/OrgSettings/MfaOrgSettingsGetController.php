@@ -19,6 +19,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use App\Model\Entity\Role;
 use Cake\Core\Configure;
+
 class MfaOrgSettingsGetController extends MfaController
 {
     /**

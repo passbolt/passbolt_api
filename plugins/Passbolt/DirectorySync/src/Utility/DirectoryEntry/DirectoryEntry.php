@@ -220,7 +220,8 @@ abstract class DirectoryEntry implements ArrayAccess
      * Validate a DirectoryEntry object and populate errors accordingly.
      * @return bool
      */
-    protected function _validate() {
+    protected function _validate()
+    {
         $this->errors = [];
 
         if (empty($this->id)) {
@@ -275,8 +276,8 @@ abstract class DirectoryEntry implements ArrayAccess
     public function getErrorsAsString()
     {
         $str = "";
-        foreach($this->errors as $field => $errors) {
-            foreach($errors as $errorMsg) {
+        foreach ($this->errors as $field => $errors) {
+            foreach ($errors as $errorMsg) {
                 $str .= "$field: $errorMsg\n";
             }
         }
@@ -288,7 +289,8 @@ abstract class DirectoryEntry implements ArrayAccess
      * Check if Directory entry has validation errors.
      * @return bool true if errors, false otherwise.
      */
-    public function hasErrors() {
+    public function hasErrors()
+    {
         return !empty($this->errors());
     }
 

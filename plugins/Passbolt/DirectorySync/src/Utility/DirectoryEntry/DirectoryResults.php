@@ -145,7 +145,6 @@ class DirectoryResults
         $this->_populateAllGroupsUsersDetails();
     }
 
-
     /**
      * Transform ldap users.
      * @return void
@@ -264,6 +263,7 @@ class DirectoryResults
                 $invalidGroups[] = $group;
             }
         }
+
         return array_merge($this->invalidGroups, $invalidGroups);
     }
 
@@ -280,6 +280,7 @@ class DirectoryResults
                 $invalidUsers[] = $user;
             }
         }
+
         return array_merge($this->invalidUsers, $invalidUsers);
     }
 
@@ -353,11 +354,12 @@ class DirectoryResults
         }
 
         $users = [];
-        foreach($this->users as $key => $user) {
+        foreach ($this->users as $key => $user) {
             if (!$user->hasErrors()) {
                 $users[$key] = $user;
             }
         }
+
         return $users;
     }
 
@@ -373,11 +375,12 @@ class DirectoryResults
         }
 
         $groups = [];
-        foreach($this->groups as $key => $group) {
+        foreach ($this->groups as $key => $group) {
             if (!$group->hasErrors()) {
                 $groups[$key] = $group;
             }
         }
+
         return $groups;
     }
 

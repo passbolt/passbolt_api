@@ -54,13 +54,13 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $userData = array_merge($userData, $modify);
 
         // Remove elements that should be removed.
-        foreach($userData as $key => $value) {
+        foreach ($userData as $key => $value) {
             if ($value === null) {
                 unset($userData[$key]);
             }
         }
 
-        $ldapObject = new LdapObject($userData,LdapObjectType::USER);
+        $ldapObject = new LdapObject($userData, LdapObjectType::USER);
 
         return $ldapObject;
     }
@@ -79,7 +79,6 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $this->assertEquals($userEntry->dn, 'CN=john,OU=accounts,OU=passbolt,OU=local');
         $this->assertEquals($userEntry->id, UuidFactory::uuid('ldap.user.id.john'));
         $this->assertTrue($userEntry->validate());
-
     }
 
     public function testValidateErrorNoId()

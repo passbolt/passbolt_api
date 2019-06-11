@@ -70,7 +70,7 @@ class OrganizationSettingsTableTest extends AppTestCase
 
     /**
      * setUp method
-     * 
+     *
      * @return void
      */
     public function setUp()

@@ -144,6 +144,7 @@ class AccountSettingsTable extends Table
             $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
             $props[] = UuidFactory::uuid($settingNamespace);
         }
+
         return $this->find()
             ->where(['user_id' => $userId, 'property_id IN' => $props])
             ->all();
@@ -227,6 +228,7 @@ class AccountSettingsTable extends Table
         if ($settingItem !== null) {
             return $this->delete($settingItem);
         }
+
         return false;
     }
 
@@ -241,9 +243,9 @@ class AccountSettingsTable extends Table
     {
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
         $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+
         return $this->find()
             ->where($settingFinder)
             ->first();
     }
 }
-
