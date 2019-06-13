@@ -21,6 +21,14 @@ Router::plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $rou
     $routes->connect('/', ['prefix' => 'tags', 'controller' => 'TagsIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
+    $routes->connect('/resource/:id', ['prefix' => 'tags', 'controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
+        ->setPass(['id'])
+        ->setMethods(['POST']);
+
+    /**
+     * @since 2.11.0
+     * @deprecated POST /tags/<resourceId>.json is deprecated in favor of POST /tags/resource/<resourceId>.json
+     */
     $routes->connect('/:id', ['prefix' => 'tags', 'controller' => 'ResourcesTagsAdd', 'action' => 'addPost'])
         ->setPass(['id'])
         ->setMethods(['POST']);
