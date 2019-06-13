@@ -34,7 +34,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.nope');
         $data = ['Tags' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         json_decode($this->_getBodyAsString());
         $this->assertError(404);
     }
@@ -45,7 +45,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $data = ['Tags' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(404);
     }
 
@@ -55,7 +55,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
         $data = ['Tags' => ['tag1', '🤔']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -69,7 +69,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.bower');
 
         $data = ['Tags' => ['#tag1']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(400);
     }
 
@@ -79,7 +79,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
         $data = ['Tags' => [bin2hex(openssl_random_pseudo_bytes(256))]];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(400);
         $response = json_decode($this->_getBodyAsString());
         $msg = 'Tag can not be more than 128 characters in length.';
@@ -92,7 +92,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $data = ['Tags' => ['#bravo', 'flip', 'stup', 'hotel']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -105,7 +105,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $data = ['Tags' => ['#bravo', '#another-tag']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertError(400, 'You do not have the permission to create new shared tags.');
     }
 
@@ -115,7 +115,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.kde');
         $data = ['Tags' => ['#bravo', 'stup', 'flip']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $response = json_decode($this->_getBodyAsString());
         $this->assertSuccess();
         $results = Hash::extract($response->body, '{n}.slug');
@@ -128,7 +128,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.grogle');
         $data = ['Tags' => ['#golf', 'stup', 'flip']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $response = json_decode($this->_getBodyAsString());
         $this->assertSuccess();
         $results = Hash::extract($response->body, '{n}.slug');
@@ -141,7 +141,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.grogle');
         $data = ['Tags' => ['#golf', '#bravo']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         json_decode($this->_getBodyAsString());
         $this->assertError(400, 'You do not have the permission to edit shared tags on this resource.');
     }
@@ -152,7 +152,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $data = ['Tags' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -165,7 +165,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
         $data = ['Tags' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -178,7 +178,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.chai');
         $data = ['Tags' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -201,7 +201,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $data = ['Tags' => []];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->postJson('/tags/resource/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
 
         // Check tag cleanup
