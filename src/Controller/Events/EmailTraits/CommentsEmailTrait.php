@@ -58,6 +58,7 @@ trait CommentsEmailTrait
         $Resources = TableRegistry::getTableLocator()->get('Resources');
         $creator = $Users->findFirstForEmail($comment->created_by);
         $resource = $Resources->get($comment->foreign_key);
+        $showComment = EmailNotificationSettings::get('show.comment');
 
         foreach ($users as $user) {
             if ($user->id === $comment->created_by) {
@@ -66,7 +67,7 @@ trait CommentsEmailTrait
             }
             $subject = __("{0} commented on {1}", $creator->profile->first_name, $resource->name);
             $template = 'LU/comment_add';
-            $body = ['creator' => $creator, 'comment' => $comment, 'resource' => $resource];
+            $body = ['creator' => $creator, 'comment' => $comment, 'resource' => $resource, 'showComment' => $showComment];
             $data = ['body' => $body, 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);
         }
