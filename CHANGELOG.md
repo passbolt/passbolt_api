@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-330: Don't execute the migration script V210InstallAccountSettingsPlugin if the table organization_settings already exists
 - PB-364: Fix Pressing enter on tag editor doesn't hide autocomplete
 - PB-339: Non admin users should not be able to create shared tags
+- PB-427: The email sender shell task shouldn't have to access the organization_settings table to send emails
 
 ## [2.10.0] - 2019-05-15
 ### Added
