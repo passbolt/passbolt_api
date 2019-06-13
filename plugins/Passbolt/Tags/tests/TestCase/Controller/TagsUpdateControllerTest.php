@@ -320,6 +320,28 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     }
 
     /**
+     * An admin should not be able to update a shared tag to a personal tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     * @group admin
+     */
+    public function testTagUpdateAdminCanNotUpdateSharedTagToPersonal()
+    {
+        $this->authenticateAs('admin');
+        $resourceId = $this->_addTestResource($this->_getDummyResourceData());
+        $tagId = $this->_addTestTag($resourceId, ['#shared'])[0]->id;
+
+        // Update Tag
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'personal'
+        ]);
+
+        $this->assertBadRequestError('Shared tags can not be changed into personal tags.');
+    }
+
+    /**
      * A personal tag update should not affect other users
      *
      * @group pro
