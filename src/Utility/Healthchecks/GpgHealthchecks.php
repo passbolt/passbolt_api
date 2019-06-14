@@ -101,6 +101,7 @@ class GpgHealthchecks
             $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
             $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
         }
+
         return $checks;
     }
 
