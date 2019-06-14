@@ -14,7 +14,6 @@
  */
 namespace App\Utility\OpenPGP\Backends;
 
-//use \Exception as Exception;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -80,7 +79,6 @@ class Gnupg implements OpenPGPBackend
         if (!extension_loaded('gnupg')) {
             throw new Exception('PHP Gnupg library is not installed.');
         }
-
         if (Configure::read('passbolt.gpg.putenv')) {
             putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
         }

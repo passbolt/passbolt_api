@@ -48,12 +48,24 @@ trait ResourcesEmailTrait
         }
         $Users = TableRegistry::getTableLocator()->get('Users');
         $user = $Users->findFirstForEmail($resource->created_by);
+        $showUsername = EmailNotificationSettings::get('show.username');
+        $showUri = EmailNotificationSettings::get('show.uri');
+        $showDescription = EmailNotificationSettings::get('show.description');
+        $showSecret = EmailNotificationSettings::get('show.secret');
         $subject = __("You added the password {0}", $resource->name);
         $template = 'LU/resource_create';
-        $data = ['body' => ['user' => $user, 'resource' => $resource], 'title' => $subject];
+        $data = [
+            'body' => [
+                'user' => $user,
+                'resource' => $resource,
+                'showUsername' => $showUsername,
+                'showUri' => $showUri,
+                'showDescription' => $showDescription,
+                'showSecret' => $showSecret
+            ], 'title' => $subject
+        ];
         $this->_send($user->username, $subject, $data, $template);
     }
-
     /**
      * Send resource update email
      *
@@ -68,6 +80,10 @@ trait ResourcesEmailTrait
         }
         $Users = TableRegistry::getTableLocator()->get('Users');
         $owner = $Users->findFirstForEmail($resource->modified_by);
+        $showUsername = EmailNotificationSettings::get('show.username');
+        $showUri = EmailNotificationSettings::get('show.uri');
+        $showDescription = EmailNotificationSettings::get('show.description');
+        $showSecret = EmailNotificationSettings::get('show.secret');
         $subject = __("{0} edited the password {1}", $owner->profile->first_name, $resource->name);
         $template = 'LU/resource_update';
 
@@ -78,7 +94,14 @@ trait ResourcesEmailTrait
 
         // Send emails to everybody that can see the resource
         foreach ($users as $user) {
-            $data = ['body' => ['user' => $owner, 'resource' => $resource], 'title' => $subject];
+            $data = ['body' => [
+                'user' => $owner,
+                'resource' => $resource,
+                'showUsername' => $showUsername,
+                'showUri' => $showUri,
+                'showDescription' => $showDescription,
+                'showSecret' => $showSecret
+            ], 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);
         }
     }
@@ -105,13 +128,22 @@ trait ResourcesEmailTrait
             return;
         }
 
+        $showUsername = EmailNotificationSettings::get('show.username');
+        $showUri = EmailNotificationSettings::get('show.uri');
+        $showDescription = EmailNotificationSettings::get('show.description');
         $subject = __("{0} deleted the password {1}", $admin->profile->first_name, $resource->name);
         $template = 'LU/resource_delete';
         foreach ($users as $user) {
             if ($user->id === $deletedBy) {
                 continue;
             }
-            $data = ['body' => ['user' => $admin, 'resource' => $resource], 'title' => $subject];
+            $data = ['body' => [
+                'user' => $admin,
+                'resource' => $resource,
+                'showUsername' => $showUsername,
+                'showUri' => $showUri,
+                'showDescription' => $showDescription,
+            ], 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);
         }
     }

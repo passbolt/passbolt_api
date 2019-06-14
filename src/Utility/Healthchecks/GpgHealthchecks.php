@@ -17,6 +17,7 @@ namespace App\Utility\Healthchecks;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class GpgHealthchecks
@@ -56,8 +57,11 @@ class GpgHealthchecks
      */
     public static function gpgLib($checks = [])
     {
-        if (Configure::read('passbolt.gpg.backend') === OpenPGPBackendFactory::GNUPG) {
-            $checks['gpg']['lib'] = (class_exists('gnupg'));
+        try {
+            OpenPGPBackendFactory::get();
+            $checks['gpg']['lib'] = true;
+        } catch (InternalErrorException $e) {
+            $checks['gpg']['lib'] = false;
         }
 
         return $checks;
@@ -93,7 +97,6 @@ class GpgHealthchecks
                 $user = posix_getpwuid($uid);
                 $gnupgHome = $user['dir'] . '/.gnupg';
             }
-
             $checks['gpg']['info']['gpgHome'] = $gnupgHome;
             $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
             $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
