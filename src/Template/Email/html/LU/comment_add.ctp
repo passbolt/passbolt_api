@@ -13,7 +13,6 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
@@ -21,6 +20,7 @@ if (PHP_SAPI === 'cli') {
 $creator = $body['creator'];
 $comment = $body['comment'];
 $resource = $body['resource'];
+$showComment = $body['showComment'];
 
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $creator->profile->avatar->url['small'], true),
@@ -33,7 +33,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-if (EmailNotificationSettings::get('show.comment')) {
+if ($showComment) {
     echo $this->element('Email/module/text', [
         'text' => Purifier::clean($comment->content)
     ]);

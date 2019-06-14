@@ -13,13 +13,17 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
 $resource = $body['resource'];
+$showUsername = $body['showUsername'];
+$showUri = $body['showUri'];
+$showDescription = $body['showDescription'];
+$showSecret = $body['showSecret'];
+
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
     'text' => $this->element('Email/module/avatar_text', [
@@ -33,19 +37,19 @@ echo $this->element('Email/module/avatar',[
 
 $text = __('Name: {0}', Purifier::clean($resource->name)) . '<br/>';
 
-if (EmailNotificationSettings::get('show.username')) {
+if ($showUsername) {
     $text .= __('Username: {0}', Purifier::clean($resource->username)) . '<br/>';
 }
-if (EmailNotificationSettings::get('show.uri')) {
+if ($showUri) {
     $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
 }
-if (EmailNotificationSettings::get('show.description')) {
+if ($showDescription) {
     $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-if (EmailNotificationSettings::get('show.secret')) {
+if ($showSecret) {
     echo $this->element('Email/module/code', [
         'text' => $resource->secrets[0]->data
     ]);
