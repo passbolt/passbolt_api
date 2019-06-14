@@ -263,7 +263,7 @@ class GpgAuthenticate extends BaseAuthenticate
     private function _initKeyring()
     {
         // check if the default key is set and available in gpg
-        $this->_gpg = OpenPGPBackendFactory::create(Configure::read('passbolt.gpg.backend'));
+        $this->_gpg = OpenPGPBackendFactory::get();
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
 
         // Check if config contains fingerprint

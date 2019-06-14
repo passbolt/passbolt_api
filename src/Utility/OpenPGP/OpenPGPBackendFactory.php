@@ -16,6 +16,7 @@ namespace App\Utility\OpenPGP;
 
 use App\Utility\OpenPGP\Backends\Gnupg;
 use Cake\Core\Configure;
+use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\InternalErrorException;
 
 class OpenPGPBackendFactory
@@ -39,7 +40,11 @@ class OpenPGPBackendFactory
     {
         switch ($backend) {
             case self::GNUPG:
-                return new Gnupg();
+                try {
+                    return new Gnupg();
+                } catch (Exception $exception) {
+                    throw new InternalErrorException($exception->getMessage());
+                }
             default:
                 throw new InternalErrorException(__('This OpenPGP backend is not supported'));
         }
