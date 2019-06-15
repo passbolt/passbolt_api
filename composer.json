@@ -7,8 +7,7 @@
         "passbolt"
     ],
     "config": {
-      "optimize-autoloader": true,
-      "classmap-authoritative": true
+      "optimize-autoloader": true
     },
     "homepage": "https://www.passbolt.com",
     "license": "AGPL-3.0-or-later",
