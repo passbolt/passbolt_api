@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Shell\Task\Base;
+namespace PassboltTestData\Shell\Task\Alt0;
 
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataTask;
