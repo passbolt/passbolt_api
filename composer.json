@@ -7,8 +7,7 @@
         "passbolt"
     ],
     "config": {
-      "optimize-autoloader": true,
-      "classmap-authoritative": true
+      "optimize-autoloader": true
     },
     "homepage": "https://www.passbolt.com",
     "license": "AGPL-3.0-or-later",
@@ -55,7 +54,7 @@
         "cakephp/bake": "~1.1",
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
-        "passbolt/passbolt_selenium_api": "dev-feature/cake37",
+        "passbolt/passbolt_selenium_api": "^2.10.0",
         "passbolt/passbolt_test_data": "^2.10.0"
     },
     "autoload": {

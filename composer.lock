@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8eecbc97dde8f2fb12ef2bc1016e7e71",
-    "content-hash": "7937bd5cbfd9d59f3159f4435fe68805",
+    "hash": "d5535275fa77d2a8219ac8aeeea1a032",
+    "content-hash": "03244659555b7d971f95c8cefdea3537",
     "packages": [
         {
             "name": "aura/intl",
@@ -3136,16 +3136,16 @@
         },
         {
             "name": "passbolt/passbolt_selenium_api",
-            "version": "dev-feature/cake37",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt_selenium_api.git",
-                "reference": "9072290aecdd00e5d0e8dd1e22b9268c2f260828"
+                "reference": "cae23fefe7805b7d4357304e1021b3a4c4198cf1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt_selenium_api/zipball/9072290aecdd00e5d0e8dd1e22b9268c2f260828",
-                "reference": "9072290aecdd00e5d0e8dd1e22b9268c2f260828",
+                "url": "https://api.github.com/repos/passbolt/passbolt_selenium_api/zipball/cae23fefe7805b7d4357304e1021b3a4c4198cf1",
+                "reference": "cae23fefe7805b7d4357304e1021b3a4c4198cf1",
                 "shasum": ""
             },
             "require": {
@@ -3187,7 +3187,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2019-02-05 11:30:19"
+            "time": "2019-06-15 14:31:46"
         },
         {
             "name": "passbolt/passbolt_test_data",
@@ -5158,8 +5158,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "burzum/cakephp-imagine-plugin": 20,
-        "psy/psysh": 0,
-        "passbolt/passbolt_selenium_api": 20
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
