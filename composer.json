@@ -6,6 +6,10 @@
         "password",
         "passbolt"
     ],
+    "config": {
+      "optimize-autoloader": true,
+      "classmap-authoritative": true
+    },
     "homepage": "https://www.passbolt.com",
     "license": "AGPL-3.0-or-later",
     "authors": [
@@ -42,7 +46,7 @@
         "thadafinser/user-agent-parser": "^2.0",
         "donatj/phpuseragentparser": "^0.7.0",
         "lorenzo/cakephp-email-queue": "^3.2.0",
-      "burzum/cakephp-file-storage": "^2.1.0",
+        "burzum/cakephp-file-storage": "^2.1.0",
         "burzum/cakephp-imagine-plugin": "3.x-dev",
         "spomky-labs/otphp": "^8.3",
         "bacon/bacon-qr-code": "^1.0",
@@ -56,8 +60,8 @@
         "cakephp/bake": "~1.1",
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
-        "passbolt/passbolt_selenium_api": "dev-feature/cake37",
-        "passbolt/passbolt_test_data": "dev-master"
+        "passbolt/passbolt_selenium_api": "^2.10.0",
+        "passbolt/passbolt_test_data": "^2.10.0"
     },
     "autoload": {
         "psr-4": {
