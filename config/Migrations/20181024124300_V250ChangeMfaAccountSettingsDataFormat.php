@@ -13,8 +13,9 @@
  * @since         2.4.0
  */
 
-use Migrations\AbstractMigration;
+use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
+use Migrations\AbstractMigration;
 
 class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
 {
@@ -25,7 +26,14 @@ class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
      */
     public function up()
     {
-        $accountSettings = TableRegistry::getTableLocator()->get('AccountSettings');
+        $connectionName = 'default';
+        if ($this->input->getOption('connection')) {
+            $connectionName = $this->input->getOption('connection');
+        }
+        $connection = ConnectionManager::get($connectionName);
+        $accountSettings = TableRegistry::getTableLocator()->get('AccountSettings', [
+            'connection' => $connection
+        ]);
         $settings = $accountSettings->find()
             ->select()
             ->where(['property' => 'mfa'])

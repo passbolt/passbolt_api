@@ -13,11 +13,11 @@
  * @since         2.7.0
  */
 
-use Migrations\AbstractMigration;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\Folder;
 use Cake\ORM\TableRegistry;
+use Migrations\AbstractMigration;
 
 class V280FileDirectoryPathsMigrations extends AbstractMigration
 {
@@ -28,18 +28,23 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
      */
     public function up()
     {
-        $Avatars = TableRegistry::getTableLocator()->get('Avatars');
+        $connectionName = 'default';
+        if ($this->input->getOption('connection')) {
+            $connectionName = $this->input->getOption('connection');
+        }
+        $connection = ConnectionManager::get($connectionName);
+
+        $Avatars = TableRegistry::getTableLocator()->get('Avatars', ['connection' => $connection]);
         $avatars = $Avatars->find()->all();
         $publicPath = WWW_ROOT . Configure::read('ImageStorage.publicPath');
 
-        foreach($avatars as $oldAvatar) {
+        foreach ($avatars as $oldAvatar) {
             // get original path
             $originalFilePath = $publicPath . $oldAvatar->path;
             $strippedId = str_replace('-', '', $oldAvatar->id);
             $originalFileName = $strippedId . '.' . $oldAvatar->extension;
             $originalFile = $originalFilePath . $originalFileName;
 
-            $connection = ConnectionManager::get('default');
             $connection->delete('file_storage', ['id' => $oldAvatar->id]);
 
             if (!file_exists($originalFile)) {
@@ -58,7 +63,7 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
                 ];
 
                 $newAvatar = $Avatars->newEntity($data, ['validate' => false]);
-                if(!$Avatars->save($newAvatar)) {
+                if (!$Avatars->save($newAvatar)) {
                     echo __("Could not save avatar for user {0}, resetting to default.\n", $oldAvatar->user_id);
                 }
             }
