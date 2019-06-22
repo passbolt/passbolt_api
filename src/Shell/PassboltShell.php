@@ -30,10 +30,25 @@ class PassboltShell extends AppShell
         'Migrate',
         'MysqlExport',
         'MysqlImport',
-        'Passbolt/License.LicenseCheck',
         'RegisterUser',
         'SendTestEmail'
     ];
+
+    /**
+     * Initializes the Shell
+     * acts as constructor for subclasses
+     * allows configuration of tasks prior to shell execution
+     *
+     * @return void
+     * @link https://book.cakephp.org/3.0/en/console-and-shells.html#Cake\Console\ConsoleOptionParser::initialize
+     */
+    public function initialize()
+    {
+        if (Configure::read('passbolt.plugins.license')) {
+            $this->tasks[] = 'Passbolt/License.LicenseCheck';
+        }
+        parent::initialize();
+    }
 
     /**
      * Display the passbolt ascii banner
