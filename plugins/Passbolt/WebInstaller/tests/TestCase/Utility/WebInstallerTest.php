@@ -16,13 +16,13 @@ namespace Passbolt\WebInstaller\Test\TestCase\Utility;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
-use Passbolt\WebInstaller\Test\TestCase\Form\GpgKeyFormTest;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 use Passbolt\WebInstaller\Utility\WebInstaller;
 
@@ -30,6 +30,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 {
     use ConfigurationTrait;
     use DatabaseTrait;
+    use GpgkeysModelTrait;
 
     public function setUp()
     {
@@ -69,7 +70,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerUtilityGpgImportKeySuccess()
     {
         $webInstaller = new WebInstaller(null);
-        $gpgSettings = GpgKeyFormTest::getDummyData();
+        $gpgSettings = $this->getDummyGpgkey();
         $webInstaller->setSettings('gpg', $gpgSettings);
         $webInstaller->importGpgKey();
 
@@ -91,7 +92,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller->setSettings('database', $databaseSettings);
 
         // Add the gpg configuration to generate a new server key.
-        $gpgSettings = GpgKeyFormTest::getDummyData();
+        $gpgSettings = $this->getDummyGpgkey();
         $webInstaller->setSettings('gpg', $gpgSettings);
         $webInstaller->importGpgKey();
 
