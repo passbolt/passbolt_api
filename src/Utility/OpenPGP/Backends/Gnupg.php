@@ -550,6 +550,7 @@ class Gnupg extends OpenPGPBackend
                 $decrypted = $this->_gpg->decrypt($text);
             } else {
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
+                $this->clearVerifyKeys();
             }
         } catch (\Exception $e) {
             throw new Exception(__('Decryption failed.'));
@@ -617,13 +618,14 @@ class Gnupg extends OpenPGPBackend
         $this->assertSignKey();
         try {
             $signedText = $this->_gpg->sign($text);
+            $this->clearSignKeys();
         } catch (\Exception $e) {
+            $this->clearSignKeys();
             throw new Exception($msg . $e->getMessage());
         }
         if ($signedText === false) {
             throw new Exception($msg);
         }
-        $this->clearSignKeys();
 
         return $signedText;
     }

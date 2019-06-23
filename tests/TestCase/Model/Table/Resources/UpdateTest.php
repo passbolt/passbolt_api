@@ -22,6 +22,7 @@ use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -61,7 +62,12 @@ class UpdateTest extends AppTestCase
     protected function _encryptSecret($userId, $text)
     {
         $gpgKey = $this->Gpgkeys->find()->where(['user_id' => $userId])->first();
-        $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
+        try {
+            $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
+        } catch(Exception $exception) {
+            $this->gpg->importKeyIntoKeyring($gpgKey->armored_key);
+            $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
+        }
         return $this->gpg->encrypt($text);
     }
 

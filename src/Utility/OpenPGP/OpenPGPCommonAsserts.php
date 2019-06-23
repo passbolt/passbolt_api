@@ -13,7 +13,7 @@ trait OpenPGPCommonAsserts {
      * @throws Exception if the armored message marker does not match the one provided
      * @return bool true if successful
      */
-    protected function assertGpgMarker(string $armoredText, string $marker)
+    public function assertGpgMarker(string $armoredText, string $marker)
     {
         $msg = __('This is not a valid OpenPGP armored message/key marker');
         try {
@@ -34,7 +34,7 @@ trait OpenPGPCommonAsserts {
      * @param string $fingerprint fingerprint
      * @return void
      */
-    protected function assertKeyInKeyring(string $fingerprint)
+    public function assertKeyInKeyring(string $fingerprint)
     {
         if (!$this->isKeyInKeyring($fingerprint)) {
             throw new Exception(__('The key {0} was not found in the keyring', $fingerprint));
@@ -47,7 +47,7 @@ trait OpenPGPCommonAsserts {
      * @throws Exception if not signature key is set
      * @return void
      */
-    protected function assertSignKey()
+    public function assertSignKey()
     {
         if (empty($this->_signKeyFingerprint)) {
             throw new Exception(__('Can not sign without a key. Set a sign key first.'));
@@ -60,7 +60,7 @@ trait OpenPGPCommonAsserts {
      * @throws Exception if not signature key is set
      * @return void
      */
-    protected function assertVerifyKey()
+    public function assertVerifyKey()
     {
         if (empty($this->_verifyKeyFingerprint)) {
             throw new Exception(__('Can not verify without a key. Set a verification key first.'));
@@ -73,7 +73,7 @@ trait OpenPGPCommonAsserts {
      * @throws Exception if no encryption key is set
      * @return void
      */
-    protected function assertEncryptKey()
+    public function assertEncryptKey()
     {
         if (empty($this->_encryptKeyFingerprint)) {
             throw new Exception(__('Can not encrypt without a key. Set a public key first.'));
@@ -86,7 +86,7 @@ trait OpenPGPCommonAsserts {
      * @throws Exception if no decryption key is set
      * @return void
      */
-    protected function assertDecryptKey()
+    public function assertDecryptKey()
     {
         if (empty($this->_decryptKeyFingerprint)) {
             throw new Exception(__('Can not decrypt without a key. Set a secret key first.'));

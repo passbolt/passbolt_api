@@ -107,6 +107,7 @@ class GpgHealthchecks
                 // using cache for local keyring
                 $checks['gpg']['gpgHome'] = true;
                 $checks['gpg']['gpgHomeWritable'] = true;
+                $checks['gpg']['info']['gpgHome'] = 'Cache engine';
             break;
             default:
                 // unknown backend

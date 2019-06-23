@@ -43,6 +43,7 @@ class Http extends OpenPGPBackend
     private $_decrypt_url;
     private $_encrypt_url;
     private $_keyinfo_url;
+    private $_msginfo_url;
 
     const KEYRING_PUBLIC = 'keyring-public-';
     const KEYRING_PRIVATE = 'keyring-private-';
@@ -50,10 +51,7 @@ class Http extends OpenPGPBackend
     const DECRYPT_ENDPOINT = 'decrypt';
     const ENCRYPT_ENDPOINT = 'encrypt';
     const KEYINFO_ENDPOINT = 'keyinfo';
-    const KEYINFO_VERIFY = 'verify';
-    const KEYINFO_SIGN = 'sign';
-    const KEYINFO_GENERATE_KEY = 'generate';
-    const KEYINFO_REVOKE_KEY = 'revoke';
+    const MSGINFO_ENDPOINT = 'msginfo';
 
     /**
      * Constructor.
@@ -75,6 +73,7 @@ class Http extends OpenPGPBackend
         $this->_decrypt_url = $this->_url . Configure::read('passbolt.gpg.http.functions.decrypt');
         $this->_encrypt_url = $this->_url . Configure::read('passbolt.gpg.http.functions.encrypt');
         $this->_keyinfo_url = $this->_url . Configure::read('passbolt.gpg.http.functions.keyinfo');
+        $this->_msginfo_url = $this->_url . Configure::read('passbolt.gpg.http.functions.msginfo');
 
         $this->_auth = [
             'username' => Configure::consume('passbolt.gpg.http.auth.username'),
@@ -101,6 +100,8 @@ class Http extends OpenPGPBackend
                 return $this->_decrypt_url;
             case self::KEYINFO_ENDPOINT:
                 return $this->_keyinfo_url;
+            case self::MSGINFO_ENDPOINT:
+                return $this->_msginfo_url;
             default:
                 throw new InternalErrorException('OpenPGP operation not supported.');
         }
@@ -162,8 +163,8 @@ class Http extends OpenPGPBackend
                 $json = $response->getJson();
                 return $json;
             case 400:
+                Log::error('OpenPGP HTTP: ' . $response->getStringBody());
                 $json = $response->getJson();
-                Log::write('error', 'OpenPGP HTTP: ' . $response->getStringBody());
                 throw new BadRequestException($json['code']);
                 break;
             default:
@@ -422,7 +423,7 @@ class Http extends OpenPGPBackend
     {
         try {
             $this->assertGpgMarker($armored, self::MESSAGE_MARKER);
-            // TODO remote check
+            $this->_post(self::MSGINFO_ENDPOINT, ['armoredText' => $armored]);
         } catch (Exception $e) {
             return false;
         }
@@ -478,6 +479,8 @@ class Http extends OpenPGPBackend
 
         if (!empty($info['expirationTime'])) {
             $result['expires'] = strtotime($info['expirationTime']);
+        } else {
+            $result['expires'] = null;
         }
 
         // Approximation for now
@@ -510,13 +513,11 @@ class Http extends OpenPGPBackend
             $this->_getKeyFromKeyring($fingerprint, self::KEYRING_PUBLIC);
             return true;
         } catch (Exception $e) {
-            Log::debug('not in public ' . $fingerprint);
         }
         try {
             $this->_getKeyFromKeyring($fingerprint, self::KEYRING_PRIVATE);
             return true;
         } catch (Exception $e) {
-            Log::debug('not in private ' . $fingerprint);
         }
         return false;
     }
@@ -577,9 +578,6 @@ class Http extends OpenPGPBackend
         $info = Cache::read($cacheKey);
         if (empty($info) || !is_array($info)) {
             $msg = __('The key could not be found in the keyring.');
-            if (Configure::read('debug')) {
-                $msg .= '(cache key empty:' . $cacheKey . ')';
-            }
             throw new Exception($msg);
         }
         return $info;
@@ -651,24 +649,32 @@ class Http extends OpenPGPBackend
                 ]
             ];
             if ($verifySignature) {
-
                 $pubKey = $this->_getKeyFromKeyring($this->_verifyKeyFingerprint, self::KEYRING_PUBLIC);
                 $data['publicKey']['armored'] = $pubKey['armored'];
             }
-            pr($data);
             $this->_passphrase = null;
             $response = $this->_post(self::DECRYPT_ENDPOINT, $data);
         } catch (Exception $exception) {
             // Catch specialized BadRequestException and cast them
-            throw new Exception($exception->getMessage());
+            Log::error('OpenPGP HTTP: Decryption failed. ' . $exception->getMessage());
+            throw new Exception(__('Decryption failed.'));
         }
 
         if ($verifySignature) {
-            $msg = __('Decryption failed. The signature is invalid.');
-            if (empty($response['signatures']) || !$response[0]['valid']) {
+            $msg = __('Decryption failed.');
+            if (empty($response['signatureInfo']) || !isset($response['signatureInfo']['keyId'])) {
+                $msg .= ' ' . __('The signature is invalid.');
                 throw new Exception($msg);
             }
-            if ($response[0]['key_id'] != substr($this->_verifyKeyFingerprint, -16)) {
+            $signature = $response['signatureInfo'];
+            if (!isset($signature['verified']) || !$signature['verified']) {
+                $msg .= ' ' . __('The signature could not be verified.');
+                throw new Exception($msg);
+            }
+            $expect = substr($this->_verifyKeyFingerprint, -16);
+            $got = strtoupper($signature['keyId']);
+            if ($expect != $got) {
+                $msg = ' ' . __('Expecting {0} and got {1} instead.', $expect, $got);
                 throw new Exception($msg);
             }
         }

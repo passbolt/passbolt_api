@@ -71,8 +71,16 @@ class OpenPGPBackendFactory
         if (self::$instance !== null) {
             return self::$instance;
         }
-
         self::$instance = self::create(Configure::read('passbolt.gpg.backend'));
         return self::$instance;
+    }
+
+    /**
+     * Reset current instance
+     * Useful if you want to change the config on the fly
+     */
+    public static function reset()
+    {
+        self::$instance = null;
     }
 }

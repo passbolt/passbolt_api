@@ -153,7 +153,7 @@ class GpgKeyForm extends Form
             return false;
         }
 
-        if (!is_null($keyInfo['expires'])) {
+        if (!empty($keyInfo['expires'])) {
             return false;
         }
 

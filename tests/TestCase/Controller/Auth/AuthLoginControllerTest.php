@@ -356,6 +356,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         }
 
         $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->clearKeys();
 
         // Import the server key.
         $this->serverKeyId = $this->gpg->importKeyIntoKeyring(file_get_contents(Configure::read('passbolt.gpg.serverKey.private')));
