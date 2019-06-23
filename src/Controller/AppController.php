@@ -16,6 +16,8 @@ namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
 use App\Controller\Events\UserRegistrationListener;
+use App\Utility\OpenPGP\Backends\Http;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
@@ -23,6 +25,7 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
+use Cake\Cache\Cache;
 
 /**
  * Application Controller

@@ -127,12 +127,28 @@ return [
             'serverKey' => [
                 // Server public / private key location and fingerprint.
                 'fingerprint' => env('PASSBOLT_GPG_SERVER_KEY_FINGERPRINT', null),
-                'public' => env('PASSBOLT_GPG_SERVER_KEY_PUBLIC', CONFIG . 'gpg' . DS . 'serverkey.asc'),
-                'private' => env('PASSBOLT_GPG_SERVER_KEY_PRIVATE', CONFIG . 'gpg' . DS . 'serverkey_private.asc'),
+                'public' => env('PASSBOLT_GPG_SERVER_KEY_PUBLIC', CONFIG . 'gpg' . DS . 'serverkey_ecc.asc'),
+                'private' => env('PASSBOLT_GPG_SERVER_KEY_PRIVATE', CONFIG . 'gpg' . DS . 'serverkey_private_ecc.asc'),
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
             ],
+
+            // Http backend configuration
+            'http' => [
+                'domain' => env('PASSBOLT_GPG_HTTP_DOMAIN', 'cloudfunctions.net'),
+                'project' => env('PASSBOLT_GPG_HTTP_PROJECT', null),
+                'region' => env('PASSBOLT_GPG_HTTP_REGION', null),
+                'auth' => [
+                    'username' => env('PASSBOLT_GPG_HTTP_USERNAME', null),
+                    'password' => env('PASSBOLT_GPG_HTTP_AUTH_PASSWORD', null)
+                ],
+                'functions' => [
+                    'encrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_ENCRYPT', 'onOpenpgpEncrypt'),
+                    'decrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_DECRYPT', 'onOpenpgpDecrypt'),
+                    'keyinfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_KEYINFO', 'onOpenpgpGetKeyInfo')
+                ]
+            ]
         ],
 
         // Legal

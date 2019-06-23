@@ -36,6 +36,8 @@
     ],
     "require": {
         "php": ">=7.0",
+        "ext-json" : "*",
+        "ext-posix" : "*",
         "cakephp/cakephp": "^3.7",
         "cakephp/migrations": "^2.1",
         "cakephp/plugin-installer": "^1.1",
