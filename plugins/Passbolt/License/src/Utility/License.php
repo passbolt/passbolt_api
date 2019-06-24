@@ -94,7 +94,7 @@ class License
         $licenseInfoStr = $this->_verifySignature($armoredSignedLicense);
         $licenseInfo = \json_decode($licenseInfoStr, true);
         if (is_null($licenseInfo)) {
-            throw new \Exception(__('The license cannot be verified.'));
+            throw new \Exception(__('The license cannot be verified. Parse error.'));
         }
 
         return $licenseInfo;
@@ -115,7 +115,7 @@ class License
 
         $isSignedMessage = $this->_gpg->isParsableArmoredSignedMessage($armoredSignedLicense);
         if (!$isSignedMessage) {
-            throw new \Exception(__('The license format is not valid.'));
+            throw new \Exception(__('The license format is not valid. Invalid format.'));
         }
 
         return $armoredSignedLicense;
@@ -141,9 +141,8 @@ class License
         try {
             $this->_gpg->verify($licenseSigned, $fingerprint, $licenseInfo);
         } catch (\Exception $e) {
-            throw new \Exception(__('The license cannot be verified.'));
+            throw new \Exception(__('The license cannot be verified. Invalid signature.'));
         }
-
         return $licenseInfo;
     }
 }

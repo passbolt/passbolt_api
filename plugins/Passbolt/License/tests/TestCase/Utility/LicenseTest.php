@@ -83,7 +83,7 @@ class LicenseTest extends TestCase
             try {
                 $license->getInfo();
             } catch (\Exception $e) {
-                $this->assertEquals('The license format is not valid.', $e->getMessage());
+                $this->assertContains('The license format is not valid.', $e->getMessage());
             }
         }
     }
@@ -95,7 +95,7 @@ class LicenseTest extends TestCase
         try {
             $license->getInfo();
         } catch (\Exception $e) {
-            $this->assertEquals('The license cannot be verified.', $e->getMessage());
+            $this->assertContains('The license cannot be verified.', $e->getMessage());
         }
     }
 
