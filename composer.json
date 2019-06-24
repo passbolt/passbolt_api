@@ -57,7 +57,7 @@
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
         "passbolt/passbolt_selenium_api": "^2.10.0",
-        "passbolt/passbolt_test_data": "^2.10.0"
+        "passbolt/passbolt_test_data": "dev-master"
     },
     "autoload": {
         "psr-4": {
