@@ -14,7 +14,6 @@
  */
 namespace App\Utility\OpenPGP\Backends;
 
-use App\Shell\ConsoleShell;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPCommonAsserts;
 use Cake\Cache\Cache;
@@ -44,6 +43,7 @@ class Http extends OpenPGPBackend
     private $_encrypt_url;
     private $_keyinfo_url;
     private $_msginfo_url;
+    private $_verify_url;
 
     const KEYRING_PUBLIC = 'keyring-public-';
     const KEYRING_PRIVATE = 'keyring-private-';
@@ -52,6 +52,7 @@ class Http extends OpenPGPBackend
     const ENCRYPT_ENDPOINT = 'encrypt';
     const KEYINFO_ENDPOINT = 'keyinfo';
     const MSGINFO_ENDPOINT = 'msginfo';
+    const VERIFY_ENDPOINT = 'verify';
 
     /**
      * Constructor.
@@ -74,6 +75,7 @@ class Http extends OpenPGPBackend
         $this->_encrypt_url = $this->_url . Configure::read('passbolt.gpg.http.functions.encrypt');
         $this->_keyinfo_url = $this->_url . Configure::read('passbolt.gpg.http.functions.keyinfo');
         $this->_msginfo_url = $this->_url . Configure::read('passbolt.gpg.http.functions.msginfo');
+        $this->_verify_url = $this->_url . Configure::read('passbolt.gpg.http.functions.verify');
 
         $this->_auth = [
             'username' => Configure::consume('passbolt.gpg.http.auth.username'),
@@ -102,6 +104,8 @@ class Http extends OpenPGPBackend
                 return $this->_keyinfo_url;
             case self::MSGINFO_ENDPOINT:
                 return $this->_msginfo_url;
+            case self::VERIFY_ENDPOINT:
+                return $this->_verify_url;
             default:
                 throw new InternalErrorException('OpenPGP operation not supported.');
         }
@@ -697,18 +701,35 @@ class Http extends OpenPGPBackend
     }
 
     /**
-     * Verify a signed message.
+     * Verify a cleartext signed message.
      *
      * @param string $armored The armored signed message to verify.
      * @param string $fingerprint The fingerprint of the key to verify for.
      * @param mixed $plainText (optional) if this parameter is passed, it will be filled with the plain text.
-     * @return void
      * @throws Exception If the armored signed message cannot be verified.
+     * @return void
      */
     public function verify($armored, $fingerprint, &$plainText = null)
     {
-        throw new Exception('Verify not implemented');
-        return;
+        try {
+            $pubKey = $this->_getKeyFromKeyring($fingerprint, self::KEYRING_PUBLIC);
+        } catch(Exception $exception) {
+            $msg = __('Verification failed. Fingerprint {0} is not in the keyring.', $fingerprint);
+            throw new Exception($msg);
+        }
+        try {
+            $data = [
+                'clearText' => $armored,
+                'publicKey' => [
+                    'armored' => $pubKey['armored']
+                ]
+            ];
+            $response = $this->_post(self::VERIFY_ENDPOINT, $data);
+        } catch(Exception $exception) {
+            $msg = __('Verification failed.');
+            throw new Exception($msg);
+        }
+        $plainText = $response['clearText'];
     }
 
     /**

@@ -147,7 +147,8 @@ return [
                     'encrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_ENCRYPT', 'onOpenpgpEncrypt'),
                     'decrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_DECRYPT', 'onOpenpgpDecrypt'),
                     'keyinfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_KEYINFO', 'onOpenpgpGetKeyInfo'),
-                    'msginfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_MSGINFO', 'onOpenpgpGetMessageInfo')
+                    'msginfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_MSGINFO', 'onOpenpgpGetMessageInfo'),
+                    'verify' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_VERIFY', 'onOpenpgpVerifyCleartext')
                 ]
             ]
         ],
