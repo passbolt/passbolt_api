@@ -49,10 +49,10 @@ class GnupgTest extends TestCase
         $keys = GpgKeyFormTest::getDummyData();
         $this->gnupg->setEncryptKey($keys['public_key_armored']);
         $this->gnupg->setSignKey($keys['private_key_armored'], '');
-        $this->gnupg->setVerifyKeyFromFingerprint($keys['fingerprint']);
 
         $messageToEncrypt = 'This is a test message.';
         $encryptedMessage = $this->gnupg->encrypt($messageToEncrypt, true);
+        $this->gnupg->setVerifyKeyFromFingerprint($keys['fingerprint']);
         $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
         $decryptedMessage = $this->gnupg->decrypt($encryptedMessage, true);
 

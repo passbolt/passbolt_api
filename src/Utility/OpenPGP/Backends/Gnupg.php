@@ -544,26 +544,31 @@ class Gnupg extends OpenPGPBackend
         $this->assertDecryptKey();
         if ($verifySignature) {
             $this->assertVerifyKey();
+            $fingerprint = $this->_verifyKeyFingerprint;
+            $this->clearVerifyKeys();
         }
         try {
             if ($verifySignature === false) {
                 $decrypted = $this->_gpg->decrypt($text);
             } else {
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
-                $this->clearVerifyKeys();
             }
         } catch (\Exception $e) {
+            $this->clearDecryptKeys();
             throw new Exception(__('Decryption failed.'));
         }
+        $this->clearDecryptKeys();
+
         if ($decrypted === false) {
             throw new Exception(__('Decryption failed.'));
         }
         if ($verifySignature) {
-            if (empty($signatureInfo) || $signatureInfo[0]['fingerprint'] !== $this->_verifyKeyFingerprint) {
-                throw new Exception(__('Decryption failed. Invalid signature.'));
+            if (empty($signatureInfo) || $signatureInfo[0]['fingerprint'] !== $fingerprint) {
+                $msg = __('Expected {0} and got {1}.', $fingerprint, $signatureInfo[0]['fingerprint']);
+                $msg = __('Decryption failed. Invalid signature.') . ' ' . $msg;
+                throw new Exception($msg);
             }
         }
-        $this->clearDecryptKeys();
 
         return $decrypted;
     }
