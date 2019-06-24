@@ -14,6 +14,7 @@
  */
 namespace App\Utility\Healthchecks;
 
+use App\Model\Table\GpgkeysTable;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -89,17 +90,30 @@ class GpgHealthchecks
      */
     public static function gpgHome($checks = [])
     {
-        if (Configure::read('passbolt.gpg.backend') === OpenPGPBackendFactory::GNUPG) {
-            // If no keyring location has been set, use the default one ~/.gnupg.
-            $gnupgHome = getenv('GNUPGHOME');
-            if (empty($gnupgHome)) {
-                $uid = posix_getuid();
-                $user = posix_getpwuid($uid);
-                $gnupgHome = $user['dir'] . '/.gnupg';
-            }
-            $checks['gpg']['info']['gpgHome'] = $gnupgHome;
-            $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
-            $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
+        switch(Configure::read('passbolt.gpg.backend')) {
+            case OpenPGPBackendFactory::GNUPG:
+                // If no keyring location has been set, use the default one ~/.gnupg.
+                $gnupgHome = getenv('GNUPGHOME');
+                if (empty($gnupgHome)) {
+                    $uid = posix_getuid();
+                    $user = posix_getpwuid($uid);
+                    $gnupgHome = $user['dir'] . '/.gnupg';
+                }
+                $checks['gpg']['info']['gpgHome'] = $gnupgHome;
+                $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
+                $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
+            break;
+            case OpenPGPBackendFactory::HTTP:
+                // using cache for local keyring
+                $checks['gpg']['gpgHome'] = true;
+                $checks['gpg']['gpgHomeWritable'] = true;
+                $checks['gpg']['info']['gpgHome'] = 'Cache engine';
+            break;
+            default:
+                // unknown backend
+                $checks['gpg']['gpgHome'] = false;
+                $checks['gpg']['gpgHome'] = false;
+            break;
         }
 
         return $checks;
@@ -153,6 +167,7 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
+            /** @var GpgkeysTable $Gpgkeys */
             $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
             $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
@@ -282,6 +297,7 @@ class GpgHealthchecks
                 $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
                 $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                 $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+                $_gpg->setVerifyKeyFromFingerprint($fingerprint);
                 $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
                 $decryptedMessage2 = $_gpg->decrypt($encryptedMessage2, true);
                 if ($decryptedMessage2 === $messageToEncrypt) {

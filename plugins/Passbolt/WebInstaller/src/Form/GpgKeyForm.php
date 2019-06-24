@@ -153,7 +153,7 @@ class GpgKeyForm extends Form
             return false;
         }
 
-        if (!is_null($keyInfo['expires'])) {
+        if (!empty($keyInfo['expires'])) {
             return false;
         }
 
@@ -172,7 +172,8 @@ class GpgKeyForm extends Form
         $gpg = OpenPGPBackendFactory::get();
         try {
             $messageToEncrypt = 'open source password manager for teams';
-            $gpg->setEncryptKey($check);
+            $fingerprint = $gpg->importKeyIntoKeyring($check);
+            $gpg->setEncryptKeyFromFingerprint($fingerprint);
             $encryptedMessage = $gpg->encrypt($messageToEncrypt);
         } catch (Exception $e) {
             return false;
@@ -193,10 +194,12 @@ class GpgKeyForm extends Form
         $gpg = OpenPGPBackendFactory::get();
         try {
             $messageToEncrypt = 'open source password manager for teams';
-            $gpg->setEncryptKey($check);
-            $gpg->setSignKey($check, '');
+            $fingerprint = $gpg->importKeyIntoKeyring($check);
+            $gpg->setEncryptKeyFromFingerprint($fingerprint);
+            $gpg->setVerifyKeyFromFingerprint($fingerprint);
+            $gpg->setSignKeyFromFingerprint($fingerprint, '');
             $encryptedMessage = $gpg->encrypt($messageToEncrypt, true);
-            $gpg->setDecryptKey($check, '');
+            $gpg->setDecryptKeyFromFingerprint($fingerprint, '');
             $decryptedMessage = $gpg->decrypt($encryptedMessage, true);
         } catch (Exception $e) {
             return false;
