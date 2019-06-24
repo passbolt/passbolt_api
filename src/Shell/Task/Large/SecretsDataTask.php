@@ -50,6 +50,10 @@ class SecretsDataTask extends DataTask
      */
     public function getData()
     {
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+
         $secrets = [];
 
         $this->loadModel('Users');

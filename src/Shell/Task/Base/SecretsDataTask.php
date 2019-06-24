@@ -16,6 +16,7 @@ namespace PassboltTestData\Shell\Task\Base;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use PassboltTestData\Lib\DataTask;
 
 class SecretsDataTask extends DataTask
@@ -142,6 +143,10 @@ class SecretsDataTask extends DataTask
      */
     public function getData()
     {
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+
         $secrets = [];
 
         $this->loadModel('Users');
