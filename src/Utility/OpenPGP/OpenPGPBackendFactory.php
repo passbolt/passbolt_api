@@ -48,13 +48,6 @@ class OpenPGPBackendFactory
                     throw new InternalErrorException($exception->getMessage());
                 }
                 break;
-            case self::HTTP:
-                try {
-                    return new Http();
-                } catch (Exception $exception) {
-                    throw new InternalErrorException($exception->getMessage());
-                }
-                break;
             default:
                 throw new InternalErrorException(__('This OpenPGP backend is not supported'));
         }
