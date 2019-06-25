@@ -68,10 +68,12 @@ class MfaOrgSettings
     }
 
     /**
+     * Format Providers
+     *
      * We accept both format ['providers' => ['totp' => true ]] and ['providers' => ['totp']]
      * This function format the former to the later to ensure consistant format
      *
-     * @param array $providers
+     * @param array $providers see above
      * @return array
      */
     private function formatProviders(array $providers)
@@ -288,6 +290,7 @@ class MfaOrgSettings
      * @throws InternalErrorException
      * @param array $data user provided input
      * @param UserAccessControl $uac user access control
+     * @return void
      */
     public function save(array $data, UserAccessControl $uac)
     {

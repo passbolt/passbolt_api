@@ -16,7 +16,6 @@
 namespace Passbolt\AccountSettings\Test\TestCase\Model\Table;
 
 use Cake\ORM\TableRegistry;
-use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 use Passbolt\AccountSettings\Test\Lib\AccountSettingsPluginTestCase;
 
 /**

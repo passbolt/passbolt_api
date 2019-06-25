@@ -238,7 +238,9 @@ class TagsTable extends Table
                     ]
                 ]);
                 // If not shared, add the user_id in the resources_tags join table
+                // @codingStandardsIgnoreStart
                 $notShared = @mb_substr($slug, 0, 1, 'utf-8') !== '#';
+                // @codingStandardsIgnoreEnd
                 $resourceTagUserId = $notShared ? $userId : null;
                 $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity([
                     'user_id' => $resourceTagUserId

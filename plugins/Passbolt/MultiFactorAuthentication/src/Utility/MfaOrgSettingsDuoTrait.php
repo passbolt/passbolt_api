@@ -22,6 +22,8 @@ trait MfaOrgSettingsDuoTrait
 {
 
     /**
+     * getDuoIntegrationKey
+     *
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
@@ -35,6 +37,8 @@ trait MfaOrgSettingsDuoTrait
     }
 
     /**
+     * getDuoHostname
+     *
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
@@ -48,6 +52,8 @@ trait MfaOrgSettingsDuoTrait
     }
 
     /**
+     * getDuoSecretKey
+     *
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
@@ -61,6 +67,8 @@ trait MfaOrgSettingsDuoTrait
     }
 
     /**
+     * getDuoSalt
+     *
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
@@ -74,8 +82,11 @@ trait MfaOrgSettingsDuoTrait
     }
 
     /**
+     * validateDuoSettings
+     *
      * @throw CustomValidationException if there is an issue
      * @param array $data user provider data
+     * @return void
      */
     public function validateDuoSettings(array $data)
     {

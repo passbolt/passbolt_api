@@ -14,9 +14,9 @@
  */
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
-use LdapTools\Utilities\LdapUtilities;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
+use LdapTools\Utilities\LdapUtilities;
 
 /**
  * Class GroupEntry
@@ -119,6 +119,8 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Validate Group entry.
+     *
+     * @return bool
      */
     public function validate()
     {
@@ -127,6 +129,7 @@ class GroupEntry extends DirectoryEntry
 
     /**
      * Validate group entry.
+     *
      * @return bool
      */
     protected function _validate()

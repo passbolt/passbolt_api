@@ -483,7 +483,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $resourceNames = Hash::extract($this->_responseJsonBody, '{n}.name');
 
         $this->assertEquals(['First Resource', 'Second Resource'], $resourceNames);
-
     }
 
     /**

@@ -21,6 +21,8 @@ use Cake\Validation\Validation;
 trait MfaOrgSettingsYubikeyTrait
 {
     /**
+     * getYubikeyOTPSecretKey
+     *
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
@@ -34,6 +36,8 @@ trait MfaOrgSettingsYubikeyTrait
     }
 
     /**
+     * getYubikeyOTPClientId
+     *
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
@@ -47,15 +51,18 @@ trait MfaOrgSettingsYubikeyTrait
     }
 
     /**
+     * validateYubikeySettings
+     *
      * @throw CustomValidationException if there is an issue
      * @param array $data user provider data
+     * @return void
      */
     public function validateYubikeySettings(array $data)
     {
         $errors = [];
 
         if (!isset($data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID])) {
-            $msg =  __('No configuration set for Yubikey OTP clientId.');
+            $msg = __('No configuration set for Yubikey OTP clientId.');
             $errors[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID]['notEmpty'] = $msg;
         } else {
             $clientID = $data[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID];

@@ -16,12 +16,12 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectCollection;
 use LdapTools\Object\LdapObjectType;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
-use Cake\Core\Configure;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 

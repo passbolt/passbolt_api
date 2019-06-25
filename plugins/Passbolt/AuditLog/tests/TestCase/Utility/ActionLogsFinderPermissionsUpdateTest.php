@@ -16,13 +16,13 @@
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\Role;
-use Passbolt\Log\Model\Entity\EntityHistory;
-use Passbolt\AuditLog\Utility\ActionLogsFinder;
 use Passbolt\AuditLog\Test\TestCase\Traits\ActionLogsOperationsTrait;
+use Passbolt\AuditLog\Utility\ActionLogsFinder;
+use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
 class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
@@ -90,7 +90,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
         $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $this->simulateShare(
             $uac,
-            @@@@@@
+            //@@@@@@
             'Resource',
             UuidFactory::uuid('resource.id.apache'),
             'User',

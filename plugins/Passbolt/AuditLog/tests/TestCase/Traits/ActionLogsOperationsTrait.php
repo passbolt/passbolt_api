@@ -14,9 +14,9 @@
 namespace Passbolt\AuditLog\Test\TestCase\Traits;
 
 use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Utility\UserAction;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
 trait ActionLogsOperationsTrait

@@ -15,16 +15,11 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use LdapTools\Object\LdapObject;
 use LdapTools\Object\LdapObjectType;
-use Passbolt\DirectorySync\Actions\AllSyncAction;
-use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Error\Exception\ValidationException;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
-use Cake\Core\Configure;
-use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry;
 
 class UserEntryTest extends DirectorySyncIntegrationTestCase

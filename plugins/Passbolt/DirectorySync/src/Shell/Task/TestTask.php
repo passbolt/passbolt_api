@@ -16,8 +16,6 @@ namespace Passbolt\DirectorySync\Shell\Task;
 
 use App\Shell\AppShell;
 use Cake\ORM\TableRegistry;
-use Passbolt\DirectorySync\Error\Exception\ValidationException;
-use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
@@ -199,7 +197,8 @@ class TestTask extends AppShell
 
     /**
      * Display invalid objects.
-     * @param array $data
+     *
+     * @param array $data data
      * @return void
      */
     protected function displayInvalidEntries(array $data)

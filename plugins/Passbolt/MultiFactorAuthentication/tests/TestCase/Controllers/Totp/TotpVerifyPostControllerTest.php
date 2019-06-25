@@ -14,8 +14,8 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
-use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use OTPHP\Factory;
+use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {

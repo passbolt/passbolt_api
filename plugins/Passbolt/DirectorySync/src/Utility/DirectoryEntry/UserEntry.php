@@ -107,6 +107,7 @@ class UserEntry extends DirectoryEntry
 
     /**
      * Validate user entry.
+     *
      * @return bool
      */
     protected function _validate()
@@ -130,6 +131,8 @@ class UserEntry extends DirectoryEntry
 
     /**
      * Validate User entry.
+     *
+     * @return bool
      */
     public function validate()
     {

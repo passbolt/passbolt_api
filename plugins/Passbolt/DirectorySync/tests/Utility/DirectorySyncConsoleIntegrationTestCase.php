@@ -16,9 +16,9 @@ namespace Passbolt\DirectorySync\Test\Utility;
 
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Configure;
+use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\DirectoryOrgSettingsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 
 abstract class DirectorySyncConsoleIntegrationTestCase
 {

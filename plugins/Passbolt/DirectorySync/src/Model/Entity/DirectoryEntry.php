@@ -56,6 +56,7 @@ class DirectoryEntry extends Entity
 
     /**
      * Get associated entity.
+     *
      * @return Group|User|null
      */
     public function getAssociatedEntity()

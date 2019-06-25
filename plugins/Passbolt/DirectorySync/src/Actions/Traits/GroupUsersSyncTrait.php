@@ -218,7 +218,6 @@ trait GroupUsersSyncTrait
         // We add users that are in group data and not in directoryRelations.
         foreach ($data['group']['users'] as $userDn) {
             // If the group member is a group, we do not process.
-            // TODO: manage nested groups.
             if ($this->groupExistsInDirectory($userDn)) {
                 continue;
             }

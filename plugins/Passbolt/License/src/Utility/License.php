@@ -143,6 +143,7 @@ class License
         } catch (\Exception $e) {
             throw new \Exception(__('The license cannot be verified. Invalid signature.'));
         }
+
         return $licenseInfo;
     }
 }

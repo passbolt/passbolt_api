@@ -248,8 +248,10 @@ abstract class DirectoryEntry implements ArrayAccess
 
     /**
      * Add a validation error in the list of errors.
+     *
      * @param string $field field name
      * @param string $errorMsg error message
+     * @return void
      */
     protected function _addError(string $field, string $errorMsg)
     {

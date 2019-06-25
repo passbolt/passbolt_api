@@ -97,8 +97,6 @@ class TestDirectory implements DirectoryInterface
 
         $this->directoryResults->initializeWithEntries($this->users, $this->groups);
 
-        // TODO: actually do the filtering.
-
         return $this->directoryResults;
     }
 

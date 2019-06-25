@@ -15,12 +15,12 @@
 
 namespace Passbolt\AuditLog\Test\TestCase\Utility;
 
+use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use App\Model\Entity\Role;
-use Passbolt\AuditLog\Utility\ActionLogsFinder;
 use Passbolt\AuditLog\Test\TestCase\Traits\ActionLogsOperationsTrait;
+use Passbolt\AuditLog\Utility\ActionLogsFinder;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
 class ActionLogsFinderResourceSecretUpdateTest extends LogIntegrationTestCase

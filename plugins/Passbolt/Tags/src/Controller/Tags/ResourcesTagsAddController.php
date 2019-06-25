@@ -103,7 +103,9 @@ class ResourcesTagsAddController extends AppController
         if (!empty($data)) {
             $existingTags = $this->Tags->findAllBySlugs($data)->all()->toArray();
             foreach ($existingTags as $existingTag) {
+                // @codingStandardsIgnoreStart
                 $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
+                // @codingStandardsIgnoreEnd
                 unset($data[array_search($existingTag->slug, $data)]);
                 if ($notShared) {
                     $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([

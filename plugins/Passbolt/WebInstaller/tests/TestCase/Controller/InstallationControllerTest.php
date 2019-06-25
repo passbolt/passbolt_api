@@ -15,9 +15,9 @@
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use Cake\Datasource\ConnectionManager;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
-use Cake\ORM\TableRegistry;
 
 class InstallationControllerTest extends WebInstallerIntegrationTestCase
 {

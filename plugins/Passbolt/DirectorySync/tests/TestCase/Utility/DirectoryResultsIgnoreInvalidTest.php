@@ -14,11 +14,11 @@
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use Cake\Core\Configure;
 use LdapTools\Object\LdapObjectType;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
-use Cake\Core\Configure;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 
 class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
