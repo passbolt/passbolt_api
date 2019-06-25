@@ -185,14 +185,17 @@ class GpgkeysTable extends Table
     }
 
     /**
+     * Return true if string is a valid fingerprint
      *
-     * @param string $value
+     * @param string $value fingerprint
      * @return bool
      */
-    static public function isValidFingerprint(string $value = null) {
+    public static function isValidFingerprint(string $value = null)
+    {
         if (empty($value)) {
             return false;
         }
+
         return (preg_match('/^[A-F0-9]{40}$/', $value) === 1);
     }
 

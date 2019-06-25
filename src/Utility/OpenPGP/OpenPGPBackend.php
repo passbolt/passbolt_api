@@ -7,7 +7,7 @@ use Cake\Http\Exception\InternalErrorException;
 
 abstract class OpenPGPBackend implements OpenPGPBackendInterface
 {
-    use OpenPGPCommonAsserts;
+    use OpenPGPCommonAssertsTrait;
 
     /**
      * @var string fingerprint of the key set to decrypt
@@ -42,7 +42,10 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     }
 
     /**
+     * Import server key in keyring
+     *
      * @throws InternalErrorException if server key is undefined or invalid
+     * @return void
      */
     public function importServerKeyInKeyring()
     {
@@ -98,7 +101,8 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearDecryptKeys() {
+    public function clearDecryptKeys()
+    {
         $this->_decryptKeyFingerprint = null;
     }
 
@@ -107,7 +111,8 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearSignKeys() {
+    public function clearSignKeys()
+    {
         $this->_signKeyFingerprint = null;
     }
 
@@ -116,7 +121,8 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearEncryptKeys() {
+    public function clearEncryptKeys()
+    {
         $this->_encryptKeyFingerprint = null;
     }
 
@@ -125,7 +131,8 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearVerifyKeys() {
+    public function clearVerifyKeys()
+    {
         $this->_verifyKeyFingerprint = null;
     }
 
@@ -134,7 +141,8 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      *
      * @return void
      */
-    public function clearKeys() {
+    public function clearKeys()
+    {
         $this->clearDecryptKeys();
         $this->clearEncryptKeys();
         $this->clearSignKeys();
