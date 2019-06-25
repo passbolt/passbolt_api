@@ -19,8 +19,8 @@ use App\Model\Entity\User;
 use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\GpgkeysTable;
 use App\Model\Table\UsersTable;
-use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
@@ -278,7 +278,7 @@ class GpgAuthenticate extends BaseAuthenticate
             try {
                 $this->_gpg->importServerKeyInKeyring();
                 $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
-            } catch(Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg);
@@ -297,7 +297,7 @@ class GpgAuthenticate extends BaseAuthenticate
     {
         try {
             $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
-        } catch(Exception $exception) {
+        } catch (Exception $exception) {
             // Try to import the key in keyring again
             try {
                 $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);

@@ -3,7 +3,8 @@ namespace App\Utility\OpenPGP;
 
 use Cake\Core\Exception\Exception;
 
-trait OpenPGPCommonAsserts {
+trait OpenPGPCommonAssertsTrait
+{
 
     /**
      * Assert an armored message/key marker is present in plaintext
@@ -92,5 +93,4 @@ trait OpenPGPCommonAsserts {
             throw new Exception(__('Can not decrypt without a key. Set a secret key first.'));
         }
     }
-
 }

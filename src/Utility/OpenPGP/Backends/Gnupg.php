@@ -640,7 +640,8 @@ class Gnupg extends OpenPGPBackend
      *
      * @return void
      */
-    public function clearDecryptKeys() {
+    public function clearDecryptKeys()
+    {
         $this->_decryptKeyFingerprint = null;
         $this->_gpg->cleardecryptkeys();
     }
@@ -650,7 +651,8 @@ class Gnupg extends OpenPGPBackend
      *
      * @return void
      */
-    public function clearSignKeys() {
+    public function clearSignKeys()
+    {
         $this->_signKeyFingerprint = null;
         $this->_gpg->clearsignkeys();
     }
@@ -660,9 +662,9 @@ class Gnupg extends OpenPGPBackend
      *
      * @return void
      */
-    public function clearEncryptKeys() {
+    public function clearEncryptKeys()
+    {
         $this->_encryptKeyFingerprint = null;
         $this->_gpg->clearencryptkeys();
     }
-
 }

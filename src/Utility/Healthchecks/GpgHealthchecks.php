@@ -90,7 +90,7 @@ class GpgHealthchecks
      */
     public static function gpgHome($checks = [])
     {
-        switch(Configure::read('passbolt.gpg.backend')) {
+        switch (Configure::read('passbolt.gpg.backend')) {
             case OpenPGPBackendFactory::GNUPG:
                 // If no keyring location has been set, use the default one ~/.gnupg.
                 $gnupgHome = getenv('GNUPGHOME');
@@ -102,18 +102,18 @@ class GpgHealthchecks
                 $checks['gpg']['info']['gpgHome'] = $gnupgHome;
                 $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
                 $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
-            break;
+                break;
             case OpenPGPBackendFactory::HTTP:
                 // using cache for local keyring
                 $checks['gpg']['gpgHome'] = true;
                 $checks['gpg']['gpgHomeWritable'] = true;
                 $checks['gpg']['info']['gpgHome'] = 'Cache engine';
-            break;
+                break;
             default:
                 // unknown backend
                 $checks['gpg']['gpgHome'] = false;
                 $checks['gpg']['gpgHome'] = false;
-            break;
+                break;
         }
 
         return $checks;
