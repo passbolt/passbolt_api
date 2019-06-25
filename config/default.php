@@ -109,7 +109,7 @@ return [
         'gpg' => [
             // Tell passbolt which OpenPGP backend to use
             // Default is PHP-GNUPG with some help from OpenPGP-PHP
-            'backend' => env('PASSBOLT_GPG_BACKEND', 'Gnupg'),
+            'backend' => env('PASSBOLT_GPG_BACKEND', 'gnupg'),
 
             // Tell passbolt where to find the GnuPG keyring.
             // If putenv is set to false, gnupg will use the default path ~/.gnupg.
@@ -133,6 +133,24 @@ return [
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
             ],
+
+            // Http backend configuration
+            'http' => [
+                'domain' => env('PASSBOLT_GPG_HTTP_DOMAIN', 'cloudfunctions.net'),
+                'project' => env('PASSBOLT_GPG_HTTP_PROJECT', null),
+                'region' => env('PASSBOLT_GPG_HTTP_REGION', null),
+                'auth' => [
+                    'username' => env('PASSBOLT_GPG_HTTP_USERNAME', null),
+                    'password' => env('PASSBOLT_GPG_HTTP_AUTH_PASSWORD', null)
+                ],
+                'functions' => [
+                    'encrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_ENCRYPT', 'onOpenpgpEncrypt'),
+                    'decrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_DECRYPT', 'onOpenpgpDecrypt'),
+                    'keyinfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_KEYINFO', 'onOpenpgpGetKeyInfo'),
+                    'msginfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_MSGINFO', 'onOpenpgpGetMessageInfo'),
+                    'verify' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_VERIFY', 'onOpenpgpVerifyCleartext')
+                ]
+            ]
         ],
 
         // Legal
