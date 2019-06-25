@@ -132,24 +132,6 @@ return [
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
-            ],
-
-            // Http backend configuration
-            'http' => [
-                'domain' => env('PASSBOLT_GPG_HTTP_DOMAIN', 'cloudfunctions.net'),
-                'project' => env('PASSBOLT_GPG_HTTP_PROJECT', null),
-                'region' => env('PASSBOLT_GPG_HTTP_REGION', null),
-                'auth' => [
-                    'username' => env('PASSBOLT_GPG_HTTP_USERNAME', null),
-                    'password' => env('PASSBOLT_GPG_HTTP_AUTH_PASSWORD', null)
-                ],
-                'functions' => [
-                    'encrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_ENCRYPT', 'onOpenpgpEncrypt'),
-                    'decrypt' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_DECRYPT', 'onOpenpgpDecrypt'),
-                    'keyinfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_KEYINFO', 'onOpenpgpGetKeyInfo'),
-                    'msginfo' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_MSGINFO', 'onOpenpgpGetMessageInfo'),
-                    'verify' => env('PASSBOLT_GPG_HTTP_FUNCTIONS_VERIFY', 'onOpenpgpVerifyCleartext')
-                ]
             ]
         ],
 
