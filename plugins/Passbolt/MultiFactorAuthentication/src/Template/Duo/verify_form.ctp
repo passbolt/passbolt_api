@@ -7,6 +7,10 @@
     $this->Html->css('themes/anew/api_login.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'login');
     $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
+    $formContext = [
+        'url' => Router::url('/mfa/verify/duo', true),
+        'id' => 'duo_form'
+    ];
 ?>
 <div class="login-form ">
     <h1>
@@ -17,6 +21,6 @@
             data-host="<?= $hostName; ?>"
             data-sig-request="<?= $sigRequest; ?>"
     ></iframe>
-    <?= $this->form->create($verifyForm, ['id' => 'duo_form']); ?><?= $this->form->end(); ?>
+    <?= $this->form->create($verifyForm, $formContext); ?><?= $this->form->end(); ?>
     <?= $this->element('formActions', ['providers' => $providers, 'currentProvider' => MfaSettings::PROVIDER_DUO]); ?>
 </div>

@@ -7,9 +7,13 @@
     $themePath = "themes/$theme/api_main.min.css?v=$version";
     $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
+    $formContext = [
+        'url' => Router::url('/mfa/setup/totp', true),
+        'class' => ['totp-setup']
+    ];
 ?>
 <div class="grid grid-responsive-12">
-    <?= $this->form->create($totpSetupForm, ['class' => ['totp-setup']]); ?>
+    <?= $this->form->create($totpSetupForm, $formContext); ?>
         <div class="row">
             <div class="col12 last">
                 <h3><?= $title; ?></h3>

@@ -7,9 +7,13 @@
     $themePath = "themes/$theme/api_main.min.css?v=$version";
     $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
+    $formContext = [
+        'url' => Router::url('/mfa/setup/yubikey', true),
+        'class' => ['yubikey-setup']
+    ];
 ?>
 <div class="grid grid-responsive-12">
-    <?= $this->form->create($yubikeySetupForm, ['class' => ['yubikey-setup']]); ?>
+    <?= $this->form->create($yubikeySetupForm, $formContext); ?>
     <div class="row">
         <div class="col12 last">
             <h3><?= $title; ?></h3>

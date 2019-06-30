@@ -9,6 +9,10 @@
     $this->Html->css($themePath, ['block' => 'css', 'fullBase' => true]);
     $this->Html->css('Duo-Frame.css', ['block' => 'css', 'fullBase' => true]);
     $this->assign('pageClass', 'iframe mfa');
+    $formContext = [
+        'url' => Router::url('/mfa/setup/duo', true),
+        'id' => 'duo_form'
+    ];
 ?>
 <div class="grid grid-responsive-12">
     <div class="row">
@@ -23,7 +27,7 @@
                     data-host="<?= $hostName; ?>"
                     data-sig-request="<?= $sigRequest; ?>"
             ></iframe>
-            <?= $this->form->create($setupForm, ['id' => 'duo_form']); ?><?= $this->form->end(); ?>
+            <?= $this->form->create($setupForm, $formContext); ?><?= $this->form->end(); ?>
         </div>
     </div>
     <div class="row">
