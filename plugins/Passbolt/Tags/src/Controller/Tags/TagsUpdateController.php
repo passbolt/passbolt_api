@@ -83,10 +83,6 @@ class TagsUpdateController extends AppController
 
         $slug = $this->request->getData('slug');
 
-        if (mb_substr($slug, 0, 1) !== '#') {
-            throw new BadRequestException('Shared tags can not be changed into personal tags.');
-        }
-
         $tagExists = $this->Tags->findBySlug($slug)->first();
 
         if ($tagExists) {
