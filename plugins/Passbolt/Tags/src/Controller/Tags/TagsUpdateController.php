@@ -82,21 +82,6 @@ class TagsUpdateController extends AppController
         }
 
         $slug = $this->request->getData('slug');
-
-        $tagExists = $this->Tags->findBySlug($slug)->first();
-
-        if ($tagExists) {
-            $this->ResourcesTags->updateAll([
-                'tag_id' => $tagExists->id
-            ], [
-                'tag_id' => $tag->id
-            ]);
-
-            $this->Tags->delete($tag);
-
-            return $tagExists;
-        }
-
         $this->Tags->patchEntity(
             $tag,
             [
