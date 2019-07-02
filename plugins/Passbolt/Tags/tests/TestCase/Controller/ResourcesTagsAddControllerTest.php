@@ -35,7 +35,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.nope');
         $data = ['Tags' => []];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        json_decode($this->_getBodyAsString());
+        $response = json_decode($this->_getBodyAsString());
         $this->assertError(404);
     }
 
@@ -73,7 +73,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->assertError(400);
     }
 
-    // Tags exceeding length of 128 chars can not be added
+    // A user can not add shared tags on a resource with read access
     public function testResourcesTagValidationError()
     {
         $this->authenticateAs('ada');
@@ -86,30 +86,20 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->assertEquals($response->body[0]->slug->maxLength, $msg);
     }
 
-    // A user can add personal tags on a resource it owns via direct permission
+    // A user can add shared and personal tags on a resource it owns via direct permission
     public function testResourcesTagsAddSuccess()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $data = ['Tags' => ['#bravo', 'flip', 'stup', 'hotel']];
+        $data = ['Tags' => ['#bravo', 'flip', '#stup', 'hotel']];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertEmpty(array_diff($data['Tags'], $results));
+        $this->assertEquals($results, ['#bravo', '#stup', 'flip', 'hotel']);
     }
 
-    // A user can not create new shared tags on a resource
-    public function testResourcesTagsAddOwnedSharedTagError()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $data = ['Tags' => ['#bravo', '#another-tag']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        $this->assertError(400, 'You do not have the permission to create new shared tags.');
-    }
-
-    // A user can add personal tags on a resource it owns via group permission
+    // A user can add shared and personal tags on a resource it owns via group permission
     public function testResourcesTagsAddSuccessGroupOwnership()
     {
         $this->authenticateAs('ada');
@@ -132,21 +122,10 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $response = json_decode($this->_getBodyAsString());
         $this->assertSuccess();
         $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertEmpty(array_diff($data['Tags'], $results));
+        $this->assertEquals($results, ['#golf', 'flip', 'stup']);
     }
 
-    // A user can not add shared tags on a resource it can read via group permission
-    public function testResourcesTagsAddSharedGroupReadError()
-    {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.grogle');
-        $data = ['Tags' => ['#golf', '#bravo']];
-        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        json_decode($this->_getBodyAsString());
-        $this->assertError(400, 'You do not have the permission to edit shared tags on this resource.');
-    }
-
-    // A user can delete all tags on a resource it owns via direct permission
+    // A user can delete shared and personal tags on a resource it owns via direct permission
     public function testResourcesTagsAddSuccessDelete()
     {
         $this->authenticateAs('ada');
@@ -159,7 +138,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->assertEquals($results, []);
     }
 
-    // A user can delete all tags on a resource it owns via group permission
+    // A user can delete shared and personal tags on a resource it owns via group permission
     public function testResourcesTagsAddSuccessDeleteGroupOwnership()
     {
         $this->authenticateAs('ada');
