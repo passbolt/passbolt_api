@@ -282,8 +282,8 @@ class UsersFixture extends TestFixture
                 'username' => 'ada@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-05-02 18:51:40',
-                'modified' => '2019-06-02 18:51:40'
+                'created' => '2019-05-02 18:51:39',
+                'modified' => '2019-06-02 18:51:39'
             ],
         ];
         parent::init();
