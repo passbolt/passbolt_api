@@ -64,6 +64,7 @@ class UpdateTest extends AppTestCase
         $gpgKey = $this->Gpgkeys->find()->where(['user_id' => $userId])->first();
         $this->gpg->importKeyIntoKeyring($gpgKey->armored_key);
         $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
+
         return $this->gpg->encrypt($text);
     }
 
