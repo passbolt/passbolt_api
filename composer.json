@@ -38,7 +38,7 @@
         "php": ">=7.0",
         "ext-json" : "*",
         "ext-posix" : "*",
-        "cakephp/cakephp": "^3.7",
+        "cakephp/cakephp": "3.7.9",
         "cakephp/migrations": "^2.1",
         "cakephp/plugin-installer": "^1.1",
         "mobiledetect/mobiledetectlib": "2.*",
@@ -57,7 +57,7 @@
         "phpunit/phpunit": "^5.7|^6.0",
         "cakephp/cakephp-codesniffer": "^3.0",
         "passbolt/passbolt_selenium_api": "^2.10.0",
-        "passbolt/passbolt_test_data": "dev-master"
+        "passbolt/passbolt_test_data": "^2.10.2"
     },
     "autoload": {
         "psr-4": {
