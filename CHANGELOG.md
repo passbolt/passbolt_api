@@ -4,8 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 ### Added
-- PB-244: As LU I should be able to rename/delete tags from the tags filter section
-- Multiple openpgp backend support
+- Groundwork to support multiple openpgp backend
 
 ### Improved
 - PB-391: As an admin deleting a user I should see the name and email of the user i'm about the delete in the model dialog
@@ -15,7 +14,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-330: Don't execute the migration script V210InstallAccountSettingsPlugin if the table organization_settings already exists
 - PB-364: Fix Pressing enter on tag editor doesn't hide autocomplete
-- PB-339: Non admin users should not be able to create shared tags
 - PB-427: The email sender shell task shouldn't have to access the organization_settings table to send emails
 
 ## [2.10.0] - 2019-05-15
