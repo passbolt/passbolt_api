@@ -24,7 +24,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
         'app.Base/Profiles', 'app.Base/Groups', 'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-        'app.Base/Groups', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings'
+        'app.Base/Groups', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
     ];
 
     /**
@@ -306,7 +306,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 
         // Update Tag
         $this->putJson("/tags/$tagId.json?api-version=v2", [
-            'slug' => '#admin-personal'
+            'slug' => 'updated-admin-personal'
         ]);
 
         // Make sure we do not see the old tag in index
@@ -316,29 +316,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertNotContains('admin-personal', $results);
 
         // And see the new tag
-        $this->assertContains('#admin-personal', $results);
-    }
-
-    /**
-     * An admin should not be able to update a shared tag to a personal tag
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     * @group admin
-     */
-    public function testTagUpdateAdminCanNotUpdateSharedTagToPersonal()
-    {
-        $this->authenticateAs('admin');
-        $resourceId = $this->_addTestResource($this->_getDummyResourceData());
-        $tagId = $this->_addTestTag($resourceId, ['#shared'])[0]->id;
-
-        // Update Tag
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
-            'slug' => 'personal'
-        ]);
-
-        $this->assertBadRequestError('Shared tags can not be changed into personal tags.');
+        $this->assertContains('updated-admin-personal', $results);
     }
 
     /**
@@ -416,7 +394,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      * @group TagUpdate
      * @group admin
      */
-    public function testTagUpdateAdminPersonalUpdateResponseContainsTag()
+    public function testTagAdminPersonalUpdateResponseContainsTag()
     {
         $this->authenticateAs('admin');
         $resourceId = $this->_addTestResource($this->_getDummyResourceData());
@@ -440,7 +418,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      * @group TagUpdate
      * @group admin
      */
-    public function testTagUpdateAdminSharedUpdateResponseContainsTag()
+    public function testTagAdminSharedUpdateResponseContainsTag()
     {
         $this->authenticateAs('admin');
         $tagId = UuidFactory::uuid('tag.id.#bravo');
@@ -451,38 +429,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $response = $this->_responseJsonBody;
         $this->assertEquals('#update-bravo', $response->slug);
         $this->assertTrue($response->is_shared);
-    }
-
-    /**
-     * After a shared tag update by Admin, tag's resources should be merged
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     * @group admin
-     */
-    public function testTagUpdateTagResourcesMergedSuccess()
-    {
-        $this->authenticateAs('admin');
-        $firstResourceId = $this->_addTestResource($this->_getDummyResourceData([
-            'name' => 'First Resource'
-        ]));
-        $this->_addTestTag($firstResourceId, ['#first-tag']);
-
-        $secondResourceId = $this->_addTestResource($this->_getDummyResourceData([
-            'name' => 'Second Resource'
-        ]));
-        $secondTagId = $this->_addTestTag($secondResourceId, ['#second-tag'])[0]->id;
-
-        $this->putJson("/tags/$secondTagId.json?api-version=v2", [
-            'slug' => '#first-tag'
-        ]);
-
-        $this->getJson('/resources.json?filter[has-tag]=%23first-tag&api-version=v2');
-
-        $resourceNames = Hash::extract($this->_responseJsonBody, '{n}.name');
-
-        $this->assertEquals(['First Resource', 'Second Resource'], $resourceNames);
     }
 
     /**
@@ -513,9 +459,9 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         return $this->_responseJsonBody;
     }
 
-    protected function _getDummyResourceData(array $override = [])
+    protected function _getDummyResourceData()
     {
-        return array_merge([
+        return [
             'name' => 'test',
             'secrets' => [
                 [
@@ -542,6 +488,6 @@ NPzwk8OlB8c=
 -----END PGP MESSAGE-----
 ']
             ],
-        ], $override);
+        ];
     }
 }
