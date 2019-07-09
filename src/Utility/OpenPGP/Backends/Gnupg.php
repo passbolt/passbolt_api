@@ -14,7 +14,6 @@
  */
 namespace App\Utility\OpenPGP\Backends;
 
-//use \Exception as Exception;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
@@ -40,35 +39,12 @@ use \OpenPGP_SecretKeyPacket as OpenPGP_SecretKeyPacket;
  *  So for all encryption and decryption operations, we will prefer Php Gnupg.
  *
  */
-class Gnupg implements OpenPGPBackend
+class Gnupg extends OpenPGPBackend
 {
-    /**
-     * @var string fingerprint of the key set to decrypt
-     */
-    private $_decryptKeyFingerprint;
-
-    /**
-     * @var string fingerprint of the key set to encrypt
-     */
-    private $_encryptKeyFingerprint;
-
-    /**
-     * @var string fingerprint of the key set to encrypt
-     */
-    private $_signKeyFingerprint;
-
     /**
      * Gpg object.
      */
     protected $_gpg = null;
-
-    /**
-     * OpenPGP ASCII armored message/key marker
-     */
-    const MESSAGE_MARKER = 'PGP MESSAGE';
-    const PUBLIC_KEY_MARKER = 'PGP PUBLIC KEY BLOCK';
-    const PRIVATE_KEY_MARKER = 'PGP PRIVATE KEY BLOCK';
-    const SIGNED_MESSAGE_MARKER = 'PGP SIGNED MESSAGE';
 
     /**
      * Constructor.
@@ -77,19 +53,16 @@ class Gnupg implements OpenPGPBackend
      */
     public function __construct()
     {
+        parent::__construct();
         if (!extension_loaded('gnupg')) {
             throw new Exception('PHP Gnupg library is not installed.');
         }
-
         if (Configure::read('passbolt.gpg.putenv')) {
             putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
         }
 
         $this->_gpg = new \gnupg();
         $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-        $this->_encryptKeyFingerprint = null;
-        $this->_decryptKeyFingerprint = null;
-        $this->_signKeyFingerprint = null;
     }
 
     /**
@@ -159,7 +132,6 @@ class Gnupg implements OpenPGPBackend
     public function setDecryptKey(string $armoredKey, string $passphrase)
     {
         $this->_decryptKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         // Get the key info.
         $decryptKeyInfo = $this->getKeyInfo($armoredKey);
@@ -197,13 +169,12 @@ class Gnupg implements OpenPGPBackend
     public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
         $this->_decryptKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         try {
             $this->_gpg->adddecryptkey($fingerprint, $passphrase);
             $this->_decryptKeyFingerprint = $fingerprint;
         } catch (\Exception $e) {
-            throw new Exception('The key {0} cannot be used to decrypt.', $fingerprint);
+            throw new Exception(__('The key {0} cannot be used to decrypt.', $fingerprint));
         }
 
         return true;
@@ -223,7 +194,6 @@ class Gnupg implements OpenPGPBackend
     public function setSignKey(string $armoredKey, string $passphrase)
     {
         $this->_signKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         $signKeyInfo = $this->getKeyInfo($armoredKey);
         $fingerprint = $signKeyInfo['fingerprint'];
@@ -261,7 +231,6 @@ class Gnupg implements OpenPGPBackend
     public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
         $this->_signKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         try {
             $this->_gpg->addsignkey($fingerprint, $passphrase);
@@ -272,23 +241,6 @@ class Gnupg implements OpenPGPBackend
         }
 
         return true;
-    }
-
-    /**
-     * Get the gpg marker.
-     *
-     * @param string $armored ASCII armored gpg data
-     * @return mixed
-     * @throws Exception
-     */
-    private function getGpgMarker(string $armored)
-    {
-        $isMarker = preg_match('/-(BEGIN )*([A-Z0-9 ]+)-/', $armored, $values);
-        if (!$isMarker || !isset($values[2])) {
-            throw new Exception(__('No OpenPGP marker found.'));
-        }
-
-        return $values[2];
     }
 
     /**
@@ -475,36 +427,16 @@ class Gnupg implements OpenPGPBackend
 
         // Build key information array.
         $info = [
+            'key_id' => $publicKeyPacket->key_id,
             'fingerprint' => $publicKeyPacket->fingerprint(),
+            'key_created' => $publicKey->timestamp,
+            'expires' => $publicKeyPacket->expires($msg),
             'bits' => $bits,
             'type' => $type,
-            'key_id' => $publicKeyPacket->key_id,
-            'key_created' => $publicKey->timestamp,
             'uid' => $userIds[0],
-            'expires' => $publicKeyPacket->expires($msg),
         ];
 
         return $info;
-    }
-
-    /**
-     * Get key information from keyring
-     *
-     * @param string $fingerprint key fingerpint
-     * @return array|false
-     */
-    public function getKeyInfoFromKeyring(string $fingerprint)
-    {
-        try {
-            $results = $this->_gpg->keyinfo($fingerprint);
-        } catch (\Exception $e) {
-            return false;
-        }
-        if (empty($results)) {
-            return false;
-        }
-
-        return $results;
     }
 
     /**
@@ -515,9 +447,16 @@ class Gnupg implements OpenPGPBackend
      */
     public function isKeyInKeyring(string $fingerprint)
     {
-        $results = $this->getKeyInfoFromKeyring($fingerprint);
+        try {
+            $results = $this->_gpg->keyinfo($fingerprint);
+        } catch (\Exception $e) {
+            return false;
+        }
+        if (empty($results) || $results === false) {
+            return false;
+        }
 
-        return !($results === false);
+        return true;
     }
 
     /**
@@ -561,7 +500,6 @@ class Gnupg implements OpenPGPBackend
         if ($sign === true) {
             $msg = __('Could not use the key to sign and encrypt.');
             $this->assertSignKey();
-            $this->assertEncryptKey();
             try {
                 $encryptedText = $this->_gpg->encryptsign($text);
             } catch (\Exception $e) {
@@ -570,18 +508,20 @@ class Gnupg implements OpenPGPBackend
             if ($encryptedText === false) {
                 throw new Exception($msg);
             }
+            $this->clearSignKeys();
         } else {
             $msg = __('Could not use the key to encrypt.');
             $this->assertEncryptKey();
             try {
                 $encryptedText = $this->_gpg->encrypt($text);
             } catch (\Exception $e) {
-                throw new Exception($msg . $e->getMessage());
+                throw new Exception($msg . ' ' . $e->getMessage());
             }
             if ($encryptedText === false) {
                 throw new Exception($msg);
             }
         }
+        $this->clearDecryptKeys();
 
         return $encryptedText;
     }
@@ -591,14 +531,18 @@ class Gnupg implements OpenPGPBackend
      *
      * @param string $text ASCII armored encrypted text to be decrypted.
      * @param bool $verifySignature should signature be verified
-     * @param array $signatureInfo signature data (optional)
-     * @throws Exception
+     * @throws Exception if decryption fails
      * @return string decrypted text
      */
-    public function decrypt(string $text, bool $verifySignature = false, array &$signatureInfo = [])
+    public function decrypt(string $text, bool $verifySignature = false)
     {
         $decrypted = false;
         $this->assertDecryptKey();
+        if ($verifySignature) {
+            $this->assertVerifyKey();
+            $fingerprint = $this->_verifyKeyFingerprint;
+            $this->clearVerifyKeys();
+        }
         try {
             if ($verifySignature === false) {
                 $decrypted = $this->_gpg->decrypt($text);
@@ -606,102 +550,23 @@ class Gnupg implements OpenPGPBackend
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
             }
         } catch (\Exception $e) {
+            $this->clearDecryptKeys();
             throw new Exception(__('Decryption failed.'));
         }
+        $this->clearDecryptKeys();
+
         if ($decrypted === false) {
             throw new Exception(__('Decryption failed.'));
         }
+        if ($verifySignature) {
+            if (empty($signatureInfo) || $signatureInfo[0]['fingerprint'] !== $fingerprint) {
+                $msg = __('Expected {0} and got {1}.', $fingerprint, $signatureInfo[0]['fingerprint']);
+                $msg = __('Decryption failed. Invalid signature.') . ' ' . $msg;
+                throw new Exception($msg);
+            }
+        }
 
         return $decrypted;
-    }
-
-    /**
-     * Assert the passphrase is empty
-     *
-     * @param string $passphrase passphrase
-     * @throws Exception if passphrase is not empty
-     * @return void
-     */
-    public function assertPassphraseEmpty(string $passphrase)
-    {
-        if ($passphrase !== '') {
-            throw new Exception('Secret keys with a passphrase are not supported.');
-        }
-    }
-
-    /**
-     * Assert key is in the keyring
-     *
-     * @param string $fingerprint fingerprint
-     * @return void
-     */
-    public function assertKeyInKeyring(string $fingerprint)
-    {
-        if (!$this->isKeyInKeyring($fingerprint)) {
-            throw new Exception(__('The key {0} was not found in the keyring', $fingerprint));
-        }
-    }
-
-    /**
-     * Assert the signature key is set
-     *
-     * @throws Exception if not signature key is set
-     * @return void
-     */
-    public function assertSignKey()
-    {
-        if (empty($this->_signKeyFingerprint)) {
-            throw new Exception(__('Can not sign without a key. Set a sign key first.'));
-        }
-    }
-
-    /**
-     * Check if an encryption key is set
-     *
-     * @throws Exception if no encryption key is set
-     * @return void
-     */
-    public function assertEncryptKey()
-    {
-        if (empty($this->_encryptKeyFingerprint)) {
-            throw new Exception(__('Can not encrypt without a key. Set a public key first.'));
-        }
-    }
-
-    /**
-     * Check if a decrypt key is set
-     *
-     * @throws Exception if no decryption key is set
-     * @return void
-     */
-    public function assertDecryptKey()
-    {
-        if (empty($this->_decryptKeyFingerprint)) {
-            throw new Exception(__('Can not decrypt without a key. Set a secret key first.'));
-        }
-    }
-
-    /**
-     * Assert an armored message/key marker is present in plaintext
-     *
-     * @param string $armoredText message or key in ASCII armored format
-     * @param string $marker a message delimiter like 'PGP MESSAGE'
-     * @throws Exception if the armored message marker does not match the one provided
-     * @return bool true if successful
-     */
-    public function assertGpgMarker(string $armoredText, string $marker)
-    {
-        $msg = __('This is not a valid OpenPGP armored message/key marker');
-        try {
-            $m = $this->getGpgMarker($armoredText);
-        } catch (Exception $e) {
-            throw new Exception($msg);
-        }
-        if ($m !== $marker) {
-            throw new Exception($msg);
-        }
-
-        return true;
     }
 
     /**
@@ -740,7 +605,9 @@ class Gnupg implements OpenPGPBackend
         $this->assertSignKey();
         try {
             $signedText = $this->_gpg->sign($text);
+            $this->clearSignKeys();
         } catch (\Exception $e) {
+            $this->clearSignKeys();
             throw new Exception($msg . $e->getMessage());
         }
         if ($signedText === false) {
@@ -748,5 +615,38 @@ class Gnupg implements OpenPGPBackend
         }
 
         return $signedText;
+    }
+
+    /**
+     * Removes all keys which were set for decryption before
+     *
+     * @return void
+     */
+    public function clearDecryptKeys()
+    {
+        $this->_decryptKeyFingerprint = null;
+        $this->_gpg->cleardecryptkeys();
+    }
+
+    /**
+     * Removes all keys which were set for signing before
+     *
+     * @return void
+     */
+    public function clearSignKeys()
+    {
+        $this->_signKeyFingerprint = null;
+        $this->_gpg->clearsignkeys();
+    }
+
+    /**
+     * Removes all keys which were set for encryption before
+     *
+     * @return void
+     */
+    public function clearEncryptKeys()
+    {
+        $this->_encryptKeyFingerprint = null;
+        $this->_gpg->clearencryptkeys();
     }
 }

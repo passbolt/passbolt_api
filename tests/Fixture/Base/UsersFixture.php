@@ -5,11 +5,9 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * UsersFixture
- *
  */
 class UsersFixture extends TestFixture
 {
-
     /**
      * Fields
      *
@@ -36,7 +34,6 @@ class UsersFixture extends TestFixture
         ],
     ];
     // @codingStandardsIgnoreEnd
-
     /**
      * Init method
      *
@@ -51,8 +48,8 @@ class UsersFixture extends TestFixture
                 'username' => 'jean@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '1e73e104-d53e-579d-a0c4-e9aeaca76c56',
@@ -60,8 +57,8 @@ class UsersFixture extends TestFixture
                 'username' => 'lynne@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '1ebc0060-9274-5451-aa12-ad0f31bc29dd',
@@ -69,8 +66,8 @@ class UsersFixture extends TestFixture
                 'username' => 'edith@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 04:59:55',
-                'modified' => '2019-01-03 05:00:55'
+                'created' => '2019-07-02 18:49:40',
+                'modified' => '2019-07-02 18:50:40'
             ],
             [
                 'id' => '32d29702-85e2-539d-98ac-6abfa7aadf01',
@@ -78,8 +75,8 @@ class UsersFixture extends TestFixture
                 'username' => 'kathleen@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '5302c3cb-5d33-53b1-82cd-57df36e13acc',
@@ -87,8 +84,8 @@ class UsersFixture extends TestFixture
                 'username' => 'ursula@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '54c6278e-f824-5fda-91ff-3e946b18d994',
@@ -96,8 +93,8 @@ class UsersFixture extends TestFixture
                 'username' => 'dame@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 03:01:55',
-                'modified' => '2019-01-03 04:01:55'
+                'created' => '2019-07-02 16:51:40',
+                'modified' => '2019-07-02 17:51:40'
             ],
             [
                 'id' => '610b4c1c-3c08-5451-a163-5b2adba8a5cd',
@@ -105,8 +102,8 @@ class UsersFixture extends TestFixture
                 'username' => 'sofia@passbolt.com',
                 'active' => true,
                 'deleted' => true,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '620de627-8f07-5427-9149-e2c43219c5aa',
@@ -114,8 +111,8 @@ class UsersFixture extends TestFixture
                 'username' => 'grace@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '640ebc06-5ec1-5322-a1ae-6120ed2f3a74',
@@ -123,8 +120,8 @@ class UsersFixture extends TestFixture
                 'username' => 'carol@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-01 05:01:55',
-                'modified' => '2019-01-02 05:01:55'
+                'created' => '2019-06-30 18:51:40',
+                'modified' => '2019-07-01 18:51:40'
             ],
             [
                 'id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
@@ -132,8 +129,8 @@ class UsersFixture extends TestFixture
                 'username' => 'anonymous@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '742554b6-2940-5b7d-a8e7-b03a19f78b8e',
@@ -141,8 +138,8 @@ class UsersFixture extends TestFixture
                 'username' => 'margaret@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '887422c0-bef6-59a7-bbda-84c253ee0848',
@@ -150,8 +147,8 @@ class UsersFixture extends TestFixture
                 'username' => 'frances@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '8d038399-ecac-55b4-8ad3-b7f0650de2a2',
@@ -159,8 +156,8 @@ class UsersFixture extends TestFixture
                 'username' => 'orna@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '8d04cf98-716b-5f6d-9fe8-c130f8992646',
@@ -168,8 +165,8 @@ class UsersFixture extends TestFixture
                 'username' => 'hedy@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '904bcd9f-ff51-5cfd-9de8-d2c876ade498',
@@ -177,8 +174,8 @@ class UsersFixture extends TestFixture
                 'username' => 'irene@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '92946500-2940-54ff-889a-3da69afe5078',
@@ -186,8 +183,8 @@ class UsersFixture extends TestFixture
                 'username' => 'joan@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '92f42805-bc0f-58fd-9de6-aab13ed0c28d',
@@ -195,8 +192,8 @@ class UsersFixture extends TestFixture
                 'username' => 'ruth@passbolt.com',
                 'active' => false,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08',
@@ -204,8 +201,8 @@ class UsersFixture extends TestFixture
                 'username' => 'wang@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'a0559bb5-050b-50a3-ad39-c6756a46dbb7',
@@ -213,8 +210,8 @@ class UsersFixture extends TestFixture
                 'username' => 'yvonne@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'af5e1f70-a0ee-5b76-935b-c846f8a6a190',
@@ -222,8 +219,8 @@ class UsersFixture extends TestFixture
                 'username' => 'adele@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2018-11-03 05:01:55',
-                'modified' => '2018-12-03 05:01:55'
+                'created' => '2019-05-02 18:51:40',
+                'modified' => '2019-06-02 18:51:40'
             ],
             [
                 'id' => 'c92a1885-1644-5bdb-8486-12d751b976ff',
@@ -231,8 +228,8 @@ class UsersFixture extends TestFixture
                 'username' => 'thelma@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
@@ -240,8 +237,8 @@ class UsersFixture extends TestFixture
                 'username' => 'admin@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'e1ebc592-b90d-5e22-9f40-50e52911673b',
@@ -249,8 +246,8 @@ class UsersFixture extends TestFixture
                 'username' => 'marlyn@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'e7fa0375-61df-5dbc-9e42-e0d363bd0ecf',
@@ -258,8 +255,8 @@ class UsersFixture extends TestFixture
                 'username' => 'nancy@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
@@ -267,8 +264,8 @@ class UsersFixture extends TestFixture
                 'username' => 'betty@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2018-12-20 05:01:55',
-                'modified' => '2018-12-27 05:01:55'
+                'created' => '2019-06-18 18:51:40',
+                'modified' => '2019-06-25 18:51:40'
             ],
             [
                 'id' => 'f7e9754a-2f64-5cdd-8ba2-178b33383505',
@@ -276,8 +273,8 @@ class UsersFixture extends TestFixture
                 'username' => 'ping@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2019-01-03 05:01:55',
-                'modified' => '2019-01-03 05:01:55'
+                'created' => '2019-07-02 18:51:40',
+                'modified' => '2019-07-02 18:51:40'
             ],
             [
                 'id' => 'f848277c-5398-58f8-a82a-72397af2d450',
@@ -285,8 +282,8 @@ class UsersFixture extends TestFixture
                 'username' => 'ada@passbolt.com',
                 'active' => true,
                 'deleted' => false,
-                'created' => '2018-11-03 05:01:55',
-                'modified' => '2018-12-03 05:01:55'
+                'created' => '2019-05-02 18:51:39',
+                'modified' => '2019-06-02 18:51:39'
             ],
         ];
         parent::init();

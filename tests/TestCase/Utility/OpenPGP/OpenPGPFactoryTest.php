@@ -23,6 +23,7 @@ class OpenPGPFactoryTest extends TestCase
 {
     public function testOpenPGPFactoryGetError()
     {
+        OpenPGPBackendFactory::reset();
         $this->expectException(InternalErrorException::class);
         Configure::write('passbolt.gpg.backend', 'nope');
         OpenPGPBackendFactory::get();
@@ -30,8 +31,10 @@ class OpenPGPFactoryTest extends TestCase
 
     public function testOpenPGPFactoryGetSuccess()
     {
+        OpenPGPBackendFactory::reset();
         Configure::write('passbolt.gpg.backend', OpenPGPBackendFactory::GNUPG);
         $gpg = OpenPGPBackendFactory::get();
+        Configure::write('passbolt.gpg.backend', OpenPGPBackendFactory::HTTP);
         $this->assertNotEmpty($gpg);
         $this->assertEquals($gpg, OpenPGPBackendFactory::get());
     }

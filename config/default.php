@@ -109,7 +109,7 @@ return [
         'gpg' => [
             // Tell passbolt which OpenPGP backend to use
             // Default is PHP-GNUPG with some help from OpenPGP-PHP
-            'backend' => env('PASSBOLT_GPG_BACKEND', 'Gnupg'),
+            'backend' => env('PASSBOLT_GPG_BACKEND', 'gnupg'),
 
             // Tell passbolt where to find the GnuPG keyring.
             // If putenv is set to false, gnupg will use the default path ~/.gnupg.
@@ -132,7 +132,7 @@ return [
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
-            ],
+            ]
         ],
 
         // Legal

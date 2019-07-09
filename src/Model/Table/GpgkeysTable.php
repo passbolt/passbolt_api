@@ -181,6 +181,21 @@ class GpgkeysTable extends Table
      */
     public function isValidFingerprintRule(string $value, array $context = null)
     {
+        return self::isValidFingerprint($value);
+    }
+
+    /**
+     * Return true if string is a valid fingerprint
+     *
+     * @param string $value fingerprint
+     * @return bool
+     */
+    public static function isValidFingerprint(string $value = null)
+    {
+        if (empty($value)) {
+            return false;
+        }
+
         return (preg_match('/^[A-F0-9]{40}$/', $value) === 1);
     }
 
@@ -193,7 +208,7 @@ class GpgkeysTable extends Table
      */
     public function isValidKeyIdRule(string $value, array $context = null)
     {
-        return (preg_match('/^[A-F0-9]{8}$/', $value) === 1);
+        return (preg_match('/^[A-F0-9]{8,16}$/', $value) === 1);
     }
 
     /**

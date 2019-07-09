@@ -15,7 +15,6 @@
 namespace App\Controller;
 
 use App\Controller\Events\EmailNotificationsListener;
-use App\Controller\Events\UserRegistrationListener;
 use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;

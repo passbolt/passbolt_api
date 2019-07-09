@@ -15,15 +15,16 @@
 namespace App\Test\TestCase\Utility\OpenPGP;
 
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\OpenPGP\Backends\Gnupg;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\TestSuite\TestCase;
-use Passbolt\WebInstaller\Test\TestCase\Utility\GpgKeyFormTest;
 
 class GnupgTest extends TestCase
 {
     use FormatValidationTrait;
+    use GpgkeysModelTrait;
 
     public $originalErrorSettings;
 
@@ -46,12 +47,13 @@ class GnupgTest extends TestCase
 
     public function testGnupgEncryptDecryptSuccess()
     {
-        $keys = GpgKeyFormTest::getDummyData();
+        $keys = $this->getDummyGpgkey();
         $this->gnupg->setEncryptKey($keys['public_key_armored']);
         $this->gnupg->setSignKey($keys['private_key_armored'], '');
 
         $messageToEncrypt = 'This is a test message.';
         $encryptedMessage = $this->gnupg->encrypt($messageToEncrypt, true);
+        $this->gnupg->setVerifyKeyFromFingerprint($keys['fingerprint']);
         $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
         $decryptedMessage = $this->gnupg->decrypt($encryptedMessage, true);
 
@@ -114,12 +116,6 @@ zaZXtuDzZmnTOjWJm895TA==
     {
         $this->expectException(Exception::class);
         $this->gnupg->setEncryptKeyFromFingerprint('2FC8945833C51946E937F9FED47B0811573EE67F');
-    }
-
-    public function testGnupgGetKeyInfoFromKeyring()
-    {
-        $info = $this->gnupg->getKeyInfoFromKeyring('2FC8945833C51946E937F9FED47B0811573EE67F');
-        $this->assertFalse($info);
     }
 
     public function testGnupgAssertGpgMarkerError_NoMarker()
@@ -248,7 +244,7 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
 
     public function testGnupgSignSuccess()
     {
-        $keys = GpgKeyFormTest::getDummyData();
+        $keys = $this->getDummyGpgkey();
         $this->gnupg->setSignKey($keys['private_key_armored'], '');
         $keyInfo = $this->gnupg->getKeyInfo($keys['private_key_armored']);
 

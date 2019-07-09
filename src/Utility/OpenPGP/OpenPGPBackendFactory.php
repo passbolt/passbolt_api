@@ -15,13 +15,16 @@
 namespace App\Utility\OpenPGP;
 
 use App\Utility\OpenPGP\Backends\Gnupg;
+use App\Utility\OpenPGP\Backends\Http;
 use Cake\Core\Configure;
+use Cake\Core\Exception\Exception;
 use Cake\Http\Exception\InternalErrorException;
 
 class OpenPGPBackendFactory
 {
 
-    const GNUPG = 'Gnupg';
+    const GNUPG = 'gnupg';
+    const HTTP = 'http';
 
     /**
      * @var OpenPGPBackend
@@ -32,14 +35,19 @@ class OpenPGPBackendFactory
      * Instantiate an OpenPGP Backend
      *
      * @param string $backend one of the supported backend
-     * @return OpenPGPBackend
      * @throws InternalErrorException if backend if not supported
+     * @return OpenPGPBackend
      */
     public static function create(string $backend = self::GNUPG)
     {
         switch ($backend) {
             case self::GNUPG:
-                return new Gnupg();
+                try {
+                    return new Gnupg();
+                } catch (Exception $exception) {
+                    throw new InternalErrorException($exception->getMessage());
+                }
+                break;
             default:
                 throw new InternalErrorException(__('This OpenPGP backend is not supported'));
         }
@@ -56,7 +64,19 @@ class OpenPGPBackendFactory
         if (self::$instance !== null) {
             return self::$instance;
         }
+        self::$instance = self::create(Configure::read('passbolt.gpg.backend'));
 
-        return self::create(Configure::read('passbolt.gpg.backend'));
+        return self::$instance;
+    }
+
+    /**
+     * Reset current instance
+     * Useful if you want to change the config on the fly
+     *
+     * @return void
+     */
+    public static function reset()
+    {
+        self::$instance = null;
     }
 }
