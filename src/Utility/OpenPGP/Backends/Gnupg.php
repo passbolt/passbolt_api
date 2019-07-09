@@ -132,7 +132,6 @@ class Gnupg extends OpenPGPBackend
     public function setDecryptKey(string $armoredKey, string $passphrase)
     {
         $this->_decryptKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         // Get the key info.
         $decryptKeyInfo = $this->getKeyInfo($armoredKey);
@@ -170,7 +169,6 @@ class Gnupg extends OpenPGPBackend
     public function setDecryptKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
         $this->_decryptKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         try {
             $this->_gpg->adddecryptkey($fingerprint, $passphrase);
@@ -196,7 +194,6 @@ class Gnupg extends OpenPGPBackend
     public function setSignKey(string $armoredKey, string $passphrase)
     {
         $this->_signKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         $signKeyInfo = $this->getKeyInfo($armoredKey);
         $fingerprint = $signKeyInfo['fingerprint'];
@@ -234,7 +231,6 @@ class Gnupg extends OpenPGPBackend
     public function setSignKeyFromFingerprint(string $fingerprint, string $passphrase)
     {
         $this->_signKeyFingerprint = null;
-        $this->assertPassphraseEmpty($passphrase);
 
         try {
             $this->_gpg->addsignkey($fingerprint, $passphrase);
@@ -519,7 +515,7 @@ class Gnupg extends OpenPGPBackend
             try {
                 $encryptedText = $this->_gpg->encrypt($text);
             } catch (\Exception $e) {
-                throw new Exception($msg . $e->getMessage());
+                throw new Exception($msg . ' ' . $e->getMessage());
             }
             if ($encryptedText === false) {
                 throw new Exception($msg);
@@ -571,20 +567,6 @@ class Gnupg extends OpenPGPBackend
         }
 
         return $decrypted;
-    }
-
-    /**
-     * Assert the passphrase is empty
-     *
-     * @param string $passphrase passphrase
-     * @throws Exception if passphrase is not empty
-     * @return void
-     */
-    public function assertPassphraseEmpty(string $passphrase)
-    {
-        if ($passphrase !== '') {
-            throw new Exception(__('Secret keys with a passphrase are not supported.'));
-        }
     }
 
     /**

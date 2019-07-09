@@ -62,12 +62,8 @@ class UpdateTest extends AppTestCase
     protected function _encryptSecret($userId, $text)
     {
         $gpgKey = $this->Gpgkeys->find()->where(['user_id' => $userId])->first();
-        try {
-            $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
-        } catch (Exception $exception) {
-            $this->gpg->importKeyIntoKeyring($gpgKey->armored_key);
-            $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
-        }
+        $this->gpg->importKeyIntoKeyring($gpgKey->armored_key);
+        $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
 
         return $this->gpg->encrypt($text);
     }
