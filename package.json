@@ -17,8 +17,8 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "jquery": "^3.4.1",
-    "openpgp": "^4.5.3",
-    "passbolt-appjs": "^2.10.2",
-    "passbolt-styleguide": "^2.10.5"
+    "openpgp": "^4.5.5",
+    "passbolt-appjs": "^2.10.3",
+    "passbolt-styleguide": "^2.10.6"
   }
 }
