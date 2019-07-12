@@ -106,44 +106,44 @@ class CommentsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->uuid('user_id', __('user_id should be a uuid'))
-            ->allowEmptyString('user_id', false, __('The user_id should not be empty'))
+            ->allowEmptyString('user_id', __('The user_id should not be empty'), false)
             ->requirePresence('user_id', 'create', __('A user_id is required'));
 
         $validator
             ->uuid('parent_id', __('parent_ud should be a uuid'))
-            ->allowEmptyString('parent_id', true);
+            ->allowEmptyString('parent_id', null, true);
 
         $validator
             ->ascii('foreign_model')
             ->inList('foreign_model', self::ALLOWED_FOREIGN_MODELS, __('The foreign_model provided is not supported'))
             ->requirePresence('foreign_model', 'create', __('A foreign_model is required'))
-            ->allowEmptyString('foreign_model', false, __('The foreign_model should not be empty'));
+            ->allowEmptyString('foreign_model', __('The foreign_model should not be empty'), false);
 
         $validator
             ->uuid('foreign_key', __('foreign_key should be a uuid'))
             ->requirePresence('foreign_key', 'create', __('A foreign_key is required'))
-            ->allowEmptyString('foreign_key', false, __('The foreign_key should not be empty'));
+            ->allowEmptyString('foreign_key', __('The foreign_key should not be empty'), false);
 
         $validator
             ->scalar('content')
             ->requirePresence('content', __('A content is required'))
-            ->allowEmptyString('content', false, __('The content should not be empty'))
+            ->allowEmptyString('content', __('The content should not be empty'), false)
             ->utf8Extended('content', __('The content is not a valid utf8 string (emoticons excluded)'))
             ->lengthBetween('content', [1, 255], __('The content length should be between {0} and {1} characters.', 1, 255));
 
         $validator
             ->uuid('created_by', __('created_by should be a uuid'))
             ->requirePresence('created_by', 'create', __('A created_by is required'))
-            ->allowEmptyString('created_by', false, __('The created_by should not be empty'));
+            ->allowEmptyString('created_by', __('The created_by should not be empty'), false);
 
         $validator
             ->uuid('modified_by', __('modified_by should be a uuid'))
             ->requirePresence('modified_by', true, __('A modified_by is required'))
-            ->allowEmptyString('modified_by', false, __('A modified_by is required'));
+            ->allowEmptyString('modified_by', __('A modified_by is required'), false);
 
         return $validator;
     }
