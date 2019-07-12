@@ -111,7 +111,7 @@ class UsersTable extends Table
     {
         $validator
             ->uuid('id', __('User id by must be a valid UUID.'))
-            ->allowEmptyString('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))

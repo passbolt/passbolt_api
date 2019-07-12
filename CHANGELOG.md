@@ -4,12 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 ### Added
-- Groundwork to support multiple openpgp backend
+- Groundwork to support multiple openpgp backends
 
 ### Improved
 - PB-391: As an admin deleting a user I should see the name and email of the user i'm about the delete in the model dialog
 - PB-396: As a user deleting a password I should see the name of the password i’m about to delete in the modal
 - PB-397: As a user in the user workspace, I should see a relevant feedback if a user is not a member of any group
+- PB-505: Upgrade CakePHP (3.8.0)
 
 ### Fixed
 - PB-330: Don't execute the migration script V210InstallAccountSettingsPlugin if the table organization_settings already exists
