@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1937780e6cc61f87b31d7fae0633d257",
+    "content-hash": "f4387e014094e2e2ec5472b1818ffa17",
     "packages": [
         {
             "name": "aura/intl",
@@ -170,16 +170,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "3.7.9",
+            "version": "3.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "1e89aa0399ce4c0f9af764e3b61aa24826278feb"
+                "reference": "69643f58dd110a4c5cce7ff867707de176c64bc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/1e89aa0399ce4c0f9af764e3b61aa24826278feb",
-                "reference": "1e89aa0399ce4c0f9af764e3b61aa24826278feb",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/69643f58dd110a4c5cce7ff867707de176c64bc4",
+                "reference": "69643f58dd110a4c5cce7ff867707de176c64bc4",
                 "shasum": ""
             },
             "require": {
@@ -255,7 +255,7 @@
                 "rapid-development",
                 "validation"
             ],
-            "time": "2019-06-20T01:33:59+00:00"
+            "time": "2019-06-27T02:33:24+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -2237,20 +2237,20 @@
         },
         {
             "name": "cakephp/bake",
-            "version": "1.10.1",
+            "version": "1.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/bake.git",
-                "reference": "b1fa1d2d4f3a6b74c69ab24c90c880dcc1f8751c"
+                "reference": "817282f4f797cd0792a393a870512e9e225e9ac1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/bake/zipball/b1fa1d2d4f3a6b74c69ab24c90c880dcc1f8751c",
-                "reference": "b1fa1d2d4f3a6b74c69ab24c90c880dcc1f8751c",
+                "url": "https://api.github.com/repos/cakephp/bake/zipball/817282f4f797cd0792a393a870512e9e225e9ac1",
+                "reference": "817282f4f797cd0792a393a870512e9e225e9ac1",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "~3.7.0",
+                "cakephp/cakephp": "^3.8.0",
                 "cakephp/plugin-installer": "^1.0",
                 "php": ">=5.6.0",
                 "wyrihaximus/twig-view": "^4.3.7"
@@ -2281,7 +2281,7 @@
                 "bake",
                 "cakephp"
             ],
-            "time": "2019-07-01T21:34:33+00:00"
+            "time": "2019-07-10T17:48:16+00:00"
         },
         {
             "name": "cakephp/cakephp-codesniffer",

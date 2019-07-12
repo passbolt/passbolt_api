@@ -55,7 +55,7 @@ class AvatarsTable extends FileStorageTable
     {
         $validator
             ->requirePresence('file', __('A file is required'))
-            ->allowEmptyString('file', false, __('File should not be empty'))
+            ->allowEmptyString('file', __('File should not be empty'), false)
             ->add('file', 'validMimeType', [
                 'rule' => ['mimeType', ['image/jpeg', 'image/png', 'image/gif']],
             ])
