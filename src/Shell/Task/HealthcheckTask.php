@@ -391,7 +391,7 @@ class HealthcheckTask extends AppShell
             __('No table found'),
             [
                 __('Run the install script to install the database tables'),
-                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake install" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER
             ]
         );
         $this->assert(
@@ -400,7 +400,7 @@ class HealthcheckTask extends AppShell
             __('No default content found'),
             [
                 __('Run the install script to set the default content such as roles and permission types'),
-                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake install" ' . PROCESS_USER
+                'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER
             ]
         );
         $this->assert(
