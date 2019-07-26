@@ -17,6 +17,8 @@ namespace App\Controller\Component;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
+use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use UserAgentParser\Provider\DonatjUAParser;
 
 class UserComponent extends Component
@@ -38,6 +40,16 @@ class UserComponent extends Component
     public function id()
     {
         return $this->Auth->user('id');
+    }
+
+    /**
+     * Return the current username if the user is identified
+     *
+     * @return string
+     */
+    public function username()
+    {
+        return $this->Auth->user('username');
     }
 
     /**
@@ -70,7 +82,7 @@ class UserComponent extends Component
      */
     public function getAccessControl()
     {
-        return new UserAccessControl($this->role(), $this->id());
+        return new UserAccessControl($this->role(), $this->id(), $this->username());
     }
 
     /**
@@ -104,5 +116,26 @@ class UserComponent extends Component
         }
 
         return $this->_userAgent;
+    }
+
+    /**
+     * Get the user theme
+     *
+     * @return string
+     */
+    public function theme()
+    {
+        $defaultTheme = 'default';
+        if (Configure::read('passbolt.plugins.accountSettings')) {
+            $AccountSettings = TableRegistry::get('Passbolt/AccountSettings.AccountSettings');
+            $theme = $AccountSettings->getTheme($this->id());
+            if (!$theme) {
+                $theme = $defaultTheme;
+            }
+
+            return $theme;
+        }
+
+        return $defaultTheme;
     }
 }

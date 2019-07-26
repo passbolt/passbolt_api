@@ -143,15 +143,37 @@ module.exports = function(grunt) {
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/ChromeWebStore.png',
-            'third_party/gnupg_logo_disabled.png', 'third_party/gnupg_logo.png'
+            'third_party/gnupg_logo_disabled.png',
+            'third_party/gnupg_logo.png',
+            'third_party/duo.svg',
+            'third_party/google-authenticator.svg',
+            'third_party/yubikey.svg',
+            // Themes preview
+            'themes/*.png',
+            // Fontawesome
+            'fa/**',
+            // Background images for error pages for ex
+            'diagrams/totp.svg',
           ],
           dest: paths.webroot + 'img',
           expand: true
         }, {
-          // CSS
+          // Default css theme
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
           src: ['api_login.min.css', 'api_main.min.css', 'api_setup.min.css'],
           dest: paths.webroot + 'css/themes/default',
+          expand: true
+        }, {
+          // Midgar css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
+          src: ['api_main.min.css'],
+          dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        }, {
+          // A new css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/anew',
+          src: ['api_login.min.css'],
+          dest: paths.webroot + 'css/themes/anew',
           expand: true
         }]
       }

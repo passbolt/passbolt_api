@@ -19,7 +19,10 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class HomeControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
+        'plugin.Passbolt/AccountSettings.AccountSettings'
+    ];
 
     public function testHomeNotLoggedInError()
     {

@@ -21,7 +21,9 @@ use Zend\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'
+    ];
 
     /**
      * Check if a redirection is of type ZendRedirect

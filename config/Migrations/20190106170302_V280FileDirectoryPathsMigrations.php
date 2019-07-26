@@ -15,9 +15,9 @@
 
 use Migrations\AbstractMigration;
 use Cake\Core\Configure;
-use Burzum\FileStorage\Storage\PathBuilder\BasePathBuilder;
 use Cake\Filesystem\Folder;
 use Cake\Datasource\ConnectionManager;
+use Cake\ORM\TableRegistry;
 
 class V280FileDirectoryPathsMigrations extends AbstractMigration
 {
@@ -28,7 +28,7 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
      */
     public function up()
     {
-        $Avatars = \Cake\ORM\TableRegistry::getTableLocator()->get('Avatars');
+        $Avatars = TableRegistry::getTableLocator()->get('Avatars');
         $avatars = $Avatars->find()->all();
         $publicPath = WWW_ROOT . Configure::read('ImageStorage.publicPath');
 
