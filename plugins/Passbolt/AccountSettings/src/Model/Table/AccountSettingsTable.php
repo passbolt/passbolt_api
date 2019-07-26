@@ -130,10 +130,12 @@ class AccountSettingsTable extends Table
 
     /**
      * Find all the settings for a given user
+     *
      * @param string $userId uuid
+     * @param array $whitelist example ['theme']
      * @return Query
      */
-    public function findIndex(string $userId, $whitelist)
+    public function findIndex(string $userId, array $whitelist)
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id must be a valid uuid.'));
@@ -144,6 +146,7 @@ class AccountSettingsTable extends Table
             $settingNamespace = AccountSetting::UUID_NAMESPACE . $item;
             $props[] = UuidFactory::uuid($settingNamespace);
         }
+
         return $this->find()
             ->where(['user_id' => $userId, 'property_id IN' => $props])
             ->all();
@@ -217,8 +220,8 @@ class AccountSettingsTable extends Table
     /**
      * Delete an entry for a given user and property
      *
-     * @param string $userId
-     * @param string $property
+     * @param string $userId user uuid
+     * @param string $property user property
      * @return bool
      */
     public function deleteByProperty(string $userId, string $property)
@@ -227,23 +230,24 @@ class AccountSettingsTable extends Table
         if ($settingItem !== null) {
             return $this->delete($settingItem);
         }
+
         return false;
     }
 
     /**
      * Get an entry for a given user and property
      *
-     * @param string $userId
-     * @param string $property
+     * @param string $userId user uuid
+     * @param string $property user property
      * @return EntityInterface|null
      */
     public function getByProperty(string $userId, string $property)
     {
         $settingNamespace = AccountSetting::UUID_NAMESPACE . $property;
         $settingFinder = ['user_id' => $userId, 'property_id' => UuidFactory::uuid($settingNamespace)];
+
         return $this->find()
             ->where($settingFinder)
             ->first();
     }
 }
-

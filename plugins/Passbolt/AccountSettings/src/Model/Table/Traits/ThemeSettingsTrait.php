@@ -19,8 +19,8 @@ use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Filesystem\File;
 use Cake\Filesystem\Folder;
-use Cake\Log\Log;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Log\Log;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
@@ -33,7 +33,8 @@ trait ThemeSettingsTrait
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    protected function themeValidationDefault(Validator $validator) {
+    protected function themeValidationDefault(Validator $validator)
+    {
         $validator
             ->add('value', ['isValidTheme' => [
                 'on' => function ($context) {
@@ -42,6 +43,7 @@ trait ThemeSettingsTrait
                 'rule' => [$this, 'isValidTheme'],
                 'message' => __('This theme is not supported.')
             ]]);
+
         return $validator;
     }
 

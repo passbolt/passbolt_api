@@ -14,9 +14,9 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 
+use Cake\Core\Configure;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use Cake\Core\Configure;
 
 class TotpSetupGetControllerTest extends MfaIntegrationTestCase
 {

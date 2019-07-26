@@ -88,5 +88,4 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         // Remove dynamically added associations
         TableRegistry::getTableLocator()->clear();
     }
-
 }

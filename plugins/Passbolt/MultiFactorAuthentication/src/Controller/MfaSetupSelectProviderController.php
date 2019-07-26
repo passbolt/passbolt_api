@@ -13,6 +13,7 @@
  * @since         2.5.0
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
+
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaSetupSelectProviderController extends MfaController

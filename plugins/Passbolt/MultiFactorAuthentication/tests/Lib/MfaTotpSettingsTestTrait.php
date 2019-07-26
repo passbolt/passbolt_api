@@ -50,6 +50,7 @@ trait MfaTotpSettingsTestTrait
                 ]);
                 break;
         }
+
         return $uri;
     }
 }

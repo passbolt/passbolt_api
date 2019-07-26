@@ -16,8 +16,8 @@ namespace Passbolt\MultiFactorAuthentication\Controller\OrgSettings;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;

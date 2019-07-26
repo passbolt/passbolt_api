@@ -79,7 +79,6 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseContains('<input type="checkbox" name="remember"');
     }
 
-
     /**
      * @group mfa
      * @group mfaVerify

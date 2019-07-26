@@ -17,8 +17,8 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Table\OrganizationSettingsTable;
 use Cake\Core\Configure;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
@@ -434,5 +434,4 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
         ]);
         $this->assertTrue(true);
     }
-
 }

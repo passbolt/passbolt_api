@@ -17,9 +17,9 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\I18n\FrozenTime;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
