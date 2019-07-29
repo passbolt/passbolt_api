@@ -199,11 +199,16 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEquals($data['Secret'][0]['data'], $resource->Secret[0]->data);
     }
 
-    public function testErrorCsrfToken()
+    public function testActionIsProtectedByCsrfTokenAndReturnErrorIfNotProvided()
     {
-        // Should be protected by a CSRF token.
-        // The plugin use this entry point along with the import feature to import resources.
-        $this->markTestIncomplete();
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $data = $this->_getDummyPostData();
+        $this->post("/resources.json", $data);
+        $this->assertResponseCode(403);
+        $data = $this->_getBodyAsString();
+        $expect = 'Missing CSRF token cookie';
+        $this->assertContains($expect, $data);
     }
 
     public function testResourcesAddValidationErrors()
