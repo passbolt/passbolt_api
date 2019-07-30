@@ -15,6 +15,8 @@
 
 namespace App\Test\TestCase\Controller\Favorites;
 
+use App\Model\Entity\Favorite;
+use App\Model\Table\FavoritesTable;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
@@ -22,12 +24,22 @@ use Cake\ORM\TableRegistry;
 
 class FavoritesAddControllerTest extends AppIntegrationTestCase
 {
+    /** @var FavoritesTable */
+    private $Favorites;
+
     use FavoritesModelTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
         'app.Base/Favorites', 'app.Base/Permissions'
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $config = TableRegistry::getTableLocator()->exists('Favorites') ? [] : ['className' => FavoritesTable::class];
+        $this->Favorites = TableRegistry::getTableLocator()->get('Favorites', $config);
+    }
 
     public function testFavoritesAddSuccess()
     {
@@ -54,7 +66,32 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
 
     public function testFavoritesAddCannotModifyNotAccessibleFields()
     {
-        $this->markTestIncomplete();
+        $this->authenticateAs('dame');
+        $resourceId = UuidFactory::uuid('resource.id.bower');
+
+        $favoriteData = [
+            'id' => 'modified_id',
+            'foreign_model' => 'modified_foreign_model',
+            'foreign_key' => 'modified_foreign_key',
+            'created' => '2019-07-29 10:31:35',
+            'modified' => '2019-07-29 10:31:35',
+            'user_id' => 'modified_user_id'
+        ];
+
+        $this->postJson("/favorites/resource/$resourceId.json", $favoriteData);
+        $this->assertSuccess();
+
+        /** @var Favorite $favorite */
+        $favorite = $this->Favorites->find()
+            ->where(['foreign_key' => $resourceId])
+            ->first();
+
+        $this->assertNotEquals($favoriteData['id'], $favorite->id);
+        $this->assertNotEquals($favoriteData['foreign_model'], $favorite->foreign_model);
+        $this->assertNotEquals($favoriteData['foreign_key'], $favorite->foreign_key);
+        $this->assertNotEquals($favoriteData['modified'], $favorite->modified);
+        $this->assertNotEquals($favoriteData['created'], $favorite->created);
+        $this->assertNotEquals($favoriteData['user_id'], $favorite->user_id);
     }
 
     public function testFavoritesAddErrorCsrfToken()
