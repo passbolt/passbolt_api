@@ -65,10 +65,15 @@ Router::scope('/auth', function (RouteBuilder $routes) {
     $routes->connect('/verify', ['prefix' => 'Auth', 'controller' => 'AuthLogin', 'action' => 'loginPost'])
         ->setMethods(['POST']);
 
+    // @deprecated since v2.11.0. It extends the user session. Use /auth/is-authenticated instead.
     $routes->connect('/checksession', ['prefix' => 'Auth', 'controller' => 'AuthCheckSession', 'action' => 'checkSessionGet'])
         ->setMethods(['GET']);
 
+    // @deprecated since v2.11.0. It extends the user session. Use /auth/is-authenticated instead.
     $routes->connect('/checkSession', ['prefix' => 'Auth', 'controller' => 'AuthCheckSession', 'action' => 'checkSessionGet'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/is-authenticated', ['prefix' => 'Auth', 'controller' => 'AuthIsAuthenticated', 'action' => 'isAuthenticated'])
         ->setMethods(['GET']);
 
     $routes->connect('/logout', ['prefix' => 'Auth', 'controller' => 'AuthLogout', 'action' => 'logoutGet'])
@@ -357,3 +362,17 @@ Router::scope('/setup', function ($routes) {
 Router::scope('/app', function ($routes) {
     $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'view']);
 });
+
+/**
+ * Other editions fallback routes
+ * Use this section to silently fail a route used by other versions without logging error
+ */
+if(!file_exists(PLUGINS . 'Passbolt' . DS . 'AccountSettings')) {
+    Router::scope('/account/settings', function ($routes) {
+        $routes->setExtensions(['json']);
+
+        // See. https://github.com/passbolt/passbolt_api/issues/270
+        $routes->connect('/', ['prefix' => 'Errors', 'controller' => 'ErrorNotFound', 'action' => 'notSupported'])
+            ->setMethods(['GET']);
+    });
+}
