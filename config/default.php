@@ -173,7 +173,8 @@ return [
                     'RecoverComplete' => ['complete'],
                     'SetupComplete' => ['complete'],
                 ]
-            ]
+            ],
+            'csp' => env('PASSBOLT_SECURITY_CSP', true)
         ],
 
         // Should the app be SSL / HTTPS only.

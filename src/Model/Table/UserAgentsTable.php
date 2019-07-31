@@ -57,7 +57,7 @@ class UserAgentsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->scalar('name')

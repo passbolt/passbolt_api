@@ -95,14 +95,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     }
 
     /**
-     * Test login without providing the csrf token
-     */
-    public function testAuthLoginControllerErrorCsrfToken()
-    {
-        $this->markTestIncomplete();
-    }
-
-    /**
      * Check that GPGAuth headers are set everywhere
      */
     public function testAuthLoginControllerGetHeaders()

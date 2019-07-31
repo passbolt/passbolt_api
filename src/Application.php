@@ -14,8 +14,10 @@
  */
 namespace App;
 
+use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
+use App\Middleware\SessionPreventExtensionMiddleware;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -37,18 +39,21 @@ class Application extends BaseApplication
     {
         /*
          * Default Middlewares
+         * - Does not extend the session when requesting /auth/is-authenticated
          * - Catch any exceptions in the lower layers, and make an error page/response
-         * - Handle plugin/theme assets like CakePHP normally does.
+         * - Handle plugin/theme assets like CakePHP normally does
          * - Apply routing middleware
          * - Apply GPG Auth headers
          * - Apply CSRF protection
          */
         $middleware
+            ->add(ContentSecurityPolicyMiddleware::class)
             ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime')
             ]))
             ->add(new RoutingMiddleware($this))
+            ->add(new SessionPreventExtensionMiddleware())
             ->add(GpgAuthHeadersMiddleware::class)
             ->add(new CsrfProtectionMiddleware());
 

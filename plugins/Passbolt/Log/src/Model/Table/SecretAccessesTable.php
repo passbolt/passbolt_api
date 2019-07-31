@@ -69,22 +69,22 @@ class SecretAccessesTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->uuid('user_id')
             ->requirePresence('user_id', 'create')
-            ->allowEmptyString('user_id', false);
+            ->allowEmptyString('user_id', null, false);
 
         $validator
             ->uuid('resource_id')
             ->requirePresence('resource_id', 'create')
-            ->allowEmptyString('resource_id', false);
+            ->allowEmptyString('resource_id', null, false);
 
         $validator
             ->uuid('secret_id')
             ->requirePresence('secret_id', 'create')
-            ->allowEmptyString('secret_id', false);
+            ->allowEmptyString('secret_id', null, false);
 
         return $validator;
     }

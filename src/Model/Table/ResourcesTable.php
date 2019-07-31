@@ -111,13 +111,13 @@ class ResourcesTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
             ->maxLength('name', 64, __('The name length should be maximum {0} characters.', 64))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', false, __('The name cannot be empty.'));
+            ->allowEmptyString('name', __('The name cannot be empty.'), false);
 
         $validator
             ->utf8Extended('username', __('The username is not a valid utf8 string.'))
@@ -136,27 +136,27 @@ class ResourcesTable extends Table
 
         $validator
             ->boolean('deleted')
-            ->allowEmptyString('deleted', false);
+            ->allowEmptyString('deleted', null, false);
 
         $validator
             ->uuid('created_by')
             ->requirePresence('created_by', 'create')
-            ->allowEmptyString('created_by', false);
+            ->allowEmptyString('created_by', null, false);
 
         $validator
             ->uuid('modified_by')
             ->requirePresence('modified_by', 'create')
-            ->allowEmptyString('modified_by', false);
+            ->allowEmptyString('modified_by', null, false);
 
         // Associated fields
         $validator
             ->requirePresence('permissions', 'create', __('The permissions are required.'))
-            ->allowEmptyString('permissions', false, __('The permissions cannot be empty.'))
+            ->allowEmptyString('permissions', __('The permissions cannot be empty.'), false)
             ->hasAtMost('permissions', 1, __('Only the permission of the owner must be provided.'), 'create');
 
         $validator
             ->requirePresence('secrets', 'create', __('A secret is required.'))
-            ->allowEmptyString('secrets', false, __('The secret cannot be empty.'))
+            ->allowEmptyString('secrets', __('The secret cannot be empty.'), false)
             ->hasAtMost('secrets', 1, __('Only the secret of the owner must be provided.'), 'create');
 
         return $validator;
