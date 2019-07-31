@@ -14,6 +14,7 @@
  */
 namespace App;
 
+use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use Cake\Core\Configure;
@@ -45,6 +46,7 @@ class Application extends BaseApplication
          * - Apply CSRF protection
          */
         $middleware
+            ->add(ContentSecurityPolicyMiddleware::class)
             ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime')

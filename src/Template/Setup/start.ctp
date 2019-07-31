@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 use Cake\Core\Configure;
+use App\Utility\Purifier;
 
 if (!isset($setupCase)) {
     $setupCase = 'install';
@@ -29,8 +30,8 @@ if ($browserName == 'firefox' || $browserName == 'chrome') {
 }
 ?>
 <input type="hidden" id="js_setup_user_username" value="<?php echo $user->username; ?>"/>
-<input type="hidden" id="js_setup_user_first_name" value="<?php echo $user->profile->first_name; ?>"/>
-<input type="hidden" id="js_setup_user_last_name" value="<?php echo $user->profile->last_name; ?>"/>
+<input type="hidden" id="js_setup_user_first_name" value="<?php echo Purifier::clean($user->profile->first_name); ?>"/>
+<input type="hidden" id="js_setup_user_last_name" value="<?php echo Purifier::clean($user->profile->last_name); ?>"/>
 
 <!-- first header -->
 <div class="header first">
