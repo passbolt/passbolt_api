@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-396: As a user deleting a password I should see the name of the password i’m about to delete in the modal
 - PB-397: As a user in the user workspace, I should see a relevant feedback if a user is not a member of any group
 - PB-505: Upgrade CakePHP (3.8.0)
+- PB-533: PB-533 Implement /auth/is-authenticated to check if the user authenticated status without extending the session
 
 ### Fixed
 - PB-330: Don't execute the migration script V210InstallAccountSettingsPlugin if the table organization_settings already exists
