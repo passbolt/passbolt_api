@@ -40,7 +40,7 @@ class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtecti
         }
 
         $defaultCsp = "default-src 'self'; ";
-        $defaultCsp .= "script-src 'self' 'unsafe-eval'; ";  // eval needed by canjs for templates
+        $defaultCsp .= "script-src 'self' 'unsafe-eval'; "; // eval needed by canjs for templates
         $defaultCsp .= "style-src 'self' 'unsafe-inline'; "; // inline needed to perform extension iframe resizing
         $defaultCsp .= "img-src 'self';";
         $defaultCsp .= "frame-src 'self';";
@@ -54,6 +54,7 @@ class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtecti
         }
 
         $response = $response->withAddedHeader('Content-Security-Policy', $csp);
+
         return $next($request, $response);
     }
 }
