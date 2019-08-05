@@ -59,7 +59,7 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
             throw new InternalErrorException('Cannot mock mfa verification without provider.');
         }
         $uac = $this->mockUserAccessControl($user);
-        $token = MfaVerifiedToken::get($uac, $provider, session_id());
+        $token = MfaVerifiedToken::get($uac, $provider, session_create_id());
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, $token);
     }
 }

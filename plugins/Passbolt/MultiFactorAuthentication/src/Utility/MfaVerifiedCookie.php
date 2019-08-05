@@ -22,7 +22,7 @@ use DateTimeInterface;
 class MfaVerifiedCookie
 {
     const MFA_COOKIE_ALIAS = 'passbolt_mfa';
-    const MAX_DURATION = '30 days';
+    const MAX_DURATION = self::MAX_DURATION_IN_DAYS . ' days';
     const MAX_DURATION_IN_DAYS = 30;
 
     /**
