@@ -16,6 +16,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\Date;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedToken;
@@ -33,8 +34,9 @@ class MfaVerifyController extends MfaController
         // Mfa cookie is set and a valid token
         $uac = $this->User->getAccessControl();
         $mfaVerifiedToken = $this->request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
+        $sessionId = $this->getRequest()->getSession()->id();
         if (isset($mfaVerifiedToken)) {
-            if (MfaVerifiedToken::check($uac, $mfaVerifiedToken)) {
+            if (MfaVerifiedToken::check($uac, $mfaVerifiedToken, $sessionId)) {
                 throw new BadRequestException(__('MFA is not required.'));
             }
         }
@@ -68,9 +70,12 @@ class MfaVerifyController extends MfaController
     protected function _generateMFaToken(string $provider)
     {
         $uac = $this->User->getAccessControl();
-        $token = MfaVerifiedToken::get($uac, $provider);
-        $remember = ($this->request->getData('remember') !== null);
-        $cookie = MfaVerifiedCookie::get($token, $remember, $this->request->is('ssl'));
+        $sessionId = $this->getRequest()->getSession()->id();
+        $token = MfaVerifiedToken::get($uac, $provider, $sessionId, (bool)$this->request->getData('remember') ?? false);
+        $expiryAt = $this->request->getData('remember') ?
+            (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
+            null;
+        $cookie = MfaVerifiedCookie::get($token, $expiryAt, $this->request->is('ssl'));
         $this->response = $this->response->withCookie($cookie);
     }
 

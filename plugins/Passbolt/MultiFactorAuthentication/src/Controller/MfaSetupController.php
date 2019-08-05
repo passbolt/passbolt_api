@@ -71,9 +71,9 @@ class MfaSetupController extends MfaController
      */
     protected function _handlePostSuccess(string $provider)
     {
-        $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider);
-        $remember = false;
-        $cookie = MfaVerifiedCookie::get($token, $remember, $this->request->is('ssl'));
+        $sessionId = $this->getRequest()->getSession()->id();
+        $token = MfaVerifiedToken::get($this->User->getAccessControl(), $provider, $sessionId);
+        $cookie = MfaVerifiedCookie::get($token, null, $this->request->is('ssl'));
         $this->response = $this->response->withCookie($cookie);
 
         if (!$this->request->is('json')) {

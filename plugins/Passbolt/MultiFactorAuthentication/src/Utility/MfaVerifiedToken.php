@@ -16,6 +16,7 @@ namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -28,9 +29,11 @@ class MfaVerifiedToken
      * @throws ValidationException if data are not valid (for example user does not exist)
      * @param UserAccessControl $uac user access control
      * @param string $provider provider name
+     * @param string $sessionId
+     * @param bool $remember
      * @return string token
      */
-    public static function get(UserAccessControl $uac, string $provider)
+    public static function get(UserAccessControl $uac, string $provider, string $sessionId, bool $remember = false)
     {
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $entityData = [
@@ -40,7 +43,9 @@ class MfaVerifiedToken
             'type' => AuthenticationToken::TYPE_MFA,
             'data' => json_encode([
                 'provider' => $provider,
-                'user_agent' => env('HTTP_USER_AGENT')
+                'user_agent' => env('HTTP_USER_AGENT'),
+                'session_id' => $sessionId,
+                'remember' => $remember
             ])
         ];
         $accessibleFields = [
@@ -65,27 +70,41 @@ class MfaVerifiedToken
      *
      * @param UserAccessControl $uac user access control
      * @param string $token token
+     * @param string $sessionId
      * @return bool
      */
-    public static function check(UserAccessControl $uac, string $token)
+    public static function check(UserAccessControl $uac, string $token, string $sessionId)
     {
         // Baseline validity check
+        /** @var AuthenticationTokensTable $auth */
         $auth = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        if (!$auth->isValid($token, $uac->getId(), AuthenticationToken::TYPE_MFA)) {
+        if (!$auth->isValid($token, $uac->getId(), AuthenticationToken::TYPE_MFA, MfaVerifiedCookie::MAX_DURATION)) {
             return false;
         }
 
         // Additional data check
+        /** @var AuthenticationToken $token */
         $token = $auth->getByToken($token);
         $data = json_decode($token->data);
-        if ($data->user_agent !== env('HTTP_USER_AGENT')) {
-            $token->active = false;
-            $auth->save($token);
 
+        if ($data->user_agent !== env('HTTP_USER_AGENT')) {
+            $auth->setInactive($token->id);
             return false;
         }
 
-        return true;
+        if (isset($data->remember)) {
+            if ($token->created->wasWithinLast(MfaVerifiedCookie::MAX_DURATION)) {
+                return true;
+            }
+        }
+
+        if ($sessionId === $data->session_id) {
+            return true;
+        }
+
+        $auth->setInactive($token->id);
+
+        return false;
     }
 
     /**
