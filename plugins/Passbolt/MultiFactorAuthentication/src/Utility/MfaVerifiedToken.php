@@ -29,8 +29,8 @@ class MfaVerifiedToken
      * @throws ValidationException if data are not valid (for example user does not exist)
      * @param UserAccessControl $uac user access control
      * @param string $provider provider name
-     * @param string $sessionId
-     * @param bool $remember
+     * @param string $sessionId Session ID
+     * @param bool $remember Remember flag
      * @return string token
      */
     public static function get(UserAccessControl $uac, string $provider, string $sessionId, bool $remember = false)
@@ -70,7 +70,7 @@ class MfaVerifiedToken
      *
      * @param UserAccessControl $uac user access control
      * @param string $token token
-     * @param string $sessionId
+     * @param string $sessionId Session ID
      * @return bool
      */
     public static function check(UserAccessControl $uac, string $token, string $sessionId)
@@ -89,6 +89,7 @@ class MfaVerifiedToken
 
         if ($data->user_agent !== env('HTTP_USER_AGENT')) {
             $auth->setInactive($token->id);
+
             return false;
         }
 

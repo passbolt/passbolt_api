@@ -86,6 +86,7 @@ class MfaMiddleware
         $mfa = $request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
         if (isset($mfa)) {
             $sessionId = $request->getSession()->id();
+
             return !MfaVerifiedToken::check($uac, $mfa, $sessionId);
         }
 

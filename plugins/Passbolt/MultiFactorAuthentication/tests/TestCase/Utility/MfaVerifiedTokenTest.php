@@ -22,6 +22,7 @@ use Cake\Http\ServerRequestFactory;
 use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use function session_create_id;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
@@ -192,7 +193,6 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $this->assertFalse($success);
     }
 
-
     /**
      * @group mfa
      * @group mfaVerifiedToken
@@ -222,6 +222,33 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
 
         $success = MfaVerifiedToken::check($uac, $token->token, $sessionId);
         $this->assertFalse($success);
+    }
+
+    public function testMfaVerifiedTokenCheckSuccessTokenIfIsNotExpiredWhenRememberIsTrue()
+    {
+        $sessionId = session_create_id();
+        $uac = $this->mockUserAccessControl('ada');
+        $entityData = [
+            'user_id' => $uac->getId(),
+            'token' => UuidFactory::uuid(),
+            'active' => true,
+            'type' => AuthenticationToken::TYPE_MFA,
+            'created' => (new Date())->addDays(-10),
+            'data' => json_encode([
+                'provider' => MfaSettings::PROVIDER_TOTP,
+                'user_agent' => null,
+                'session_id' => $sessionId,
+                'remember' => true
+            ])
+        ];
+        $accessibleFields = ['user_id' => true, 'token' => true, 'active' => true, 'type' => true, 'data' => true, 'created' => true];
+        $token = $this->AuthenticationTokens->newEntity($entityData, ['accessibleFields' => $accessibleFields]);
+        $this->assertEmpty($token->getErrors());
+        $this->AuthenticationTokens->save($token);
+        $this->assertEmpty($token->getErrors());
+
+        $success = MfaVerifiedToken::check($uac, $token->token, $sessionId);
+        $this->assertTrue($success);
     }
 
     /**
