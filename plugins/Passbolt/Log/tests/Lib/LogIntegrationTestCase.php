@@ -57,6 +57,7 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         Configure::write('passbolt.plugins.log.enabled', true);
 
         UserAction::destroy();
+        TableRegistry::getTableLocator()->clear();
 
         TableRegistry::getTableLocator()->clear();
 
