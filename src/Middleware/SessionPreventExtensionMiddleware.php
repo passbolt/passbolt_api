@@ -23,7 +23,7 @@ use Cake\Utility\Hash;
 class SessionPreventExtensionMiddleware
 {
     /**
-     * Ensure the call to the /auth/is-autenticated route does not extend the
+     * Ensure the call to the /auth/is-authenticated route does not extend the
      * user session.
      *
      * The session expiration is handled by 2 mechanisms :
