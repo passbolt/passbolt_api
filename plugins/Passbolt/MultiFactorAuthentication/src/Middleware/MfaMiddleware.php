@@ -15,6 +15,7 @@
 namespace Passbolt\MultiFactorAuthentication\Middleware;
 
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
@@ -37,8 +38,9 @@ class MfaMiddleware
         if ($this->requiredMfaCheck($request)) {
             // Clear any dubious cookie if mfa check required
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
+                $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
                 $response = $response
-                    ->withCookie(MfaVerifiedCookie::clearCookie($request->is('ssl')));
+                    ->withCookie(MfaVerifiedCookie::clearCookie($secure));
             }
             // Exception if ajax or redirect
             return $response

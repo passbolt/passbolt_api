@@ -14,6 +14,7 @@
  */
 namespace Passbolt\MultiFactorAuthentication\Controller;
 
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\Date;
@@ -75,7 +76,8 @@ class MfaVerifyController extends MfaController
         $expiryAt = $this->request->getData('remember') ?
             (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
             null;
-        $cookie = MfaVerifiedCookie::get($token, $expiryAt, $this->request->is('ssl'));
+        $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
+        $cookie = MfaVerifiedCookie::get($token, $expiryAt, $secure);
         $this->response = $this->response->withCookie($cookie);
     }
 

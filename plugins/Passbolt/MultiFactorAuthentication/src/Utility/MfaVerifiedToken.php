@@ -19,6 +19,8 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Table\AuthenticationTokensTable;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class MfaVerifiedToken
@@ -44,7 +46,7 @@ class MfaVerifiedToken
             'data' => json_encode([
                 'provider' => $provider,
                 'user_agent' => env('HTTP_USER_AGENT'),
-                'session_id' => $sessionId,
+                'session_id' => (new DefaultPasswordHasher)->hash($sessionId),
                 'remember' => $remember
             ])
         ];
@@ -82,28 +84,38 @@ class MfaVerifiedToken
             return false;
         }
 
-        // Additional data check
         /** @var AuthenticationToken $token */
         $token = $auth->getByToken($token);
         $data = json_decode($token->data);
 
-        if ($data->user_agent !== env('HTTP_USER_AGENT')) {
-            $auth->setInactive($token->id);
+        // Check for issue when decoding data
+        if ($data === null) {
+            $auth->setInactive($token->token);
 
             return false;
         }
 
-        if (isset($data->remember)) {
+        // Check for user agent change
+        if ($data->user_agent !== env('HTTP_USER_AGENT')) {
+            $auth->setInactive($token->token);
+
+            return false;
+        }
+
+        // Remember me
+        if (isset($data->remember) && $data->remember === true) {
             if ($token->created->wasWithinLast(MfaVerifiedCookie::MAX_DURATION)) {
                 return true;
             }
+            throw new InternalErrorException('remember failed');
         }
 
-        if ($sessionId === $data->session_id) {
+        // Check Session id
+        if ((new DefaultPasswordHasher)->check($sessionId, $data->session_id)) {
             return true;
         }
 
-        $auth->setInactive($token->id);
+        $auth->setInactive($token->token);
 
         return false;
     }

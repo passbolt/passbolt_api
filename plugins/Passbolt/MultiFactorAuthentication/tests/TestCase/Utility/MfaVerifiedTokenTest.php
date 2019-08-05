@@ -147,7 +147,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $sessionId = uniqid();
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $token = $this->AuthenticationTokens->getByToken($token);
-        $this->AuthenticationTokens->setInactive($token->id);
+        $this->AuthenticationTokens->setInactive($token->token);
         $success = MfaVerifiedToken::check($uac, $token, $sessionId);
         $this->assertFalse($success);
     }
