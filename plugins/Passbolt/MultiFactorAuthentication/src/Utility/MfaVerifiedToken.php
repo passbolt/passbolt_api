@@ -107,7 +107,6 @@ class MfaVerifiedToken
             if ($token->created->wasWithinLast(MfaVerifiedCookie::MAX_DURATION)) {
                 return true;
             }
-            throw new InternalErrorException('remember failed');
         }
 
         // Check Session id
