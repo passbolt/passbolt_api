@@ -22,7 +22,6 @@ use Cake\Http\ServerRequestFactory;
 use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
-use function session_create_id;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
@@ -59,7 +58,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     public function testMfaVerifiedTokenSuccess()
     {
         $uac = $this->mockUserAccessControl('ada');
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $this->assertTrue(Validation::uuid($token));
 
@@ -81,7 +80,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     {
         $uac = $this->mockUserAccessControl('nope');
         $this->expectException(ValidationException::class);
-        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, session_create_id());
+        MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, uniqid());
     }
 
     /**
@@ -91,7 +90,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     public function testMfaVerifiedTokenCheckSuccess()
     {
         $uac = $this->mockUserAccessControl('ada');
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $request = ServerRequestFactory::fromGlobals();
         $request->getSession()->id($sessionId);
@@ -107,7 +106,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     {
         // Token does not exist
         $uac = $this->mockUserAccessControl('ada');
-        $success = MfaVerifiedToken::check($uac, UuidFactory::uuid(), session_create_id());
+        $success = MfaVerifiedToken::check($uac, UuidFactory::uuid(), uniqid());
         $this->assertFalse($success);
     }
 
@@ -119,7 +118,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     {
         $uac = $this->mockUserAccessControl('ada');
         $uac2 = $this->mockUserAccessControl('betty');
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $success = MfaVerifiedToken::check($uac2, $token, $sessionId);
         $this->assertFalse($success);
@@ -133,8 +132,8 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     {
         $uac = $this->mockUserAccessControl('ada');
         $uac2 = $this->mockUserAccessControl('betty');
-        $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, session_create_id());
-        $success = MfaVerifiedToken::check($uac2, $token, session_create_id());
+        $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, uniqid());
+        $success = MfaVerifiedToken::check($uac2, $token, uniqid());
         $this->assertFalse($success);
     }
 
@@ -145,7 +144,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     public function testMfaVerifiedTokenCheckFailsTokenIsDisabled()
     {
         $uac = $this->mockUserAccessControl('ada');
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         $token = MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         $token = $this->AuthenticationTokens->getByToken($token);
         $this->AuthenticationTokens->setInactive($token->id);
@@ -162,7 +161,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         // Token is from another type
         $uac = $this->mockUserAccessControl('ada');
         $token = $this->AuthenticationTokens->generate($uac->getId(), AuthenticationToken::TYPE_LOGIN);
-        $success = MfaVerifiedToken::check($uac, $token->token, session_create_id());
+        $success = MfaVerifiedToken::check($uac, $token->token, uniqid());
         $this->assertFalse($success);
     }
 
@@ -189,7 +188,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         $this->assertEmpty($token->getErrors());
         $this->AuthenticationTokens->save($token);
         $this->assertEmpty($token->getErrors());
-        $success = MfaVerifiedToken::check($uac, $token->token, session_create_id());
+        $success = MfaVerifiedToken::check($uac, $token->token, uniqid());
         $this->assertFalse($success);
     }
 
@@ -199,7 +198,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifiedTokenCheckFailsTokenIfIsExpiredWhenRememberIsTrue()
     {
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         $uac = $this->mockUserAccessControl('ada');
         $entityData = [
             'user_id' => $uac->getId(),
@@ -226,7 +225,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
 
     public function testMfaVerifiedTokenCheckSuccessTokenIfIsNotExpiredWhenRememberIsTrue()
     {
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         $uac = $this->mockUserAccessControl('ada');
         $entityData = [
             'user_id' => $uac->getId(),
@@ -258,7 +257,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
     public function testMfaVerifiedTokenSetAllInactive()
     {
         $uac = $this->mockUserAccessControl('ada');
-        $sessionId = session_create_id();
+        $sessionId = uniqid();
         MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_TOTP, $sessionId);
         MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_YUBIKEY, $sessionId);
         MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_DUO, $sessionId);
