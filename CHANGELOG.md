@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+
+## [2.11.0] - 2019-08-07
 ### Added
 - Groundwork to support multiple openpgp backends
 
@@ -653,7 +655,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...HEAD
+[2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.9.0
 [2.8.4]: https://github.com/passbolt/passbolt_api/compare/v2.8.3...v2.8.4
