@@ -185,14 +185,14 @@ class GpgHealthchecks
     {
         $checks['gpg']['gpgKeyPublicInKeyring'] = false;
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        if ($checks['gpg']['gpgHome'] || $fingerprint === null) {
+        if (!$checks['gpg']['gpgHome'] || $fingerprint === null) {
             return $checks;
         }
         $gpg = OpenPGPBackendFactory::get();
         if (!$gpg->isKeyInKeyring($fingerprint)) {
             return $checks;
         }
-
+        $checks['gpg']['gpgKeyPublicInKeyring'] = true;
         return $checks;
     }
 
