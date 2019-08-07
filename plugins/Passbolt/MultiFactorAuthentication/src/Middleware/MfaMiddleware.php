@@ -38,7 +38,7 @@ class MfaMiddleware
         if ($this->requiredMfaCheck($request)) {
             // Clear any dubious cookie if mfa check required
             if ($request->getCookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS)) {
-                $secure = Configure::read('passbolt.security.cookies.secure') || $this->getRequest()->is('ssl');
+                $secure = Configure::read('passbolt.security.cookies.secure') || $request->is('ssl');
                 $response = $response
                     ->withCookie(MfaVerifiedCookie::clearCookie($secure));
             }
