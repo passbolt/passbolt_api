@@ -265,9 +265,9 @@ class GpgHealthchecks
                 try {
                     $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
                     $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
-                    $_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
                     $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                     $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
+                    $_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
                     $decryptedMessage = $_gpg->decrypt($encryptedMessage);
                     if ($decryptedMessage === $messageToEncrypt) {
                         $checks['gpg']['canDecrypt'] = true;
@@ -297,8 +297,9 @@ class GpgHealthchecks
                 $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
                 $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                 $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-                $_gpg->setVerifyKeyFromFingerprint($fingerprint);
                 $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
+                $_gpg->setVerifyKeyFromFingerprint($fingerprint);
+                $_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
                 $decryptedMessage2 = $_gpg->decrypt($encryptedMessage2, true);
                 if ($decryptedMessage2 === $messageToEncrypt) {
                     $checks['gpg']['canDecryptVerify'] = true;
@@ -349,13 +350,13 @@ class GpgHealthchecks
             $messageToEncrypt = 'test message';
 
             try {
-                $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-                $_gpg->setDecryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+                $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $signedMessage = $_gpg->sign($messageToEncrypt);
-                $encryptedMessage = $_gpg->encrypt($messageToEncrypt, true);
 
                 try {
-                    $_gpg->verify($encryptedMessage, Configure::read('passbolt.gpg.serverKey.fingerprint'));
+                    $_gpg->setVerifyKeyFromFingerprint($fingerprint);
                     $_gpg->verify($signedMessage, Configure::read('passbolt.gpg.serverKey.fingerprint'));
                     $checks['gpg']['canVerify'] = true;
                 } catch (Exception $e) {
