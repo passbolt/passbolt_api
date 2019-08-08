@@ -193,6 +193,7 @@ class GpgHealthchecks
             return $checks;
         }
         $checks['gpg']['gpgKeyPublicInKeyring'] = true;
+
         return $checks;
     }
 
