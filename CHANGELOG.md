@@ -744,7 +744,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...HEAD
+[2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.5...v2.9.0
 [2.8.5]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.8.5
