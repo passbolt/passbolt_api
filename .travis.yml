@@ -1,6 +1,6 @@
 language: php
 
-dist: trusty
+dist: bionic
 
 sudo: required
 
@@ -31,9 +31,8 @@ matrix:
   fast_finish: true
 
   include:
-    # Default / DEBIAN 9 - Stretch
-    # PHP 7.0 - MARIADB 10.1
-    - php: 7.0
+    # PHP 7.1 - MARIADB 10.1
+    - php: 7.1
       env: PHPUNIT=1 COVERAGE=1 DB=mariadb DB_VERSION=10.1
       addons: &php7_addon
         mariadb: '10.1'
@@ -41,29 +40,12 @@ matrix:
           packages:
             - *common_pkg
 
-    # Ubuntu - 18.x
-    # PHP 7.2 - MYSQL 5.7
-    - php: 7.0
+    # PHP 7.1 - MYSQL 5.7
+    - php: 7.1
       env: PHPUNIT=1 DB=mysql DB_VERSION=5.7
+      services:
+        - mysql
       addons: &php7_addon
-        apt:
-          sources:
-            - mysql-5.7-trusty
-          packages:
-            - *common_pkg
-            - mysql-server
-            - mysql-client
-      before_install:
-        - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('') where User='root'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
-        - sudo mysql_upgrade -u root
-        - sudo service mysql restart
-
-    # Minimal
-    # PHP 7.0 - MARIADB 5.5
-    - php: 7.0
-      env: PHPUNIT=1 DB=mariadb DB_VERSION=5.5
-      addons: &php7_addon
-        mariadb: '5.5'
         apt:
           packages:
             - *common_pkg
@@ -77,8 +59,8 @@ matrix:
           packages:
             - *common_pkg
 
-    # PHP 7.0 - MARIADB 10.2
-    - php: 7.0
+    # PHP 7.1 - MARIADB 10.2
+    - php: 7.1
       env: PHPUNIT=1 DB=mariadb DB_VERSION=10.2
       addons: &php7_addon
         mariadb: '10.2'
@@ -86,7 +68,6 @@ matrix:
           packages:
             - *common_pkg
 
-    # Debian - Buster (Testing)
     # PHP 7.3 - MARIADB 10.3
     - php: 7.3
       env: PHPUNIT=1 DB=mariadb DB_VERSION=10.3
@@ -96,13 +77,13 @@ matrix:
           packages:
             - *common_pkg
 
-    # PHP 7.0 - POSTGRESQL 9.2
-#    - php: 7.0
+    # PHP 7.1 - POSTGRESQL 9.2
+#    - php: 7.1
 #      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.2 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
 #      addons: *php7_addon
 
-    # PHP 7.0 - POSTGRESQL 9.4
-#    - php: 7.0
+    # PHP 7.1 - POSTGRESQL 9.4
+#    - php: 7.1
 #      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.4 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
 #      addons:
 #        postgresql: "9.4"
@@ -111,17 +92,21 @@ matrix:
 #            - *common_pkg
 
     # PHPCS
-    - php: 7.0
-      env: PHPCS=1 DB=mysql DB_VERSION=5.6
-      addons: *php7_addon
+    - php: 7.3
+      env: PHPCS=1 PHPUNIT=1 DB=mariadb DB_VERSION=10.3
+      addons: &php7_addon
+        mariadb: '10.3'
+        apt:
+          packages:
+            - *common_pkg
 
 #  allow_failures:
-#    # PHP 7.0 - POSTGRESQL 9.2
-#    - php: 7.0
+#    # PHP 7.1 - POSTGRESQL 9.2
+#    - php: 7.1
 #      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.2 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
 #
-#    # PHP 7.0 - POSTGRESQL 9.4
-#    - php: 7.0
+#    # PHP 7.1 - POSTGRESQL 9.4
+#    - php: 7.1
 #      env: PHPUNIT=1 DB=postgresql DB_VERSION=9.4 DATASOURCES_TEST_DRIVER=Postgres DATASOURCES_TEST_USERNAME=postgres DATASOURCES_TEST_PORT=5432
 
 before_script:
