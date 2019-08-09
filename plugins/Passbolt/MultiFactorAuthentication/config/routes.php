@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
+
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
@@ -94,4 +95,11 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
 
     $routes->connect('/settings', ['prefix' => 'OrgSettings', 'controller' => 'MfaOrgSettingsPost', 'action' => 'post'])
         ->setMethods(['PUT', 'POST']);
+
+    /**
+     * User settings
+     */
+    $routes->connect('/setup/:userId', ['prefix' => 'UserSettings', 'controller' => 'MfaUserSettingsDelete', 'action' => 'delete'])
+        ->setPass(['userId'])
+        ->setMethods(['DELETE']);
 });
