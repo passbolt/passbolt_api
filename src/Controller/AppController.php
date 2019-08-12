@@ -14,6 +14,7 @@
  */
 namespace App\Controller;
 
+use App\Controller\Component\EmailSubscriptionComponent;
 use App\Controller\Events\EmailNotificationsListener;
 use App\Utility\UserAction;
 use Cake\Controller\Controller;
@@ -28,6 +29,8 @@ use Cake\Routing\Router;
  *
  * Add your application-wide methods in the class below, your controllers
  * will inherit them.
+ *
+ * @property EmailSubscriptionComponent EmailSubscription
  *
  * @link http://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
@@ -64,6 +67,11 @@ class AppController extends Controller
                 'plugin' => null
             ],
         ]);
+
+        $this->loadComponent(
+            'EmailSubscription',
+            [EmailSubscriptionComponent::APP_FULL_BASE_URL => Configure::read('App.fullBaseUrl')]
+        );
 
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
