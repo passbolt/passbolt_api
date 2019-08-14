@@ -16,6 +16,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\Utility\Hash;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaMiddleware;
+use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 
 // Merge config
 $mainConfig = Configure::read('passbolt.plugins.multiFactorAuthentication');
@@ -33,3 +34,6 @@ EventManager::instance()->on(
         $middlewareQueue->add(new MfaMiddleware());
     }
 );
+
+// Register email redactors
+EventManager::instance()->on(new MfaRedactorPool());
