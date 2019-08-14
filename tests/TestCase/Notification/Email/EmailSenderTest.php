@@ -79,17 +79,21 @@ class EmailSenderTest extends TestCase
             'headers' => ['Auto-Submitted' => 'auto-generated']
         ];
 
+        $data = $email->getData();
+        $data['body']['fullBaseUrl'] = self::APP_FULL_BASE_URL;
+
         $this->emailQueueMock->expects($this->once())
             ->method('enqueue')
-            ->with($email->getTo(), $email->getData(), $options)
+            ->with($email->getTo(), $data, $options)
             ->willReturn(true);
 
         $this->sut->sendEmail($email);
     }
 
-    public function testThatSendEmailAddFullBaseUrlToBody()
+    public function testThatSendEmailAddFullBaseUrlToBodyAndMergeData()
     {
-        $email = new Email('test', 'test', [], '');
+        $expectedData = ['body' => ['some_data' => 'test']];
+        $email = new Email('test', 'test', $expectedData, '');
 
         $options =  [
             'template' => $email->getTemplate(),
@@ -99,13 +103,13 @@ class EmailSenderTest extends TestCase
             'headers' => ['Auto-Submitted' => 'auto-generated']
         ];
 
+        $expectedData = ['body' => ['some_data' => 'test', 'fullBaseUrl' => self::APP_FULL_BASE_URL]];
+
         $this->emailQueueMock->expects($this->once())
             ->method('enqueue')
-            ->with($email->getTo(), $email->getData(), $options)
+            ->with($email->getTo(), $expectedData, $options)
             ->willReturn(true);
 
         $this->sut->sendEmail($email);
-
-        $this->assertEquals(self::APP_FULL_BASE_URL, $email->getData()['body']['fullBaseUrl']);
     }
 }
