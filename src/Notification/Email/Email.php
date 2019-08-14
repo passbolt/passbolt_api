@@ -78,7 +78,7 @@ class Email
     public function withData(array $data)
     {
         $new = clone $this;
-        $this->data = $data;
+        $new->data = $data;
 
         return $new;
     }

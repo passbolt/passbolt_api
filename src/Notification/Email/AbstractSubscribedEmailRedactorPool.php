@@ -2,7 +2,9 @@
 
 namespace App\Notification\Email;
 
-abstract class AbstractSubscribedEmailRedactorPool
+use Cake\Event\EventListenerInterface;
+
+abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInterface
 {
     /**
      * @param CollectSubscribedEmailRedactorEvent $event

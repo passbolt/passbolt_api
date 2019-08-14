@@ -69,7 +69,7 @@ class EmailSender
      */
     private function addFullBaseUrlToEmail(Email $email)
     {
-        return $email->withData(array_merge($email->getData(), [
+        return $email->withData(array_merge_recursive($email->getData(), [
             'body' => [
                 'fullBaseUrl' => $this->appFullBaseUrl
             ]
