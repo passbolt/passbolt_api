@@ -33,11 +33,5 @@
     </p>
 </div>
 <div class="submit-input-wrapper">
-    <script>
-        function reload() {
-            window.location.reload();
-            return false;
-        }
-    </script>
-    <a id="js_setup_plugin_check" class="button primary big" onclick="javascript:reload();">retry</a>
+    <a id="js_setup_plugin_check" class="button primary big">retry</a>
 </div>

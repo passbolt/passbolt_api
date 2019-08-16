@@ -99,6 +99,11 @@ module.exports = function(grunt) {
       },
       appjs: {
         files: [{
+          cwd: paths.node_modules + 'babel-polyfill/dist',
+          src: ['polyfill.min.js'],
+          dest: paths.js + 'app',
+          expand: true
+        }, {
           cwd: paths.node_modules_appjs + 'dist',
           src: ['steal.production.js', 'bundles/passbolt-appjs/passbolt.js'],
           dest: paths.js + 'app',
