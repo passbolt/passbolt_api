@@ -14,6 +14,7 @@
  */
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 
 Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
@@ -94,4 +95,10 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
 
     $routes->connect('/settings', ['prefix' => 'OrgSettings', 'controller' => 'MfaOrgSettingsPost', 'action' => 'post'])
         ->setMethods(['PUT', 'POST']);
+
+    /**
+     * User settings
+     */
+    $routes->connect('/setup', ['prefix' => 'UserSettings', 'controller' => MfaUserSettingsDeleteController::class, 'action' => 'delete'])
+        ->setMethods(['DELETE']);
 });

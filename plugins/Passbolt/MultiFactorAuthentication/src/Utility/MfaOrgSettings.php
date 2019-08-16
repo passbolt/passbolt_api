@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.5.0
+ * @since         2.0.0
  */
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
@@ -20,7 +20,6 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Locator\TableLocator;
 use Cake\ORM\TableRegistry;
 
 class MfaOrgSettings
@@ -141,6 +140,14 @@ class MfaOrgSettings
         }
 
         return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return count($this->getEnabledProviders()) > 0;
     }
 
     /**
