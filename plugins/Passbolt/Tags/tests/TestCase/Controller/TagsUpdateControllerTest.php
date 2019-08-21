@@ -127,26 +127,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     }
 
     /**
-     * A tag with too long slug should not be saved
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     */
-    public function testTagUpdateSharedTagSlugTooLong()
-    {
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
-            'slug' => '#' . str_repeat('a', 128)
-        ]);
-        $this->assertBadRequestError('Could not validate tag data.');
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
-        $this->assertTrue(Hash::check($response, 'slug.maxLength'));
-        $this->assertEquals('Tag can not be more than 128 characters in length.', Hash::get($response, 'slug.maxLength'));
-    }
-
-    /**
      * A user should be able to use unicode text in a tag
      *
      * @group pro
@@ -191,39 +171,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
             $tagId = UuidFactory::uuid($case['tag']);
             $this->putJson("/tags/$tagId.json?api-version=v2", $case['data']);
             $this->assertEquals('success', $this->_responseJsonHeader->status, $test);
-        }
-    }
-
-    /**
-     * An admin should be able to use unicode text in a tag
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     */
-    public function testTagUpdateSharedTagSupportsUnicode()
-    {
-        $success = [
-            'chinese' => [
-                'slug' => '#新的專用資源名稱'
-            ],
-            'slavic' => [
-                'slug' => '#Новое имя частного ресурса'
-            ],
-            'french' => [
-                'slug' => '#Nouveau nom de resource privée'
-            ],
-            'emoticon' => [
-                'slug' => "#\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}"
-            ]
-        ];
-
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-
-        foreach ($success as $case => $data) {
-            $this->putJson("/tags/$tagId.json?api-version=v2", $data);
-            $this->assertSuccess();
         }
     }
 
@@ -291,35 +238,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     }
 
     /**
-     * An admin should be able to update a personal tag to a shared tag
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     * @group admin
-     */
-    public function testTagUpdateAdminCanUpdatePersonalTag()
-    {
-        $this->authenticateAs('admin');
-        $resourceId = $this->_addTestResource($this->_getDummyResourceData());
-        $tagId = $this->_addTestTag($resourceId, ['admin-personal'])[0]->id;
-
-        // Update Tag
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
-            'slug' => 'updated-admin-personal'
-        ]);
-
-        // Make sure we do not see the old tag in index
-        $this->getJson('/tags.json?api-version=v2');
-        $response = json_decode($this->_getBodyAsString());
-        $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertNotContains('admin-personal', $results);
-
-        // And see the new tag
-        $this->assertContains('updated-admin-personal', $results);
-    }
-
-    /**
      * A personal tag update should not affect other users
      *
      * @group pro
@@ -369,24 +287,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     }
 
     /**
-     * An Admin should be able to update a shared tag
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     * @group admin
-     */
-    public function testTagUpdateAdminCanUpdateSharedTag()
-    {
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
-            'slug' => '#update-bravo'
-        ]);
-        $this->assertSuccess();
-    }
-
-    /**
      * After a personal tag update by Admin, the response should contain updated tag
      *
      * @group pro
@@ -408,27 +308,6 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $response = $this->_responseJsonBody;
         $this->assertEquals('updated-admin-personal', $response->slug);
         $this->assertFalse($response->is_shared);
-    }
-
-    /**
-     * After a shared tag update by Admin, the response should contain updated tag
-     *
-     * @group pro
-     * @group tag
-     * @group TagUpdate
-     * @group admin
-     */
-    public function testTagAdminSharedUpdateResponseContainsTag()
-    {
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
-            'slug' => '#update-bravo'
-        ]);
-        $this->assertSuccess();
-        $response = $this->_responseJsonBody;
-        $this->assertEquals('#update-bravo', $response->slug);
-        $this->assertTrue($response->is_shared);
     }
 
     /**

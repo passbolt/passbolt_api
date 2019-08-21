@@ -14,8 +14,12 @@
  */
 namespace Passbolt\Tags\Controller\Tags;
 
+use App\Controller\Component\UserComponent;
 use Passbolt\Tags\Model\Entity\Tag;
 
+/**
+ * @property UserComponent User
+ */
 trait TagAccessTrait
 {
     /**
@@ -26,15 +30,12 @@ trait TagAccessTrait
      */
     protected function isPersonalTagAccessible(Tag $tag)
     {
-        $isAccessible = false;
-
         foreach ($tag->get('resources_tags') as $resourcesTag) {
             if ($this->User->id() === $resourcesTag->get('user_id')) {
-                $isAccessible = true;
-                break;
+                return true;
             }
         }
 
-        return $isAccessible;
+        return false;
     }
 }

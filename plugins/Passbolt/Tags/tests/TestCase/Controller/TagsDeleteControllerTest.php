@@ -153,35 +153,4 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
         $results = Hash::extract($response->body, '{n}.slug');
         $this->assertNotContains('fox-trot', $results);
     }
-
-    /**
-     * An Admin should be able to delete a shared tag
-     *
-     * @group pro
-     * @group tag
-     * @group tagDelete
-     * @group admin
-     */
-    public function testTagDeleteAdminCanDeleteSharedTag()
-    {
-        // Make sure ada has access to shared tag #bravo
-        $this->authenticateAs('ada');
-        $this->getJson('/tags.json?api-version=v2');
-        $response = json_decode($this->_getBodyAsString());
-        $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertContains('#bravo', $results);
-
-        // Admin delete shared tag
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-        $this->deleteJson("/tags/$tagId.json?api-version=v2");
-        $this->assertSuccess();
-
-        // Make sure ada does not see the deleted tag in index
-        $this->authenticateAs('ada');
-        $this->getJson('/tags.json?api-version=v2');
-        $response = json_decode($this->_getBodyAsString());
-        $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertNotContains('#bravo', $results);
-    }
 }
