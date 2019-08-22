@@ -16,6 +16,7 @@ namespace PassboltTestData\Shell\Task\Large;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use PassboltTestData\Lib\DataTask;
 
 class SecretsDataTask extends DataTask
