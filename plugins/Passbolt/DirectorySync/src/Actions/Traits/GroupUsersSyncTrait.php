@@ -340,9 +340,9 @@ trait GroupUsersSyncTrait
             $saveResult = $this->Groups->save($group);
             if (!$saveResult) {
                 $errors = $group->getErrors();
-                $isNotActive = isset($errors['groups_users'][1]['user_id']['user_is_active']);
-                $isDeleted = isset($errors['groups_users'][1]['user_id']['user_is_not_soft_deleted']);
-                if ($isNotActive && $isDeleted || $isDeleted) {
+                $isNotActive = !empty(Hash::extract($errors, 'groups_users.{n}.user_id.user_is_active'));
+                $isDeleted = !empty(Hash::extract($errors, 'groups_users.{n}.user_id.user_is_not_soft_deleted'));
+                if (($isNotActive && $isDeleted) || $isDeleted) {
                     $msg = __('The user {0} could not be added to group {1} because it is deleted.', $u->username, $group->name);
                 } elseif ($isNotActive) {
                     $msg = __('The user {0} could not be added to group {1} because it is not active yet.', $u->username, $group->name);
