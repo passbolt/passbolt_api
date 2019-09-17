@@ -27,35 +27,20 @@ use Cake\Validation\Validation;
 class QueryStringComponent extends Component
 {
     /**
-     * @var Request
-     */
-    protected $_request;
-
-    /**
-     * Initialize properties.
-     *
-     * @param array $config The config data.
-     * @return void
-     */
-    public function initialize(array $config)
-    {
-        $controller = $this->_registry->getController();
-        $this->_request = $controller->request;
-    }
-
-    /**
      * Get query Items
      * @param array $allowedQueryItems whitelist
+     * @param callable[] $filterValidators Filters validator callable
      * @return array
      */
-    public function get(array $allowedQueryItems)
+    public function get(array $allowedQueryItems, array $filterValidators = [])
     {
-        $query = $this->_request->getQueryParams();
+        $request = $this->getController()->getRequest();
+        $query = $request->getQueryParams();
         $query = self::rewriteLegacyItems($query);
         $query = self::extractQueryItems($query);
         $query = self::unsetUnwantedQueryItems($query, $allowedQueryItems);
         $query = self::normalizeQueryItems($query);
-        self::validateQueryItems($query, $allowedQueryItems);
+        self::validateQueryItems($query, $allowedQueryItems, $filterValidators);
         $query = self::finalizeOrder($query);
 
         return $query;
@@ -187,16 +172,17 @@ class QueryStringComponent extends Component
      *
      * @param array $query items to validate
      * @param array $allowedQueryItems whitelisted items
-     * @throws BadRequestException if a validation error occurs
+     * @param callable[] $filterValidators Filters validator callable
      * @return bool true if validate
+     * @throws BadRequestException if a validation error occurs
      */
-    public static function validateQueryItems(array $query, array $allowedQueryItems)
+    public static function validateQueryItems(array $query, array $allowedQueryItems, array $filterValidators)
     {
         foreach ($query as $key => $parameters) {
             switch ($key) {
                 case 'filter':
                     try {
-                        self::validateFilters($parameters);
+                        self::validateFilters($parameters, $filterValidators);
                     } catch (Exception $e) {
                         throw new BadRequestException(__('Invalid filter.') . ' ' . $e->getMessage());
                     }
@@ -236,46 +222,56 @@ class QueryStringComponent extends Component
      * - is-favorite: bool
      * - is-owned-by-me: bool
      * - is-shared-with-me: bool
-     * @throws Exception if one of the filters is not supported / not in the list
+     * @param callable[] $filterValidators Filter validators callable
      * @return bool true if valid
+     * @throws Exception if one of the filters is not supported / not in the list
      */
-    public static function validateFilters(array $filters = null)
+    public static function validateFilters(array $filters = null, array $filterValidators = [])
     {
         if (isset($filters)) {
-            foreach ($filters as $filter => $values) {
-                switch ($filter) {
+            foreach ($filters as $filterName => $values) {
+                switch ((string)$filterName) { // See: https://www.php.net/manual/en/types.comparisons.php for NULL/0/FALSE
                     case 'search':
                         self::validateFilterSearch($values);
                         break;
                     case 'has-access':
                     case 'has-id':
-                        self::validateFilterResources($values, $filter);
+                        self::validateFilterResources($values, $filterName);
                         break;
                     case 'has-managers':
                     case 'has-users':
-                        self::validateFilterUsers($values, $filter);
+                        self::validateFilterUsers($values, $filterName);
                         break;
                     case 'has-groups':
-                        self::validateFilterGroups($values, $filter);
+                        self::validateFilterGroups($values, $filterName);
                         break;
                     case 'is-shared-with-group':
-                        self::validateFilterGroup($values, $filter);
+                        self::validateFilterGroup($values, $filterName);
                         break;
                     case 'modified-after':
-                        self::validateFilterTimestamp($values, $filter);
+                        self::validateFilterTimestamp($values, $filterName);
                         break;
                     case 'is-active':
                     case 'is-admin':
                     case 'is-favorite':
                     case 'is-owned-by-me':
                     case 'is-shared-with-me':
-                        self::validateFilterBoolean($values, $filter);
+                        self::validateFilterBoolean($values, $filterName);
                         break;
                     case 'has-tag':
                         self::validateFilterString($values, $filter);
                         break;
                     default:
-                        throw new Exception(__('No validation rule for filter {0}. Please create one.', $filter));
+                        // Check if custom filter validators were defined for this filter
+                        if (!isset($filterValidators[$filterName])) {
+                            throw new Exception(__('No validation rule for filter {0}. Please create one.', $filterName));
+                        }
+
+                        if (!call_user_func($filterValidators[$filterName], $values)) {
+                            throw new Exception(__('Filter {0} is not valid.', $filterName));
+                        }
+
+                        break;
                 }
             }
         }
@@ -474,8 +470,8 @@ class QueryStringComponent extends Component
      *
      * @param array $orders a list of order to validate like ['Groups.name ASC', 'Users.created']
      * @param array $allowedQueryItems whitelist
-     * @throws Exception if the group name does not validate
      * @return bool true if validate
+     * @throws Exception if the group name does not validate
      */
     public static function validateOrders(array $orders = null, array $allowedQueryItems = null)
     {
@@ -498,8 +494,8 @@ class QueryStringComponent extends Component
      * Validate Contain
      *
      * @param array $contain conditions
-     * @throws Exception if the contain value is not 0 or 1
      * @return bool true if validate
+     * @throws Exception if the contain value is not 0 or 1
      */
     public static function validateContain(array $contain = null)
     {
