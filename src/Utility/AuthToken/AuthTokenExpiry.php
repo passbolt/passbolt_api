@@ -12,6 +12,7 @@ class AuthTokenExpiry
         AuthenticationToken::TYPE_LOGIN,
         AuthenticationToken::TYPE_RECOVER,
         AuthenticationToken::TYPE_REGISTER,
+        AuthenticationToken::TYPE_MFA,
     ];
 
     /**

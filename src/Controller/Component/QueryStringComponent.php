@@ -259,7 +259,7 @@ class QueryStringComponent extends Component
                         self::validateFilterBoolean($values, $filterName);
                         break;
                     case 'has-tag':
-                        self::validateFilterString($values, $filter);
+                        self::validateFilterString($values, $filterName);
                         break;
                     default:
                         // Check if custom filter validators were defined for this filter
