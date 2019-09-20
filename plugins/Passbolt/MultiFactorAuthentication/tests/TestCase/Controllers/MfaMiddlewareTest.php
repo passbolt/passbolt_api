@@ -12,6 +12,8 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
+namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers;
+
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
