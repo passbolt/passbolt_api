@@ -99,6 +99,7 @@ Router::plugin('Passbolt/MultiFactorAuthentication', ['path' => '/mfa'], functio
     /**
      * User settings
      */
-    $routes->connect('/setup', ['prefix' => 'UserSettings', 'controller' => MfaUserSettingsDeleteController::class, 'action' => 'delete'])
+    $routes->connect('/setup/:userId', ['prefix' => 'UserSettings', 'controller' => 'MfaUserSettingsDelete', 'action' => 'delete'])
+        ->setPass(['userId'])
         ->setMethods(['DELETE']);
 });
