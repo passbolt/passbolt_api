@@ -104,6 +104,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
      * @see App\Test\TestCase\Model\Table\Resources\ShareDryRunTest
      * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
      */
+
     public function testErrorValidation()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');

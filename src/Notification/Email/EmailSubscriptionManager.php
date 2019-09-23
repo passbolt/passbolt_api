@@ -10,13 +10,21 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 namespace App\Notification\Email;
 
 use Cake\Event\Event;
 
+/**
+ * Class EmailSubscriptionManager
+ * @package App\Notification\Email
+ *
+ * The EmailSubscriptionManager class is a composite object to handle the email subscriptions.
+ * It handles the list of the subscription from creation to retrieval.
+ * It is provided by the EmailSubscriptionDispatcher to the SubscribedEmailRedactor, and used
+ * by the latter to make the registration.
+ */
 class EmailSubscriptionManager
 {
     /**

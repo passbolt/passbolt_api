@@ -10,9 +10,8 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 namespace App\Notification\Email;
 
 use App\Utility\Purifier;
@@ -21,6 +20,14 @@ use EmailQueue\EmailQueue;
 use EmailQueue\Model\Table\EmailQueueTable;
 use Exception;
 
+/**
+ * Class EmailSender
+ * @package App\Notification\Email
+ *
+ * Its sole purpose is to send emails. It encapsulates the logic on how the email is sent.
+ * In practices it uses the EmailQueue plugin enqueue. Ultimate send responsibility is deferred to a
+ * separated command line task (triggered manually or via cron job).
+ */
 class EmailSender
 {
     /**

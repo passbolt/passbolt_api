@@ -10,9 +10,8 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 namespace App\Notification\Email;
 
 use Cake\Event\Event;
@@ -23,20 +22,34 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
 
+/**
+ * Class EmailSubscriptionDispatcher
+ * @package App\Notification\Email
+ *
+ * The EmailSubscriptionDispatcher class is the core class of the email notification system.
+ * It provides the registration mechanism by dispatching an event to each subscribed SubscribedEmailRedactor
+ * to collect them.
+ *
+ * It will listen for all the subscribed events and will get the matching SubscribedEmailRedactor and
+ * delegate to them the email creation. Then it will pass those created emails to the EmailSender for sending.
+ */
 class EmailSubscriptionDispatcher implements EventListenerInterface
 {
     /**
      * @var EventManagerInterface
      */
     private $eventManager;
+
     /**
      * @var EmailSubscriptionManager
      */
     private $emailSubscriptionManager;
+
     /**
      * @var EmailSender
      */
     private $emailSender;
+
     /**
      * @var LoggerInterface
      */
@@ -98,7 +111,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
             $emailCollection = $emailRedactor->onSubscribedEvent($event);
 
             if (!$emailCollection instanceof EmailCollection) {
-                throw new InvalidArgumentException('$emailCollection must be an instance ' . EmailCollection::class);
+                throw new InvalidArgumentException('$emailCollection must be an instance of ' . EmailCollection::class);
             }
 
             if ($emailCollection->getEmails()) {

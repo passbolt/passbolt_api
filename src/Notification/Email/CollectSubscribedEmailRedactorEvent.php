@@ -10,16 +10,19 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 namespace App\Notification\Email;
 
 use Cake\Event\Event;
 use InvalidArgumentException;
 
 /**
+ * Class CollectSubscribedEmailRedactorEvent
+ * @package App\Notification\Email
  * @method EmailSubscriptionManager getSubject()
+ *
+ * Event triggered by the EmailSubscriptionDispatcher to collect emails from the subscribed EmailRedactors.
  */
 class CollectSubscribedEmailRedactorEvent extends Event
 {

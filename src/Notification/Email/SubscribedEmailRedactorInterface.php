@@ -10,18 +10,25 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 namespace App\Notification\Email;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 
+/**
+ * Interface SubscribedEmailRedactorInterface
+ * @package App\Notification\Email
+ *
+ * A class implementing the interface SubscribedEmailRedactorInterface
+ * can subscribe to the events in which it is interested to send emails.
+ */
 interface SubscribedEmailRedactorInterface extends EventListenerInterface
 {
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
+     *
      * @return array
      */
     public function getSubscribedEvents();
@@ -29,6 +36,7 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
     /**
      * Method called by the EventDispatcher to register the redactor so it can be called when its subscribed events
      * are triggered.
+     *
      * @param CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
@@ -38,6 +46,7 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
      * Method called when its subscribed events are dispatched by the EmailSubscriptionDispatcher.
      * Redactor MUST implement this method to manipulate the email collection to send.
      * Return an EmailCollection.
+     *
      * @param Event $event Event object
      * @return EmailCollection
      */
