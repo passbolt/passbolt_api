@@ -31,6 +31,7 @@ class HomeController extends AppController
             ->setTemplatePath('/Home')
             ->setTemplate('home');
 
+        $this->set('theme', $this->User->theme());
         $this->set('title', Configure::read('passbolt.meta.description'));
         $this->set('jsBuildMode', Configure::read('passbolt.js.build'));
 

@@ -225,12 +225,7 @@ class AuthenticationTokensTable extends Table
             return false;
         }
 
-        // Is it expired
-        if ($this->isExpired($token, $expiry)) {
-            return false;
-        }
-
-        return true;
+        return !$this->isExpired($token, $expiry);
     }
 
     /**

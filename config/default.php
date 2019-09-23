@@ -38,7 +38,7 @@ return [
      */
     'passbolt' => [
         // Edition.
-        'edition' => 'ce',
+        'edition' => 'pro',
 
         // Authentication & Authorisation.
         'auth' => [
@@ -182,6 +182,10 @@ return [
 
         // Security.
         'security' => [
+            'cookies' => [
+                // force cookie secure flag even if request is not https
+                'secure' => filter_var(env('PASSBOLT_SECURITY_COOKIE_SECURE', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN),
             'csrfProtection' => [
                 'active' => true,
