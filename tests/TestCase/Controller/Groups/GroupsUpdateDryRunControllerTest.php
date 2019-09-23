@@ -57,6 +57,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
      *   => expected result: only the secrets the user does not have already access through another source should be
      *      requested for encryption
      */
+
     public function testGroupsUpdateDryRunAsGroupManagerSuccess()
     {
         // Define actors of this tests

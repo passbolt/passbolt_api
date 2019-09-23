@@ -17,9 +17,8 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -42,6 +41,8 @@ use Cake\Validation\Validator;
  */
 class AuthenticationTokensTable extends Table
 {
+    /** @var \App\Utility\AuthToken\AuthTokenExpiry */
+    private $authTokenExpiry;
 
     /**
      * Initialize method
@@ -52,6 +53,8 @@ class AuthenticationTokensTable extends Table
     public function initialize(array $config)
     {
         parent::initialize($config);
+
+        $this->authTokenExpiry = new AuthTokenExpiry();
 
         $this->setTable('authentication_tokens');
         $this->setDisplayField('id');
@@ -228,15 +231,15 @@ class AuthenticationTokensTable extends Table
     /**
      * Check if a token is expired
      *
-     * @param EntityInterface $token AuthenticationToken
+     * @param AuthenticationToken $token uuid
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(EntityInterface $token, $expiry = null)
+    public function isExpired(AuthenticationToken $token, $expiry = null)
     {
         if ($expiry === null) {
-            $expiry = Configure::read('passbolt.auth.tokenExpiry');
+            $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
         }
         $valid = $token->created->wasWithinLast($expiry);
         if (!$valid) {
