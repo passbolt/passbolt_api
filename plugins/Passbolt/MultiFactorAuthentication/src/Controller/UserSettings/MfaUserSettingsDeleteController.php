@@ -85,7 +85,7 @@ class MfaUserSettingsDeleteController extends MfaController
                 $mfaSettings->delete();
                 $message = __('The multi-factor authentication settings for the user were deleted.');
             }
-            $this->dispatchSuccessEvent($user);
+            $this->dispatchSettingsDeletedEvent($user);
         } catch (RecordNotFoundException $exception) {
             // No MFA settings found for user
         }
@@ -103,9 +103,9 @@ class MfaUserSettingsDeleteController extends MfaController
     }
 
     /**
-     * @param $user
+     * @param User $user user
      */
-    private function dispatchSuccessEvent($user)
+    private function dispatchSettingsDeletedEvent(User $user)
     {
         $eventData['target'] = $user;
         $eventData['uac'] = $this->User->getAccessControl();

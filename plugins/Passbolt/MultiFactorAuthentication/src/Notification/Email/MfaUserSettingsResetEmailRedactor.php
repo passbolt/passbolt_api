@@ -41,6 +41,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
         if ($user->id !== $uac->getId()) {
             return $this->createEmailAdminDelete($user, $uac);
         }
+
         return $this->createEmailSelfDelete($user);
     }
 
@@ -71,6 +72,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
         /** @var UsersTable $users */
         $users = TableRegistry::getTableLocator()->get('Users');
         $admin = $users->findFirstForEmail($uac->getId());
+
         return new Email(
             $user->username,
             $subject = __('Your multi-factor authentication settings were reset by an administrator.'),
