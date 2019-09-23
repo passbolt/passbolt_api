@@ -10,9 +10,8 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 namespace Passbolt\MultiFactorAuthentication\Controller\UserSettings;
 
 use App\Model\Entity\User;
@@ -86,10 +85,7 @@ class MfaUserSettingsDeleteController extends MfaController
                 $mfaSettings->delete();
                 $message = __('The multi-factor authentication settings for the user were deleted.');
             }
-
-            $this->dispatchEvent(self::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT, [
-                'user' => $user
-            ]);
+            $this->dispatchSuccessEvent($user);
         } catch (RecordNotFoundException $exception) {
             // No MFA settings found for user
         }
@@ -103,6 +99,16 @@ class MfaUserSettingsDeleteController extends MfaController
      */
     private function isAllowed(string $userId = null)
     {
-        return $this->User->isAdmin() || $userId === $this->Auth->user('id');
+        return isset($userId) && ($this->User->isAdmin() || $userId === $this->Auth->user('id'));
+    }
+
+    /**
+     * @param $user
+     */
+    private function dispatchSuccessEvent($user)
+    {
+        $eventData['target'] = $user;
+        $eventData['uac'] = $this->User->getAccessControl();
+        $this->dispatchEvent(self::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT, $eventData);
     }
 }

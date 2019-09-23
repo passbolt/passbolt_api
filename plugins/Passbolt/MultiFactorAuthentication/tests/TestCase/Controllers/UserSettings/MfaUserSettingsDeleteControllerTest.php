@@ -46,21 +46,21 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 
     const TESTED_ROUTE = '/mfa/setup/%s.json?api-version=v2';
 
-    public function testThatMfaUserSettingsDeleteNeedsAuthenticatedUser()
+    public function testMfaUserSettingsDeleteNeedsAuthenticatedUser()
     {
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
         $this->assertResponseCode(403);
         $this->assertResponseError('You need to login to access this location.');
     }
 
-    public function testThatMfaUserSettingsDeleteIsAllowedIfUserIsAdmin()
+    public function testMfaUserSettingsDeleteIsAllowedIfUserIsAdmin()
     {
         $this->authenticateAs('admin');
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
         $this->assertResponseCode(400);
     }
 
-    public function testThatMfaUserSettingsDeleteIsAllowedIfUserIsAccountOwner()
+    public function testMfaUserSettingsDeleteIsAllowedIfUserIsAccountOwner()
     {
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
@@ -73,7 +73,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertResponseCode(200);
     }
 
-    public function testThatMfaUserSettingsDeleteIsNotAllowedIfNotAccountOwnerOrAdmin()
+    public function testMfaUserSettingsDeleteIsNotAllowedIfNotAccountOwnerOrAdmin()
     {
         $this->authenticateAs('ada');
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid()));
@@ -81,7 +81,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('You are not allowed to access this location');
     }
 
-    public function testThatMfaUserSettingsDeleteCheckIfGivenUserIdIsValid()
+    public function testMfaUserSettingsDeleteCheckIfGivenUserIdIsValid()
     {
         $this->authenticateAs('admin');
         $this->deleteJson(sprintf(self::TESTED_ROUTE, 'fake-uuid'));
@@ -89,7 +89,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertResponseError('The user id is not valid.');
     }
 
-    public function testThatMfaUserSettingsDeleteIsSuccessIfNoSettingsWerePresentForUser()
+    public function testMfaUserSettingsDeleteIsSuccessIfNoSettingsWerePresentForUser()
     {
         $this->authenticateAs('admin');
         $this->deleteJson(sprintf(self::TESTED_ROUTE, UuidFactory::uuid('user.id.ada')));
@@ -97,7 +97,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertResponseContains('No multi-factor authentication settings defined for the user.');
     }
 
-    public function testThatMfaUserSettingsDeleteIsSuccessWhenAllConditionsAreFullfiled()
+    public function testMfaUserSettingsDeleteIsSuccessWhenAllConditionsAreFullfiled()
     {
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],

@@ -42,8 +42,8 @@ class ContentSecurityPolicyMiddleware extends \Cake\Http\Middleware\CsrfProtecti
         $defaultCsp = "default-src 'self'; ";
         $defaultCsp .= "script-src 'self' 'unsafe-eval'; "; // eval needed by canjs for templates
         $defaultCsp .= "style-src 'self' 'unsafe-inline'; "; // inline needed to perform extension iframe resizing
-        $defaultCsp .= "img-src 'self';";
-        $defaultCsp .= "frame-src 'self';";
+        $defaultCsp .= "img-src 'self' data:; ";
+        $defaultCsp .= "frame-src 'self' https://*.duosecurity.com;";
 
         if ($cspFromConfig === null || $cspFromConfig === true) {
             $csp = $defaultCsp;

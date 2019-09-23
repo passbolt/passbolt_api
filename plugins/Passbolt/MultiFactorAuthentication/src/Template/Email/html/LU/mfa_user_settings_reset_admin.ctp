@@ -10,9 +10,8 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
-
 use App\Model\Entity\User;
 use App\Utility\Purifier;
 use Cake\I18n\FrozenTime;
@@ -33,7 +32,8 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => FrozenTime::now(),
-        'text' => __('Multi-factor authentication settings were reset for your account. You can now connect to your account using your password.')
+        'text' => __('Multi-factor authentication settings were reset for your account by an administrator.') .
+            __('Please contact your administrator if you didn\'t request this action.')
     ])
 ]);
 
