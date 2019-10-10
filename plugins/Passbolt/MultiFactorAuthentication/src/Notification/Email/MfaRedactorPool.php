@@ -10,23 +10,21 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.12.0
  */
+namespace Passbolt\MultiFactorAuthentication\Notification\Email;
 
-namespace App\Utility\AuthToken;
+use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
 
-class AuthTokenExpiryConfigValidator
+class MfaRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
-     * @param string $expiry Expiry
-     * @return string|null
+     * @return array of SubscribedEmailRedactors
      */
-    public function __invoke(string $expiry)
+    public function getSubscribedRedactors()
     {
-        if (preg_match('/^[0-9]+ (year|month|day|hour|minute|second)/', $expiry)) {
-            return $expiry;
-        }
-
-        return null;
+        return [
+            new MfaUserSettingsResetEmailRedactor()
+        ];
     }
 }

@@ -12,10 +12,14 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
+
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\Utility\Hash;
+use Passbolt\MultiFactorAuthentication\EventListener\AddIsMfaEnabledBehavior;
+use Passbolt\MultiFactorAuthentication\EventListener\AddIsMfaEnabledColumnToUsersGrid;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaMiddleware;
+use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 
 // Merge config
 $mainConfig = Configure::read('passbolt.plugins.multiFactorAuthentication');
@@ -27,9 +31,16 @@ if (isset($mainConfig)) {
 }
 
 // Starts middleware
-EventManager::instance()->on(
-    'Server.buildMiddleware',
-    function ($event, $middlewareQueue) {
-        $middlewareQueue->add(new MfaMiddleware());
-    }
-);
+EventManager::instance()
+    ->on(
+        'Server.buildMiddleware',
+        function ($event, $middlewareQueue) {
+            $middlewareQueue->add(new MfaMiddleware());
+        }
+    )
+    // Decorate the users grid and add the column "is_mfa_enabled"
+    ->on(new AddIsMfaEnabledColumnToUsersGrid()) // add filtering, filter validation, and ordering features for "is_mfa_enabled"
+    ->on(new AddIsMfaEnabledBehavior()); // decorate the query to add the new property on the User entity
+
+// Register email redactors
+EventManager::instance()->on(new MfaRedactorPool());

@@ -1,0 +1,49 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.12.0
+ */
+namespace Passbolt\MultiFactorAuthentication\EventListener;
+
+use App\Model\Table\UsersTable;
+use Cake\Event\EventInterface;
+use Cake\Event\EventListenerInterface;
+use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
+
+class AddIsMfaEnabledBehavior implements EventListenerInterface
+{
+    /**
+     * @return array
+     */
+    public function implementedEvents()
+    {
+        return [
+            'Model.initialize' => $this
+        ];
+    }
+
+    /**
+     * @param EventInterface $event Event
+     * @return void
+     */
+    public function __invoke(EventInterface $event)
+    {
+        if (!$event->getSubject() instanceof UsersTable) {
+            return;
+        }
+
+        /** @var UsersTable $users */
+        $users = $event->getSubject();
+
+        $users->addBehavior(IsMfaEnabledBehavior::class);
+    }
+}

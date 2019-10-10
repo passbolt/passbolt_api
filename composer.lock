@@ -136,13 +136,13 @@
             "authors": [
                 {
                     "name": "Benjamin Eberlei",
-                    "role": "Lead Developer",
-                    "email": "kontakt@beberlei.de"
+                    "email": "kontakt@beberlei.de",
+                    "role": "Lead Developer"
                 },
                 {
                     "name": "Richard Quadling",
-                    "role": "Collaborator",
-                    "email": "rquadling@gmail.com"
+                    "email": "rquadling@gmail.com",
+                    "role": "Collaborator"
                 }
             ],
             "description": "Thin assertion library for input validation in business models.",
@@ -202,8 +202,8 @@
                 },
                 {
                     "name": "Other contributors",
-                    "role": "Contributors",
-                    "homepage": "https://github.com/burzum/cakephp-file-storage/graphs/contributors"
+                    "homepage": "https://github.com/burzum/cakephp-file-storage/graphs/contributors",
+                    "role": "Contributors"
                 }
             ],
             "description": "This plugin is giving you the possibility to store files in virtually any kind of storage backend. This plugin is wrapping the Gaufrette library (https://github.com/KnpLabs/Gaufrette) library in a CakePHP fashion and provides a simple way to use the storage adapters through the StorageManager class.",
@@ -1216,15 +1216,15 @@
             "authors": [
                 {
                     "name": "Paragon Initiative Enterprises",
-                    "role": "Maintainer",
                     "email": "security@paragonie.com",
-                    "homepage": "https://paragonie.com"
+                    "homepage": "https://paragonie.com",
+                    "role": "Maintainer"
                 },
                 {
                     "name": "Steve 'Sc00bz' Thomas",
-                    "role": "Original Developer",
                     "email": "steve@tobtu.com",
-                    "homepage": "https://www.tobtu.com"
+                    "homepage": "https://www.tobtu.com",
+                    "role": "Original Developer"
                 }
             ],
             "description": "Constant-time Implementations of RFC 4648 Encoding (Base-64, Base-32, Base-16)",
@@ -4468,8 +4468,8 @@
             "authors": [
                 {
                     "name": "Sebastian Bergmann",
-                    "role": "lead",
-                    "email": "sebastian@phpunit.de"
+                    "email": "sebastian@phpunit.de",
+                    "role": "lead"
                 }
             ],
             "description": "The PHP Unit Testing framework.",
@@ -4538,6 +4538,7 @@
                 "mock",
                 "xunit"
             ],
+            "abandoned": true,
             "time": "2018-08-09T05:50:03+00:00"
         },
         {
