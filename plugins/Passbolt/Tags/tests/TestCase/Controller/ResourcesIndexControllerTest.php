@@ -27,6 +27,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     ];
 
     // Success with currect personal and shared tags for resource with direct and group permissions
+
     public function testTagResourcesIndexContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -55,6 +56,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success on filter by personal tag without contain
+
     public function testTagResourcesIndexFilterSuccess()
     {
         $this->authenticateAs('ada');
@@ -71,6 +73,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success on filter by personal tag without contain on a tag used by someone else
+
     public function testTagResourcesIndexFilterSuccessPersonalTagUsedBySomeoneElse()
     {
         $this->authenticateAs('betty');
@@ -83,6 +86,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success on filter by personal tag with contain
+
     public function testTagResourcesIndexFilterContainSuccess()
     {
         $this->authenticateAs('ada');
@@ -99,6 +103,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success on filter by shared tag with contain
+
     public function testTagResourcesIndexFilterSharedTagSuccess()
     {
         $this->authenticateAs('ada');
@@ -111,6 +116,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success with empty result set is returned when filtering on a tag that does not exist
+
     public function testTagResourcesIndexFilterNonExistingTagEmptySuccess()
     {
         $this->authenticateAs('ada');
@@ -121,6 +127,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success with tag in non latin character
+
     public function testTagResourcesIndexFilterExistingUtf8TagSuccess()
     {
         $this->authenticateAs('ada');
@@ -131,6 +138,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Success with empty result set is returned when filtering on a tag I do not have resource for
+
     public function testTagResourcesIndexFilterNotMyTagEmptySuccess()
     {
         $this->authenticateAs('betty');
@@ -141,6 +149,7 @@ class ResourceIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // An error message should be shown if the value in the tag filter is empty
+
     public function testTagResourcesIndexFilterEmptyError()
     {
         $this->authenticateAs('betty');

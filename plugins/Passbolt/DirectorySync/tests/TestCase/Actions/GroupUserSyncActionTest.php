@@ -355,7 +355,6 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         ];
         $this->assertReport($reports[2], $expectedUserGroupReport);
 
-
         $groupCreated = $this->assertGroupExist(null, ['name' => 'newgroup', 'deleted' => false]);
 
         $defaultGroupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();

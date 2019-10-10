@@ -26,6 +26,7 @@ trait ConfigurationTrait
      * - config/passbolt.php not writable
      * - config/license not writable
      */
+
     protected function skipTestIfNotWebInstallerFriendly()
     {
         if (!$this->isWebInstallerFriendly()) {
@@ -38,6 +39,7 @@ trait ConfigurationTrait
      * - config/passbolt.php not writable
      * - or config/license not writable
      */
+
     protected function isWebInstallerFriendly()
     {
         $configFolderWritable = is_writable(CONFIG);
@@ -60,6 +62,7 @@ trait ConfigurationTrait
     /*
      * Backup the passbolt configuration
      */
+
     protected function backupConfiguration()
     {
         // Backup the config and restore it after each test.

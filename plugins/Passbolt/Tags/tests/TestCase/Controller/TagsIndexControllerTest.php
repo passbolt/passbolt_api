@@ -26,6 +26,7 @@ class TagIndexControllerTest extends TagPluginIntegrationTestCase
     ];
 
     // A user not logged in should not be able to see tags
+
     public function testTagIndexNotLoggedIn()
     {
         $this->getJson('/tags.json?api-version=v2');
@@ -36,6 +37,7 @@ class TagIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // A user should see personal and shared tags or resources via direct and group permissions
+
     public function testTagIndexSuccess()
     {
         $this->authenticateAs('ada');

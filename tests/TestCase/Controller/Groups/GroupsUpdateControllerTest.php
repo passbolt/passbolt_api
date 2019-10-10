@@ -64,6 +64,7 @@ hcciUFw5
      *   - Remove the group manager role of a member
      *   - Add the group manager role to a member
      */
+
     public function testGroupsUpdateAsGMUpdateMembersRoleSuccess()
     {
         // Define actors of this tests
@@ -107,6 +108,7 @@ hcciUFw5
      *   - A member who has already an access to all the resources shared with the group
      *   - A member who has already an access to some resources shared with the group
      */
+
     public function testGroupsUpdateAsGMAddMembersSuccess()
     {
         // Define actors of this tests
@@ -174,6 +176,7 @@ hcciUFw5
      *   - A member who has access to the resources shared with the group only because of its membership
      *   - A member who has access to some resources shared with the group because of other permissions
      */
+
     public function testGroupsUpdateAsGMDeleteMembersSuccess()
     {
         // Define actors of this tests
@@ -226,6 +229,7 @@ hcciUFw5
      *   - A member who has access to the resources shared with the group only because of its membership
      *   - A member who has access to some resources shared with the group because of other permissions
      */
+
     public function testGroupsUpdateAsGMUpdateGroupComplexScenarioSuccess()
     {
         // Define actors of this tests
@@ -314,6 +318,7 @@ hcciUFw5
      * As an administrator I can update the name of a group
      * Only an administrator is allowed to update the name of a group
      */
+
     public function testGroupsUpdateAsGMCannotUpdateNameError()
     {
         // Define actors of this tests
@@ -339,6 +344,7 @@ hcciUFw5
      * As an administrator I can update the name of a group
      * Only an administrator is allowed to update the name of a group
      */
+
     public function testGroupsUpdateAsADUpdateNameSuccess()
     {
         // Define actors of this tests
@@ -363,6 +369,7 @@ hcciUFw5
      * As an administrator I can update the roles of the members of a group
      * @see testAsGMUpdateMembersRoleSuccess
      */
+
     public function testGroupsUpdateAsADUpdateMembersRoleSuccess()
     {
         // Define actors of this tests
@@ -404,6 +411,7 @@ hcciUFw5
      *   - A member who has access to the resources shared with the group only because of its membership
      *   - A member who has access to some resources shared with the group because of other permissions
      */
+
     public function testGroupsUpdateAsADDeleteMembersSuccess()
     {
         // Define actors of this tests
@@ -450,6 +458,7 @@ hcciUFw5
      *   - Remove the group manager role of a member
      *   - Add the group manager role to a member
      */
+
     public function testGroupsUpdateAsADUpdateGroupComplexScenarioSuccess()
     {
         // Define actors of this tests
@@ -497,6 +506,7 @@ hcciUFw5
     }
 
     // As an administrator I shouldn't be able to add users to a group
+
     public function testGroupsUpdateAsAdminCannotAddGroupUserError()
     {
         // Define actors of this tests
@@ -545,6 +555,7 @@ hcciUFw5
     }
 
     // As an administrator I shouldn't be able to add users to a group
+
     public function testGroupsUpdateAsAdminCannotDeleteGroupUserError()
     {
         // Define actors of this tests

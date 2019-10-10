@@ -203,6 +203,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     /*
      * TEST ORG SETTING DUO TRAIT
      */
+
     /**
      * @group mfa
      * @group mfaOrgSettings
@@ -339,6 +340,7 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     /*
      * TEST ORG SETTING YUBIKEY TRAIT
      */
+
     /**
      * @group mfa
      * @group mfaOrgSettings
