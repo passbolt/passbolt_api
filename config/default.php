@@ -62,6 +62,9 @@ return [
             'validate' => [
                 'mx' => filter_var(env('PASSBOLT_EMAIL_VALIDATE_MX', false), FILTER_VALIDATE_BOOLEAN),
             ],
+            'purify' => [
+                'subject' => filter_var(env('PASSBOLT_EMAIL_PURIFY_SUBJECT', false), FILTER_VALIDATE_BOOLEAN),
+            ],
 
             // Email delivery settings such as credentials are in app.php.
             // Allow to disable displaying the armored secret in the email.
