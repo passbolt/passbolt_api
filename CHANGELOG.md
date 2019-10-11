@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [unreleased]
 ### Added
 - PB-575: As AD I can see the MFA status of each user in the users grid
+- PB-639: As LU I can delete a personal tag
 
 ## [2.11.0] - 2019-08-08
 ### Security fixes
