@@ -715,4 +715,47 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $reports = $this->action->execute();
         $this->assertEmpty($reports);
     }
+
+    /**
+     * Unit test for PB-767
+     *
+     * When multiple users are added to a group, a failed validation on one groupUser should not make the other associations fail.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_failedValidationShouldNotContaminateOtherGroupUsers()
+    {
+        $this->mockDirectoryUserData('ruth', 'ruth', 'ruth@passbolt.com');
+        $this->mockDirectoryUserData('betty', 'betty', 'betty@passbolt.com');
+        // Ruth is a inactive user.
+        $ruthEntry = $this->mockDirectoryEntryUser(['fname' => 'ruth', 'lname' => 'ruth', 'foreign_key' => UuidFactory::uuid('user.id.ruth')], Alias::STATUS_SUCCESS);
+        $bettyEntry = $this->mockDirectoryEntryUser(['fname' => 'betty', 'lname' => 'betty', 'foreign_key' => UuidFactory::uuid('user.id.betty')], Alias::STATUS_SUCCESS);
+        $this->mockDirectoryEntryGroup('marketing');
+        //$this->mockDirectoryEntryGroup('marketing');
+        $this->mockDirectoryGroupData('marketing', [
+            'group_users' => [
+                $ruthEntry->directory_name,
+                $bettyEntry->directory_name,
+            ]
+        ]);
+        $reports = $this->action->execute();
+
+        $expectedUserGroupReport = [
+            'action' => Alias::ACTION_CREATE,
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'status' => Alias::STATUS_IGNORE,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        $expectedUserGroupReport = [
+            'action' => Alias::ACTION_CREATE,
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($reports[1], $expectedUserGroupReport);
+    }
 }

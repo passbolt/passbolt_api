@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-575: As AD I can see the MFA status of each user in the users grid
 - PB-639: As LU I can delete a personal tag
 - PB-687: As an admin I can resend an invitation for a user that didn't complete the setup
+- PB-767: Fix LDAP sync issue "when multiple users are added to a group, failed validation of one should not impact validation of others"
 
 ## [2.11.0] - 2019-08-08
 ### Security fixes
