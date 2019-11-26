@@ -55,7 +55,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     /**
      * @return void
      */
-    public function testThatIsMfaEnabledColumnNotIncludedIfMfaDisabledForOrgAndContainParameterHaveIsMfaEnabled()
+    public function testThatColumnIsMfaEnabledIsDisabledIfMfaIsDisabledForOrg()
     {
         $config = [
             MfaSettings::PROVIDERS => [
@@ -69,7 +69,8 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->getJson('/users.json?contain[is_mfa_enabled]=1');
         $this->assertSuccess();
-        $this->assertObjectNotHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]->User);
+        $this->assertObjectHasAttribute('is_mfa_enabled', $this->_responseJsonBody[0]->User);
+        $this->assertAttributeEquals(false, 'is_mfa_enabled', $this->_responseJsonBody[0]->User);
     }
 
     /**
