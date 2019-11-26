@@ -72,9 +72,13 @@ class EmailNotificationsListener implements EventListenerInterface
     protected function _send(string $to, string $subject, array $data, string $template)
     {
         $data['body']['fullBaseUrl'] = Configure::read('App.fullBaseUrl');
+        $purify = Configure::read('passbolt.email.purify.subject');
+        if (isset($purify) && $purify) {
+            $subject = Purifier::clean($subject);
+        }
         $options = [
             'template' => $template,
-            'subject' => Purifier::clean($subject),
+            'subject' => $subject,
             'format' => 'html',
             'config' => 'default',
             'headers' => ['Auto-Submitted' => 'auto-generated']

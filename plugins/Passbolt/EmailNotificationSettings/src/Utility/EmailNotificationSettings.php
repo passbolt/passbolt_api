@@ -41,6 +41,9 @@ class EmailNotificationSettings
      * @var array
      */
     private static $defaultSettings = [
+        'purify' => [
+            'subject' => false
+        ],
         'show' => [
             'comment' => true,
             'description' => true,

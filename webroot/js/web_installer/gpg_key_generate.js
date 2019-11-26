@@ -60,7 +60,7 @@ ready(function () {
     } catch(error) {
       console.error(error);
     }
-  }
+  };
 
   /**
    * Validate the form.
@@ -103,7 +103,7 @@ ready(function () {
    */
   const isValidUtf8 = function(value) {
     return /^((?![\u{10000}-\u{10FFFF}]).)*$/u.test(value);
-  }
+  };
 
   /**
    * Check that a string is a valid email string.
@@ -111,7 +111,7 @@ ready(function () {
    */
   const isValidEmail = function(value) {
     return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value);
-  }
+  };
 
  /**
    * Handle a field error. Display an error message associated to the field.
@@ -151,10 +151,10 @@ ready(function () {
     const length = '2048';
 
     return await openpgp.generateKey({
-      numBits: length,
+      rsaBits: length,
       userIds: userId,
     });
-  }
+  };
 
   init();
 });
