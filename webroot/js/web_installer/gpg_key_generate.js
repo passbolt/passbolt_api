@@ -151,7 +151,7 @@ ready(function () {
     const length = '2048';
 
     return await openpgp.generateKey({
-      rsaBits: length,
+      numBits: length,
       userIds: userId,
     });
   };
