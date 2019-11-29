@@ -99,7 +99,7 @@ class SettingsIndexController extends AppController
                     'debug' => Configure::read('debug') ? 1 : 0,
                     'server_timezone' => date_default_timezone_get(),
                     // session timeout info in minutes
-                    'session_timeout' => Configure::read('Session.timeout', ini_get('session.gc_maxlifetime')/60),
+                    'session_timeout' => Configure::read('Session.timeout', ini_get('session.gc_maxlifetime') / 60),
                     'image_storage' => [
                         'public_path' => Configure::read('ImageStorage.publicPath')
                     ],
