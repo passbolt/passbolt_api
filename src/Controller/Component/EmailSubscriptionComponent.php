@@ -29,6 +29,7 @@ class EmailSubscriptionComponent extends Component
     use EventDispatcherTrait;
 
     const APP_FULL_BASE_URL = 'App.fullBaseUrl';
+    const PASSBOLT_EMAIL_PURIFY_SUBJECT = 'passbolt.email.purify.subject';
 
     /**
      * @var EmailSubscriptionDispatcher
@@ -44,7 +45,12 @@ class EmailSubscriptionComponent extends Component
         $this->emailSubscriptionDispatcher = new EmailSubscriptionDispatcher(
             EventManager::instance(),
             new EmailSubscriptionManager(),
-            new EmailSender(EventManager::instance(), $this->getEmailQueueTable(), $config[self::APP_FULL_BASE_URL])
+            new EmailSender(
+                EventManager::instance(),
+                $this->getEmailQueueTable(),
+                $config[self::APP_FULL_BASE_URL],
+                $config[self::PASSBOLT_EMAIL_PURIFY_SUBJECT] ?? false
+            )
         );
 
         parent::initialize($config);
