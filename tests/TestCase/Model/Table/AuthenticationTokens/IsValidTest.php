@@ -23,10 +23,10 @@ use Cake\ORM\TableRegistry;
 
 class IsValidTest extends AppTestCase
 {
-    public $AuthenticationTokens;
-
-    public $fixtures = ['app.Base/AuthenticationTokens', 'app.Base/Users'];
     use AuthenticationTokenModelTrait;
+
+    public $AuthenticationTokens;
+    public $fixtures = ['app.Base/AuthenticationTokens', 'app.Base/Users'];
 
     public function setUp()
     {

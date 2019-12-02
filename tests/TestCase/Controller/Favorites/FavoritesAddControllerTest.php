@@ -24,10 +24,10 @@ use Cake\ORM\TableRegistry;
 
 class FavoritesAddControllerTest extends AppIntegrationTestCase
 {
+    use FavoritesModelTrait;
+
     /** @var FavoritesTable */
     private $Favorites;
-
-    use FavoritesModelTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',

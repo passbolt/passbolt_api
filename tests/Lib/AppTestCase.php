@@ -31,8 +31,6 @@ use Cake\TestSuite\TestCase;
 
 abstract class AppTestCase extends TestCase
 {
-    // Do not load all the traits here
-    // load them were needed instead
     use ArrayTrait;
     use CommentsModelTrait;
     use EntityTrait;

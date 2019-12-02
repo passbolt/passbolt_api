@@ -257,8 +257,10 @@ class ResourcesTable extends Table
 
         // If the list of secrets does not correspond to the list of users who have access to the resource,
         // do not validate.
-        if (count($secretsUsersIds) != count($allowedUsersIds)
-            || !empty(array_diff($allowedUsersIds, $secretsUsersIds))) {
+        if (
+            count($secretsUsersIds) != count($allowedUsersIds)
+            || !empty(array_diff($allowedUsersIds, $secretsUsersIds))
+        ) {
             return false;
         }
 

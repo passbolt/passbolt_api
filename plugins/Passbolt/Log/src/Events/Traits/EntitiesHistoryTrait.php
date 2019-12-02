@@ -90,9 +90,11 @@ trait EntitiesHistoryTrait
      */
     public function logEntityHistory(Event $event)
     {
-        if ($event->getName() == 'Model.afterSave' ||
+        if (
+            $event->getName() == 'Model.afterSave' ||
             $event->getName() == 'Model.afterDelete' ||
-            $event->getName() == 'Model.afterRead') {
+            $event->getName() == 'Model.afterRead'
+        ) {
             $this->_logEntityHistory($event);
         }
     }

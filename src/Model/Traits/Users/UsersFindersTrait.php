@@ -482,4 +482,22 @@ trait UsersFindersTrait
 
         return $user;
     }
+
+    /**
+     * Get all active users.
+     *
+     * @return object User
+     */
+    public function findActive()
+    {
+        $user = $this->find()
+             ->where([
+                 'Users.deleted' => false,
+                 'Users.active' => true,
+             ])
+             ->order(['Users.created' => 'ASC'])
+             ->all();
+
+        return $user;
+    }
 }
