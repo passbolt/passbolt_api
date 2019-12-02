@@ -26,14 +26,14 @@ use EmailQueue\Model\Table\EmailQueueTable;
 
 class EmailSubscriptionComponent extends Component
 {
+    use EventDispatcherTrait;
+
     const APP_FULL_BASE_URL = 'App.fullBaseUrl';
 
     /**
      * @var EmailSubscriptionDispatcher
      */
     private $emailSubscriptionDispatcher;
-
-    use EventDispatcherTrait;
 
     /**
      * @param array $config Config for the component

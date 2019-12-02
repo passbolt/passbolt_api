@@ -40,7 +40,7 @@ class SubscribedRedactorPoolTest extends TestCase
     {
         $this->subscribedRedactorsMock = [$this->createMock(SubscribedEmailRedactorInterface::class)];
 
-        $this->sut = new class($this->subscribedRedactorsMock) extends AbstractSubscribedEmailRedactorPool
+        $this->sut = new class ($this->subscribedRedactorsMock) extends AbstractSubscribedEmailRedactorPool
         {
             /**
              * @var array

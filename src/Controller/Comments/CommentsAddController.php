@@ -65,12 +65,14 @@ class CommentsAddController extends AppController
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
-            if (!empty($errors['foreign_key']) &&
+            if (
+                !empty($errors['foreign_key']) &&
                 (
-                    !empty($errors['foreign_key']['resource_exists'])
-                 || !empty($errors['foreign_key']['resource_is_soft_deleted'])
-                 || !empty($errors['foreign_key']['has_resource_access'])
-                )) {
+                    !empty($errors['foreign_key']['resource_exists']) ||
+                 !empty($errors['foreign_key']['resource_is_soft_deleted']) ||
+                 !empty($errors['foreign_key']['has_resource_access'])
+                )
+            ) {
                 throw new NotFoundException(__('The resource does not exist.'));
             }
             throw new BadRequestException(__('Could not validate comment data.'));

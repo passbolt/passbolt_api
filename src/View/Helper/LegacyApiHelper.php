@@ -19,7 +19,6 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
-
 use InvalidArgumentException;
 
 class LegacyApiHelper extends Helper
