@@ -66,6 +66,7 @@ trait ResourcesEmailTrait
         ];
         $this->_send($user->username, $subject, $data, $template);
     }
+
     /**
      * Send resource update email
      *
