@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Added
+- PB-687: As an admin I can resend an invitation for a user that didn't complete the setup
+
+### Improved
+- PB-878: Update Openpgp.js to v4.7
+- PB-893: Update CakePHP to v3.8.6
+
+### Fixed
+- PB-771: Added purify subject for the email subscribers
+- PB-856: Added migration fix to remove unused tables
+- GITHUB-84: Fix gc_maxlifetime versus Session.timeout units
 
 ## [2.11.0] - 2019-08-07
 ### Added
