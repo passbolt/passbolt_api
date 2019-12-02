@@ -11,6 +11,7 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
+ * @deprecated since v2.11.0. It extends the user session. Use AuthIsAuthenticatedController instead.
  */
 namespace App\Controller\Auth;
 

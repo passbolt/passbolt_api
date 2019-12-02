@@ -15,7 +15,7 @@
 namespace App\Model\Table;
 
 use App\Error\Exception\ValidationException;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\I18n\FrozenTime;
@@ -85,7 +85,7 @@ class GpgkeysTable extends Table
             ->requirePresence('armored_key', 'create')
             ->notEmpty('armored_key')
             ->add('armored_key', ['custom' => [
-                'rule' => [$this, 'isParsableArmoredPublicKeyRule'],
+                'rule' => [$this, 'isParsableArmoredPublicKey'],
                 'message' => __('The key should be a valid OpenPGPG ASCII armored key.')
             ]]);
 
@@ -181,6 +181,21 @@ class GpgkeysTable extends Table
      */
     public function isValidFingerprintRule(string $value, array $context = null)
     {
+        return self::isValidFingerprint($value);
+    }
+
+    /**
+     * Return true if string is a valid fingerprint
+     *
+     * @param string $value fingerprint
+     * @return bool
+     */
+    public static function isValidFingerprint(string $value = null)
+    {
+        if (empty($value)) {
+            return false;
+        }
+
         return (preg_match('/^[A-F0-9]{40}$/', $value) === 1);
     }
 
@@ -193,7 +208,7 @@ class GpgkeysTable extends Table
      */
     public function isValidKeyIdRule(string $value, array $context = null)
     {
-        return (preg_match('/^[A-F0-9]{8}$/', $value) === 1);
+        return (preg_match('/^[A-F0-9]{8,16}$/', $value) === 1);
     }
 
     /**
@@ -203,11 +218,11 @@ class GpgkeysTable extends Table
      * @param array $context not in use
      * @return bool
      */
-    public function isParsableArmoredPublicKeyRule(string $value, array $context = null)
+    public function isParsableArmoredPublicKey(string $value, array $context = null)
     {
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
 
-        return $gpg->isParsableArmoredPublicKeyRule($value);
+        return $gpg->isParsableArmoredPublicKey($value);
     }
 
     /**
@@ -358,7 +373,7 @@ class GpgkeysTable extends Table
             throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
         try {
-            $gpg = new Gpg();
+            $gpg = OpenPGPBackendFactory::get();
             $info = $gpg->getPublicKeyInfo($armoredKey);
         } catch (Exception $e) {
             throw new ValidationException(__('Could not create Gpgkey from armored key.'));

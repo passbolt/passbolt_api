@@ -18,6 +18,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait RecoveryEmailTrait
 {
@@ -42,7 +43,7 @@ trait RecoveryEmailTrait
      */
     public function sendRecoverEmail(Event $event, User $user, AuthenticationToken $token)
     {
-        if (Configure::read('passbolt.email.send.user.recover') === false) {
+        if (!EmailNotificationSettings::get('send.user.recover')) {
             return;
         }
 

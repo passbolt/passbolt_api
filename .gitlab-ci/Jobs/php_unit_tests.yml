@@ -1,0 +1,213 @@
+.test-template:
+  stage: test
+  variables:
+    # MySQL services variables
+    MYSQL_USER: user
+    MYSQL_PASSWORD: testing-password
+    MYSQL_ROOT_PASSWORD: testing-password2
+    MYSQL_DATABASE: test
+
+    # Passbolt unit test job common variables
+    DEBUG: "true"
+    DATASOURCES_DEFAULT_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_DEFAULT_USERNAME: $MYSQL_USER
+    DATASOURCES_DEFAULT_PASSWORD: $MYSQL_PASSWORD
+    DATASOURCES_DEFAULT_HOST: 127.0.0.1
+    DATASOURCES_TEST_DATABASE: $MYSQL_DATABASE
+    DATASOURCES_TEST_USERNAME: $MYSQL_USER
+    DATASOURCES_TEST_PASSWORD: $MYSQL_PASSWORD
+    DATASOURCES_TEST_HOST: 127.0.0.1
+    PASSBOLT_GPG_SERVER_KEY_PUBLIC: config/gpg/unsecure.key
+    PASSBOLT_GPG_SERVER_KEY_PRIVATE: config/gpg/unsecure_private.key
+    APP_FULL_BASE_URL: http://127.0.0.1
+    PASSBOLT_REGISTRATION_PUBLIC: 1
+    PASSBOLT_SELENIUM_ACTIVE: 1
+    # This is the development dummy fingerprint
+    PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
+    PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
+  services:
+  - name: $DATABASE_ENGINE_VERSION
+    command:
+      - /bin/bash
+      - -c
+      - |
+        mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+        docker-entrypoint.sh mysqld
+  image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
+  script:
+    - init_test_db
+    - cp config/app.default.php config/app.php
+    - composer install --dev --no-interaction
+    - gpg --import config/gpg/unsecure_private.key
+    - gpg --import config/gpg/unsecure.key
+    - $PHPUNIT_COMMAND
+  only:
+    - branches
+  artifacts:
+    reports:
+      junit: unitreport.xml
+
+php7.3-mariadb10.4:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "mariadb:10.4"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+  only:
+    - develop
+    - master
+
+php7.3-mysql5.7:
+  variables:
+    PHP_VERSION: "7.3"
+    DATABASE_ENGINE_VERSION: "mysql:5.7"
+  extends: .test-template
+
+php7.2-mariadb10.4:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mariadb:10.4"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+  only:
+    - develop
+    - master
+
+php7.2-mariadb10.3:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mariadb:10.3"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.2-mariadb10.2:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mariadb:10.2"
+  extends: .test-template
+  only:
+    - develop
+    - master
+
+php7.2-mariadb10.1:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mariadb:10.1"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.2-mariadb10.0:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mariadb:10.0"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.2-mysql5.7:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mysql:5.7"
+  extends: .test-template
+
+php7.2-mysql5.6:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mysql:5.6"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.2-mysql5.5:
+  variables:
+    PHP_VERSION: "7.2"
+    DATABASE_ENGINE_VERSION: "mysql:5.5"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.1-mariadb10.4:
+  variables:
+    PHP_VERSION: "7.1"
+    DATABASE_ENGINE_VERSION: "mariadb:10.4"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.1-mysql5.7:
+  variables:
+    PHP_VERSION: "7.1"
+    DATABASE_ENGINE_VERSION: "mysql:5.7"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.0-mariadb10.4:
+  variables:
+    PHP_VERSION: "7.0"
+    DATABASE_ENGINE_VERSION: "mariadb:10.4"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.0-mariadb10.1:
+  variables:
+    PHP_VERSION: "7.0"
+    DATABASE_ENGINE_VERSION: "mariadb:10.1"
+  extends: .test-template
+  except:
+    variables:
+      - $TEST_DISABLED
+
+php7.0-mysql5.7:
+  variables:
+    PHP_VERSION: "7.0"
+    DATABASE_ENGINE_VERSION: "mysql:5.7"
+  extends: .test-template
+  only:
+    - develop
+    - master
+  except:
+    variables:
+      - $TEST_DISABLED
+
+.custom_functions: &custom_functions |
+
+  function init_test_db() {
+    mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON $DATASOURCES_TEST_DATABASE.* to $DATASOURCES_TEST_USERNAME@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
+  }
+
+before_script:
+  - *custom_functions

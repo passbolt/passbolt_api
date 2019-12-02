@@ -14,9 +14,11 @@
  */
 namespace App\Utility\Healthchecks;
 
-use App\Utility\Gpg;
+use App\Model\Table\GpgkeysTable;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 class GpgHealthchecks
@@ -56,7 +58,12 @@ class GpgHealthchecks
      */
     public static function gpgLib($checks = [])
     {
-        $checks['gpg']['lib'] = (class_exists('gnupg'));
+        try {
+            OpenPGPBackendFactory::get();
+            $checks['gpg']['lib'] = true;
+        } catch (InternalErrorException $e) {
+            $checks['gpg']['lib'] = false;
+        }
 
         return $checks;
     }
@@ -83,17 +90,31 @@ class GpgHealthchecks
      */
     public static function gpgHome($checks = [])
     {
-        // If no keyring location has been set, use the default one ~/.gnupg.
-        $gnupgHome = getenv('GNUPGHOME');
-        if (empty($gnupgHome)) {
-            $uid = posix_getuid();
-            $user = posix_getpwuid($uid);
-            $gnupgHome = $user['dir'] . '/.gnupg';
+        switch (Configure::read('passbolt.gpg.backend')) {
+            case OpenPGPBackendFactory::GNUPG:
+                // If no keyring location has been set, use the default one ~/.gnupg.
+                $gnupgHome = getenv('GNUPGHOME');
+                if (empty($gnupgHome)) {
+                    $uid = posix_getuid();
+                    $user = posix_getpwuid($uid);
+                    $gnupgHome = $user['dir'] . '/.gnupg';
+                }
+                $checks['gpg']['info']['gpgHome'] = $gnupgHome;
+                $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
+                $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
+                break;
+            case OpenPGPBackendFactory::HTTP:
+                // using cache for local keyring
+                $checks['gpg']['gpgHome'] = true;
+                $checks['gpg']['gpgHomeWritable'] = true;
+                $checks['gpg']['info']['gpgHome'] = 'Cache engine';
+                break;
+            default:
+                // unknown backend
+                $checks['gpg']['gpgHome'] = false;
+                $checks['gpg']['gpgHome'] = false;
+                break;
         }
-
-        $checks['gpg']['info']['gpgHome'] = $gnupgHome;
-        $checks['gpg']['gpgHome'] = file_exists($checks['gpg']['info']['gpgHome']);
-        $checks['gpg']['gpgHomeWritable'] = is_writable($checks['gpg']['info']['gpgHome']);
 
         return $checks;
     }
@@ -135,7 +156,7 @@ class GpgHealthchecks
         $checks['gpg']['gpgKeyPublicFingerprint'] = false;
         $checks['gpg']['gpgKeyPublicEmail'] = false;
         if ($checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'] && $checks['gpg']['gpgKey']) {
-            $gpg = new Gpg();
+            $gpg = OpenPGPBackendFactory::get();
             $privateKeydata = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
             $privateKeyInfo = $gpg->getKeyInfo($privateKeydata);
             if ($privateKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
@@ -146,6 +167,7 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
+            /** @var GpgkeysTable $Gpgkeys */
             $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
             $checks['gpg']['gpgKeyPublicEmail'] = $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
         }
@@ -162,15 +184,15 @@ class GpgHealthchecks
     public static function gpgKeyInKeyring($checks = [])
     {
         $checks['gpg']['gpgKeyPublicInKeyring'] = false;
-        if ($checks['gpg']['gpgHome'] && Configure::read('passbolt.gpg.serverKey.fingerprint')) {
-            $gpg = new Gpg();
-            $keyInfo = $gpg->getKeyInfoFromKeyring(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-            if (!empty($keyInfo)) {
-                if ($keyInfo[0]['can_sign'] && $keyInfo[0]['can_encrypt']) {
-                    $checks['gpg']['gpgKeyPublicInKeyring'] = true;
-                }
-            }
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        if (!$checks['gpg']['gpgHome'] || $fingerprint === null) {
+            return $checks;
         }
+        $gpg = OpenPGPBackendFactory::get();
+        if (!$gpg->isKeyInKeyring($fingerprint)) {
+            return $checks;
+        }
+        $checks['gpg']['gpgKeyPublicInKeyring'] = true;
 
         return $checks;
     }
@@ -185,11 +207,10 @@ class GpgHealthchecks
     {
         $checks['gpg']['canEncrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
-            $_gpg = new \gnupg();
-            $_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-            $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
+            $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
             try {
+                $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
                 $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
                 if ($encryptedMessage !== false) {
                     $checks['gpg']['canEncrypt'] = true;
@@ -211,13 +232,14 @@ class GpgHealthchecks
     {
         $checks['gpg']['canEncryptSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
-            $_gpg = new \gnupg();
-            $_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-            $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-            $_gpg->addsignkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+            $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
             try {
-                $encryptedMessage2 = $_gpg->encryptsign($messageToEncrypt);
+                $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                $_gpg->setEncryptKeyFromFingerprint($fingerprint);
+                $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+                $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
                 if ($encryptedMessage2 !== false) {
                     $checks['gpg']['canEncryptSign'] = true;
                 }
@@ -239,13 +261,14 @@ class GpgHealthchecks
         $checks['gpg']['canDecrypt'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             if ($checks['gpg']['canEncrypt']) {
-                $_gpg = new \gnupg();
-                $_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-                $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
-                $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
+                $_gpg = OpenPGPBackendFactory::get();
                 $messageToEncrypt = 'test message';
                 try {
+                    $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                    $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                    $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                     $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
+                    $_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
                     $decryptedMessage = $_gpg->decrypt($encryptedMessage);
                     if ($decryptedMessage === $messageToEncrypt) {
                         $checks['gpg']['canDecrypt'] = true;
@@ -268,14 +291,17 @@ class GpgHealthchecks
     {
         $checks['gpg']['canDecryptVerify'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
-            $_gpg = new \gnupg();
-            $_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-            $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-            $_gpg->addsignkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+            $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
             try {
-                $encryptedMessage2 = $_gpg->encryptsign($messageToEncrypt);
-                $_gpg->decryptverify($encryptedMessage2, $decryptedMessage2);
+                $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                $_gpg->setEncryptKeyFromFingerprint($fingerprint);
+                $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+                $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
+                $_gpg->setVerifyKeyFromFingerprint($fingerprint);
+                $_gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
+                $decryptedMessage2 = $_gpg->decrypt($encryptedMessage2, true);
                 if ($decryptedMessage2 === $messageToEncrypt) {
                     $checks['gpg']['canDecryptVerify'] = true;
                 }
@@ -296,9 +322,8 @@ class GpgHealthchecks
     {
         $checks['gpg']['canSign'] = false;
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
-            $_gpg = new \gnupg();
-            $_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-            $_gpg->addsignkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
+            $_gpg = OpenPGPBackendFactory::get();
+            $_gpg->setSignKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
             $messageToEncrypt = 'test message';
             try {
                 $signature = $_gpg->sign($messageToEncrypt);
@@ -322,27 +347,20 @@ class GpgHealthchecks
     {
         $checks['gpg']['canVerify'] = false;
         if ($checks['gpg']['canDecryptVerify']) {
-            $_gpg = new \gnupg();
-            $_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
+            $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
 
             try {
-                $_gpg->addencryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-                $_gpg->adddecryptkey(Configure::read('passbolt.gpg.serverKey.fingerprint'), Configure::read('passbolt.gpg.serverKey.passphrase'));
-                $signature = $_gpg->sign($messageToEncrypt);
-                $encryptedMessage = $_gpg->encryptsign($messageToEncrypt);
-                $plaintext = "";
+                $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+                $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
+                $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+                $signedMessage = $_gpg->sign($messageToEncrypt);
 
-                // Verify encrypted message
-                $info = $_gpg->verify($encryptedMessage, false, $plaintext);
-                if ($info !== false && isset($info['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info['fingerprint']) {
+                try {
+                    $_gpg->setVerifyKeyFromFingerprint($fingerprint);
+                    $_gpg->verify($signedMessage, Configure::read('passbolt.gpg.serverKey.fingerprint'));
                     $checks['gpg']['canVerify'] = true;
-                }
-
-                // Verify signature
-                $info = $_gpg->verify($signature, false, $messageToEncrypt);
-                if ($info !== false && isset($info[0]['fingerprint']) && Configure::read('passbolt.gpg.serverKey.fingerprint') == $info[0]['fingerprint']) {
-                    $checks['gpg']['canVerify'] = true;
+                } catch (Exception $e) {
                 }
             } catch (Exception $e) {
             }

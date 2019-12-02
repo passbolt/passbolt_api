@@ -18,7 +18,10 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
+        'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings'
+    ];
 
     public $fails = [
         'cannot recover with username that is empty' => [

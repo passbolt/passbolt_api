@@ -78,8 +78,8 @@ trait AuthenticationTokenModelTrait
                 $data['modified'] = date('Y-m-d H:i:s', strtotime('-10 days'));
                 break;
             case 'expired':
-                $data['created'] = date('Y-m-d H:i:s', strtotime('-10 days'));
-                $data['modified'] = date('Y-m-d H:i:s', strtotime('-10 days'));
+                $data['created'] = date('Y-m-d H:i:s', strtotime('-11 days'));
+                $data['modified'] = date('Y-m-d H:i:s', strtotime('-11 days'));
                 break;
         }
 

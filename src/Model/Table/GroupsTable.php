@@ -94,13 +94,13 @@ class GroupsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmptyString('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->utf8Extended('name', __('The name is not a valid utf8 string.'))
             ->lengthBetween('name', [0, 255], __('The name length should be maximum {0} characters.', 255))
             ->requirePresence('name', 'create', __('A name is required.'))
-            ->allowEmptyString('name', false, __('The name cannot be empty.'));
+            ->allowEmptyString('name', __('The name cannot be empty.'), false);
 
         $validator
             ->boolean('deleted')
@@ -109,12 +109,12 @@ class GroupsTable extends Table
         $validator
             ->uuid('created_by')
             ->requirePresence('created_by', 'create')
-            ->allowEmptyString('created_by', false);
+            ->allowEmptyString('created_by', null, false);
 
         $validator
             ->uuid('modified_by')
             ->requirePresence('modified_by', true, __('Modified by field is required.'))
-            ->allowEmptyString('modified_by', false);
+            ->allowEmptyString('modified_by', null, false);
 
         return $validator;
     }

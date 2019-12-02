@@ -13,7 +13,6 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
@@ -22,6 +21,10 @@ if (PHP_SAPI === 'cli') {
 $owner = $body['owner'];
 $resource = $body['resource'];
 $secret = $body['secret'];
+$showUsername = $body['showUsername'];
+$showUri = $body['showUri'];
+$showDescription = $body['showDescription'];
+$showSecret = $body['showSecret'];
 
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $owner->profile->avatar->url['small'], true),
@@ -36,19 +39,19 @@ echo $this->element('Email/module/avatar',[
 
 $text = __('Name: {0}', Purifier::clean($resource->name)) . '<br/>';
 
-if (Configure::read('passbolt.email.show.username')) {
+if ($showUsername) {
     $text .= __('Username: {0}', Purifier::clean($resource->username)) . '<br/>';
 }
-if (Configure::read('passbolt.email.show.uri')) {
+if ($showUri) {
     $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
 }
-if (Configure::read('passbolt.email.show.description')) {
+if ($showDescription) {
     $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-if (Configure::read('passbolt.email.show.secret')) {
+if ($showSecret) {
     echo $this->element('Email/module/code', [
         'text' => $secret
     ]);

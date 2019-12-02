@@ -20,6 +20,7 @@ use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 trait GroupsEmailTrait
 {
@@ -43,9 +44,10 @@ trait GroupsEmailTrait
      */
     public function sendGroupUserAddEmail(Event $event, Group $group)
     {
-        if (!Configure::read('passbolt.email.send.group.user.add')) {
+        if (!EmailNotificationSettings::get('send.group.user.add')) {
             return;
         }
+
         $Users = TableRegistry::getTableLocator()->get('Users');
         $admin = $Users->findFirstForEmail($group->created_by);
 
@@ -75,7 +77,7 @@ trait GroupsEmailTrait
      */
     public function sendGroupDeleteEmail(Event $event, Group $group, string $deletedBy)
     {
-        if (!Configure::read('passbolt.email.send.group.delete')) {
+        if (!EmailNotificationSettings::get('send.group.delete')) {
             return;
         }
 
@@ -144,7 +146,7 @@ trait GroupsEmailTrait
      */
     public function sendAddUserGroupUpdateEmail(Event $event, Group $group, array $addedGroupsUsers, User $modifiedBy)
     {
-        if (empty($addedGroupsUsers) || !Configure::read('passbolt.email.send.group.user.add')) {
+        if (empty($addedGroupsUsers) || !EmailNotificationSettings::get('send.group.user.add')) {
             return;
         }
 
@@ -178,7 +180,7 @@ trait GroupsEmailTrait
      */
     public function sendUpdateMembershipGroupUpdateEmail(Event $event, Group $group, array $updatedGroupsUsers, User $modifiedBy)
     {
-        if (empty($updatedGroupsUsers) || !Configure::read('passbolt.email.send.group.user.update')) {
+        if (empty($updatedGroupsUsers) || !EmailNotificationSettings::get('send.group.user.update')) {
             return;
         }
 
@@ -212,7 +214,7 @@ trait GroupsEmailTrait
      */
     public function sendDeleteUserGroupUpdateEmail(Event $event, Group $group, array $removedGroupsUsers, User $modifiedBy)
     {
-        if (empty($removedGroupsUsers) || !Configure::read('passbolt.email.send.group.user.delete')) {
+        if (empty($removedGroupsUsers) || !EmailNotificationSettings::get('send.group.user.delete')) {
             return;
         }
 
@@ -252,8 +254,10 @@ trait GroupsEmailTrait
         array $removedGroupsUsers,
         User $modifiedBy
     ) {
-        if ((empty($addedGroupsUsers) && empty($updatedGroupsUsers) && empty($removedGroupsUsers))
-            || !Configure::read('passbolt.email.send.group.manager.update')) {
+        if (
+            (empty($addedGroupsUsers) && empty($updatedGroupsUsers) && empty($removedGroupsUsers))
+            || !EmailNotificationSettings::get('send.group.manager.update')
+        ) {
             return;
         }
 

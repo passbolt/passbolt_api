@@ -15,6 +15,8 @@
 namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Utility\OpenPGP\OpenPGPBackend;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
@@ -27,6 +29,8 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Avatars'
     ];
     public $keyid;
+
+    /** @var OpenPGPBackend $gpg */
     public $gpg;
 
     // Keys ids used in this test. Set in _gpgSetup.
@@ -86,16 +90,8 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $data = $this->_getBodyAsString();
         $expect = 'An Internal Error Has Occurred';
         $this->assertContains($expect, $data);
-        $expect = 'The OpenPGP server key defined in the config could not be found in the GnuPG keyring.';
+        $expect = 'The OpenPGP server key fingerprint defined in the config does not match the one associated with the key on file.';
         $this->assertContains($expect, $data);
-    }
-
-    /**
-     * Test login without providing the csrf token
-     */
-    public function testAuthLoginControllerErrorCsrfToken()
-    {
-        $this->markTestIncomplete();
     }
 
     /**
@@ -131,7 +127,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerAllStagesFingerprint()
     {
-        $this->_gpgSetup(); // add ada's keys
+        $this->gpgSetup(); // add ada's keys
         $fix = [
             '' => false, // wrong empty
             'XXX' => false, // wrong format
@@ -176,7 +172,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerStage0MessageFormat()
     {
-        $this->_gpgSetup();
+        $this->gpgSetup();
         $uuid = UuidFactory::uuid();
 
         $fix = [
@@ -193,10 +189,10 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0' => true // right
         ];
 
-        $this->_gpg->addencryptkey($this->serverKeyId);
-        $this->_gpg->addsignkey($this->adaKeyId);
+        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, "");
         foreach ($fix as $token => $expectSuccess) {
-            $msg = $this->_gpg->encrypt($token);
+            $msg = $this->gpg->encrypt($token);
             $this->post('/auth/verify', [
                 'data' => [
                     'gpg_auth' => [
@@ -236,17 +232,15 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerStage0WrongServerKey()
     {
-        $this->_gpgSetup();
+        $this->gpgSetup();
         $uuid = UuidFactory::uuid();
 
         // Use betty public key instead of server
         $wrongPublicKey = FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key';
-        $keyInfo = $this->_gpg->import(file_get_contents($wrongPublicKey));
-        $this->serverKeyId = $keyInfo['fingerprint'];
+        $this->serverKeyId = $this->gpg->importKeyIntoKeyring(file_get_contents($wrongPublicKey));
         $token = 'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0';
-        $this->_gpg->addencryptkey($this->serverKeyId);
-        $this->_gpg->addsignkey($this->adaKeyId);
-        $msg = $this->_gpg->encrypt($token);
+        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+        $msg = $this->gpg->encrypt($token);
 
         $this->post('/auth/verify.json', [
             'data' => [
@@ -270,7 +264,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerStage1UserToken()
     {
-        $this->_gpgSetup();
+        $this->gpgSetup();
         $this->post('/auth/login', [
             'data' => [
                 'gpg_auth' => [
@@ -289,19 +283,14 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 
         // try to decrypt the message
         $this->assertTrue(
-            $this->_gpg->adddecryptkey($this->adaKeyId, ''),
+            $this->gpg->setDecryptKeyFromFingerprint($this->adaKeyId, ''),
             'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.'
         );
         $msg = (stripslashes(urldecode($headers['X-GPGAuth-User-Auth-Token'])));
-        $plaintext = '';
-        $info = $this->_gpg->decryptverify($msg, $plaintext);
-        $this->assertFalse(($info === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);
-        $this->assertFalse(($plaintext === ''), 'Could not decrypt the server generated User Auth Token: ' . $msg);
-        $this->assertEquals(
-            strtoupper($info[0]['fingerprint']),
-            strtoupper(Configure::read('passbolt.gpg.serverKey.fingerprint')),
-            'Server signature is not matching known fingerprint'
-        );
+        $signatureInfo = [];
+        $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
+        $plaintext = $this->gpg->decrypt($msg, true);
+        $this->assertFalse(($plaintext === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);
 
         // Decrypt and check if the token is in the right format
         $info = explode('|', $plaintext);
@@ -350,20 +339,23 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      * Setup GPG and import the keys to be used in the tests
      * @param string $name ada by default
      */
-    protected function _gpgSetup()
+    protected function gpgSetup()
     {
         // Make sure the keys are in the keyring
         // if needed we add them for later use in the tests
-        $this->_gpg = new \gnupg();
-        $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
+        if (Configure::read('passbolt.gpg.putenv')) {
+            putenv('GNUPGHOME=' . Configure::read('passbolt.gpg.keyring'));
+        }
+
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->clearKeys();
 
         // Import the server key.
-        $keyInfo = $this->_gpg->import(file_get_contents(Configure::read('passbolt.gpg.serverKey.private')));
-        $this->serverKeyId = $keyInfo['fingerprint'];
+        $this->serverKeyId = $this->gpg->importKeyIntoKeyring(file_get_contents(Configure::read('passbolt.gpg.serverKey.private')));
+        $this->gpg->importKeyIntoKeyring(file_get_contents(Configure::read('passbolt.gpg.serverKey.public')));
 
         // Import the key of ada.
-        $keyInfo = $this->_gpg->import(file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'));
-        $this->adaKeyId = $keyInfo['fingerprint'];
+        $this->adaKeyId = $this->gpg->importKeyIntoKeyring(file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'));
     }
 
     protected function getHeaders()

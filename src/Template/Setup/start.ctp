@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 use Cake\Core\Configure;
+use App\Utility\Purifier;
 
 if (!isset($setupCase)) {
     $setupCase = 'install';
@@ -27,10 +28,18 @@ if ($browserName == 'firefox' || $browserName == 'chrome') {
 } else {
     $pluginCheckTemplate = 'Public/Setup/unsupported';
 }
+
+// See. fetch('scriptBottom')
+$this->start('scriptBottom');
+// Load the javascript application.
+$scriptOptions = ['fullBase' => true, 'cache-version' => Configure::read('passbolt.version')];
+echo $this->Html->script('/js/vendors/jquery.min.js?v=' . Configure::read('passbolt.version'), $scriptOptions);
+echo $this->Html->script('/js/setup/reload.js?v=' . Configure::read('passbolt.version'), $scriptOptions);
+$this->end();
 ?>
 <input type="hidden" id="js_setup_user_username" value="<?php echo $user->username; ?>"/>
-<input type="hidden" id="js_setup_user_first_name" value="<?php echo $user->profile->first_name; ?>"/>
-<input type="hidden" id="js_setup_user_last_name" value="<?php echo $user->profile->last_name; ?>"/>
+<input type="hidden" id="js_setup_user_first_name" value="<?php echo Purifier::clean($user->profile->first_name); ?>"/>
+<input type="hidden" id="js_setup_user_last_name" value="<?php echo Purifier::clean($user->profile->last_name); ?>"/>
 
 <!-- first header -->
 <div class="header first">

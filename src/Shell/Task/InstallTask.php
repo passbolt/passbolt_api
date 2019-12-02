@@ -257,7 +257,7 @@ class InstallTask extends AppShell
         $this->out();
         $this->out(__('Install the schema and default data.'));
         $this->hr();
-        $cmd = $this->_formatCmd('migrations migrate');
+        $cmd = $this->_formatCmd('migrations migrate --no-lock');
 
         return ($this->dispatchShell($cmd) === self::CODE_SUCCESS);
     }
@@ -306,8 +306,11 @@ class InstallTask extends AppShell
                 throw new Exception(__('The GnuPG config for the server is not available or incomplete'));
             }
             // Check if keyring is present and writable
-            if (!$checks['gpg']['gpgHome'] || !$checks['gpg']['gpgHomeWritable']) {
-                throw new Exception(__('The GPG keyring location is not set or not writable.'));
+            if (!$checks['gpg']['gpgHome']) {
+                throw new Exception(__('The GPG keyring location is not set.'));
+            }
+            if (!$checks['gpg']['gpgHomeWritable']) {
+                throw new Exception(__('The GPG keyring location is not writable.'));
             }
 
             // In production don't accept default GPG server key

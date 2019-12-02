@@ -17,10 +17,12 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsDeleteNotificationTest extends AppIntegrationTestCase
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $Groups;
 
     public $fixtures = [
@@ -30,7 +32,8 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
 
     public function testGroupsDeleteNotificationDisabled()
     {
-        Configure::write('passbolt.email.send.group.delete', false);
+        $this->setEmailNotificationSetting('send.group.delete', false);
+
         $this->authenticateAs('edith');
         $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json');
         $this->assertResponseSuccess();
@@ -46,7 +49,8 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
 
     public function testGroupsDeleteNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.group.delete', true);
+        $this->setEmailNotificationSetting('send.group.delete', true);
+
         $this->authenticateAs('edith');
         $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json');
         $this->assertResponseSuccess();

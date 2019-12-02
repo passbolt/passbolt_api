@@ -16,7 +16,7 @@ namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAction;
-use Cake\Network\Exception\InternalErrorException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 

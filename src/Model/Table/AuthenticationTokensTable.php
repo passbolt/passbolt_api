@@ -17,9 +17,8 @@ namespace App\Model\Table;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -42,6 +41,8 @@ use Cake\Validation\Validator;
  */
 class AuthenticationTokensTable extends Table
 {
+    /** @var \App\Utility\AuthToken\AuthTokenExpiry */
+    private $authTokenExpiry;
 
     /**
      * Initialize method
@@ -52,6 +53,8 @@ class AuthenticationTokensTable extends Table
     public function initialize(array $config)
     {
         parent::initialize($config);
+
+        $this->authTokenExpiry = new AuthTokenExpiry();
 
         $this->setTable('authentication_tokens');
         $this->setDisplayField('id');
@@ -75,17 +78,17 @@ class AuthenticationTokensTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmpty('id', null, 'create');
 
         $validator
             ->uuid('token')
             ->requirePresence('token', 'create')
-            ->allowEmptyString('token', false, __('Then authentication token should not be empty.'));
+            ->allowEmptyString('token', __('Then authentication token should not be empty.'), false);
 
         $validator
             ->scalar('type')
             ->requirePresence('type', 'create')
-            ->allowEmptyString('token', false, __('Then authentication type should not be empty.'))
+            ->allowEmptyString('token', __('Then authentication type should not be empty.'), false)
             ->add('type', ['type' => [
                 'rule' => [$this, 'isValidAuthenticationTokenType'],
                 'message' => __('This authentication type is not supported.')
@@ -94,7 +97,7 @@ class AuthenticationTokensTable extends Table
         $validator
             ->uuid('user_id')
             ->requirePresence('user_id', 'create')
-            ->allowEmptyString('user_id', false, __('Then authentication user id should not be empty.'));
+            ->allowEmptyString('user_id', __('Then authentication user id should not be empty.'), false);
 
         $validator
             ->boolean('active')
@@ -233,15 +236,15 @@ class AuthenticationTokensTable extends Table
     /**
      * Check if a token is expired
      *
-     * @param EntityInterface $token uuid
+     * @param AuthenticationToken $token uuid
      * @param string|int $expiry the numeric value with space then time type.
      *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(EntityInterface $token, $expiry = null)
+    public function isExpired(AuthenticationToken $token, $expiry = null)
     {
         if ($expiry === null) {
-            $expiry = Configure::read('passbolt.auth.tokenExpiry');
+            $expiry = $this->authTokenExpiry->getExpirationForTokenType($token->type);
         }
         $valid = $token->created->wasWithinLast($expiry);
         if (!$valid) {

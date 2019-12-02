@@ -89,10 +89,21 @@ module.exports = function(grunt) {
           src: ['openpgp.min.js'],
           dest: paths.js + 'vendors',
           expand: true
+        }, {
+          // jQuery
+          cwd: paths.node_modules + 'jquery/dist',
+          src: ['jquery.min.js'],
+          dest: paths.js + 'vendors',
+          expand: true
         }]
       },
       appjs: {
         files: [{
+          cwd: paths.node_modules + 'babel-polyfill/dist',
+          src: ['polyfill.min.js'],
+          dest: paths.js + 'app',
+          expand: true
+        }, {
           cwd: paths.node_modules_appjs + 'dist',
           src: ['steal.production.js', 'bundles/passbolt-appjs/passbolt.js'],
           dest: paths.js + 'app',

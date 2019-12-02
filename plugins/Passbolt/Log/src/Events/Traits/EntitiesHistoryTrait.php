@@ -90,9 +90,11 @@ trait EntitiesHistoryTrait
      */
     public function logEntityHistory(Event $event)
     {
-        if ($event->getName() == 'Model.afterSave' ||
+        if (
+            $event->getName() == 'Model.afterSave' ||
             $event->getName() == 'Model.afterDelete' ||
-            $event->getName() == 'Model.afterRead') {
+            $event->getName() == 'Model.afterRead'
+        ) {
             $this->_logEntityHistory($event);
         }
     }
@@ -141,7 +143,13 @@ trait EntitiesHistoryTrait
     {
         $table = $event->getSubject();
         $modelName = $table->getAlias();
-        $userAction = UserAction::getInstance();
+        try {
+            $userAction = UserAction::getInstance();
+        } catch (\Exception $exception) {
+            // preventing the app to fail if no user action is set
+            // we consider the log operation is not needed
+            return;
+        }
 
         if ($this->isLogOperationNeeded($event, $userAction->getActionName())) {
             $entity = $event->getData()['entity'];

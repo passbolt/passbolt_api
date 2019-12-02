@@ -22,6 +22,7 @@ use Cake\ORM\TableRegistry;
 
 class CleanupTest extends AppTestCase
 {
+    use CleanupTrait;
 
     public $Secrets;
     public $Groups;
@@ -30,8 +31,6 @@ class CleanupTest extends AppTestCase
         'app.Base/Resources', 'app.Base/Secrets'
     ];
     public $options;
-
-    use CleanupTrait;
 
     public function setUp()
     {

@@ -16,6 +16,11 @@ namespace App\Auth;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\GpgkeysTable;
+use App\Model\Table\UsersTable;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
@@ -39,9 +44,8 @@ class GpgAuthenticate extends BaseAuthenticate
     protected $_config;
 
     /**
-     * @var $_gpg \gnupg instance
+     * @var $_gpg OpenPGPBackendInterface instance
      * @access protected
-     * @link http://php.net/manual/en/book.gnupg.php
      */
     protected $_gpg;
 
@@ -65,11 +69,6 @@ class GpgAuthenticate extends BaseAuthenticate
      * @var User $_user
      */
     protected $_user;
-
-    /**
-     * @var AuthenticationToken $_AuthenticationToken
-     */
-    protected $_AuthenticationToken;
 
     /**
      * When an unauthenticated user tries to access a protected page this method is called
@@ -169,21 +168,23 @@ class GpgAuthenticate extends BaseAuthenticate
         } catch (Exception $e) {
             return $this->_error($e->getMessage());
         }
-        $this->_gpg->addsignkey(
-            $this->_config['serverKey']['fingerprint'],
-            $this->_config['serverKey']['passphrase']
+
+        $this->_gpg->setSignKeyFromFingerprint(
+            Configure::read('passbolt.gpg.serverKey.fingerprint'),
+            Configure::read('passbolt.gpg.serverKey.passphrase')
         );
 
         // generate the authentication token
-        $this->_AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $authenticationToken = $this->_AuthenticationToken->generate($this->_user->id, AuthenticationToken::TYPE_LOGIN);
+        /** @var AuthenticationTokensTable $AuthenticationToken */
+        $AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $authenticationToken = $AuthenticationToken->generate($this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!isset($authenticationToken->token)) {
             return $this->_error(__('Failed to create token.'));
         }
 
         // encrypt and sign and send
         $token = 'gpgauthv1.3.0|36|' . $authenticationToken->token . '|gpgauthv1.3.0';
-        $msg = $this->_gpg->encryptsign($token);
+        $msg = $this->_gpg->encrypt($token, true);
         $msg = quotemeta(urlencode($msg));
         $this->_response = $this->_response->withHeader('X-GPGAuth-User-Auth-Token', $msg);
 
@@ -206,14 +207,17 @@ class GpgAuthenticate extends BaseAuthenticate
 
         // extract the UUID to get the database records
         list($version, $length, $uuid, $version2) = explode('|', $this->_data['user_token_result']);
-        $isValidToken = $this->_AuthenticationToken->isValid($uuid, $this->_user->id, AuthenticationToken::TYPE_LOGIN);
+
+        /** @var AuthenticationTokensTable $AuthenticationToken */
+        $AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $isValidToken = $AuthenticationToken->isValid($uuid, $this->_user->id, AuthenticationToken::TYPE_LOGIN);
         if (!$isValidToken) {
             return $this->_error(__('The user token result could not be found ') .
                 't=' . $uuid . ' u=' . $this->_user->id);
         }
 
         // All good!
-        $this->_AuthenticationToken->setInactive($uuid);
+        $AuthenticationToken->setInactive($uuid);
         $this->_response = $this->_response
             ->withHeader('X-GPGAuth-Progress', 'complete')
             ->withHeader('X-GPGAuth-Authenticated', 'true')
@@ -247,8 +251,6 @@ class GpgAuthenticate extends BaseAuthenticate
             return false;
         }
 
-        $this->_AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-
         return true;
     }
 
@@ -260,48 +262,50 @@ class GpgAuthenticate extends BaseAuthenticate
      */
     private function _initKeyring()
     {
-        // load base configuration
-        $this->_config = Configure::read('passbolt.gpg');
-        if (!isset($this->_config['serverKey']['fingerprint'])) {
-            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
-        }
-        $keyid = $this->_config['serverKey']['fingerprint'];
-
         // check if the default key is set and available in gpg
-        $this->_gpg = new \gnupg();
-        $info = $this->_gpg->keyinfo($keyid);
-        $this->_gpg->seterrormode(\gnupg::ERROR_EXCEPTION);
-        if (empty($info)) {
-            throw new InternalErrorException(__('The OpenPGP server key defined in the config could not be found in the GnuPG keyring.'));
+        $this->_gpg = OpenPGPBackendFactory::get();
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+
+        // Check if config contains fingerprint
+        if (!GpgkeysTable::isValidFingerprint($fingerprint)) {
+            throw new InternalErrorException(__('The GnuPG config for the server is not available or incomplete.'));
         }
 
         // set the key to be used for decrypting
-        if (!$this->_gpg->adddecryptkey($keyid, $this->_config['serverKey']['passphrase'])) {
-            throw new InternalErrorException(__('The OpenPGP server key defined in the config cannot be used to decrypt.'));
+        try {
+            $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+        } catch (Exception $exception) {
+            try {
+                $this->_gpg->importServerKeyInKeyring();
+                $this->_gpg->setDecryptKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+            } catch (Exception $exception) {
+                $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
+                $msg .= $exception->getMessage();
+                throw new InternalErrorException($msg);
+            }
         }
     }
 
     /**
      * Set user key for encryption and import it in the keyring if needed
      *
-     * @param string $keyid SHA1 fingerprint
+     * @param string $fingerprint fingerprint
      * @throws InternalErrorException when the key is not valid
      * @return void
      */
-    private function _initUserKey(string $keyid)
+    private function _initUserKey(string $fingerprint)
     {
-        $info = $this->_gpg->keyinfo($keyid);
-        if (empty($info)) {
-            if (!$this->_gpg->import($this->_user->gpgkey->armored_key)) {
+        try {
+            $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
+        } catch (Exception $exception) {
+            // Try to import the key in keyring again
+            try {
+                $this->_gpg->importKeyIntoKeyring($this->_user->gpgkey->armored_key);
+                $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
+            } catch (Exception $exception) {
                 throw new InternalErrorException(__('The OpenPGP key for the user could not be imported in GnuPG.'));
             }
-            // check that the imported key match the fingerprint
-            $info = $this->_gpg->keyinfo($keyid);
-            if (empty($info)) {
-                throw new InternalErrorException(__('GnuPGP does not return any information for the OpenPGP key of the user.'));
-            }
         }
-        $this->_gpg->addencryptkey($keyid);
     }
 
     /**
@@ -317,19 +321,21 @@ class GpgAuthenticate extends BaseAuthenticate
 
             return false;
         }
-        $keyid = strtoupper($this->_data['keyid']);
+        $fingerprint = strtoupper($this->_data['keyid']);
 
         // validate the fingerprint format
+        /** @var GpgkeysTable $Gpgkeys */
         $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        if (!$Gpgkeys->isValidFingerprintRule($keyid)) {
+        if (!$Gpgkeys->isValidFingerprintRule($fingerprint)) {
             $this->_debug('Invalid fingerprint.');
 
             return false;
         }
 
         // try to find the user
+        /** @var UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
-        $user = $Users->find('auth', ['fingerprint' => $keyid])->first();
+        $user = $Users->find('auth', ['fingerprint' => $fingerprint])->first();
         if (empty($user)) {
             $this->_debug('User not found.');
 

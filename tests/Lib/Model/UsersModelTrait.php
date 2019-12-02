@@ -128,19 +128,6 @@ trait UsersModelTrait
         return $this->Users->save($testUser);
     }
 
-    protected function getPersistedUser($random = true)
-    {
-        $fixture = new UsersFixture();
-
-        $index = 0;
-
-        if ($random) {
-            $index = array_rand($fixture->records);
-        }
-
-        return $fixture->records[$index];
-    }
-
     protected function getNonExistingRoleId()
     {
         return UuidFactory::uuid('role.id.notexist');

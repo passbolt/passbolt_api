@@ -1,0 +1,20 @@
+.cs-check:
+  stage: test
+  variables:
+    PHP_VERSION: "7.2"
+  image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
+  allow_failure: true
+  script:
+    - composer install --dev --no-interaction
+    - composer cs-check
+
+check-style-strict:
+  extends: .cs-check
+  allow_failure: false
+  only:
+    - common
+
+check-style:
+  extends: .cs-check
+  except:
+    - common

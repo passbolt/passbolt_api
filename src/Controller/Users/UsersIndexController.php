@@ -15,37 +15,43 @@
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
-use App\Controller\Component\QueryStringComponent;
+use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Model\Entity\Role;
-use Cake\Event\Event;
+use App\Model\Table\Dto\FindIndexOptions;
+use App\Model\Table\UsersTable;
 
+/**
+ * @property UsersTable Users
+ */
 class UsersIndexController extends AppController
 {
-
     /**
-     * User Index action
-     *
      * @return void
      */
     public function index()
     {
         $this->loadModel('Users');
 
-        $whitelist = [
-            'filter' => ['search', 'has-groups', 'has-access', 'is-admin'],
-            'order' => [
-                'User.username', 'User.created', 'User.modified',
-                'Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'
-            ],
-            'contain' => [
-                'LastLoggedIn'
-            ]
-        ];
+        $findIndexOptions = (new FindIndexOptions())
+            ->allowContain('LastLoggedIn')
+            ->allowOrders(['User.username', 'User.created', 'User.modified'])
+            ->allowOrders(['Profile.first_name', 'Profile.last_name', 'Profile.created', 'Profile.modified'])
+            ->allowFilters(['search', 'has-groups', 'has-access', 'is-admin']);
+
         if ($this->User->role() === Role::ADMIN) {
-            $whitelist['filter'][] = 'is-active';
+            $findIndexOptions->allowFilter('is-active');
         }
-        $options = $this->QueryString->get($whitelist);
-        $users = $this->Users->findIndex($this->User->role(), $options);
+
+        $event = ControllerFindIndexOptionsBeforeMarshal::create($findIndexOptions, $this);
+
+        $this->getEventManager()->dispatch($event);
+
+        $computedFindIndexOptions = $this->QueryString->get(
+            $event->getOptions()->getAllowedOptions(),
+            $event->getOptions()->getFilterValidators()
+        );
+
+        $users = $this->Users->findIndex($this->User->role(), $computedFindIndexOptions);
 
         $this->success(__('The operation was successful.'), $users);
     }

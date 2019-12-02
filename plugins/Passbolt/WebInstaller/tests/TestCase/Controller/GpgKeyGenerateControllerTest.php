@@ -14,13 +14,13 @@
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
-use Cake\Core\Configure;
+use App\Test\Lib\Model\GpgkeysModelTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
-use Passbolt\WebInstaller\Test\TestCase\Utility\GpgKeyFormTest;
 
 class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
 {
+    use GpgkeysModelTrait;
+
     public function setUp()
     {
         parent::setUp();
@@ -38,7 +38,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerGpgKeyGeneratePostSuccess()
     {
-        $postData = GpgKeyFormTest::getDummyData();
+        $postData = $this->getDummyGpgkey();
         $this->post('/install/gpg_key', $postData);
         $this->assertResponseCode(302);
         $this->assertRedirectContains('install/email');
@@ -47,7 +47,7 @@ class GpgKeyGenerateControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerGpgKeyGeneratePostError_InvalidData()
     {
-        $postData = GpgKeyFormTest::getDummyData([
+        $postData = $this->getDummyGpgkey([
             'fingerprint' => '2FC8945833C51946E937F9FED47B0811573EE67E'
         ]);
         $this->post('/install/gpg_key', $postData);

@@ -15,11 +15,14 @@
 
 namespace App\Test\TestCase\Model\Table\Resources;
 
+use App\Model\Table\GpgkeysTable;
 use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackend;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -27,16 +30,26 @@ class UpdateTest extends AppTestCase
 {
     use FormatValidationTrait;
 
+    /** @var ResourcesTable */
     public $Resources;
 
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'];
+    /** @var GpgkeysTable */
+    public $Gpgkeys;
+
+    /** @var OpenPGPBackend gpg */
+    public $gpg;
+
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
+        'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'
+    ];
 
     public function setUp()
     {
         parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        $this->gpg = new Gpg();
+        $this->gpg = OpenPGPBackendFactory::get();
     }
 
     public function tearDown()
@@ -49,7 +62,8 @@ class UpdateTest extends AppTestCase
     protected function _encryptSecret($userId, $text)
     {
         $gpgKey = $this->Gpgkeys->find()->where(['user_id' => $userId])->first();
-        $this->gpg->setEncryptKey($gpgKey->armored_key);
+        $this->gpg->importKeyIntoKeyring($gpgKey->armored_key);
+        $this->gpg->setEncryptKeyFromFingerprint($gpgKey->fingerprint);
 
         return $this->gpg->encrypt($text);
     }

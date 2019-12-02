@@ -16,11 +16,13 @@ namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class UsersAddNotificationTest extends AppIntegrationTestCase
 {
+    use EmailNotificationSettingsTestTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
         'app.Base/Profiles', 'app.Base/EmailQueue', 'app.Base/AuthenticationTokens', 'app.Base/Avatars'
@@ -28,7 +30,8 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
 
     public function testUserAddNotificationDisabled()
     {
-        Configure::write('passbolt.email.send.user.create', false);
+        $this->setEmailNotificationSetting('send.user.create', false);
+
         $this->authenticateAs('admin');
         $roles = TableRegistry::getTableLocator()->get('Roles');
         $this->postJson('/users.json', [
@@ -49,7 +52,8 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
 
     public function testUserAddNotificationSuccess()
     {
-        Configure::write('passbolt.email.send.user.create', true);
+        $this->setEmailNotificationSetting('send.user.create', true);
+
         $this->authenticateAs('admin');
         $roles = TableRegistry::getTableLocator()->get('Roles');
         $this->postJson('/users.json', [

@@ -19,7 +19,6 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
 use Cake\View\Helper;
-
 use InvalidArgumentException;
 
 class LegacyApiHelper extends Helper
@@ -69,7 +68,7 @@ class LegacyApiHelper extends Helper
     public static function formatEntity(Entity $entity, string $name)
     {
         $result = [];
-        foreach ($entity->visibleProperties() as $property) {
+        foreach ($entity->getVisible() as $property) {
             $value = $entity->get($property);
             if (is_string($value) || is_bool($value) || is_numeric($value) || is_null($value)) {
                 // example: id

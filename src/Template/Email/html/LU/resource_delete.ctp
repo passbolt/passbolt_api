@@ -13,13 +13,16 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use Cake\Core\Configure;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
 $resource = $body['resource'];
+$showUsername = $body['showUsername'];
+$showUri = $body['showUri'];
+$showDescription = $body['showDescription'];
+
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
     'text' => $this->element('Email/module/avatar_text', [
@@ -33,13 +36,13 @@ echo $this->element('Email/module/avatar',[
 
 $text = __('Name: {0}', Purifier::clean($resource->name)) . '<br/>';
 
-if (Configure::read('passbolt.email.show.username')) {
+if ($showUsername) {
     $text .= __('Username: {0}', Purifier::clean($resource->username)) . '<br/>';
 }
-if (Configure::read('passbolt.email.show.uri')) {
+if ($showUri) {
     $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
 }
-if (Configure::read('passbolt.email.show.description')) {
+if ($showDescription) {
     $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
 }
 echo $this->element('Email/module/text', [

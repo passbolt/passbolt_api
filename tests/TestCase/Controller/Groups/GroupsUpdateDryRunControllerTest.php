@@ -15,9 +15,7 @@
 
 namespace App\Test\TestCase\Controller\Groups;
 
-use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Gpg;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -59,6 +57,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
      *   => expected result: only the secrets the user does not have already access through another source should be
      *      requested for encryption
      */
+
     public function testGroupsUpdateDryRunAsGroupManagerSuccess()
     {
         // Define actors of this tests

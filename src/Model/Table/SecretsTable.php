@@ -22,7 +22,7 @@ use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
-use App\Utility\Gpg;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -45,7 +45,6 @@ use Cake\Validation\Validator;
  */
 class SecretsTable extends Table
 {
-
     use PermissionsCleanupTrait;
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
@@ -130,7 +129,7 @@ class SecretsTable extends Table
      */
     public function isValidGpgMessageRule(string $check, array $context)
     {
-        $gpg = new Gpg();
+        $gpg = OpenPGPBackendFactory::get();
 
         return $gpg->isValidMessage($check);
     }
