@@ -389,8 +389,10 @@ class GroupsUpdateController extends AppController
         // The secrets to add.
         foreach ($addedAccess as $access) {
             foreach ($secrets as $secret) {
-                if ($secret['user_id'] == $access['user_id']
-                    && $secret['resource_id'] == $access['resource_id']) {
+                if (
+                    $secret['user_id'] == $access['user_id']
+                    && $secret['resource_id'] == $access['resource_id']
+                ) {
                     $changes[$access['resource_id']]['add'][] = $secret;
                 }
             }

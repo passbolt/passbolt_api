@@ -22,12 +22,13 @@ use Cake\ORM\TableRegistry;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
+    use AuthenticationTokenModelTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/AuthenticationTokens'
     ];
     public $AuthenticationTokens;
-    use AuthenticationTokenModelTrait;
 
     public function setUp()
     {

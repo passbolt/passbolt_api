@@ -56,6 +56,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
     }
 
     // As admin the request should also contain not active users.
+
     public function testUsersIndexGetAsAdminSuccess()
     {
         $this->authenticateAs('admin');

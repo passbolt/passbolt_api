@@ -17,10 +17,10 @@ namespace App\Utility\OpenPGP\Backends;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
-use \OpenPGP as OpenPGP;
-use \OpenPGP_Message as OpenPGP_Message;
-use \OpenPGP_PublicKeyPacket as OpenPGP_PublicKeyPacket;
-use \OpenPGP_SecretKeyPacket as OpenPGP_SecretKeyPacket;
+use OpenPGP as OpenPGP;
+use OpenPGP_Message as OpenPGP_Message;
+use OpenPGP_PublicKeyPacket as OpenPGP_PublicKeyPacket;
+use OpenPGP_SecretKeyPacket as OpenPGP_SecretKeyPacket;
 
 /**
  * Gpg wrapper utility
@@ -361,8 +361,10 @@ class Gnupg extends OpenPGPBackend
      */
     public function getPublicKeyInfo(string $armoredKey)
     {
-        if ($this->isParsableArmoredPublicKey($armoredKey) === false
-            && $this->isParsableArmoredPrivateKey($armoredKey) === false) {
+        if (
+            $this->isParsableArmoredPublicKey($armoredKey) === false
+            && $this->isParsableArmoredPrivateKey($armoredKey) === false
+        ) {
             throw new Exception(__('The public key could not be parsed.'));
         }
 

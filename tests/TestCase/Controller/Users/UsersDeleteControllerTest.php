@@ -23,12 +23,12 @@ use Cake\ORM\TableRegistry;
 
 class UsersDeleteControllerTest extends AppIntegrationTestCase
 {
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
+
     public $Users;
     public $GroupsUsers;
     public $Permissions;
-
-    use GroupsModelTrait;
-    use GroupsUsersModelTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
