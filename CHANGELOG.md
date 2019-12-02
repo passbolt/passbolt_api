@@ -7,6 +7,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-575: As AD I can see the MFA status of each user in the users grid
 - PB-639: As LU I can delete a personal tag
 - PB-687: As an admin I can resend an invitation for a user that didn't complete the setup
+- PB-698: As an admin I can disable MFA for a user
+
+### Improved
+- PB-878: Update Openpgp.js to v4.7
+- PB-893: Update CakePHP to v3.8.6
+
+### Fixed
+- PB-771: Added purify subject for the email subscribers
+- PB-856: Added migration fix to remove unused tables
+- GITHUB-84: Fix gc_maxlifetime versus Session.timeout units
 - PB-767: Fix LDAP sync issue "when multiple users are added to a group, failed validation of one should not impact validation of others"
 
 ## [2.11.0] - 2019-08-08
