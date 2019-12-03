@@ -13,16 +13,18 @@
  * @since         2.0.0
  */
 
-namespace Passbolt\License\Test\TestCase\Utility;
+namespace Passbolt\License\Test\TestCase\Form;
 
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use Passbolt\License\Utility\License;
+use Cake\Utility\Hash;
+use Passbolt\License\Form\LicenseKeyForm;
 
-class LicenseTest extends TestCase
+class LicenseKeyFormTest extends TestCase
 {
     protected $baseTestPath;
+
+    protected $_licenseKeyForm;
 
     /**
      * setUp method
@@ -35,6 +37,7 @@ class LicenseTest extends TestCase
         $this->loadPlugins(['Passbolt/License']);
         $this->baseTestPath = PLUGINS . 'Passbolt' . DS . 'License' . DS . 'tests';
         $licenseDevPublicKey = $this->baseTestPath . DS . 'data' . DS . 'gpg' . DS . 'license_dev_public.key';
+        $this->_licenseKeyForm = new LicenseKeyForm();
         Configure::write('passbolt.plugins.license.licenseKey.public', $licenseDevPublicKey);
     }
 
@@ -52,12 +55,12 @@ class LicenseTest extends TestCase
         return file_get_contents($testDataPath . $scenario);
     }
 
-    public function testLicenseSuccessGetInfo()
+    public function testLicenseKeyParseSuccess()
     {
         $licenseStr = $this->_getDummyLicense('license_dev');
-        $license = new License($licenseStr);
+        $this->_licenseKeyForm->setData(['key_ascii' => $licenseStr]);
         try {
-            $licenseInfo = $license->getInfo();
+            $licenseInfo = $this->_licenseKeyForm->parse();
         } catch (\Exception $e) {
             return $this->fail('The license does not validate: ' . $e->getMessage());
         }
@@ -70,55 +73,42 @@ class LicenseTest extends TestCase
         $this->assertEquals('2019-03-27T00:00:00+00:00', $licenseInfo['created']);
     }
 
-    public function testLicenseErrorGetInfo_InvalidFormat()
+    public function testLicenseKeyValidate_ErrorInvalidFormat()
     {
         $licensesStr = [
             'empty license' => '',
             'not even a gpg message' => '---- invalid format ----',
-            'corrupted gpg message' => '',
+            'corrupted gpg message' => 'sqSQSQsqsqqSQsqSQsqssqsqSQsq',
         ];
 
         foreach ($licensesStr as $licenseStr) {
-            $license = new License($licenseStr);
-            try {
-                $license->getInfo();
-            } catch (\Exception $e) {
-                $this->assertContains('The license format is not valid.', $e->getMessage());
-            }
+            $data = ['key_ascii' => $licenseStr];
+            $result = $this->_licenseKeyForm->execute($data);
+
+            $this->assertFalse($result);
         }
     }
 
-    public function testLicenseErrorGetInfo_InvalidLicenseIssuer()
+    public function testLicenseKeyErrorGetInfo_InvalidLicenseIssuer()
     {
         $licenseStr = $this->_getDummyLicense('license_issuer_ada');
-        $license = new License($licenseStr);
-        try {
-            $license->getInfo();
-        } catch (\Exception $e) {
-            $this->assertContains('The license cannot be verified.', $e->getMessage());
-        }
+        $data = ['key_ascii' => $licenseStr];
+        $result = $this->_licenseKeyForm->execute($data);
+        $errors = $this->_licenseKeyForm->getErrors();
+
+        $this->assertFalse($result);
+        $this->assertTrue(isset($errors['key_ascii']));
+        $this->assertNotEmpty(Hash::get($errors, 'key_ascii.is_valid_license'));
+        $this->assertEquals(Hash::get($errors, 'key_ascii.is_valid_license'), 'The license content or signature is not valid.');
     }
 
-    public function testLicenseSuccessValidate()
+    public function testLicenseKeyValidate_Success()
     {
         $licenseStr = $this->_getDummyLicense('license_dev');
-        $license = new License($licenseStr);
-        try {
-            $license->validate();
-        } catch (\Exception $e) {
-            $this->assertTrue(false);
-        }
-        $this->assertTrue(true);
-    }
 
-    public function testLicenseErrorValidate_ExpiredLicense()
-    {
-        $licenseStr = $this->_getDummyLicense('license_expired');
-        $license = new License($licenseStr);
-        try {
-            $license->validate();
-        } catch (\Exception $e) {
-            $this->assertEquals('The license is expired.', $e->getMessage());
-        }
+        $data = ['key_ascii' => $licenseStr];
+        $result = $this->_licenseKeyForm->execute($data);
+
+        $this->assertTrue($result);
     }
 }

@@ -72,7 +72,6 @@ class LicenseKeyControllerTest extends WebInstallerIntegrationTestCase
             $this->post('/install/license_key', $postData);
             $data = ($this->_getBodyAsString());
             $this->assertResponseOk();
-            $this->assertContains('The license is not valid', $data);
             $this->assertContains('The license format is not valid', $data);
         }
         $this->assertTrue(true);

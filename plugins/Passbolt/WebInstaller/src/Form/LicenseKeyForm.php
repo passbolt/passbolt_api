@@ -17,10 +17,12 @@ namespace Passbolt\WebInstaller\Form;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
-use Passbolt\License\Utility\License;
+use Passbolt\License\Utility\LicenseKey;
 
 class LicenseKeyForm extends Form
 {
+    private $_lastError = null;
+
     /**
      * License key schema.
      * @param Schema $schema schema
@@ -42,37 +44,13 @@ class LicenseKeyForm extends Form
         $validator
             ->requirePresence('license_key', 'create', __('A subscription key is required.'))
             ->notEmpty('license_key', __('A subscription key is required.'))
-            ->add('license_key', 'is_valid_license_format', [
-                'last' => true,
-                'rule' => [$this, 'checkLicenseFormat'],
-                'message' => 'The license format is not valid.'
-            ])
             ->add('license_key', 'is_valid_license', [
                 'last' => true,
-                'rule' => [$this, 'checkLicense'],
-                'message' => 'The license is not valid.'
+                'rule' => [$this, 'checkLicenseIsValid'],
+                'message' => 'The license format is not valid.'
             ]);
 
         return $validator;
-    }
-
-    /**
-     * Check if a license is in a valid format.
-     *
-     * @param string $value The license
-     * @param array $context not in use
-     * @return bool
-     */
-    public function checkLicenseFormat(string $value, array $context = null)
-    {
-        $license = new License($value);
-        try {
-            $license->getArmoredSignedLicense();
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -82,16 +60,22 @@ class LicenseKeyForm extends Form
      * @param array|null $context not in use
      * @return string|bool
      */
-    public function checkLicense(string $value, array $context = null)
+    public function checkLicenseIsValid(string $value, array $context = null)
     {
-        $license = new License($value);
-        try {
-            $license->validate();
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
+        $license = new LicenseKey($value);
+        $valid = $license->validate();
+        $this->_lastError = $license->getFirstErrorMessage();
 
-        return true;
+        return $valid;
+    }
+
+    /**
+     * Get last error details.
+     * @return string|null
+     */
+    public function getLastErrorDetails()
+    {
+        return $this->_lastError;
     }
 
     /**

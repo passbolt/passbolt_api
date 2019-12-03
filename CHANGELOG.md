@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Improved
 - PB-878: Update Openpgp.js to v4.7
 - PB-893: Update CakePHP to v3.8.6
+- PB-894: Improve subscription key checks and output details
 
 ### Fixed
 - PB-771: Added purify subject for the email subscribers
