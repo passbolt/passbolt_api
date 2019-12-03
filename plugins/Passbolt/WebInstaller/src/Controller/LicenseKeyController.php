@@ -54,7 +54,7 @@ class LicenseKeyController extends WebInstallerController
         $data = $this->request->getData();
         try {
             $this->validateData($data);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $this->_error($e->getMessage());
         }
 
@@ -74,7 +74,7 @@ class LicenseKeyController extends WebInstallerController
         $confIsValid = $form->execute($data);
         $this->set('formExecuteResult', $form);
         if (!$confIsValid) {
-            throw new Exception(__('The license is not valid.'));
+            throw new Exception(__('The license is not valid: {0}', [$form->getLastErrorDetails()]));
         }
     }
 }

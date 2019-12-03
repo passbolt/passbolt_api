@@ -15,8 +15,10 @@
 namespace Passbolt\License\Shell\Task;
 
 use App\Shell\AppShell;
+use Cake\Chronos\Date;
 use Cake\Core\Configure;
-use Passbolt\License\Utility\License;
+use Cake\ORM\TableRegistry;
+use Passbolt\License\Utility\LicenseKey;
 
 /**
  * License Check shell command.
@@ -43,6 +45,7 @@ class LicenseCheckTask extends AppShell
      * main() method.
      *
      * @return bool|int|null Success or error code.
+     * @throws \Exception
      */
     public function main()
     {
@@ -55,16 +58,121 @@ class LicenseCheckTask extends AppShell
             return false;
         }
 
-        $license = new License(file_get_contents($file));
-        try {
-            $license->validate();
-        } catch (\Exception $e) {
+        $license = new LicenseKey(file_get_contents($file));
+        $validFormat = $license->validateFormat();
+
+        if (!$validFormat) {
             $this->out('');
-            $this->_error(__('License error: {0}', $e->getMessage()), false);
+            $this->_error(__('Subscription key error: {0}', $license->getFirstErrorMessage()), false);
+            $this->_displayErrorFooter();
 
             return false;
         }
 
+        $validData = $license->validateData();
+        if (!$validData) {
+            $this->out('');
+            $this->_error(__('Subscription key metadata error: {0}', $license->getFirstErrorMessage()), false);
+        }
+
+        $this->_displayInfo($license);
+
+        // Conclusion.
+        if (!$validData) {
+            $this->_displayErrorFooter();
+
+            return false;
+        }
+
+        $this->_displayValidFooter();
+
         return true;
+    }
+
+    /**
+     * Display info for a valid license.
+     *
+     * @param LicenseKey $license the license object
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected function _displayInfo(LicenseKey $license)
+    {
+        $data = $license->getData();
+        $users = TableRegistry::getTableLocator()->get('Users');
+
+        echo $this->nl();
+        $this->out(__("Thanks for choosing Passbolt Pro"));
+        $this->out(__("Below are your subscription key details"));
+        echo $this->nl();
+
+        // Customer id output.
+        $customerIdStr = __("<error>Not Available</error>");
+        if (isset($data['customer_id'])) {
+            $customerIdStr = "<info>{$data['customer_id']}</info>";
+        }
+        $this->out(__("Customer id:\t{0}", $customerIdStr));
+
+        // Users quantity output.
+        $usersQtyStr = __("<error>Not Available</error>");
+        if (isset($data['users'])) {
+            try {
+                // Should not break in case of database exception.
+                // This can happen when Passbolt is not configured and should not prevent licence validation.
+                $usersQty = $users->findActive()->count();
+            } catch (\Exception $e) {
+                $usersQty = 0;
+            }
+
+            if ($usersQty > $data['users']) {
+                $usersQtyStr = __("<error>{0} (currently: {1}) - Exceeded</error>", $data['users'], $usersQty);
+            } else {
+                $usersQtyStr = __("<info>{0} (currently: {1})</info>", $data['users'], $usersQty);
+            }
+        }
+        $this->out(__("Users limit:\t{0}", $usersQtyStr));
+
+        // Created date output.
+        if (isset($data['created'])) {
+            $date = Date::createFromTimestamp(strtotime($data['created']));
+            $this->out(__("Valid from:\t<info>{0}</info>", $date->toFormattedDateString()));
+        }
+
+        // Expiry date output.
+        if (isset($data['expiry'])) {
+            $date = Date::createFromTimestamp(strtotime($data['expiry']));
+            $expired = $date->lt(new Date());
+            if ($expired) {
+                $this->out(__("Expires on:\t<error>{0} (expired)</error>", $date->toFormattedDateString()));
+            } else {
+                $diffDays = $date->diffInDays(new Date());
+                $this->out(__("Expires on:\t<info>{0} (in {1} days)</info>", $date->toFormattedDateString(), $diffDays));
+            }
+        }
+    }
+
+    /**
+     * Display valid footer.
+     * @return void
+     */
+    protected function _displayValidFooter()
+    {
+        echo $this->nl();
+        $this->out(__("For any question / feedback / subscription renewal,"));
+        $this->out(__("kindly contact us at <info>sales@passbolt.com</info>"));
+        echo $this->nl();
+    }
+
+    /**
+     * Display error footer.
+     * @return void
+     */
+    protected function _displayErrorFooter()
+    {
+        echo $this->nl();
+        $this->_error(__("It looks like you could use some help."));
+        $this->_error(__("We are here for you. You can contact us at sales@passbolt.com"));
+        echo $this->nl();
     }
 }
