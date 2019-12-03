@@ -44,7 +44,7 @@ class MfaOrgSettingsYubikeyTraitTest extends MfaIntegrationTestCase
         ],
         MfaSettings::PROVIDER_YUBIKEY => [
             'clientId' => '40123',
-            'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXUY='
+            'secretKey' => 'i2/j3jIQBO/axOl3ah4mlgXlXU+Y='
         ]
     ];
 
