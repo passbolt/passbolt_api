@@ -25,7 +25,7 @@ trait SubscribedEmailRedactorMockTrait
 {
     private function createSubscribedRedactor(array $subscribedEvents, Email $email)
     {
-        return new class($subscribedEvents, $email) implements SubscribedEmailRedactorInterface
+        return new class ($subscribedEvents, $email) implements SubscribedEmailRedactorInterface
         {
             use SubscribedEmailRedactorTrait;
 

@@ -23,7 +23,6 @@ use Cake\Event\EventManagerInterface;
 use Cake\TestSuite\TestCase;
 use EmailQueue\Model\Table\EmailQueueTable;
 use PHPUnit\Framework\MockObject\MockObject;
-use Throwable;
 
 class EmailSenderTest extends TestCase
 {
@@ -44,13 +43,30 @@ class EmailSenderTest extends TestCase
      */
     private $emailQueueMock;
 
+    /**
+     * @var bool
+     */
+    private $purifySubject;
+
     public function setUp()
     {
         $this->eventManagerMock = $this->createMock(EventManagerInterface::class);
         $this->emailQueueMock = $this->createMock(EmailQueueTable::class);
+        $this->purifySubject = false;
 
-        $this->sut = new EmailSender($this->eventManagerMock, $this->emailQueueMock, self::APP_FULL_BASE_URL);
+        $this->sut = new EmailSender(
+            $this->eventManagerMock,
+            $this->emailQueueMock,
+            self::APP_FULL_BASE_URL,
+            $this->purifySubject
+        );
+
         parent::setUp();
+    }
+
+    public function getSubject($subject, $purifierEnabled)
+    {
+        return $purifierEnabled ? Purifier::clean($subject) : $subject;
     }
 
     public function testThatSendThrowExceptionIfEnqueueFailed()
@@ -58,7 +74,7 @@ class EmailSenderTest extends TestCase
         $email = new Email('test', 'test', [], '');
         $options = [
             'template' => $email->getTemplate(),
-            'subject' => Purifier::clean($email->getSubject()),
+            'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
             'format' => 'html',
             'config' => 'default',
             'headers' => ['Auto-Submitted' => 'auto-generated']
@@ -80,13 +96,13 @@ class EmailSenderTest extends TestCase
         $this->assertTrue($expectedException, "sendEmail should have raised exception " . EmailSenderException::class);
     }
 
-    public function testThatSendEnqueueEmailWithOptions()
+    public function testThatSendEnqueueEmailWithOptionsWhenPurifySubjectIsDisabled()
     {
         $email = new Email('test', 'test', [], '');
 
         $options = [
             'template' => $email->getTemplate(),
-            'subject' => Purifier::clean($email->getSubject()),
+            'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
             'format' => 'html',
             'config' => 'default',
             'headers' => ['Auto-Submitted' => 'auto-generated']
@@ -103,6 +119,36 @@ class EmailSenderTest extends TestCase
         $this->sut->sendEmail($email);
     }
 
+    public function testThatSendEnqueueEmailWithOptionsWhenPurifySubjectIsEnabled()
+    {
+        $sut = new EmailSender(
+            $this->eventManagerMock,
+            $this->emailQueueMock,
+            self::APP_FULL_BASE_URL,
+            true
+        );
+
+        $email = new Email('test', 'test', [], '');
+
+        $options = [
+            'template' => $email->getTemplate(),
+            'subject' => $this->getSubject($email->getSubject(), true),
+            'format' => 'html',
+            'config' => 'default',
+            'headers' => ['Auto-Submitted' => 'auto-generated']
+        ];
+
+        $data = $email->getData();
+        $data['body']['fullBaseUrl'] = self::APP_FULL_BASE_URL;
+
+        $this->emailQueueMock->expects($this->once())
+            ->method('enqueue')
+            ->with($email->getTo(), $data, $options)
+            ->willReturn(true);
+
+        $sut->sendEmail($email);
+    }
+
     public function testThatSendEmailAddFullBaseUrlToBodyAndMergeData()
     {
         $expectedData = ['body' => ['some_data' => 'test']];
@@ -110,7 +156,7 @@ class EmailSenderTest extends TestCase
 
         $options = [
             'template' => $email->getTemplate(),
-            'subject' => Purifier::clean($email->getSubject()),
+            'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
             'format' => 'html',
             'config' => 'default',
             'headers' => ['Auto-Submitted' => 'auto-generated']

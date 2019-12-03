@@ -19,7 +19,6 @@ use Cake\Core\Exception\Exception;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Utility\Hash;
-
 use Cake\Validation\Validator;
 
 class GpgKeyForm extends Form

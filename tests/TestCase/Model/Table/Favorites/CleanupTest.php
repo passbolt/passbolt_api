@@ -23,6 +23,7 @@ use Cake\Utility\Hash;
 
 class CleanupTest extends AppTestCase
 {
+    use CleanupTrait;
 
     public $Favorites;
     public $Groups;
@@ -30,8 +31,6 @@ class CleanupTest extends AppTestCase
         'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Favorites'
     ];
     public $options;
-
-    use CleanupTrait;
 
     public function setUp()
     {

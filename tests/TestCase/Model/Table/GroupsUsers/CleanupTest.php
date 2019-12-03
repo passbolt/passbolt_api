@@ -23,13 +23,12 @@ use Cake\Utility\Hash;
 
 class CleanupTest extends AppTestCase
 {
+    use CleanupTrait;
 
     public $GroupsUsers;
     public $Groups;
     public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
     public $options;
-
-    use CleanupTrait;
 
     public function setUp()
     {
