@@ -254,8 +254,10 @@ trait GroupsEmailTrait
         array $removedGroupsUsers,
         User $modifiedBy
     ) {
-        if ((empty($addedGroupsUsers) && empty($updatedGroupsUsers) && empty($removedGroupsUsers))
-            || !EmailNotificationSettings::get('send.group.manager.update')) {
+        if (
+            (empty($addedGroupsUsers) && empty($updatedGroupsUsers) && empty($removedGroupsUsers))
+            || !EmailNotificationSettings::get('send.group.manager.update')
+        ) {
             return;
         }
 

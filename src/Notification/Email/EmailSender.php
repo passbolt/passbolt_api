@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.12.0
  */
+
 namespace App\Notification\Email;
 
 use App\Utility\Purifier;
@@ -46,15 +47,22 @@ class EmailSender
     private $appFullBaseUrl;
 
     /**
+     * @var string
+     */
+    private $purifySubject = false;
+
+    /**
      * @param EventManagerInterface $eventManager EventManager object
      * @param EmailQueueTable $emailQueue Email queue
      * @param string $appFullBaseUrl Full base url of the Passbolt instance
+     * @param bool $purifySubject True if subject must be purified
      */
-    public function __construct(EventManagerInterface $eventManager, EmailQueueTable $emailQueue, string $appFullBaseUrl)
+    public function __construct(EventManagerInterface $eventManager, EmailQueueTable $emailQueue, string $appFullBaseUrl, bool $purifySubject)
     {
         $this->emailQueue = $emailQueue;
         $this->eventManager = $eventManager;
         $this->appFullBaseUrl = $appFullBaseUrl;
+        $this->purifySubject = $purifySubject;
     }
 
     /**
@@ -82,11 +90,24 @@ class EmailSender
     {
         return [
             'template' => $email->getTemplate(),
-            'subject' => Purifier::clean($email->getSubject()),
+            'subject' => $this->purifySubject($email->getSubject()),
             'format' => 'html',
             'config' => 'default',
             'headers' => ['Auto-Submitted' => 'auto-generated']
         ];
+    }
+
+    /**
+     * @param string $subject Subject to purify
+     * @return string
+     */
+    private function purifySubject(string $subject)
+    {
+        if ($this->purifySubject) {
+            $subject = Purifier::clean($subject);
+        }
+
+        return $subject;
     }
 
     /**

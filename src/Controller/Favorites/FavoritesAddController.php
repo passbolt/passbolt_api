@@ -94,9 +94,11 @@ class FavoritesAddController extends AppController
     {
         $errors = $favorite->getErrors();
         if (!empty($errors)) {
-            if (isset($errors['foreign_key']['resource_exists'])
+            if (
+                isset($errors['foreign_key']['resource_exists'])
                 || isset($errors['foreign_key']['resource_is_not_soft_deleted'])
-                || isset($errors['foreign_key']['has_resource_access'])) {
+                || isset($errors['foreign_key']['has_resource_access'])
+            ) {
                 throw new NotFoundException(__('The resource does not exist.'));
             }
             if (isset($errors['user_id']['favorite_unique'])) {

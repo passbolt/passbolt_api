@@ -27,9 +27,9 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
 {
-    public $Resources;
     use FavoritesModelTrait;
 
+    public $Resources;
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions'];
 
     public function setUp()
