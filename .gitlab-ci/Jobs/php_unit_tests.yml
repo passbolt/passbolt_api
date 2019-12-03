@@ -82,6 +82,7 @@ php7.4-mysql8.0:
   only:
     - develop
     - master
+  allow_failure: true
 
 php7.3-mariadb10.4:
   variables:
