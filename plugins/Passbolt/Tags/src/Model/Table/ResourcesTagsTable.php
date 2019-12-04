@@ -123,32 +123,32 @@ class ResourcesTagsTable extends Table
      */
     public function updateUserTag(string $userId, string $oldTagId, string $newTagId)
     {
-        $this->updateAll([
-            'tag_id' => $newTagId
-        ], [
-            'tag_id' => $oldTagId,
-            'user_id' => $userId
-        ]);
-
-        // Remove duplicated associations.
-        // It happens when a tag_id is updated with a new tag_id that was already associated with a resource for
-        // the same user.
-        $duplicateSubQuery = $this->find();
-        $duplicateIds = $duplicateSubQuery->select([
-                'id',
-                'count' => $duplicateSubQuery->func()->count('id')
-            ])
+        // Find all the user resources already tagged with the new tag.
+        $resourcesIdAssociatedWithNewTag = $this->find()
+            ->select(['resource_id'])
             ->where([
                 'tag_id' => $newTagId,
                 'user_id' => $userId
             ])
-            ->group(['resource_id', 'tag_id'])
-            ->having(['count >' => 1])
-            ->extract('id')
+            ->extract('resource_id')
             ->toArray();
 
-        if (!empty($duplicateIds)) {
-            $this->deleteAll(['id IN' => $duplicateIds]);
+        // Tag with the new tag only the user resources that haven't been yet tagged with the new tag.
+        $updateWhere = [
+            'tag_id' => $oldTagId,
+            'user_id' => $userId,
+        ];
+        if (!empty($resourcesIdAssociatedWithNewTag)) {
+            $updateWhere['resource_id NOT IN'] = $resourcesIdAssociatedWithNewTag;
         }
+        $this->updateAll([
+            'tag_id' => $newTagId
+        ], $updateWhere);
+
+        // Remove all associations between the old tag and the user resources.
+        $this->deleteAll([
+            'tag_id' => $oldTagId,
+            'user_id' => $userId,
+        ]);
     }
 }
