@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use \Cake\Core\Configure;
+use Cake\Core\Configure;
 
 $license = env(
     'PASSBOLT_PLUGINS_LICENSE_LICENSE',

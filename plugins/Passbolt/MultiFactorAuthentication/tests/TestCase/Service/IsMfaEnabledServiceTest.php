@@ -86,8 +86,7 @@ class IsMfaEnabledServiceTest extends TestCase
     public function testThatIsEnabledForUserReturnFalseWhenOrgAndUserHaveNoCommonEnabledProviders(
         array $orgEnabledProviders,
         array $accountEnabledProviders
-    )
-    {
+    ) {
         $this->mfaOrgSettingsMock->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
@@ -115,8 +114,7 @@ class IsMfaEnabledServiceTest extends TestCase
     public function testThatIsEnabledForUserReturnTrueWhenOrgAndUserHaveCommonEnabledProviders(
         array $orgEnabledProviders,
         array $accountEnabledProviders
-    )
-    {
+    ) {
         $this->mfaOrgSettingsMock->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
