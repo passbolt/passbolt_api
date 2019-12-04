@@ -33,7 +33,7 @@ class MfaEntityMapper
     private $isMfaEnabledService;
 
     /**
-     * @param IsMfaEnabledService $isMfaEnabledService
+     * @param IsMfaEnabledService $isMfaEnabledService service
      */
     public function __construct(IsMfaEnabledService $isMfaEnabledService)
     {
