@@ -18,19 +18,13 @@ namespace Passbolt\MultiFactorAuthentication\Model\Query;
 use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\UsersTable;
-use App\Utility\UserAccessControl;
 use Cake\Collection\CollectionInterface;
 use Cake\ORM\Query;
-use Passbolt\AccountSettings\Model\Entity\AccountSetting;
-use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
+use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
-use RuntimeException;
-use Throwable;
 
 class IsMfaEnabledQueryDecorator
 {
-    const MFA_SETTINGS_PROPERTY = 'mfa_settings';
-    const IS_MFA_ENABLED_PROPERTY_NAME = 'is_mfa_enabled';
     const IS_MFA_ENABLED_FILTER_NAME = 'is-mfa-enabled';
 
     /**
@@ -39,11 +33,18 @@ class IsMfaEnabledQueryDecorator
     private $usersTable;
 
     /**
-     * @param UsersTable $usersTable Users table
+     * @var MfaEntityMapper
      */
-    public function __construct(UsersTable $usersTable)
+    private $userMfaMapper;
+
+    /**
+     * @param UsersTable $usersTable Users table
+     * @param MfaEntityMapper $userMfaMapper Property mapper
+     */
+    public function __construct(UsersTable $usersTable, MfaEntityMapper $userMfaMapper)
     {
         $this->usersTable = $usersTable;
+        $this->userMfaMapper = $userMfaMapper;
     }
 
     /**
@@ -54,7 +55,7 @@ class IsMfaEnabledQueryDecorator
     public function apply(Query $query, FindIndexOptions $options)
     {
         $this->addMfaSettingsAssociationToUsersTable();
-        $this->addIsMfaEnabledPropertyToUsers($query, $options);
+        $this->addIsMfaEnabledPropertyToUsers($query);
         $this->applyIsMfaEnabledFilterToResults($query, $options);
 
         return $query;
@@ -65,37 +66,23 @@ class IsMfaEnabledQueryDecorator
      */
     private function addMfaSettingsAssociationToUsersTable()
     {
-        $this->usersTable->hasOne('AccountSettings', [
-            'className' => 'AccountSettings',
-            'foreignKey' => 'user_id',
-            'propertyName' => self::MFA_SETTINGS_PROPERTY,
-            'conditions' => [
-                'property' => MfaSettings::MFA
-            ]
-        ]);
+        $this->usersTable->hasOne('AccountSettings')
+            ->setClassName('Passbolt/AccountSettings.AccountSettings')
+            ->setForeignKey('user_id')
+            ->setProperty(MfaEntityMapper::MFA_SETTINGS_PROPERTY)
+            ->setConditions(['property' => MfaSettings::MFA]);
     }
 
     /**
      * @param Query $query Query
-     * @param FindIndexOptions $options Options
      * @return Query
      */
-    private function addIsMfaEnabledPropertyToUsers(Query $query, FindIndexOptions $options)
+    private function addIsMfaEnabledPropertyToUsers(Query $query)
     {
-        if (!array_key_exists(static::IS_MFA_ENABLED_PROPERTY_NAME, $options->getContain())) {
-            return $query;
-        }
-
         $query
             ->contain(['AccountSettings'])
             ->formatResults(function (CollectionInterface $results) {
-                return $results->map(function (User $user) {
-                    $user->setHidden([self::MFA_SETTINGS_PROPERTY], true);
-                    $user->setVirtual([self::IS_MFA_ENABLED_PROPERTY_NAME], true);
-                    $user->set(self::IS_MFA_ENABLED_PROPERTY_NAME, $this->getIsMfaEnabled($user));
-
-                    return $user;
-                });
+                return $results->map($this->userMfaMapper);
             });
 
         return $query;
@@ -113,41 +100,11 @@ class IsMfaEnabledQueryDecorator
         if ($isMfaEnabledFilter !== null) {
             $query->formatResults(function (CollectionInterface $results) use ($isMfaEnabledFilter) {
                 return $results->filter(function (User $user) use ($isMfaEnabledFilter) {
-                    return $user->get(self::IS_MFA_ENABLED_PROPERTY_NAME) === $isMfaEnabledFilter;
+                    return $user->get(MfaEntityMapper::IS_MFA_ENABLED_PROPERTY) === $isMfaEnabledFilter;
                 });
             });
         }
 
         return $query;
-    }
-
-    /**
-     * @param User $user User
-     * @return bool
-     */
-    private function getIsMfaEnabled(User $user)
-    {
-        $isMfaEnabled = false;
-
-        /** @var AccountSetting $mfaSettings */
-        $mfaSettings = $user->get(self::MFA_SETTINGS_PROPERTY) ?? false;
-        if ($mfaSettings) {
-            try {
-                $mfaAccountSettings = new MfaAccountSettings(
-                    new UserAccessControl($user->role->name, $user->id),
-                    json_decode($mfaSettings->value, true)
-                );
-
-                if ($mfaAccountSettings === false) {
-                    throw new RuntimeException('Failed to parse JSON with MFA account settings.');
-                }
-
-                $isMfaEnabled = count($mfaAccountSettings->getEnabledProviders()) > 0;
-            } catch (Throwable $t) {
-                // MFA JSON settings can't be parsed or no provider found
-            }
-        }
-
-        return $isMfaEnabled;
     }
 }

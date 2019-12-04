@@ -90,7 +90,7 @@ class MfaAccountSettings
         if (!isset($this->settings[$provider]) || !isset($this->settings[$provider][self::VERIFIED])) {
             return false;
         }
-        $result = false;
+
         switch ($provider) {
             case MfaSettings::PROVIDER_TOTP:
                 $result = ($this->isOtpProvisioningUriSet());
