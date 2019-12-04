@@ -25,11 +25,17 @@ class IsMfaEnabledService
      * @var MfaOrgSettings
      */
     private $mfaOrgSettings;
+
     /**
      * @var GetMfaAccountSettingsService
      */
     private $mfaAccountSettingsService;
 
+    /**
+     * IsMfaEnabledService constructor.
+     * @param MfaOrgSettings $mfaOrgSettings settings
+     * @param GetMfaAccountSettingsService $mfaAccountSettingsService service
+     */
     public function __construct(MfaOrgSettings $mfaOrgSettings, GetMfaAccountSettingsService $mfaAccountSettingsService)
     {
         $this->mfaOrgSettings = $mfaOrgSettings;
