@@ -19,6 +19,7 @@ use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Controller\Users\UsersIndexController;
 use Cake\Event\EventListenerInterface;
 use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
+use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
 
 class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
 {
@@ -35,7 +36,7 @@ class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
         $options = $event->getOptions();
 
         $options->allowFilter(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME);
-        $options->allowContain(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_PROPERTY_NAME);
+        $options->allowContain(MfaEntityMapper::IS_MFA_ENABLED_PROPERTY);
         $options->addFilterValidator(IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME, function ($value) {
             return QueryStringComponent::validateFilterBoolean($value, IsMfaEnabledQueryDecorator::IS_MFA_ENABLED_FILTER_NAME);
         });
