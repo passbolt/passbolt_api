@@ -589,7 +589,7 @@ class DirectoryResults
         }
 
         foreach ($group['group']['groups'] as $g) {
-            $this->_getFlattenedChildrenRecursive($g, $flatTree, ++ $level);
+            $this->_getFlattenedChildrenRecursive($g, $flatTree, ++$level);
         }
     }
 

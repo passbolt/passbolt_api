@@ -97,7 +97,7 @@ class ActionLogResultsParser
 
         foreach ($this->entries as $listEntry) {
             if ($listEntry['action_log_id'] === $entry['action_log_id']) {
-                $nbEntriesForActionLog ++;
+                $nbEntriesForActionLog++;
             }
         }
 

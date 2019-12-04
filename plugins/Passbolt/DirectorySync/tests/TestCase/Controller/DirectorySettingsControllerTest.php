@@ -16,7 +16,6 @@
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
 use App\Model\Entity\Role;
-
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
