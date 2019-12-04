@@ -119,15 +119,36 @@ class ResourcesTagsTable extends Table
      * @param string $userId User whose tags to update
      * @param string $oldTagId Id of the tag that needs update
      * @param string $newTagId New tag id
-     * @return int
+     * @return void
      */
     public function updateUserTag(string $userId, string $oldTagId, string $newTagId)
     {
-        return $this->updateAll([
+        $this->updateAll([
             'tag_id' => $newTagId
         ], [
             'tag_id' => $oldTagId,
             'user_id' => $userId
         ]);
+
+        // Remove duplicated associations.
+        // It happens when a tag_id is updated with a new tag_id that was already associated with a resource for
+        // the same user.
+        $duplicateSubQuery = $this->find();
+        $duplicateIds = $duplicateSubQuery->select([
+                'id',
+                'count' => $duplicateSubQuery->func()->count('id')
+            ])
+            ->where([
+                'tag_id' => $newTagId,
+                'user_id' => $userId
+            ])
+            ->group(['resource_id', 'tag_id'])
+            ->having(['count >' => 1])
+            ->extract('id')
+            ->toArray();
+
+        if (!empty($duplicateIds)) {
+            $this->deleteAll(['id IN' => $duplicateIds]);
+        }
     }
 }

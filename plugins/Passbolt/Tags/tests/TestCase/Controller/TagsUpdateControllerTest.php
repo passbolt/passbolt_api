@@ -14,8 +14,11 @@
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Model\Table\ResourcesTagsTable;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
@@ -26,6 +29,13 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
         'app.Base/Groups', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
     ];
+
+    public function setUp()
+    {
+        parent::setUp();
+        $config = TableRegistry::getTableLocator()->exists('Passbolt/Tags.ResourcesTags') ? [] : ['className' => ResourcesTagsTable::class];
+        $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags', $config);
+    }
 
     /**
      * A user not logged in should not be able to update tags
@@ -221,6 +231,39 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     }
 
     /**
+     * A user should be able to update a personal tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateUserWithExistingTagHandleTagsAssociationDuplicate()
+    {
+        $this->authenticateAs('ada');
+        $resource = $this->_addTestResource(ResourcesModelTrait::getDummyResource());
+        $tags = $this->_addTestTag($resource->id, ['test-tag-1', 'test-tag-2']);
+        $this->assertCount(2, $tags);
+
+        $resourcesTagsCount = $this->ResourcesTags->find()->where([
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'resource_id' => $resource->id
+        ])->count();
+        $this->assertEquals(2, $resourcesTagsCount);
+
+        $this->putJson("/tags/{$tags[0]->id}.json?api-version=v2", [
+            'slug' => $tags[1]->slug
+        ]);
+        $this->assertSuccess();
+
+        $resourcesTags = $this->ResourcesTags->find()->where([
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'resource_id' => $resource->id
+        ])->all()->toArray();
+        $this->assertCount(1, $resourcesTags);
+        $this->assertEquals($tags[1]->id, $resourcesTags[0]->tag_id);
+    }
+
+    /**
      * A user should not be able to update a personal tag to a shared tag
      *
      * @group pro
@@ -297,11 +340,12 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     public function testTagAdminPersonalUpdateResponseContainsTag()
     {
         $this->authenticateAs('admin');
-        $resourceId = $this->_addTestResource($this->_getDummyResourceData());
-        $tagId = $this->_addTestTag($resourceId, ['admin-personal'])[0]->id;
+        $resource = $this->_addTestResource(ResourcesModelTrait::getDummyResource());
+        $tags = $this->_addTestTag($resource->id, ['admin-personal']);
+        $tag = $tags[0];
 
         // Update Tag
-        $this->putJson("/tags/$tagId.json?api-version=v2", [
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
             'slug' => 'updated-admin-personal'
         ]);
         $this->assertSuccess();
@@ -320,7 +364,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     {
         $this->postJson("/resources.json?api-version=v2", $data);
 
-        return $this->_responseJsonBody->id;
+        return $this->_responseJsonBody;
     }
 
     /**
@@ -336,37 +380,5 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
 
         return $this->_responseJsonBody;
-    }
-
-    protected function _getDummyResourceData()
-    {
-        return [
-            'name' => 'test',
-            'secrets' => [
-                [
-                    'user_id' => UuidFactory::uuid('user.id.admin'),
-                    'data' => '-----BEGIN PGP MESSAGE-----
-Version: OpenPGP.js v4.5.1
-Comment: https://openpgpjs.org
-
-wcFMA1P90Qk1JHA+ARAAoO5thhi4EIlQWPHhoSbC7ZkqcUfTvdhaLsPDDs8z
-/27WkSxaa9XZllJUojz12fOqgX6vAd1Osbf6ccvqA/MdUPU3qZ35YbXstvJX
-hntbh/FWjexUdwz41rSe8pUwVRu+C1efPUoOpGkdghyLnrGnIPxvW1Z1ZKQh
-IMs9YxCaDY0BPL2xQ0t6f7srF1Vn1ZhutK6FHNNEJrs7RH6JRaSKfG0AVWEd
-FG2+EB7qY+gt/63vJwTT2ara+QNGpUSezHvmBgM7WXTfQgYLJWuMi34lqWzv
-nUQWY0ooPMLFlzuECu+H64f1okHVpmTFrntRd9yGwZrg601C/WAJ8yYGWR3n
-5bAFbtl+IIhmtr9yXvNxVzj4h0KD+hEuQiy0mboucFapDsFpkOjsx5Qta0EB
-VXPvfGs4w+DXspT7Kejjz3xzB3OD2ywDNxH+Mu7OHrOqz0rfVnVCROTwc30a
-ENruqr1CuGp1TYlwXQPVXtZyCEauOCWlW+TpSinq7+asNBJ9EIWdy/hNOUVV
-8pd8ku4RqW4lmRJXtQWeqmNfXVuNvRr+BONIj7A2qdnNr8J5/PWPs6km4xop
-TGLcOP8lBGYT89Oal230qmtm7bGb92iVwGgw5m/1/q+Ho7eBZ+sM2IWEDPbZ
-Yqcb+ONCV6wgGlnvMntZD4Aiu4JXy8TJsYtPKNEhNjnSQAFdTDXzg7Cw8ypU
-/uIyuaZnKUWjnVtQAI1bEhlZ1YV8LU0MoZPEWsSy2CHHDuSE4uNFFtb7QPkS
-NPzwk8OlB8c=
-=YH4T
------END PGP MESSAGE-----
-']
-            ],
-        ];
     }
 }
