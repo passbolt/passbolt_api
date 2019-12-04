@@ -104,6 +104,7 @@ class MfaUserSettingsDeleteController extends MfaController
 
     /**
      * @param User $user user
+     * @return void
      */
     private function dispatchSettingsDeletedEvent(User $user)
     {

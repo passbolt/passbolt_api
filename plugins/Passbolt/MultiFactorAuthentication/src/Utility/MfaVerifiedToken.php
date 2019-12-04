@@ -46,7 +46,7 @@ class MfaVerifiedToken
             'data' => json_encode([
                 'provider' => $provider,
                 'user_agent' => env('HTTP_USER_AGENT'),
-                'session_id' => (new DefaultPasswordHasher)->hash($sessionId),
+                'session_id' => (new DefaultPasswordHasher())->hash($sessionId),
                 'remember' => $remember
             ])
         ];
@@ -110,7 +110,7 @@ class MfaVerifiedToken
         }
 
         // Check Session id
-        if ((new DefaultPasswordHasher)->check($sessionId, $data->session_id)) {
+        if ((new DefaultPasswordHasher())->check($sessionId, $data->session_id)) {
             return true;
         }
 
