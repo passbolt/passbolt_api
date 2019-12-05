@@ -15,7 +15,7 @@
 
 use Migrations\AbstractMigration;
 
-class V2130DropUnusedTables extends AbstractMigration
+class V2120DropUnusedTables extends AbstractMigration
 {
     /**
      * Up
