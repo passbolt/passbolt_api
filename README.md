@@ -31,7 +31,7 @@ GNU Affero General Public License for more details.
 
 Passbolt is an open source password manager for teams. It allows you to
 securely share and store credentials. For instance, the wifi password of your
-office, the administrator password of a router or your organisation's social
+office, the administrator password of a router or your organization's social
 media account passwords, all of them can be secured using passbolt.
 
 Passbolt is different from the other password managers because:
