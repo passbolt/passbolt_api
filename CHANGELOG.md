@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
-## [2.12.0] - 2019-12-03
+## [2.12.0] - 2019-12-05
 ### Added
 - PB-687: As an admin I can resend an invitation for a user that didn't complete the setup
 
