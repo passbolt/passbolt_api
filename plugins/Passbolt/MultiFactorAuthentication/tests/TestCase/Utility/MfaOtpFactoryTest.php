@@ -36,6 +36,25 @@ class MfaOtpFactoryTest extends MfaIntegrationTestCase
      * @group mfa
      * @group mfaOtpFactory
      */
+    public function testMfaOtpFactoryGetIssuer_UrlCheck()
+    {
+        $issuer = MfaOtpFactory::getIssuer('https://localhost:8080');
+        $this->assertTextEquals('localhost', $issuer);
+
+        $issuer = MfaOtpFactory::getIssuer('http://cloud.passbolt.com/acme');
+        $this->assertTextEquals('cloud.passbolt.com/acme', $issuer);
+
+        $issuer = MfaOtpFactory::getIssuer('http://cloud.passbolt.com/acme:test');
+        $this->assertTextEquals('cloud.passbolt.com/acmetest', $issuer);
+
+        $issuer = MfaOtpFactory::getIssuer('www.passbolt.com');
+        $this->assertTextEquals('www.passbolt.com', $issuer);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaOtpFactory
+     */
     public function testMfaOtpFactoryGenerateTOTP()
     {
         $otp = MfaOtpFactory::generateTOTP($this->mockUserAccessControl('ada'));
