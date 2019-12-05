@@ -37,6 +37,10 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      */
     private $usersTable;
 
+    /**
+     * MfaUserSettingsResetEmailRedactor constructor.
+     * @param UsersTable $usersTable user table
+     */
     public function __construct(UsersTable $usersTable)
     {
         $this->usersTable = $usersTable;
