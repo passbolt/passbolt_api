@@ -23,6 +23,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 
 class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -91,7 +92,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function onSubscribedEvent(Event $event)
     {
         $emailCollection = new EmailCollection();
-        $email = $this->createEmail($event->getData('user'), $this->getData('uac'));
+        $email = $this->createEmail($event->getData('target'), $event->getData('uac'));
 
         return $emailCollection->addEmail($email);
     }
@@ -102,7 +103,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function getSubscribedEvents()
     {
         return [
-            'mfa.user_settings.reset'
+            MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT
         ];
     }
 }
