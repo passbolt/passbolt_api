@@ -23,6 +23,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Controller\UserSettings\MfaUserSettingsDeleteController;
 
 class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -30,6 +31,20 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
 
     const TEMPLATE_SELF = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_self';
     const TEMPLATE_ADMIN = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_admin';
+
+    /**
+     * @var UsersTable
+     */
+    private $usersTable;
+
+    /**
+     * MfaUserSettingsResetEmailRedactor constructor.
+     * @param UsersTable $usersTable user table
+     */
+    public function __construct(UsersTable $usersTable)
+    {
+        $this->usersTable = $usersTable;
+    }
 
     /**
      * @param User $user user who got their settings deleted
@@ -69,9 +84,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      */
     private function createEmailAdminDelete(User $user, UserAccessControl $uac)
     {
-        /** @var UsersTable $users */
-        $users = TableRegistry::getTableLocator()->get('Users');
-        $admin = $users->findFirstForEmail($uac->getId());
+        $admin = $this->usersTable->findFirstForEmail($uac->getId());
 
         return new Email(
             $user->username,
@@ -91,7 +104,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function onSubscribedEvent(Event $event)
     {
         $emailCollection = new EmailCollection();
-        $email = $this->createEmail($event->getData('user'), $this->getData('uac'));
+        $email = $this->createEmail($event->getData('target'), $event->getData('uac'));
 
         return $emailCollection->addEmail($email);
     }
@@ -102,7 +115,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function getSubscribedEvents()
     {
         return [
-            'mfa.user_settings.reset'
+            MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT
         ];
     }
 }

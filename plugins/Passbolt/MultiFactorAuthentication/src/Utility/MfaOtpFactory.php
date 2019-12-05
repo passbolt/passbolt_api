@@ -31,14 +31,17 @@ class MfaOtpFactory
      * Return Issuer
      * The domain name without http(s):// and trailing /
      *
+     * @param string $url Router::url will be used if empty
      * @return string
      */
-    public static function getIssuer()
+    public static function getIssuer($url = null)
     {
-        $url = Router::url('/', true);
+        if (!isset($url) || !is_string($url)) {
+            $url = Router::url('/', true);
+        }
+        $url = parse_url($url, PHP_URL_HOST) . parse_url($url, PHP_URL_PATH);
+        $url = str_replace(':', '', $url);
         $url = rtrim($url, '/');
-        $url = ltrim($url, 'https://');
-        $url = ltrim($url, 'http://');
 
         return $url;
     }

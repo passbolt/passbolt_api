@@ -32,9 +32,14 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => FrozenTime::now(),
-        'text' => __('Multi-factor authentication settings were reset for your account by an administrator.') .
-            __('Please contact your administrator if you didn\'t request this action.')
+        'text' => __('Your multi-factor authentication is disabled.')
     ])
+]);
+
+$text = __('Multi-factor authentication settings were reset for your account by an administrator.') .
+    __('Please contact your administrator if you didn\'t request this action.');
+echo $this->element('Email/module/text', [
+    'text' => $text
 ]);
 
 echo $this->element('Email/module/button', [
