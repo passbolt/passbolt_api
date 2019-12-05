@@ -20,9 +20,9 @@ use App\Model\Table\UsersTable;
 use Cake\ORM\Behavior;
 use Passbolt\MultiFactorAuthentication\Model\Query\IsMfaEnabledQueryDecorator;
 use Passbolt\MultiFactorAuthentication\Service\GetMfaAccountSettingsService;
+use Passbolt\MultiFactorAuthentication\Service\GetMfaOrgSettingsService;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
 use Passbolt\MultiFactorAuthentication\Utility\EntityMapper\User\MfaEntityMapper;
-use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 
 /**
  * @method UsersTable getTable()
@@ -50,7 +50,7 @@ class IsMfaEnabledBehavior extends Behavior
      */
     public function initialize(array $config)
     {
-        $isMfaEnabledService = new IsMfaEnabledService(MfaOrgSettings::get(), new GetMfaAccountSettingsService());
+        $isMfaEnabledService = new IsMfaEnabledService(new GetMfaOrgSettingsService(), new GetMfaAccountSettingsService());
 
         $this->isMfaEnabledQueryDecorator = new IsMfaEnabledQueryDecorator(
             $this->getTable(),

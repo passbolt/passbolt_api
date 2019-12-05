@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Service;
 use App\Model\Entity\User;
 use Exception;
 use Passbolt\MultiFactorAuthentication\Service\GetMfaAccountSettingsService;
+use Passbolt\MultiFactorAuthentication\Service\GetMfaOrgSettingsService;
 use Passbolt\MultiFactorAuthentication\Service\IsMfaEnabledService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
@@ -41,13 +42,19 @@ class IsMfaEnabledServiceTest extends TestCase
      */
     private $getMfaAccountSettingsServiceMock;
 
+    /**
+     * @var MockObject|GetMfaOrgSettingsService
+     */
+    private $getMfaOrgSettingsServiceMock;
+
     public function setUp()
     {
         $this->mfaOrgSettingsMock = $this->createMock(MfaOrgSettings::class);
         $this->getMfaAccountSettingsServiceMock = $this->createMock(GetMfaAccountSettingsService::class);
+        $this->getMfaOrgSettingsServiceMock = $this->createMock(GetMfaOrgSettingsService::class);
 
         $this->sut = new IsMfaEnabledService(
-            $this->mfaOrgSettingsMock,
+            $this->getMfaOrgSettingsServiceMock,
             $this->getMfaAccountSettingsServiceMock
         );
 
@@ -56,6 +63,10 @@ class IsMfaEnabledServiceTest extends TestCase
 
     public function testThatIsEnabledForUserReturnFalseWhenOrgIsNotEnabled()
     {
+        $this->getMfaOrgSettingsServiceMock->expects($this->once())
+            ->method('get')
+            ->willReturn($this->mfaOrgSettingsMock);
+
         $this->mfaOrgSettingsMock->expects($this->once())
             ->method('isEnabled')
             ->willReturn(false);
@@ -65,6 +76,10 @@ class IsMfaEnabledServiceTest extends TestCase
 
     public function testThatIsEnabledForUserReturnFalseWhenFailedToRetrieveMfaSettings()
     {
+        $this->getMfaOrgSettingsServiceMock->expects($this->once())
+            ->method('get')
+            ->willReturn($this->mfaOrgSettingsMock);
+
         $this->mfaOrgSettingsMock->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
@@ -87,6 +102,10 @@ class IsMfaEnabledServiceTest extends TestCase
         array $orgEnabledProviders,
         array $accountEnabledProviders
     ) {
+        $this->getMfaOrgSettingsServiceMock->expects($this->once())
+            ->method('get')
+            ->willReturn($this->mfaOrgSettingsMock);
+
         $this->mfaOrgSettingsMock->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
@@ -115,6 +134,10 @@ class IsMfaEnabledServiceTest extends TestCase
         array $orgEnabledProviders,
         array $accountEnabledProviders
     ) {
+        $this->getMfaOrgSettingsServiceMock->expects($this->once())
+            ->method('get')
+            ->willReturn($this->mfaOrgSettingsMock);
+
         $this->mfaOrgSettingsMock->expects($this->once())
             ->method('isEnabled')
             ->willReturn(true);
