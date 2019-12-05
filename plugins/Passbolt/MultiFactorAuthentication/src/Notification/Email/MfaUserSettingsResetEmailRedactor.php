@@ -33,6 +33,16 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     const TEMPLATE_ADMIN = 'Passbolt/MultiFactorAuthentication.LU/mfa_user_settings_reset_admin';
 
     /**
+     * @var UsersTable
+     */
+    private $usersTable;
+
+    public function __construct(UsersTable $usersTable)
+    {
+        $this->usersTable = $usersTable;
+    }
+
+    /**
      * @param User $user user who got their settings deleted
      * @param UserAccessControl $uac of user who deleted the settings
      * @return Email
@@ -70,9 +80,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      */
     private function createEmailAdminDelete(User $user, UserAccessControl $uac)
     {
-        /** @var UsersTable $users */
-        $users = TableRegistry::getTableLocator()->get('Users');
-        $admin = $users->findFirstForEmail($uac->getId());
+        $admin = $this->usersTable->findFirstForEmail($uac->getId());
 
         return new Email(
             $user->username,
