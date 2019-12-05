@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+
+## [2.12.0] - 2019-12-05
 ### Added
 - PB-575: As AD I can see the MFA status of each user in the users grid
 - PB-639: As LU I can delete a personal tag
@@ -760,7 +762,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...HEAD
+[2.12.0]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.5...v2.9.0
