@@ -16,51 +16,63 @@
 namespace Passbolt\MultiFactorAuthentication\Service;
 
 use App\Model\Entity\User;
-use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Exception;
+use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Throwable;
 
 class IsMfaEnabledService
 {
     /**
-     * @var MfaOrgSettings
-     */
-    private $mfaOrgSettings;
-
-    /**
      * @var GetMfaAccountSettingsService
      */
-    private $mfaAccountSettingsService;
+    private $getMfaAccountSettingsService;
+    /**
+     * @var GetMfaOrgSettingsService
+     */
+    private $getMfaOrgSettingsService;
 
     /**
-     * IsMfaEnabledService constructor.
-     * @param MfaOrgSettings $mfaOrgSettings settings
-     * @param GetMfaAccountSettingsService $mfaAccountSettingsService service
+     * @param GetMfaOrgSettingsService $getMfaOrgSettingsService Service to retrieve MfaOrgSettings
+     * @param GetMfaAccountSettingsService $getMfaAccountSettingsService Service to retrieve MfaAccountSettings
      */
-    public function __construct(MfaOrgSettings $mfaOrgSettings, GetMfaAccountSettingsService $mfaAccountSettingsService)
+    public function __construct(GetMfaOrgSettingsService $getMfaOrgSettingsService, GetMfaAccountSettingsService $getMfaAccountSettingsService)
     {
-        $this->mfaOrgSettings = $mfaOrgSettings;
-        $this->mfaAccountSettingsService = $mfaAccountSettingsService;
+        $this->getMfaAccountSettingsService = $getMfaAccountSettingsService;
+        $this->getMfaOrgSettingsService = $getMfaOrgSettingsService;
     }
 
     /**
      * @param User $user User to check if mfa is enabled
      * @return bool
+     * @throws Exception
      */
     public function isEnabledForUser(User $user)
     {
-        if (!$this->mfaOrgSettings->isEnabled()) {
+        $mfaOrgSettings = $this->getMfaOrgSettingsService->get();
+
+        if (!$mfaOrgSettings->isEnabled()) {
             return false;
         }
 
         try {
             $providersEnabledForOrgAndUser = array_intersect(
-                $this->mfaOrgSettings->getEnabledProviders(),
-                $this->mfaAccountSettingsService->getSettingsForUser($user)->getEnabledProviders()
+                $mfaOrgSettings->getEnabledProviders(),
+                $this->getMfaAccountSettings($user)->getEnabledProviders()
             );
         } catch (Throwable $t) {
             $providersEnabledForOrgAndUser = [];
         }
 
         return count($providersEnabledForOrgAndUser) > 0;
+    }
+
+    /**
+     * @param User $user User to get settings for
+     * @return MfaAccountSettings
+     * @throws Exception
+     */
+    private function getMfaAccountSettings(User $user)
+    {
+        return $this->getMfaAccountSettingsService->getSettingsForUser($user);
     }
 }
