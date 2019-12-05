@@ -41,6 +41,7 @@ class MfaOtpFactory
         }
         $url = parse_url($url, PHP_URL_HOST) . parse_url($url, PHP_URL_PATH);
         $url = str_replace(':', '', $url);
+        $url = rtrim($url, '/');
 
         return $url;
     }
