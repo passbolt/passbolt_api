@@ -32,13 +32,13 @@ matrix:
 
   include:
     # PHP 7.1 - MARIADB 10.1
-    - php: 7.1
-      env: PHPUNIT=1 COVERAGE=1 DB=mariadb DB_VERSION=10.1
-      addons: &php7_addon
-        mariadb: '10.1'
-        apt:
-          packages:
-            - *common_pkg
+#    - php: 7.1
+#      env: PHPUNIT=1 COVERAGE=1 DB=mariadb DB_VERSION=10.1
+#      addons: &php7_addon
+#        mariadb: '10.1'
+#        apt:
+#          packages:
+#            - *common_pkg
 
     # PHP 7.1 - MYSQL 5.7
     - php: 7.1
@@ -51,13 +51,13 @@ matrix:
             - *common_pkg
 
     # PHP 7.2 - MARIADB 10.1
-    - php: 7.2
-      env: PHPUNIT=1 DB=mariadb DB_VERSION=10.1
-      addons: &php7_addon
-        mariadb: '10.1'
-        apt:
-          packages:
-            - *common_pkg
+#    - php: 7.2
+#      env: PHPUNIT=1 DB=mariadb DB_VERSION=10.1
+#      addons: &php7_addon
+#        mariadb: '10.1'
+#        apt:
+#          packages:
+#            - *common_pkg
 
     # PHP 7.1 - MARIADB 10.2
     - php: 7.1

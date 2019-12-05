@@ -12,6 +12,12 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
+use App\Model\Entity\AuthenticationToken;
+use App\Utility\AuthToken\AuthTokenExpiryConfigValidator;
+
+$authTokenExpiryConfigValidator = new AuthTokenExpiryConfigValidator();
+
 return [
     /*
      * Passbolt application default configuration.
@@ -36,7 +42,18 @@ return [
 
         // Authentication & Authorisation.
         'auth' => [
-            'tokenExpiry' => env('PASSBOLT_AUTH_TOKEN_EXPIRY', '3 days')
+            'tokenExpiry' => env('PASSBOLT_AUTH_TOKEN_EXPIRY', '3 days'),
+            'token' => [
+                AuthenticationToken::TYPE_REGISTER => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_REGISTER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_RECOVER => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '1 day'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_LOGIN => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+            ]
         ],
 
         // Email settings
@@ -44,6 +61,9 @@ return [
             // Additional email validation settings
             'validate' => [
                 'mx' => filter_var(env('PASSBOLT_EMAIL_VALIDATE_MX', false), FILTER_VALIDATE_BOOLEAN),
+            ],
+            'purify' => [
+                'subject' => filter_var(env('PASSBOLT_EMAIL_PURIFY_SUBJECT', false), FILTER_VALIDATE_BOOLEAN),
             ],
 
             // Email delivery settings such as credentials are in app.php.

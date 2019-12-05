@@ -4,6 +4,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
 
+## [2.12.0] - 2019-12-05
+### Added
+- PB-687: As an admin I can resend an invitation for a user that didn't complete the setup
+
+### Improved
+- PB-878: Update Openpgp.js to v4.7
+- PB-893: Update CakePHP to v3.8.6
+
+### Fixed
+- PB-771: Added purify subject for the email subscribers
+- PB-856: Added migration fix to remove unused tables
+- GITHUB-84: Fix gc_maxlifetime versus Session.timeout units
+
 ## [2.11.0] - 2019-08-08
 ### Security fixes
 - PB-661: Fix tab nabbing when clicking on "open in a new tab" in password grid
@@ -666,7 +679,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v2.12.0...HEAD
+[2.12.0]: https://github.com/passbolt/passbolt_api/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/passbolt/passbolt_api/compare/v2.10.0...v2.11.0
 [2.10.0]: https://github.com/passbolt/passbolt_api/compare/v2.9.0...v2.10.0
 [2.9.0]: https://github.com/passbolt/passbolt_api/compare/v2.8.4...v2.9.0

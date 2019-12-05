@@ -19,7 +19,6 @@ use Cake\View\ViewVarsTrait;
 
 class PassboltConfiguration
 {
-
     use ViewVarsTrait;
 
     /**

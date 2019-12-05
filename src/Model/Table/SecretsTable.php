@@ -45,7 +45,6 @@ use Cake\Validation\Validator;
  */
 class SecretsTable extends Table
 {
-
     use PermissionsCleanupTrait;
     use ResourcesCleanupTrait;
     use TableCleanupTrait;

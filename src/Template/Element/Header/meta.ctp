@@ -19,6 +19,13 @@ use Cake\Routing\Router;
     <meta name="description" content="<?= Configure::read('passbolt.meta.description'); ?>">
     <meta name="keywords" content="Passbolt, password manager, online password manager, open source password manager">
     <meta name="robots" content="<?= Configure::read('passbolt.meta.robots'); ?>">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" type="image/png" href="<?= Router::url('/favicon.ico', true); ?>"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= Router::url('/favicon.ico', true); ?>" />
+    <link rel="icon" href="<?= Router::url('/favicon_32.png', true); ?>" sizes="32x32" />
+    <link rel="icon" href="<?= Router::url('/favicon_57.png', true); ?>" sizes="57x57" />
+    <link rel="icon" href="<?= Router::url('/favicon_76.png', true); ?>" sizes="76x76" />
+    <link rel="icon" href="<?= Router::url('/favicon_96.png', true); ?>" sizes="96x96" />
+    <link rel="icon" href="<?= Router::url('/favicon_128.png', true); ?>" sizes="128x128" />
+    <link rel="icon" href="<?= Router::url('/favicon_192.png', true); ?>" sizes="192x192" />
+    <link rel="icon" href="<?= Router::url('/favicon_228.png', true); ?>" sizes="228x228" />
     <base href="<?= Router::url('/', true); ?>">
