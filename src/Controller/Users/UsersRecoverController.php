@@ -82,7 +82,7 @@ class UsersRecoverController extends AppController
             $this->_assertValidation();
             $user = $this->_assertRules();
             $token = null;
-
+            $adminId = null;
             if ($user->active) {
                 $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
                 $event = 'UsersRecoverController.recoverPost.success';
@@ -90,11 +90,18 @@ class UsersRecoverController extends AppController
                 // The user has not completed the setup, restart setup
                 // Fixes https://github.com/passbolt/passbolt_api/issues/73
                 $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-                $event = 'UsersRecoverController.registerPost.success';
+                $event = 'Model.Users.afterRegister.success';
+                if ($this->User->role() === Role::ADMIN) {
+                    $adminId = $this->User->id();
+                }
             }
 
             // Create an event to build email with token
-            $event = new Event($event, $this, ['user' => $user, 'token' => $token]);
+            $options = ['user' => $user, 'token' => $token];
+            if (isset($adminId)) {
+                $options['adminId'] = $adminId;
+            }
+            $event = new Event($event, $this, $options);
             $this->getEventManager()->dispatch($event);
         } catch (BadRequestException $e) {
             if ($this->request->is('json')) {
