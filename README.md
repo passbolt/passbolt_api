@@ -6,7 +6,7 @@
 	  /_/    \__,_/____/____/_,___/\____/_/\__/
 
 	The open source password manager for teams
-	Copyright (c) 2018 Passbolt SA
+	Copyright (c) 2019 Passbolt SA
 	https://www.passbolt.com
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c804760791534e62b90632215952eaf0)](https://www.codacy.com/app/passbolt/passbolt_api?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=passbolt/passbolt_api&amp;utm_campaign=Badge_Grade)
