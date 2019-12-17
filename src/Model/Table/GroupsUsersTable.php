@@ -17,6 +17,7 @@ namespace App\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\GroupsUser;
+use App\Model\Entity\User;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;
@@ -335,6 +336,19 @@ class GroupsUsersTable extends Table
     }
 
     /**
+     * Get the list of groups where the user is member
+     *
+     * @param string $userId user uuid
+     * @return \Cake\ORM\Query
+     */
+    public function findGroupsWhereUserIsMember(string $userId)
+    {
+        return $this->find()
+            ->select('group_id')
+            ->where(['user_id' => $userId]);
+    }
+
+    /**
      * Check if the given user is the manager of a given group
      *
      * @param string $userId uuid
@@ -518,5 +532,29 @@ class GroupsUsersTable extends Table
     public function cleanupHardDeletedGroups($dryRun = false)
     {
         return $this->cleanupHardDeleted('Groups', $dryRun);
+    }
+
+    /**
+     * @param User $user User for which permission is check
+     * @param AcoEntityInterface $acoEntity Entity for which permission is checked
+     * @param int $permission Permission to check
+     * @return bool
+     */
+    public function isPermissionDefinedForGroupUserIsMemberOf(User $user, AcoEntityInterface $acoEntity, int $permission)
+    {
+        return (bool)$this->addAssociations([
+            'hasOne' => ['Group']
+        ])
+            ->findGroupsWhereUserIsMember($user->id)
+            ->where(['Groups.deleted', 0])
+            ->innerJoinWith('Groups.Permissions', function (Query $q) use ($acoEntity, $permission) {
+                return $q->where(function (QueryExpression $exp) use ($acoEntity, $permission) {
+                    return $exp->eq('aco_foreign_key', $acoEntity->getAcoForeignKey())
+                        ->eq('aco', $acoEntity->getAcoType())
+                        ->eq('aro', PermissionsTable::GROUP_ARO)
+                        ->gte('type', $permission);
+                });
+            })
+            ->count();
     }
 }

@@ -15,6 +15,8 @@
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Table\PermissionsTable;
+use App\Utility\Permissions\AroEntityInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
@@ -26,7 +28,7 @@ use Cake\Validation\Validation;
  *
  * @package App\Utility
  */
-class UserAccessControl
+class UserAccessControl implements AroEntityInterface
 {
     private $userId;
     private $roleName;
@@ -55,6 +57,22 @@ class UserAccessControl
     public function userId()
     {
         return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAroForeignKey()
+    {
+        return $this->userId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAroType()
+    {
+        return PermissionsTable::USER_ARO;
     }
 
     /**

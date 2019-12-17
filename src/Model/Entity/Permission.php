@@ -61,4 +61,93 @@ class Permission extends Entity
         'group' => false,
         'user' => false,
     ];
+
+    /**
+     * @var AroEntityInterface
+     */
+    private $aroObject;
+
+    /**
+     * @var AcoEntityInterface
+     */
+    private $acoObject;
+
+    /**
+     * @param AcoEntityInterface $accessControlObject ACO
+     * @return $this
+     */
+    public function setAcoObject(AcoEntityInterface $accessControlObject)
+    {
+        $this->acoObject = $accessControlObject;
+        $this->setDirty('aco');
+        $this->setDirty('aco_foreign_key');
+
+        return $this;
+    }
+
+    /**
+     * @param AroEntityInterface $accessRequestObject ARO
+     * @return $this
+     */
+    public function setAroObject(AroEntityInterface $accessRequestObject)
+    {
+        $this->aroObject = $accessRequestObject;
+
+        $this->setDirty('aro');
+        $this->setDirty('aro_foreign_key');
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $acoForeignKey ACO foreign key
+     * @return string
+     */
+    protected function _getAcoForeignKey(string $acoForeignKey = null)
+    {
+        if ($this->acoObject) {
+            return $this->acoObject->getAcoForeignKey();
+        }
+
+        return $acoForeignKey;
+    }
+
+    /**
+     * @param string|null $aco Access Control Object
+     * @return string
+     */
+    protected function _getAco(string $aco = null)
+    {
+        if ($this->acoObject) {
+            return $this->acoObject->getAcoType();
+        }
+
+        return $aco;
+    }
+
+    /**
+     * @param string|null $aroForeignKey ARO foreign key
+     * @return string
+     */
+    protected function _getAroForeignKey(string $aroForeignKey = null)
+    {
+        if ($this->aroObject) {
+            return $this->aroObject->getAroForeignKey();
+        }
+
+        return $aroForeignKey;
+    }
+
+    /**
+     * @param string|null $aro Access Request Object
+     * @return string
+     */
+    protected function _getAro(string $aro = null)
+    {
+        if ($this->aroObject) {
+            return $this->aroObject->getAroType();
+        }
+
+        return $aro;
+    }
 }

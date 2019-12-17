@@ -22,6 +22,10 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
+use App\Utility\Permissions\AcoEntityInterface;
+use App\Utility\Permissions\AroEntityInterface;
+use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -60,7 +64,8 @@ class PermissionsTable extends Table
      * List of allowed aco models on which Permissions can be plugged.
      */
     const ALLOWED_ACOS = [
-        self::RESOURCE_ACO
+        self::RESOURCE_ACO,
+        self::FOLDER_ACO,
     ];
 
     /**
@@ -100,6 +105,12 @@ class PermissionsTable extends Table
         $this->belongsTo('Resources', [
             'foreignKey' => 'aco_foreign_key',
         ]);
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $this->belongsTo('Folders', [
+                'foreignKey' => 'aco_foreign_key'
+            ]);
+        }
 
         $this->belongsTo('Users', [
             'foreignKey' => 'aro_foreign_key',
@@ -475,5 +486,24 @@ class PermissionsTable extends Table
     public function cleanupHardDeletedGroups($dryRun = false)
     {
         return $this->cleanupHardDeletedAro('Groups', $dryRun);
+    }
+
+    /**
+     * @param AroEntityInterface $aroEntity User for which the permission must be defined
+     * @param AcoEntityInterface $acoEntity Entity for which the permissions must be defined
+     * @param int $permission The permission which must be defined
+     * @return bool
+     */
+    public function isGivenPermissionDefinedForAroOnAco(AroEntityInterface $aroEntity, AcoEntityInterface $acoEntity, int $permission)
+    {
+        return (bool)$this->find()
+            ->where(function (QueryExpression $exp) use ($aroEntity, $acoEntity, $permission) {
+                return $exp->eq('aco', $acoEntity->getAcoType())
+                    ->eq('aco_foreign_key', $acoEntity->getAcoForeignKey())
+                    ->eq('aro_foreign_key', $aroEntity->getAroForeignKey())
+                    ->eq('aro', $aroEntity->getAroType())
+                    ->gte('type', $permission);
+            })
+            ->count();
     }
 }
