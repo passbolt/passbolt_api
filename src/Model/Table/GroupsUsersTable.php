@@ -546,7 +546,7 @@ class GroupsUsersTable extends Table
             'hasOne' => ['Group']
         ])
             ->findGroupsWhereUserIsMember($user->id)
-            ->where(['Groups.deleted', 0])
+            ->where(['deleted' => false])
             ->innerJoinWith('Groups.Permissions', function (Query $q) use ($acoEntity, $permission) {
                 return $q->where(function (QueryExpression $exp) use ($acoEntity, $permission) {
                     return $exp->eq('aco_foreign_key', $acoEntity->getAcoForeignKey())
