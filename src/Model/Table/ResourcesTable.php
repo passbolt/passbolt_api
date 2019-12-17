@@ -20,6 +20,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
+use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -261,36 +262,6 @@ class ResourcesTable extends Table
     }
 
     /**
-     * Check that a user has access to a resource.
-     *
-     * @param string $userId The user to get check the access for
-     * @param string $resourceId The target resource
-     * @param int $permissionType The minimum permission type
-     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
-     * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return bool
-     */
-    public function hasAccess(string $userId, string $resourceId, int $permissionType = Permission::READ)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
-        }
-        if (!Validation::uuid($resourceId)) {
-            throw new \InvalidArgumentException(__('The resource id should be a valid uuid.'));
-        }
-        if (!$this->getAssociation('Permissions')->isValidPermissionType($permissionType)) {
-            throw new \InvalidArgumentException(__('The permission type should be in the list of allowed permission type.'));
-        }
-
-        $query = $this->find();
-        $query->where(['Resources.id' => $resourceId]);
-        $query->innerJoinWith('Permission');
-        $query = $this->_filterQueryByPermissionsType($query, $userId, $permissionType);
-
-        return !is_null($query->first());
-    }
-
-    /**
      * Soft delete a resource.
      *
      * @param string $userId The user who perform the delete.
@@ -311,7 +282,8 @@ class ResourcesTable extends Table
 
             return false;
         }
-        if (!$this->hasAccess($userId, $resource->id, Permission::UPDATE)) {
+
+        if (!$this->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resource->id, $userId, Permission::UPDATE)) {
             $resource->setError('id', [
                 'has_access' => __('The user cannot delete this resource.'),
             ]);
@@ -351,6 +323,10 @@ class ResourcesTable extends Table
         // Remove all the associated favorites.
         $this->getAssociation('Favorites')
             ->deleteAll(['Favorites.foreign_key' => $resource->id]);
+
+        // Notify other components about the resource soft delete.
+        $event = new Event('Model.Resource.afterSoftDelete', $resource);
+        $this->getEventManager()->dispatch($event);
 
         return true;
     }

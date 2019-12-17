@@ -44,7 +44,16 @@ class GroupsUsersFixture extends TestFixture
      */
     public function init()
     {
-        $this->records = [
+        $this->records = $this->getRecords();
+        parent::init();
+    }
+
+    /**
+     * @return array
+     */
+    protected function getRecords()
+    {
+        return [
             [
                 'id' => '04e7d8bc-056a-5e4f-b857-4ee179c39bf4',
                 'group_id' => '469edf9d-ca1e-5003-91d6-3a46755d5a50',
@@ -200,6 +209,5 @@ class GroupsUsersFixture extends TestFixture
                 'created' => '2018-09-07 09:25:10',
             ],
         ];
-        parent::init();
     }
 }

@@ -18,6 +18,7 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
+use App\Model\Table\PermissionsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -555,7 +556,7 @@ class GroupsUpdateController extends AppController
         // have anymore access to.
         foreach ($removedUsersIds as $userId) {
             foreach ($resources as $resource) {
-                if (!$this->Resources->hasAccess($userId, $resource->id)) {
+                if (!$this->Groups->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resource->id, $userId)) {
                     $accessRemoved[] = ['resource_id' => $resource->id, 'user_id' => $userId];
                 }
             }

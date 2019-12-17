@@ -32,7 +32,7 @@ class SaveTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Secrets',
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
     public function setUp()

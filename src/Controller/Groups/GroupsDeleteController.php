@@ -18,6 +18,7 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Model\Table\PermissionsTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -123,7 +124,7 @@ class GroupsDeleteController extends AppController
             $msg = __('The group cannot be deleted.') . ' ';
 
             if (isset($errors['id']['soleOwnerOfSharedResource'])) {
-                $resourceIds = $this->Permissions->findSharedResourcesGroupIsSoleOwner($group->id)->extract('aco_foreign_key')->toArray();
+                $resourceIds = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
                 $findResourcesOptions = [];
                 $findResourcesOptions['contain']['permissions.user.profile'] = true;
                 $findResourcesOptions['contain']['permissions.group'] = true;
@@ -157,7 +158,7 @@ class GroupsDeleteController extends AppController
         $resourcesIdsToUpdate = Hash::extract($owners, '{n}.aco_foreign_key');
         sort($resourcesIdsToUpdate);
 
-        $resourcesIdsBlockingDelete = $this->Permissions->findSharedResourcesGroupIsSoleOwner($group->id)->extract('aco_foreign_key')->toArray();
+        $resourcesIdsBlockingDelete = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $group->id)->extract('aco_foreign_key')->toArray();
         sort($resourcesIdsBlockingDelete);
 
         // If all the resources that are requiring a change are not satisfied, throw an exception.

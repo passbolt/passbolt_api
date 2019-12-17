@@ -18,15 +18,19 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
-use Cake\Datasource\EntityInterface;
+use App\Model\Entity\Resource;
+use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
+/**
+ * @property ResourcesTable Resources
+ */
 class ResourcesUpdateController extends AppController
 {
     /**
@@ -56,18 +60,20 @@ class ResourcesUpdateController extends AppController
         }
 
         // The user can access the resource.
-        if (!$this->Resources->hasAccess($this->User->id(), $id, Permission::UPDATE)) {
+        if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $id, $this->User->id(), Permission::UPDATE)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
-        // Patch and validate the entity
-        $this->_patchAndValidateEntity($resource);
+        $data = $this->_formatRequestData();
+        $this->_patchAndValidateEntity($resource, $data);
 
-        // Save the entity
-        if (!$this->Resources->save($resource)) {
+        $this->Resources->getConnection()->transactional(function () use ($resource, $data) {
+            $this->Resources->save($resource);
             $this->_handleValidationError($resource);
-            throw new InternalErrorException(__('The resource could not be updated. Try again later.'));
-        }
+            $this->afterUpdate($resource, $data);
+            $this->_handleValidationError($resource);
+        });
+
 
         // Retrieve the updated resource.
         $options = [
@@ -75,20 +81,18 @@ class ResourcesUpdateController extends AppController
         ];
         $output = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
 
-        $this->_notifyUser($resource);
         $this->success(__('The resource has been updated successfully.'), $output);
     }
 
     /**
      * Build the resource entity from user input
      *
-     * @param \Cake\Datasource\EntityInterface $resource Resource
+     * @param Resource $resource Resource
+     * @param array $data Request data
      * @return void
      */
-    protected function _patchAndValidateEntity(EntityInterface $resource)
+    protected function _patchAndValidateEntity(Resource $resource, array $data)
     {
-        $data = $this->_formatRequestData();
-
         // Enforce data.
         $data['modified_by'] = $this->User->id();
 
@@ -153,12 +157,12 @@ class ResourcesUpdateController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param \Cake\Datasource\EntityInterface $resource entity
-     * @throws NotFoundException
-     * @throws ValidationException
+     * @param Resource $resource entity
      * @return void
+     * @throws ValidationException
+     * @throws NotFoundException
      */
-    protected function _handleValidationError($resource)
+    protected function _handleValidationError(Resource $resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
@@ -174,16 +178,15 @@ class ResourcesUpdateController extends AppController
     }
 
     /**
-     * Send email notification
-     *
-     * @param \App\Model\Entity\Resource $resource Resource
-     * @return void
+     * Trigger the after resource update event.
+     * @param Resource $resource The update resource
+     * @param array $data The request data.
      */
-    protected function _notifyUser(\App\Model\Entity\Resource $resource)
+    protected function afterUpdate(Resource $resource, array $data = [])
     {
-        $event = new Event('ResourcesUpdateController.update.success', $this, [
-            'resource' => $resource,
-        ]);
+        $uac = $this->User->getAccessControl();
+        $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
+        $event = new Event('ResourcesUpdateController.update.success', $this, $eventData);
         $this->getEventManager()->dispatch($event);
     }
 }

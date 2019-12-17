@@ -19,6 +19,7 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Table\PermissionsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -120,7 +121,7 @@ class ShareController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
         // The user can access the resource.
-        if (!$this->Resources->hasAccess($this->User->id(), $resourceId, Permission::OWNER)) {
+        if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $this->User->id(), Permission::OWNER)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
     }

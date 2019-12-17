@@ -44,7 +44,17 @@ class GroupsFixture extends TestFixture
      */
     public function init()
     {
-        $this->records = [
+        $this->records = $this->getRecords();
+        parent::init();
+    }
+
+    /**
+     * Override this method to define different records for the fixture
+     * @return array
+     */
+    protected function getRecords()
+    {
+        return [
             [
                 'id' => '15cec625-8417-5533-bdb1-a17aec0bfcf4',
                 'name' => 'Freelancer',
@@ -217,6 +227,5 @@ class GroupsFixture extends TestFixture
                 'modified_by' => 'd57c10f5-639d-5160-9c81-8a0c6c4ec856',
             ],
         ];
-        parent::init();
     }
 }

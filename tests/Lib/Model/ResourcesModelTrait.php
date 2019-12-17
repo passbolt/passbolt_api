@@ -15,6 +15,7 @@
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 
 trait ResourcesModelTrait
@@ -91,7 +92,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     {
         foreach ($resourcesIds as $resourceId) {
             // No access to the resource.
-            $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
+            $hasAccess = $this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $userId);
             $this->assertFalse($hasAccess);
             // No secret for the resource.
             $secret = $this->Resources->Secrets->find()
@@ -113,7 +114,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
     {
         foreach ($resourcesIds as $resourceId) {
             // Access granted to the resource.
-            $hasAccess = $this->Resources->hasAccess($userId, $resourceId);
+            $hasAccess = $this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $userId);
             $this->assertTrue($hasAccess);
             // Secret existing.
             $secret = $this->Resources->Secrets->find()

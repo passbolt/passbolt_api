@@ -32,7 +32,7 @@ use Cake\Validation\Validator;
  * Groups Model
  *
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsToMany $Users
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
+ * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\SecretsTable|\Cake\ORM\Association\HasOne $Modifier
  *
  * @method \App\Model\Entity\Group get($primaryKey, $options = [])
@@ -286,8 +286,8 @@ class GroupsTable extends Table
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
-        $Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $resourceIds = $Permissions->findResourcesOnlyGroupCanAccess($group->id)->extract('aco_foreign_key')->toArray();
+        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
+            ->extract('aco_foreign_key')->toArray();
         if (!empty($resourceIds)) {
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
@@ -298,7 +298,7 @@ class GroupsTable extends Table
 
         // Delete all permissions
         // Delete all the secrets that lost permissions in the process
-        $Permissions->deleteAll(['aro_foreign_key' => $group->id]);
+        $this->Permissions->deleteAll(['aro_foreign_key' => $group->id]);
         $Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $Secrets->cleanupHardDeletedPermissions();
 

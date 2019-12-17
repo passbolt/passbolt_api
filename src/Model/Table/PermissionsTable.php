@@ -50,19 +50,25 @@ class PermissionsTable extends Table
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
 
+    const RESOURCE_ACO = 'Resource';
+    const FOLDER_ACO = 'Folder';
+
+    const USER_ARO = 'User';
+    const GROUP_ARO = 'Group';
+
     /**
      * List of allowed aco models on which Permissions can be plugged.
      */
     const ALLOWED_ACOS = [
-        'Resource',
+        self::RESOURCE_ACO
     ];
 
     /**
      * List of allowed aro models on which Permissions can be plugged.
      */
     const ALLOWED_AROS = [
-        'Group',
-        'User',
+        self::GROUP_ARO,
+        self::USER_ARO,
     ];
 
     /**
@@ -94,6 +100,7 @@ class PermissionsTable extends Table
         $this->belongsTo('Resources', [
             'foreignKey' => 'aco_foreign_key',
         ]);
+
         $this->belongsTo('Users', [
             'foreignKey' => 'aro_foreign_key',
         ]);
@@ -111,7 +118,7 @@ class PermissionsTable extends Table
     {
         $validator
             ->uuid('id')
-            ->allowEmpty('id', 'create');
+            ->allowEmptyString('id', null, 'create');
 
         $validator
             ->inList('aco', self::ALLOWED_ACOS, __(
@@ -119,12 +126,12 @@ class PermissionsTable extends Table
                 implode(', ', self::ALLOWED_ACOS)
             ))
             ->requirePresence('aco', 'create', __('The aco is required.'))
-            ->notEmpty('aco', __('The aco cannot be empty.'));
+            ->notEmptyString('aco', __('The aco cannot be empty.'));
 
         $validator
             ->uuid('aco_foreign_key')
             ->requirePresence('aco_foreign_key', 'create')
-            ->notEmpty('aco_foreign_key');
+            ->notEmptyString('aco_foreign_key');
 
         $validator
             ->inList('aro', self::ALLOWED_AROS, __(
@@ -132,12 +139,12 @@ class PermissionsTable extends Table
                 implode(', ', self::ALLOWED_AROS)
             ))
             ->requirePresence('aro', 'create', __('The aro is required.'))
-            ->notEmpty('aro', __('The aro cannot be empty.'));
+            ->notEmptyString('aro', __('The aro cannot be empty.'));
 
         $validator
             ->uuid('aro_foreign_key')
             ->requirePresence('aro_foreign_key', 'create')
-            ->notEmpty('aro_foreign_key');
+            ->notEmptyString('aro_foreign_key');
 
         $validator
             ->inList('type', self::ALLOWED_TYPES, __(
@@ -145,7 +152,7 @@ class PermissionsTable extends Table
                 implode(', ', self::ALLOWED_TYPES)
             ))
             ->requirePresence('type', 'create', __('The type is required.'))
-            ->notEmpty('type', __('The type cannot be empty.'));
+            ->notEmptyString('type', __('The type cannot be empty.'));
 
         return $validator;
     }
@@ -174,13 +181,7 @@ class PermissionsTable extends Table
      */
     public function isValidPermissionType(int $value)
     {
-        $permissionTypes = [
-            Permission::READ,
-            Permission::UPDATE,
-            Permission::OWNER,
-        ];
-
-        return is_int($value) && in_array($value, $permissionTypes);
+        return is_int($value) && in_array($value, self::ALLOWED_TYPES);
     }
 
     /**
@@ -221,19 +222,32 @@ class PermissionsTable extends Table
     public function acoExistsRule(\Cake\Datasource\EntityInterface $entity, array $options)
     {
         $rules = new RulesChecker($options);
-        if ($entity->aco == 'Resource') {
-            $rule = $rules->existsIn('aco_foreign_key', 'Resources');
-            $existIn = $rule($entity, $options);
-            $rule = new IsNotSoftDeletedRule();
-            $isNotSoftDeleted = $rule($entity, [
-                'table' => 'Resources',
-                'errorField' => 'aco_foreign_key',
-            ]);
+        $exist = false;
 
-            return $existIn && $isNotSoftDeleted;
+        switch ($entity->aco) { // Change this implementation  next time a new ACO is created
+            case static::RESOURCE_ACO:
+                $rule = $rules->existsIn('aco_foreign_key', 'Resources');
+                $existIn = $rule($entity, $options);
+                $rule = new IsNotSoftDeletedRule();
+                $isNotSoftDeleted = $rule($entity, [
+                    'table' => 'Resources',
+                    'errorField' => 'aco_foreign_key',
+                ]);
+                $exist = $existIn && $isNotSoftDeleted;
+                break;
+            case static::FOLDER_ACO:
+                $rule = $rules->existsIn('aco_foreign_key', 'Folders');
+                $existIn = $rule($entity, $options);
+                $rule = new IsNotSoftDeletedRule();
+                $isNotSoftDeleted = $rule($entity, [
+                    'table' => 'Folders',
+                    'errorField' => 'aco_foreign_key',
+                ]);
+                $exist = $existIn && $isNotSoftDeleted;
+                break;
         }
 
-        return false;
+        return $exist;
     }
 
     /**
@@ -247,7 +261,8 @@ class PermissionsTable extends Table
     {
         $rules = new RulesChecker($options);
         $aro = Inflector::pluralize($entity->aro);
-        if (in_array($aro, ['Users', 'Groups'])) {
+        $singularizedAro = Inflector::singularize($aro);
+        if (in_array($singularizedAro, self::ALLOWED_AROS)) {
             // The aro instance exists.
             $existRule = $rules->existsIn('aro_foreign_key', $aro);
             $existIn = $existRule($entity, $options);
@@ -259,7 +274,7 @@ class PermissionsTable extends Table
             ]);
             // The user is active.
             $isActive = true;
-            if ($aro == 'Users') {
+            if ($singularizedAro === self::USER_ARO) {
                 $isActiveRule = new IsActiveRule();
                 $isActive = $isActiveRule($entity, [
                     'table' => $aro,

@@ -14,6 +14,8 @@
  */
 namespace App\Model\Traits\Cleanup;
 
+use App\Model\Table\PermissionsTable;
+
 trait PermissionsCleanupTrait
 {
 
@@ -29,7 +31,7 @@ trait PermissionsCleanupTrait
         $secrets = $this->find('all');
 
         foreach ($secrets as $secret) {
-            if (!$this->Resources->hasAccess($secret->user_id, $secret->resource_id)) {
+            if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $secret->resource_id, $secret->user_id)) {
                 $secretsToDelete[] = $secret->id;
             }
         }

@@ -12,14 +12,21 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Entity\GroupsUser;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
+use ArrayObject;
+use Cake\Event\Event;
+use Cake\ORM\Association\BelongsTo;
+use Cake\ORM\Behavior\TimestampBehavior;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
@@ -29,18 +36,18 @@ use Cake\Validation\Validator;
 /**
  * GroupsUsers Model
  *
- * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsTo $Groups
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property GroupsTable|BelongsTo $Groups
+ * @property UsersTable|BelongsTo $Users
  *
- * @method \App\Model\Entity\GroupsUser get($primaryKey, $options = [])
- * @method \App\Model\Entity\GroupsUser newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\GroupsUser findOrCreate($search, callable $callback = null, $options = [])
+ * @method GroupsUser get($primaryKey, $options = [])
+ * @method GroupsUser newEntity($data = null, array $options = [])
+ * @method GroupsUser[] newEntities(array $data, array $options = [])
+ * @method GroupsUser|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method GroupsUser patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method GroupsUser[] patchEntities($entities, array $data, array $options = [])
+ * @method GroupsUser findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin TimestampBehavior
  */
 class GroupsUsersTable extends Table
 {
@@ -71,8 +78,8 @@ class GroupsUsersTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -100,8 +107,8 @@ class GroupsUsersTable extends Table
     /**
      * Create group validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     * @return Validator
      */
     public function validationSaveGroup(Validator $validator)
     {
@@ -117,8 +124,8 @@ class GroupsUsersTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
@@ -158,7 +165,7 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId)
     {
@@ -189,7 +196,7 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     public function findGroupsWhereUserIsSoleManager(string $userId)
     {
@@ -242,7 +249,7 @@ class GroupsUsersTable extends Table
      * The user should be the manager at the point but we might as well cast a larger net
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     public function findGroupsWhereUserOnlyMember(string $userId)
     {
@@ -291,7 +298,7 @@ class GroupsUsersTable extends Table
      * Useful to know which group to delete when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return Query
      */
     public function findGroupsWhereUserNotOnlyMember(string $userId)
     {
@@ -325,19 +332,6 @@ class GroupsUsersTable extends Table
             ]);
 
         return $query;
-    }
-
-    /**
-     * Get the list of groups where the user is member
-     *
-     * @param string $userId user uuid
-     * @return \Cake\ORM\Query
-     */
-    public function findGroupsWhereUserIsMember(string $userId)
-    {
-        return $this->find()
-            ->select('group_id')
-            ->where(['user_id' => $userId]);
     }
 
     /**
@@ -469,7 +463,7 @@ class GroupsUsersTable extends Table
      * Return a groupUser entity.
      * @param array $data entity data
      *
-     * @return \App\Model\Entity\GroupsUser
+     * @return GroupsUser
      */
     public function buildEntity(array $data)
     {
@@ -492,12 +486,12 @@ class GroupsUsersTable extends Table
      * Event fired before request data is converted into entities
      * - On create, if not defined set is_admin to false
      *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
+     * @param Event $event event
+     * @param ArrayObject $data data
+     * @param ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
         if (!isset($data['is_admin'])) {
             $data['is_admin'] = false;

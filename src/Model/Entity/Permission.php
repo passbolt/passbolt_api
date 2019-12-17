@@ -15,6 +15,7 @@
 
 namespace App\Model\Entity;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -26,12 +27,11 @@ use Cake\ORM\Entity;
  * @property string $aro
  * @property string $aro_foreign_key
  * @property int $type
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property FrozenTime $created
+ * @property FrozenTime $modified
  */
 class Permission extends Entity
 {
-
     /**
      * The types of permissions.
      */
