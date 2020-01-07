@@ -533,28 +533,4 @@ class GroupsUsersTable extends Table
     {
         return $this->cleanupHardDeleted('Groups', $dryRun);
     }
-
-    /**
-     * @param User $user User for which permission is check
-     * @param AcoEntityInterface $acoEntity Entity for which permission is checked
-     * @param int $permission Permission to check
-     * @return bool
-     */
-    public function isPermissionDefinedForGroupUserIsMemberOf(User $user, AcoEntityInterface $acoEntity, int $permission)
-    {
-        return (bool)$this->addAssociations([
-            'hasOne' => ['Group']
-        ])
-            ->findGroupsWhereUserIsMember($user->id)
-            ->where(['deleted' => false])
-            ->innerJoinWith('Groups.Permissions', function (Query $q) use ($acoEntity, $permission) {
-                return $q->where(function (QueryExpression $exp) use ($acoEntity, $permission) {
-                    return $exp->eq('aco_foreign_key', $acoEntity->getAcoForeignKey())
-                        ->eq('aco', $acoEntity->getAcoType())
-                        ->eq('aro', PermissionsTable::GROUP_ARO)
-                        ->gte('type', $permission);
-                });
-            })
-            ->count();
-    }
 }
