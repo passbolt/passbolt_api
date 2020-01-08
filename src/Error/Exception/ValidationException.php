@@ -21,7 +21,9 @@ use Cake\ORM\Table;
 /**
  * Exception raised when a validation rule is not satisfied in a Controller.
  */
-class ValidationException extends Exception
+class ValidationException extends Exception implements
+    ExceptionWithErrorsDetailInterface,
+    ExceptionWithTableDetailInterface
 {
 
     /**
@@ -39,7 +41,7 @@ class ValidationException extends Exception
     /**
      * The table that throw the validation exception.
      *
-     * @var \Cake\ORM\Table
+     * @var Table
      */
     protected $_table = null;
 
@@ -48,7 +50,7 @@ class ValidationException extends Exception
      *
      * @param string $message The error message
      * @param Entity|null $entity The validation errors.
-     * @param \Cake\ORM\Table $table The table that is the source of the validation errors.
+     * @param Table $table The table that is the source of the validation errors.
      * @param int $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
@@ -82,7 +84,7 @@ class ValidationException extends Exception
     /**
      * Get the table
      *
-     * @return \Cake\ORM\Table
+     * @return Table
      */
     public function getTable()
     {
