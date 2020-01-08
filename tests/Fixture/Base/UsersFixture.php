@@ -124,15 +124,6 @@ class UsersFixture extends TestFixture
                 'modified' => '2019-07-01 18:51:40'
             ],
             [
-                'id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-                'role_id' => '6f02b8d2-e24c-51fe-a452-5a027c26dbef',
-                'username' => 'anonymous@passbolt.com',
-                'active' => true,
-                'deleted' => false,
-                'created' => '2019-07-02 18:51:40',
-                'modified' => '2019-07-02 18:51:40'
-            ],
-            [
                 'id' => '742554b6-2940-5b7d-a8e7-b03a19f78b8e',
                 'role_id' => 'a58de6d3-f52c-5080-b79b-a601a647ac85',
                 'username' => 'margaret@passbolt.com',

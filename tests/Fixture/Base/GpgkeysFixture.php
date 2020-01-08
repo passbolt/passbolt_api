@@ -1500,52 +1500,7 @@ C1bPERQcYXABssLYtGmFVdoC3DLBcCY+tjrJRz7DXtpo
                 'deleted' => false,
                 'created' => '2019-07-02 18:51:44',
                 'modified' => '2019-07-02 18:51:44'
-            ],
-            [
-                'id' => 'fc8d6501-9391-5cd4-ad17-f46df3443d6f',
-                'user_id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-                'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQENBFwOJQQBCADRAFkj8r4nB2XBDkZjIZC5Bom5U6Rf914guuXul8Qvr62RDpdK
-FFPEKurVEzPikI7ZFg6n3fAPsvPl90WJIvXlUX9tXJaPY/OO3A0AepTkglAYpgKT
-PIEDmmDneYtt7lyRKYmrfw1jYKllA6+MUVEvy+bLj2y93eHPCq/DKnk0K6ce84Kg
-TuWL9aU8p8ylz2EYi5RNTqhvAUuaEen3kurVrcKka9jGY765UzCVdRtW2iX0MWK/
-muLThWgis8jD7P6Ojms/X12zU2wjC+TSyrhHg379UC2xsyyr/RCzBBIJ+jPS+Q4D
-Lv+qyVBPAQNKpzbhlmboacQ/2Jfu9Q62F5XZABEBAAG0J0Fub255bW91cyBVc2Vy
-IDxhbm9ueW1vdXNAcGFzc2JvbHQuY29tPokBTgQTAQoAOBYhBHSIv+86HnHDbqfH
-zaivjPebwNB2BQJcDiUEAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEKiv
-jPebwNB2kDoIAJBAdjosPI49MAEPdHl8KWZ9CjRqpycxkr72mw8bnSMwj/+NtveL
-HhPMIq9HDhljefMCEZuEPv5zCPlHiq5Tsci+qZaUg59P5jELeSF9coIhE4vf/0qt
-TZuokpxHnbWTpEW6dgYOqC08mHVAC8eaeirnVQKhw8iBWqLrEJDUAPvhNDsjq9xd
-V7gkMQH0CTMcvm34efUIzF7LgqCoY5y0QH9LYAnQtiBeMjc74wH6lRVboCVkpAxw
-PvNhdM+a+6qq5s2IhJUbOBx+NqgTz2Y9eGSzg7YpWFSscpWKLVgYF7VmD91dQl1L
-v4lX8JcYppcoICiIZgUYwKV5GR8MlaA03sq5AQ0EXA4lBAEIALy4jNGklWVA0CVj
-B9jryGGJMIzjxnNMjn9jgLJXkBx3y64/OoTW9gmUSzZYeQgDItz9Kcs5vaR7pHYN
-6VossH7v+tAOKh4jjbMjNjFwo28K9wfR3BtHdxdg+yjFTEXkD7EYh8Q1vzSid9V1
-k+FvNRY79XIN5IfG1d0O6g0AmHocuq+S7oRUt1nRfbPnolDVGPopBCLExGZevmBL
-qSXBYJzh2+QARvhEL8P57sPrUgyBK6GqEInpWyzdnrQDhYrWMmk15ySiAG7V/ic1
-JzKaiN0gJmCnxQUO0xLMqMLC0MlihB6HgAiquc0Ia/cTAaojFxm5zcVWwKpj+GUp
-V6zWMqUAEQEAAYkBNgQYAQoAIBYhBHSIv+86HnHDbqfHzaivjPebwNB2BQJcDiUE
-AhsMAAoJEKivjPebwNB2BKkIALZFZgq3MnbpsXzl1+Vyp40/c5agxjAmndqB3dVx
-Yhwo+i5Xqk/DTwWuVu288ZxohXrqUTVDYIeB2k+xAH853ByWuoq0YYTcsZTpHicb
-N3NLRcy+Gi/F+4mDfdgWEIhFRiTUyZxb7aCnKcMFr7ibu/KCas1IX3D/eXN725AC
-iWptsicD+4JoCsZRNEnlZFWbacsOOnmjdfLlWbGn2a0KkKgsd3JPKMcA8AoKMdJ6
-C5KUCIC8mpLTwhvLwQS27k3nBkVAinYBBX1zCfrVYgnBjC35Ho7ftR9mT+RYJmsH
-Px4aG63zJWA7DjnzYJS0sAoNJxBrXU3TS530f5b1owOAogg=
-=qspo
------END PGP PUBLIC KEY BLOCK-----
-',
-                'bits' => 2048,
-                'uid' => 'Anonymous User <anonymous@passbolt.com>',
-                'key_id' => '9BC0D076',
-                'fingerprint' => '7488BFEF3A1E71C36EA7C7CDA8AF8CF79BC0D076',
-                'type' => 'RSA',
-                'expires' => null,
-                'key_created' => '2018-12-10 08:34:12',
-                'deleted' => false,
-                'created' => '2019-07-02 18:51:44',
-                'modified' => '2019-07-02 18:51:44'
-            ],
+            ]
         ];
         parent::init();
     }

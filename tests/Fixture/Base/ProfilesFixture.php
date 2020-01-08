@@ -207,14 +207,6 @@ class ProfilesFixture extends TestFixture
                 'modified' => '2019-07-02 18:51:41'
             ],
             [
-                'id' => 'c94371fe-8fcc-5b77-b50e-2db38646a673',
-                'user_id' => '6aabffc9-f788-58f8-9bc9-f4c102ad2f53',
-                'first_name' => 'Anonymous',
-                'last_name' => 'User',
-                'created' => '2019-07-02 18:51:41',
-                'modified' => '2019-07-02 18:51:41'
-            ],
-            [
                 'id' => 'cbce5d22-46c1-51d1-b851-36b174e40611',
                 'user_id' => 'e97b14ba-8957-57c9-a357-f78a6e1e1a46',
                 'first_name' => 'Betty',
