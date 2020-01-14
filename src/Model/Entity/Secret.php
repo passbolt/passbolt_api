@@ -44,6 +44,6 @@ class Secret extends Entity
         'resource_id' => false,
         'data' => false,
         'created' => false,
-        'modified' => false
+        'modified' => false,
     ];
 }

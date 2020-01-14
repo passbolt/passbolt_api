@@ -27,7 +27,7 @@ trait EntitiesHistoryTrait
                 'Permissions' => [
                     EntityHistory::CRUD_CREATE,
                     EntityHistory::CRUD_UPDATE,
-                    EntityHistory::CRUD_DELETE
+                    EntityHistory::CRUD_DELETE,
                 ],
                 'models' => [
                     'SecretAccesses' => [
@@ -113,23 +113,23 @@ trait EntitiesHistoryTrait
 
         if ($modelName == 'Permissions') {
             $table->belongsTo('Passbolt/Log.PermissionsHistory', [
-                'foreignKey' => 'foreign_key'
+                'foreignKey' => 'foreign_key',
             ]);
         }
         if ($modelName == 'Resources') {
             $table->belongsTo('Passbolt/Log.EntitiesHistory', [
-                'foreignKey' => 'foreign_key'
+                'foreignKey' => 'foreign_key',
             ]);
         }
         if ($modelName == 'Secrets') {
             $table->belongsTo('Passbolt/Log.SecretsHistory', [
-                'foreignKey' => 'foreign_key'
+                'foreignKey' => 'foreign_key',
             ]);
             $table->hasMany('Passbolt/Log.SecretAccesses');
         }
         if ($modelName == 'SecretAccesses') {
             $table->belongsTo('Passbolt/Log.EntitiesHistory', [
-                'foreignKey' => 'foreign_key'
+                'foreignKey' => 'foreign_key',
             ]);
         }
     }

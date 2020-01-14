@@ -26,7 +26,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/AuthenticationTokens'
+        'app.Base/AuthenticationTokens',
     ];
     public $AuthenticationTokens;
 
@@ -50,11 +50,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
             'AuthenticationToken' => [
-                'token' => $t->token
+                'token' => $t->token,
             ],
             'Gpgkey' => [
-                'key' => $armoredKey
-            ]
+                'key' => $armoredKey,
+            ],
         ];
         $this->postJson($url, $data);
         $this->assertSuccess();
@@ -84,11 +84,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $data = [
             'authenticationtoken' => [
-                'token' => $t->token
+                'token' => $t->token,
             ],
             'gpgkey' => [
-                'armored_key' => $armoredKey
-            ]
+                'armored_key' => $armoredKey,
+            ],
         ];
         $this->postJson($url, $data);
         $this->assertSuccess();
@@ -107,11 +107,11 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'sofia_public.key');
         $data = [
             'authenticationtoken' => [
-                'token' => $t->token
+                'token' => $t->token,
             ],
             'gpgkey' => [
-                'armored_key' => $armoredKey
-            ]
+                'armored_key' => $armoredKey,
+            ],
         ];
         $this->postJson($url, $data);
         $this->assertError();
@@ -159,36 +159,36 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $fails = [
             'empty array' => [
                 'data' => [],
-                'message' => 'An authentication token must be provided.'
+                'message' => 'An authentication token must be provided.',
             ],
             'null' => [
                 'data' => null,
-                'message' => 'An authentication token must be provided.'
+                'message' => 'An authentication token must be provided.',
             ],
             'array with null' => [
                 'data' => ['token' => null],
-                'message' => 'An authentication token must be provided.'
+                'message' => 'An authentication token must be provided.',
             ],
             'int' => [
                 'data' => ['token' => 100],
-                'message' => 'The authentication token should be a valid uuid.'
+                'message' => 'The authentication token should be a valid uuid.',
             ],
             'string' => [
                 'data' => ['token' => 'nope'],
-                'message' => 'The authentication token should be a valid uuid.'
+                'message' => 'The authentication token should be a valid uuid.',
             ],
             'expired token' => [
                 'data' => ['token' => $tokenExpired],
-                'message' => 'The authentication token is not valid or has expired.'
+                'message' => 'The authentication token is not valid or has expired.',
             ],
             'inactive token' => [
                 'data' => ['token' => $tokenInactive],
-                'message' => 'The authentication token is not valid or has expired.'
+                'message' => 'The authentication token is not valid or has expired.',
             ],
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
-                'AuthenticationToken' => $case['data']
+                'AuthenticationToken' => $case['data'],
             ];
             $this->postJson($url, $data);
             $this->assertError(400, $case['message'], 'Issue with test case: ' . $caseName);
@@ -210,35 +210,35 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $fails = [
             'empty array' => [
                 'data' => [],
-                'message' => 'An OpenPGP key must be provided.'
+                'message' => 'An OpenPGP key must be provided.',
             ],
             'null' => [
                 'data' => null,
-                'message' => 'An OpenPGP key must be provided.'
+                'message' => 'An OpenPGP key must be provided.',
             ],
             'array with null' => [
                 'data' => ['armored_key' => null],
-                'message' => 'An OpenPGP key must be provided.'
+                'message' => 'An OpenPGP key must be provided.',
             ],
             'int' => [
                 'data' => ['armored_key' => 100],
-                'message' => 'A valid OpenPGP key must be provided.'
+                'message' => 'A valid OpenPGP key must be provided.',
             ],
             'string' => [
                 'data' => ['armored_key' => 'nope'],
-                'message' => 'A valid OpenPGP key must be provided.'
+                'message' => 'A valid OpenPGP key must be provided.',
             ],
             'partial key' => [
                 'data' => ['armored_key' => $cutKey],
-                'message' => 'A valid OpenPGP key must be provided.'
-            ]
+                'message' => 'A valid OpenPGP key must be provided.',
+            ],
         ];
         foreach ($fails as $caseName => $case) {
             $data = [
             'AuthenticationToken' => [
-                'token' => $t->token
+                'token' => $t->token,
             ],
-            'Gpgkey' => $case['data']
+            'Gpgkey' => $case['data'],
             ];
         }
         $this->postJson($url, $data);

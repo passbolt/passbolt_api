@@ -30,7 +30,7 @@ class SslHealthchecks
         $checks['ssl'] = [
             'peerValid' => false,
             'hostValid' => false,
-            'notSelfSigned' => false
+            'notSelfSigned' => false,
         ];
         // No point to check anything if this Core config is not valid
         if (isset($checks['core']['fullBaseUrlReachable'])) {
@@ -59,7 +59,7 @@ class SslHealthchecks
             $HttpSocket = new Client([
                 'ssl_verify_peer' => true,
                 'ssl_verify_host' => false,
-                'ssl_allow_self_signed' => true
+                'ssl_allow_self_signed' => true,
             ]);
             $response = $HttpSocket->get($url);
             $checks['ssl']['peerValid'] = $response->isOk();
@@ -83,7 +83,7 @@ class SslHealthchecks
             $HttpSocket = new Client([
                 'ssl_verify_peer' => true,
                 'ssl_verify_host' => true,
-                'ssl_allow_self_signed' => true
+                'ssl_allow_self_signed' => true,
             ]);
             $response = $HttpSocket->get($url);
             $checks['ssl']['hostValid'] = $response->isOk();
@@ -107,7 +107,7 @@ class SslHealthchecks
             $HttpSocket = new Client([
                 'ssl_verify_peer' => true,
                 'ssl_verify_host' => true,
-                'ssl_allow_self_signed' => false
+                'ssl_allow_self_signed' => false,
             ]);
             $response = $HttpSocket->get($url);
             $checks['ssl']['notSelfSigned'] = $response->isOk();

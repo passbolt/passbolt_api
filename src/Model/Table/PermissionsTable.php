@@ -54,7 +54,7 @@ class PermissionsTable extends Table
      * List of allowed aco models on which Permissions can be plugged.
      */
     const ALLOWED_ACOS = [
-        'Resource'
+        'Resource',
     ];
 
     /**
@@ -89,13 +89,13 @@ class PermissionsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Groups', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
         $this->belongsTo('Resources', [
-            'foreignKey' => 'aco_foreign_key'
+            'foreignKey' => 'aco_foreign_key',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
 
         $this->addBehavior('Timestamp');
@@ -177,7 +177,7 @@ class PermissionsTable extends Table
         $permissionTypes = [
             Permission::READ,
             Permission::UPDATE,
-            Permission::OWNER
+            Permission::OWNER,
         ];
 
         return is_int($value) && in_array($value, $permissionTypes);
@@ -201,11 +201,11 @@ class PermissionsTable extends Table
         );
         $rules->addCreate([$this, 'acoExistsRule'], 'aco_exists', [
             'errorField' => 'aco_foreign_key',
-            'message' => __('The aco does not exist.')
+            'message' => __('The aco does not exist.'),
         ]);
         $rules->addCreate([$this, 'aroExistsRule'], 'aro_exists', [
             'errorField' => 'aro_foreign_key',
-            'message' => __('The aro does not exist.')
+            'message' => __('The aro does not exist.'),
         ]);
 
         return $rules;
@@ -330,7 +330,7 @@ class PermissionsTable extends Table
                 // The permission does not belong to the resource.
                 if (is_null($permissionKey)) {
                     $errors = ['id' => [
-                        'permission_exists' => __('The permission does not exist.', $change['id'])
+                        'permission_exists' => __('The permission does not exist.', $change['id']),
                     ]];
                     throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }
@@ -360,7 +360,7 @@ class PermissionsTable extends Table
                     'aco_foreign_key' => true,
                     'aro' => true,
                     'aro_foreign_key' => true,
-                    'type' => true
+                    'type' => true,
                 ]];
                 // Create and validate the new permission entity.
                 $permission = $this->newEntity($change, $options);
@@ -391,7 +391,7 @@ class PermissionsTable extends Table
             ->leftJoinWith($modelName)
             ->where([
                 $modelName . '.deleted' => true,
-                'aro' => ucfirst(Inflector::singularize($modelName))
+                'aro' => ucfirst(Inflector::singularize($modelName)),
             ]);
 
         return $this->cleanupSoftDeleted($modelName, $dryRun, $query);

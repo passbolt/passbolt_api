@@ -71,19 +71,19 @@ class CleanupTask extends AppShell
                 'Soft Deleted Users',
                 'Hard Deleted Users',
                 'Soft Deleted Groups',
-                'Hard Deleted Groups'
+                'Hard Deleted Groups',
             ],
             'Favorites' => [
                 'Soft Deleted Users',
                 'Hard Deleted Users',
                 'Soft Deleted Resources',
-                'Hard Deleted Resources'
+                'Hard Deleted Resources',
             ],
             'Comments' => [
                 'Soft Deleted Users',
                 'Hard Deleted Users',
                 'Soft Deleted Resources',
-                'Hard Deleted Resources'
+                'Hard Deleted Resources',
             ],
             'Permissions' => [
                 'Soft Deleted Users',
@@ -91,15 +91,15 @@ class CleanupTask extends AppShell
                 'Soft Deleted Groups',
                 'Hard Deleted Groups',
                 'Soft Deleted Resources',
-                'Hard Deleted Resources'
+                'Hard Deleted Resources',
             ],
             'Secrets' => [
                 'Soft Deleted Users',
                 'Hard Deleted Users',
                 'Soft Deleted Resources',
                 'Hard Deleted Resources',
-                'Hard Deleted Permissions'
-            ]
+                'Hard Deleted Permissions',
+            ],
         ];
 
         $this->out(' Cleanup shell', 0);

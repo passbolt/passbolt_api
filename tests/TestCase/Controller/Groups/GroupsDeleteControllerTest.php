@@ -32,7 +32,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars',
-        'app.Base/EmailQueue'
+        'app.Base/EmailQueue',
     ];
 
     public function setUp()
@@ -161,13 +161,13 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     {
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -239,13 +239,13 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userMId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);

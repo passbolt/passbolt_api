@@ -30,7 +30,7 @@ class ShareTest extends AppTestCase
     public $fixtures = [
         'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/GroupsUsers', 'app.Base/Groups'
+        'app.Base/GroupsUsers', 'app.Base/Groups',
     ];
 
     public function setUp()
@@ -196,27 +196,27 @@ hcciUFw5
                 'errorField' => 'permissions.0.id.permission_exists',
                 'data' => [
                     'permissions' => [[
-                        'id' => UuidFactory::uuid()]]]
+                        'id' => UuidFactory::uuid()]]],
             ],
             'cannot delete a permission of another resource' => [
                 'errorField' => 'permissions.0.id.permission_exists',
                 'data' => [
                     'permissions' => [[
                         'id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"),
-                        'delete' => true]]
-                ]
+                        'delete' => true]],
+                ],
             ],
             'cannot add a permission with invalid data' => [
                 'errorField' => 'permissions.0.aro_foreign_key._required',
                 'data' => [
                     'permissions' => [
-                        ['aro' => 'User', 'type' => Permission::OWNER]]]
+                        ['aro' => 'User', 'type' => Permission::OWNER]]],
             ],
             'cannot update a permission with a wrong permission type' => [
                 'errorField' => 'permissions.0.type.inList',
                 'data' => [
                     'permissions' => [[
-                        'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]]]
+                        'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]]],
             ],
             'cannot add a secret with invalid data' => [
                 'errorField' => 'secrets.0.data.isValidGpgMessage',
@@ -224,8 +224,8 @@ hcciUFw5
                     'permissions' => [[
                         'aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ]],
                     'secrets' => [[
-                        'user_id' => $userEId, 'data' => 'INVALID GPG MESSAGE']]
-                ]
+                        'user_id' => $userEId, 'data' => 'INVALID GPG MESSAGE']],
+                ],
             ],
             // Test build rules.
             'cannot remove the latest owner' => [
@@ -233,8 +233,8 @@ hcciUFw5
                 'data' => [
                     'permissions' => [[
                         'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
-                        'delete' => true]]
-                ]
+                        'delete' => true]],
+                ],
             ],
             'cannot add a permissions for a deleted user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
@@ -242,7 +242,7 @@ hcciUFw5
                     'permissions' => [[
                         'aro' => 'User',
                         'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
-                        'type' => Permission::OWNER]]]
+                        'type' => Permission::OWNER]]],
             ],
             'cannot add a permissions for an inactive user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
@@ -250,7 +250,7 @@ hcciUFw5
                     'permissions' => [[
                         'aro' => 'User',
                         'aro_foreign_key' => UuidFactory::uuid('user.id.ruth'),
-                        'type' => Permission::OWNER]]]
+                        'type' => Permission::OWNER]]],
             ],
         ];
 

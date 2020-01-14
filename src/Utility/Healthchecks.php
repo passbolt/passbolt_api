@@ -160,7 +160,7 @@ class Healthchecks
         try {
             $context = stream_context_create([
                 'http' => [
-                    'method' => 'GET'
+                    'method' => 'GET',
                 ],
                 'ssl' => [
                     'verify_peer' => false,

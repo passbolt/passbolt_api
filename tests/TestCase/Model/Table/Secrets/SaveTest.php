@@ -31,7 +31,7 @@ class SaveTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers'
+        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
     ];
 
     public function setUp()
@@ -57,7 +57,7 @@ class SaveTest extends AppTestCase
                 // See the validationSaveResource.
                 'resource_id' => true,
                 'user_id' => true,
-                'data' => true
+                'data' => true,
             ],
         ];
     }

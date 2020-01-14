@@ -51,7 +51,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $data = [
             ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ],
-            ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'type' => Permission::OWNER]
+            ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'type' => Permission::OWNER],
         ];
 
         // Retrieve the resource and its permissions to share.
@@ -95,7 +95,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $data = [
             ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true],
-            ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true]
+            ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true],
         ];
 
         // Retrieve the resource and its permissions to share.
@@ -129,7 +129,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $groupFId = UuidFactory::uuid('group.id.freelancer');
         $data = [
             ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER],
-            ['aro' => 'Group', 'aro_foreign_key' => $groupFId, 'type' => Permission::READ]
+            ['aro' => 'Group', 'aro_foreign_key' => $groupFId, 'type' => Permission::READ],
         ];
 
         // Retrieve the resource and its permissions to share.
@@ -175,23 +175,23 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $testCases = [
             'permission does not exist' => [
                 'errorField' => '0.id.permission_exists',
-                'data' => [['id' => UuidFactory::uuid()]]
+                'data' => [['id' => UuidFactory::uuid()]],
             ],
             'permission relative to another resource' => [
                 'errorField' => '0.id.permission_exists',
-                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userBId")]]
+                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userBId")]],
             ],
             'permission type cannot be empty' => [
                 'errorField' => '0.type._empty',
                 'data' => [[
                     'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
-                    'type' => null]]
+                    'type' => null]],
             ],
             'permission type is invalid' => [
                 'errorField' => '0.type.inList',
                 'data' => [[
                     'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
-                    'type' => 42]]
+                    'type' => 42]],
             ],
         ];
 
@@ -206,11 +206,11 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $testCases = [
             'permission does not exist' => [
                 'errorField' => '0.id.permission_exists',
-                'data' => [['id' => UuidFactory::uuid(), 'delete' => true]]
+                'data' => [['id' => UuidFactory::uuid(), 'delete' => true]],
             ],
             'permission relative to another resource' => [
                 'errorField' => '0.id.permission_exists',
-                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userBId"), 'delete' => true]]
+                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userBId"), 'delete' => true]],
             ],
         ];
 
@@ -224,39 +224,39 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $testCases = [
             'aro is required' => [
                 'errorField' => '0.aro._required',
-                'data' => [['aro_foreign_key' => $userEId, 'type' => Permission::OWNER]]
+                'data' => [['aro_foreign_key' => $userEId, 'type' => Permission::OWNER]],
             ],
             'aro cannot be empty' => [
                 'errorField' => '0.aro._empty',
-                'data' => [['aro' => null, 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER]]
+                'data' => [['aro' => null, 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER]],
             ],
             'aro is invalid' => [
                 'errorField' => '0.aro.inList',
-                'data' => [['aro' => 'BADARO', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER]]
+                'data' => [['aro' => 'BADARO', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER]],
             ],
             'aro_foreign_key is required' => [
                 'errorField' => '0.aro_foreign_key._required',
-                'data' => [['aro' => 'User', 'type' => Permission::OWNER]]
+                'data' => [['aro' => 'User', 'type' => Permission::OWNER]],
             ],
             'aro_foreign_key cannot be empty' => [
                 'errorField' => '0.aro_foreign_key._empty',
-                'data' => [['aro' => 'User', 'aro_foreign_key' => null, 'type' => Permission::OWNER]]
+                'data' => [['aro' => 'User', 'aro_foreign_key' => null, 'type' => Permission::OWNER]],
             ],
             'aro_foreign_key is invalid' => [
                 'errorField' => '0.aro_foreign_key.uuid',
-                'data' => [['aro' => 'User', 'aro_foreign_key' => 'invalid-uuid', 'type' => Permission::OWNER]]
+                'data' => [['aro' => 'User', 'aro_foreign_key' => 'invalid-uuid', 'type' => Permission::OWNER]],
             ],
             'permission type is required' => [
                 'errorField' => '0.type._required',
-                'data' => [['aro' => 'User', 'aro_foreign_key' => $userEId]]
+                'data' => [['aro' => 'User', 'aro_foreign_key' => $userEId]],
             ],
             'permission type cannot be empty' => [
                 'errorField' => '0.type._empty',
-                'data' => [['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => null]]
+                'data' => [['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => null]],
             ],
             'permission type is invalid' => [
                 'errorField' => '0.type.inList',
-                'data' => [['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => 42]]
+                'data' => [['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => 42]],
             ],
         ];
 

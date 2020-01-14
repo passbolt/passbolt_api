@@ -43,8 +43,8 @@ class ResourcesAddController extends AppController
         $options = [
             'contain' => [
                 'creator' => true, 'favorite' => true, 'modifier' => true,
-                'secret' => true, 'permission' => true
-            ]
+                'secret' => true, 'permission' => true,
+            ],
         ];
         $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
 
@@ -86,7 +86,7 @@ class ResourcesAddController extends AppController
                 'created_by' => true,
                 'modified_by' => true,
                 'secrets' => true,
-                'permissions' => true
+                'permissions' => true,
             ],
             'associated' => [
                 'Permissions' => [
@@ -95,17 +95,17 @@ class ResourcesAddController extends AppController
                         'aco' => true,
                         'aro' => true,
                         'aro_foreign_key' => true,
-                        'type' => true
-                    ]
+                        'type' => true,
+                    ],
                 ],
                 'Secrets' => [
                     'validate' => 'saveResource',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'data' => true
-                    ]
-                ]
-            ]
+                        'data' => true,
+                    ],
+                ],
+            ],
         ]);
 
         // Handle validation errors if any at this stage.

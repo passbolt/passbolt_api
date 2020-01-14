@@ -29,7 +29,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles',
         'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Resources', 'app.Base/Permissions'
+        'app.Base/Resources', 'app.Base/Permissions',
     ];
 
     public function setUp()

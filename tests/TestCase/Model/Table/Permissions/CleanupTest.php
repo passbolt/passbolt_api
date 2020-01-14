@@ -33,7 +33,7 @@ class CleanupTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Alt0/GroupsUsers',
-        'app.Alt0/Permissions', 'app.Base/Resources'
+        'app.Alt0/Permissions', 'app.Base/Resources',
     ];
 
     public function setUp()

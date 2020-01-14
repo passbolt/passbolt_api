@@ -55,12 +55,12 @@ class ProfilesTable extends Table
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
 
         $this->hasOne('Avatars', [
             'foreignKey' => 'foreign_key',
-            'conditions' => ['model' => 'Avatar']
+            'conditions' => ['model' => 'Avatar'],
         ]);
     }
 

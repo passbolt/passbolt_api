@@ -61,8 +61,8 @@ class OrganizationSettingsTableTest extends AppTestCase
                 ],
                 'emailNotifications' => [
                     'create' => true,
-                ]
-            ]
+                ],
+            ],
         ];
 
         return $organizationSettings;

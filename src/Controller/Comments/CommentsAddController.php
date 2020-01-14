@@ -108,7 +108,7 @@ class CommentsAddController extends AppController
                     'parent_id' => true,
                     'content' => true,
                     'created_by' => true,
-                    'modified_by' => true
+                    'modified_by' => true,
                 ],
             ]
         );
@@ -149,7 +149,7 @@ class CommentsAddController extends AppController
     protected function _notifyUsers($comment)
     {
         $event = new Event('CommentAddController.addPost.success', $this, [
-            'comment' => $comment
+            'comment' => $comment,
         ]);
         $this->getEventManager()->dispatch($event);
     }

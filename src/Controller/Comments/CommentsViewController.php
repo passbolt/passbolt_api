@@ -49,7 +49,7 @@ class CommentsViewController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['creator', 'modifier']
+            'contain' => ['creator', 'modifier'],
         ];
         $options = $this->QueryString->get($whitelist);
 

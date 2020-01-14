@@ -104,7 +104,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId
+            'aco_foreign_key' => $resourceOId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -122,7 +122,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Make the group also owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId
+            'aco_foreign_key' => $resourceOId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -141,7 +141,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId
+            'aco_foreign_key' => $resourceOId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -160,7 +160,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId
+            'aco_foreign_key' => $resourceOId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
@@ -192,7 +192,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
             'aro_foreign_key' => $userId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
         ]);
 
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
@@ -206,7 +206,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Remove The permissions of Orna
         $this->Permissions->deleteAll([
             'aro_foreign_key' => $userId,
-            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux')
+            'aco_foreign_key' => UuidFactory::uuid('resource.id.linux'),
         ]);
 
         $resources = $this->Permissions->findSharedResourcesUserIsSoleOwner($userId)->extract('aco_foreign_key')->toArray();
@@ -271,7 +271,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupMId,
-            'aco_foreign_key' => $resourceLId
+            'aco_foreign_key' => $resourceLId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
@@ -290,7 +290,7 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Change the permission of the group to READ
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupMId,
-            'aco_foreign_key' => $resourceLId
+            'aco_foreign_key' => $resourceLId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);

@@ -123,7 +123,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
                             sprintf('EmailSubscriptionDispatcher failed to send email on event `%s`', $event->getName()),
                             [
                                 'emailCollection' => $emailCollection,
-                                'exception' => $t
+                                'exception' => $t,
                             ]
                         );
                     }

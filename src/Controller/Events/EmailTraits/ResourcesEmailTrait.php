@@ -61,8 +61,8 @@ trait ResourcesEmailTrait
                 'showUsername' => $showUsername,
                 'showUri' => $showUri,
                 'showDescription' => $showDescription,
-                'showSecret' => $showSecret
-            ], 'title' => $subject
+                'showSecret' => $showSecret,
+            ], 'title' => $subject,
         ];
         $this->_send($user->username, $subject, $data, $template);
     }
@@ -101,7 +101,7 @@ trait ResourcesEmailTrait
                 'showUsername' => $showUsername,
                 'showUri' => $showUri,
                 'showDescription' => $showDescription,
-                'showSecret' => $showSecret
+                'showSecret' => $showSecret,
             ], 'title' => $subject];
             $this->_send($user->username, $subject, $data, $template);
         }

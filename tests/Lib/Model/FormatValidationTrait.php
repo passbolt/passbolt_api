@@ -370,7 +370,7 @@ trait FormatValidationTrait
             'rule_name' => '_ascii',
             'test_cases' => [
                 self::getStringMask('alphaASCII', $length) => true,
-                self::getStringMask('alphaASCIIUpper', $length) => true
+                self::getStringMask('alphaASCIIUpper', $length) => true,
             ],
         ];
 
@@ -473,7 +473,7 @@ trait FormatValidationTrait
                 $min - 1 => false,
                 $min => true,
                 $max => true,
-                $max + 1 => false
+                $max + 1 => false,
             ],
         ];
 

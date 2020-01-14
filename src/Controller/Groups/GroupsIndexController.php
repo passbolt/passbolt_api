@@ -32,7 +32,7 @@ class GroupsIndexController extends AppController
         $whitelist = [
             'contain' => ['modifier', 'modifier.profile', 'user', 'group_user', 'my_group_user'],
             'filter' => ['has-users', 'has-managers'],
-            'order' => ['Group.name']
+            'order' => ['Group.name'],
         ];
         $options = $this->QueryString->get($whitelist);
         if (isset($options['contain']['my_group_user'])) {

@@ -46,7 +46,7 @@ class SubscribedEmailRedactorTraitTest extends TestCase
             public function getSubscribedEvents()
             {
                 return [
-                    'event_1'
+                    'event_1',
                 ];
             }
 

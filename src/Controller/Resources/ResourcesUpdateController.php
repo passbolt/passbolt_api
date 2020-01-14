@@ -71,7 +71,7 @@ class ResourcesUpdateController extends AppController
 
         // Retrieve the updated resource.
         $options = [
-            'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true]
+            'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true],
         ];
         $output = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
 
@@ -118,10 +118,10 @@ class ResourcesUpdateController extends AppController
                     'accessibleFields' => [
                         'id' => true,
                         'user_id' => true,
-                        'data' => true
-                    ]
-                ]
-            ]
+                        'data' => true,
+                    ],
+                ],
+            ],
         ]);
 
         // Handle validation errors if any at this stage.
@@ -182,7 +182,7 @@ class ResourcesUpdateController extends AppController
     protected function _notifyUser(\App\Model\Entity\Resource $resource)
     {
         $event = new Event('ResourcesUpdateController.update.success', $this, [
-            'resource' => $resource
+            'resource' => $resource,
         ]);
         $this->getEventManager()->dispatch($event);
     }

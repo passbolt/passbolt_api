@@ -114,7 +114,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $optionsSettings = [
             'full_base_url' => Configure::read('app.full_base_url'),
             'public_registration' => 0,
-            'force_ssl' => 0
+            'force_ssl' => 0,
         ];
         $webInstaller->setSettings('options', $optionsSettings);
 
@@ -156,7 +156,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
                 'last_name' => 'Avarguès-Weber',
             ],
             'deleted' => false,
-            'role_id' => $roleAdminId
+            'role_id' => $roleAdminId,
         ];
         $webInstaller->setSettings('first_user', $userSettings);
         $webInstaller->createFirstUser();
@@ -179,7 +179,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         if (file_exists(PLUGINS . DS . 'Passbolt' . DS . 'License')) {
             $webInstaller = new WebInstaller(null);
             $licenseSettings = [
-                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev')
+                'license_key' => file_get_contents(PLUGINS . DS . 'Passbolt' . DS . 'License' . DS . 'tests' . DS . 'data' . DS . 'license' . DS . 'license_dev'),
             ];
             $webInstaller->setSettings('license', $licenseSettings);
 

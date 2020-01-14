@@ -46,7 +46,7 @@ trait AuthenticationTokenModelTrait
                 'type' => true,
                 'data' => true,
                 'created' => true,
-                'deleted' => true
+                'deleted' => true,
             ]]
         );
         $authToken->save($token, ['checkRules' => false]);
@@ -66,7 +66,7 @@ trait AuthenticationTokenModelTrait
             'user_id' => $userId,
             'type' => $type,
             'token' => UuidFactory::uuid(),
-            'active' => true
+            'active' => true,
         ];
         switch ($case) {
             case 'inactive':

@@ -31,7 +31,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
+                'last_name' => 'Avarguès-Weber',
             ],
         ]);
         $this->assertResponseSuccess();
@@ -50,7 +50,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
+                'last_name' => 'Avarguès-Weber',
             ],
         ]);
         $this->assertResponseSuccess();

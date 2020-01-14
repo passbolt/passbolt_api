@@ -93,7 +93,7 @@ class EmailSender
             'subject' => $this->purifySubject($email->getSubject()),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated']
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
         ];
     }
 
@@ -118,8 +118,8 @@ class EmailSender
     {
         return $email->withData(array_merge_recursive($email->getData(), [
             'body' => [
-                'fullBaseUrl' => $this->appFullBaseUrl
-            ]
+                'fullBaseUrl' => $this->appFullBaseUrl,
+            ],
         ]));
     }
 }

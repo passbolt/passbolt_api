@@ -51,7 +51,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
             'tls' => true,
             'port' => 'invalid-port',
             'username' => 'test@passbolt.com',
-            'password' => 'password'
+            'password' => 'password',
         ];
         $this->post('/install/email', $postData);
         $data = ($this->_getBodyAsString());

@@ -25,7 +25,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     use AuthenticationTokenModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens'
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/AuthenticationTokens',
     ];
     public $AuthenticationTokens;
 
@@ -47,7 +47,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             // Add when legacy urls removed (/setup/recover/nope/nope get called instead of 404)
             //'only one parameter given' => '/setup/recover/start/' . UuidFactory::uuid(),
             'no parameter given on legacy url' => '/setup/recover',
-            'only one parameter given on legacy url' => '/setup/recover/' . UuidFactory::uuid()
+            'only one parameter given on legacy url' => '/setup/recover/' . UuidFactory::uuid(),
         ];
         foreach ($fails as $case => $url) {
             $this->get($url);

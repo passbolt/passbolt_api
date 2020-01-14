@@ -27,7 +27,7 @@ class ShareControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets'
+        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
     ];
 
     public function setUp()
@@ -142,27 +142,27 @@ hcciUFw5
             'cannot a permission that does not exist' => [
                 'errorField' => 'permissions.0.id.permission_exists',
                 'data' => ['permissions' => [
-                    ['id' => UuidFactory::uuid()]
-                ]]
+                    ['id' => UuidFactory::uuid()],
+                ]],
             ],
             'cannot delete a permission of another resource' => [
                 'errorField' => 'permissions.0.id.permission_exists',
                 'data' => ['permissions' => [
-                    ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true]
-                ]]
+                    ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true],
+                ]],
             ],
             'cannot add a permission with invalid data' => [
                 'errorField' => 'permissions.0.aro_foreign_key._required',
                 'data' => ['permissions' => [
-                    ['aro' => 'User', 'type' => Permission::OWNER]
-                ]]
+                    ['aro' => 'User', 'type' => Permission::OWNER],
+                ]],
             ],
             'cannot add a permission for a soft deleted user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userSId,
-                    'type' => Permission::OWNER]
+                    'type' => Permission::OWNER],
                 ]],
             ],
             'cannot add a permission for an inactive user' => [
@@ -170,27 +170,27 @@ hcciUFw5
                 'data' => ['permissions' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userRId,
-                    'type' => Permission::OWNER]
+                    'type' => Permission::OWNER],
                 ]],
             ],
             'cannot remove the latest owner' => [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => ['permissions' => [
-                    ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true]
-                ]]
+                    ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true],
+                ]],
             ],
             // Test on secrets.
             'cannot add a permission for a user and forget to send its secret' => [
                 'errorField' => 'secrets.secrets_provided',
                 'data' => ['permissions' => [
-                    ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ]
-                ]]
+                    ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ],
+                ]],
             ],
             'cannot add a secret for a user who do not have access to the resource' => [
                 'errorField' => 'secrets.secrets_provided',
                 'data' => ['secrets' => [
-                    ['user_id' => $userEId, 'data' => $this->getValidSecret()]
-                ]]
+                    ['user_id' => $userEId, 'data' => $this->getValidSecret()],
+                ]],
             ],
         ];
 

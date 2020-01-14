@@ -179,7 +179,7 @@ class GroupsDeleteController extends AppController
     {
         $event = new Event('GroupsDeleteController.delete.success', $this, [
             'group' => $group,
-            'userId' => $this->User->id()
+            'userId' => $this->User->id(),
         ]);
         $this->getEventManager()->dispatch($event);
     }

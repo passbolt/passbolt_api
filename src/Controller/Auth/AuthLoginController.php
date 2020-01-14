@@ -30,7 +30,7 @@ class AuthLoginController extends AppController
     {
         $this->Auth->allow([
             'loginGet',
-            'loginPost'
+            'loginPost',
         ]);
 
         return parent::beforeFilter($event);

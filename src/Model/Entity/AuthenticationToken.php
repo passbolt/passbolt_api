@@ -52,6 +52,6 @@ class AuthenticationToken extends Entity
         'token' => false,
         'active' => false,
         'type' => false,
-        'data' => false
+        'data' => false,
     ];
 }

@@ -109,7 +109,7 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
         $this->Permissions->deleteAll(['aro_foreign_key IN' => $userId, 'aco_foreign_key' => $resourceOId]);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupLId,
-            'aco_foreign_key' => $resourceOId
+            'aco_foreign_key' => $resourceOId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
