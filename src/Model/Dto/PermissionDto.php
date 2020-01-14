@@ -71,7 +71,7 @@ class PermissionDto
     }
 
     /**
-     * @param int $permissionType
+     * @param int $permissionType Permission type
      * @return $this
      */
     public function setType(int $permissionType)

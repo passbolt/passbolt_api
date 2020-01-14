@@ -108,7 +108,7 @@ class PermissionsTable extends Table
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             $this->belongsTo('Folders', [
-                'foreignKey' => 'aco_foreign_key'
+                'foreignKey' => 'aco_foreign_key',
             ]);
         }
 
