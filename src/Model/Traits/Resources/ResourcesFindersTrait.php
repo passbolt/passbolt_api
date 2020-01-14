@@ -127,9 +127,9 @@ trait ResourcesFindersTrait
             $query->contain([
                 'Permissions' => [
                     'Users' => [
-                        'Profiles' => AvatarsTable::addContainAvatar()
-                    ]
-                ]
+                        'Profiles' => AvatarsTable::addContainAvatar(),
+                    ],
+                ],
             ]);
         }
 
@@ -327,7 +327,7 @@ trait ResourcesFindersTrait
         $query->innerJoinWith('Permissions', function ($q) use ($groupId) {
             return $q->where([
                 'Permissions.aco_foreign_key = Resources.id',
-                'Permissions.aro_foreign_key' => $groupId
+                'Permissions.aro_foreign_key' => $groupId,
             ]);
         });
 
@@ -353,7 +353,7 @@ trait ResourcesFindersTrait
             ->innerJoinWith('Users')
             ->where([
                 'Groups.deleted' => 0,
-                'Users.id' => $userId
+                'Users.id' => $userId,
             ]);
     }
 }

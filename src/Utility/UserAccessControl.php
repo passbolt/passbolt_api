@@ -83,7 +83,7 @@ class UserAccessControl
     {
         return [
             'userId' => $this->userId,
-            'rolename' => $this->roleName
+            'rolename' => $this->roleName,
         ];
     }
 }

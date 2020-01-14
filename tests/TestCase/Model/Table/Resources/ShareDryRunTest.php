@@ -119,42 +119,42 @@ class ShareDryRunTest extends AppTestCase
             // PatchEntitiesWithChanges function
             'cannot update a permission that does not exist' => [
                 'errorField' => 'permissions.0.id.permission_exists',
-                'data' => [['id' => UuidFactory::uuid()]]
+                'data' => [['id' => UuidFactory::uuid()]],
             ],
             'cannot delete a permission of another resource' => [
                 'errorField' => 'permissions.0.id.permission_exists',
                 'data' => [[
                     'id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"),
-                    'delete' => true]]
+                    'delete' => true]],
             ],
             'cannot add a permission with invalid data' => [
                 'errorField' => 'permissions.0.aro_foreign_key._required',
-                'data' => [['aro' => 'User', 'type' => Permission::OWNER]]
+                'data' => [['aro' => 'User', 'type' => Permission::OWNER]],
             ],
             'cannot update a permission with a wrong permission type' => [
                 'errorField' => 'permissions.0.type.inList',
-                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]]
+                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]],
             ],
             // Test build rules.
             'cannot remove the latest owner' => [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => [[
                     'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
-                    'delete' => true]]
+                    'delete' => true]],
             ],
             'cannot add a permissions for a deleted user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
-                    'type' => Permission::OWNER]]
+                    'type' => Permission::OWNER]],
             ],
             'cannot add a permissions for an inactive user' => [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => UuidFactory::uuid('user.id.ruth'),
-                    'type' => Permission::OWNER]]
+                    'type' => Permission::OWNER]],
             ],
         ];
 

@@ -44,6 +44,6 @@ class Favorite extends Entity
         'foreign_key' => false,
         'foreign_model' => false,
         'created' => false,
-        'modified' => false
+        'modified' => false,
     ];
 }

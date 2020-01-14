@@ -54,7 +54,7 @@ class SendTestEmailTask extends AppShell
 
         $parser->addOption('recipient', [
             'short' => 'r',
-            'help' => __('The recipient whom to send the test email to')
+            'help' => __('The recipient whom to send the test email to'),
         ]);
 
         return $parser;

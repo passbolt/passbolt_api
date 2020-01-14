@@ -137,19 +137,19 @@ hcciUFw5
         $testCases = [
             'user_id is required' => [
                 'errorField' => '0.user_id._required',
-                'add' => [['data' => $this->getValidSecret()]]
+                'add' => [['data' => $this->getValidSecret()]],
             ],
             'user_id is invalid' => [
                 'errorField' => '0.user_id.uuid',
-                'add' => [['user_id' => 'not-valid', 'data' => $this->getValidSecret()]]
+                'add' => [['user_id' => 'not-valid', 'data' => $this->getValidSecret()]],
             ],
             'data is required' => [
                 'errorField' => '0.data._required',
-                'add' => [['user_id' => UuidFactory::uuid()]]
+                'add' => [['user_id' => UuidFactory::uuid()]],
             ],
             'data is invalid' => [
                 'errorField' => '0.data.isValidGpgMessage',
-                'add' => [['user_id' => UuidFactory::uuid(), 'data' => 'not-valid']]
+                'add' => [['user_id' => UuidFactory::uuid(), 'data' => 'not-valid']],
             ],
         ];
 
@@ -162,11 +162,11 @@ hcciUFw5
         $testCases = [
             'secret does not exist for unknown user' => [
                 'errorField' => 'secret_exists',
-                'delete' => [UuidFactory::uuid()]
+                'delete' => [UuidFactory::uuid()],
             ],
             'secret does not exist for invalid user uuid' => [
                 'errorField' => 'secret_exists',
-                'delete' => ['invalid-id']
+                'delete' => ['invalid-id'],
             ],
         ];
 

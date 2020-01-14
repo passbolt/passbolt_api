@@ -77,7 +77,7 @@ class EmailSenderTest extends TestCase
             'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated']
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
         ];
 
         $this->emailQueueMock->expects($this->once())
@@ -105,7 +105,7 @@ class EmailSenderTest extends TestCase
             'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated']
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
         ];
 
         $data = $email->getData();
@@ -135,7 +135,7 @@ class EmailSenderTest extends TestCase
             'subject' => $this->getSubject($email->getSubject(), true),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated']
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
         ];
 
         $data = $email->getData();
@@ -159,7 +159,7 @@ class EmailSenderTest extends TestCase
             'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated']
+            'headers' => ['Auto-Submitted' => 'auto-generated'],
         ];
 
         $expectedData = ['body' => ['some_data' => 'test', 'fullBaseUrl' => self::APP_FULL_BASE_URL]];

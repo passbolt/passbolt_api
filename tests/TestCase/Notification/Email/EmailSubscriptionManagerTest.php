@@ -45,7 +45,7 @@ class EmailSubscriptionManagerTest extends TestCase
             $this->createSubscribedRedactor(
                 ['event_name'],
                 new Email('test', 'test', [], 'test')
-            )
+            ),
         ];
         $this->sut->addNewSubscription($expectedRedactors[0]);
         $this->sut->addNewSubscription($expectedRedactors[1]);
@@ -63,7 +63,7 @@ class EmailSubscriptionManagerTest extends TestCase
             $this->createSubscribedRedactor(
                 ['event_name1'],
                 new Email('test', 'test', [], 'test')
-            )
+            ),
         ];
         $this->sut->addNewSubscription($expectedRedactors[0]);
         $this->sut->addNewSubscription($expectedRedactors[1]);

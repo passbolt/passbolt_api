@@ -182,7 +182,7 @@ st3lhztahsDyWaZfpwNevoDzETA6ibxJ4aeDUMQ99OXf/V5vXA0300wqsBInri1f
 UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
 =GMak
 -----END PGP PRIVATE KEY BLOCK-----',
-            'fingerprint' => 'B16B0A095A9AF46D7D7FAA440A848FBED334B3EC'
+            'fingerprint' => 'B16B0A095A9AF46D7D7FAA440A848FBED334B3EC',
         ];
         $dummy = array_merge($dummy, $data);
 
@@ -198,7 +198,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
     {
         $attributes = [
             'id', 'user_id', 'armored_key', 'bits', 'uid', 'key_id',
-            'fingerprint', 'type', 'expires', 'key_created', 'deleted', 'created', 'modified'
+            'fingerprint', 'type', 'expires', 'key_created', 'deleted', 'created', 'modified',
         ];
         $this->assertObjectHasAttributes($attributes, $gpgkey);
     }

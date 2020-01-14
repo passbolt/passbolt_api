@@ -17,7 +17,7 @@ return [
         'plugins' => [
             'webInstaller' => [
                 'version' => '2.0.0',
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

@@ -64,7 +64,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/ce/60/76/06f3518a8e7f419ab1357bb00f02f498/06f3518a8e7f419ab1357bb00f02f498.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:43',
-                'modified' => '2019-07-02 18:51:43'
+                'modified' => '2019-07-02 18:51:43',
             ],
             [
                 'id' => '2f96c11e-f226-4e5e-80b4-0daa6f6fe2dd',
@@ -79,7 +79,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/9c/eb/10/2f96c11ef2264e5e80b40daa6f6fe2dd/2f96c11ef2264e5e80b40daa6f6fe2dd.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:42',
-                'modified' => '2019-07-02 18:51:42'
+                'modified' => '2019-07-02 18:51:42',
             ],
             [
                 'id' => '66ff4a4a-0704-4fdf-a61e-491dcb56b1f7',
@@ -94,7 +94,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/b9/2a/40/66ff4a4a07044fdfa61e491dcb56b1f7/66ff4a4a07044fdfa61e491dcb56b1f7.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:42',
-                'modified' => '2019-07-02 18:51:42'
+                'modified' => '2019-07-02 18:51:42',
             ],
             [
                 'id' => '7b80ddf8-14e7-4064-bbac-bbd7e5f52875',
@@ -109,7 +109,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/0a/ae/40/7b80ddf814e74064bbacbbd7e5f52875/7b80ddf814e74064bbacbbd7e5f52875.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:43',
-                'modified' => '2019-07-02 18:51:43'
+                'modified' => '2019-07-02 18:51:43',
             ],
             [
                 'id' => '86843607-a68f-4983-9f3d-4158f46bcf84',
@@ -124,7 +124,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/62/6a/34/86843607a68f49839f3d4158f46bcf84/86843607a68f49839f3d4158f46bcf84.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:42',
-                'modified' => '2019-07-02 18:51:42'
+                'modified' => '2019-07-02 18:51:42',
             ],
             [
                 'id' => 'bd4fbd32-e123-4643-aaf8-00e2b39c308d',
@@ -139,7 +139,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/ba/00/3f/bd4fbd32e1234643aaf800e2b39c308d/bd4fbd32e1234643aaf800e2b39c308d.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:42',
-                'modified' => '2019-07-02 18:51:42'
+                'modified' => '2019-07-02 18:51:42',
             ],
             [
                 'id' => 'ed6e67c4-5e94-4a8d-b7b2-0f7864cad21e',
@@ -154,7 +154,7 @@ class AvatarsFixture extends TestFixture
                 'path' => 'Avatar/39/1a/94/ed6e67c45e944a8db7b20f7864cad21e/ed6e67c45e944a8db7b20f7864cad21e.png',
                 'adapter' => 'Local',
                 'created' => '2019-07-02 18:51:43',
-                'modified' => '2019-07-02 18:51:43'
+                'modified' => '2019-07-02 18:51:43',
             ],
         ];
         parent::init();

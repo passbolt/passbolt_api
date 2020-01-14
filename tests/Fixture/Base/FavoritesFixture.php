@@ -47,7 +47,7 @@ class FavoritesFixture extends TestFixture
                 'foreign_key' => '8e3874ae-4b40-590b-968a-418f704b9d9a',
                 'foreign_model' => 'Resource',
                 'created' => '2019-07-02 18:51:51',
-                'modified' => '2019-07-02 18:51:51'
+                'modified' => '2019-07-02 18:51:51',
             ],
             [
                 'id' => 'c0964b40-f5b4-5927-b501-f75998121769',
@@ -55,7 +55,7 @@ class FavoritesFixture extends TestFixture
                 'foreign_key' => '8e3874ae-4b40-590b-968a-418f704b9d9a',
                 'foreign_model' => 'Resource',
                 'created' => '2019-07-02 18:51:51',
-                'modified' => '2019-07-02 18:51:51'
+                'modified' => '2019-07-02 18:51:51',
             ],
             [
                 'id' => 'f9e22750-3cc2-5bbe-bd66-88f3358aaac3',
@@ -63,7 +63,7 @@ class FavoritesFixture extends TestFixture
                 'foreign_key' => 'daaf057e-7fc3-5537-a8a9-e8c151890878',
                 'foreign_model' => 'Resource',
                 'created' => '2019-07-02 18:51:52',
-                'modified' => '2019-07-02 18:51:52'
+                'modified' => '2019-07-02 18:51:52',
             ],
             [
                 'id' => 'fca890dc-c9cb-5f2f-b44e-2588d6ac8b08',
@@ -71,7 +71,7 @@ class FavoritesFixture extends TestFixture
                 'foreign_key' => '8378fa3d-b9f4-5428-90a4-ab5478c1a5bb',
                 'foreign_model' => 'Resource',
                 'created' => '2019-07-02 18:51:51',
-                'modified' => '2019-07-02 18:51:51'
+                'modified' => '2019-07-02 18:51:51',
             ],
         ];
         parent::init();

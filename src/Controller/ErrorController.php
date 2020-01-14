@@ -71,7 +71,7 @@ class ErrorController extends AppController
                     'code' => $this->viewVars['code'],
                 ],
                 'body' => $body ?? '',
-                '_serialize' => ['header', 'body']
+                '_serialize' => ['header', 'body'],
             ]);
 
             // render a legacy JSON view by default

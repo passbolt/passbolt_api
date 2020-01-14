@@ -54,7 +54,7 @@ trait PermissionsModelTrait
         $saveOptions = [
             'validate' => 'default',
             'accessibleFields' => [
-                '*' => true
+                '*' => true,
             ],
         ];
         $data = [
@@ -62,7 +62,7 @@ trait PermissionsModelTrait
             'aco_foreign_key' => $aco_foreign_key,
             'aro' => $aro,
             'aro_foreign_key' => $aro_foreign_key,
-            'type' => $type
+            'type' => $type,
         ];
         $permission = $this->Permissions->newEntity($data, $saveOptions);
         $this->Permissions->save($permission);

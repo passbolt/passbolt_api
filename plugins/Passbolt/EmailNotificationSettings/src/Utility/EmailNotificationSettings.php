@@ -42,7 +42,7 @@ class EmailNotificationSettings
      */
     private static $defaultSettings = [
         'purify' => [
-            'subject' => false
+            'subject' => false,
         ],
         'show' => [
             'comment' => true,
@@ -76,7 +76,7 @@ class EmailNotificationSettings
                     'update' => true,
                 ],
             ],
-        ]
+        ],
     ];
 
     /**
@@ -128,7 +128,7 @@ class EmailNotificationSettings
         $settingsOverridenByfile = static::checkSettingsAreOverriddenByFile();
         $settings['sources'] = [
             'database' => false,
-            'file' => $settingsOverridenByfile
+            'file' => $settingsOverridenByfile,
         ];
 
         try {

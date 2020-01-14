@@ -98,7 +98,7 @@ trait ShareEmailTrait
                 'showUsername' => $showUsername,
                 'showUri' => $showUri,
                 'showDescription' => $showDescription,
-                'showSecret' => $showSecret
+                'showSecret' => $showSecret,
             ], 'title' => $subject];
             $this->_send($userName, $subject, $data, $template);
         }

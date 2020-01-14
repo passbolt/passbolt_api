@@ -315,7 +315,7 @@ trait GroupsEmailTrait
                 'addedUsers' => $addedUsers,
                 'updatedUsers' => $updatedUsers,
                 'removedUsers' => $removedUsers,
-                'whoIsAdmin' => $whoIsAdmin
+                'whoIsAdmin' => $whoIsAdmin,
             ], 'title' => $subject];
             $this->_send($groupManager->username, $subject, $data, $template);
         }

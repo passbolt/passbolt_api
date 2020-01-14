@@ -26,7 +26,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldShowComment()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -40,7 +40,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldShowDescription()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -54,7 +54,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldShowSecret()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -68,7 +68,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldShowUri()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -82,7 +82,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldShowUsername()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -96,7 +96,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendCommentAdd()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -110,7 +110,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendPasswordCreate()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -124,7 +124,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendPasswordShare()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -138,7 +138,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendPasswordUpdate()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -152,7 +152,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendPasswordDelete()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -166,7 +166,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendUserCreate()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -180,7 +180,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendUserRecover()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -194,7 +194,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendGroupDelete()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -208,7 +208,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendGroupUserAdd()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -222,7 +222,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendGroupUserDelete()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -236,7 +236,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendGroupUserUpdate()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(
@@ -250,7 +250,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
     public function testNotificationSettingsFormFieldSendGroupManagerUpdate()
     {
         $testCases = [
-            'boolean' => $this->getBooleanTestCases()
+            'boolean' => $this->getBooleanTestCases(),
         ];
 
         $this->assertFormFieldFormatValidation(

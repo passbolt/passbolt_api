@@ -37,12 +37,12 @@ class InstallTask extends AppShell
             ->addOption('quick', [
                 'help' => 'Use a database dump if any to speed things up.',
                 'boolean' => true,
-                'default' => false
+                'default' => false,
             ])
             ->addOption('backup', [
                 'help' => 'Make a database dump to speed things up for next quick install.',
                 'boolean' => true,
-                'default' => false
+                'default' => false,
             ])
             ->addOption('cache', [
                 'help' => 'Create a database dump to enable cache option use later on',
@@ -57,7 +57,7 @@ class InstallTask extends AppShell
                 'help' => 'Override database if any',
                 'default' => 'false',
                 'short' => 'f',
-                'boolean' => true
+                'boolean' => true,
             ])
             ->addOption('no-admin', [
                 'help' => 'Don\'t register an admin account during the installation',
@@ -65,13 +65,13 @@ class InstallTask extends AppShell
                 'boolean' => true,
             ])
             ->addOption('admin-username', [
-                'help' => __('Admin\' username (email). If interactive mode enabled, and no-admin not set, it will be requested')
+                'help' => __('Admin\' username (email). If interactive mode enabled, and no-admin not set, it will be requested'),
             ])
             ->addOption('admin-first-name', [
-                'help' => __('Admin\' first name. If interactive mode enabled, and no-admin not set, it will be requested')
+                'help' => __('Admin\' first name. If interactive mode enabled, and no-admin not set, it will be requested'),
             ])
             ->addOption('admin-last-name', [
-                'help' => __('Admin\' last name. If interactive mode enabled, and no-admin not set, it will be requested')
+                'help' => __('Admin\' last name. If interactive mode enabled, and no-admin not set, it will be requested'),
             ]);
 
         return $parser;

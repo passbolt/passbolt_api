@@ -65,7 +65,7 @@ class User extends Entity
         'role_id' => false,
 
         // associated data
-        'profile' => false
+        'profile' => false,
     ];
 
     /**
@@ -98,12 +98,12 @@ class User extends Entity
         $tokenQuery = $AuthenticationTokens
             ->find()
             ->select([
-                'modified'
+                'modified',
             ])
             ->where([
                 'user_id' => $this->id,
                 'active' => 0,
-                'type' => AuthenticationToken::TYPE_LOGIN
+                'type' => AuthenticationToken::TYPE_LOGIN,
             ])
             ->order('modified DESC')
             ->first();

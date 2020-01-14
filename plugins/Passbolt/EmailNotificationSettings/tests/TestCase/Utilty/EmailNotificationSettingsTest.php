@@ -36,7 +36,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Comments',
         'app.Base/Permissions', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/EmailQueue',
-        'app.Base/OrganizationSettings', 'app.Base/Gpgkeys'
+        'app.Base/OrganizationSettings', 'app.Base/Gpgkeys',
     ];
 
     public function setUp()
@@ -108,7 +108,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
-            'send_password_share' => false
+            'send_password_share' => false,
         ];
 
         $this->setEmailNotificationSettings($cases);
@@ -238,7 +238,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             'Group' => ['name' => 'New group name'],
             'GroupUsers' => [
                 ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]]
+                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
             ],
         ];
 

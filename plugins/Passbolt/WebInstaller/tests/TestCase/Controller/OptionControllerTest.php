@@ -41,7 +41,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $postData = [
             'full_base_url' => 'http://passbolt.dev/',
             'public_registration' => 0,
-            'force_ssl' => 0
+            'force_ssl' => 0,
         ];
         $this->post('/install/options', $postData);
         $this->assertResponseCode(302);
@@ -59,7 +59,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $postData = [
             'full_base_url' => 'http://passbolt.dev',
             'public_registration' => 0,
-            'force_ssl' => 0
+            'force_ssl' => 0,
         ];
         $this->post('/install/options', $postData);
         $this->assertResponseCode(302);
@@ -71,7 +71,7 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
         $postData = [
             'full_base_url' => 'http://passbolt.dev',
             'public_registration' => 'invalid-data',
-            'force_ssl' => 0
+            'force_ssl' => 0,
         ];
         $this->post('/install/options', $postData);
         $data = ($this->_getBodyAsString());

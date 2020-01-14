@@ -59,6 +59,6 @@ class Permission extends Entity
 
         // Associated entities
         'group' => false,
-        'user' => false
+        'user' => false,
     ];
 }

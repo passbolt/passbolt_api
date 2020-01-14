@@ -36,7 +36,7 @@ class DropTablesTask extends AppShell
             ->addOption('datasource', [
                 'short' => 'd',
                 'default' => 'default',
-                'help' => __('Datasource name')
+                'help' => __('Datasource name'),
             ]);
 
         return $parser;

@@ -20,25 +20,25 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/AuthenticationTokens',
-        'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings'
+        'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
     ];
 
     public $fails = [
         'cannot recover with username that is empty' => [
             'form-data' => ['username' => ''],
-            'error' => 'Please provide a valid email address.'
+            'error' => 'Please provide a valid email address.',
         ],
         'cannot recover with username is not an email' => [
             'form-data' => ['username' => 'notanemail'],
-            'error' => 'Please provide a valid email address.'
+            'error' => 'Please provide a valid email address.',
         ],
         'cannot recover a user that does not exist' => [
             'form-data' => ['username' => 'notauser@passbolt.com'],
-            'error' => 'This user does not exist or has been deleted.'
+            'error' => 'This user does not exist or has been deleted.',
         ],
         'cannot recover a user that has been deleted' => [
             'form-data' => ['username' => 'sofia@passbolt.com'],
-            'error' => 'This user does not exist or has been deleted.'
+            'error' => 'This user does not exist or has been deleted.',
         ],
     ];
 

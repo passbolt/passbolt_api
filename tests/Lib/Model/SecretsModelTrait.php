@@ -51,7 +51,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $entityContent = [
             'resource_id' => UuidFactory::uuid('resource.id.april'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'data' => self::getDummySecretData(UuidFactory::uuid('user.id.ada'))
+            'data' => self::getDummySecretData(UuidFactory::uuid('user.id.ada')),
         ];
         $entityContent = array_merge($entityContent, $data);
 

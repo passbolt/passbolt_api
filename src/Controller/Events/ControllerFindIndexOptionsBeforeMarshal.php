@@ -54,7 +54,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     public static function create(FindIndexOptions $options, Controller $controller)
     {
         return new static(static::EVENT_NAME, $controller, [
-            'options' => $options
+            'options' => $options,
         ]);
     }
 

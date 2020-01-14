@@ -57,7 +57,7 @@ hcciUFw5
             'name' => 'Resource name updated by test',
             'username' => 'username_updated@by.test',
             'uri' => 'https://uri.updated.by.test',
-            'description' => 'Resource description updated'
+            'description' => 'Resource description updated',
         ];
 
         // If secrets provided update them all.
@@ -66,7 +66,7 @@ hcciUFw5
                 $defaultData['secrets'][] = [
                     'id' => $secret->id,
                     'user_id' => $secret->user_id,
-                    'data' => $this->getValidSecret()
+                    'data' => $this->getValidSecret(),
                 ];
             }
         }
@@ -90,25 +90,25 @@ hcciUFw5
                 'name' => '新的專用資源名稱',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.域.com',
-                'description' => '新的資源描述'
+                'description' => '新的資源描述',
             ]),
             'slavic' => $this->_getDummyPostData($resource, [
                 'name' => 'Новое имя частного ресурса',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.домен.com',
-                'description' => 'Новое описание частного ресурса'
+                'description' => 'Новое описание частного ресурса',
             ]),
             'french' => $this->_getDummyPostData($resource, [
                 'name' => 'Nouveau nom de resource privée',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.mon-domain.com',
-                'description' => 'Nouvelle description de resource privée'
+                'description' => 'Nouvelle description de resource privée',
             ]),
             'emoticon' => $this->_getDummyPostData($resource, [
                 'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
-                'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}"
+                'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
             ]),
         ];
 

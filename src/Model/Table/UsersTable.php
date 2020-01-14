@@ -76,28 +76,28 @@ class UsersTable extends Table
 
         $this->belongsTo('Roles', [
             'foreignKey' => 'role_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
         $this->hasMany('AuthenticationTokens', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasMany('FileStorage', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasOne('Gpgkeys', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
         ]);
         $this->hasMany('GroupsUsers', [
-            'foreignKey' => 'user_id'
+            'foreignKey' => 'user_id',
         ]);
         $this->belongsToMany('Groups', [
-            'through' => 'GroupsUsers'
+            'through' => 'GroupsUsers',
         ]);
         $this->hasMany('Permissions', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
     }
 
@@ -184,20 +184,20 @@ class UsersTable extends Table
     {
         // Add rule
         $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
-            'message' => __('This username is already in use.')
+            'message' => __('This username is already in use.'),
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
-            'message' => __('This is not a valid role.')
+            'message' => __('This is not a valid role.'),
         ]);
 
         // Delete rules
         $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.'),
         ]);
         $rules->addDelete(new IsNotSoleManagerOfNonEmptyGroupRule(), 'soleManagerOfNonEmptyGroup', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the user group manager role to other users before deleting this user.')
+            'message' => __('You need to transfer the user group manager role to other users before deleting this user.'),
         ]);
 
         return $rules;
@@ -248,10 +248,10 @@ class UsersTable extends Table
                         'validate' => 'register',
                         'accessibleFields' => [
                             'first_name' => true,
-                            'last_name' => true
-                        ]
-                    ]
-                ]
+                            'last_name' => true,
+                        ],
+                    ],
+                ],
             ]
         );
     }
@@ -313,10 +313,10 @@ class UsersTable extends Table
                     'validate' => 'update',
                     'accessibleFields' => $accessibleProfileFields,
                     'associated' => [
-                        'Avatars'
-                    ]
-                ]
-            ]
+                        'Avatars',
+                    ],
+                ],
+            ],
         ]);
 
         return $entity;

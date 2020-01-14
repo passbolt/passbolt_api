@@ -42,16 +42,16 @@ class PermissionsHistoryTable extends Table
 
         $this->hasOne('EntitiesHistory', [
             'foreignKey' => 'foreign_key',
-            'className' => 'Passbolt/Log.EntitiesHistory'
+            'className' => 'Passbolt/Log.EntitiesHistory',
         ]);
         $this->belongsTo('Groups', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
         $this->belongsTo('Resources', [
-            'foreignKey' => 'aco_foreign_key'
+            'foreignKey' => 'aco_foreign_key',
         ]);
         $this->belongsTo('Users', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
 
         // The contains below are a duplicate of above.
@@ -59,16 +59,16 @@ class PermissionsHistoryTable extends Table
         // specific conditions in deeply nested associations.
         $this->belongsTo('PermissionsHistoryGroups', [
             'foreignKey' => 'aro_foreign_key',
-            'className' => 'Groups'
+            'className' => 'Groups',
         ]);
         $this->belongsTo('PermissionsHistoryUsers', [
             'foreignKey' => 'aro_foreign_key',
-            'className' => 'Users'
+            'className' => 'Users',
         ]);
         $this->belongsTo('PermissionsHistoryResources', [
             'foreignKey' => 'aco_foreign_key',
             'className' => 'Resources',
-            'joinType' => 'LEFT'
+            'joinType' => 'LEFT',
         ]);
     }
 

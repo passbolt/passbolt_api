@@ -61,27 +61,27 @@ class RegisterUserTask extends AppShell
             ->addOption('interactive', [
                 'short' => 'i',
                 'boolean' => true,
-                'help' => __('Enable interactive mode')
+                'help' => __('Enable interactive mode'),
             ])
             ->addOption('interactive-loop', [
                 'default' => 3,
-                'help' => __('Enable interactive mode')
+                'help' => __('Enable interactive mode'),
             ])
             ->addOption('username', [
                 'short' => 'u',
-                'help' => __('The user email aka username')
+                'help' => __('The user email aka username'),
             ])
             ->addOption('first-name', [
                 'short' => 'f',
-                'help' => __('The user first name')
+                'help' => __('The user first name'),
             ])
             ->addOption('last-name', [
                 'short' => 'l',
-                'help' => __('The user last name')
+                'help' => __('The user last name'),
             ])
             ->addOption('role', [
                 'short' => 'r',
-                'help' => __('The User role, such as "admin" or "user"')
+                'help' => __('The User role, such as "admin" or "user"'),
             ]);
 
         return $parser;
@@ -201,8 +201,8 @@ class RegisterUserTask extends AppShell
             'role_id' => $roleId, // if null it will be defaulted to user in beforeMarshal
             'profile' => [
                 'first_name' => $firstname,
-                'last_name' => $lastname
-            ]
+                'last_name' => $lastname,
+            ],
         ];
 
         return $userData;

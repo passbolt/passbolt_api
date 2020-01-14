@@ -68,19 +68,19 @@ class GroupsTable extends Table
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
         $this->hasMany('GroupsUsers', [
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
         ]);
         $this->hasOne('MyGroupUser', [
-            'className' => 'GroupsUsers'
+            'className' => 'GroupsUsers',
         ]);
         $this->hasMany('Permissions', [
-            'foreignKey' => 'aro_foreign_key'
+            'foreignKey' => 'aro_foreign_key',
         ]);
         $this->belongsToMany('Users', [
-            'through' => 'GroupsUsers'
+            'through' => 'GroupsUsers',
         ]);
     }
 
@@ -138,7 +138,7 @@ class GroupsTable extends Table
         );
         $rules->addCreate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
-            'message' => __('A group manager must be provided.')
+            'message' => __('A group manager must be provided.'),
         ]);
 
         // Update rules.
@@ -151,18 +151,18 @@ class GroupsTable extends Table
         );
         $rules->addUpdate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
             'errorField' => 'groups_users',
-            'message' => __('A group manager must be provided.')
+            'message' => __('A group manager must be provided.'),
         ]);
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
             'errorField' => 'id',
-            'message' => __('The group cannot be soft deleted.')
+            'message' => __('The group cannot be soft deleted.'),
         ]);
 
         // Delete rules
         $rules->addDelete(new IsNotSoleOwnerOfSharedResourcesRule(), 'soleOwnerOfSharedResource', [
             'errorField' => 'id',
-            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.')
+            'message' => __('You need to transfer the ownership for the shared passwords owned by this user before deleting this user.'),
         ]);
 
         return $rules;
@@ -182,17 +182,17 @@ class GroupsTable extends Table
                 'created_by' => true,
                 'modified_by' => true,
                 'groups_users' => true,
-                'deleted' => true
+                'deleted' => true,
             ],
             'associated' => [
                 'GroupsUsers' => [
                     'validate' => 'saveGroup',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'is_admin' => true
-                    ]
+                        'is_admin' => true,
+                    ],
                 ],
-            ]
+            ],
         ]);
     }
 

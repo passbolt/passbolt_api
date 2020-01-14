@@ -45,6 +45,6 @@ class Profile extends Entity
         'id' => false,
         'user_id' => false,
         'first_name' => false,
-        'last_name' => false
+        'last_name' => false,
     ];
 }

@@ -22,6 +22,6 @@ class UserAgent extends Entity
      * @var array
      */
     protected $_accessible = [
-        'name' => true
+        'name' => true,
     ];
 }

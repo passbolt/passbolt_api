@@ -25,7 +25,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments'
+        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments',
     ];
 
     public function testCommentsViewSuccess()

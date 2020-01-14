@@ -72,13 +72,13 @@ class FindSharedResourcesGroupIsSoleOwnerTest extends AppTestCase
         // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::READ;
         $this->Permissions->save($permission);
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $groupId,
-            'aco_foreign_key' => $resourceId
+            'aco_foreign_key' => $resourceId,
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);

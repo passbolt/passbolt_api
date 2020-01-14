@@ -5,7 +5,7 @@ return [
             'emailNotificationSettings' => [
                 'version' => '1.0.0',
                 'enabled' => true,
-            ]
-        ]
-    ]
+            ],
+        ],
+    ],
 ];

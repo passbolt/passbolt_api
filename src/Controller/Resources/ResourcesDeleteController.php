@@ -113,7 +113,7 @@ class ResourcesDeleteController extends AppController
         $event = new Event('ResourcesDeleteController.delete.success', $this, [
             'resource' => $resource,
             'deletedBy' => $this->User->id(),
-            'users' => $users
+            'users' => $users,
         ]);
         $this->getEventManager()->dispatch($event);
     }
