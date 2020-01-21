@@ -1,0 +1,80 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.14.0
+ */
+namespace Passbolt\Folders\Test\Lib\Model;
+
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
+
+trait FoldersModelTrait
+{
+    /**
+     * Asserts that an object has all the attributes a resource should have.
+     *
+     * @param object $resource
+     */
+    protected function assertFolderAttributes($resource)
+    {
+        $attributes = ['id', 'name', 'created', 'modified', 'created_by', 'modified_by'];
+        $this->assertObjectHasAttributes($attributes, $resource);
+    }
+
+    /**
+     * Get a dummy folder with test data.
+     * The relation returned shoudl passe a default validation.
+     *
+     * @param array $data Custom data that will be merged with the default content.
+     * @return array
+     * @throws \Exception If the create date is not correct.
+     */
+    public static function getDummyFolderData($data = [])
+    {
+        $entityContent = [
+            'name' => UuidFactory::uuid('folder.id.name'),
+            'created' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'modified' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'created_by' => UuidFactory::uuid('user.id.username'),
+            'modified_by' => UuidFactory::uuid('user.id.username'),
+        ];
+        $entityContent = array_merge($entityContent, $data);
+
+        return $entityContent;
+    }
+
+    public static function getDummyFolderEntity($data = [], $options = [])
+    {
+        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $defaultOptions = [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
+
+        $data = self::getDummyFolderData($data);
+        $options = array_merge($defaultOptions, $options);
+
+        return $foldersTable->newEntity($data, $options);
+    }
+
+    public static function addFolder($data = [], $options = [])
+    {
+        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $folder = self::getDummyFolderEntity($data, $options);
+
+        $foldersTable->saveOrFail($folder);
+
+        return $folder;
+    }
+}

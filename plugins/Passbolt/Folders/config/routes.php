@@ -1,0 +1,44 @@
+<?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.14.0
+ */
+
+use Cake\Routing\RouteBuilder;
+use Cake\Routing\Router;
+
+Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes) {
+    $routes->setExtensions('json');
+
+    /**  @uses \Passbolt\Folders\Controller\Folders\FoldersGetController::view() */
+    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersGet', 'action' => 'view'])
+        ->setPass(['folderId'])
+        ->setMethods(['GET']);
+
+    /** @uses \Passbolt\Folders\Controller\Folders\FoldersCreateController::create() */
+    $routes->connect('/', ['prefix' => 'Folders', 'controller' => 'FoldersCreate', 'action' => 'create'])
+        ->setMethods(['POST']);
+
+    /** @uses \Passbolt\Folders\Controller\Folders\FoldersUpdateController::update() */
+    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersUpdate', 'action' => 'update'])
+        ->setPass(['folderId'])
+        ->setMethods(['PUT', 'POST']);
+
+    /** @uses \Passbolt\Folders\Controller\Folders\FoldersDeleteController::delete() */
+    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersDelete', 'action' => 'delete'])
+        ->setPass(['folderId'])
+        ->setMethods(['DELETE']);
+
+    /** @uses \Passbolt\Folders\Controller\Folders\FoldersIndexController::index() */
+    $routes->connect('/', ['prefix' => 'Folders', 'controller' => 'FoldersIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+});
