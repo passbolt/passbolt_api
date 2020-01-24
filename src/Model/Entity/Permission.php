@@ -63,43 +63,6 @@ class Permission extends Entity
     ];
 
     /**
-     * @var AroEntityInterface
-     */
-    private $aroObject;
-
-    /**
-     * @var AcoEntityInterface
-     */
-    private $acoObject;
-
-    /**
-     * @param AcoEntityInterface $accessControlObject ACO
-     * @return $this
-     */
-    public function setAcoObject(AcoEntityInterface $accessControlObject)
-    {
-        $this->acoObject = $accessControlObject;
-        $this->setDirty('aco');
-        $this->setDirty('aco_foreign_key');
-
-        return $this;
-    }
-
-    /**
-     * @param AroEntityInterface $accessRequestObject ARO
-     * @return $this
-     */
-    public function setAroObject(AroEntityInterface $accessRequestObject)
-    {
-        $this->aroObject = $accessRequestObject;
-
-        $this->setDirty('aro');
-        $this->setDirty('aro_foreign_key');
-
-        return $this;
-    }
-
-    /**
      * @param string|null $acoForeignKey ACO foreign key
      * @return string
      */

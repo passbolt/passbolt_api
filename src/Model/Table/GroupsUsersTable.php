@@ -17,7 +17,6 @@ namespace App\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\GroupsUser;
-use App\Model\Entity\User;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\GroupsCleanupTrait;

@@ -15,7 +15,6 @@
 namespace App\Model\Entity;
 
 use App\Model\Table\PermissionsTable;
-use App\Utility\Permissions\AroEntityInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
@@ -37,7 +36,7 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\Profile[] $profiles
  * @property \App\Model\Entity\GroupUser[] $groups_users
  */
-class User extends Entity implements AroEntityInterface
+class User extends Entity
 {
     /**
      * last_logged_in virtual field.
@@ -111,21 +110,5 @@ class User extends Entity implements AroEntityInterface
             ->first();
 
         return $tokenQuery;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAroType()
-    {
-        return PermissionsTable::USER_ARO;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAroForeignKey()
-    {
-        return $this->id;
     }
 }

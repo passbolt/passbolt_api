@@ -22,8 +22,6 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
-use App\Utility\Permissions\AcoEntityInterface;
-use App\Utility\Permissions\AroEntityInterface;
 use Cake\Core\Configure;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\RulesChecker;
