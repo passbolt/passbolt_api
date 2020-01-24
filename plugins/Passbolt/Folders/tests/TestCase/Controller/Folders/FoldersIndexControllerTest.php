@@ -71,6 +71,56 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
+    private function insertFixtureCase1(&$folder)
+    {
+        // Ada has access to folder Lovelace and Something as a OWNER
+        // Lovelace (Ada:O) ; Something (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'Lovelace', 'created_by' => $userId, 'modified_by' => $userId];
+        $folder = $this->addFolder($folderData);
+        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
+
+        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'Something', 'created_by' => $userId, 'modified_by' => $userId];
+        $folder = $this->addFolder($folderData);
+        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
+    }
+
+    /**
+     * @return void
+     */
+    public function testFoldersIndexFilterBySearchSuccess()
+    {
+        $this->insertFixtureCase1($folder);
+
+        $this->authenticateAs('ada');
+
+        $this->getJson('/folders.json?api-version=2&filter[search]=Love');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 1);
+        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
+        $this->assertNotContains('Something', $this->_responseJsonBody);
+
+        $this->getJson('/folders.json?api-version=2&filter[search]=ovela');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 1);
+        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
+        $this->assertNotContains('Something', $this->_responseJsonBody);
+
+        $this->getJson('/folders.json?api-version=2&filter[search]=ace');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 1);
+        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
+        $this->assertNotContains('Something', $this->_responseJsonBody);
+
+        $this->getJson('/folders.json?api-version=2&filter[search]=Lovelace');
+        $this->assertSuccess();
+        $this->assertEquals(count($this->_responseJsonBody), 1);
+        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
+        $this->assertNotContains('Something', $this->_responseJsonBody);
+
+        $this->assertSuccess();
+    }
+
     private function insertFixtureCase2(&$folder)
     {
         // Ada has access to folder Lovelace and Something as a OWNER

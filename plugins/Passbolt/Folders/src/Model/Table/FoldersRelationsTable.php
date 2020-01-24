@@ -15,7 +15,6 @@
 namespace Passbolt\Folders\Model\Table;
 
 use App\Model\Rule\IsNotSoftDeletedRule;
-use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;

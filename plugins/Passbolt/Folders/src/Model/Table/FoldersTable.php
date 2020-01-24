@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
+
 namespace Passbolt\Folders\Model\Table;
 
 use Cake\ORM\Query;

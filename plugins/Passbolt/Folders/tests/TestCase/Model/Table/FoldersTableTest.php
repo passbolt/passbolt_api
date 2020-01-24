@@ -60,6 +60,39 @@ class FoldersTableTest extends AppTestCase
         $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
     }
 
+    public function testThatFindAllByNamesRetrieveFolderMatchingTheName()
+    {
+        $folderName = 'FolderWithSpecialName';
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderData = ['id' => UuidFactory::uuid(), 'name' => $folderName, 'created_by' => $userId, 'modified_by' => $userId];
+        $this->addFolder($folderData);
+
+        $query = $this->Folders->find();
+
+        $matchingNames = [
+            'FolderWithSpecialName', // Exact match
+            'SpecialName', // Ending Partial Match,
+            'Folder', // Starting Partial Match,
+            'WithSpecial', // Middle Partial Match
+        ];
+
+        foreach ($matchingNames as $matchingName) {
+            $folders = $this->Folders->_filterQueryBySearch($query, $matchingName);
+            $this->assertCount(1, $folders, sprintf("FoldersTable::findAllByName() should match the given input: `%s`", $matchingName));
+        }
+
+        $nonMatchingNames = [
+            'FolderSpecial',
+            'FolderWithSpecialNameButVerySpecial',
+        ];
+
+        foreach ($nonMatchingNames as $nonMatchingName) {
+            $folders = $this->Folders->_filterQueryBySearch($query, $nonMatchingName);
+            $this->assertCount(0, $folders, sprintf("FoldersTable::findAllByName() should not match the given input: `%s`", $nonMatchingName));
+        }
+    }
+
     /**
      * @return void
      */

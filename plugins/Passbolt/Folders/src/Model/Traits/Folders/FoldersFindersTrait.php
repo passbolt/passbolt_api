@@ -21,6 +21,9 @@ use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
 
+/**
+ * @property PermissionsTable Permissions
+ */
 trait FoldersFindersTrait
 {
     /**
@@ -41,6 +44,10 @@ trait FoldersFindersTrait
 
         if (isset($options['filter']['has-id'])) {
             $this->_filterByIds($query, $options['filter']['has-id']);
+        }
+
+        if (isset($options['filter']['search'])) {
+            $this->_filterQueryBySearch($query, $options['filter']['search'][0]);
         }
 
         // Filter on folders the user has access
@@ -110,6 +117,27 @@ trait FoldersFindersTrait
         $query->where(['Folders.id IN' => $resourcesFilterByPermissionTypeSubQuery]);
 
         return $query;
+    }
+
+    /**
+     * Filter a Folders query by search.
+     * Search on the name field.
+     *
+     * By instance :
+     * $query = $Folders->find();
+     * $Groups->_filterQueryBySearch($query, 'creative');
+     *
+     * Should filter all the groups with a name containing creative.
+     *
+     * @param Query $query Query to filter
+     * @param string $name Name to filter
+     * @return Query
+     */
+    public function _filterQueryBySearch(Query $query, string $name)
+    {
+        return $query->where([
+            ['name LIKE' => '%' . $name . '%'],
+        ]);
     }
 
     /**
