@@ -65,6 +65,6 @@ class FoldersTableTest extends TestCase
 
     public function testFake()
     {
-        $this->assertTrue(true);
+        $this->markTestIncomplete();
     }
 }
