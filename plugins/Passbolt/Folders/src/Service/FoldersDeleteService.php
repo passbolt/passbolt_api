@@ -214,9 +214,11 @@ class FoldersDeleteService
             ->where([
                 'folder_parent_id' => $folder->id,
                 'user_id' => $userId
-            ])->select('id');
+            ])->select('id')->extract('id')->toArray();
 
-        $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['id' => $children]);
+        if (!empty($children)) {
+            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['id IN' => $children]);
+        }
     }
 
     /**

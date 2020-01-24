@@ -17,10 +17,12 @@ namespace Passbolt\Folders\Test\TestCase\Controller;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Fixture\Base\AvatarsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
@@ -47,13 +49,15 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
+        AvatarsFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,
-        UsersFixture::class,
+        RolesFixture::class,
+        UsersFixture::class
     ];
 
     /**
