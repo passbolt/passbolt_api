@@ -90,7 +90,7 @@ class FoldersUpdateService
 
         $folder = $this->getFolder($id);
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folder, $data) {
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
             if (isset($data['name'])) {
                 $this->updateFolder($uac, $folder, $data['name']);
             }
