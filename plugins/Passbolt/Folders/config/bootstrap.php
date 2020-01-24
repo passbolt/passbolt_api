@@ -13,5 +13,11 @@
  * @since         2.14.0
  */
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
+use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 
 Configure::load('Passbolt/Folders.config', 'default', true);
+
+
+// Register email redactors
+EventManager::instance()->on(new FoldersEmailRedactorPool());

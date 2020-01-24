@@ -17,6 +17,9 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventManagerTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -39,6 +42,7 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
     use PermissionsModelTrait;
+    use EventDispatcherTrait;
 
     public $fixtures = [
         FoldersFixture::class,
@@ -49,6 +53,21 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         ProfilesFixture::class,
         UsersFixture::class,
     ];
+
+    /**
+     * @var FoldersCreateService
+     */
+    private $service;
+
+    /**
+     * @var PermissionsTable
+     */
+    private $Permissions;
+
+    /**
+     * @var FoldersRelationsTable
+     */
+    private $FoldersRelations;
 
     /**
      * setUp method
@@ -163,5 +182,31 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         $this->addPermission('Folder', $parentFolder->id, 'User', $userId, Permission::READ);
         $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $parentFolder->id, 'user_id' => $userId];
         $this->addFolderRelation($folderRelationData);
+    }
+
+    /**
+     * @return void
+     */
+    public function testThatFoldersCreateDispatchEventToSendEmailAfterFolderIsCreated()
+    {
+        $eventNameToTest = FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT;
+        $eventWasDispatched = false;
+
+        $callable = function (Event $event) use (&$eventWasDispatched) {
+            $this->assertArrayHasKey('folder', $event->getData(), "Event should provide the `folder` entity as event data.");
+            $this->assertArrayHasKey('uac', $event->getData(), "Event should provide the `uac` as event data.");
+            $eventWasDispatched = true;
+        };
+
+        // We use the same instance of event manager that the service is using to test that dispatch is done.
+        $this->service->getEventManager()->on($eventNameToTest, $callable);
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => 'A'];
+
+        $this->service->create($uac, $folderData);
+
+        $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was created with success.");
     }
 }

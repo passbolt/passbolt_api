@@ -19,18 +19,26 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\UsersTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersCreateService
 {
+    use EventDispatcherTrait;
+
+    const FOLDERS_CREATE_FOLDER_EVENT = 'folders.folder.create';
+
     /**
      * @var FoldersTable
      */
@@ -42,7 +50,7 @@ class FoldersCreateService
     private $foldersPermissionsCreateService;
 
     /**
-     * @var FoldersRelationCreateService
+     * @var FoldersRelationsCreateService
      */
     private $foldersRelationsCreateService;
 
@@ -68,7 +76,7 @@ class FoldersCreateService
      * @param UserAccessControl $uac The current user
      * @param array $data The folder data
      * @return Folder
-     * @throws \Exception If an unexpected error occurred
+     * @throws Exception If an unexpected error occurred
      */
     public function create(UserAccessControl $uac, array $data = [])
     {
@@ -80,6 +88,11 @@ class FoldersCreateService
             $this->createFolderRelation($uac, $folder, $data);
         });
 
+        $this->dispatchEvent(self::FOLDERS_CREATE_FOLDER_EVENT, [
+            'uac' => $uac,
+            'folder' => $folder,
+        ]);
+
         return $folder;
     }
 
@@ -88,7 +101,7 @@ class FoldersCreateService
      *
      * @param UserAccessControl $uac The current user
      * @param array $data The folder data
-     * @return \Cake\Datasource\EntityInterface|Folder
+     * @return EntityInterface|Folder
      */
     private function createFolder(UserAccessControl $uac, array $data)
     {
@@ -105,7 +118,7 @@ class FoldersCreateService
      *
      * @param UserAccessControl $uac The current user
      * @param array $data The folder data
-     * @return \Cake\Datasource\EntityInterface|Folder
+     * @return EntityInterface|Folder
      */
     private function buildFolderEntity(UserAccessControl $uac, array $data)
     {
@@ -150,7 +163,7 @@ class FoldersCreateService
     {
         try {
             $this->foldersPermissionsCreateService->create($uac, $folder->id, Permission::OWNER);
-        } catch (\Exception $error) {
+        } catch (Exception $error) {
             throw new InternalErrorException(__('Could not create the folder, please try again later.'), 400, $error);
         }
     }
@@ -173,7 +186,7 @@ class FoldersCreateService
 
         try {
             $this->foldersRelationsCreateService->create($uac, $folder->id, $folderParentId);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $e);
         }
     }
