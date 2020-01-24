@@ -19,6 +19,7 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Entity\Folder;
 
 trait FoldersFindersTrait
 {
@@ -39,7 +40,7 @@ trait FoldersFindersTrait
         $query = $this->find();
 
         if (isset($options['filter']['has-id'])) {
-            $query->whereInList('Folders.id', $options['filter']['has-id']);
+            $this->_filterByIds($query, $options['filter']['has-id']);
         }
 
         // Filter on folders the user has access
@@ -109,5 +110,17 @@ trait FoldersFindersTrait
         $query->where(['Folders.id IN' => $resourcesFilterByPermissionTypeSubQuery]);
 
         return $query;
+    }
+
+    /**
+     * Filter a query to retrieve folders on their ids with the given list of ids
+     *
+     * @param Query $query Query to filter on
+     * @param array $folderIds array of folders ids
+     * @return Query|Folder[]
+     */
+    public function _filterByIds(Query $query, array $folderIds)
+    {
+        return $query->where(['Folders.id IN' => $folderIds]);
     }
 }

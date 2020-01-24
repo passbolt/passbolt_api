@@ -15,9 +15,12 @@
 
 namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
+use App\Utility\UuidFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
+use Cake\TestSuite\TestCase;
+use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 
@@ -55,6 +58,39 @@ class FoldersTableTest extends AppTestCase
         parent::setUp();
         $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
         $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
+    }
+
+    /**
+     * @return void
+     */
+    public function testThatFindAllByIdsRetrieveFolderWithTheGivenIds()
+    {
+        $allFolders = [
+            UuidFactory::uuid('folder.id.a'),
+            UuidFactory::uuid('folder.id.b'),
+            UuidFactory::uuid('folder.id.c'),
+            UuidFactory::uuid('folder.id.d'),
+            UuidFactory::uuid('folder.id.e'),
+        ];
+        foreach ($allFolders as $folderId) {
+            $folderData = [
+                'id' => $folderId,
+                'name' => 'folder name',
+                'created_by' => UuidFactory::uuid('user.id.ada'),
+                'modified_by' => UuidFactory::uuid('user.id.ada')
+            ];
+            $this->addFolder($folderData);
+        }
+
+        $expectedFolderIds = [
+            UuidFactory::uuid('folder.id.b'),
+            UuidFactory::uuid('folder.id.c'),
+        ];
+
+        $folders = $this->Folders->_filterByIds($this->Folders->find(), $expectedFolderIds);
+        $folderIds = Hash::extract($folders->toArray(), '{n}.id');
+
+        $this->assertSame($folderIds, $expectedFolderIds, "List of folders returned does not contain expected folders.");
     }
 
     /**

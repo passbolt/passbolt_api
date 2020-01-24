@@ -16,7 +16,11 @@
 namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
+use Passbolt\Folders\Model\Table\FoldersTable;
 
+/**
+ * @property FoldersTable Folders
+ */
 class FoldersIndexController extends AppController
 {
     /**
