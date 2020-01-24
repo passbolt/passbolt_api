@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -30,6 +31,10 @@ use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersUpdateService
 {
+    use EventDispatcherTrait;
+
+    const FOLDERS_UPDATE_FOLDER_EVENT = 'folders.folder.update';
+
     /**
      * @var FoldersTable
      */
@@ -98,6 +103,11 @@ class FoldersUpdateService
                 $this->moveFolder($uac, $folder, $data['folder_parent_id']);
             }
         });
+
+        $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
+            'uac' => $uac,
+            'folder' => $folder,
+        ]);
 
         return $folder;
     }

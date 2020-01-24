@@ -21,6 +21,7 @@ use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -30,6 +31,10 @@ use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersDeleteService
 {
+    use EventDispatcherTrait;
+
+    const FOLDERS_DELETE_FOLDER_EVENT = 'folders.folder.delete';
+
     /**
      * @var FoldersTable
      */
@@ -95,6 +100,10 @@ class FoldersDeleteService
             $this->deleteFoldersRelations($uac, $folder);
             $this->deleteFolder($uac, $folder);
             $this->moveChildrenToRoot($uac, $folder);
+            $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
+                'uac' => $uac,
+                'folder' => $folder,
+            ]);
         });
     }
 

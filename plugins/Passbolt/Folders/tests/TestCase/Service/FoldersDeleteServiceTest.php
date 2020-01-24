@@ -1,8 +1,20 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.14.0
+ */
 
 namespace Passbolt\Folders\Test\TestCase\Service;
 
-use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
@@ -16,6 +28,7 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
@@ -140,5 +153,52 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolder($folder->id);
         $this->assertFolderRelation($folder->id, $userId, null);
+    }
+
+    private function insertFixtureCase3(&$folderA, &$folderB)
+    {
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a OWNER
+        // A (Ada:O)   B (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderA = $this->addFolder($folderAData);
+        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
+        $this->addFolderRelation($folderRelationData);
+
+        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderB = $this->addFolder($folderBData);
+        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
+        $this->addFolderRelation($folderRelationData);
+    }
+
+    /**
+     * @return void
+     */
+    public function testThatFoldersUpdateDispatchEventToSendEmailAfterFolderIsCreated()
+    {
+        $eventNameToTest = FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT;
+        $eventWasDispatched = false;
+
+        $callable = function (Event $event) use (&$eventWasDispatched) {
+            $this->assertArrayHasKey('folder', $event->getData(), "Event should provide the `folder` entity as event data.");
+            $this->assertArrayHasKey('uac', $event->getData(), "Event should provide the `uac` as event data.");
+            $eventWasDispatched = true;
+        };
+
+        // We use the same instance of event manager that the service is using to test that dispatch is done.
+        $this->service->getEventManager()->on($eventNameToTest, $callable);
+
+        $parentFolder = null;
+        $folder = null;
+        $this->insertFixtureCase3($parentFolder, $folder);
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $this->service->delete($uac, $folder->id);
+
+        $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was deleted with success.");
     }
 }

@@ -11,22 +11,14 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
- *
- * @see \Passbolt\Folders\Notification\Email\CreateFolderEmailRedactor
  */
-
-use App\Model\Entity\User;
 use App\Utility\Purifier;
 use Cake\Routing\Router;
-use Passbolt\Folders\Model\Entity\Folder;
-
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
-/** @var User $user */
 $user = $body['user'];
-/** @var Folder $folder */
-$folder = $body['folder'];
+$folder = $body['resource'];
 
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
@@ -34,8 +26,8 @@ echo $this->element('Email/module/avatar',[
         'username' => Purifier::clean($user->username),
         'first_name' => Purifier::clean($user->profile->first_name),
         'last_name' => Purifier::clean($user->profile->last_name),
-        'datetime' => $folder->created,
-        'text' => __('You have created a new folder')
+        'datetime' => $folder->modified,
+        'text' => __('{0} deleted the folder {1}', null, Purifier::clean($folder->name))
     ])
 ]);
 
@@ -44,7 +36,8 @@ $text = __('Name: {0}', Purifier::clean($folder->name)) . '<br/>';
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
+
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/folders/view/{$folder->id}", true),
-    'text' => __('view it in passbolt')
+    'url' => Router::url('/', true),
+    'text' => __('log in passbolt')
 ]);

@@ -16,8 +16,7 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\ForbiddenException;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -27,12 +26,11 @@ use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Passbolt\Folders\Service\FoldersUpdateService Test Case
  *
- * @uses \Passbolt\Folders\Service\FoldersUpdateService
+ * @covers \Passbolt\Folders\Service\FoldersUpdateService
  */
 class FoldersUpdateServiceTest extends AppIntegrationTestCase
 {
@@ -50,6 +48,21 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         ProfilesFixture::class,
         UsersFixture::class,
     ];
+
+    /**
+     * @var FoldersUpdateService
+     */
+    private $service;
+
+    /**
+     * @var PermissionsTable
+     */
+    private $Permissions;
+
+    /**
+     * @var FoldersRelationsTable
+     */
+    private $FoldersRelations;
 
     /**
      * setUp method
@@ -158,5 +171,33 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
         $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
         $this->addFolderRelation($folderRelationData);
+    }
+
+    /**
+     * @return void
+     */
+    public function testThatFoldersUpdateDispatchEventToSendEmailAfterFolderIsCreated()
+    {
+        $eventNameToTest = FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT;
+        $eventWasDispatched = false;
+
+        $callable = function (Event $event) use (&$eventWasDispatched) {
+            $this->assertArrayHasKey('folder', $event->getData(), "Event should provide the `folder` entity as event data.");
+            $this->assertArrayHasKey('uac', $event->getData(), "Event should provide the `uac` as event data.");
+            $eventWasDispatched = true;
+        };
+
+        // We use the same instance of event manager that the service is using to test that dispatch is done.
+        $this->service->getEventManager()->on($eventNameToTest, $callable);
+
+        $parentFolder = null;
+        $folder = null;
+        $this->insertFixtureCase4($parentFolder, $folder);
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folder = $this->service->update($uac, $folder->id, ['folderparent_id' => $parentFolder->id]);
+
+        $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was updated with success.");
     }
 }

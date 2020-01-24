@@ -32,7 +32,9 @@ class FoldersEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         $usersTable = TableRegistry::getTableLocator()->get('Users');
 
         return [
-            new CreateFolderEmailRedactor($usersTable)
+            new CreateFolderEmailRedactor($usersTable),
+            new DeleteFolderEmailRedactor($usersTable),
+            new UpdateFolderEmailRedactor($usersTable),
         ];
     }
 }
