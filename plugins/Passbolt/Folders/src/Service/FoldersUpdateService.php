@@ -23,6 +23,7 @@ use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersTable;
@@ -87,7 +88,7 @@ class FoldersUpdateService
             return;
         }
 
-        $folder = $this->foldersTable->get($id);
+        $folder = $this->getFolder($id);
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folder, $data) {
             if (isset($data['name'])) {
@@ -99,6 +100,22 @@ class FoldersUpdateService
         });
 
         return $folder;
+    }
+
+    /**
+     * Retrieve the folder.
+     *
+     * @param string $folderId The folder identifier to retrieve.
+     * @return Folder
+     * @throws NotFoundException If the folder does not exist.
+     */
+    private function getFolder(string $folderId)
+    {
+        try {
+            return $this->foldersTable->get($folderId);
+        } catch (RecordNotFoundException $e) {
+            throw new NotFoundException(__('The folder does not exist.'));
+        }
     }
 
     /**

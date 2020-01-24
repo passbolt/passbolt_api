@@ -27,6 +27,7 @@ class FoldersDeleteController extends AppController
      *
      * @param string $id The identifier of the folder.
      * @return void
+     * @throws \Exception
      */
     public function delete(string $id)
     {

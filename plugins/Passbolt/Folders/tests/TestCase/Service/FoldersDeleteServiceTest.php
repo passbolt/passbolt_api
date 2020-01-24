@@ -1,20 +1,10 @@
 <?php
-/**
- * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SA (https://www.passbolt.com)
- *
- * Licensed under GNU Affero General Public License version 3 of the or any later version.
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
- * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
- * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
- */
-namespace Passbolt\Folders\Test\TestCase\Controller;
 
+namespace Passbolt\Folders\Test\TestCase\Service;
+
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
+use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -23,22 +13,29 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Service\FoldersDeleteService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Ramsey\Uuid\Uuid;
 
 /**
- * Passbolt\Folders\Controller\Folders\FoldersDeleteController Test Case
+ * Passbolt\Folders\Service\FoldersDeleteService Test Case
  *
- * @uses \Passbolt\Folders\Controller\Folders\FoldersDeleteController
+ * @uses \Passbolt\Folders\Service\FoldersDeleteService
  */
-class FoldersDeleteControllerTest extends AppIntegrationTestCase
+class FoldersDeleteServiceTest extends AppIntegrationTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -64,10 +61,13 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
+        $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
+        $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
         $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
+        $this->service = new FoldersDeleteService();
     }
 
     public function testSuccessCase1_DeleteFolder()
@@ -75,9 +75,10 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         $folder = null;
         $this->insertFixtureCase1($folder);
 
-        $this->authenticateAs('ada');
-        $this->deleteJson("/folders/{$folder->id}.json?api-version=2");
-        $this->assertSuccess();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $this->service->delete($uac, $folder->id);
+        $this->assertFolderNotExist($folder->id);
     }
 
     private function insertFixtureCase1(&$folder)
@@ -98,9 +99,11 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         $folder = null;
         $this->insertFixtureCase2($parentFolder, $folder);
 
-        $this->authenticateAs('ada');
-        $this->deleteJson("/folders/{$parentFolder->id}.json?cascade=1&api-version=2");
-        $this->assertSuccess();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $this->service->delete($uac, $parentFolder->id, true);
+        $this->assertFolderNotExist($parentFolder->id);
+        $this->assertFolderNotExist($folder->id);
     }
 
     private function insertFixtureCase2(&$folderA, &$folderB)
@@ -125,27 +128,16 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         $this->addFolderRelation($folderRelationData);
     }
 
-    public function testNotValidIdParameter()
+    public function testSuccessCase3_DeleteFolderAndMoveChildrenToRoot()
     {
-        $this->authenticateAs('ada');
-        $resourceId = 'invalid-id';
-        $this->deleteJson("/folders/$resourceId.json?version=2");
-        $this->assertError(400, 'The folder id is not valid.');
-    }
+        $parentFolder = null;
+        $folder = null;
+        $this->insertFixtureCase2($parentFolder, $folder);
 
-    public function testActionIsProtectedByCsrfTokenAndReturnErrorIfNotProvided()
-    {
-        $this->disableCsrfToken();
-        $this->authenticateAs('ada');
-        $folderId = UuidFactory::uuid('folder.id.folder');
-        $this->delete("/folders/{$folderId}.json?api-version=2");
-        $this->assertResponseCode(403);
-    }
-
-    public function testResourcesAddErrorNotAuthenticated()
-    {
-        $folderId = UuidFactory::uuid('folder.id.folder');
-        $this->deleteJson("/folders/{$folderId}.json?api-version=2");
-        $this->assertAuthenticationError();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $this->service->delete($uac, $parentFolder->id, false);
+        $this->assertFolderNotExist($parentFolder->id);
+        $this->assertFolder($folder->id);
     }
 }

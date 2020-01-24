@@ -31,6 +31,43 @@ trait FoldersModelTrait
     }
 
     /**
+     * Assert a user has a folder
+     * @param string $folderId The folder to assert
+     * @param string|null $userId
+     * @return void
+     */
+    protected function assertFolder(string $folderId, string $userId = null)
+    {
+        $folderQuery = $this->Folders->find()->where(['id' => $folderId]);
+
+        if (!is_null($userId)) {
+            $folderQuery->where(['user_id' => $userId]);
+        }
+
+        $folder = $folderQuery->first();
+        $this->assertNotEmpty($folder);
+    }
+
+    /**
+     * Assert that a folder does not exist
+     *
+     * @param string $id The target folder
+     */
+    protected function assertFolderNotExist(string $id)
+    {
+        $folder = $this->Folders->find()->where(['id' => $id])->count();
+        $this->assertEmpty($folder);
+
+        $foldersRelations = $this->FoldersRelations->find()->where(['foreign_id' => $id])->count();
+        $this->assertEmpty($foldersRelations);
+        $foldersRelationsParents = $this->FoldersRelations->find()->where(['folder_parent_id' => $id])->count();
+        $this->assertEmpty($foldersRelationsParents);
+
+        $permissions = $this->Permissions->find()->where(['aco_foreign_key' => $id])->count();
+        $this->assertEmpty($permissions);
+    }
+
+    /**
      * Get a dummy folder with test data.
      * The relation returned shoudl passe a default validation.
      *
