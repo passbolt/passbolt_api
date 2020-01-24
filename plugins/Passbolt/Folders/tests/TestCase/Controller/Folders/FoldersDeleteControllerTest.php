@@ -40,9 +40,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersDeleteControllerTest extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
+    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [

@@ -62,4 +62,9 @@ class FoldersTableTest extends TestCase
 
         parent::tearDown();
     }
+
+    public function testFake()
+    {
+        $this->assertTrue(true);
+    }
 }

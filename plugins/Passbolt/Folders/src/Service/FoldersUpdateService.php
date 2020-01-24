@@ -15,14 +15,15 @@
 
 namespace Passbolt\Folders\Service;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersTable;
 
@@ -32,6 +33,11 @@ class FoldersUpdateService
      * @var FoldersTable
      */
     private $foldersTable;
+
+    /**
+     * @var FoldersHasAncestorService
+     */
+    private $foldersHasAncestorService;
 
     /**
      * @var FoldersMoveService
@@ -61,37 +67,55 @@ class FoldersUpdateService
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $this->foldersHasAncestorService = new FoldersHasAncestorService();
         $this->foldersMoveService = new FoldersMoveService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
+    /**
+     * Update a folder for the current user.
+     *
+     * @param UserAccessControl $uac The current user
+     * @param string $id The folder to update
+     * @param array $data The folder data
+     * @return void|Folder
+     * @throws \Exception If an unexpected error occurred
+     */
     public function update(UserAccessControl $uac, string $id, array $data = [])
     {
         if (empty($data)) {
             return;
         }
 
-        $userId = $uac->userId();
         $folder = $this->foldersTable->get($id);
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $userId, $folder, $data) {
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folder, $data) {
             if (isset($data['name'])) {
-                 $this->updateFolder($userId, $folder, $data['name']);
+                $this->updateFolder($uac, $folder, $data['name']);
             }
             if (isset($data['folder_parent_id'])) {
-                $this->foldersMoveService->move($uac, $folder->id, $data['folder_parent_id']);
+                $this->moveFolder($uac, $folder, $data['folder_parent_id']);
             }
         });
 
         return $folder;
     }
 
-    private function updateFolder(string $userId, Folder $folder, string $name)
+    /**
+     * Update and save the folder changes in database.
+     *
+     * @param UserAccessControl $uac The current user
+     * @param Folder $folder The folder to update.
+     * @param string $name The folder name
+     * @return \Cake\Datasource\EntityInterface|Folder
+     */
+    private function updateFolder(UserAccessControl $uac, Folder $folder, string $name)
     {
         if ($folder->name === $name) {
-            return;
+            return $folder;
         }
 
+        $userId = $uac->userId();
         $isAllowed = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId, Permission::UPDATE);
         if (!$isAllowed) {
             throw new ForbiddenException(__('You are not allowed to update this folder.'));
@@ -106,15 +130,29 @@ class FoldersUpdateService
         return $folder;
     }
 
+    /**
+     * Patch the folder entity.
+     *
+     * @param Folder $folder The folder entity to update.
+     * @param array $data The folder data.
+     * @return \Cake\Datasource\EntityInterface|Folder
+     */
     private function patchEntity($folder, $data)
     {
         $accessibleFields = [
-            'name' => true
+            'name' => true,
         ];
 
         return $this->foldersTable->patchEntity($folder, $data, ['accessibleFields' => $accessibleFields]);
     }
 
+    /**
+     * Handle folder validation errors.
+     *
+     * @param Folder $folder The folder
+     * @return void
+     * @throws ValidationException If the provided data does not validate.
+     */
     private function handleValidationErrors($folder)
     {
         $errors = $folder->getErrors();
@@ -122,5 +160,114 @@ class FoldersUpdateService
             throw new ValidationException(__('Could not validate the folder data.'), $folder, $this->foldersTable);
         }
     }
-}
 
+    /**
+     * Move the folder.
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param Folder $folder The folder to move.
+     * @param string $folderParentId The destination folder.
+     * @return void
+     * @throws \Exception
+     */
+    private function moveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    {
+        $this->validateMoveFolder($uac, $folder, $folderParentId);
+        $this->foldersMoveService->move($uac, $folder->id, $folderParentId);
+    }
+
+    /**
+     * Validate the parent folder
+     *
+     * @param UserAccessControl $uac The current user
+     * @param Folder $folder The folder to move.
+     * @param string $folderParentId The destination folder.
+     * @return void
+     */
+    private function validateMoveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    {
+        if (is_null($folderParentId)) {
+            $this->assertUserCanMoveFolderToRoot($folder);
+        } else {
+            $this->assertFolderParentExists($folderParentId);
+            $this->assertUserCanUpdateFolderParent($uac, $folderParentId);
+            $this->assertMoveIsCycleFree($uac, $folder, $folderParentId);
+        }
+    }
+
+    /**
+     * Assert that the user can move the folder to the root.
+     *
+     * @param Folder $folder The folder to move.
+     * @return void
+     */
+    private function assertUserCanMoveFolderToRoot(Folder $folder)
+    {
+        // @todo Not needed with personal folder.
+    }
+
+    /**
+     * Assert that the parent folder exists.
+     *
+     * @param string $folderId The destination folder.
+     * @return void
+     * @throws CustomValidationException If the destination folder does not exist.
+     */
+    private function assertFolderParentExists(string $folderId)
+    {
+        try {
+            $this->foldersTable->get($folderId);
+        } catch (RecordNotFoundException $e) {
+            $errors = [
+                'folder_parent_id' => [
+                    'folder_exists' => 'The folder parent must exist.',
+                ],
+            ];
+            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
+        }
+    }
+
+    /**
+     * Assert that the current user can update the destination folder.
+     *
+     * @param UserAccessControl $uac The current user
+     * @param string $folderId The parent folder.
+     * @return void
+     * @throws CustomValidationException If the user cannot write in the destination folder.
+     */
+    private function assertUserCanUpdateFolderParent(UserAccessControl $uac, string $folderId)
+    {
+        $userId = $uac->userId();
+        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $userId, Permission::UPDATE);
+        if (!$isAllowedToMoveIn) {
+            $errors = [
+                'folder_parent_id' => [
+                    'folder_exists' => 'The folder parent is not writable.',
+                ],
+            ];
+            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
+        }
+    }
+
+    /**
+     * Assert that moving the folder into the destination folder won't create a cycle.
+     *
+     * @param UserAccessControl $uac The current user
+     * @param Folder $folder The folder to move
+     * @param string $folderParentId The parent folder.
+     * @return void
+     * @throws CustomValidationException If a cycle is detected
+     */
+    private function assertMoveIsCycleFree(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    {
+        $cycle = $this->foldersHasAncestorService->check($uac, $folder->id, $folderParentId);
+        if ($cycle) {
+            $errors = [
+                'folder_parent_id' => [
+                    'folder_cycle' => 'The folder cannot be its own ancestor.',
+                ],
+            ];
+            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
+        }
+    }
+}

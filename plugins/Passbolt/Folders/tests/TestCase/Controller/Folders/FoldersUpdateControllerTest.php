@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
+
 namespace Passbolt\Folders\Test\TestCase\Controller;
 
 use App\Model\Entity\Permission;
@@ -40,9 +41,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersUpdateControllerTest extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
+    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [
@@ -79,6 +80,10 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
         $this->assertSuccess();
+
+        // Assert controller response
+        $folder = $this->_responseJsonBody;
+        $this->assertEquals($data['name'], $folder->name);
     }
 
     private function insertFixtureCase1(&$folder)
@@ -93,7 +98,7 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
         $this->addFolderRelation($folderRelationData);
     }
 
-    public function testErrorCase2_UpdateName()
+    public function testErrorCase2_InsufficientPermissionToUpdateName()
     {
         $folder = null;
         $this->insertFixtureCase2($folder);
@@ -114,5 +119,29 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
         $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::READ);
         $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $userId];
         $this->addFolderRelation($folderRelationData);
+    }
+
+    public function testNotValidIdParameter()
+    {
+        $this->authenticateAs('ada');
+        $resourceId = 'invalid-id';
+        $this->putJson("/folders/$resourceId.json?version=2");
+        $this->assertError(400, 'The folder id is not valid.');
+    }
+
+    public function testActionIsProtectedByCsrfTokenAndReturnErrorIfNotProvided()
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('ada');
+        $folderId = UuidFactory::uuid('folder.id.folder');
+        $this->put("/folders/{$folderId}.json?api-version=2");
+        $this->assertResponseCode(403);
+    }
+
+    public function testResourcesAddErrorNotAuthenticated()
+    {
+        $folderId = UuidFactory::uuid('folder.id.folder');
+        $this->putJson("/folders/{$folderId}.json?api-version=2");
+        $this->assertAuthenticationError();
     }
 }

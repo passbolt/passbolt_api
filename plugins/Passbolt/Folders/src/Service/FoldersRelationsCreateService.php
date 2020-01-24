@@ -89,13 +89,13 @@ class FoldersRelationsCreateService
             'foreign_model' => PermissionsTable::FOLDER_ACO,
             'foreign_id' => $folderId,
             'user_id' => $userId,
-            'folder_parent_id' => $folderParentId
+            'folder_parent_id' => $folderParentId,
         ];
         $accessibleFields = [
             'foreign_model' => true,
             'foreign_id' => true,
             'user_id' => true,
-            'folder_parent_id' => true
+            'folder_parent_id' => true,
         ];
 
         return $this->foldersRelationsTable->newEntity($data, ['accessibleFields' => $accessibleFields]);

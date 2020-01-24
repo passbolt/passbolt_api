@@ -41,5 +41,4 @@ class FoldersDeleteController extends AppController
 
         $this->success(__('The folder has been deleted successfully.'));
     }
-
 }

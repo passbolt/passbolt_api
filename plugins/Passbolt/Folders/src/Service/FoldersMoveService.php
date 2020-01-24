@@ -39,11 +39,21 @@ class FoldersMoveService
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->foldersRelationsDeleteService = new FoldersRelationsDeleteService();
+        $this->foldersHasAncestorService = new FoldersHasAncestorService();
     }
 
+    /**
+     * Move a folder.
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param string $folderId The folder to move.
+     * @param string|null $folderParentId The destination folder to move in. Place the folder at the root if null given.
+     * @return void
+     * @throws \Exception
+     */
     public function move(UserAccessControl $uac, string $folderId, string $folderParentId = null)
     {
-        $cycle = $this->detectCycle($folderId, $folderParentId);
+        $cycle = $this->foldersHasAncestorService->check($uac, $folderId, $folderParentId);
         if ($cycle) {
             throw new BadRequestException(__('Cycle detected.'));
         }
@@ -52,10 +62,5 @@ class FoldersMoveService
             $this->foldersRelationsDeleteService->delete($uac, $folderId, $uac->userId());
             $this->foldersRelationsCreateService->create($uac, $folderId, $folderParentId);
         });
-    }
-
-    private function detectCycle($folderId, $folderParentId)
-    {
-        return false;
     }
 }

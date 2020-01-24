@@ -16,6 +16,7 @@
 namespace Passbolt\Folders\Service;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
@@ -35,6 +36,14 @@ class FoldersPermissionsDeleteService
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 
+    /**
+     * Delete a folder permission
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param string $folderId The folder to create a permission for
+     * @return void
+     * @throws \Exception
+     */
     public function delete(UserAccessControl $uac, string $folderId)
     {
         $this->permissionsTable->getConnection()->transactional(function () use ($uac, $folderId) {
@@ -42,11 +51,18 @@ class FoldersPermissionsDeleteService
         });
     }
 
+    /**
+     * Delete the folder permission from the database.
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param string $folderId The folder to create a permission for
+     * @return void
+     */
     private function deletePermission(UserAccessControl $uac, string $folderId)
     {
         $this->permissionsTable->deleteAll([
             'aco_foreign_key' => $folderId,
-            'aro_foreign_key' => $uac->userId()
+            'aro_foreign_key' => $uac->userId(),
         ]);
     }
 }

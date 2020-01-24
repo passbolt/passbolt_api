@@ -52,7 +52,8 @@ class FoldersUpdateController extends AppController
      *
      * @return array
      */
-    private function getData() {
+    private function getData()
+    {
         $data = [];
         $body = $this->getRequest()->getParsedBody();
 

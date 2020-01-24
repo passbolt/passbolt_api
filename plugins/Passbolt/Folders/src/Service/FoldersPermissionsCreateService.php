@@ -16,6 +16,7 @@
 namespace Passbolt\Folders\Service;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
@@ -35,7 +36,16 @@ class FoldersPermissionsCreateService
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 
-    public function create(UserAccessControl $uac, string $folderId, string $permissionType)
+    /**
+     * Create a folder permission
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param string $folderId The folder to create a permission for
+     * @param int $permissionType The permission type
+     * @return Permission
+     * @throws \Exception
+     */
+    public function create(UserAccessControl $uac, string $folderId, int $permissionType)
     {
         $permission = null;
         $userId = $uac->userId();
@@ -47,7 +57,15 @@ class FoldersPermissionsCreateService
         return $permission;
     }
 
-    private function createPermission(string $folderId, string $userId, string $permissionType)
+    /**
+     * Creat and save the permission in database.
+     *
+     * @param string $folderId The folder to create the permission for.
+     * @param string $userId The user to create the permission for.
+     * @param int $permissionType The permission type.
+     * @return void
+     */
+    private function createPermission(string $folderId, string $userId, int $permissionType)
     {
         $permission = $this->buildPermissionEntity($folderId, $userId, $permissionType);
         $this->handlePermissionValidationErrors($permission);
@@ -55,7 +73,15 @@ class FoldersPermissionsCreateService
         $this->handlePermissionValidationErrors($permission);
     }
 
-    private function buildPermissionEntity($folderId, $userId, $permissionType)
+    /**
+     * Build the permission entity.
+     *
+     * @param string $folderId The folder to create the permission for.
+     * @param string $userId The user to create the permission for.
+     * @param int $permissionType The permission type.
+     * @return Permission
+     */
+    private function buildPermissionEntity(string $folderId, string $userId, int $permissionType)
     {
         $data = [
             'aco' => PermissionsTable::FOLDER_ACO,
@@ -64,7 +90,7 @@ class FoldersPermissionsCreateService
             'aro_foreign_key' => $userId,
             'type' => $permissionType,
             'created_by' => $userId,
-            'modified_by' => $userId
+            'modified_by' => $userId,
         ];
         $accessibleFields = [
             'aco' => true,
@@ -73,13 +99,19 @@ class FoldersPermissionsCreateService
             'aro_foreign_key' => true,
             'type' => true,
             'created_by' => true,
-            'modified_by' => true
+            'modified_by' => true,
         ];
 
         return $this->permissionsTable->newEntity($data, ['accessibleFields' => $accessibleFields]);
     }
 
-    private function handlePermissionValidationErrors($permission)
+    /**
+     * Handle permission validation errors.
+     *
+     * @param Permission $permission The permission
+     * @return void
+     */
+    private function handlePermissionValidationErrors(Permission $permission)
     {
         $errors = $permission->getErrors();
         if (!empty($errors)) {

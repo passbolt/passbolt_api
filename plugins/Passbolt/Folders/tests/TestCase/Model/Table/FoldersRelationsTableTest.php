@@ -37,7 +37,7 @@ class FoldersRelationsTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations'
+        'plugin.Passbolt/Folders.FoldersRelations',
     ];
 
     /**
@@ -62,5 +62,10 @@ class FoldersRelationsTableTest extends TestCase
         unset($this->FoldersRelations);
 
         parent::tearDown();
+    }
+
+    public function testFake()
+    {
+        $this->assertTrue(true);
     }
 }

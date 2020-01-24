@@ -42,9 +42,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersCreateControllerTest extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
+    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [
@@ -96,7 +96,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
 
         $data = [
             'name' => 'B',
-            'folder_parent_id' => $parentFolder->id
+            'folder_parent_id' => $parentFolder->id,
         ];
         $this->authenticateAs('ada');
         $this->postJson('/folders.json?api-version=2', $data);
@@ -136,7 +136,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
     {
         $data = [
             'name' => 'B',
-            'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist')
+            'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
         ];
         $this->authenticateAs('ada');
         $this->postJson('/folders.json?api-version=2', $data);
@@ -154,7 +154,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
 
         $data = [
             'name' => 'B',
-            'folder_parent_id' => $parentFolder->id
+            'folder_parent_id' => $parentFolder->id,
         ];
         $this->authenticateAs('ada');
         $this->postJson('/folders.json?api-version=2', $data);

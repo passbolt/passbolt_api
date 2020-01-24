@@ -40,7 +40,7 @@ class FoldersRelationsTable extends Table
      */
     const ALLOWED_FOREIGN_MODELS = [
         'Folder',
-        'Resource'
+        'Resource',
     ];
 
     /**

@@ -35,9 +35,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersCreateServiceTest extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
+    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [
@@ -134,7 +134,7 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         $uac = new UserAccessControl(Role::USER, $userId);
         $folderData = [
             'name' => 'B',
-            'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist')
+            'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
         ];
         $this->service->create($uac, $folderData);
     }

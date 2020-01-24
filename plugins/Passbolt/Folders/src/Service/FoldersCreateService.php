@@ -103,7 +103,7 @@ class FoldersCreateService
     /**
      * Build the folder entity.
      *
-     * @param UserAccessControl $uac
+     * @param UserAccessControl $uac The current user
      * @param array $data The folder data
      * @return \Cake\Datasource\EntityInterface|Folder
      */
@@ -118,7 +118,7 @@ class FoldersCreateService
         $accessibleFields = [
             'name' => true,
             'created_by' => true,
-            'modified_by' => true
+            'modified_by' => true,
         ];
 
         return $this->foldersTable->newEntity($data, ['accessibleFields' => $accessibleFields]);
@@ -127,8 +127,9 @@ class FoldersCreateService
     /**
      * Handle folder validation errors.
      *
-     * @param Folder $folder
+     * @param Folder $folder The folder
      * @return void
+     * @throws ValidationException If the provided data does not validate.
      */
     private function handleValidationErrors(Folder $folder)
     {
@@ -165,7 +166,6 @@ class FoldersCreateService
      */
     private function createFolderRelation(UserAccessControl $uac, Folder $folder, array $data = [])
     {
-
         $folderParentId = Hash::get($data, 'folder_parent_id', null);
         if (!is_null($folderParentId)) {
             $this->validateParentFolder($uac, $folderParentId);
@@ -195,8 +195,8 @@ class FoldersCreateService
         } catch (RecordNotFoundException $e) {
             $errors = [
                 'folder_parent_id' => [
-                    'folder_exists' => 'The folder parent must exist.'
-                ]
+                    'folder_exists' => 'The folder parent must exist.',
+                ],
             ];
             throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
         }

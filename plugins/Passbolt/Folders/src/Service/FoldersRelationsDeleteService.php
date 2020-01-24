@@ -46,7 +46,7 @@ class FoldersRelationsDeleteService
     {
         $this->foldersRelationsTable->deleteAll([
             'foreign_id' => $foreignId,
-            'user_id' => $uac->userId()
+            'user_id' => $uac->userId(),
         ]);
     }
 }

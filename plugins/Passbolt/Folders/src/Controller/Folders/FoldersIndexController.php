@@ -31,7 +31,7 @@ class FoldersIndexController extends AppController
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => ['creator', 'modifier', 'permission', 'permissions', 'permissions.user.profile', 'permissions.group'],
-            'filter' => ['has-id']
+            'filter' => ['has-id'],
         ];
         $options = $this->QueryString->get($whitelist);
 

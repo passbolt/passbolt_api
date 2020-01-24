@@ -80,11 +80,13 @@ class FoldersDeleteService
         $this->foldersPermissionsDeleteService->delete($uac, $folder->id);
     }
 
-    private function deleteFoldersRelations($uac, $folder) {
+    private function deleteFoldersRelations($uac, $folder)
+    {
         $this->foldersRelationsDeleteService->delete($uac, $folder->id);
     }
 
-    private function deleteFolder($uac, $folder) {
+    private function deleteFolder($uac, $folder)
+    {
 
         $this->foldersTable->delete($folder);
         $this->handleValidationErrors($folder);
@@ -99,4 +101,3 @@ class FoldersDeleteService
         }
     }
 }
-

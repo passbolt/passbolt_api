@@ -43,6 +43,6 @@ class FoldersRelation extends Entity
         'user_id' => false,
         'folder_parent_id' => false,
         'created' => false,
-        'modified' => false
+        'modified' => false,
     ];
 }

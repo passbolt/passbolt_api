@@ -25,6 +25,7 @@ class FoldersCreateController extends AppController
     /**
      * Folders create action.
      *
+     * @return void
      * @throws \Exception
      */
     public function create()
@@ -44,7 +45,8 @@ class FoldersCreateController extends AppController
      *
      * @return array
      */
-    private function getData() {
+    private function getData()
+    {
         $data = [];
         $body = $this->getRequest()->getParsedBody();
 
