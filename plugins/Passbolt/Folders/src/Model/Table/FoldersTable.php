@@ -15,7 +15,6 @@
 
 namespace Passbolt\Folders\Model\Table;
 
-use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -78,6 +77,17 @@ class FoldersTable extends Table
             'foreignKey' => 'folder_parent_id',
             'through' => 'Passbolt/Folders.FoldersRelations',
             'dependent' => false
+        ]);
+        $this->hasMany('FoldersRelations', [
+            'className' => 'FoldersRelations',
+            'foreignKey' => 'foreign_id',
+            'conditions' => [
+                'FoldersRelations.foreign_model' => 'Folder'
+            ],
+            'dependent' => true,
+            'saveStrategy' => 'replace',
+            // Important so that we can track the delete event and log it.
+            'cascadeCallbacks' => true,
         ]);
     }
 

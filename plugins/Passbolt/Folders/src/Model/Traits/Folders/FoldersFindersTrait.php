@@ -50,6 +50,10 @@ trait FoldersFindersTrait
             $this->_filterQueryBySearch($query, $options['filter']['search'][0]);
         }
 
+        if (isset($options['filter']['has-parent'])) {
+            $this->_filterQueryByParentIds($query, $options['filter']['has-parent']);
+        }
+
         // Filter on folders the user has access
         $query = $this->_filterQueryByPermissions($query, $userId);
 
@@ -173,5 +177,21 @@ trait FoldersFindersTrait
     public function _filterByIds(Query $query, array $folderIds)
     {
         return $query->where(['Folders.id IN' => $folderIds]);
+    }
+
+    /**
+     * @param Query $query Query to filter on
+     * @param array $parentIds Array of parent ids
+     * @return Query
+     */
+    public function _filterQueryByParentIds(Query $query, array $parentIds)
+    {
+        if (empty($parentIds)) {
+            return $query;
+        }
+
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds) {
+            return $q->where(['FoldersRelations.folder_parent_id IN' => $parentIds]);
+        });
     }
 }

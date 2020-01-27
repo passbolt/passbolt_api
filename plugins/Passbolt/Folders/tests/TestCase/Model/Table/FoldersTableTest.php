@@ -17,20 +17,27 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Lib\AppTestCase;
+use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsUsersFixture;
+use App\Test\Fixture\Base\PermissionsFixture;
+use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Fixture\FoldersFixture;
+use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
- * Passbolt\Folders\Model\Table\FoldersTable Test Case
+ * @covers \Passbolt\Folders\Model\Table\FoldersTable
  */
 class FoldersTableTest extends AppTestCase
 {
@@ -40,25 +47,34 @@ class FoldersTableTest extends AppTestCase
     use PermissionsModelTrait;
 
     /**
-     * Test subject
-     *
-     * @var \Passbolt\Folders\Model\Table\FoldersTable
-     */
-    public $Folders;
-
-    /**
      * Fixtures
      *
      * @var array
      */
     public $fixtures = [
-        'app.Base/GroupsUsers',
-        'app.Base/Resources',
-        'app.Base/Users',
-        'app.Base/Permissions',
-        'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations',
+        FoldersFixture::class,
+        FoldersRelationsFixture::class,
+        GpgkeysFixture::class,
+        GroupsUsersFixture::class,
+        PermissionsFixture::class,
+        ProfilesFixture::class,
+        UsersFixture::class,
     ];
+
+    /**
+     * @var FoldersTable
+     */
+    public $Folders;
+
+    /**
+     * @var FoldersRelationsTable
+     */
+    public $FoldersRelations;
+
+    /**
+     * @var PermissionsTable
+     */
+    public $Permissions;
 
     /**
      * setUp method
@@ -77,7 +93,148 @@ class FoldersTableTest extends AppTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function testThatFindAllByNamesRetrieveFolderMatchingTheName()
+    /**
+     * tearDown method
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        unset($this->Folders);
+
+        parent::tearDown();
+    }
+
+    public function testValidationName()
+    {
+        $testCases = [
+            'utf8Extended' => self::getUtf8ExtendedTestCases(64),
+            'maxLength' => self::getMaxLengthTestCases(64),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Folders, 'name', self::getDummyFolderData(), self::getDummyFolderEntityDefaultOptions(), $testCases);
+    }
+
+    /* ************************************************************** */
+    /* FORMAT VALIDATION TESTS */
+    /* ************************************************************** */
+
+    /**
+     * Get default folder entity options.
+     */
+    public function getDummyFolderEntityDefaultOptions()
+    {
+        return [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
+    }
+
+    /* ************************************************************** */
+    /* CONTAINS TESTS */
+    /* ************************************************************** */
+
+    public function testFindView_ContainChildrenFolders()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B and C as a OWNER
+        // Ada see folder folders B and C in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        // |- C (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        $options['contain']['children_folders'] = true;
+        $folder = $this->Folders->findView($userId, $folderA->id, $options)->first();
+
+        // Expected fields.
+        $this->assertFolderAttributes($folder);
+        $this->assertObjectHasAttribute('children_folders', $folder);
+        $this->assertCount(2, $folder->children_folders);
+        foreach ($folder->children_folders as $childFolder) {
+            $this->assertFolderAttributes($childFolder);
+        }
+        $childrenFoldersIds = Hash::extract($folder->children_folders, '{n}.id');
+        $this->assertContains($folderB->id, $childrenFoldersIds);
+        $this->assertContains($folderC->id, $childrenFoldersIds);
+    }
+
+    /* ************************************************************** */
+    /* FINDER TESTS */
+    /* ************************************************************** */
+
+    public function testFindIndex_FilterByParentId()
+    {
+        $this->insertTestCase1();
+
+        // Relations are expressed as follow: folder_parent_id => [child_folder_id]
+        $expectedFoldersForParentId = [
+            UuidFactory::uuid('folder.id.a') => [
+                UuidFactory::uuid('folder.id.b')
+            ],
+            UuidFactory::uuid('folder.id.c') => [
+                UuidFactory::uuid('folder.id.e'),
+            ],
+        ];
+
+        // One parent should return only its children
+        foreach ($expectedFoldersForParentId as $parentIdToFilter => $expectedFolderIds) {
+            $folders = $this->Folders->_filterQueryByParentIds($this->Folders->find(), [$parentIdToFilter]);
+            $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
+            $this->assertEquals(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders.");
+        }
+
+        // Multiple parents should retrieve the children of all parents once
+        $expectedFolderIds = $this->getAllChildrenFromExpectedFolders($expectedFoldersForParentId);
+        $parentIdsToFilter = array_keys($expectedFoldersForParentId);
+
+        $folders = $this->Folders->_filterQueryByParentIds($this->Folders->find(), $parentIdsToFilter);
+        $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
+        $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.");
+    }
+
+    private function insertTestCase1()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Relations are expressed as follow: folder_parent_id => [child_folder_id]
+        $expectedFoldersForParentId = [
+            UuidFactory::uuid('folder.id.a') => [
+                UuidFactory::uuid('folder.id.b')
+            ],
+            UuidFactory::uuid('folder.id.c') => [
+                UuidFactory::uuid('folder.id.e'),
+            ],
+        ];
+
+        foreach ($expectedFoldersForParentId as $folderParentId => $childrenFolders) {
+            $this->addFolderFor(['id' => $folderParentId], [
+                $userId => Permission::OWNER
+            ]);
+            foreach ($childrenFolders as $childrenFolderId) {
+                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId,], [$userId => Permission::OWNER]);
+            }
+        }
+    }
+
+    private function getAllChildrenFromExpectedFolders(array $expectedFoldersForParentId)
+    {
+        return array_reduce($expectedFoldersForParentId, function ($accumulator, $current) {
+            if (empty($accumulator)) {
+                $accumulator = [];
+            }
+            return array_merge($accumulator, $current);
+        });
+    }
+
+    public function testFindIndex_FilterBySearch()
     {
         $folderName = 'FolderWithSpecialName';
 
@@ -110,10 +267,7 @@ class FoldersTableTest extends AppTestCase
         }
     }
 
-    /**
-     * @return void
-     */
-    public function testThatFindAllByIdsRetrieveFolderWithTheGivenIds()
+    public function testFindIndex_FilterByIds()
     {
         $allFolders = [
             UuidFactory::uuid('folder.id.a'),
@@ -141,78 +295,5 @@ class FoldersTableTest extends AppTestCase
         $folderIds = Hash::extract($folders->toArray(), '{n}.id');
 
         $this->assertSame($folderIds, $expectedFolderIds, "List of folders returned does not contain expected folders.");
-    }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        unset($this->Folders);
-
-        parent::tearDown();
-    }
-
-    /**
-     * Get default folder entity options.
-     */
-    public function getDummyFolderEntityDefaultOptions()
-    {
-        return [
-            'checkRules' => true,
-            'accessibleFields' => [
-                '*' => true,
-            ],
-        ];
-    }
-
-    /* ************************************************************** */
-    /* FORMAT VALIDATION TESTS */
-    /* ************************************************************** */
-
-    public function testValidationName()
-    {
-        $testCases = [
-            'utf8Extended' => self::getUtf8ExtendedTestCases(64),
-            'maxLength' => self::getMaxLengthTestCases(64),
-            'requirePresence' => self::getRequirePresenceTestCases(),
-            'notEmpty' => self::getNotEmptyTestCases(),
-        ];
-        $this->assertFieldFormatValidation($this->Folders, 'name', self::getDummyFolderData(), self::getDummyFolderEntityDefaultOptions(), $testCases);
-    }
-
-    /* ************************************************************** */
-    /* CONTAINS TESTS */
-    /* ************************************************************** */
-
-    public function testFindView_ContainChildrenFolders()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        // Insert fixtures.
-        // Ada has access to folder A, B and C as a OWNER
-        // Ada see folder folders B and C in A
-        // A (Ada:O)
-        // |- B (Ada:O)
-        // |- C (Ada:O)
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-
-        $options['contain']['children_folders'] = true;
-        $folder = $this->Folders->findView($userId, $folderA->id, $options)->first();
-
-        // Expected fields.
-        $this->assertFolderAttributes($folder);
-        $this->assertObjectHasAttribute('children_folders', $folder);
-        $this->assertCount(2, $folder->children_folders);
-        foreach($folder->children_folders as $childFolder) {
-        $this->assertFolderAttributes($childFolder);
-    }
-        $childrenFoldersIds = Hash::extract($folder->children_folders, '{n}.id');
-        $this->assertContains($folderB->id, $childrenFoldersIds);
-        $this->assertContains($folderC->id, $childrenFoldersIds);
     }
 }

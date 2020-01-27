@@ -165,4 +165,54 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
 
         $this->assertSuccess();
     }
+
+    private function insertFixtureCase3()
+    {
+        // Relations are expressed as follow: folder_parent_id => [child_folder_id]
+        $folderRelations = [
+            UuidFactory::uuid('folder.id.a') => [
+                UuidFactory::uuid('folder.id.b')
+            ],
+            UuidFactory::uuid('folder.id.c') => [
+                UuidFactory::uuid('folder.id.e'),
+            ],
+        ];
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        foreach ($folderRelations as $folderParentId => $childrenFolders) {
+            $this->addFolderFor(['id' => $folderParentId,], [$userId => Permission::OWNER]);
+            foreach ($childrenFolders as $childrenFolderId) {
+                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId,], [$userId => Permission::OWNER]);
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    public function testFoldersIndexFilterHasParentSuccess()
+    {
+        $this->insertFixtureCase3();
+        $this->authenticateAs('ada');
+
+        $expectedRelations = [
+            UuidFactory::uuid('folder.id.a') => [
+                UuidFactory::uuid('folder.id.b')
+            ],
+            UuidFactory::uuid('folder.id.c') => [
+                UuidFactory::uuid('folder.id.e'),
+            ],
+        ];
+
+        foreach ($expectedRelations as $folderParentId => $expectedFolderChildrenIds) {
+            $this->getJson('/folders.json?api-version=2&filter[has-parent][]=' . $folderParentId);
+            $this->assertSuccess();
+
+            $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+
+            foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
+                $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
+            }
+        }
+    }
 }
