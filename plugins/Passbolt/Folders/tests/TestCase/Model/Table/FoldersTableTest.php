@@ -12,17 +12,23 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
+
 namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
+use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 
 /**
  * Passbolt\Folders\Model\Table\FoldersTable Test Case
  */
-class FoldersTableTest extends TestCase
+class FoldersTableTest extends AppTestCase
 {
+    use FoldersModelTrait;
+    use FormatValidationTrait;
+
     /**
      * Test subject
      *
@@ -63,8 +69,32 @@ class FoldersTableTest extends TestCase
         parent::tearDown();
     }
 
-    public function testFake()
+    /**
+     * Get default folder entity options.
+     */
+    public function getDummyFolderEntityDefaultOptions()
     {
-        $this->markTestIncomplete();
+        return [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
     }
+
+    /* ************************************************************** */
+    /* FORMAT VALIDATION TESTS */
+    /* ************************************************************** */
+
+    public function testValidationName()
+    {
+        $testCases = [
+            'utf8Extended' => self::getUtf8ExtendedTestCases(64),
+            'maxLength' => self::getMaxLengthTestCases(64),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Folders, 'name', self::getDummyFolderData(), self::getDummyFolderEntityDefaultOptions(), $testCases);
+    }
+
 }

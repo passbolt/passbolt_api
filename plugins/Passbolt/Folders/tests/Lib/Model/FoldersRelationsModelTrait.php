@@ -56,7 +56,6 @@ trait FoldersRelationsModelTrait
     public static function getDummyFolderRelation($data = [])
     {
         $entityContent = [
-            'id' => UuidFactory::uuid('folder-relation.id.folder-relation'),
             'foreign_model' => PermissionsTable::FOLDER_ACO,
             'foreign_id' => UuidFactory::uuid('folder.id.folder'),
             'user_id' => UuidFactory::uuid('user.id.test'),

@@ -14,15 +14,20 @@
  */
 namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
+use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Model\Table\FoldersRelationsTable Test Case
  */
-class FoldersRelationsTableTest extends TestCase
+class FoldersRelationsTableTest extends AppTestCase
 {
+    use FoldersRelationsModelTrait;
+    use FormatValidationTrait;
+
     /**
      * Test subject
      *
@@ -64,8 +69,63 @@ class FoldersRelationsTableTest extends TestCase
         parent::tearDown();
     }
 
-    public function testFake()
+    /**
+     * Get default folder entity options.
+     */
+    public function getDummyFolderRelationsEntityDefaultOptions()
     {
-        $this->markTestIncomplete();
+        return [
+            'checkRules' => true,
+            'accessibleFields' => [
+                '*' => true,
+            ],
+        ];
+    }
+
+    /* ************************************************************** */
+    /* FORMAT VALIDATION TESTS */
+    /* ************************************************************** */
+
+    public function testValidationForeignModel()
+    {
+        $testCases = [
+            'inList' => self::getInListTestCases($this->FoldersRelations::ALLOWED_FOREIGN_MODELS),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->FoldersRelations, 'foreign_model',
+            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationForeignId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->FoldersRelations, 'foreign_id',
+            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationUserId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->FoldersRelations, 'user_id',
+            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+    }
+
+    public function testValidationFolderParentId()
+    {
+        $testCases = [
+            'uuid' => self::getUuidTestCases(),
+            'allowEmpty' => self::getAllowEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->FoldersRelations, 'folder_parent_id',
+            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
     }
 }

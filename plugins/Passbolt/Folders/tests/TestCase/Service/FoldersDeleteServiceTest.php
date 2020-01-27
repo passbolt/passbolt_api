@@ -139,5 +139,6 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->service->delete($uac, $parentFolder->id, false);
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolder($folder->id);
+        $this->assertFolderRelation($folder->id, $userId, null);
     }
 }
