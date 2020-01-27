@@ -21,6 +21,7 @@ use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
 use Cake\Event\Event;
+use Cake\Core\Configure;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -93,6 +94,17 @@ class ResourcesTable extends Table
             'foreignKey' => 'resource_id',
             'saveStrategy' => 'replace',
         ]);
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $this->hasMany('FoldersRelations', [
+                'className' => 'FoldersRelations',
+                'foreignKey' => 'foreign_id',
+                'conditions' => [
+                    'FoldersRelations.foreign_model' => 'Resource'
+                ],
+                'dependent' => false,
+            ]);
+        }
     }
 
     /**

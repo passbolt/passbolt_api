@@ -247,7 +247,7 @@ class QueryStringComponent extends Component
                         self::validateFilterGroups($values, $filterName);
                         break;
                     case 'has-parent':
-                        self::validateFilterParents($values, $filterName);
+                        self::validateFilterParentFolders($values, $filterName);
                         break;
                     case 'is-shared-with-group':
                         self::validateFilterGroup($values, $filterName);
@@ -395,7 +395,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterParents(array $values, string $filtername)
+    public static function validateFilterParentFolders(array $values, string $filtername)
     {
         foreach ($values as $i => $parentId) {
             if (!is_int($i)) {
@@ -404,7 +404,7 @@ class QueryStringComponent extends Component
             if (!is_scalar($parentId) || empty($parentId)) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i));
             }
-            self::validateFilterParent($parentId, $filtername);
+            self::validateFilterParentFolder($parentId, $filtername);
         }
 
         return true;
@@ -470,7 +470,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterParent(string $parentId, string $filtername)
+    public static function validateFilterParentFolder(string $parentId, string $filtername)
     {
         if (!Validation::uuid($parentId)) {
             throw new Exception(__('"{0}" is not a valid parent id for filter {1}.', $parentId, $filtername));

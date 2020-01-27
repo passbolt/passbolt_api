@@ -17,6 +17,7 @@ namespace Passbolt\Folders\Test\Lib\Model;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -146,5 +147,32 @@ trait FoldersModelTrait
 
         $permissions = $this->Permissions->find()->where(['aco_foreign_key' => $id])->count();
         $this->assertEmpty($permissions);
+    }
+
+    /**
+     * Add folders for the given users
+     * @param array $data Data
+     * @param array $usersIds UserIDS
+     * @return \Cake\Datasource\EntityInterface
+     */
+    public function addResourceForUsers($data = [], $usersIds)
+    {
+        reset($usersIds);
+        $userId = key($usersIds);
+        if (!isset($data['created_by'])) {
+            $data['created_by'] = $userId;
+        }
+        if (!isset($data['modified_by'])) {
+            $data['modified_by'] = $userId;
+        }
+
+        $resource = $this->addResource($data);
+
+        foreach($usersIds as $userId => $permissionType) {
+            $folderRelationData = ['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userId, 'folder_parent_id' => $data['folder_parent_id'] ?? null];
+            $this->addFolderRelation($folderRelationData);
+        }
+
+        return $resource;
     }
 }

@@ -17,9 +17,73 @@ namespace App\Test\Lib\Model;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait ResourcesModelTrait
 {
+    public function addResource($data = [])
+    {
+        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $entityData = self::getDummyResource($data);
+        $resource = $resourcesTable->newEntity($entityData, self::getEntityDefaultOption());
+        $resourcesTable->saveOrFail($resource);
+
+        return $resource;
+    }
+
+    protected function getEntityDefaultOption()
+    {
+        return [
+            'validate' => 'default',
+            'accessibleFields' => ['*' => true],
+            'associated' => [
+                'Permissions' => [
+                    'validate' => 'saveResource',
+                    'accessibleFields' => [
+                        'aco' => true,
+                        'aro' => true,
+                        'aro_foreign_key' => true,
+                        'type' => true,
+                    ],
+                ],
+                'Secrets' => [
+                    'validate' => 'saveResource',
+                    'accessibleFields' => [
+                        'user_id' => true,
+                        'data' => true,
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function insertResource()
+    {
+        $resource = self::getDummyResource();
+        $testCases = [
+            'requirePresence' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+        ];
+        $this->assertFieldFormatValidation($this->Resources, 'permissions', $resource, self::getEntityDefaultOptions(), $testCases);
+
+        // Cannot use the default AssertFieldFormatValidation to test array value.
+        // Test the hasMost rule.
+        $userId = UuidFactory::uuid('user.id.ada');
+        $permissions = [[
+            'aro' => 'User',
+            'aro_foreign_key' => $userId,
+            'aco' => 'Resource',
+            'type' => Permission::OWNER,
+        ], [
+            'aro' => 'User',
+            'aro_foreign_key' => $userId,
+            'aco' => 'Resource',
+            'type' => Permission::OWNER,
+        ]];
+        $entityData = array_merge($resource, ['permissions' => $permissions]);
+        $entity = $this->Resources->newEntity($entityData, self::getEntityDefaultOptions());
+        $save = $this->Resources->save($entity, ['checkRules' => false]);
+    }
 
     /**
      * Get a dummy resource with test data.

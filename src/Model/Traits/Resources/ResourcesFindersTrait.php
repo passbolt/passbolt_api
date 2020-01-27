@@ -89,6 +89,11 @@ trait ResourcesFindersTrait
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
+        // Filter on resources with the given parent ids.
+        if (isset($options['filter']['has-parent'])) {
+            $query = $this->_filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+        }
+
         // Filter on resources I have permission.
         $query = $this->_filterQueryByPermissions($query, $userId);
 
@@ -312,5 +317,21 @@ trait ResourcesFindersTrait
         $query->where(['Resources.id IN' => $resourcesSharedWithGroupSubQuery]);
 
         return $query;
+    }
+
+    /**
+     * @param Query $query Query to filter on
+     * @param array $parentIds Array of parent ids
+     * @return Query
+     */
+    public function _filterQueryByFolderParentIds(Query $query, array $parentIds)
+    {
+        if (empty($parentIds)) {
+            return $query;
+        }
+
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds) {
+            return $q->where(['FoldersRelations.folder_parent_id IN' => $parentIds]);
+        });
     }
 }
