@@ -12,12 +12,19 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
+
 namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
+use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
@@ -25,6 +32,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersRelationsTableTest extends AppTestCase
 {
+    use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use FormatValidationTrait;
 
@@ -43,6 +51,9 @@ class FoldersRelationsTableTest extends AppTestCase
     public $fixtures = [
         'plugin.Passbolt/Folders.Folders',
         'plugin.Passbolt/Folders.FoldersRelations',
+        'app.Base/Resources',
+        'app.Base/Users',
+        'app.Base/Permissions'
     ];
 
     /**
@@ -53,8 +64,13 @@ class FoldersRelationsTableTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.folders', ['enabled' => true]);
         $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
+        $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
+        $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
+        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     /**
@@ -127,5 +143,112 @@ class FoldersRelationsTableTest extends AppTestCase
         ];
         $this->assertFieldFormatValidation($this->FoldersRelations, 'folder_parent_id',
             self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+    }
+
+    /* ************************************************************** */
+    /* BUILD RULES TESTS */
+    /* ************************************************************** */
+
+    public function testErrorBuildRuleCreate_FolderRelationUnique()
+    {
+        // Insert fixtures.
+        // Ada has access to folder A as a OWNER
+        // A (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folder = $this->addFolderFor(['name' => 'folder'], [$userId => Permission::OWNER]);
+
+        $data = [
+            'foreign_model' => 'Folder',
+            'foreign_id' => $folder->id,
+            'user_id' => $userId
+        ];
+        $folder = self::getDummyFolderRelationEntity($data);
+        $save = $this->FoldersRelations->save($folder);
+        $this->assertFalse($save);
+        $errors = $folder->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['folder_relation_unique']);
+    }
+
+    public function testErrorBuildRuleCreate_ForeignIdExists_FolderNotExist()
+    {
+        $data = [
+            'foreign_model' => 'Folder',
+            'foreign_id' => UuidFactory::uuid('folder.id.not-exist')
+        ];
+        $folder = self::getDummyFolderRelationEntity($data);
+        $save = $this->FoldersRelations->save($folder);
+        $this->assertFalse($save);
+        $errors = $folder->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['foreign_model_exists']);
+    }
+
+    public function testErrorBuildRuleCreate_ForeignIdExists_ResourceNotExist()
+    {
+        $data = [
+            'foreign_model' => 'Resource',
+            'foreign_id' => UuidFactory::uuid('resource.id.not-exist')
+        ];
+        $folder = self::getDummyFolderRelationEntity($data);
+        $save = $this->FoldersRelations->save($folder);
+        $this->assertFalse($save);
+        $errors = $folder->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['foreign_model_exists']);
+    }
+
+    public function testErrorBuildRuleCreate_ForeignIdExists_ResourceSoftDeleted()
+    {
+        $data = [
+            'foreign_model' => 'Resource',
+            'foreign_id' => UuidFactory::uuid('resource.id.jquery')
+        ];
+        $folder = self::getDummyFolderRelationEntity($data);
+        $save = $this->FoldersRelations->save($folder);
+        $this->assertFalse($save);
+        $errors = $folder->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['foreign_id']['foreign_model_exists']);
+    }
+
+    public function testErrorBuildRuleCreate_UserIdExists_UserNotExist()
+    {
+        // Insert fixtures.
+        // Ada has access to folder A as a OWNER
+        // A (Ada:O)
+        $folder = $this->addFolderFor(['name' => 'folder'], [UuidFactory::uuid('user.id.ada') => Permission::OWNER]);
+
+        $data = [
+            'foreign_model' => 'Folder',
+            'foreign_id' => $folder->id,
+            'user_id' => UuidFactory::uuid('user.id.not-exist')
+        ];
+        $folder = self::getDummyFolderRelationEntity($data);
+        $save = $this->FoldersRelations->save($folder);
+        $this->assertFalse($save);
+        $errors = $folder->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['user_exists']);
+    }
+
+    public function testErrorBuildRuleCreate_UserIdExists_UserSoftDeleted()
+    {
+        // Insert fixtures.
+        // Ada has access to folder A as a OWNER
+        // A (Ada:O)
+        $folder = $this->addFolderFor(['name' => 'folder'], [UuidFactory::uuid('user.id.ada') => Permission::OWNER]);
+
+        $data = [
+            'foreign_model' => 'Folder',
+            'foreign_id' => $folder->id,
+            'user_id' => UuidFactory::uuid('user.id.sofia')
+        ];
+        $folder = self::getDummyFolderRelationEntity($data);
+        $save = $this->FoldersRelations->save($folder);
+        $this->assertFalse($save);
+        $errors = $folder->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertNotNull($errors['user_id']['user_is_not_soft_deleted']);
     }
 }

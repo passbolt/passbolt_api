@@ -14,6 +14,8 @@
  */
 namespace Passbolt\Folders\Test\Lib\Model;
 
+use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -75,7 +77,7 @@ trait FoldersModelTrait
      * @return array
      * @throws \Exception If the create date is not correct.
      */
-    public static function getDummyFolderData($data = [])
+    public function getDummyFolderData($data = [])
     {
         $entityContent = [
             'name' => UuidFactory::uuid('folder.id.name'),
@@ -89,7 +91,7 @@ trait FoldersModelTrait
         return $entityContent;
     }
 
-    public static function getDummyFolderEntity($data = [], $options = [])
+    public function getDummyFolderEntity($data = [], $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $defaultOptions = [
@@ -105,12 +107,37 @@ trait FoldersModelTrait
         return $foldersTable->newEntity($data, $options);
     }
 
-    public static function addFolder($data = [], $options = [])
+    public function addFolder($data = [], $options = [])
     {
         $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $folder = self::getDummyFolderEntity($data, $options);
 
         $foldersTable->saveOrFail($folder);
+
+        return $folder;
+    }
+
+    public function addFolderFor($data = [], $usersIds, $options = [])
+    {
+        reset($usersIds);
+        $userId = key($usersIds);
+        if (!isset($data['created_by'])) {
+            $data['created_by'] = $userId;
+        }
+        if (!isset($data['modified_by'])) {
+            $data['modified_by'] = $userId;
+        }
+
+        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+        $folder = $this->getDummyFolderEntity($data, $options);
+
+        $foldersTable->saveOrFail($folder);
+
+        foreach($usersIds as $userId => $permissionType) {
+            $this->addPermission('Folder', $folder->id, 'User', $userId, $permissionType);
+            $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $userId, $data['folder_parent_id'] ?? null];
+            $this->addFolderRelation($folderRelationData);
+        }
 
         return $folder;
     }

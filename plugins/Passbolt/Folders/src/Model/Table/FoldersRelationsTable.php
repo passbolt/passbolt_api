@@ -14,6 +14,7 @@
  */
 namespace Passbolt\Folders\Model\Table;
 
+use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -58,6 +59,14 @@ class FoldersRelationsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsTo('Resources', [
+            'foreignKey' => 'foreign_id',
+        ]);
+        $this->belongsTo('Folders', [
+            'foreignKey' => 'foreign_id',
+        ]);
+        $this->belongsTo('Users');
     }
 
     /**
@@ -106,6 +115,59 @@ class FoldersRelationsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
+        $rules->addCreate(
+            $rules->isUnique(
+                ['foreign_id', 'user_id'],
+                __('A folder relation already exists for the given foreign model and user.')
+            ),
+            'folder_relation_unique'
+        );
+        $rules->addCreate([$this, 'foreignIdExistsRule'], 'foreign_model_exists', [
+            'errorField' => 'foreign_id',
+            'message' => __('The foreign model does not exist.'),
+        ]);
+        $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
+            'errorField' => 'user_id',
+            'message' => __('The user does not exist.'),
+        ]);
+        $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
+            'table' => 'Users',
+            'errorField' => 'user_id',
+            'message' => __('The user does not exist.'),
+        ]);
+
         return $rules;
+    }
+
+    /**
+     * Checks that the foreign id exists
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The entity to test
+     * @param array $options The additional options for this rule
+     * @return bool
+     */
+    public function foreignIdExistsRule(\Cake\Datasource\EntityInterface $entity, array $options)
+    {
+        $rules = new RulesChecker($options);
+        $exist = false;
+
+        switch ($entity->foreign_model) {
+            case 'Resource':
+                $rule = $rules->existsIn('foreign_id', 'Resources');
+                $existIn = $rule($entity, $options);
+                $rule = new IsNotSoftDeletedRule();
+                $isNotSoftDeleted = $rule($entity, [
+                    'table' => 'Resources',
+                    'errorField' => 'foreign_id',
+                ]);
+                $exist = $existIn && $isNotSoftDeleted;
+                break;
+            case 'Folder':
+                $rule = $rules->existsIn('foreign_id', 'Folders');
+                $exist = $rule($entity, $options);
+                break;
+        }
+
+        return $exist;
     }
 }
