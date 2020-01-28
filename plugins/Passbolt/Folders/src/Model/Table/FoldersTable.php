@@ -76,18 +76,10 @@ class FoldersTable extends Table
             'targetForeignKey' => 'foreign_id',
             'foreignKey' => 'folder_parent_id',
             'through' => 'Passbolt/Folders.FoldersRelations',
-            'dependent' => false
-        ]);
-        $this->hasMany('FoldersRelations', [
-            'className' => 'FoldersRelations',
-            'foreignKey' => 'foreign_id',
+            'dependent' => false,
             'conditions' => [
                 'FoldersRelations.foreign_model' => 'Folder'
             ],
-            'dependent' => true,
-            'saveStrategy' => 'replace',
-            // Important so that we can track the delete event and log it.
-            'cascadeCallbacks' => true,
         ]);
     }
 

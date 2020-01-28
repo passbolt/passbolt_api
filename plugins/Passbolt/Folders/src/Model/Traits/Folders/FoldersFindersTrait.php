@@ -74,7 +74,7 @@ trait FoldersFindersTrait
         // If contains children_folders.
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
-                return $q->where(['FoldersRelations.user_id' => $userId]);
+                return $q->where(['user_id' => $userId]);
             });
         }
 
@@ -190,8 +190,8 @@ trait FoldersFindersTrait
             return $query;
         }
 
-        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds) {
-            return $q->where(['FoldersRelations.folder_parent_id IN' => $parentIds]);
+        return $query->innerJoinWith('ChildrenFolders', function (Query $q) use ($parentIds) {
+            return $q->where(['folder_parent_id IN' => $parentIds]);
         });
     }
 }
