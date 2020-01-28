@@ -15,14 +15,19 @@
 
 namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
-use App\Utility\UuidFactory;
+use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
+use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Model\Table\FoldersTable Test Case
@@ -30,7 +35,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 class FoldersTableTest extends AppTestCase
 {
     use FoldersModelTrait;
+    use FoldersRelationsModelTrait;
     use FormatValidationTrait;
+    use PermissionsModelTrait;
 
     /**
      * Test subject
@@ -45,7 +52,12 @@ class FoldersTableTest extends AppTestCase
      * @var array
      */
     public $fixtures = [
+        'app.Base/GroupsUsers',
+        'app.Base/Resources',
+        'app.Base/Users',
+        'app.Base/Permissions',
         'plugin.Passbolt/Folders.Folders',
+        'plugin.Passbolt/Folders.FoldersRelations',
     ];
 
     /**
@@ -56,8 +68,13 @@ class FoldersTableTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.folders', ['enabled' => true]);
         $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
         $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
+        $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
+        $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
+        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
+        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     public function testThatFindAllByNamesRetrieveFolderMatchingTheName()
@@ -166,4 +183,36 @@ class FoldersTableTest extends AppTestCase
         $this->assertFieldFormatValidation($this->Folders, 'name', self::getDummyFolderData(), self::getDummyFolderEntityDefaultOptions(), $testCases);
     }
 
+    /* ************************************************************** */
+    /* CONTAINS TESTS */
+    /* ************************************************************** */
+
+    public function testFindView_ContainChildrenFolders()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B and C as a OWNER
+        // Ada see folder folders B and C in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        // |- C (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        $options['contain']['children_folders'] = true;
+        $folder = $this->Folders->findView($userId, $folderA->id, $options)->first();
+
+        // Expected fields.
+        $this->assertFolderAttributes($folder);
+        $this->assertObjectHasAttribute('children_folders', $folder);
+        $this->assertCount(2, $folder->children_folders);
+        foreach($folder->children_folders as $childFolder) {
+        $this->assertFolderAttributes($childFolder);
+    }
+        $childrenFoldersIds = Hash::extract($folder->children_folders, '{n}.id');
+        $this->assertContains($folderB->id, $childrenFoldersIds);
+        $this->assertContains($folderC->id, $childrenFoldersIds);
+    }
 }

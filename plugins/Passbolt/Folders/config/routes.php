@@ -19,8 +19,8 @@ use Cake\Routing\Router;
 Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes) {
     $routes->setExtensions('json');
 
-    /**  @uses \Passbolt\Folders\Controller\Folders\FoldersGetController::view() */
-    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersGet', 'action' => 'view'])
+    /**  @uses \Passbolt\Folders\Controller\Folders\FoldersViewController::view() */
+    $routes->connect('/:folderId', ['prefix' => 'Folders', 'controller' => 'FoldersView', 'action' => 'view'])
         ->setPass(['folderId'])
         ->setMethods(['GET']);
 

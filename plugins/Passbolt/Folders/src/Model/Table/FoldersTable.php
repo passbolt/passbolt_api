@@ -70,10 +70,14 @@ class FoldersTable extends Table
             'foreignKey' => 'aco_foreign_key',
         ]);
         $this->hasMany('Permissions', [
-            'foreignKey' => 'aco_foreign_key',
-            'saveStrategy' => 'replace',
-            // Important so that we can track the delete event and log it.
-            'cascadeCallbacks' => true,
+            'foreignKey' => 'aco_foreign_key'
+        ]);
+        $this->belongsToMany('ChildrenFolders', [
+            'className' => 'Folders',
+            'targetForeignKey' => 'foreign_id',
+            'foreignKey' => 'folder_parent_id',
+            'through' => 'Passbolt/Folders.FoldersRelations',
+            'dependent' => false
         ]);
     }
 

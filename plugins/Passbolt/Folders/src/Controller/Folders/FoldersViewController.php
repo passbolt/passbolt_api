@@ -16,8 +16,42 @@
 namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
+use Cake\Validation\Validation;
 
-class FolderViewController extends AppController
+class FoldersViewController extends AppController
 {
+    /**
+     * Folder View action
+     *
+     * @param string $id uuid Identifier of the folder
+     * @return void
+     * @throws NotFoundException if the folder does not exist
+     * @throws BadRequestException if the folder id is not a uuid
+     */
+    public function view(string $id)
+    {
+        if (!Validation::uuid($id)) {
+            throw new BadRequestException(__('The folder id is not valid.'));
+        }
 
+        $this->loadModel('Passbolt/Folders.Folders');
+
+        // Retrieve and sanity the query options.
+        $whitelist = [
+            'contain' => ['children_folders', 'creator', 'modifier', 'permission', 'permissions',
+                'permissions.user.profile', 'permissions.group'],
+            'filter' => ['has-id'],
+        ];
+        $options = $this->QueryString->get($whitelist);
+
+        $folder = $this->Folders->findView($this->User->id(), $id, $options)->first();
+
+        if (empty($folder)) {
+            throw new NotFoundException('The folder does not exist.');
+        }
+
+        $this->success(__('The operation was successful.'), $folder);
+    }
 }

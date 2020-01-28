@@ -67,6 +67,13 @@ trait FoldersFindersTrait
             });
         }
 
+        // If contains children_folders.
+        if (isset($options['contain']['children_folders'])) {
+            $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
+                return $q->where(['FoldersRelations.user_id' => $userId]);
+            });
+        }
+
         // If contains creator.
         if (isset($options['contain']['creator'])) {
             $query->contain('Creator');
@@ -94,6 +101,22 @@ trait FoldersFindersTrait
         }
 
         $query->orderAsc('Folders.name');
+
+        return $query;
+    }
+
+    /**
+     * Build the query that fetches data for folders view
+     *
+     * @param string $userId The user to get the folders for
+     * @param string $folderId The folder to retrieve
+     * @param array $options options
+     * @return Query
+     */
+    public function findView(string $userId, string $folderId, array $options = [])
+    {
+        $query = $this->findIndex($userId, $options)
+            ->where(['Folders.id' => $folderId]);
 
         return $query;
     }
