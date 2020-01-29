@@ -25,6 +25,7 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -33,6 +34,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Closure;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
@@ -50,6 +52,7 @@ use Ramsey\Uuid\Uuid;
  */
 class FoldersDeleteServiceTest extends AppIntegrationTestCase
 {
+    use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
@@ -64,6 +67,26 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         ProfilesFixture::class,
         UsersFixture::class,
     ];
+
+    /**
+     * @var FoldersDeleteService
+     */
+    private $service;
+
+    /**
+     * @var FoldersTable
+     */
+    private $Folders;
+
+    /**
+     * @var PermissionsTable
+     */
+    private $Permissions;
+
+    /**
+     * @var FoldersRelationsTable
+     */
+    private $FoldersRelations;
 
     /**
      * setUp method
@@ -200,5 +223,49 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->service->delete($uac, $folder->id);
 
         $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was deleted with success.");
+    }
+
+    /**
+     * Test that a user got access denied if does not have at least UPDATE permission.
+     * @dataProvider provideErrorCase4_UserIsNotAllowedToDeleteFolder
+     */
+    public function testErrorCase1_UserIsNotAllowedToDeleteFolder(Closure $fixture, UserAccessControl $notAllowedUac)
+    {
+        $folder = $this->executeFixture($fixture);
+
+        $this->expectException(ForbiddenException::class);
+
+        $this->service->delete($notAllowedUac, $folder->id);
+    }
+
+    public function provideErrorCase4_UserIsNotAllowedToDeleteFolder()
+    {
+        $fixture = function () {
+            $folder = $this->addFolderFor(['name' => 'A'], [
+                UuidFactory::uuid('user.id.ada') => Permission::OWNER,
+                UuidFactory::uuid('user.id.betty') => Permission::READ,
+            ]);
+
+            $this->addFolderFor(['name' => 'B'], [
+                UuidFactory::uuid('user.id.carol') => Permission::UPDATE,
+            ]);
+
+            return $folder;
+        };
+
+        return [
+            'Betty has a READ permission defined on the folder' => [$fixture, $this->getUserAccessControl('betty')],
+            'Carol has a UPDATE permission defined on another folder' => [$fixture, $this->getUserAccessControl('carol')],
+            'Dame has no permission defined om the folder' => [$fixture, $this->getUserAccessControl('dame')],
+        ];
+    }
+
+    /**
+     * @param string $username
+     * @return UserAccessControl
+     */
+    private function getUserAccessControl(string $username)
+    {
+        return new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.'. $username));
     }
 }
