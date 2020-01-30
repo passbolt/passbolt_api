@@ -320,4 +320,53 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userId, 'folder_parent_id' => $folderB->id];
         $this->addFolderRelation($folderRelationData);
     }
+
+    public function testSuccessCase5_DeleteFolderAndContent_OnlyWhenEnoughPermissions()
+    {
+        $parentFolder = null;
+        $folder = null;
+        $childFolder = null;
+        $this->insertFixtureCase5($parentFolder, $folder, $childFolder);
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $this->service->delete($uac, $parentFolder->id, true);
+        $this->assertFolderNotExist($parentFolder->id);
+        $this->assertFolder($folder->id);
+        $this->assertFolder($childFolder->id);
+
+        $this->assertPermissionNotExist($parentFolder->id, $userId);
+        $this->assertPermission($folder->id, $userId, Permission::READ);
+        $this->assertPermission($childFolder->id, $userId, Permission::OWNER);
+    }
+
+    private function insertFixtureCase5(&$folderA, &$folderB, &$folderC)
+    {
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a OWNER
+        // Folder B is in folder A
+        // A (Ada:O)
+        // |
+        // B (Ada:O)
+        // |
+        // C (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderA = $this->addFolder($folderAData);
+        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
+        $this->addFolderRelation($folderRelationData);
+
+        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderB = $this->addFolder($folderBData);
+        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::READ);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
+        $this->addFolderRelation($folderRelationData);
+
+        $folderCData = ['id' => UuidFactory::uuid(), 'name' => 'C', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderC = $this->addFolder($folderCData);
+        $this->addPermission('Folder', $folderC->id, 'User', $userId, Permission::OWNER);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userId, 'folder_parent_id' => $folderB->id];
+        $this->addFolderRelation($folderRelationData);
+    }
 }
