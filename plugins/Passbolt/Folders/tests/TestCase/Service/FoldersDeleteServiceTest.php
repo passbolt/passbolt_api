@@ -330,10 +330,18 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
+
         $this->service->delete($uac, $parentFolder->id, true);
+
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolder($folder->id);
         $this->assertFolder($childFolder->id);
+
+        // Check that the relation with the child of parent have been deleted
+        $this->assertFolderRelationNotExist($folder->id, $userId, $parentFolder->id);
+
+        // Check that the relations with parents of parents have been deleted
+        $this->assertNoRelationsExistFor($parentFolder->id, $userId);
 
         $this->assertPermissionNotExist($parentFolder->id, $userId);
         $this->assertPermission($folder->id, $userId, Permission::READ);
