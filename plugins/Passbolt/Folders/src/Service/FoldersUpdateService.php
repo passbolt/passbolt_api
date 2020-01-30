@@ -216,10 +216,16 @@ class FoldersUpdateService
         if (is_null($folderParentId)) {
             $this->assertUserCanMoveFolderToRoot($folder);
         } else {
+            $this->assertUserCanChangeTheFolderParent($folder);
             $this->assertFolderParentExists($folderParentId);
-            $this->assertUserCanUpdateFolderParent($uac, $folderParentId);
+            $this->assertUserHasPermissionToUseFolderParent($uac, $folderParentId);
             $this->assertMoveIsCycleFree($uac, $folder, $folderParentId);
         }
+    }
+
+    private function assertUserCanChangeTheFolderParent(Folder $folder)
+    {
+        // @todo Not needed with personal folder.
     }
 
     /**
@@ -262,7 +268,7 @@ class FoldersUpdateService
      * @return void
      * @throws CustomValidationException If the user cannot write in the destination folder.
      */
-    private function assertUserCanUpdateFolderParent(UserAccessControl $uac, string $folderId)
+    private function assertUserHasPermissionToUseFolderParent(UserAccessControl $uac, string $folderId)
     {
         $userId = $uac->userId();
         $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $userId, Permission::UPDATE);
@@ -272,7 +278,7 @@ class FoldersUpdateService
                     'folder_exists' => 'The folder parent is not writable.',
                 ],
             ];
-            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
+            throw new ForbiddenException('Could not validate the folder data.', null, new CustomValidationException(__('Could not validate the folder data.'), $errors));
         }
     }
 
