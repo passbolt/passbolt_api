@@ -140,6 +140,8 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->service->delete($uac, $parentFolder->id, true);
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolderNotExist($folder->id);
+        $this->assertPermissionNotExist($folder->id, $userId);
+        $this->assertPermissionNotExist($parentFolder->id, $userId);
     }
 
     private function insertFixtureCase2(&$folderA, &$folderB)
@@ -283,6 +285,10 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolderNotExist($folder->id);
         $this->assertFolderNotExist($childFolder->id);
+
+        $this->assertPermissionNotExist($folder->id, $userId);
+        $this->assertPermissionNotExist($parentFolder->id, $userId);
+        $this->assertPermissionNotExist($childFolder->id, $userId);
     }
 
     private function insertFixtureCase4(&$folderA, &$folderB, &$folderC)
