@@ -88,4 +88,42 @@ trait FoldersRelationsModelTrait
         $folderRelation = $folderRelationQuery->first();
         $this->assertNotEmpty($folderRelation);
     }
+
+    /**
+     * Assert a user has an item in their graph.
+     * @param string $foreignId
+     * @param string $userId
+     * @param string $folderParentId
+     */
+    protected function assertFolderRelationNotExist(string $foreignId, string $userId, string $folderParentId = null)
+    {
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $folderRelationQuery = $foldersRelationsTable->find()->where([
+            'foreign_id' => $foreignId,
+            'user_id' => $userId,
+        ]);
+        if (is_null($folderParentId)) {
+            $folderRelationQuery->whereNull('folder_parent_id');
+        } else {
+            $folderRelationQuery->where(['folder_parent_id' => $folderParentId]);
+        }
+        $folderRelation = $folderRelationQuery->first();
+        $this->assertEmpty($folderRelation);
+    }
+
+    /**
+     * Assert a user has an item in their graph.
+     * @param string $foreignId
+     * @param string $userId
+     */
+    protected function assertNoRelationsExistFor(string $foreignId, string $userId)
+    {
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $folderRelationQuery = $foldersRelationsTable->find()->where([
+            'foreign_id' => $foreignId,
+            'user_id' => $userId,
+        ]);
+
+        $this->assertEquals(0, $folderRelationQuery->count());
+    }
 }
