@@ -20,6 +20,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Closure;
@@ -278,7 +279,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
                 Permission::READ, // Permission for destination item
                 $uac
             ],
-            'User has READ permission on Target; READ permission on DESTINATION; Target is not at the root;' => [
+            'User has READ permission on Target; READ permission on DESTINATION; TARGET is not at the root;' => [
                 $folderWithNoParentFolderFixture,
                 Permission::READ, // Permission for target item
                 Permission::READ, // Permission for destination item
@@ -336,39 +337,49 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         ];
     }
 
-
-
-    public function provideSharedCases()
+    public function testErrorCase0_NotFoundError()
     {
+        $notExistFolderId = UuidFactory::uuid();
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
 
-        return [
-            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
-                $folderWithNoParentFolderFixture,
-                Permission::READ, // Permission for target item
-                Permission::UPDATE, // Permission for destination item
-                $uac
-            ],
-            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
-                $folderWithNoParentFolderFixture,
-                0, // Permission for target item
-                Permission::UPDATE, // Permission for destination item
-                $uac
-            ],
-            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
-                $folderWithParentFolderFixture,
-                Permission::READ, // Permission for target item
-                Permission::UPDATE, // Permission for destination item
-                $uac
-            ],
-            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
-                $folderWithParentFolderFixture,
-                0, // Permission for target item
-                Permission::UPDATE, // Permission for destination item
-                $uac
-            ],
-        ];
+        $this->expectException(NotFoundException::class);
+
+        $this->service->update($uac, $notExistFolderId, ['name' => 'new name']);
     }
+
+//
+//    public function provideSharedCases()
+//    {
+//        $userId = UuidFactory::uuid('user.id.ada');
+//        $uac = new UserAccessControl(Role::USER, $userId);
+//
+//        return [
+//            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
+//                $folderWithNoParentFolderFixture,
+//                Permission::READ, // Permission for target item
+//                Permission::UPDATE, // Permission for destination item
+//                $uac
+//            ],
+//            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
+//                $folderWithNoParentFolderFixture,
+//                0, // Permission for target item
+//                Permission::UPDATE, // Permission for destination item
+//                $uac
+//            ],
+//            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
+//                $folderWithParentFolderFixture,
+//                Permission::READ, // Permission for target item
+//                Permission::UPDATE, // Permission for destination item
+//                $uac
+//            ],
+//            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
+//                $folderWithParentFolderFixture,
+//                0, // Permission for target item
+//                Permission::UPDATE, // Permission for destination item
+//                $uac
+//            ],
+//        ];
+//    }
 
 }
