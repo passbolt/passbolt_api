@@ -3,6 +3,13 @@ namespace Passbolt\Folders\Test\TestCase\Controller;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Fixture\Alt0\SecretsFixture;
+use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsUsersFixture;
+use App\Test\Fixture\Base\PermissionsFixture;
+use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\ResourcesFixture;
+use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -11,6 +18,8 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Fixture\FoldersFixture;
+use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -31,12 +40,15 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'app.Base/GroupsUsers',
-        'app.Base/Resources',
-        'app.Base/Users',
-        'app.Base/Permissions',
-        'plugin.Passbolt/Folders.Folders',
-        'plugin.Passbolt/Folders.FoldersRelations',
+        FoldersFixture::class,
+        FoldersRelationsFixture::class,
+        GpgkeysFixture::class,
+        GroupsUsersFixture::class,
+        PermissionsFixture::class,
+        ProfilesFixture::class,
+        UsersFixture::class,
+        SecretsFixture::class,
+        ResourcesFixture::class,
     ];
 
     /**
@@ -56,7 +68,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function testSuccess_Contain()
+    public function testSuccess_ContainChildrenFolders()
     {
         $userId = UuidFactory::uuid('user.id.ada');
 
@@ -84,6 +96,35 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $childrenFoldersIds = Hash::extract($result->children_folders, '{n}.id');
         $this->assertContains($folderB->id, $childrenFoldersIds);
         $this->assertContains($folderC->id, $childrenFoldersIds);
+    }
+
+    public function testSuccess_ContainChildrenResources()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B and C as a OWNER
+        // Ada see folder folders B and C in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        // |- C (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $resource1 = $this->addResourceForUsers(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource2 = $this->addResourceForUsers(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders/{$folderA->id}.json?contain[children_resources]=1&api-version=2");
+        $this->assertSuccess();
+
+        $result = $this->_responseJsonBody;
+        $this->assertFolderAttributes($result);
+        $this->assertCount(2, $result->children_resources);
+        foreach($result->children_resources as $childResource) {
+            $this->assertFolderAttributes($childResource);
+        }
+        $childrenResourceIds = Hash::extract($result->children_resources, '{n}.id');
+        $this->assertContains($resource1->id, $childrenResourceIds);
+        $this->assertContains($resource2->id, $childrenResourceIds);
     }
 
     public function testError_NotValidIdParameter()

@@ -88,6 +88,13 @@ trait FoldersFindersTrait
             });
         }
 
+        // If contains children_resources.
+        if (isset($options['contain']['children_resources'])) {
+            $query->contain('ChildrenResources', function (Query $q) use ($userId) {
+                return $q->where(['user_id' => $userId]);
+            });
+        }
+
         // If contains creator.
         if (isset($options['contain']['creator'])) {
             $query->contain('Creator');

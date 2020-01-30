@@ -89,6 +89,16 @@ class FoldersTable extends Table
                 'FoldersRelations.foreign_model' => 'Folder'
             ],
         ]);
+        $this->belongsToMany('ChildrenResources', [
+            'className' => 'Resources',
+            'targetForeignKey' => 'foreign_id',
+            'foreignKey' => 'folder_parent_id',
+            'through' => 'Passbolt/Folders.FoldersRelations',
+            'dependent' => false,
+            'conditions' => [
+                'FoldersRelations.foreign_model' => 'Resource'
+            ],
+        ]);
     }
 
     /**
