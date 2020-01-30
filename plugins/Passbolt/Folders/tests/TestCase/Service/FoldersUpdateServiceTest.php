@@ -5,6 +5,7 @@ namespace Passbolt\Folders\Test\TestCase\Service;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -13,12 +14,16 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Closure;
+use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersUpdateService;
@@ -26,6 +31,7 @@ use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Passbolt\Folders\Service\FoldersUpdateService Test Case
@@ -34,6 +40,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersUpdateServiceTest extends AppIntegrationTestCase
 {
+    use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
@@ -200,4 +207,168 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
 
         $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was updated with success.");
     }
+
+    /**
+     * @param Closure $fixture
+     * @param int $targetPermission
+     * @param int $destinationPermission
+     * @param UserAccessControl $uac
+     * @throws Exception
+     * @dataProvider provideErrorCase5_UserNotAllowedToOrganize
+     */
+    public function testErrorCase5_UserIsNotAllowedToOrganize(Closure $fixture, int $targetPermission, int $destinationPermission, UserAccessControl $uac)
+    {
+        // Retrieve in variables what is returned from the fixture.
+        list($folder, $newParentFolder) = $this->executeFixture($fixture, $targetPermission, $destinationPermission);
+
+        $this->expectException(ForbiddenException::class);
+
+        $this->service->update($uac, $folder->id, ['folder_parent_id' => $newParentFolder->id]);
+    }
+
+    public function provideErrorCase5_UserNotAllowedToOrganize()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+
+        /**
+         * This fixture create a folder with a parent folder.
+         *
+         * (T)arget is the folder being moved.
+         * (P)arent is the parent folder of (T)arget folder.
+         * (D)estination is the new parent folder.
+         *
+         * User has the same permission for P and T.
+         *
+         * @param int $targetPermission
+         * @param int $destinationPermission
+         * @return array
+         */
+        $folderWithParentFolderFixture = function (int $targetPermission, int $destinationPermission) use ($userId) {
+            $parentFolder = $this->addFolderFor(['id' => UuidFactory::uuid(), 'name' => 'P'], [$userId => $targetPermission]);
+            $newParentFolder = $this->addFolderFor(['id' => UuidFactory::uuid(), 'name' => 'D'], [$userId => $destinationPermission]);
+            $folder = $this->addFolderFor(['name' => 'T', 'folder_parent_id' => $parentFolder->id], [$userId => $targetPermission]);
+
+            return [$folder, $newParentFolder];
+        };
+
+        /**
+         * This fixture create a folder with no parent folder (folder at the root).
+         *
+         * (T)arget is the folder being moved.
+         * (D)estination is the new parent folder.
+         *
+         * User has the same permission for P and T.
+         *
+         * @param int $targetPermission
+         * @param int $destinationPermission
+         * @return array
+         */
+        $folderWithNoParentFolderFixture = function (int $targetPermission, int $destinationPermission) use ($userId) {
+            $newParentFolder = $this->addFolderFor(['id' => UuidFactory::uuid(), 'name' => 'D'], [$userId => $destinationPermission]);
+            $folder = $this->addFolderFor(['name' => 'T'], [$userId => $targetPermission]);
+
+            return [$folder, $newParentFolder];
+        };
+
+        return [
+            'User has READ permission on Target; READ permission on DESTINATION; TARGET is at the root;' => [
+                $folderWithParentFolderFixture,
+                Permission::READ, // Permission for target item
+                Permission::READ, // Permission for destination item
+                $uac
+            ],
+            'User has READ permission on Target; READ permission on DESTINATION; Target is not at the root;' => [
+                $folderWithNoParentFolderFixture,
+                Permission::READ, // Permission for target item
+                Permission::READ, // Permission for destination item
+                $uac
+            ],
+        ];
+    }
+
+    /**
+     * @param Closure $fixture
+     * @param int $targetPermission
+     * @param int $destinationPermission
+     * @param UserAccessControl $uac
+     * @throws Exception
+     * @dataProvider provideSuccessCase6_UserCanHaveItsOwnOrganization
+     */
+    public function testSuccessCase6_UserCanHaveItsOwnOrganization(Closure $fixture, int $targetPermission, int $destinationPermission, UserAccessControl $uac)
+    {
+        // Retrieve in variables what is returned from the fixture.
+        list($folder, $newParentFolder) = $this->executeFixture($fixture, $targetPermission, $destinationPermission);
+
+        $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $newParentFolder->id]);
+
+        $this->assertFolderRelation($folder->id, $uac->userId(), $newParentFolder->id);
+    }
+
+    public function provideSuccessCase6_UserCanHaveItsOwnOrganization()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
+
+        $folderWithNoParentFolderFixture = function (int $targetPermission, int $destinationPermission) use ($userId) {
+            $newParentFolder = $this->addFolderFor(
+                ['id' => UuidFactory::uuid(), 'name' => 'New Parent Folder'],
+                [$userId => $destinationPermission]
+            );
+            $folder = $this->addFolderFor(['name' => 'Folder'], [$userId => $targetPermission]);
+
+            return [$folder, $newParentFolder];
+        };
+
+        return [
+            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
+                $folderWithNoParentFolderFixture,
+                Permission::READ, // target item
+                Permission::UPDATE, // destination item
+                $uac
+            ],
+            'User has UPDATE permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
+                $folderWithNoParentFolderFixture,
+                Permission::UPDATE, // target item
+                Permission::UPDATE, // destination item
+                $uac
+            ],
+        ];
+    }
+
+
+
+    public function provideSharedCases()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+
+        return [
+            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
+                $folderWithNoParentFolderFixture,
+                Permission::READ, // Permission for target item
+                Permission::UPDATE, // Permission for destination item
+                $uac
+            ],
+            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
+                $folderWithNoParentFolderFixture,
+                0, // Permission for target item
+                Permission::UPDATE, // Permission for destination item
+                $uac
+            ],
+            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
+                $folderWithParentFolderFixture,
+                Permission::READ, // Permission for target item
+                Permission::UPDATE, // Permission for destination item
+                $uac
+            ],
+            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
+                $folderWithParentFolderFixture,
+                0, // Permission for target item
+                Permission::UPDATE, // Permission for destination item
+                $uac
+            ],
+        ];
+    }
+
 }

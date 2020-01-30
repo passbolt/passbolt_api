@@ -19,8 +19,8 @@ use Closure;
 
 trait FixtureProviderTrait
 {
-    public function executeFixture(Closure $fixture)
+    public function executeFixture(Closure $fixture, ...$fixtureParameters)
     {
-        return $fixture->bindTo($this)();
+        return $fixture->bindTo($this)(...$fixtureParameters);
     }
 }
