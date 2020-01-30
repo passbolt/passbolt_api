@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT="$(readlink -f $0)"
+SCRIPT_DIR="$(dirname $SCRIPT)"
+
+git pull origin master
+composer install --no-dev
+./bin/cake passbolt migrate --backup
+./bin/cake cache clear_all
