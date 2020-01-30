@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-SCRIPT="$(readlink -f $0)"
-SCRIPT_DIR="$(dirname $SCRIPT)"
+SCRIPT_DIR="$(dirname $0)"
 
+cd "$SCRIPT_DIR"
 git pull origin master
 composer install --no-dev
-./bin/cake passbolt migrate --backup
-./bin/cake cache clear_all
+./cake passbolt migrate --backup
+./cake cache clear_all
