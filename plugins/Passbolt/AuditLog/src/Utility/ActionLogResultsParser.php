@@ -26,6 +26,7 @@ class ActionLogResultsParser
 {
     protected $actionLogs = [];
     protected $entries = [];
+    protected $filters = [];
 
     const TYPE_PERMISSIONS_UPDATED = 'Permissions.updated';
     const TYPE_SECRETS_READ = 'Resource.Secrets.read';
@@ -38,11 +39,14 @@ class ActionLogResultsParser
      * ActionLogResultsParser constructor.
      *
      * @param ResultSet $actionLogs action logs
+     * @param array $filters list of filters
+     *   - array resources is the one currently supported. It should contain a list of ids.
      * @return void
      */
-    public function __construct(ResultSet $actionLogs)
+    public function __construct(ResultSet $actionLogs, array $filters = [])
     {
         $this->actionLogs = $actionLogs;
+        $this->filters = $filters;
     }
 
     /**
@@ -175,6 +179,15 @@ class ActionLogResultsParser
     {
         foreach ($actionLog->entities_history as $entityHistory) {
             if ($entityHistory->foreign_model == 'SecretAccesses') {
+                // If the resources filter is set, and the current resource is not in the filter, we skip the entry.
+                if (
+                    !empty($this->filters)
+                    && isset($this->filters['resources'])
+                    && !in_array($entityHistory->secret_access->secret_access_resource->id, $this->filters['resources'])
+                ) {
+                    continue;
+                }
+
                 $data = [
                     'resource' => $entityHistory->secret_access->secret_access_resource->toArray(),
                 ];

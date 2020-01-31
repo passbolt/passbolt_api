@@ -211,7 +211,7 @@ class ActionLogsFinder
             $q = $this->_paginate($q, $options);
         }
         $actionLogs = $q->all();
-        $resultParser = new ActionLogResultsParser($actionLogs);
+        $resultParser = new ActionLogResultsParser($actionLogs, ['resources' => [$resourceId]]);
         $res = $resultParser->parse();
 
         return $res;

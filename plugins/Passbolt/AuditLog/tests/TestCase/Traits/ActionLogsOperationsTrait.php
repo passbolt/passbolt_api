@@ -115,4 +115,42 @@ trait ActionLogsOperationsTrait
         ];
         $EntitiesHistory->create($entityHistory, $userAction);
     }
+
+    /**
+     * Simulate multiple resource get with secrets.
+     * @param UserAccessControl $user user
+     * @param array $resourceIds resource ids
+     * @return void
+     * @throws \Exception in case the secret cannot be retrieved.
+     */
+    public function simulateMultipleResourceGetWithSecrets(UserAccessControl $user, array $resourceIds)
+    {
+        $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+        $EntitiesHistory = TableRegistry::getTableLocator()->get('Passbolt/Log.EntitiesHistory');
+        $SecretAccesses = TableRegistry::getTableLocator()->get('Passbolt/Log.SecretAccesses');
+        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
+
+        $userAction = UserAction::getInstance($user, 'ResourcesIndex.index', 'GET /resources/.json');
+        $ActionLogs->create($userAction, 1);
+
+        foreach ($resourceIds as $resourceId) {
+            $secret = $Secrets->find()->where([
+                'resource_id' => $resourceId,
+                'user_id' => $user->getId()
+            ])->first();
+
+            if (!$secret) {
+                throw new \Exception('Could not retrieve the secret for the given resource and user');
+            }
+
+            $sa = $SecretAccesses->create($secret, $user);
+
+            $entityHistory = [
+                'foreign_model' => 'SecretAccesses',
+                'foreign_key' => $sa->id,
+                'crud' => EntityHistory::CRUD_CREATE
+            ];
+            $EntitiesHistory->create($entityHistory, $userAction);
+        }
+    }
 }

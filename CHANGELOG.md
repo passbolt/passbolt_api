@@ -3,6 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [unreleased]
+### Fixed
+- PB-980: Fix "secret access logging in password activity log should not display other resources secret access after a multiple share"
 
 ## [2.12.0] - 2019-12-05
 ### Added
