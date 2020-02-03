@@ -15,26 +15,34 @@
 
 namespace Passbolt\Folders\Test\TestCase\Controller;
 
+use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Permission;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use PassboltTestData\Lib\PermissionMatrix;
 
 /**
  * @see \Passbolt\Folders\Controller\Folders\FoldersIndexController
@@ -44,6 +52,8 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
     /** @var FoldersRelationsTable */
     private $FoldersRelations;
@@ -52,6 +62,16 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
      * @var PermissionsTable
      */
     private $Permissions;
+
+    /**
+     * @var GroupsUsersTable
+     */
+    private $GroupsUsers;
+
+    /**
+     * @var GroupsTable
+     */
+    private $Groups;
 
     public $fixtures = [
         FoldersFixture::class,
@@ -63,6 +83,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         UsersFixture::class,
         ResourcesFixture::class,
         SecretsFixture::class,
+        GroupsFixture::class,
     ];
 
     public function setUp()
@@ -73,6 +94,10 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
+        $config = TableRegistry::getTableLocator()->exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers', $config);
+        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
     private function insertFixtureCase1(&$folder)
@@ -248,7 +273,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertFolderAttributes($folder);
         $this->assertAttributeNotEmpty('children_resources', $folder);
         $this->assertCount(2, $folder->children_resources);
-        foreach($folder->children_resources as $childResource) {
+        foreach ($folder->children_resources as $childResource) {
             $this->assertResourceAttributes($childResource);
         }
         $childrenResourceIds = Hash::extract($folder->children_resources, '{n}.id');
@@ -280,11 +305,120 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertFolderAttributes($folder);
         $this->assertAttributeNotEmpty('children_folders', $folder);
         $this->assertCount(2, $folder->children_folders);
-        foreach($folder->children_folders as $childFolder) {
+        foreach ($folder->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);
         }
         $childrenFolderIds = Hash::extract($folder->children_folders, '{n}.id');
         $this->assertContains($resource1->id, $childrenFolderIds);
         $this->assertContains($resource2->id, $childrenFolderIds);
+    }
+
+    public function testSuccess_ContainPermission()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B and C as a OWNER
+        // Ada see folder folders B and C in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        // |- C (Ada:O)
+        $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $this->addFolderFor(['name' => 'B'], [$userId => Permission::UPDATE]);
+        $this->addFolderFor(['name' => 'C'], [$userId => Permission::READ]);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders.json?contain[permission]=1&api-version=2");
+        $this->assertSuccess();
+
+        /** @var Folder[] $result */
+        $result = $this->_responseJsonBody;
+
+        $this->assertCount(3, $result);
+        foreach ($result as $folder) {
+            $this->assertFolderAttributes($folder);
+            $this->assertPermissionAttributes($folder->permission);
+        }
+    }
+
+    public function testSuccess_ContainPermissions()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B and C as a OWNER
+        // Ada see folder folders B and C in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        // |- C (Ada:O)
+        $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $this->addFolderFor(['name' => 'B'], [$userId => Permission::UPDATE]);
+        $this->addFolderFor(['name' => 'C'], [$userId => Permission::READ]);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders.json?contain[permissions]=1&api-version=2");
+        $this->assertSuccess();
+
+        /** @var Folder[] $result */
+        $result = $this->_responseJsonBody;
+        $this->assertCount(3, $result);
+        foreach ($result as $folder) {
+            $this->assertFolderAttributes($folder);
+            foreach ($folder->permissions as $permission) {
+                $this->assertPermissionAttributes($permission);
+            }
+        }
+    }
+
+    private function addGroup()
+    {
+        $entity = $this->Groups->newEntity(
+            self::getDummyGroup(),
+            [
+                'validate' => 'default',
+                'accessibleFields' => [
+                    'name' => true,
+                    'created_by' => true,
+                    'modified_by' => true,
+                    'groups_users' => true,
+                    'deleted' => true,
+                ],
+                'associated' => [
+                    'GroupsUsers' => [
+                        'validate' => 'saveGroup',
+                        'accessibleFields' => [
+                            'user_id' => true,
+                            'is_admin' => true,
+                        ],
+                    ],
+                ],
+            ]
+        );
+        return $this->Groups->save($entity);
+    }
+
+    public function testSuccess_ContainPermissionsGroup()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        $group = $this->addGroup();
+        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $this->addPermission('Folder', $folder->id, 'Group', $group->id, Permission::OWNER);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
+        $this->assertSuccess();
+
+        /** @var Folder[] $result */
+        $result = $this->_responseJsonBody;
+        $this->assertCount(1, $result);
+        foreach ($result as $folder) {
+            $this->assertFolderAttributes($folder);
+            $this->assertObjectHasAttribute('permissions', $folder);
+
+            $permission = $folder->permissions[1];
+            $this->assertObjectHasAttribute('group', $permission);
+            $this->assertGroupAttributes($permission->group);
+        }
     }
 }
