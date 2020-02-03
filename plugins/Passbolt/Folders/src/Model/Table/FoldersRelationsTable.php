@@ -18,6 +18,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
 
 /**
  * FoldersRelations Model
@@ -35,6 +36,8 @@ use Cake\Validation\Validator;
  */
 class FoldersRelationsTable extends Table
 {
+    use FoldersRelationsFindersTrait;
+
     /**
      * List of allowed item models on which a folder relation can be plugged.
      */

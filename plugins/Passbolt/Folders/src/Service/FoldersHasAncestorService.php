@@ -70,7 +70,7 @@ class FoldersHasAncestorService
         } elseif ($cursorParentFolderId === $folderId) {
             return true;
         } else {
-            return $this->request($userId, $folderId, $cursorParentFolderId);
+            return $this->_hasAncestor($userId, $folderId, $cursorParentFolderId);
         }
     }
 }

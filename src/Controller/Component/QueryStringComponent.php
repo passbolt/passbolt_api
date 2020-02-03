@@ -463,6 +463,7 @@ class QueryStringComponent extends Component
      * Validate a filter that is a single parent id
      * Examples:
      * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
+     * - Bueno: '/'
      * - No Bueno: 'no-bueno'
      *
      * @param string $parentId uuid
@@ -472,7 +473,7 @@ class QueryStringComponent extends Component
      */
     public static function validateFilterParentFolder(string $parentId, string $filtername)
     {
-        if (!Validation::uuid($parentId)) {
+        if (!Validation::uuid($parentId) && $parentId !== '/') {
             throw new Exception(__('"{0}" is not a valid parent id for filter {1}.', $parentId, $filtername));
         }
 

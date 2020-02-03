@@ -143,7 +143,7 @@ class FoldersTableTest extends AppTestCase
 
         // Insert fixtures.
         // Ada has access to folder A, B and C as a OWNER
-        // Ada see folder folders B and C in A
+        // Ada sees folder folders B and C in A
         // A (Ada:O)
         // |- B (Ada:O)
         // |- C (Ada:O)
@@ -164,6 +164,25 @@ class FoldersTableTest extends AppTestCase
         $childrenFoldersIds = Hash::extract($folder->children_folders, '{n}.id');
         $this->assertContains($folderB->id, $childrenFoldersIds);
         $this->assertContains($folderC->id, $childrenFoldersIds);
+    }
+
+    public function testFindView_ContainFolderParentId()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B as a OWNER
+        // Ada sees folder folders B in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        $options['contain']['folder_parent_id'] = true;
+        $folder = $this->Folders->findView($userId, $folderB->id, $options)->first();
+
+        // Expected fields.
+        $this->assertEquals($folderA->id, $folder->folder_parent_id);
     }
 
     /* ************************************************************** */

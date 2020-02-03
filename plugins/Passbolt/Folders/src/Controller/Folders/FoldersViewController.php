@@ -40,7 +40,7 @@ class FoldersViewController extends AppController
 
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['children_folders', 'creator', 'modifier', 'permission', 'permissions',
+            'contain' => ['children_folders', 'creator', 'folder_parent_id', 'modifier', 'permission', 'permissions',
                 'permissions.user.profile', 'permissions.group'],
             'filter' => ['has-id'],
         ];

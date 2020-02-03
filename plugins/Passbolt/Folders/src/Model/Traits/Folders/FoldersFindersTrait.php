@@ -20,10 +20,8 @@ use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Service\FoldersRelationsFindService;
 
-/**
- * @property PermissionsTable Permissions
- */
 trait FoldersFindersTrait
 {
     /**
@@ -76,6 +74,11 @@ trait FoldersFindersTrait
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
                 return $q->where(['user_id' => $userId]);
             });
+        }
+
+        // If contains folder_parent_id.
+        if (isset($options['contain']['folder_parent_id'])) {
+            $query = $this->_containFolderParentId($query, $userId);
         }
 
         // If contains creator.
@@ -180,6 +183,8 @@ trait FoldersFindersTrait
     }
 
     /**
+     * Filter a query by parents ids.
+     *
      * @param Query $query Query to filter on
      * @param array $parentIds Array of parent ids
      * @return Query
@@ -190,8 +195,50 @@ trait FoldersFindersTrait
             return $query;
         }
 
-        return $query->innerJoinWith('ChildrenFolders', function (Query $q) use ($parentIds) {
-            return $q->where(['folder_parent_id IN' => $parentIds]);
+        $includeRoot = false;
+        $includeRootIndex = array_search('/', $parentIds);
+        if ($includeRootIndex !== false) {
+            $includeRoot = true;
+            array_splice($parentIds, $includeRootIndex, 1);
+        }
+
+        return $query->innerJoinWith('ChildrenFolders', function (Query $q) use ($parentIds, $includeRoot) {
+            $conditionInParentIds = '';
+            $conditionRoot = '';
+            if (!empty($parentIds)) {
+                $conditionInParentIds = ['folder_parent_id IN' => $parentIds];
+            }
+            if ($includeRoot) {
+                $conditionRoot = ['folder_parent_id IS NULL'];
+            }
+            $q->where(['OR' => [
+                $conditionInParentIds,
+                $conditionRoot
+            ]]);
+            return $q;
         });
+    }
+
+    /**
+     * Add folder_parent_id contain element.
+     * Basically, add a placeholder to the entity that will be treated
+     * in a virtual field in the User entity.
+     *
+     * @param Query $query query
+     * @param string $userId The user id to retrieve the folder_parent_id for.
+     * @return Query
+     */
+    private function _containFolderParentId(Query $query, string $userId)
+    {
+        $query->formatResults(function ($results) use ($userId) {
+            return $results->map(function ($row) use ($userId) {
+                $folderRelation = $this->FoldersRelations->findUserFolderRelation($userId, $row->id)->first();
+                $row['folder_parent_id'] = $folderRelation ? $folderRelation->folder_parent_id : null;
+
+                return $row;
+            });
+        });
+
+        return $query;
     }
 }
