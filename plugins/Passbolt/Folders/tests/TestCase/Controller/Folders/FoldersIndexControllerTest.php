@@ -32,6 +32,7 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
+use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -82,6 +83,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         ResourcesFixture::class,
         SecretsFixture::class,
         GroupsFixture::class,
+        FileStorageFixture::class,
     ];
 
     public function setUp()
@@ -273,6 +275,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertCount(2, $folder->children_resources);
         foreach ($folder->children_resources as $childResource) {
             $this->assertResourceAttributes($childResource);
+            $this->assertObjectHasFolderParentIdAttribute($childResource, $folderA->id);
         }
         $childrenResourceIds = Hash::extract($folder->children_resources, '{n}.id');
         $this->assertContains($resource1->id, $childrenResourceIds);
@@ -414,13 +417,35 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
             $this->assertFolderAttributes($folder);
             $this->assertObjectHasAttribute('permissions', $folder);
 
+            /** @var Permission $permission */
             foreach ($folder->permissions as $permission) {
-                if ($permission->group !== null) {
-                    break; // we are only interested in the group permission but we do not create a permission ONLY for a group because this is not how the system behave
+                if ($permission->aro === 'Group') {
+                    break; // we are only interested in the group permission
                 }
             }
             $this->assertObjectHasAttribute('group', $permission);
             $this->assertGroupAttributes($permission->group);
         }
+    }
+
+
+    public function testSuccess_ContainPermissionsUserProfile()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $this->authenticateAs('ada');
+        $this->getJson("/folders.json?contain[permissions.user.profile]=1&api-version=2");
+
+        $this->assertSuccess();
+        /** @var Folder[] $result */
+        $result = $this->_responseJsonBody;
+        $folder = $result[0];
+        $this->assertFolderAttributes($folder);
+        $this->assertObjectHasAttribute('permissions', $folder);
+
+        $permission = $folder->permissions[0];
+        $user = $permission->user;
+        $this->assertObjectHasAttribute('profile', $user);
+        $this->assertProfileAttributes($user->profile);
     }
 }

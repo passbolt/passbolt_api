@@ -91,7 +91,8 @@ trait FoldersFindersTrait
         // If contains children_resources.
         if (isset($options['contain']['children_resources'])) {
             $query->contain('ChildrenResources', function (Query $q) use ($userId) {
-                return $q->where(['user_id' => $userId]);
+                return $q->where(['user_id' => $userId])
+                    ->find(ContainFolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
 
