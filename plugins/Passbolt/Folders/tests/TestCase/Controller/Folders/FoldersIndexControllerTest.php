@@ -17,10 +17,12 @@ namespace Passbolt\Folders\Test\TestCase\Controller;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
@@ -59,6 +61,8 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         UsersFixture::class,
+        ResourcesFixture::class,
+        SecretsFixture::class,
     ];
 
     public function setUp()
@@ -218,5 +222,69 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
                 $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
             }
         }
+    }
+
+    public function testSuccess_ContainChildrenResources()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, R1 and R2 as a OWNER
+        // Ada see resources R1 and R2 in folder A
+        // A (Ada:O)
+        // |- R1 (Ada:O)
+        // |- R2 (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $resource1 = $this->addResourceForUsers(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource2 = $this->addResourceForUsers(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders.json?contain[children_resources]=1&api-version=2");
+        $this->assertSuccess();
+
+        $result = $this->_responseJsonBody;
+        $folder = $result[0];
+
+        $this->assertFolderAttributes($folder);
+        $this->assertAttributeNotEmpty('children_resources', $folder);
+        $this->assertCount(2, $folder->children_resources);
+        foreach($folder->children_resources as $childResource) {
+            $this->assertResourceAttributes($childResource);
+        }
+        $childrenResourceIds = Hash::extract($folder->children_resources, '{n}.id');
+        $this->assertContains($resource1->id, $childrenResourceIds);
+        $this->assertContains($resource2->id, $childrenResourceIds);
+    }
+
+    public function testSuccess_ContainChildrenFolders()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        // Insert fixtures.
+        // Ada has access to folder A, B and C as a OWNER
+        // Ada see folder folders B and C in A
+        // A (Ada:O)
+        // |- B (Ada:O)
+        // |- C (Ada:O)
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $resource1 = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource2 = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders.json?contain[children_folders]=1&api-version=2");
+        $this->assertSuccess();
+
+        $result = $this->_responseJsonBody;
+        $folder = $result[0];
+
+        $this->assertFolderAttributes($folder);
+        $this->assertAttributeNotEmpty('children_folders', $folder);
+        $this->assertCount(2, $folder->children_folders);
+        foreach($folder->children_folders as $childFolder) {
+            $this->assertFolderAttributes($childFolder);
+        }
+        $childrenFolderIds = Hash::extract($folder->children_folders, '{n}.id');
+        $this->assertContains($resource1->id, $childrenFolderIds);
+        $this->assertContains($resource2->id, $childrenFolderIds);
     }
 }
