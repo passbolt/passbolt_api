@@ -15,7 +15,6 @@
 
 namespace Passbolt\Folders\Test\TestCase\Controller;
 
-use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Permission;
 use App\Model\Table\GroupsTable;
 use App\Model\Table\GroupsUsersTable;
@@ -42,7 +41,6 @@ use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use PassboltTestData\Lib\PermissionMatrix;
 
 /**
  * @see \Passbolt\Folders\Controller\Folders\FoldersIndexController
@@ -416,7 +414,11 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
             $this->assertFolderAttributes($folder);
             $this->assertObjectHasAttribute('permissions', $folder);
 
-            $permission = $folder->permissions[1];
+            foreach ($folder->permissions as $permission) {
+                if ($permission->group !== null) {
+                    break; // we are only interested in the group permission but we do not create a permission ONLY for a group because this is not how the system behave
+                }
+            }
             $this->assertObjectHasAttribute('group', $permission);
             $this->assertGroupAttributes($permission->group);
         }
