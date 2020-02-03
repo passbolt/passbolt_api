@@ -17,7 +17,9 @@ use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
+use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Utility\UuidFactory;
+use Burzum\FileStorage\Test\Fixture\FileStorageFixture;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -42,6 +44,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
     use FoldersRelationsModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
+    use ProfilesModelTrait;
 
     /**
      * Fixtures
@@ -59,6 +62,8 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         SecretsFixture::class,
         ResourcesFixture::class,
         GroupsFixture::class,
+        ProfilesFixture::class,
+        FileStorageFixture::class,
     ];
 
     /**
@@ -207,5 +212,24 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         }
         $this->assertObjectHasAttribute('group', $permission);
         $this->assertGroupAttributes($permission->group);
+    }
+
+    public function testSuccess_ContainPermissionsUserProfile()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $this->authenticateAs('ada');
+        $this->getJson("/folders/{$folder->id}.json?contain[permissions.user.profile]=1&api-version=2");
+
+        $this->assertSuccess();
+        /** @var Folder[] $result */
+        $folder = $this->_responseJsonBody;
+        $this->assertFolderAttributes($folder);
+        $this->assertObjectHasAttribute('permissions', $folder);
+
+        $permission = $folder->permissions[0];
+        $user = $permission->user;
+        $this->assertObjectHasAttribute('profile', $user);
+        $this->assertProfileAttributes($user->profile);
     }
 }
