@@ -1,21 +1,28 @@
 <?php
+
 namespace Passbolt\Folders\Test\TestCase\Controller;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\GroupsModelTrait;
+use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
@@ -33,6 +40,8 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
     use IntegrationTestTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
+    use GroupsModelTrait;
+    use GroupsUsersModelTrait;
 
     /**
      * Fixtures
@@ -49,6 +58,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         UsersFixture::class,
         SecretsFixture::class,
         ResourcesFixture::class,
+        GroupsFixture::class,
     ];
 
     /**
@@ -66,6 +76,10 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
+        $config = TableRegistry::getTableLocator()->exists('GroupsUsers') ? [] : ['className' => GroupsUsersTable::class];
+        $this->GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers', $config);
+        $config = TableRegistry::getTableLocator()->exists('Groups') ? [] : ['className' => GroupsTable::class];
+        $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
     public function testSuccess_ContainChildrenFolders()
@@ -89,7 +103,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $result = $this->_responseJsonBody;
         $this->assertFolderAttributes($result);
         $this->assertCount(2, $result->children_folders);
-        foreach($result->children_folders as $childFolder) {
+        foreach ($result->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);
             $this->assertObjectHasFolderParentIdAttribute($childFolder, $folderA->id);
         }
@@ -119,7 +133,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $result = $this->_responseJsonBody;
         $this->assertFolderAttributes($result);
         $this->assertCount(2, $result->children_resources);
-        foreach($result->children_resources as $childResource) {
+        foreach ($result->children_resources as $childResource) {
             $this->assertFolderAttributes($childResource);
         }
         $childrenResourceIds = Hash::extract($result->children_resources, '{n}.id');
@@ -140,5 +154,58 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $folderId = UuidFactory::uuid('folder.id.folder');
         $this->getJson("/folders/{$folderId}.json?api-version=2");
         $this->assertAuthenticationError();
+    }
+
+    private function addGroup()
+    {
+        $entity = $this->Groups->newEntity(
+            self::getDummyGroup(),
+            [
+                'validate' => 'default',
+                'accessibleFields' => [
+                    'name' => true,
+                    'created_by' => true,
+                    'modified_by' => true,
+                    'groups_users' => true,
+                    'deleted' => true,
+                ],
+                'associated' => [
+                    'GroupsUsers' => [
+                        'validate' => 'saveGroup',
+                        'accessibleFields' => [
+                            'user_id' => true,
+                            'is_admin' => true,
+                        ],
+                    ],
+                ],
+            ]
+        );
+        return $this->Groups->save($entity);
+    }
+
+    public function testSuccess_ContainPermissionsGroup()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+
+        $group = $this->addGroup();
+        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $this->addPermission('Folder', $folder->id, 'Group', $group->id, Permission::OWNER);
+
+        $this->authenticateAs('ada');
+        $this->getJson("/folders/{$folder->id}.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
+
+        $this->assertSuccess();
+        /** @var Folder[] $result */
+        $folder = $this->_responseJsonBody;
+        $this->assertFolderAttributes($folder);
+        $this->assertObjectHasAttribute('permissions', $folder);
+
+        foreach ($folder->permissions as $permission) {
+            if ($permission->group !== null) {
+                break; // we are only interested in the group permission but we do not create a permission ONLY for a group because this is not how the system behave
+            }
+        }
+        $this->assertObjectHasAttribute('group', $permission);
+        $this->assertGroupAttributes($permission->group);
     }
 }
