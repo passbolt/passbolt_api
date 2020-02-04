@@ -149,7 +149,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
     {
         $parentFolder = null;
         $folder = null;
-        $this->insertFixtureCaseX($parentFolder, $folder);
+        $this->insertFixtureCase8($parentFolder, $folder);
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
