@@ -19,7 +19,7 @@ use App\Model\Table\ResourcesTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Table;
-use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 
 /**
  * Add the FolderParentId behavior at runtime. It allows to add a behavior on core classes without directly changing the
@@ -54,7 +54,7 @@ class AddFolderParentIdBehavior implements EventListenerInterface
             if ($event->getSubject() instanceof $allowed) {
                 /** @var Table $table */
                 $table = $event->getSubject();
-                $table->addBehavior(FolderParentIdBehavior::class);
+                $table->addBehavior(ContainFolderParentIdBehavior::class);
                 return;
             }
         }

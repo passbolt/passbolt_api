@@ -20,14 +20,14 @@ use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
-use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * Trait FoldersFindersTrait
  * @package Passbolt\Folders\Model\Traits\Folders
  *
- * @mixin FolderParentIdBehavior
+ * @mixin ContainFolderParentIdBehavior
  */
 trait FoldersFindersTrait
 {
@@ -45,10 +45,10 @@ trait FoldersFindersTrait
             throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        $query = $this->find('all');
+        $query = $this->find();
 
-        if ($this->hasBehavior(FolderParentIdBehavior::class)) {
-            $this->containFolderParentIdByUserId($query, $userId);
+        if ($this->hasBehavior(ContainFolderParentIdBehavior::class)) {
+            $query->find(ContainFolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
         }
 
         if (isset($options['filter']['has-id'])) {
@@ -84,7 +84,7 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
                 return $q->where(['user_id' => $userId])
-                    ->find(FolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(ContainFolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
 

@@ -54,7 +54,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function insertFixtureCase3()
+    public function insertFixtureCase1()
     {
         // Relations are expressed as follow: folder_parent_id => [child_folder_id]
         $folderRelations = [
@@ -89,7 +89,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
      */
     public function testFoldersIndexFilterHasParentSuccess()
     {
-        $this->insertFixtureCase3();
+        $this->insertFixtureCase1();
 
         $this->authenticateAs('ada');
 
@@ -103,6 +103,8 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
             ],
         ];
 
+        TableRegistry::clear(); // We clean up the registry for clean initialization of the tables during tests.
+
         foreach ($expectedFolderRelations as $folderParentId => $expectedFolderChildrenIds) {
             $this->getJson('/resources.json?api-version=2&filter[has-parent][]=' . $folderParentId);
             $this->assertSuccess();
@@ -110,6 +112,10 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
             $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
             foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
                 $this->assertContains($expectedFolderChildrenId, $resultFolderIds, "Expected children is missing for the given parent folder.");
+            }
+
+            foreach ($this->_responseJsonBody as $folder) {
+                $this->assertObjectHasFolderParentIdAttribute($folder, $folderParentId);
             }
         }
     }

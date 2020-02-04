@@ -19,7 +19,7 @@ use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
-use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use PHPUnit\Framework\Assert;
 
 /**

@@ -28,7 +28,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Exception;
-use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
@@ -128,7 +128,7 @@ class FoldersUpdateService
     {
         try {
             return $this->foldersTable->get($folderId, [
-                'finder' => FolderParentIdBehavior::FINDER_NAME,
+                'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
                 'user_id' => $uac->userId(),
             ]);
         } catch (RecordNotFoundException $e) {

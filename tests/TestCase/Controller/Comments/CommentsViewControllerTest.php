@@ -25,7 +25,8 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments',
+        'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Comments', 'plugin.Passbolt/Folders.Folders',
+        'plugin.Passbolt/Folders.FoldersRelations',
     ];
 
     public function testCommentsViewSuccess()

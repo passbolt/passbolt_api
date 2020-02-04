@@ -15,9 +15,7 @@
 
 namespace Passbolt\Folders\Model\Behavior;
 
-use App\Model\Entity\Resource;
 use App\Model\Event\TableFindIndexBefore;
-use App\Model\Table\Dto\FindIndexOptions;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
@@ -26,10 +24,9 @@ use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Service\FoldersPermissionsCreateService;
 use UnexpectedValueException;
 
 /**
@@ -37,7 +34,7 @@ use UnexpectedValueException;
  *
  * @method FoldersTable getTable()
  */
-class FolderParentIdBehavior extends Behavior
+class ContainFolderParentIdBehavior extends Behavior
 {
     use InstanceConfigTrait;
 
@@ -78,7 +75,7 @@ class FolderParentIdBehavior extends Behavior
     ];
 
     /**
-     * @var FoldersRelationsTable
+     * @var FoldersPermissionsCreateService
      */
     private $foldersRelationsTable;
 
@@ -101,10 +98,6 @@ class FolderParentIdBehavior extends Behavior
      */
     public function initialize(array $config)
     {
-        if (isset($config['events'])) {
-            $this->setConfig('events', $config['events'], false);
-        }
-
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
 
         parent::initialize($config);
@@ -133,34 +126,30 @@ class FolderParentIdBehavior extends Behavior
      */
     public function handleEvent(Event $event, $data, $options)
     {
-        $events = $this->_config['events'];
-        $eventName = $event->getName();
-        switch ($eventName) {
+        switch ($event->getName()) {
             case TableFindIndexBefore::EVENT_NAME:
-                /**
-                 * @var Query $data
-                 * @var FindIndexOptions $options
-                 */
                 $this->containFolderParentIdByUserId($data, $options->getUserId());
                 break;
-            case 'Model.beforeFind':
-                break;
             case 'Model.afterSave':
-                /** @var EntityInterface $entity */
-                $entity = $data;
-                $new = $entity->isNew() !== false;
-                foreach ($events[$eventName] as $field => $when) {
-                    if (!in_array($when, ['always', 'new', 'existing'])) {
-                        throw new UnexpectedValueException(
-                            sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
-                        );
-                    }
-                    if ($when === 'always' || ($when === 'new' && $new) || ($when === 'existing' && !$new)) {
-                        // When the entity is a new entity, we use the created_by property.
-                        $this->mapFolderParentIdFieldToEntity($entity, $entity->created_by);
-                    }
-                }
+                $this->handleAfterSave($data);
                 break;
+        }
+    }
+
+    private function handleAfterSave(EntityInterface $entity)
+    {
+        $events = $this->_config['events'];
+        $new = $entity->isNew() !== false;
+        foreach ($events['Model.afterSave'] as $field => $when) {
+            if (!in_array($when, ['always', 'new', 'existing'])) {
+                throw new UnexpectedValueException(
+                    sprintf('When should be one of "always", "new" or "existing". The passed value "%s" is invalid', $when)
+                );
+            }
+            if ($when === 'always' || ($when === 'new' && $new) || ($when === 'existing' && !$new)) {
+                // When the entity is a new entity, we use the created_by property.
+                $this->mapFolderParentIdFieldToEntity($entity, $entity->created_by);
+            }
         }
     }
 
@@ -186,10 +175,6 @@ class FolderParentIdBehavior extends Behavior
      */
     private function mapFolderParentIdFieldToEntity(EntityInterface $entity, string $userId)
     {
-        if (!$entity instanceof Resource && !$entity instanceof Folder) {
-            throw new InvalidArgumentException('This entity can not have a folder_parent_id property.');
-        }
-
         if (!$entity->id) {
             throw new InvalidArgumentException('The entity must have an ID.');
         }
