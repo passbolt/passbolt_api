@@ -55,7 +55,7 @@ class FoldersHasAncestorService
      * @param string $folderParentId The target ancestor folder.
      * @return bool
      */
-    private function _hasAncestor(string $userId, string $folderId, string $folderParentId)
+    private function _hasAncestor(string $userId, string $folderId, string $folderParentId = null)
     {
         $cursorParentFolderId = $this->foldersRelationsTable->find()
             ->where([

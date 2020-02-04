@@ -145,6 +145,38 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $this->addFolderRelation($folderRelationData);
     }
 
+    public function testSuccessCase8_UserCanMoveAFolderToRoot()
+    {
+        $parentFolder = null;
+        $folder = null;
+        $this->insertFixtureCaseX($parentFolder, $folder);
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => null]);
+        $this->assertTrue($folder instanceof Folder);
+        $this->assertFolderRelation($folder->id, $userId, null);
+    }
+
+    private function insertFixtureCase8(&$folderA, &$folderB)
+    {
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a OWNER
+        // A (Ada:O)   B (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderA = $this->addFolder($folderAData);
+        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
+        $this->addFolderRelation($folderRelationData);
+
+        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
+        $folderB = $this->addFolder($folderBData);
+        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
+        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
+        $this->addFolderRelation($folderRelationData);
+    }
+
     public function testErrorCase7_CanNotMoveAParentIntoAChild()
     {
         $this->expectException(CustomValidationException::class);

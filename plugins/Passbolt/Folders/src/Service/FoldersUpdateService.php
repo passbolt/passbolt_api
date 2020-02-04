@@ -96,10 +96,10 @@ class FoldersUpdateService
         $folder = $this->getFolder($id);
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
-            if (isset($data['name'])) {
+            if (array_key_exists('name', $data)) {
                 $this->updateFolder($uac, $folder, $data['name']);
             }
-            if (isset($data['folder_parent_id'])) {
+            if (array_key_exists('folder_parent_id', $data)) {
                 $this->moveFolder($uac, $folder, $data['folder_parent_id']);
             }
         });
@@ -197,7 +197,7 @@ class FoldersUpdateService
      * @return void
      * @throws \Exception
      */
-    private function moveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    private function moveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
     {
         $this->validateMoveFolder($uac, $folder, $folderParentId);
         $this->foldersMoveService->move($uac, $folder->id, $folderParentId);
@@ -211,7 +211,7 @@ class FoldersUpdateService
      * @param string $folderParentId The destination folder.
      * @return void
      */
-    private function validateMoveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    private function validateMoveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
     {
         if (is_null($folderParentId)) {
             $this->assertUserCanMoveFolderToRoot($folder);

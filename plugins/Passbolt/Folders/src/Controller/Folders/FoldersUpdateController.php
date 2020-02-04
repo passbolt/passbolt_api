@@ -62,9 +62,8 @@ class FoldersUpdateController extends AppController
             $data['name'] = $name;
         }
 
-        $folderParentId = Hash::get($body, 'folder_parent_id');
-        if (isset($folderParentId)) {
-            $data['folder_parent_id'] = $folderParentId;
+        if (array_key_exists('folder_parent_id', $body)) {
+            $data['folder_parent_id'] = $body['folder_parent_id'];
         }
 
         return $data;
