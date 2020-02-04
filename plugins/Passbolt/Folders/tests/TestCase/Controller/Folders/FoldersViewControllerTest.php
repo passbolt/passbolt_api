@@ -79,6 +79,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         $this->assertCount(2, $result->children_folders);
         foreach($result->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);
+            $this->assertObjectHasFolderParentIdAttribute($childFolder, $folderA->id);
         }
         $childrenFoldersIds = Hash::extract($result->children_folders, '{n}.id');
         $this->assertContains($folderB->id, $childrenFoldersIds);

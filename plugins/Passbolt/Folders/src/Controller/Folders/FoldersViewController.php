@@ -19,7 +19,11 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Table\FoldersTable;
 
+/**
+ * @property FoldersTable Folders
+ */
 class FoldersViewController extends AppController
 {
     /**

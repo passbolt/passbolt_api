@@ -21,12 +21,16 @@ use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
-use Cake\Event\EventDispatcherTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Exception;
+use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersUpdateService
@@ -85,7 +89,7 @@ class FoldersUpdateService
      * @param string $id The folder to update
      * @param array $data The folder data
      * @return void|Folder
-     * @throws \Exception If an unexpected error occurred
+     * @throws Exception If an unexpected error occurred
      */
     public function update(UserAccessControl $uac, string $id, array $data = [])
     {
@@ -93,7 +97,7 @@ class FoldersUpdateService
             return;
         }
 
-        $folder = $this->getFolder($id);
+        $folder = $this->getFolder($id, $uac);
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
             if (array_key_exists('name', $data)) {
@@ -116,13 +120,17 @@ class FoldersUpdateService
      * Retrieve the folder.
      *
      * @param string $folderId The folder identifier to retrieve.
+     * @param UserAccessControl $uac UserAccessControl updating the resource
      * @return Folder
      * @throws NotFoundException If the folder does not exist.
      */
-    private function getFolder(string $folderId)
+    private function getFolder(string $folderId, UserAccessControl $uac)
     {
         try {
-            return $this->foldersTable->get($folderId);
+            return $this->foldersTable->get($folderId, [
+                'finder' => FolderParentIdBehavior::FINDER_NAME,
+                'user_id' => $uac->userId(),
+            ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The folder does not exist.'));
         }
@@ -134,7 +142,7 @@ class FoldersUpdateService
      * @param UserAccessControl $uac The current user
      * @param Folder $folder The folder to update.
      * @param string $name The folder name
-     * @return \Cake\Datasource\EntityInterface|Folder
+     * @return EntityInterface|Folder
      */
     private function updateFolder(UserAccessControl $uac, Folder $folder, string $name)
     {
@@ -162,7 +170,7 @@ class FoldersUpdateService
      *
      * @param Folder $folder The folder entity to update.
      * @param array $data The folder data.
-     * @return \Cake\Datasource\EntityInterface|Folder
+     * @return EntityInterface|Folder
      */
     private function patchEntity($folder, $data)
     {
@@ -195,12 +203,12 @@ class FoldersUpdateService
      * @param Folder $folder The folder to move.
      * @param string $folderParentId The destination folder.
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function moveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
     {
         $this->validateMoveFolder($uac, $folder, $folderParentId);
-        $this->foldersMoveService->move($uac, $folder->id, $folderParentId);
+        $this->foldersMoveService->move($uac, $folder, $folderParentId);
     }
 
     /**

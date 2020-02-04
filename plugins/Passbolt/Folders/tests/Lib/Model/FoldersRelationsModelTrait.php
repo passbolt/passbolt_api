@@ -17,8 +17,14 @@ namespace Passbolt\Folders\Test\Lib\Model;
 
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
+use PHPUnit\Framework\Assert;
 
+/**
+ * @mixin Assert
+ */
 trait FoldersRelationsModelTrait
 {
     public static function addFolderRelation($data = [], $options = [])
@@ -125,5 +131,11 @@ trait FoldersRelationsModelTrait
         ]);
 
         $this->assertEquals(0, $folderRelationQuery->count());
+    }
+
+    protected function assertObjectHasFolderParentIdAttribute($object, string $expectedParentId)
+    {
+        $this->assertObjectHasAttribute('folder_parent_id', $object);
+        $this->assertEquals($expectedParentId, $object->folder_parent_id);
     }
 }

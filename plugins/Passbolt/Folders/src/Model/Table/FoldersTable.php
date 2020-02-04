@@ -15,24 +15,27 @@
 
 namespace Passbolt\Folders\Model\Table;
 
+use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
+use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
 
 /**
  * Folders Model
  *
- * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder newEntity($data = null, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder[] patchEntities($entities, array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\Folder findOrCreate($search, callable $callback = null, $options = [])
+ * @method Folder get($primaryKey, $options = [])
+ * @method Folder newEntity($data = null, array $options = [])
+ * @method Folder[] newEntities(array $data, array $options = [])
+ * @method Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method Folder saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method Folder patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method Folder[] patchEntities($entities, array $data, array $options = [])
+ * @method Folder findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin TimestampBehavior
+ * @mixin FolderParentIdBehavior
  */
 class FoldersTable extends Table
 {
@@ -52,7 +55,8 @@ class FoldersTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+        $this->addBehavior(TimestampBehavior::class);
+        $this->addBehavior(FolderParentIdBehavior::class);
 
         $this->hasOne('Creator', [
             'className' => 'Users',

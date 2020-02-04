@@ -14,10 +14,11 @@
  */
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
+use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 
 Configure::load('Passbolt/Folders.config', 'default', true);
 
-
-// Register email redactors
-EventManager::instance()->on(new FoldersEmailRedactorPool());
+EventManager::instance()
+    ->on(new AddFolderParentIdBehavior()) // Decorate the query to add the "folder_parent_id" property on the entities
+    ->on(new FoldersEmailRedactorPool()); // Register email redactors

@@ -19,9 +19,16 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
+use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Service\FoldersRelationsFindService;
 
+/**
+ * Trait FoldersFindersTrait
+ * @package Passbolt\Folders\Model\Traits\Folders
+ *
+ * @mixin FolderParentIdBehavior
+ */
 trait FoldersFindersTrait
 {
     /**
@@ -30,15 +37,19 @@ trait FoldersFindersTrait
      * @param string $userId The user to get the folders for
      * @param array $options options
      * @return Query
-     * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
+     * @throws InvalidArgumentException if the userId parameter is not a valid uuid.
      */
     public function findIndex(string $userId, array $options = [])
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user id should be a valid uuid.'));
+            throw new InvalidArgumentException(__('The user id should be a valid uuid.'));
         }
 
-        $query = $this->find();
+        $query = $this->find('all');
+
+        if ($this->hasBehavior(FolderParentIdBehavior::class)) {
+            $this->containFolderParentIdByUserId($query, $userId);
+        }
 
         if (isset($options['filter']['has-id'])) {
             $this->_filterByIds($query, $options['filter']['has-id']);
@@ -72,13 +83,9 @@ trait FoldersFindersTrait
         // If contains children_folders.
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
-                return $q->where(['user_id' => $userId]);
+                return $q->where(['user_id' => $userId])
+                    ->find(FolderParentIdBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
-        }
-
-        // If contains folder_parent_id.
-        if (isset($options['contain']['folder_parent_id'])) {
-            $query = $this->_containFolderParentId($query, $userId);
         }
 
         // If contains creator.
@@ -217,28 +224,5 @@ trait FoldersFindersTrait
             ]]);
             return $q;
         });
-    }
-
-    /**
-     * Add folder_parent_id contain element.
-     * Basically, add a placeholder to the entity that will be treated
-     * in a virtual field in the User entity.
-     *
-     * @param Query $query query
-     * @param string $userId The user id to retrieve the folder_parent_id for.
-     * @return Query
-     */
-    private function _containFolderParentId(Query $query, string $userId)
-    {
-        $query->formatResults(function ($results) use ($userId) {
-            return $results->map(function ($row) use ($userId) {
-                $folderRelation = $this->FoldersRelations->findUserFolderRelation($userId, $row->id)->first();
-                $row['folder_parent_id'] = $folderRelation ? $folderRelation->folder_parent_id : null;
-
-                return $row;
-            });
-        });
-
-        return $query;
     }
 }

@@ -104,12 +104,12 @@ trait FoldersModelTrait
     /**
      * Asserts that an object has all the attributes a resource should have.
      *
-     * @param object $resource
+     * @param object $folder
      */
-    protected function assertFolderAttributes($resource)
+    protected function assertFolderAttributes($folder)
     {
-        $attributes = ['id', 'name', 'created', 'modified', 'created_by', 'modified_by'];
-        $this->assertObjectHasAttributes($attributes, $resource);
+        $attributes = ['id', 'name', 'created', 'modified', 'created_by', 'modified_by', 'folder_parent_id'];
+        $this->assertObjectHasAttributes($attributes, $folder);
     }
 
     /**

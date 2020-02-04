@@ -5,7 +5,6 @@ namespace Passbolt\Folders\Test\TestCase\Service;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -32,7 +31,6 @@ use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Passbolt\Folders\Service\FoldersUpdateService Test Case
@@ -124,6 +122,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $parentFolder->id]);
         $this->assertTrue($folder instanceof Folder);
         $this->assertFolderRelation($folder->id, $userId, $parentFolder->id);
+        $this->assertObjectHasFolderParentIdAttribute($folder, $parentFolder->id);
     }
 
     private function insertFixtureCase4(&$folderA, &$folderB)
@@ -278,8 +277,8 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
          * @return array
          */
         $folderWithParentFolderFixture = function (int $targetPermission, int $destinationPermission) use ($userId) {
-            $parentFolder = $this->addFolderFor(['id' => UuidFactory::uuid(), 'name' => 'P'], [$userId => $targetPermission]);
-            $newParentFolder = $this->addFolderFor(['id' => UuidFactory::uuid(), 'name' => 'D'], [$userId => $destinationPermission]);
+            $parentFolder = $this->addFolderFor(['name' => 'P'], [$userId => $targetPermission]);
+            $newParentFolder = $this->addFolderFor(['name' => 'D'], [$userId => $destinationPermission]);
             $folder = $this->addFolderFor(['name' => 'T', 'folder_parent_id' => $parentFolder->id], [$userId => $targetPermission]);
 
             return [$folder, $newParentFolder];
@@ -336,6 +335,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $newParentFolder->id]);
 
         $this->assertFolderRelation($folder->id, $uac->userId(), $newParentFolder->id);
+        $this->assertObjectHasFolderParentIdAttribute($folder, $newParentFolder->id);
     }
 
     public function provideSuccessCase6_UserCanHaveItsOwnOrganization()

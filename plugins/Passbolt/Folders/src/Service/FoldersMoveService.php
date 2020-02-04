@@ -18,11 +18,14 @@ namespace Passbolt\Folders\Service;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Behavior\FolderParentIdBehavior;
+use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersMoveService
 {
     /**
-     * @var FoldersRelationCreateService
+     * @var FoldersRelationsCreateService
      */
     private $foldersRelationsCreateService;
 
@@ -30,6 +33,16 @@ class FoldersMoveService
      * @var FoldersRelationsDeleteService
      */
     private $foldersRelationsDeleteService;
+
+    /**
+     * @var FoldersHasAncestorService
+     */
+    private $foldersHasAncestorService;
+
+    /**
+     * @var FoldersTable
+     */
+    private $foldersTable;
 
     /**
      * Instantiate the service.
@@ -46,21 +59,22 @@ class FoldersMoveService
      * Move a folder.
      *
      * @param UserAccessControl $uac The current user.
-     * @param string $folderId The folder to move.
+     * @param Folder $folder The folder to move.
      * @param string|null $folderParentId The destination folder to move in. Place the folder at the root if null given.
      * @return void
      * @throws \Exception
      */
-    public function move(UserAccessControl $uac, string $folderId, string $folderParentId = null)
+    public function move(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
     {
-        $cycle = $this->foldersHasAncestorService->check($uac, $folderId, $folderParentId);
+        $cycle = $this->foldersHasAncestorService->check($uac, $folder->id, $folderParentId);
         if ($cycle) {
             throw new BadRequestException(__('Cycle detected.'));
         }
 
-        $this->foldersTable->getConnection()->transactional(function () use ($uac, $folderId, $folderParentId) {
-            $this->foldersRelationsDeleteService->delete($uac, $folderId, $uac->userId());
-            $this->foldersRelationsCreateService->create($uac, $folderId, $folderParentId);
+        $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $folderParentId) {
+            $this->foldersRelationsDeleteService->delete($uac, $folder->id);
+            $this->foldersRelationsCreateService->create($uac, $folder->id, $folderParentId);
+            $folder->set(FolderParentIdBehavior::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
         });
     }
 }

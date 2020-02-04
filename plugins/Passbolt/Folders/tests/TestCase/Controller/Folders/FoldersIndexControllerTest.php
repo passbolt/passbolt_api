@@ -210,6 +210,10 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
 
             $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
+            foreach ($this->_responseJsonBody as $folder) {
+                $this->assertObjectHasFolderParentIdAttribute($folder, $folderParentId);
+            }
+
             foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
                 $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
             }
