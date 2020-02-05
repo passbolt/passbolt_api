@@ -19,9 +19,11 @@ use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
+use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * @method EventManager getEventManager()
@@ -89,9 +91,11 @@ trait ResourcesFindersTrait
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
-        // Filter on resources with the given parent ids.
-        if (isset($options['filter']['has-parent'])) {
-            $query = $this->_filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+        if (Configure::read('passbolt.plugins.folders')) {
+            // Filter on resources with the given parent ids.
+            if (isset($options['filter']['has-parent'])) {
+                $query = $this->_filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+            }
         }
 
         // Filter on resources I have permission.
@@ -320,6 +324,8 @@ trait ResourcesFindersTrait
     }
 
     /**
+     * Filter a query by parents ids.
+     *
      * @param Query $query Query to filter on
      * @param array $parentIds Array of parent ids
      * @return Query
@@ -330,8 +336,24 @@ trait ResourcesFindersTrait
             return $query;
         }
 
-        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds) {
-            return $q->where(['FoldersRelations.folder_parent_id IN' => $parentIds]);
+        $includeRoot = false;
+        $parentIds = array_filter($parentIds, function($value) use (&$includeRoot){
+            if ($value == Folder::ROOT_ID) {
+                $includeRoot = true;
+                return false;
+            }
+            return true;
+        });
+
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
+            $conditions = [];
+            if (!empty($parentIds)) {
+                $conditions[] = ['folder_parent_id IN' => $parentIds];
+            }
+            if ($includeRoot) {
+                $conditions[] = ['folder_parent_id IS NULL'];
+            }
+            return $q->where(['OR' => $conditions]);
         });
     }
 }
