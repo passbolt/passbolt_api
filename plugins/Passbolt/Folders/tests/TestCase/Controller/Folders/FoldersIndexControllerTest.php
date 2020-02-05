@@ -199,11 +199,13 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
     {
         // Relations are expressed as follow: folder_parent_id => [child_folder_id]
         $folderRelations = [
-            UuidFactory::uuid('folder.id.a') => [
-                UuidFactory::uuid('folder.id.b')
-            ],
+            UuidFactory::uuid('folder.id.a') => [],
             UuidFactory::uuid('folder.id.c') => [
                 UuidFactory::uuid('folder.id.e'),
+            ],
+            UuidFactory::uuid('folder.id.d') => [
+                UuidFactory::uuid('folder.id.f'),
+                UuidFactory::uuid('folder.id.g')
             ],
         ];
 
@@ -216,36 +218,94 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function provideFoldersIndexFilterHasParentSuccessRelations()
+    {
+        return [
+            'When has parent is false' => [
+                [false],
+                [
+                    UuidFactory::uuid('folder.id.a'),
+                    UuidFactory::uuid('folder.id.c'),
+                    UuidFactory::uuid('folder.id.d'),
+                ]
+            ],
+            'When has-parent is single and return only 1 item' => [
+                [
+                    UuidFactory::uuid('folder.id.c')
+                ],
+                [
+                    UuidFactory::uuid('folder.id.e')
+                ]
+            ],
+            'When has-parent is single and return more than 1 item' => [
+                [
+                    UuidFactory::uuid('folder.id.d')
+                ],
+                [
+                    UuidFactory::uuid('folder.id.f'),
+                    UuidFactory::uuid('folder.id.g')
+                ]
+            ],
+            'When has-parent is multiple and return 1 item' => [
+                [
+                    UuidFactory::uuid('folder.id.a'), // has no children
+                    UuidFactory::uuid('folder.id.c'), // has 1 child
+                ],
+                [
+                    UuidFactory::uuid('folder.id.e')
+                ]
+            ],
+            'When has-parent is multiple and return more than 1 item' => [
+                [
+                    UuidFactory::uuid('folder.id.c'), // has 1 child
+                    UuidFactory::uuid('folder.id.d'), // has 2 children
+                ],
+                [
+                    UuidFactory::uuid('folder.id.e'),
+                    UuidFactory::uuid('folder.id.f'),
+                    UuidFactory::uuid('folder.id.g'),
+                ]
+            ],
+            'When has-parent is mixed with root and ids' => [
+                [
+                    false, // has no children
+                    UuidFactory::uuid('folder.id.c'),
+                ],
+                [
+                    UuidFactory::uuid('folder.id.e'),
+                    UuidFactory::uuid('folder.id.a'),
+                    UuidFactory::uuid('folder.id.c'),
+                    UuidFactory::uuid('folder.id.d'),
+                ]
+            ],
+        ];
+    }
+
     /**
+     * @dataProvider provideFoldersIndexFilterHasParentSuccessRelations
+     * @param mixed $hasParentFilterId
+     * @param array $expectedFolderChildrenIds
      * @return void
      */
-    public function testFoldersIndexFilterHasParentSuccess()
+    public function testFoldersIndexFilterHasParentSuccess($hasParentFilterId, array $expectedFolderChildrenIds)
     {
         $this->insertFixtureCase3();
         $this->authenticateAs('ada');
 
-        $expectedRelations = [
-            UuidFactory::uuid('folder.id.a') => [
-                UuidFactory::uuid('folder.id.b')
-            ],
-            UuidFactory::uuid('folder.id.c') => [
-                UuidFactory::uuid('folder.id.e'),
-            ],
-        ];
+        $queryParameters = http_build_query([
+            'api-version' => 2,
+            'filter' => [
+                'has-parent' => $hasParentFilterId
+            ]
+        ]);
 
-        foreach ($expectedRelations as $folderParentId => $expectedFolderChildrenIds) {
-            $this->getJson('/folders.json?api-version=2&filter[has-parent][]=' . $folderParentId);
-            $this->assertSuccess();
+        $this->getJson('/folders.json?' . $queryParameters);
+        $this->assertSuccess();
 
-            $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
+        $resultFolderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
-            foreach ($this->_responseJsonBody as $folder) {
-                $this->assertObjectHasFolderParentIdAttribute($folder, $folderParentId);
-            }
-
-            foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
-                $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
-            }
+        foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
+            $this->assertContains($expectedFolderChildrenId, $resultFolderIds);
         }
     }
 

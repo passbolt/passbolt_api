@@ -401,7 +401,7 @@ class QueryStringComponent extends Component
             if (!is_int($i)) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i, $filtername));
             }
-            if (!is_scalar($parentId) || empty($parentId)) {
+            if (!is_scalar($parentId) && !is_bool($parentId)) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i));
             }
             self::validateFilterParentFolder($parentId, $filtername);
@@ -473,7 +473,7 @@ class QueryStringComponent extends Component
      */
     public static function validateFilterParentFolder(string $parentId, string $filtername)
     {
-        if (!Validation::uuid($parentId) && $parentId !== '/') {
+        if (!Validation::uuid($parentId) && $parentId != false) {
             throw new Exception(__('"{0}" is not a valid parent id for filter {1}.', $parentId, $filtername));
         }
 

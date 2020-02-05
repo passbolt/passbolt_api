@@ -28,6 +28,8 @@ use Cake\ORM\Entity;
  */
 class Folder extends Entity
 {
+    const ROOT_ID = false;
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

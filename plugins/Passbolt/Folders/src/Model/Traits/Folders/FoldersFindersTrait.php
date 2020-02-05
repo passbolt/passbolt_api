@@ -211,26 +211,23 @@ trait FoldersFindersTrait
         }
 
         $includeRoot = false;
-        $includeRootIndex = array_search('/', $parentIds);
-        if ($includeRootIndex !== false) {
-            $includeRoot = true;
-            array_splice($parentIds, $includeRootIndex, 1);
-        }
+        $parentIds = array_filter($parentIds, function($value) use (&$includeRoot){
+            if ($value == Folder::ROOT_ID) {
+                $includeRoot = true;
+                return false;
+            }
+            return true;
+        });
 
         return $query->innerJoinWith('ChildrenFolders', function (Query $q) use ($parentIds, $includeRoot) {
-            $conditionInParentIds = '';
-            $conditionRoot = '';
+            $conditions = [];
             if (!empty($parentIds)) {
-                $conditionInParentIds = ['folder_parent_id IN' => $parentIds];
+                $conditions[] = ['folder_parent_id IN' => $parentIds];
             }
             if ($includeRoot) {
-                $conditionRoot = ['folder_parent_id IS NULL'];
+                $conditions[] = ['folder_parent_id IS NULL'];
             }
-            $q->where(['OR' => [
-                $conditionInParentIds,
-                $conditionRoot
-            ]]);
-            return $q;
+            return $q->where(['OR' => $conditions]);
         });
     }
 }
