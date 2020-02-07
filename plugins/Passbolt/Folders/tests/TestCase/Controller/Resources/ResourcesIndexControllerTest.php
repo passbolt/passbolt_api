@@ -115,6 +115,15 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('resource.id.d'),
                 ]
             ],
+            'When has parent is false as a string' => [
+                $fixture,
+                ['false'],
+                [
+                    UuidFactory::uuid('resource.id.a'),
+                    UuidFactory::uuid('resource.id.c'),
+                    UuidFactory::uuid('resource.id.d'),
+                ]
+            ],
             'When has-parent is single and return only 1 item' => [
                 $fixture,
                 [

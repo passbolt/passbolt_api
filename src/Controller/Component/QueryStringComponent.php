@@ -98,6 +98,12 @@ class QueryStringComponent extends Component
                     if (!is_array($query['filter']['search'])) {
                         $query['filter']['search'] = [$query['filter']['search']];
                     }
+                } elseif ($filterName === 'has-parent') {
+                    foreach ($query['filter']['has-parent'] as $i => $parentId) {
+                        if ($parentId === 'false' || $parentId === '0') {
+                            $query['filter']['has-parent'][$i] = false;
+                        }
+                    }
                 }
             }
         }
@@ -401,7 +407,7 @@ class QueryStringComponent extends Component
             if (!is_int($i)) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i, $filtername));
             }
-            if (!is_scalar($parentId) && !is_bool($parentId)) {
+            if (!is_scalar($parentId)) {
                 throw new Exception(__('"{0}" is not a valid parent filter.', $i));
             }
             self::validateFilterParentFolder($parentId, $filtername);

@@ -107,6 +107,11 @@ trait FoldersFindersTrait
         }
 
         // Retrieve the permission and the details of a user attach to it if any
+        if (isset($options['contain']['permissions'])) {
+            $query->contain(['Permissions']);
+        }
+
+        // Retrieve the permission and the details of a user attach to it if any
         if (isset($options['contain']['permissions.user.profile'])) {
             $query->contain([
                 'Permissions' => [

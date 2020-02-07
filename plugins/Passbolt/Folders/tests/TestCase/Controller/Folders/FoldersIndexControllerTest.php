@@ -425,6 +425,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertCount(3, $result);
         foreach ($result as $folder) {
             $this->assertFolderAttributes($folder);
+            $this->assertObjectHasAttribute('permissions', $folder);
             foreach ($folder->permissions as $permission) {
                 $this->assertPermissionAttributes($permission);
             }
