@@ -16,6 +16,7 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Controller\Events\ResourceCreateEvent;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
