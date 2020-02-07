@@ -186,6 +186,7 @@ class FoldersCreateService
 
         try {
             $this->foldersRelationsCreateService->create($uac, $folder->id, $folderParentId);
+            $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $e);
         }

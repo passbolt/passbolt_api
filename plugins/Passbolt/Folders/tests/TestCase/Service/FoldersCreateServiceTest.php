@@ -114,7 +114,7 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
 
         $this->assertTrue($folder instanceof Folder);
         $this->assertEquals('B', $folder->name);
-        $this->assertEquals(null, $folder->folder_parent_id);
+        $this->assertEquals($parentFolder->id, $folder->folder_parent_id);
         $this->assertEquals($userId, $folder->created_by);
         $this->assertEquals($userId, $folder->modified_by);
         $this->assertPermission($folder->id, $userId, Permission::OWNER);

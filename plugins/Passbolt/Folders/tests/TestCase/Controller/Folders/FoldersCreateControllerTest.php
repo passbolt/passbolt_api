@@ -110,6 +110,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $folder = $this->_responseJsonBody;
         $this->assertFolderAttributes($folder);
         $this->assertEquals($data['name'], $folder->name);
+        $this->assertEquals($data['folder_parent_id'], $folder->folder_parent_id);
         $this->assertEquals($userId, $folder->created_by);
         $this->assertEquals($userId, $folder->modified_by);
     }
