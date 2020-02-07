@@ -1,8 +1,4 @@
 <?php
-
-use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\Folders\EventListener\ResourceCreateEventListener;
-
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -17,22 +13,32 @@ use Passbolt\Folders\EventListener\ResourceCreateEventListener;
  * @since         2.14.0
  */
 
-class ResourceCreateEventListenerTest extends AppIntegrationTestCase
+namespace Passbolt\Folders\Test\TestCase\EventListener;
+
+use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Folders\EventListener\ResourceEventListener;
+
+
+/**
+ * Class ResourceEventListenerTest
+ * @covers \Passbolt\Folders\EventListener\ResourceEventListener
+ */
+class ResourceEventListenerTest extends AppIntegrationTestCase
 {
     /**
-     * @var ResourceCreateEventListener
+     * @var ResourceEventListener
      */
     private $sut;
 
     public function setUp()
     {
-        $this->sut = new ResourceCreateEventListener();
+        $this->sut = new ResourceEventListener();
 
         parent::setUp();
     }
 
     public function testThatFolderParentIsCreated()
     {
-
+        $this->markTestIncomplete();
     }
 }

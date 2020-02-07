@@ -21,9 +21,10 @@ use Cake\Event\Event;
 use Exception;
 use InvalidArgumentException;
 
-class ResourceCreateEvent extends Event
+class ResourceEvent extends Event
 {
-    const EVENT_NAME = 'resources.resource.create';
+    const EVENT_RESOURCE_CREATE = 'resources.resource.create';
+    const EVENT_RESOURCE_UPDATE = 'resources.resource.update';
 
     /** @var array */
     private $payload;
@@ -64,11 +65,26 @@ class ResourceCreateEvent extends Event
      * @param UserAccessControl $uac UAC
      * @param Resource $resource Resource
      * @param array $payload Payload
-     * @return ResourceCreateEvent
+     * @return ResourceEvent
      */
-    public static function create(UserAccessControl $uac, Resource $resource, array $payload)
+    public static function newCreate(UserAccessControl $uac, Resource $resource, array $payload)
     {
-        return new static(self::EVENT_NAME, null, [
+        return new static(self::EVENT_RESOURCE_CREATE, null, [
+            'resource' => $resource,
+            'payload' => $payload,
+            'uac' => $uac,
+        ]);
+    }
+
+    /**
+     * @param UserAccessControl $uac UAC
+     * @param Resource $resource Resource
+     * @param array $payload Payload
+     * @return ResourceEvent
+     */
+    public static function newUpdate(UserAccessControl $uac, Resource $resource, array $payload)
+    {
+        return new static(self::EVENT_RESOURCE_UPDATE, null, [
             'resource' => $resource,
             'payload' => $payload,
             'uac' => $uac,

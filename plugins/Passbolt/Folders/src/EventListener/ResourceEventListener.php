@@ -15,7 +15,7 @@
 
 namespace Passbolt\Folders\EventListener;
 
-use App\Controller\Events\ResourceCreateEvent;
+use App\Controller\Events\ResourceEvent;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
@@ -33,14 +33,16 @@ use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelationsCreateService;
+use Passbolt\Folders\Service\ResourcesMoveService;
 
 /**
- * Listen when a resource is created, and use the payload to create relation between a resource and the given parent.
+ * Listen when a resource is created or updated,
+ * and use the request payload to create/delete relation between a resource and the given/existing parent.
  *
  * Class AddFolderParentIdBehavior
  * @package Passbolt\Folders\EventListener
  */
-class ResourceCreateEventListener implements EventListenerInterface
+class ResourceEventListener implements EventListenerInterface
 {
     /**
      * @var FoldersRelationsCreateService
@@ -55,12 +57,18 @@ class ResourceCreateEventListener implements EventListenerInterface
     private $foldersTable;
 
     /**
+     * @var ResourcesMoveService
+     */
+    private $resourceMoveService;
+
+    /**
      * @return array
      */
     public function implementedEvents()
     {
         return [
-            ResourceCreateEvent::EVENT_NAME => $this
+            ResourceEvent::EVENT_RESOURCE_CREATE => $this,
+            ResourceEvent::EVENT_RESOURCE_UPDATE => $this,
         ];
     }
 
@@ -70,19 +78,51 @@ class ResourceCreateEventListener implements EventListenerInterface
         $this->userHasPermissionService = new UserHasPermissionService();
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->userHasPermissionService = new UserHasPermissionService();
+        $this->resourceMoveService = new ResourcesMoveService();
     }
 
     /**
-     * @param ResourceCreateEvent $event Event
+     * @param ResourceEvent $event Event
      * @return void
      */
-    public function __invoke(ResourceCreateEvent $event)
+    public function __invoke(ResourceEvent $event)
     {
         $resource = $event->getResource();
         $payload = $event->getPayload();
         $uac = $event->getUac();
         $folderParentId = Hash::get($payload, 'folder_parent_id', null);
 
+        switch ($event->getName()) {
+            case ResourceEvent::EVENT_RESOURCE_CREATE:
+                $this->createResourceWithParent($resource, $uac, $folderParentId);
+                break;
+            case ResourceEvent::EVENT_RESOURCE_UPDATE:
+                $this->updateResourceWithParent($resource, $uac, $folderParentId);
+                break;
+        }
+    }
+
+    /**
+     * @param Resource $resource Resource
+     * @param string $folderParentId FolderParent
+     * @param UserAccessControl $uac UAC
+     */
+    private function updateResourceWithParent(Resource $resource, UserAccessControl $uac, string $folderParentId = null)
+    {
+        try {
+            $this->resourceMoveService->move($uac, $resource, $folderParentId);
+        } catch (Exception $e) {
+            throw new InternalErrorException(__('Could not create the relation, please try again later.'), 500, $e);
+        }
+    }
+
+    /**
+     * @param Resource $resource Resource
+     * @param string $folderParentId FolderParent
+     * @param UserAccessControl $uac UAC
+     */
+    private function createResourceWithParent(Resource $resource, UserAccessControl $uac, string $folderParentId = null)
+    {
         if (!is_null($folderParentId)) {
             $this->validateParentFolder($resource, $uac, $folderParentId);
         }
@@ -136,6 +176,5 @@ class ResourceCreateEventListener implements EventListenerInterface
             ]);
             throw new ValidationException(__('Could not validate resource data.'), $resource, $this->foldersTable, 400);
         }
-
     }
 }

@@ -50,7 +50,7 @@ class FoldersUpdateService
     private $foldersHasAncestorService;
 
     /**
-     * @var FoldersMoveService
+     * @var ResourcesMoveService
      */
     private $foldersMoveService;
 

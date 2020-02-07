@@ -155,7 +155,11 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true ]);
-        $this->addPlugin('Passbolt/Folders', ['bootstrap' => true, 'routes' => true ]);
+
+        $folderEnabled = Configure::read('passbolt.plugins.folders.enabled');
+        if (!isset($folderEnabled) || $folderEnabled) {
+            $this->addPlugin('Passbolt/Folders', ['bootstrap' => true, 'routes' => true]);
+        }
 
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
