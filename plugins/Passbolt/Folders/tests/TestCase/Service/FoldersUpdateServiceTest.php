@@ -25,6 +25,7 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Closure;
 use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersUpdateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
@@ -96,7 +97,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $folder = $this->service->update($uac, $folder->id, ['name' => 'A updated']);
         $this->assertTrue($folder instanceof Folder);
         $this->assertEquals('A updated', $folder->name);
-        $this->assertFolderRelation($folder->id, $userId, null);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, null);
     }
 
     private function insertFixtureCase1(&$folder)
@@ -121,7 +122,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $uac = new UserAccessControl(Role::USER, $userId);
         $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $parentFolder->id]);
         $this->assertTrue($folder instanceof Folder);
-        $this->assertFolderRelation($folder->id, $userId, $parentFolder->id);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $parentFolder->id);
         $this->assertObjectHasFolderParentIdAttribute($folder, $parentFolder->id);
     }
 
@@ -154,7 +155,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $uac = new UserAccessControl(Role::USER, $userId);
         $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => null]);
         $this->assertTrue($folder instanceof Folder);
-        $this->assertFolderRelation($folder->id, $userId, null);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, null);
     }
 
     private function insertFixtureCase8(&$folderA, &$folderB)
@@ -334,7 +335,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
 
         $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $newParentFolder->id]);
 
-        $this->assertFolderRelation($folder->id, $uac->userId(), $newParentFolder->id);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $uac->userId(), $newParentFolder->id);
         $this->assertObjectHasFolderParentIdAttribute($folder, $newParentFolder->id);
     }
 

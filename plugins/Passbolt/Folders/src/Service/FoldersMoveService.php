@@ -20,6 +20,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersMoveService
@@ -73,7 +74,7 @@ class FoldersMoveService
 
         $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $folderParentId) {
             $this->foldersRelationsDeleteService->delete($uac, $folder->id);
-            $this->foldersRelationsCreateService->create($uac, $folder->id, $folderParentId);
+            $this->foldersRelationsCreateService->create($uac, $folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderParentId);
             $folder->set(ContainFolderParentIdBehavior::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
         });
     }

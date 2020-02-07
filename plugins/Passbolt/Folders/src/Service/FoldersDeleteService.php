@@ -26,7 +26,10 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersDeleteService
@@ -46,7 +49,7 @@ class FoldersDeleteService
     private $foldersRelationsTable;
 
     /**
-     * @var FoldersRelationDeleteService
+     * @var FoldersRelationsDeleteService
      */
     private $foldersRelationsDeleteService;
 
@@ -85,7 +88,7 @@ class FoldersDeleteService
      * @param string $id The folder to delete
      * @param bool $cascade (optional) Delete also the folder content. Default false.
      * @return void
-     * @throws \Exception If an unexpected error occurred
+     * @throws Exception If an unexpected error occurred
      */
     public function delete(UserAccessControl $uac, string $id, bool $cascade = false)
     {
@@ -145,7 +148,7 @@ class FoldersDeleteService
      * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to delete the content
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function deleteContent(UserAccessControl $uac, Folder $folder)
     {
@@ -157,11 +160,11 @@ class FoldersDeleteService
             ]);
 
         foreach ($children as $folderRelation) {
-            if ($folderRelation->foreign_model === 'Folder') {
+            if ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_FOLDER) {
                 if ($this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderRelation->foreign_id, $userId, Permission::UPDATE)) {
                     $this->delete($uac, $folderRelation->foreign_id, true);
                 }
-            } else if ($folderRelation->foreign_model === 'Resource') {
+            } else if ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_RESOURCE) {
                 $this->resourcesTable->softDelete($uac, $folderRelation->foreign_id);
             }
         }
@@ -173,7 +176,7 @@ class FoldersDeleteService
      * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to delete the permission for.
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function deletePermissions(UserAccessControl $uac, Folder $folder)
     {
@@ -186,7 +189,7 @@ class FoldersDeleteService
      * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to delete the folders relations for.
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function deleteFoldersRelations(UserAccessControl $uac, Folder $folder)
     {
@@ -199,7 +202,7 @@ class FoldersDeleteService
      * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to delete
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function deleteFolder(UserAccessControl $uac, Folder $folder)
     {
@@ -214,7 +217,7 @@ class FoldersDeleteService
      * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to delete
      * @return void
-     * @throws \Exception
+     * @throws Exception
      */
     private function moveChildrenToRoot(UserAccessControl $uac, Folder $folder)
     {

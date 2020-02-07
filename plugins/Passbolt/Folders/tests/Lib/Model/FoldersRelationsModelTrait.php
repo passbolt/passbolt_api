@@ -76,14 +76,16 @@ trait FoldersRelationsModelTrait
     /**
      * Assert a user has an item in their graph.
      * @param string $foreignId
+     * @param string $foreignModel
      * @param string $userId
      * @param string $folderParentId
      */
-    protected function assertFolderRelation(string $foreignId, string $userId, string $folderParentId = null)
+    protected function assertFolderRelation(string $foreignId, string $foreignModel, string $userId, string $folderParentId = null)
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $folderRelationQuery = $foldersRelationsTable->find()->where([
             'foreign_id' => $foreignId,
+            'foreign_model' => $foreignModel,
             'user_id' => $userId,
         ]);
         if (is_null($folderParentId)) {

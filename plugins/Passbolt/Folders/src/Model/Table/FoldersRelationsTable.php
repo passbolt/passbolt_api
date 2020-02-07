@@ -15,24 +15,27 @@
 namespace Passbolt\Folders\Model\Table;
 
 use App\Model\Rule\IsNotSoftDeletedRule;
+use Cake\Datasource\EntityInterface;
+use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Traits\Folders\FoldersRelationsFindersTrait;
 
 /**
  * FoldersRelations Model
  *
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity($data = null, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, array $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, $options = [])
+ * @method FoldersRelation get($primaryKey, $options = [])
+ * @method FoldersRelation newEntity($data = null, array $options = [])
+ * @method FoldersRelation[] newEntities(array $data, array $options = [])
+ * @method FoldersRelation|false save(EntityInterface $entity, $options = [])
+ * @method FoldersRelation saveOrFail(EntityInterface $entity, $options = [])
+ * @method FoldersRelation patchEntity(EntityInterface $entity, array $data, array $options = [])
+ * @method FoldersRelation[] patchEntities($entities, array $data, array $options = [])
+ * @method FoldersRelation findOrCreate($search, callable $callback = null, $options = [])
  *
- * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ * @mixin TimestampBehavior
  */
 class FoldersRelationsTable extends Table
 {
@@ -42,8 +45,8 @@ class FoldersRelationsTable extends Table
      * List of allowed item models on which a folder relation can be plugged.
      */
     const ALLOWED_FOREIGN_MODELS = [
-        'Folder',
-        'Resource',
+        FoldersRelation::FOREIGN_MODEL_FOLDER,
+        FoldersRelation::FOREIGN_MODEL_RESOURCE,
     ];
 
     /**
@@ -74,8 +77,8 @@ class FoldersRelationsTable extends Table
     /**
      * Default validation rules.
      *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
+     * @param Validator $validator Validator instance.
+     * @return Validator
      */
     public function validationDefault(Validator $validator)
     {
@@ -112,8 +115,8 @@ class FoldersRelationsTable extends Table
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
+     * @param RulesChecker $rules The rules object to be modified.
+     * @return RulesChecker
      */
     public function buildRules(RulesChecker $rules)
     {
@@ -144,29 +147,29 @@ class FoldersRelationsTable extends Table
     /**
      * Checks that the foreign id exists
      *
-     * @param \Cake\Datasource\EntityInterface $entity The entity to test
+     * @param FoldersRelation $foldersRelation The folder_relation to test
      * @param array $options The additional options for this rule
      * @return bool
      */
-    public function foreignIdExistsRule(\Cake\Datasource\EntityInterface $entity, array $options)
+    public function foreignIdExistsRule(FoldersRelation $foldersRelation, array $options)
     {
         $rules = new RulesChecker($options);
         $exist = false;
 
-        switch ($entity->foreign_model) {
-            case 'Resource':
+        switch ($foldersRelation->foreign_model) {
+            case FoldersRelation::FOREIGN_MODEL_RESOURCE:
                 $rule = $rules->existsIn('foreign_id', 'Resources');
-                $existIn = $rule($entity, $options);
+                $existIn = $rule($foldersRelation, $options);
                 $rule = new IsNotSoftDeletedRule();
-                $isNotSoftDeleted = $rule($entity, [
+                $isNotSoftDeleted = $rule($foldersRelation, [
                     'table' => 'Resources',
                     'errorField' => 'foreign_id',
                 ]);
                 $exist = $existIn && $isNotSoftDeleted;
                 break;
-            case 'Folder':
+            case FoldersRelation::FOREIGN_MODEL_FOLDER:
                 $rule = $rules->existsIn('foreign_id', 'Folders');
-                $exist = $rule($entity, $options);
+                $exist = $rule($foldersRelation, $options);
                 break;
         }
 

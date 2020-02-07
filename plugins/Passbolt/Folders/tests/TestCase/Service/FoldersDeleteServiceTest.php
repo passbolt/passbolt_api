@@ -30,12 +30,11 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Closure;
-use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersDeleteService;
@@ -43,7 +42,6 @@ use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-use Ramsey\Uuid\Uuid;
 
 /**
  * Passbolt\Folders\Service\FoldersDeleteService Test Case
@@ -177,7 +175,7 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->service->delete($uac, $parentFolder->id, false);
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolder($folder->id);
-        $this->assertFolderRelation($folder->id, $userId, null);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, null);
     }
 
     private function insertFixtureCase3(&$folderA, &$folderB)

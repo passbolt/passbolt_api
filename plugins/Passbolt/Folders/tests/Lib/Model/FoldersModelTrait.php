@@ -20,6 +20,7 @@ use App\Model\Table\PermissionsTable;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Entity\Folder;
 
 trait FoldersModelTrait
 {
@@ -71,6 +72,12 @@ trait FoldersModelTrait
         return $entityContent;
     }
 
+    /**
+     * @param array $data
+     * @param $usersIds
+     * @param array $options
+     * @return Folder
+     */
     public function addFolderFor($data = [], $usersIds, $options = [])
     {
         reset($usersIds);

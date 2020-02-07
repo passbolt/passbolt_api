@@ -19,7 +19,6 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\UsersTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\EntityInterface;
@@ -31,6 +30,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersCreateService
@@ -185,7 +185,7 @@ class FoldersCreateService
         }
 
         try {
-            $this->foldersRelationsCreateService->create($uac, $folder->id, $folderParentId);
+            $this->foldersRelationsCreateService->create($uac, $folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderParentId);
             $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $e);

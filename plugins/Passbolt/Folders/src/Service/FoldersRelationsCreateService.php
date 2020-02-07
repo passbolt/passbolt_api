@@ -16,10 +16,12 @@
 namespace Passbolt\Folders\Service;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
+use Exception;
+use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsCreateService
 {
@@ -40,17 +42,18 @@ class FoldersRelationsCreateService
      * Create a folder relation for the current user.
      *
      * @param UserAccessControl $uac The current user
-     * @param string $folderId The target folder
+     * @param string $foreignId The target folder
+     * @param string $foreignModel
      * @param string|null $folderParentId (optional) The target folder destination.
      * @return Folder
-     * @throws \Exception If an unexpected error occurred
+     * @throws Exception If an unexpected error occurred
      */
-    public function create(UserAccessControl $uac, string $folderId, string $folderParentId = null)
+    public function create(UserAccessControl $uac, string $foreignId, string $foreignModel, string $folderParentId = null)
     {
         $folderRelation = null;
 
-        $this->foldersRelationsTable->getConnection()->transactional(function () use (&$folderRelation, $uac, $folderId, $folderParentId) {
-            $folderRelation = $this->createUserFolderRelation($uac, $folderId, $folderParentId);
+        $this->foldersRelationsTable->getConnection()->transactional(function () use (&$folderRelation, $uac, $foreignModel, $foreignId, $folderParentId) {
+            $folderRelation = $this->createUserFolderRelation($uac, $foreignId, $foreignModel, $folderParentId);
         });
 
         return $folderRelation;
@@ -60,14 +63,15 @@ class FoldersRelationsCreateService
      * Create and save the folder relation in database.
      *
      * @param UserAccessControl $uac The current user
-     * @param string $folderId The target folder
+     * @param string $folderId The target id
+     * @param string $foreignModel The target model
      * @param string|null $folderParentId (optional) The target folder destination.
      * @return FoldersRelation
      */
-    private function createUserFolderRelation(UserAccessControl $uac, string $folderId, string $folderParentId = null)
+    private function createUserFolderRelation(UserAccessControl $uac, string $folderId, string $foreignModel, string $folderParentId = null)
     {
         $userId = $uac->userId();
-        $folderRelation = $this->buildFolderRelationEntity($userId, $folderId, $folderParentId);
+        $folderRelation = $this->buildFolderRelationEntity($userId, $folderId, $foreignModel, $folderParentId);
         $this->handleFolderRelationValidationErrors($folderRelation);
         $this->foldersRelationsTable->save($folderRelation);
         $this->handleFolderRelationValidationErrors($folderRelation);
@@ -79,14 +83,15 @@ class FoldersRelationsCreateService
      * Build the folder relation entity.
      *
      * @param string $userId The user id.
-     * @param string $folderId The target folder
+     * @param string $folderId The target id
+     * @param string $foreignModel The target model
      * @param string|null $folderParentId (optional) The target folder destination.
      * @return FoldersRelation
      */
-    private function buildFolderRelationEntity(string $userId, string $folderId, $folderParentId = null)
+    private function buildFolderRelationEntity(string $userId, string $folderId, string $foreignModel, $folderParentId = null)
     {
         $data = [
-            'foreign_model' => PermissionsTable::FOLDER_ACO,
+            'foreign_model' => $foreignModel,
             'foreign_id' => $folderId,
             'user_id' => $userId,
             'folder_parent_id' => $folderParentId,
@@ -104,10 +109,10 @@ class FoldersRelationsCreateService
     /**
      * Handle folder relation validation errors.
      *
-     * @param $folderRelation The folder relation
+     * @param FoldersRelation $folderRelation The folder relation
      * @return void
      */
-    private function handleFolderRelationValidationErrors($folderRelation)
+    private function handleFolderRelationValidationErrors(FoldersRelation $folderRelation)
     {
         $errors = $folderRelation->getErrors();
         if (!empty($errors)) {

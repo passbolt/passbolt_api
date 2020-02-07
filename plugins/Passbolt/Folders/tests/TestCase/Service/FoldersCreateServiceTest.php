@@ -19,11 +19,11 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
-use Cake\Event\EventManagerTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersCreateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
@@ -99,7 +99,7 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         $this->assertEquals($userId, $folder->created_by);
         $this->assertEquals($userId, $folder->modified_by);
         $this->assertPermission($folder->id, $userId, Permission::OWNER);
-        $this->assertFolderRelation($folder->id, $userId);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId);
     }
 
     public function testSuccessCase2_WithParentFolder()
@@ -118,7 +118,7 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         $this->assertEquals($userId, $folder->created_by);
         $this->assertEquals($userId, $folder->modified_by);
         $this->assertPermission($folder->id, $userId, Permission::OWNER);
-        $this->assertFolderRelation($folder->id, $userId, $parentFolder->id);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $parentFolder->id);
     }
 
     private function insertFixtureCase2(&$parentFolder)

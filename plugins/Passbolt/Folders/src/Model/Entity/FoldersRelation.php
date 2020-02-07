@@ -14,6 +14,7 @@
  */
 namespace Passbolt\Folders\Model\Entity;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
@@ -23,11 +24,14 @@ use Cake\ORM\Entity;
  * @property string $foreign_id
  * @property string $foreign_model
  * @property string|null $folder_parent_id
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property FrozenTime $created
+ * @property FrozenTime $modified
  */
 class FoldersRelation extends Entity
 {
+    const FOREIGN_MODEL_FOLDER = 'Folder';
+    const FOREIGN_MODEL_RESOURCE = 'Resource';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

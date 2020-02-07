@@ -1,5 +1,7 @@
 <?php
 
+namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
+
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppIntegrationTestCase;
