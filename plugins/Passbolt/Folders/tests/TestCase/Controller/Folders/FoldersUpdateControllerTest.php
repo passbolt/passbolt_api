@@ -57,7 +57,7 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         RolesFixture::class,
-        UsersFixture::class
+        UsersFixture::class,
     ];
 
     /**
@@ -77,8 +77,7 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
 
     public function testSuccessCase1_UpdateName()
     {
-        $folder = null;
-        $this->insertFixtureCase1($folder);
+        $folder = $this->insertFixtureCase1();
 
         $data = ['name' => 'A updated'];
         $this->authenticateAs('ada');
@@ -90,22 +89,19 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEquals($data['name'], $folder->name);
     }
 
-    private function insertFixtureCase1(&$folder)
+    private function insertFixtureCase1()
     {
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+
+        return $folder;
     }
 
     public function testErrorCase2_InsufficientPermissionToUpdateName()
     {
-        $folder = null;
-        $this->insertFixtureCase2($folder);
+        $folder = $this->insertFixtureCase2();
 
         $data = ['name' => 'A updated'];
         $this->authenticateAs('ada');
@@ -113,16 +109,16 @@ class FoldersUpdateControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('You are not allowed to update this folder.');
     }
 
-    private function insertFixtureCase2(&$folder)
+    private function insertFixtureCase2()
     {
         // Ada has access to folder A as a READ
-        // A (Ada:R)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::READ);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        // Betty is OWNER of folder A
+        // A (Ada:R, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+
+        return $folder;
     }
 
     public function testNotValidIdParameter()

@@ -86,7 +86,7 @@ class DeleteFolderEmailRedactorTest extends TestCase
 
         $event = (new Event(FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT))->setData([
             'folder' => $folder,
-            'uac' => new UserAccessControl('', UuidFactory::uuid())
+            'uac' => new UserAccessControl('', UuidFactory::uuid()),
         ]);
 
         $this->usersTableMock->expects($this->once())
@@ -112,7 +112,7 @@ class DeleteFolderEmailRedactorTest extends TestCase
                 'body' => [
                     'user' => $user,
                     'folder' => $folder,
-                ]
+                ],
             ],
             $email->getData()
         );

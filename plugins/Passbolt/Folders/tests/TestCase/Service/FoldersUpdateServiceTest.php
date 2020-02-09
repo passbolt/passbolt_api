@@ -2,7 +2,7 @@
 
 namespace Passbolt\Folders\Test\TestCase\Service;
 
-use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
@@ -18,7 +18,6 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
@@ -89,8 +88,7 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
 
     public function testSuccessCase1_UpdateName()
     {
-        $folder = null;
-        $this->insertFixtureCase1($folder);
+        $folder = $this->insertFixtureCase1();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -100,122 +98,97 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, null);
     }
 
-    private function insertFixtureCase1(&$folder)
+    private function insertFixtureCase1()
     {
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+
+        return $folder;
     }
 
     public function testSuccessCase4_UserCanOrganizeTheirItems()
     {
-        $parentFolder = null;
-        $folder = null;
-        $this->insertFixtureCase4($parentFolder, $folder);
+        list($folderA, $folderB) = $this->insertFixtureCase4();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $parentFolder->id]);
+        $folder = $this->service->update($uac, $folderB->id, ['folder_parent_id' => $folderA->id]);
         $this->assertTrue($folder instanceof Folder);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $parentFolder->id);
-        $this->assertObjectHasFolderParentIdAttribute($folder, $parentFolder->id);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $folderA->id);
+        $this->assertObjectHasFolderParentIdAttribute($folder, $folderA->id);
     }
 
-    private function insertFixtureCase4(&$folderA, &$folderB)
+    private function insertFixtureCase4()
     {
         // Ada has access to folder A as a OWNER
         // Ada has access to folder B as a OWNER
         // A (Ada:O)   B (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderA = $this->addFolder($folderAData);
-        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userId => Permission::OWNER]);
 
-        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderB = $this->addFolder($folderBData);
-        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        return [$folderA, $folderB];
     }
 
     public function testSuccessCase8_UserCanMoveAFolderToRoot()
     {
-        $parentFolder = null;
-        $folder = null;
-        $this->insertFixtureCase8($parentFolder, $folder);
+        list($folderA, $folderB) = $this->insertFixtureCase8();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => null]);
+        $folder = $this->service->update($uac, $folderB->id, ['folder_parent_id' => null]);
         $this->assertTrue($folder instanceof Folder);
         $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, null);
     }
 
-    private function insertFixtureCase8(&$folderA, &$folderB)
+    private function insertFixtureCase8()
     {
         // Ada has access to folder A as a OWNER
         // Ada has access to folder B as a OWNER
-        // A (Ada:O)   B (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderA = $this->addFolder($folderAData);
-        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
-
-        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderB = $this->addFolder($folderBData);
-        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
-        $this->addFolderRelation($folderRelationData);
-    }
-
-    public function testErrorCase7_CanNotMoveAParentIntoAChild()
-    {
-        $this->expectException(CustomValidationException::class);
-//        $this->expectExceptionMessage(__('You are not allowed to create content into the parent folder.'));
-
-        $parentFolder = null;
-        $folder = null;
-        $this->insertFixtureCase7($parentFolder, $folder);
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folder = $this->service->update($uac, $parentFolder->id, ['folder_parent_id' => $folder->id]);
-    }
-
-    private function insertFixtureCase7(&$folderA, &$folderB)
-    {
-        // Ada has access to folder A as a OWNER
-        // Ada has access to folder B as a OWNER
-        // Folder B is in folder A
         // A (Ada:O)
         // |
         // B (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderA = $this->addFolder($folderAData);
-        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
 
-        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderB = $this->addFolder($folderBData);
-        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
-        $this->addFolderRelation($folderRelationData);
+        return [$folderA, $folderB];
     }
 
-    /**
-     * @return void
-     */
+    public function testErrorCase7_CanNotMoveAParentIntoAChild()
+    {
+        list($folderA, $folderB) = $this->insertFixtureCase7();
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        try {
+            $this->service->update($uac, $folderA->id, ['folder_parent_id' => $folderB->id]);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['folder_parent_id' => ['folder_exists' => 'The destination folder cannot be a child.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+        $this->fail('Expect ValidationException');
+    }
+
+    private function insertFixtureCase7()
+    {
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a OWNER
+        // A (Ada:O)
+        // |
+        // B (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        return [$folderA, $folderB];
+    }
+
     public function testThatFoldersUpdateDispatchEventToSendEmailAfterFolderIsCreated()
     {
         $eventNameToTest = FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT;
@@ -230,94 +203,45 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
         // We use the same instance of event manager that the service is using to test that dispatch is done.
         $this->service->getEventManager()->on($eventNameToTest, $callable);
 
-        $parentFolder = null;
-        $folder = null;
-        $this->insertFixtureCase4($parentFolder, $folder);
+        list($folderA, $folderB) = $this->insertFixtureCase4();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folder = $this->service->update($uac, $folder->id, ['folderparent_id' => $parentFolder->id]);
+        $this->service->update($uac, $folderB->id, ['folder_parent_id' => $folderA->id]);
 
         $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was updated with success.");
     }
 
-    /**
-     * @param Closure $fixture
-     * @param int $targetPermission
-     * @param int $destinationPermission
-     * @param UserAccessControl $uac
-     * @throws Exception
-     * @dataProvider provideErrorCase5_UserNotAllowedToOrganize
-     */
-    public function testErrorCase5_UserIsNotAllowedToOrganize(Closure $fixture, int $targetPermission, int $destinationPermission, UserAccessControl $uac)
+    public function testErrorCase5_InsufficientPermissionDestinationFolder()
     {
-        // Retrieve in variables what is returned from the fixture.
-        list($folder, $newParentFolder) = $this->executeFixture($fixture, $targetPermission, $destinationPermission);
-
-        $this->expectException(ForbiddenException::class);
-
-        $this->service->update($uac, $folder->id, ['folder_parent_id' => $newParentFolder->id]);
-    }
-
-    public function provideErrorCase5_UserNotAllowedToOrganize()
-    {
+        list($folder, $destinationFolder) = $this->insertFixtureCase5();
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
 
-        /**
-         * This fixture create a folder with a parent folder.
-         *
-         * (T)arget is the folder being moved.
-         * (P)arent is the parent folder of (T)arget folder.
-         * (D)estination is the new parent folder.
-         *
-         * User has the same permission for P and T.
-         *
-         * @param int $targetPermission
-         * @param int $destinationPermission
-         * @return array
-         */
-        $folderWithParentFolderFixture = function (int $targetPermission, int $destinationPermission) use ($userId) {
-            $parentFolder = $this->addFolderFor(['name' => 'P'], [$userId => $targetPermission]);
-            $newParentFolder = $this->addFolderFor(['name' => 'D'], [$userId => $destinationPermission]);
-            $folder = $this->addFolderFor(['name' => 'T', 'folder_parent_id' => $parentFolder->id], [$userId => $targetPermission]);
+        try {
+            $this->service->update($uac, $folder->id, ['folder_parent_id' => $destinationFolder->id]);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
+            $this->assertEquals($errors, $e->getErrors());
 
-            return [$folder, $newParentFolder];
-        };
+            return;
+        }
+        $this->fail('Expect ValidationException');
+    }
 
-        /**
-         * This fixture create a folder with no parent folder (folder at the root).
-         *
-         * (T)arget is the folder being moved.
-         * (D)estination is the new parent folder.
-         *
-         * User has the same permission for P and T.
-         *
-         * @param int $targetPermission
-         * @param int $destinationPermission
-         * @return array
-         */
-        $folderWithNoParentFolderFixture = function (int $targetPermission, int $destinationPermission) use ($userId) {
-            $newParentFolder = $this->addFolderFor(['id' => UuidFactory::uuid(), 'name' => 'D'], [$userId => $destinationPermission]);
-            $folder = $this->addFolderFor(['name' => 'T'], [$userId => $targetPermission]);
+    public function insertFixtureCase5()
+    {
+        // Ada has access to folder A as a READ
+        // Betty has access to folder A as a OWNER
+        // Ada has access to folder B as a OWNER
+        // A (Ada:R, Betty:O)    B(Ada:Owner)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folder = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
+        $destinationFolder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
-            return [$folder, $newParentFolder];
-        };
-
-        return [
-            'User has READ permission on Target; READ permission on DESTINATION; TARGET is at the root;' => [
-                $folderWithParentFolderFixture,
-                Permission::READ, // Permission for target item
-                Permission::READ, // Permission for destination item
-                $uac
-            ],
-            'User has READ permission on Target; READ permission on DESTINATION; TARGET is not at the root;' => [
-                $folderWithNoParentFolderFixture,
-                Permission::READ, // Permission for target item
-                Permission::READ, // Permission for destination item
-                $uac
-            ],
-        ];
+        return [$folder, $destinationFolder];
     }
 
     /**
@@ -330,7 +254,6 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
      */
     public function testSuccessCase6_UserCanHaveItsOwnOrganization(Closure $fixture, int $targetPermission, int $destinationPermission, UserAccessControl $uac)
     {
-        // Retrieve in variables what is returned from the fixture.
         list($folder, $newParentFolder) = $this->executeFixture($fixture, $targetPermission, $destinationPermission);
 
         $folder = $this->service->update($uac, $folder->id, ['folder_parent_id' => $newParentFolder->id]);
@@ -359,13 +282,13 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
                 $folderWithNoParentFolderFixture,
                 Permission::READ, // target item
                 Permission::UPDATE, // destination item
-                $uac
+                $uac,
             ],
             'User has UPDATE permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
                 $folderWithNoParentFolderFixture,
                 Permission::UPDATE, // target item
                 Permission::UPDATE, // destination item
-                $uac
+                $uac,
             ],
         ];
     }
@@ -380,39 +303,4 @@ class FoldersUpdateServiceTest extends AppIntegrationTestCase
 
         $this->service->update($uac, $notExistFolderId, ['name' => 'new name']);
     }
-
-//
-//    public function provideSharedCases()
-//    {
-//        $userId = UuidFactory::uuid('user.id.ada');
-//        $uac = new UserAccessControl(Role::USER, $userId);
-//
-//        return [
-//            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
-//                $folderWithNoParentFolderFixture,
-//                Permission::READ, // Permission for target item
-//                Permission::UPDATE, // Permission for destination item
-//                $uac
-//            ],
-//            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is not at the root' => [
-//                $folderWithNoParentFolderFixture,
-//                0, // Permission for target item
-//                Permission::UPDATE, // Permission for destination item
-//                $uac
-//            ],
-//            'User has READ permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
-//                $folderWithParentFolderFixture,
-//                Permission::READ, // Permission for target item
-//                Permission::UPDATE, // Permission for destination item
-//                $uac
-//            ],
-//            'User has no permission on TARGET; UPDATE permission on DESTINATION; TARGET is at the root;' => [
-//                $folderWithParentFolderFixture,
-//                0, // Permission for target item
-//                Permission::UPDATE, // Permission for destination item
-//                $uac
-//            ],
-//        ];
-//    }
-
 }

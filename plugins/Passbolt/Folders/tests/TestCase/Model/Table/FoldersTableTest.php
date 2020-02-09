@@ -196,7 +196,7 @@ class FoldersTableTest extends AppTestCase
         // Relations are expressed as follow: folder_parent_id => [child_folder_id]
         $expectedFoldersForParentId = [
             UuidFactory::uuid('folder.id.a') => [
-                UuidFactory::uuid('folder.id.b')
+                UuidFactory::uuid('folder.id.b'),
             ],
             UuidFactory::uuid('folder.id.c') => [
                 UuidFactory::uuid('folder.id.e'),
@@ -226,7 +226,7 @@ class FoldersTableTest extends AppTestCase
         // Relations are expressed as follow: folder_parent_id => [child_folder_id]
         $expectedFoldersForParentId = [
             UuidFactory::uuid('folder.id.a') => [
-                UuidFactory::uuid('folder.id.b')
+                UuidFactory::uuid('folder.id.b'),
             ],
             UuidFactory::uuid('folder.id.c') => [
                 UuidFactory::uuid('folder.id.e'),
@@ -235,10 +235,10 @@ class FoldersTableTest extends AppTestCase
 
         foreach ($expectedFoldersForParentId as $folderParentId => $childrenFolders) {
             $this->addFolderFor(['id' => $folderParentId], [
-                $userId => Permission::OWNER
+                $userId => Permission::OWNER,
             ]);
             foreach ($childrenFolders as $childrenFolderId) {
-                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId,], [$userId => Permission::OWNER]);
+                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId, ], [$userId => Permission::OWNER]);
             }
         }
     }
@@ -249,6 +249,7 @@ class FoldersTableTest extends AppTestCase
             if (empty($accumulator)) {
                 $accumulator = [];
             }
+
             return array_merge($accumulator, $current);
         });
     }
@@ -300,7 +301,7 @@ class FoldersTableTest extends AppTestCase
                 'id' => $folderId,
                 'name' => 'folder name',
                 'created_by' => UuidFactory::uuid('user.id.ada'),
-                'modified_by' => UuidFactory::uuid('user.id.ada')
+                'modified_by' => UuidFactory::uuid('user.id.ada'),
             ];
             $this->addFolder($folderData);
         }

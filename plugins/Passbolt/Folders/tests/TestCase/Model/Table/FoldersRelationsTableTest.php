@@ -53,7 +53,7 @@ class FoldersRelationsTableTest extends AppTestCase
         'plugin.Passbolt/Folders.FoldersRelations',
         'app.Base/Resources',
         'app.Base/Users',
-        'app.Base/Permissions'
+        'app.Base/Permissions',
     ];
 
     /**
@@ -109,8 +109,13 @@ class FoldersRelationsTableTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->FoldersRelations, 'foreign_model',
-            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation(
+            $this->FoldersRelations,
+            'foreign_model',
+            self::getDummyFolderRelation(),
+            self::getDummyFolderRelationsEntityDefaultOptions(),
+            $testCases
+        );
     }
 
     public function testValidationForeignId()
@@ -120,8 +125,13 @@ class FoldersRelationsTableTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->FoldersRelations, 'foreign_id',
-            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation(
+            $this->FoldersRelations,
+            'foreign_id',
+            self::getDummyFolderRelation(),
+            self::getDummyFolderRelationsEntityDefaultOptions(),
+            $testCases
+        );
     }
 
     public function testValidationUserId()
@@ -131,8 +141,13 @@ class FoldersRelationsTableTest extends AppTestCase
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->FoldersRelations, 'user_id',
-            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation(
+            $this->FoldersRelations,
+            'user_id',
+            self::getDummyFolderRelation(),
+            self::getDummyFolderRelationsEntityDefaultOptions(),
+            $testCases
+        );
     }
 
     public function testValidationFolderParentId()
@@ -141,8 +156,13 @@ class FoldersRelationsTableTest extends AppTestCase
             'uuid' => self::getUuidTestCases(),
             'allowEmpty' => self::getAllowEmptyTestCases(),
         ];
-        $this->assertFieldFormatValidation($this->FoldersRelations, 'folder_parent_id',
-            self::getDummyFolderRelation(), self::getDummyFolderRelationsEntityDefaultOptions(), $testCases);
+        $this->assertFieldFormatValidation(
+            $this->FoldersRelations,
+            'folder_parent_id',
+            self::getDummyFolderRelation(),
+            self::getDummyFolderRelationsEntityDefaultOptions(),
+            $testCases
+        );
     }
 
     /* ************************************************************** */
@@ -160,7 +180,7 @@ class FoldersRelationsTableTest extends AppTestCase
         $data = [
             'foreign_model' => 'Folder',
             'foreign_id' => $folder->id,
-            'user_id' => $userId
+            'user_id' => $userId,
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -174,7 +194,7 @@ class FoldersRelationsTableTest extends AppTestCase
     {
         $data = [
             'foreign_model' => 'Folder',
-            'foreign_id' => UuidFactory::uuid('folder.id.not-exist')
+            'foreign_id' => UuidFactory::uuid('folder.id.not-exist'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -188,7 +208,7 @@ class FoldersRelationsTableTest extends AppTestCase
     {
         $data = [
             'foreign_model' => 'Resource',
-            'foreign_id' => UuidFactory::uuid('resource.id.not-exist')
+            'foreign_id' => UuidFactory::uuid('resource.id.not-exist'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -202,7 +222,7 @@ class FoldersRelationsTableTest extends AppTestCase
     {
         $data = [
             'foreign_model' => 'Resource',
-            'foreign_id' => UuidFactory::uuid('resource.id.jquery')
+            'foreign_id' => UuidFactory::uuid('resource.id.jquery'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -222,7 +242,7 @@ class FoldersRelationsTableTest extends AppTestCase
         $data = [
             'foreign_model' => 'Folder',
             'foreign_id' => $folder->id,
-            'user_id' => UuidFactory::uuid('user.id.not-exist')
+            'user_id' => UuidFactory::uuid('user.id.not-exist'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);
@@ -242,7 +262,7 @@ class FoldersRelationsTableTest extends AppTestCase
         $data = [
             'foreign_model' => 'Folder',
             'foreign_id' => $folder->id,
-            'user_id' => UuidFactory::uuid('user.id.sofia')
+            'user_id' => UuidFactory::uuid('user.id.sofia'),
         ];
         $folder = self::getDummyFolderRelationEntity($data);
         $save = $this->FoldersRelations->save($folder);

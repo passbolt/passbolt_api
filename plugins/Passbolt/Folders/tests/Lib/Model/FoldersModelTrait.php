@@ -100,7 +100,7 @@ trait FoldersModelTrait
                 'foreign_model' => PermissionsTable::FOLDER_ACO,
                 'foreign_id' => $folder->id,
                 'user_id' => $userId,
-                'folder_parent_id' => $data['folder_parent_id'] ?? null
+                'folder_parent_id' => $data['folder_parent_id'] ?? null,
             ];
             $this->addFolderRelation($folderRelationData);
         }
@@ -175,7 +175,7 @@ trait FoldersModelTrait
 
         $resource = $this->addResource($data);
 
-        foreach($usersIds as $userId => $permissionType) {
+        foreach ($usersIds as $userId => $permissionType) {
             $folderRelationData = [
                 'foreign_model' => PermissionsTable::RESOURCE_ACO,
                 'foreign_id' => $resource->id,

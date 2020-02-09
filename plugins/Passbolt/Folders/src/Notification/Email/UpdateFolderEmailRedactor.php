@@ -68,13 +68,13 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT
+            FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT,
         ];
     }
 
     /**
      * @param Folder $folder Folder entity
-     * @param UserAccessControl $user UserAccessControl performing the action
+     * @param UserAccessControl $userAccessControl UserAccessControl performing the action
      * @return Email
      */
     private function createEmail(Folder $folder, UserAccessControl $userAccessControl)

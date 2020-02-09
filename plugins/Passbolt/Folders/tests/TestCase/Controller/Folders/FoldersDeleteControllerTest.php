@@ -56,7 +56,7 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         RolesFixture::class,
-        UsersFixture::class
+        UsersFixture::class,
     ];
 
     /**
@@ -76,38 +76,33 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
 
     public function testSuccessCase1_DeleteFolder()
     {
-        $folder = null;
-        $this->insertFixtureCase1($folder);
+        $folder = $this->insertFixtureCase1();
 
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folder->id}.json?api-version=2");
         $this->assertSuccess();
     }
 
-    private function insertFixtureCase1(&$folder)
+    private function insertFixtureCase1()
     {
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+
+        return $folderA;
     }
 
     public function testSuccessCase2_DeleteFolderAndContent()
     {
-        $parentFolder = null;
-        $folder = null;
-        $this->insertFixtureCase2($parentFolder, $folder);
+        list($folderA, $folderB) = $this->insertFixtureCase2();
 
         $this->authenticateAs('ada');
-        $this->deleteJson("/folders/{$parentFolder->id}.json?cascade=1&api-version=2");
+        $this->deleteJson("/folders/{$folderA->id}.json?cascade=1&api-version=2");
         $this->assertSuccess();
     }
 
-    private function insertFixtureCase2(&$folderA, &$folderB)
+    private function insertFixtureCase2()
     {
         // Ada has access to folder A as a OWNER
         // Ada has access to folder B as a OWNER
@@ -116,17 +111,10 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         // |
         // B (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderAData = ['id' => UuidFactory::uuid(), 'name' => 'A', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderA = $this->addFolder($folderAData);
-        $this->addPermission('Folder', $folderA->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userId];
-        $this->addFolderRelation($folderRelationData);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
 
-        $folderBData = ['id' => UuidFactory::uuid(), 'name' => 'B', 'created_by' => $userId, 'modified_by' => $userId];
-        $folderB = $this->addFolder($folderBData);
-        $this->addPermission('Folder', $folderB->id, 'User', $userId, Permission::OWNER);
-        $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userId, 'folder_parent_id' => $folderA->id];
-        $this->addFolderRelation($folderRelationData);
+        return [$folderA, $folderB];
     }
 
     public function testNotValidIdParameter()

@@ -181,7 +181,8 @@ class FoldersCreateService
     {
         $folderParentId = Hash::get($data, 'folder_parent_id', null);
         if (!is_null($folderParentId)) {
-            $this->validateParentFolder($uac, $folderParentId);
+            $this->validateParentFolder($uac, $folder, $folderParentId);
+            $this->handleValidationErrors($folder);
         }
 
         try {
@@ -196,30 +197,30 @@ class FoldersCreateService
      * Validate the parent folder
      *
      * @param UserAccessControl $uac The current user
+     * @param Folder $folder the created folder
      * @param string $folderParentId The parent folder to validate
      * @return void
      * @throws CustomValidationException If the parent folder does not exist.
      * @throws ForbiddenException If the user is not allowed to insert content in the parent folder.
      */
-    private function validateParentFolder(UserAccessControl $uac, string $folderParentId)
+    private function validateParentFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
     {
         // The provided parent folder must exist.
         try {
             $this->foldersTable->get($folderParentId);
         } catch (RecordNotFoundException $e) {
-            $errors = [
-                'folder_parent_id' => [
-                    'folder_exists' => 'The folder parent must exist.',
-                ],
-            ];
-            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
+            $errors = ['folder_exists' => 'The folder parent must exist.'];
+
+            return $folder->setError('folder_parent_id', $errors);
         }
 
         // The user should have at least UPDATE permission on the destination parent folder to insert content into.
         $userId = $uac->userId();
         $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveIn) {
-            throw new ForbiddenException(__('You are not allowed to create content into the parent folder.'));
+            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+
+            return $folder->setError('folder_parent_id', $errors);
         }
     }
 }

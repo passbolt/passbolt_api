@@ -73,11 +73,11 @@ class FoldersTable extends Table
             'foreignKey' => 'aco_foreign_key',
         ]);
         $this->hasMany('Permissions', [
-            'foreignKey' => 'aco_foreign_key'
+            'foreignKey' => 'aco_foreign_key',
         ]);
         $this->hasMany('FoldersRelations', [
             'className' => 'Passbolt/Folders.FoldersRelations',
-            'foreignKey' => 'foreign_id'
+            'foreignKey' => 'foreign_id',
         ]);
         $this->belongsToMany('ChildrenFolders', [
             'className' => 'Passbolt/Folders.Folders',
@@ -86,7 +86,7 @@ class FoldersTable extends Table
             'through' => 'Passbolt/Folders.FoldersRelations',
             'dependent' => false,
             'conditions' => [
-                'FoldersRelations.foreign_model' => 'Folder'
+                'FoldersRelations.foreign_model' => 'Folder',
             ],
         ]);
         $this->belongsToMany('ChildrenResources', [
@@ -96,7 +96,7 @@ class FoldersTable extends Table
             'through' => 'Passbolt/Folders.FoldersRelations',
             'dependent' => false,
             'conditions' => [
-                'FoldersRelations.foreign_model' => 'Resource'
+                'FoldersRelations.foreign_model' => 'Resource',
             ],
         ]);
     }

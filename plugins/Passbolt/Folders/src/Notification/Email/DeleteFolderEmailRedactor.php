@@ -68,13 +68,13 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT
+            FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT,
         ];
     }
 
     /**
      * @param Folder $folder Folder entity
-     * @param UserAccessControl $user UserAccessControl performing the action
+     * @param UserAccessControl $userAccessControl UserAccessControl performing the action
      * @return Email
      */
     private function createEmail(Folder $folder, UserAccessControl $userAccessControl)

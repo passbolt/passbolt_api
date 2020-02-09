@@ -185,6 +185,7 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
                 ],
             ]
         );
+
         return $this->Groups->save($entity);
     }
 

@@ -222,71 +222,59 @@ class FoldersUpdateService
     private function validateMoveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
     {
         if (is_null($folderParentId)) {
-            $this->assertUserCanMoveFolderToRoot($folder);
+            $this->assertUserCanMoveOutOfFolder($uac, $folder);
         } else {
-            $this->assertUserCanChangeTheFolderParent($folder);
-            $this->assertFolderParentExists($folderParentId);
-            $this->assertUserHasPermissionToUseFolderParent($uac, $folderParentId);
+            $this->assertFolderParentExists($folder, $folderParentId);
+            $this->assertUserCanMoveOutOfFolder($uac, $folder);
+            $this->assertUserCanMoveInFolder($uac, $folder, $folderParentId);
             $this->assertMoveIsCycleFree($uac, $folder, $folderParentId);
         }
     }
 
-    private function assertUserCanChangeTheFolderParent(Folder $folder)
+    /**
+     * Check if the user can move content out of the folder;
+     * @param UserAccessControl $uac The current user
+     * @param Folder $folder The folder from where the user wants to move out
+     * @return void
+     */
+    private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, Folder $folder)
     {
         // @todo Not needed with personal folder.
     }
 
     /**
-     * Assert that the user can move the folder to the root.
-     *
-     * @param Folder $folder The folder to move.
+     * Check if the user can move content in the folder;
+     * @param UserAccessControl $uac The current user
+     * @param Folder $folder The folder into which the user wants to move out
+     * @param string $folderParentId The destination folder
      * @return void
      */
-    private function assertUserCanMoveFolderToRoot(Folder $folder)
+    private function assertUserCanMoveInFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
     {
-        // @todo Not needed with personal folder.
+        $userId = $uac->userId();
+        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
+        if (!$isAllowedToMoveIn) {
+            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $folder->setError('folder_parent_id', $errors);
+            $this->handleValidationErrors($folder);
+        }
     }
 
     /**
      * Assert that the parent folder exists.
      *
+     * @param Folder $folder The folder to move.
      * @param string $folderId The destination folder.
      * @return void
-     * @throws CustomValidationException If the destination folder does not exist.
      */
-    private function assertFolderParentExists(string $folderId)
+    private function assertFolderParentExists(Folder $folder, string $folderId)
     {
         try {
             $this->foldersTable->get($folderId);
         } catch (RecordNotFoundException $e) {
-            $errors = [
-                'folder_parent_id' => [
-                    'folder_exists' => 'The folder parent must exist.',
-                ],
-            ];
-            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
-        }
-    }
-
-    /**
-     * Assert that the current user can update the destination folder.
-     *
-     * @param UserAccessControl $uac The current user
-     * @param string $folderId The parent folder.
-     * @return void
-     * @throws CustomValidationException If the user cannot write in the destination folder.
-     */
-    private function assertUserHasPermissionToUseFolderParent(UserAccessControl $uac, string $folderId)
-    {
-        $userId = $uac->userId();
-        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $userId, Permission::UPDATE);
-        if (!$isAllowedToMoveIn) {
-            $errors = [
-                'folder_parent_id' => [
-                    'folder_exists' => 'The folder parent is not writable.',
-                ],
-            ];
-            throw new ForbiddenException('Could not validate the folder data.', null, new CustomValidationException(__('Could not validate the folder data.'), $errors));
+            $errors = ['folder_exists' => 'The folder parent must exist.'];
+            $folder->setError('folder_parent_id', $errors);
+            $this->handleValidationErrors($folder);
         }
     }
 
@@ -295,20 +283,16 @@ class FoldersUpdateService
      *
      * @param UserAccessControl $uac The current user
      * @param Folder $folder The folder to move
-     * @param string $folderParentId The parent folder.
+     * @param string $folderParentId The destination folder.
      * @return void
-     * @throws CustomValidationException If a cycle is detected
      */
     private function assertMoveIsCycleFree(UserAccessControl $uac, Folder $folder, string $folderParentId)
     {
         $cycle = $this->foldersHasAncestorService->check($uac, $folder->id, $folderParentId);
         if ($cycle) {
-            $errors = [
-                'folder_parent_id' => [
-                    'folder_cycle' => 'The folder cannot be its own ancestor.',
-                ],
-            ];
-            throw new CustomValidationException(__('Could not validate the folder data.'), $errors);
+            $errors = ['folder_exists' => 'The destination folder cannot be a child.'];
+            $folder->setError('folder_parent_id', $errors);
+            $this->handleValidationErrors($folder);
         }
     }
 }

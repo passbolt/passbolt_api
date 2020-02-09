@@ -66,7 +66,7 @@ class CreateFolderEmailRedactorTest extends TestCase
         $folder->id = UuidFactory::uuid();
         $event = (new Event(FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT))->setData([
             'folder' => $folder,
-            'uac' => new UserAccessControl('', $userId)
+            'uac' => new UserAccessControl('', $userId),
         ]);
 
         $this->usersTableMock->expects($this->once())
@@ -91,7 +91,7 @@ class CreateFolderEmailRedactorTest extends TestCase
                 'body' => [
                     'user' => $user,
                     'folder' => $folder,
-                ]
+                ],
             ],
             $email->getData()
         );

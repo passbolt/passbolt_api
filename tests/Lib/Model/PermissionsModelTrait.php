@@ -16,6 +16,7 @@ namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Permission;
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait PermissionsModelTrait
 {
@@ -51,6 +52,7 @@ trait PermissionsModelTrait
      */
     public function addPermission($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type = Permission::OWNER)
     {
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [
             'validate' => 'default',
             'accessibleFields' => [
@@ -64,8 +66,8 @@ trait PermissionsModelTrait
             'aro_foreign_key' => $aro_foreign_key,
             'type' => $type,
         ];
-        $permission = $this->Permissions->newEntity($data, $saveOptions);
-        $this->Permissions->save($permission);
+        $permission = $permissionsTable->newEntity($data, $saveOptions);
+        $permissionsTable->save($permission);
 
         return $permission;
     }

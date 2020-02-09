@@ -70,7 +70,6 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         foreach ($childrenFolders as $childrenFolderId) {
             $this->addResourceForUsers(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId], [$userId => Permission::OWNER]);
         }
-
     }
 
     /**
@@ -87,7 +86,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                 ],
                 UuidFactory::uuid('folder.id.d') => [
                     UuidFactory::uuid('resource.id.f'),
-                    UuidFactory::uuid('resource.id.g')
+                    UuidFactory::uuid('resource.id.g'),
                 ],
             ];
 
@@ -116,7 +115,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('resource.id.a'),
                     UuidFactory::uuid('resource.id.c'),
                     UuidFactory::uuid('resource.id.d'),
-                ]
+                ],
             ],
             'When has parent is false as a string' => [
                 $fixture,
@@ -125,26 +124,26 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('resource.id.a'),
                     UuidFactory::uuid('resource.id.c'),
                     UuidFactory::uuid('resource.id.d'),
-                ]
+                ],
             ],
             'When has-parent is single and return only 1 item' => [
                 $fixture,
                 [
-                    UuidFactory::uuid('folder.id.c')
+                    UuidFactory::uuid('folder.id.c'),
                 ],
                 [
-                    UuidFactory::uuid('resource.id.e')
-                ]
+                    UuidFactory::uuid('resource.id.e'),
+                ],
             ],
             'When has-parent is single and return more than 1 item' => [
                 $fixture,
                 [
-                    UuidFactory::uuid('folder.id.d')
+                    UuidFactory::uuid('folder.id.d'),
                 ],
                 [
                     UuidFactory::uuid('resource.id.f'),
-                    UuidFactory::uuid('resource.id.g')
-                ]
+                    UuidFactory::uuid('resource.id.g'),
+                ],
             ],
             'When has-parent is multiple and return 1 item' => [
                 $fixture,
@@ -153,8 +152,8 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('folder.id.c'), // has 1 child
                 ],
                 [
-                    UuidFactory::uuid('resource.id.e')
-                ]
+                    UuidFactory::uuid('resource.id.e'),
+                ],
             ],
             'When has-parent is multiple and return more than 1 item' => [
                 $fixture,
@@ -166,7 +165,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('resource.id.e'),
                     UuidFactory::uuid('resource.id.f'),
                     UuidFactory::uuid('resource.id.g'),
-                ]
+                ],
             ],
             'When has-parent is mixed with root and ids' => [
                 $fixture,
@@ -179,7 +178,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('resource.id.a'),
                     UuidFactory::uuid('resource.id.c'),
                     UuidFactory::uuid('resource.id.d'),
-                ]
+                ],
             ],
         ];
     }
@@ -200,8 +199,8 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $queryParameters = http_build_query([
             'api-version' => 2,
             'filter' => [
-                'has-parent' => $hasParentFilterId
-            ]
+                'has-parent' => $hasParentFilterId,
+            ],
         ]);
 
         $this->authenticateAs('ada');

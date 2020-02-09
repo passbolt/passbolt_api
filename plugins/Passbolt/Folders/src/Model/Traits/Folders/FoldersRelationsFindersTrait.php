@@ -31,7 +31,7 @@ trait FoldersRelationsFindersTrait
         return $this->find()
             ->where([
                 'foreign_id' => $folderId,
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
     }
 }

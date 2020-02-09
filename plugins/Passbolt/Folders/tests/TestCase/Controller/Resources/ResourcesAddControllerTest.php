@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.14.0
  */
 
 namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
@@ -32,12 +32,12 @@ use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Closure;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
@@ -50,6 +50,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     use FoldersRelationsModelTrait;
     use FoldersModelTrait;
     use FixtureProviderTrait;
+    use ResourcesModelTrait;
 
     public $fixtures = [
         FoldersFixture::class,
@@ -87,163 +88,91 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function setUp()
     {
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
-        parent::setUp();
     }
 
-    protected function _getGpgMessage()
+    public function testResourcesAddSuccessCaseXXX_CreateToRoot()
     {
-        return '-----BEGIN PGP MESSAGE-----
-
-hQIMA1P90Qk1JHA+ARAAu3oaLzv/BfeukST6tYAkAID+xbt5dhsv4lxL3oSbo8Nm
-qmJQSVe6wmh8nZJjeHN4L7iCq8FEZpdCwrDbX1qIuqBFFO3vx6BJFOURG0JbI/E/
-nXtvck00RvxTB1Y30OUbGp21jjEILyuELhWpf11+AQelybY4XKyM8UxGjSncDqaS
-X7/yXspCByywci1VfzK7D6+zfcyLy29wQm9Ci5j6I4QqhvlKQPTxl6tWrJh+EyLP
-SLZjO8ofc00fbc7mUIH5taDg6Br2VLG/x29HhKCPYdOVzSz3BpUCcUcPgn98mCV0
-Qh7ZPE1NNmCWXID5hryuSF71IiAYhxae9u77pOAbVe0PwFgMY6kke/hJQkO6IYJ/
-/Q3aL/xHTlY2XtPbpV1in6soc0wJBuoROrwN0AdtvEJOnomclNEH5BPwLjZ1shCr
-vuk0zJjj9WcqQiVNEuErs4d7rLc+dB7md+97S8Gtcf8lrlZMH9ooI2UnvxC8HRqX
-KzcgW17YF44VtD2TLMymvpnjPV9gruYnmpkQG/1ihnDOWe6xWlFH6jZf5eE4IEVn
-osx/D6inZHHMXWbZu9hMiQloKKZ0s8yxTFw9C1wFwaIxRtvJ84qc17rJs7mfcC2n
-sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
-QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
-W3AI8+rWjK8MGH2T88hCYI/6
-=uahb
------END PGP MESSAGE-----';
-    }
-
-    protected function _getDummyPostData($data = [])
-    {
-        $defaultData = [
-            'Resource' => [
-                'name' => 'new resource name',
-                'username' => 'username@domain.com',
-                'uri' => 'https://www.domain.com',
-                'description' => 'new resource description',
-            ],
-            'Secret' => [
-                [
-                    'data' => $this->_getGpgMessage(),
-                ],
-            ],
-        ];
-        $data = array_merge_recursive($defaultData, $data);
-
-        return $data;
-    }
-
-    /**
-     * @dataProvider provideResourcesAddSuccess
-     * @param Closure $fixture
-     * @param array $resourceData
-     * @param string|null $expectedFolderParentId
-     */
-    public function testResourcesAddSuccessCreateFolderRelation(Closure $fixture, array $resourceData, string $expectedFolderParentId = null)
-    {
-        list($userId) = $this->executeFixture($fixture);
+        $userId = UuidFactory::uuid('user.id.ada');
+        $data = $this->getDummyResource();
+        $data['folder_parent_id'] = null;
 
         $this->authenticateAs('ada');
-        $this->postJson("/resources.json?api-version=2", $resourceData);
+        $this->postJson("/resources.json?api-version=v2", $data);
         $this->assertSuccess();
 
-        // Check the server response.
         $resource = $this->_responseJsonBody;
-
-        // Check the relation
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, $expectedFolderParentId);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, null);
     }
 
-    public function provideResourcesAddSuccess()
+    public function testResourcesAddSuccessCaseXXX_CreateIntoPersonalFolder()
     {
-        $folderParentId = UuidFactory::uuid();
-
-        $fixture = function () use ($folderParentId) {
-            $userId = UuidFactory::uuid('user.id.ada');
-            $this->addFolderFor(['id' => $folderParentId, 'name' => 'test'], [$userId => Permission::OWNER]);
-            return [$userId];
-        };
-
-        return [
-            'Without a parent folder' => [
-                $fixture,
-                $this->_getDummyPostData(),
-                null
-            ],
-            'With a parent folder which exists' => [
-                $fixture,
-                $this->_getDummyPostData([
-                    'Resource' => [
-                        'folder_parent_id' => $folderParentId,
-                    ]
-                ]),
-                $folderParentId
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider provideResourcesAddError
-     * @param Closure $fixture
-     * @param int $responseCode
-     * @param string $responseMessage
-     * @param string $expectedErrorField
-     * @param array $data
-     */
-    public function testResourcesAddErrorsDoesNotCreateFolderResourceIfFolderParentNotOk(
-        Closure $fixture,
-        int $responseCode,
-        string $responseMessage,
-        string $expectedErrorField,
-        array $data = []
-    )
-    {
-        $this->executeFixture($fixture);
+        list ($userId, $folder) = $this->insertFixtureForCaseXXX_CreateIntoPersonalFolder();
+        $data = $this->getDummyResource();
+        $data['folder_parent_id'] = $folder->id;
 
         $this->authenticateAs('ada');
-        $this->postJson("/resources.json?api-version=2", $data);
-        $this->assertError($responseCode, $responseMessage);
-        $arr = json_decode(json_encode($this->_responseJsonBody), true);
-        $error = Hash::get($arr, $expectedErrorField);
-        $this->assertNotNull($error);
-        $this->assertResourceNotExist(['Resources.id' => $data['Resource']['name']]);
+        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->assertSuccess();
+
+        $resource = $this->_responseJsonBody;
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, $folder->id);
     }
 
-    public function provideResourcesAddError()
+    public function insertFixtureForCaseXXX_CreateIntoPersonalFolder()
     {
-        $folderParentId = UuidFactory::uuid();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
 
-        $fixture = function () use ($folderParentId) {
-            $this->addFolderFor(['id' => $folderParentId, 'name' => 'test'], [UuidFactory::uuid('user.id.betty') => Permission::OWNER]);
-        };
+        return [$userId, $folder];
+    }
 
-        return [
-            'Parent folder which does not exists' => [
-                $fixture,
-                'responseCode' => 400,
-                'responseMessage' => 'Could not validate resource data',
-                'errorField' => 'folder_parent_id.folder_exists',
-                'data' => $this->_getDummyPostData([
-                    'Resource' => [
-                        'folder_parent_id' => UuidFactory::uuid(),
-                    ]
-                ]),
-            ],
-            'User does not have permission on parent folder' => [
-                $fixture,
-                'responseCode' => 403,
-                'responseMessage' => 'Could not validate resource data',
-                'errorField' => 'folder_parent_id.not_allowed',
-                'data' => $this->_getDummyPostData([
-                    'Resource' => [
-                        'folder_parent_id' => $folderParentId,
-                    ]
-                ]),
-            ],
-        ];
+    public function testResourcesAddErrorCaseXXX_FolderParentNotExist()
+    {
+        $data = $this->getDummyResource();
+        $data['folder_parent_id'] = UuidFactory::uuid();
+
+        $this->authenticateAs('ada');
+        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->assertError(400, 'Could not validate resource data');
+        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $error = Hash::get($arr, 'folder_parent_id.folder_exists');
+        $this->assertNotNull($error);
+    }
+
+    public function insertFixtureForCaseXXX_FolderParentNotExist()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $resource = $this->addResourceForUsers([], [$userId => Permission::OWNER]);
+
+        return [$resource];
+    }
+
+    public function testResourcesAddErrorCaseXXX_FolderParentNotAllowed()
+    {
+        list($folder) = $this->insertFixtureForCaseXXX_FolderParentNotAllowed();
+        $data = $this->getDummyResource();
+        $data['folder_parent_id'] = $folder->id;
+
+        $this->authenticateAs('ada');
+        $this->postJson("/resources.json?api-version=v2", $data);
+        $this->assertError(400, 'Could not validate resource data');
+        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $error = Hash::get($arr, 'folder_parent_id.has_folder_access');
+        $this->assertNotNull($error);
+    }
+
+    public function insertFixtureForCaseXXX_FolderParentNotAllowed()
+    {
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folder = $this->addFolderFor([], [$userBId => Permission::OWNER]);
+
+        return [$folder];
     }
 }

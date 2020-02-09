@@ -102,7 +102,7 @@ class FoldersDeleteService
             $this->deletePermissions($uac, $folder);
             $this->deleteFoldersRelations($uac, $folder);
             $this->deleteFolder($uac, $folder);
-            $this->moveChildrenToRoot($uac, $folder);
+            $this->moveChildrenToRoot($folder);
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
                 'uac' => $uac,
                 'folder' => $folder,
@@ -156,7 +156,7 @@ class FoldersDeleteService
         $children = $this->foldersRelationsTable->find()
             ->where([
                 'folder_parent_id' => $folder->id,
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
 
         foreach ($children as $folderRelation) {
@@ -164,7 +164,7 @@ class FoldersDeleteService
                 if ($this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderRelation->foreign_id, $userId, Permission::UPDATE)) {
                     $this->delete($uac, $folderRelation->foreign_id, true);
                 }
-            } else if ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_RESOURCE) {
+            } elseif ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_RESOURCE) {
                 $this->resourcesTable->softDelete($uac, $folderRelation->foreign_id);
             }
         }
@@ -206,7 +206,7 @@ class FoldersDeleteService
      */
     private function deleteFolder(UserAccessControl $uac, Folder $folder)
     {
-        $this->foldersTable->delete($folder);
+        $this->foldersTable->delete($folder, ['atomic' => false]);
         $this->handleValidationErrors($folder);
         $this->foldersPermissionsDeleteService->delete($uac, $folder->id);
     }
@@ -214,19 +214,17 @@ class FoldersDeleteService
     /**
      * Move the children of the folder to root.
      *
-     * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to delete
      * @return void
      * @throws Exception
      */
-    private function moveChildrenToRoot(UserAccessControl $uac, Folder $folder)
+    private function moveChildrenToRoot(Folder $folder)
     {
-        $userId = $uac->userId();
         $children = $this->foldersRelationsTable->find()
-            ->where([
-                'folder_parent_id' => $folder->id,
-                'user_id' => $userId
-            ])->select('id')->extract('id')->toArray();
+            ->where(['folder_parent_id' => $folder->id])
+            ->select('id')
+            ->extract('id')
+            ->toArray();
 
         if (!empty($children)) {
             $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['id IN' => $children]);

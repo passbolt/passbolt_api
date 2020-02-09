@@ -100,18 +100,13 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
-    private function insertFixtureCase1(&$folder)
+    private function insertFixtureCase1()
     {
         // Ada has access to folder Lovelace and Something as a OWNER
-        // Lovelace (Ada:O) ; Something (Ada:O)
+        // Lovelace (Ada:O)   Something (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'Lovelace', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
-
-        $folderData = ['id' => UuidFactory::uuid(), 'name' => 'Something', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
+        $folderA = $this->addFolderFor(['name' => 'Lovelace'], [$userId => Permission::OWNER]);
+        $this->addFolderFor(['name' => 'Something', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
     }
 
     /**
@@ -119,7 +114,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
      */
     public function testFoldersIndexFilterBySearchSuccess()
     {
-        $this->insertFixtureCase1($folder);
+        $this->insertFixtureCase1();
 
         $this->authenticateAs('ada');
 
@@ -150,26 +145,16 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
     }
 
-    private function insertFixtureCase2(&$folder)
+    private function insertFixtureCase2()
     {
         // Ada has access to folder Lovelace and Something as a OWNER
         // Lovelace (Ada:O) ; Something (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C'], [$userId => Permission::OWNER]);
 
-        $folderId = UuidFactory::uuid('folder.id.specific');
-        $folderData = ['id' => $folderId, 'name' => 'Specific', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
-
-        $folderId = UuidFactory::uuid('folder.id.specific2');
-        $folderData = ['id' => $folderId, 'name' => 'Specific 2', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
-
-        $folderId = UuidFactory::uuid('folder.id.other');
-        $folderData = ['id' => $folderId, 'name' => 'Other', 'created_by' => $userId, 'modified_by' => $userId];
-        $folder = $this->addFolder($folderData);
-        $this->addPermission('Folder', $folder->id, 'User', $userId, Permission::OWNER);
+        return [$folderA, $folderB, $folderC];
     }
 
     /**
@@ -177,19 +162,17 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
      */
     public function testFoldersIndexFilterByIdSuccess()
     {
-        $this->insertFixtureCase2($folder);
+        list($folderA, $folderB, $folderC) = $this->insertFixtureCase2();
 
         $this->authenticateAs('ada');
 
-        $folderId1 = UuidFactory::uuid('folder.id.specific');
-        $folderId2 = UuidFactory::uuid('folder.id.specific2');
-        $this->getJson('/folders.json?api-version=2&filter[has-id][]=' . $folderId1 . '&filter[has-id][]=' . $folderId2);
+        $this->getJson('/folders.json?api-version=2&filter[has-id][]=' . $folderA->id . '&filter[has-id][]=' . $folderB->id);
         $this->assertSuccess();
 
         $this->assertCount(2, $this->_responseJsonBody);
         $folderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $this->assertContains($folderId1, $folderIds);
-        $this->assertContains($folderId2, $folderIds);
+        $this->assertContains($folderA->id, $folderIds);
+        $this->assertContains($folderB->id, $folderIds);
         $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
 
         $this->assertSuccess();
@@ -205,15 +188,15 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
             ],
             UuidFactory::uuid('folder.id.d') => [
                 UuidFactory::uuid('folder.id.f'),
-                UuidFactory::uuid('folder.id.g')
+                UuidFactory::uuid('folder.id.g'),
             ],
         ];
 
         $userId = UuidFactory::uuid('user.id.ada');
         foreach ($folderRelations as $folderParentId => $childrenFolders) {
-            $this->addFolderFor(['id' => $folderParentId,], [$userId => Permission::OWNER]);
+            $this->addFolderFor(['id' => $folderParentId, ], [$userId => Permission::OWNER]);
             foreach ($childrenFolders as $childrenFolderId) {
-                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId,], [$userId => Permission::OWNER]);
+                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId, ], [$userId => Permission::OWNER]);
             }
         }
     }
@@ -227,24 +210,24 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('folder.id.a'),
                     UuidFactory::uuid('folder.id.c'),
                     UuidFactory::uuid('folder.id.d'),
-                ]
+                ],
             ],
             'When has-parent is single and return only 1 item' => [
                 [
-                    UuidFactory::uuid('folder.id.c')
+                    UuidFactory::uuid('folder.id.c'),
                 ],
                 [
-                    UuidFactory::uuid('folder.id.e')
-                ]
+                    UuidFactory::uuid('folder.id.e'),
+                ],
             ],
             'When has-parent is single and return more than 1 item' => [
                 [
-                    UuidFactory::uuid('folder.id.d')
+                    UuidFactory::uuid('folder.id.d'),
                 ],
                 [
                     UuidFactory::uuid('folder.id.f'),
-                    UuidFactory::uuid('folder.id.g')
-                ]
+                    UuidFactory::uuid('folder.id.g'),
+                ],
             ],
             'When has-parent is multiple and return 1 item' => [
                 [
@@ -252,8 +235,8 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('folder.id.c'), // has 1 child
                 ],
                 [
-                    UuidFactory::uuid('folder.id.e')
-                ]
+                    UuidFactory::uuid('folder.id.e'),
+                ],
             ],
             'When has-parent is multiple and return more than 1 item' => [
                 [
@@ -264,7 +247,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('folder.id.e'),
                     UuidFactory::uuid('folder.id.f'),
                     UuidFactory::uuid('folder.id.g'),
-                ]
+                ],
             ],
             'When has-parent is mixed with root and ids' => [
                 [
@@ -276,7 +259,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
                     UuidFactory::uuid('folder.id.a'),
                     UuidFactory::uuid('folder.id.c'),
                     UuidFactory::uuid('folder.id.d'),
-                ]
+                ],
             ],
         ];
     }
@@ -295,8 +278,8 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         $queryParameters = http_build_query([
             'api-version' => 2,
             'filter' => [
-                'has-parent' => $hasParentFilterId
-            ]
+                'has-parent' => $hasParentFilterId,
+            ],
         ]);
 
         $this->getJson('/folders.json?' . $queryParameters);
@@ -456,6 +439,7 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
                 ],
             ]
         );
+
         return $this->Groups->save($entity);
     }
 
@@ -488,7 +472,6 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
             $this->assertGroupAttributes($permission->group);
         }
     }
-
 
     public function testSuccess_ContainPermissionsUserProfile()
     {

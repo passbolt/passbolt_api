@@ -48,7 +48,7 @@ class FoldersIndexController extends AppController
                 'has-id',
                 'has-parent',
                 'search',
-            ]
+            ],
         ];
         $options = $this->QueryString->get($whitelist);
 

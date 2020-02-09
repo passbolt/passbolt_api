@@ -55,13 +55,13 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT
+            FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
         ];
     }
 
     /**
      * @param Folder $folder Folder entity
-     * @param UserAccessControl $user UserAccessControl
+     * @param UserAccessControl $userAccessControl UserAccessControl
      * @return Email
      */
     private function createEmail(Folder $folder, UserAccessControl $userAccessControl)

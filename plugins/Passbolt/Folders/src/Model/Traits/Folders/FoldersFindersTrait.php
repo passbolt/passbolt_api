@@ -216,11 +216,13 @@ trait FoldersFindersTrait
         }
 
         $includeRoot = false;
-        $parentIds = array_filter($parentIds, function($value) use (&$includeRoot){
+        $parentIds = array_filter($parentIds, function ($value) use (&$includeRoot) {
             if ($value == Folder::ROOT_ID) {
                 $includeRoot = true;
+
                 return false;
             }
+
             return true;
         });
 
@@ -232,6 +234,7 @@ trait FoldersFindersTrait
             if ($includeRoot) {
                 $conditions[] = ['folder_parent_id IS NULL'];
             }
+
             return $q->where(['OR' => $conditions]);
         });
     }

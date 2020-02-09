@@ -84,7 +84,7 @@ class UpdateFolderEmailRedactorTest extends TestCase
 
         $event = (new Event(FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT))->setData([
             'folder' => $folder,
-            'uac' => new UserAccessControl('', UuidFactory::uuid())
+            'uac' => new UserAccessControl('', UuidFactory::uuid()),
         ]);
 
         $this->usersTableMock->expects($this->once())
@@ -110,7 +110,7 @@ class UpdateFolderEmailRedactorTest extends TestCase
                 'body' => [
                     'user' => $user,
                     'folder' => $folder,
-                ]
+                ],
             ],
             $email->getData()
         );

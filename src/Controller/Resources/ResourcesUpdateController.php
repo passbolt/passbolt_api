@@ -180,6 +180,17 @@ class ResourcesUpdateController extends AppController
 
     /**
      * Trigger the after resource update event.
+     * @param {Resource} $resource The update resource
+     * @param {array} $data The request data.
+     */
+    protected function afterUpdate($resource, $data) {
+        $uac = $this->User->getAccessControl();
+        $event = new Event('Action.Resource.afterUpdate', $resource, ['uac' => $uac, 'data' => $data]);
+        $this->getEventManager()->dispatch($event);
+    }
+
+    /**
+     * Trigger the after resource update event.
      * @param Resource $resource The update resource
      * @param array $data The request data.
      */

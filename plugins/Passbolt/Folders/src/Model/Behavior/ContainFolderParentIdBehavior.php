@@ -65,7 +65,7 @@ class ContainFolderParentIdBehavior extends Behavior
         ],
         'implementedMethods' => [
             /** @uses containFolderParentIdByUserId */
-            'containFolderParentIdByUserId' => 'containFolderParentIdByUserId'  // containFolderParentId is available as mixin method for table using this behavior
+            'containFolderParentIdByUserId' => 'containFolderParentIdByUserId',  // containFolderParentId is available as mixin method for table using this behavior
         ],
         'events' => [
             'Model.afterSave' => ['new'],

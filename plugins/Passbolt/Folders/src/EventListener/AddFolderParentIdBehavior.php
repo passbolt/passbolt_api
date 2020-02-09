@@ -40,7 +40,7 @@ class AddFolderParentIdBehavior implements EventListenerInterface
     public function implementedEvents()
     {
         return [
-            'Model.initialize' => $this
+            'Model.initialize' => $this,
         ];
     }
 
@@ -55,6 +55,7 @@ class AddFolderParentIdBehavior implements EventListenerInterface
                 /** @var Table $table */
                 $table = $event->getSubject();
                 $table->addBehavior(ContainFolderParentIdBehavior::class);
+
                 return;
             }
         }

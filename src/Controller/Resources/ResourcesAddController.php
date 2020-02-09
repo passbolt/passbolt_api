@@ -170,6 +170,17 @@ class ResourcesAddController extends AppController
      * @param {Resource} $resource The created resource
      * @param {array} $data The request data.
      */
+    protected function afterCreate($resource, $data) {
+        $uac = $this->User->getAccessControl();
+        $event = new Event('Action.Resource.afterCreate', $resource, ['uac' => $uac, 'data' => $data]);
+        $this->getEventManager()->dispatch($event);
+    }
+
+    /**
+     * Trigger the after resource create event.
+     * @param {Resource} $resource The created resource
+     * @param {array} $data The request data.
+     */
     protected function afterCreate(Resource $resource, array $data = []) {
         $uac = $this->User->getAccessControl();
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];

@@ -16,23 +16,22 @@
 namespace Passbolt\Folders\Test\TestCase\EventListener;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\Folders\EventListener\ResourceEventListener;
-
+use Passbolt\Folders\EventListener\ResourcesEventListener;
 
 /**
  * Class ResourceEventListenerTest
- * @covers \Passbolt\Folders\EventListener\ResourceEventListener
+ * @covers \Passbolt\Folders\EventListener\ResourcesEventListener
  */
 class ResourceEventListenerTest extends AppIntegrationTestCase
 {
     /**
-     * @var ResourceEventListener
+     * @var ResourcesEventListener
      */
     private $sut;
 
     public function setUp()
     {
-        $this->sut = new ResourceEventListener();
+        $this->sut = new ResourcesEventListener();
 
         parent::setUp();
     }
