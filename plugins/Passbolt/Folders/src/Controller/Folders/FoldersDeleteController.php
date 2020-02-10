@@ -16,7 +16,9 @@
 namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
+use App\Controller\Component\QueryStringComponent;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Service\FoldersDeleteService;
 
@@ -36,9 +38,12 @@ class FoldersDeleteController extends AppController
         }
 
         $uac = $this->User->getAccessControl();
-        $foldersDeleteService = new FoldersDeleteService();
+        $data = $this->request->getQueryParams();
+        $cascade = Hash::get($data, 'cascade', false);
+        $cascade = QueryStringComponent::normalizeBoolean($cascade);
 
-        $foldersDeleteService->delete($uac, $id);
+        $foldersDeleteService = new FoldersDeleteService();
+        $foldersDeleteService->delete($uac, $id, $cascade);
 
         $this->success(__('The folder has been deleted successfully.'));
     }

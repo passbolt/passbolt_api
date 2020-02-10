@@ -15,7 +15,6 @@
 
 namespace Passbolt\Folders\Service;
 
-use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;

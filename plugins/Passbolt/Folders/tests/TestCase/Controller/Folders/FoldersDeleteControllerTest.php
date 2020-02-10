@@ -30,6 +30,7 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
@@ -68,6 +69,8 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
+        $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
+        $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
         $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
@@ -81,6 +84,7 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folder->id}.json?api-version=2");
         $this->assertSuccess();
+        $this->assertFolderNotExist($folder->id);
     }
 
     private function insertFixtureCase1()
@@ -100,9 +104,37 @@ class FoldersDeleteControllerTest extends AppIntegrationTestCase
         $this->authenticateAs('ada');
         $this->deleteJson("/folders/{$folderA->id}.json?cascade=1&api-version=2");
         $this->assertSuccess();
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertFolderNotExist($folderB->id);
     }
 
     private function insertFixtureCase2()
+    {
+        // Ada has access to folder A as a OWNER
+        // Ada has access to folder B as a OWNER
+        // Folder B is in folder A
+        // A (Ada:O)
+        // |
+        // B (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+
+        return [$folderA, $folderB];
+    }
+
+    public function testSuccessCase3_DeleteFolderButNotTheContent()
+    {
+        list($folderA, $folderB) = $this->insertFixtureCase2();
+
+        $this->authenticateAs('ada');
+        $this->deleteJson("/folders/{$folderA->id}.json?api-version=2");
+        $this->assertSuccess();
+        $this->assertFolderNotExist($folderA->id);
+        $this->assertFolder($folderB->id);
+    }
+
+    private function insertFixtureCase3()
     {
         // Ada has access to folder A as a OWNER
         // Ada has access to folder B as a OWNER
