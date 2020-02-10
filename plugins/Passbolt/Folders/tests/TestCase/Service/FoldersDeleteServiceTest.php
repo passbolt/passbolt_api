@@ -18,13 +18,18 @@ namespace Passbolt\Folders\Test\TestCase\Service;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
+use App\Test\Fixture\Alt0\SecretsFixture;
+use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
+use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -55,6 +60,7 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
     use PermissionsModelTrait;
+    use ResourcesModelTrait;
 
     public $fixtures = [
         FoldersFixture::class,
@@ -64,6 +70,9 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         PermissionsFixture::class,
         ProfilesFixture::class,
         UsersFixture::class,
+        ResourcesFixture::class,
+        SecretsFixture::class,
+        FavoritesFixture::class,
     ];
 
     /**
@@ -87,6 +96,11 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
     private $FoldersRelations;
 
     /**
+     * @var ResourcesTable
+     */
+    private $Resources;
+
+    /**
      * setUp method
      *
      * @return void
@@ -101,6 +115,8 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
         $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
+        $config = TableRegistry::getTableLocator()->exists('Resources') ? [] : ['className' => ResourcesTable::class];
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources', $config);
         $this->service = new FoldersDeleteService();
     }
 
@@ -224,7 +240,7 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
 
     public function testSuccessCase4_DeleteFolderAndContent_ChildOfChild()
     {
-        list($parentFolder, $folder, $childFolder) = $this->insertFixtureCase4();
+        list($parentFolder, $folder, $childFolder, $resourceR1) = $this->insertFixtureCase4();
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
@@ -232,6 +248,7 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         $this->assertFolderNotExist($parentFolder->id);
         $this->assertFolderNotExist($folder->id);
         $this->assertFolderNotExist($childFolder->id);
+        $this->assertResourceIsSoftDeleted($resourceR1->id);
 
         $this->assertPermissionNotExist($folder->id, $userId);
         $this->assertPermissionNotExist($parentFolder->id, $userId);
@@ -248,12 +265,15 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         // B (Ada:O)
         // |
         // C (Ada:O)
+        // |
+        // R1 (Ada:O)
         $userId = UuidFactory::uuid('user.id.ada');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
         $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderB->id], [$userId => Permission::OWNER]);
+        $resourceR1 = $this->addResourceForUsers(['name' => 'R1', 'folder_parent_id' => $folderB->id], [$userId => Permission::OWNER]);
 
-        return [$folderA, $folderB, $folderC];
+        return [$folderA, $folderB, $folderC, $resourceR1];
     }
 
     public function testSuccessCase5_DeleteFolderAndContent_OnlyWhenEnoughPermissions()

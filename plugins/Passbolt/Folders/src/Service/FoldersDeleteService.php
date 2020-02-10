@@ -161,12 +161,36 @@ class FoldersDeleteService
 
         foreach ($children as $folderRelation) {
             if ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-                if ($this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderRelation->foreign_id, $userId, Permission::UPDATE)) {
-                    $this->delete($uac, $folderRelation->foreign_id, true);
-                }
+                $this->deleteChildFolder($uac, $folderRelation->foreign_id);
             } elseif ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_RESOURCE) {
-                $this->resourcesTable->softDelete($uac, $folderRelation->foreign_id);
+                $this->deleteChildResource($uac, $folderRelation->foreign_id);
             }
+        }
+    }
+
+    /**
+     * Delete a child folder
+     * @param UserAccessControl $uac The current user.
+     * @param string $folderId The folder to delete
+     * @throws Exception
+     */
+    private function deleteChildFolder($uac, $folderId)
+    {
+        if ($this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $uac->userId(), Permission::UPDATE)) {
+            $this->delete($uac, $folderId, true);
+        }
+    }
+
+    /**
+     * Delete a child resource
+     * @param UserAccessControl $uac The current user.
+     * @param string $resourceId The resource to delete
+     */
+    private function deleteChildResource($uac, $resourceId)
+    {
+        if ($this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resourceId, $uac->userId(), Permission::UPDATE)) {
+            $resource = $this->resourcesTable->get($resourceId);
+            $this->resourcesTable->softDelete($uac->userId(), $resource);
         }
     }
 
