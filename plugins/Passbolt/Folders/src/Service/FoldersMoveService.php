@@ -67,7 +67,7 @@ class FoldersMoveService
      */
     public function move(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
     {
-        $cycle = $this->foldersHasAncestorService->check($uac, $folder->id, $folderParentId);
+        $cycle = $this->foldersHasAncestorService->hasAncestor($uac, $folderParentId, $folder->id);
         if ($cycle) {
             throw new BadRequestException(__('Cycle detected.'));
         }

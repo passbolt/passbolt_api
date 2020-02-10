@@ -288,8 +288,8 @@ class FoldersUpdateService
      */
     private function assertMoveIsCycleFree(UserAccessControl $uac, Folder $folder, string $folderParentId)
     {
-        $cycle = $this->foldersHasAncestorService->check($uac, $folder->id, $folderParentId);
-        if ($cycle) {
+        $hasAncestor = $this->foldersHasAncestorService->hasAncestor($uac, $folderParentId, $folder->id);
+        if ($hasAncestor) {
             $errors = ['folder_exists' => 'The destination folder cannot be a child.'];
             $folder->setError('folder_parent_id', $errors);
             $this->handleValidationErrors($folder);

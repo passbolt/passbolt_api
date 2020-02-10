@@ -39,38 +39,37 @@ class FoldersHasAncestorService
      * Check if a folder has another one as ancestor.
      *
      * @param UserAccessControl $uac The current user
-     * @param string $folderId The folder to check.
-     * @param string|null $folderParentId The target ancestor folder.
+     * @param string|null $folderId The target folder.
+     * @param string $ancestorFolderId The potential folder ancestor
      * @return bool
      */
-    public function check(UserAccessControl $uac, string $folderId, string $folderParentId = null)
+    public function hasAncestor(UserAccessControl $uac, string $folderId = null, string $ancestorFolderId)
     {
-        return $this->_hasAncestor($uac->userId(), $folderId, $folderParentId);
+        if ($ancestorFolderId === $folderId) {
+            return true;
+        } else if (is_null($folderId)) {
+            // Root has no ancestor.
+            return false;
+        }
+
+        $folderParentId = $this->getFolderParentId($uac->userId(), $folderId);
+
+        return $this->hasAncestor($uac, $folderParentId, $ancestorFolderId);
     }
 
     /**
-     * Sub function of hasAncestor that loop on itself to check a folder does not have another has ancestor.
-     * @param string $userId The user to check for.
-     * @param string $folderId The folder to check.
-     * @param string $folderParentId The target ancestor folder.
-     * @return bool
+     * Retrieve a folder parent id for a user.
+     * @param string $userId The user to check for
+     * @param string $folderId The folder to check for
+     * @return string
      */
-    private function _hasAncestor(string $userId, string $folderId, string $folderParentId = null)
-    {
-        $cursorParentFolderId = $this->foldersRelationsTable->find()
+    private function getFolderParentId(string $userId, string $folderId) {
+        return $this->foldersRelationsTable->find()
             ->where([
-                'foreign_id' => $folderParentId,
+                'foreign_id' => $folderId,
                 'user_id' => $userId,
             ])->select('folder_parent_id')
             ->extract('folder_parent_id')
             ->first();
-
-        if (is_null($cursorParentFolderId)) {
-            return false;
-        } elseif ($cursorParentFolderId === $folderId) {
-            return true;
-        } else {
-            return $this->_hasAncestor($userId, $folderId, $cursorParentFolderId);
-        }
     }
 }
