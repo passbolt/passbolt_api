@@ -16,7 +16,6 @@
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
-use App\Controller\Events\ResourceEvent;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
@@ -163,17 +162,6 @@ class ResourcesAddController extends AppController
         if (!empty($errors)) {
             throw new ValidationException(__('Could not validate resource data.'), $resource, $this->Resources);
         }
-    }
-
-    /**
-     * Trigger the after resource create event.
-     * @param {Resource} $resource The created resource
-     * @param {array} $data The request data.
-     */
-    protected function afterCreate($resource, $data) {
-        $uac = $this->User->getAccessControl();
-        $event = new Event('Action.Resource.afterCreate', $resource, ['uac' => $uac, 'data' => $data]);
-        $this->getEventManager()->dispatch($event);
     }
 
     /**
