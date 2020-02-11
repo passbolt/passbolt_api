@@ -194,7 +194,7 @@ class FoldersDeleteServiceTest extends AppIntegrationTestCase
         return [$folderA, $folderB];
     }
 
-    public function testThatFoldersUpdateDispatchEventToSendEmailAfterFolderIsCreated()
+    public function testSuccessCase6_FoldersSendEmailAfterFolderIsDeleted()
     {
         $eventNameToTest = FoldersDeleteService::FOLDERS_DELETE_FOLDER_EVENT;
         $eventWasDispatched = false;
