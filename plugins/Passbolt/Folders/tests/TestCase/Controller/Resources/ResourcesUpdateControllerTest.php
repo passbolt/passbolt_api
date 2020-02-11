@@ -97,9 +97,9 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function testResourcesUpdateSuccessCaseXXX_MoveToRoot()
+    public function testResourcesUpdateSuccessCase1_MoveToRoot()
     {
-        list($userId, $resource) = $this->insertFixtureForCaseXXX_MoveToRoot();
+        list($userId, $resource) = $this->insertFixtureForCase1_MoveToRoot();
         $data = $resource->toArray();
         $data['folder_parent_id'] = null;
 
@@ -111,7 +111,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, null);
     }
 
-    public function insertFixtureForCaseXXX_MoveToRoot()
+    public function insertFixtureForCase1_MoveToRoot()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
@@ -120,9 +120,9 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return [$userId, $resource];
     }
 
-    public function testResourcesUpdateSuccessCaseXXX_MoveIntoPersonnalFolder()
+    public function testResourcesUpdateSuccessCase2_MoveIntoPersonnalFolder()
     {
-        list($userId, $resource, $folder) = $this->insertFixtureForCaseXXX_MoveIntoPersonnalFolder();
+        list($userId, $resource, $folder) = $this->insertFixtureForCase2_MoveIntoPersonnalFolder();
         $data = $resource->toArray();
         $data['folder_parent_id'] = $folder->id;
 
@@ -134,7 +134,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userId, $folder->id);
     }
 
-    public function insertFixtureForCaseXXX_MoveIntoPersonnalFolder()
+    public function insertFixtureForCase2_MoveIntoPersonnalFolder()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
@@ -143,9 +143,9 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return [$userId, $resource, $folder];
     }
 
-    public function testResourcesUpdateErrorCaseXXX_FolderParentNotExist()
+    public function testResourcesUpdateErrorCase3_FolderParentNotExist()
     {
-        list($resource) = $this->insertFixtureForCaseXXX_FolderParentNotExist();
+        list($resource) = $this->insertFixtureForCase3_FolderParentNotExist();
         $data = $resource->toArray();
         $data['folder_parent_id'] = UuidFactory::uuid();
 
@@ -157,7 +157,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotNull($error);
     }
 
-    public function insertFixtureForCaseXXX_FolderParentNotExist()
+    public function insertFixtureForCase3_FolderParentNotExist()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $resource = $this->addResourceForUsers([], [$userId => Permission::OWNER]);
@@ -165,9 +165,9 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return [$resource];
     }
 
-    public function testResourcesUpdateErrorCaseXXX_FolderParentNotAllowed()
+    public function testResourcesUpdateErrorCase4_FolderParentNotAllowed()
     {
-        list($resource, $folder) = $this->insertFixtureForCaseXXX_FolderParentNotAllowed();
+        list($resource, $folder) = $this->insertFixtureForCase4_FolderParentNotAllowed();
         $data = $resource->toArray();
         $data['folder_parent_id'] = $folder->id;
 
@@ -179,7 +179,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotNull($error);
     }
 
-    public function insertFixtureForCaseXXX_FolderParentNotAllowed()
+    public function insertFixtureForCase4_FolderParentNotAllowed()
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $resource = $this->addResourceForUsers([], [$userAId => Permission::OWNER]);
