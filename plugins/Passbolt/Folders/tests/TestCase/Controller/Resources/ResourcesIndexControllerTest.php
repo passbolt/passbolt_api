@@ -68,7 +68,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     {
         $this->addFolderFor(['id' => $folderParentId], [$userId => Permission::OWNER]);
         foreach ($childrenFolders as $childrenFolderId) {
-            $this->addResourceForUsers(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId], [$userId => Permission::OWNER]);
+            $this->addResourceFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId], [$userId => Permission::OWNER]);
         }
     }
 
@@ -103,7 +103,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
             }
 
             foreach ($rootResources as $resourceId) {
-                $this->addResourceForUsers(['id' => $resourceId], [$userId => Permission::OWNER]);
+                $this->addResourceFor(['id' => $resourceId], [$userId => Permission::OWNER]);
             }
         };
 

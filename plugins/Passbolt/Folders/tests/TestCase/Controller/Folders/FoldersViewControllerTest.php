@@ -1,5 +1,17 @@
 <?php
-
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.14.0
+ */
 namespace Passbolt\Folders\Test\TestCase\Controller;
 
 use App\Model\Entity\Permission;
@@ -14,7 +26,6 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -29,6 +40,7 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
+use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -37,7 +49,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  *
  * @uses \Passbolt\Folders\Controller\Folders\FoldersViewController
  */
-class FoldersViewControllerTest extends AppIntegrationTestCase
+class FoldersViewControllerTest extends FoldersIntegrationTestCase
 {
     use IntegrationTestTrait;
     use FoldersModelTrait;
@@ -128,8 +140,8 @@ class FoldersViewControllerTest extends AppIntegrationTestCase
         // |- B (Ada:O)
         // |- C (Ada:O)
         $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $resource1 = $this->addResourceForUsers(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $resource2 = $this->addResourceForUsers(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
 
         $this->authenticateAs('ada');
         $this->getJson("/folders/{$folderA->id}.json?contain[children_resources]=1&api-version=2");

@@ -11,7 +11,6 @@ use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
@@ -29,6 +28,7 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersUpdateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
+use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -37,7 +37,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  *
  * @covers \Passbolt\Folders\Service\FoldersUpdateService
  */
-class FoldersUpdateServiceTest extends AppIntegrationTestCase
+class FoldersUpdateServiceTest extends FoldersTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;

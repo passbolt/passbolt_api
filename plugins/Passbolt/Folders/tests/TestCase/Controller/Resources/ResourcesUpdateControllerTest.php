@@ -115,7 +115,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
-        $resource = $this->addResourceForUsers(['folder_parent_id' => $folder->id], [$userId => Permission::OWNER]);
+        $resource = $this->addResourceFor(['folder_parent_id' => $folder->id], [$userId => Permission::OWNER]);
 
         return [$userId, $resource];
     }
@@ -138,7 +138,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
-        $resource = $this->addResourceForUsers([], [$userId => Permission::OWNER]);
+        $resource = $this->addResourceFor([], [$userId => Permission::OWNER]);
 
         return [$userId, $resource, $folder];
     }
@@ -160,7 +160,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     public function insertFixtureForCase3_FolderParentNotExist()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $resource = $this->addResourceForUsers([], [$userId => Permission::OWNER]);
+        $resource = $this->addResourceFor([], [$userId => Permission::OWNER]);
 
         return [$resource];
     }
@@ -182,7 +182,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     public function insertFixtureForCase4_FolderParentNotAllowed()
     {
         $userAId = UuidFactory::uuid('user.id.ada');
-        $resource = $this->addResourceForUsers([], [$userAId => Permission::OWNER]);
+        $resource = $this->addResourceFor([], [$userAId => Permission::OWNER]);
         $userBId = UuidFactory::uuid('user.id.betty');
         $folder = $this->addFolderFor([], [$userBId => Permission::OWNER]);
 

@@ -19,6 +19,7 @@ use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Service\ResourcesAfterCreateService;
+use Passbolt\Folders\Service\ResourcesAfterSoftDeleteService;
 use Passbolt\Folders\Service\ResourcesAfterUpdateService;
 
 /**
@@ -30,15 +31,15 @@ use Passbolt\Folders\Service\ResourcesAfterUpdateService;
  */
 class ResourcesEventListener implements EventListenerInterface
 {
-
     /**
      * @return array
      */
     public function implementedEvents()
     {
         return [
-            'Action.Resource.afterCreate' => 'handleResourceAfterCreateEvent',
-            'Action.Resource.afterUpdate' => 'handleResourceAfterUpdateEvent',
+            'ResourcesAddController.addPost.success' => 'handleResourceAfterCreateEvent',
+            'ResourcesUpdateController.update.success' => 'handleResourceAfterUpdateEvent',
+            'Model.Resource.afterSoftDelete' => 'handleResourceAfterSoftDeleteEvent',
         ];
     }
 
@@ -62,5 +63,17 @@ class ResourcesEventListener implements EventListenerInterface
         $folderParentId = Hash::get($data['data'], 'folder_parent_id', null);
         $service = new ResourcesAfterUpdateService();
         $service->afterUpdate($uac, $resource, $folderParentId);
+    }
+
+    /**
+     * Handle a resource after soft delete event.
+     * @param Event $event The event.
+     * @throws \Exception
+     */
+    public function handleResourceAfterSoftDeleteEvent(Event $event)
+    {
+        $resource = $event->getSubject();
+        $service = new ResourcesAfterSoftDeleteService();
+        $service->afterSoftDelete($resource);
     }
 }

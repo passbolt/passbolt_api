@@ -24,7 +24,6 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -34,6 +33,7 @@ use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
+use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -42,7 +42,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  *
  * @uses \Passbolt\Folders\Controller\Folders\FoldersCreateController
  */
-class FoldersCreateControllerTest extends AppIntegrationTestCase
+class FoldersCreateControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -76,7 +76,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
-    public function testSuccessCase1_WithoutParentFolder()
+    public function testCreateFolder_PersoSuccess1_CreateFolder()
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $data = ['name' => 'A'];
@@ -92,10 +92,10 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->assertEquals($userId, $folder->modified_by);
     }
 
-    public function testSuccessCase2_WithFolderParentId()
+    public function testCreateFolder_PersoSuccess2_CreateInFolder()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $parentFolder = $this->insertFixtureCase2();
+        $parentFolder = $this->insertPersoSuccess2Fixture();
 
         $data = [
             'name' => 'B',
@@ -114,7 +114,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->assertEquals($userId, $folder->modified_by);
     }
 
-    private function insertFixtureCase2()
+    private function insertPersoSuccess2Fixture()
     {
         // Ada has access to folder A as a OWNER
         // A (Ada:O)
@@ -124,7 +124,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         return $folderA;
     }
 
-    public function testErrorCase3_ValidationError()
+    public function testCreateFolder_CommonError1_ValidationError()
     {
         $data = ['name' => ''];
         $this->authenticateAs('ada');
@@ -136,7 +136,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->assertEquals('The name cannot be empty.', $error['_empty']);
     }
 
-    public function testErrorCase4_ParentFolderDoesNotExist()
+    public function testCreateFolder_CommonError2_ParentFolderDoesNotExist()
     {
         $data = [
             'name' => 'B',
@@ -151,9 +151,9 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->assertEquals('The folder parent must exist.', $error['folder_exists']);
     }
 
-    public function testErrorCase5_ParentFolderInsufficientPermission()
+    public function testCreateFolder_SharedError1_ParentFolderInsufficientPermission()
     {
-        $parentFolder = $this->insertFixtureCase5();
+        $parentFolder = $this->insertSharedError1Fixture();
 
         $data = [
             'name' => 'B',
@@ -167,7 +167,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->assertEquals('You are not allowed to create content into the parent folder.', $error['has_folder_access']);
     }
 
-    private function insertFixtureCase5()
+    private function insertSharedError1Fixture()
     {
         // Ada has access to folder A in READ
         // Betty has access to folder A as OWNER
@@ -179,7 +179,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         return $folder;
     }
 
-    public function testActionIsProtectedByCsrfTokenAndReturnErrorIfNotProvided()
+    public function testCreateFolderError_IsProtectedByCsrfToken()
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
@@ -187,7 +187,7 @@ class FoldersCreateControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testResourcesAddErrorNotAuthenticated()
+    public function testCreateFolderError_NotAuthenticated()
     {
         $this->postJson('/folders.json?api-version=2');
         $this->assertAuthenticationError();

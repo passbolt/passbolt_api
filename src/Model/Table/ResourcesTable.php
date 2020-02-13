@@ -22,6 +22,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
 use Cake\Event\Event;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -102,7 +103,7 @@ class ResourcesTable extends Table
                 'conditions' => [
                     'FoldersRelations.foreign_model' => 'Resource'
                 ],
-                'dependent' => false,
+                'dependent' => true,
             ]);
         }
     }

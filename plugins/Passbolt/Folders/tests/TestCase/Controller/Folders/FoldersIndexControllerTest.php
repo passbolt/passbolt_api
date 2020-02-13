@@ -27,7 +27,6 @@ use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
@@ -40,13 +39,14 @@ use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
+use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * @see \Passbolt\Folders\Controller\Folders\FoldersIndexController
  */
-class FoldersIndexControllerTest extends AppIntegrationTestCase
+class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -303,8 +303,8 @@ class FoldersIndexControllerTest extends AppIntegrationTestCase
         // |- R1 (Ada:O)
         // |- R2 (Ada:O)
         $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $resource1 = $this->addResourceForUsers(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-        $resource2 = $this->addResourceForUsers(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
+        $resource2 = $this->addResourceFor(['name' => 'R2', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
 
         $this->authenticateAs('ada');
         $this->getJson("/folders.json?contain[children_resources]=1&api-version=2");

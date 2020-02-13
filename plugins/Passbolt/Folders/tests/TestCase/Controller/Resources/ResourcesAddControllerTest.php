@@ -97,10 +97,18 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
+    private function _getDummyResourceData()
+    {
+        $dummy = $this->getDummyResourceData();
+        $dummy['secrets'][] = $this->getDummySecret(['resource_id' => null]);
+
+        return $dummy;
+    }
+
     public function testResourcesAddSuccessCase1_CreateToRoot()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $data = $this->getDummyResource();
+        $data = $this->_getDummyResourceData();
         $data['folder_parent_id'] = null;
 
         $this->authenticateAs('ada');
@@ -113,8 +121,9 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function testResourcesAddSuccessCase2_CreateIntoPersonalFolder()
     {
-        list ($userId, $folder) = $this->insertFixtureForCase2_CreateIntoPersonalFolder();
-        $data = $this->getDummyResource();
+        list ($folder) = $this->insertFixtureForCase2_CreateIntoPersonalFolder();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $data = $this->_getDummyResourceData();
         $data['folder_parent_id'] = $folder->id;
 
         $this->authenticateAs('ada');
@@ -130,12 +139,13 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $folder = $this->addFolderFor([], [$userId => Permission::OWNER]);
 
-        return [$userId, $folder];
+        return [$folder];
     }
 
     public function testResourcesAddErrorCase3_FolderParentNotExist()
     {
-        $data = $this->getDummyResource();
+        $userId = UuidFactory::uuid('user.id.ada');
+        $data = $this->_getDummyResourceData();
         $data['folder_parent_id'] = UuidFactory::uuid();
 
         $this->authenticateAs('ada');
@@ -149,7 +159,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     public function insertFixtureForCase3_FolderParentNotExist()
     {
         $userId = UuidFactory::uuid('user.id.ada');
-        $resource = $this->addResourceForUsers([], [$userId => Permission::OWNER]);
+        $resource = $this->addResourceFor([], [$userId => Permission::OWNER]);
 
         return [$resource];
     }
@@ -157,7 +167,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     public function testResourcesAddErrorCase4_FolderParentNotAllowed()
     {
         list($folder) = $this->insertFixtureForCase4_FolderParentNotAllowed();
-        $data = $this->getDummyResource();
+        $data = $this->_getDummyResourceData();
         $data['folder_parent_id'] = $folder->id;
 
         $this->authenticateAs('ada');

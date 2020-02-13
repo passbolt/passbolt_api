@@ -59,6 +59,11 @@ class FoldersDeleteService
     private $foldersPermissionsDeleteService;
 
     /**
+     * @var PermissionsTable
+     */
+    private $permissionsTable;
+
+    /**
      * @var ResourcesTable
      */
     private $resourcesTable;
@@ -75,6 +80,7 @@ class FoldersDeleteService
     {
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->userHasPermissionService = new UserHasPermissionService();
         $this->foldersRelationsDeleteService = new FoldersRelationsDeleteService();
@@ -97,12 +103,13 @@ class FoldersDeleteService
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $cascade) {
             if ($cascade) {
-                $this->deleteContent($uac, $folder);
+                $this->deleteFolderContent($uac, $folder);
+            } else {
+                $this->moveFolderContentToRoot($folder);
             }
-            $this->deletePermissions($uac, $folder);
-            $this->deleteFoldersRelations($uac, $folder);
-            $this->deleteFolder($uac, $folder);
-            $this->moveChildrenToRoot($folder);
+            $this->foldersTable->delete($folder, ['atomic' => false]);
+            $this->handleValidationErrors($folder);
+
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
                 'uac' => $uac,
                 'folder' => $folder,
@@ -150,20 +157,15 @@ class FoldersDeleteService
      * @return void
      * @throws Exception
      */
-    private function deleteContent(UserAccessControl $uac, Folder $folder)
+    private function deleteFolderContent(UserAccessControl $uac, Folder $folder)
     {
-        $userId = $uac->userId();
-        $children = $this->foldersRelationsTable->find()
-            ->where([
-                'folder_parent_id' => $folder->id,
-                'user_id' => $userId,
-            ]);
+        $children = $this->foldersRelationsTable->findAllByFolderParentId($folder->id);
 
         foreach ($children as $folderRelation) {
             if ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-                $this->deleteChildFolder($uac, $folderRelation->foreign_id);
+                $this->deleteChildFolderOrMoveToRoot($uac, $folderRelation->foreign_id);
             } elseif ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_RESOURCE) {
-                $this->deleteChildResource($uac, $folderRelation->foreign_id);
+                $this->deleteChildResourceOrMoveToRoot($uac, $folderRelation->foreign_id);
             }
         }
     }
@@ -174,10 +176,14 @@ class FoldersDeleteService
      * @param string $folderId The folder to delete
      * @throws Exception
      */
-    private function deleteChildFolder($uac, $folderId)
+    private function deleteChildFolderOrMoveToRoot($uac, $folderId)
     {
-        if ($this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $uac->userId(), Permission::UPDATE)) {
+        $userId = $uac->userId();
+        $canDelete = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $userId, Permission::UPDATE);
+        if ($canDelete) {
             $this->delete($uac, $folderId, true);
+        } else {
+            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['foreign_id' => $folderId]);
         }
     }
 
@@ -186,73 +192,28 @@ class FoldersDeleteService
      * @param UserAccessControl $uac The current user.
      * @param string $resourceId The resource to delete
      */
-    private function deleteChildResource($uac, $resourceId)
+    private function deleteChildResourceOrMoveToRoot($uac, $resourceId)
     {
-        if ($this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resourceId, $uac->userId(), Permission::UPDATE)) {
+        $userId = $uac->userId();
+        $canDelete = $this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resourceId, $userId, Permission::UPDATE);
+        if ($canDelete) {
             $resource = $this->resourcesTable->get($resourceId);
             $this->resourcesTable->softDelete($uac->userId(), $resource);
+        } else {
+            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['foreign_id' => $resourceId]);
         }
     }
 
     /**
-     * Delete the user permission for a folder.
-     *
-     * @param UserAccessControl $uac The current user.
-     * @param Folder $folder The folder to delete the permission for.
-     * @return void
-     * @throws Exception
-     */
-    private function deletePermissions(UserAccessControl $uac, Folder $folder)
-    {
-        $this->foldersPermissionsDeleteService->delete($uac, $folder->id);
-    }
-
-    /**
-     * Delete the user folders relations.
-     *
-     * @param UserAccessControl $uac The current user.
-     * @param Folder $folder The folder to delete the folders relations for.
-     * @return void
-     * @throws Exception
-     */
-    private function deleteFoldersRelations(UserAccessControl $uac, Folder $folder)
-    {
-        $this->foldersRelationsDeleteService->delete($uac, $folder->id);
-    }
-
-    /**
-     * Delete the folder in database.
-     *
-     * @param UserAccessControl $uac The current user.
-     * @param Folder $folder The folder to delete
-     * @return void
-     * @throws Exception
-     */
-    private function deleteFolder(UserAccessControl $uac, Folder $folder)
-    {
-        $this->foldersTable->delete($folder, ['atomic' => false]);
-        $this->handleValidationErrors($folder);
-        $this->foldersPermissionsDeleteService->delete($uac, $folder->id);
-    }
-
-    /**
-     * Move the children of the folder to root.
+     * Move folder content to root.
      *
      * @param Folder $folder The folder to delete
      * @return void
      * @throws Exception
      */
-    private function moveChildrenToRoot(Folder $folder)
+    private function moveFolderContentToRoot(Folder $folder)
     {
-        $children = $this->foldersRelationsTable->find()
-            ->where(['folder_parent_id' => $folder->id])
-            ->select('id')
-            ->extract('id')
-            ->toArray();
-
-        if (!empty($children)) {
-            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['id IN' => $children]);
-        }
+        $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['folder_parent_id' => $folder->id]);
     }
 
     /**

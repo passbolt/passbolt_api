@@ -67,7 +67,7 @@ trait PermissionsModelTrait
             'type' => $type,
         ];
         $permission = $permissionsTable->newEntity($data, $saveOptions);
-        $permissionsTable->save($permission);
+        $permissionsTable->saveOrFail($permission);
 
         return $permission;
     }

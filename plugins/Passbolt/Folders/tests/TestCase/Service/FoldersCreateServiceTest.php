@@ -1,4 +1,17 @@
 <?php
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.14.0
+ */
 
 namespace Passbolt\Folders\Test\TestCase\Service;
 
@@ -11,7 +24,6 @@ use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -26,6 +38,7 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersCreateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
+use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -34,7 +47,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  *
  * @uses \Passbolt\Folders\Service\FoldersCreateService
  */
-class FoldersCreateServiceTest extends AppIntegrationTestCase
+class FoldersCreateServiceTest extends FoldersTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
@@ -84,120 +97,9 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         $this->service = new FoldersCreateService();
     }
 
-    public function testSuccessCase1_WithoutFolderParent()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'A'];
-        $folder = $this->service->create($uac, $folderData);
-
-        $this->assertTrue($folder instanceof Folder);
-        $this->assertEquals('A', $folder->name);
-        $this->assertEquals(null, $folder->folder_parent_id);
-        $this->assertEquals($userId, $folder->created_by);
-        $this->assertEquals($userId, $folder->modified_by);
-        $this->assertPermission($folder->id, $userId, Permission::OWNER);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId);
-    }
-
-    public function testSuccessCase2_WithParentFolder()
-    {
-        $parentFolder = $this->insertFixtureCase2();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
-        $folder = $this->service->create($uac, $folderData);
-
-        $this->assertTrue($folder instanceof Folder);
-        $this->assertEquals('B', $folder->name);
-        $this->assertEquals($parentFolder->id, $folder->folder_parent_id);
-        $this->assertEquals($userId, $folder->created_by);
-        $this->assertEquals($userId, $folder->modified_by);
-        $this->assertPermission($folder->id, $userId, Permission::OWNER);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $parentFolder->id);
-    }
-
-    private function insertFixtureCase2()
-    {
-        // Ada has access to folder A as a OWNER
-        // A (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-
-        return $folderA;
-    }
-
-    public function testErrorCase3_ValidationError()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => ''];
-
-        try {
-            $this->service->create($uac, $folderData);
-        } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
-        }
-        $this->fail('Expect ValidationException');
-    }
-
-    public function testErrorCase4_ParentFolderDoesNotExist()
-    {
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = [
-            'name' => 'B',
-            'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
-        ];
-
-        try {
-            $this->service->create($uac, $folderData);
-        } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent must exist.']];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
-        }
-        $this->fail('Expect ValidationException');
-    }
-
-    public function testErrorCase5_ParentFolderInsufficientPermission()
-    {
-        list ($parentFolder) = $this->insertFixtureCase5();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
-
-        try {
-            $this->service->create($uac, $folderData);
-        } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
-        }
-        $this->fail('Expect ValidationException');
-    }
-
-    private function insertFixtureCase5()
-    {
-        // Ada has access to folder A as a READ
-        // Betty is OWNER of folder A
-        // A (Ada:R, Betty:O)
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
-
-        return [$folderA];
-    }
+    /* ************************************************************** */
+    /* COMMON & VALIDATION */
+    /* ************************************************************** */
 
     public function testThatFoldersCreateDispatchEventToSendEmailAfterFolderIsCreated()
     {
@@ -220,5 +122,191 @@ class FoldersCreateServiceTest extends AppIntegrationTestCase
         $this->service->create($uac, $folderData);
 
         $this->assertTrue($eventWasDispatched, "Event `$eventNameToTest` was not dispatched after folder was created with success.");
+    }
+
+    public function testCreateFolder_CommonError1_ValidationError()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => ''];
+
+        try {
+            $this->service->create($uac, $folderData);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+        $this->fail('Expect ValidationException');
+    }
+
+    public function testCreateFolder_CommonError2_ParentFolderNotExist()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = [
+            'name' => 'B',
+            'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
+        ];
+
+        try {
+            $this->service->create($uac, $folderData);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent must exist.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+        $this->fail('Expect ValidationException');
+    }
+
+    public function testCreateFolder_CommonError3_ParentFolderNoPermission()
+    {
+        list ($parentFolder) = $this->insertCommonError3Fixture();
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
+
+        try {
+            $this->service->create($uac, $folderData);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+        $this->fail('Expect ValidationException');
+    }
+
+    private function insertCommonError3Fixture()
+    {
+        // Betty is OWNER of folder A
+        // A (Betty:O)
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::OWNER]);
+
+        return [$folderA];
+    }
+
+    /* ************************************************************** */
+    /* PERSONAL FOLDER */
+    /* ************************************************************** */
+
+    public function testCreateFolder_PersoSuccess1_CreateToRoot()
+    {
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => 'A'];
+        $folder = $this->service->create($uac, $folderData);
+
+        $this->assertTrue($folder instanceof Folder);
+        $this->assertEquals('A', $folder->name);
+        $this->assertEquals(null, $folder->folder_parent_id);
+        $this->assertEquals($userId, $folder->created_by);
+        $this->assertEquals($userId, $folder->modified_by);
+        $this->assertPermission($folder->id, $userId, Permission::OWNER);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId);
+    }
+
+    public function testCreateFolder_PersoSuccess2_CreateInFolder()
+    {
+        $parentFolder = $this->insertPersoSuccess2Fixture();
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
+        $folder = $this->service->create($uac, $folderData);
+
+        $this->assertTrue($folder instanceof Folder);
+        $this->assertEquals('B', $folder->name);
+        $this->assertEquals($parentFolder->id, $folder->folder_parent_id);
+        $this->assertEquals($userId, $folder->created_by);
+        $this->assertEquals($userId, $folder->modified_by);
+        $this->assertPermission($folder->id, $userId, Permission::OWNER);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userId, $parentFolder->id);
+    }
+
+    private function insertPersoSuccess2Fixture()
+    {
+        // Ada has access to folder A as a OWNER
+        // A (Ada:O)
+        $userId = UuidFactory::uuid('user.id.ada');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
+
+        return $folderA;
+    }
+
+    /* ************************************************************** */
+    /* SHARED FOLDER */
+    /* ************************************************************** */
+
+    public function testCreateFolder_SharedError1_ParentFolderInsufficientPermission()
+    {
+        list ($parentFolder) = $this->insertSharedError1Fixture();
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
+
+        try {
+            $this->service->create($uac, $folderData);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+        $this->fail('Expect ValidationException');
+    }
+
+    private function insertSharedError1Fixture()
+    {
+        // Ada has access to folder A as a READ
+        // Betty is OWNER of folder A
+        // A (Ada:R, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+
+        return [$folderA];
+    }
+
+    public function testCreateFolder_SharedSuccess1_CreateInFolder()
+    {
+        list ($folderA) = $this->insertSharedSuccess1Fixture();
+
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+        $folderData = ['name' => 'B', 'folder_parent_id' => $folderA->id];
+        $folderB = $this->service->create($uac, $folderData);
+
+        $this->assertTrue($folderB instanceof Folder);
+        $this->assertEquals('B', $folderB->name);
+        $this->assertEquals($folderA->id, $folderB->folder_parent_id);
+        $this->assertEquals($userAId, $folderB->created_by);
+        $this->assertEquals($userAId, $folderB->modified_by);
+        $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertPermissionNotExist($folderB->id, $userBId);
+        $this->assertFolderRelationNotExist($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderA->id);
+    }
+
+    private function insertSharedSuccess1Fixture()
+    {
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // A (Ada:O, Betty:R)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+
+        return [$folderA];
     }
 }
