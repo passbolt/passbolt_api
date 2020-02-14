@@ -18,9 +18,12 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\EmailDigest\DigestMarshallerRegister\Group\GroupUserEmailDigestMarshallerRegister;
+use App\Notification\EmailDigest\DigestMarshallerRegister\Resource\ResourceEmailDigestMarshallerRegister;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -101,6 +104,8 @@ class Application extends BaseApplication
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
         }
+
+        $this->registerEvents();
     }
 
     /**
@@ -155,6 +160,7 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true ]);
+        $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
 
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
@@ -184,5 +190,16 @@ class Application extends BaseApplication
         }
 
         return $this;
+    }
+
+    /**
+     * Register some required events at bootstrap
+     * @return void
+     */
+    protected function registerEvents()
+    {
+        EventManager::instance()
+            ->on(new GroupUserEmailDigestMarshallerRegister())
+            ->on(new ResourceEmailDigestMarshallerRegister());
     }
 }

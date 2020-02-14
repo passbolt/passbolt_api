@@ -100,6 +100,7 @@ trait ShareEmailTrait
                 'showDescription' => $showDescription,
                 'showSecret' => $showSecret,
             ], 'title' => $subject];
+
             $this->_send($userName, $subject, $data, $template);
         }
     }
