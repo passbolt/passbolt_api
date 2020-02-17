@@ -135,7 +135,7 @@ trait FoldersRelationsModelTrait
         $this->assertEquals(0, $folderRelationQuery->count());
     }
 
-    protected function assertObjectHasFolderParentIdAttribute($object, string $expectedParentId)
+    protected function assertObjectHasFolderParentIdAttribute($object, string $expectedParentId = null)
     {
         $this->assertObjectHasAttribute('folder_parent_id', $object);
         $this->assertEquals($expectedParentId, $object->folder_parent_id);

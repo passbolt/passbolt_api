@@ -76,6 +76,7 @@ class FoldersUpdateService
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
         $this->foldersHasAncestorService = new FoldersHasAncestorService();
         $this->foldersMoveService = new FoldersMoveService();
         $this->userHasPermissionService = new UserHasPermissionService();
@@ -92,18 +93,18 @@ class FoldersUpdateService
      */
     public function update(UserAccessControl $uac, string $id, array $data = [])
     {
-        if (empty($data)) {
-            return;
-        }
-
         $folder = $this->getFolder($id, $uac);
+        if (empty($data)) {
+            return $folder;
+        }
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
             if (array_key_exists('name', $data)) {
                 $this->updateFolder($uac, $folder, $data['name']);
             }
             if (array_key_exists('folder_parent_id', $data)) {
-                $this->moveFolder($uac, $folder, $data['folder_parent_id']);
+                $this->validateMoveFolder($uac, $folder, $data['folder_parent_id']);
+                $this->moveFolder($folder, $data['folder_parent_id']);
             }
         });
 
@@ -196,21 +197,6 @@ class FoldersUpdateService
     }
 
     /**
-     * Move the folder.
-     *
-     * @param UserAccessControl $uac The current user.
-     * @param Folder $folder The folder to move.
-     * @param string $folderParentId The destination folder.
-     * @return void
-     * @throws Exception
-     */
-    private function moveFolder(UserAccessControl $uac, Folder $folder, string $folderParentId = null)
-    {
-        $this->validateMoveFolder($uac, $folder, $folderParentId);
-        $this->foldersMoveService->move($uac, $folder, $folderParentId);
-    }
-
-    /**
      * Validate the parent folder
      *
      * @param UserAccessControl $uac The current user
@@ -223,8 +209,8 @@ class FoldersUpdateService
         if (is_null($folderParentId)) {
             $this->assertUserCanMoveOutOfFolder($uac, $folder);
         } else {
-            $this->assertFolderParentExists($folder, $folderParentId);
             $this->assertUserCanMoveOutOfFolder($uac, $folder);
+            $this->assertFolderParentExists($folder, $folderParentId);
             $this->assertUserCanMoveInFolder($uac, $folder, $folderParentId);
             $this->assertMoveIsCycleFree($uac, $folder, $folderParentId);
         }
@@ -238,24 +224,14 @@ class FoldersUpdateService
      */
     private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, Folder $folder)
     {
-        // @todo Not needed with personal folder.
-    }
-
-    /**
-     * Check if the user can move content in the folder;
-     * @param UserAccessControl $uac The current user
-     * @param Folder $folder The folder into which the user wants to move out
-     * @param string $folderParentId The destination folder
-     * @return void
-     */
-    private function assertUserCanMoveInFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
-    {
-        $userId = $uac->userId();
-        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
-        if (!$isAllowedToMoveIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
-            $folder->setError('folder_parent_id', $errors);
-            $this->handleValidationErrors($folder);
+        if (!is_null($folder->folder_parent_id)) {
+            $userId = $uac->userId();
+            $isAllowedToMoveOut= $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->folder_parent_id, $userId, Permission::UPDATE);
+            if (!$isAllowedToMoveOut) {
+                $errors = ['has_folder_access' => 'You are not allowed to move content out of the parent folder.'];
+                $folder->setError('folder_parent_id', $errors);
+                $this->handleValidationErrors($folder);
+            }
         }
     }
 
@@ -278,6 +254,24 @@ class FoldersUpdateService
     }
 
     /**
+     * Check if the user can move content in the folder;
+     * @param UserAccessControl $uac The current user
+     * @param Folder $folder The folder into which the user wants to move out
+     * @param string $folderParentId The destination folder
+     * @return void
+     */
+    private function assertUserCanMoveInFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    {
+        $userId = $uac->userId();
+        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
+        if (!$isAllowedToMoveIn) {
+            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+            $folder->setError('folder_parent_id', $errors);
+            $this->handleValidationErrors($folder);
+        }
+    }
+
+    /**
      * Assert that moving the folder into the destination folder won't create a cycle.
      *
      * @param UserAccessControl $uac The current user
@@ -289,9 +283,38 @@ class FoldersUpdateService
     {
         $hasAncestor = $this->foldersHasAncestorService->hasAncestor($uac, $folderParentId, $folder->id);
         if ($hasAncestor) {
-            $errors = ['folder_exists' => 'The destination folder cannot be a child.'];
+            $errors = ['folder_cycle' => 'The destination folder cannot be a child.'];
             $folder->setError('folder_parent_id', $errors);
             $this->handleValidationErrors($folder);
         }
+    }
+
+    /**
+     * Move the folder.
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param Folder $folder The folder to move.
+     * @param string $folderParentId The destination folder.
+     * @return void
+     * @throws Exception
+     */
+    private function moveFolder(Folder $folder, string $folderParentId = null)
+    {
+        // If the destination folder is not the root, then move the folder into it for users who can see it.
+        if (!is_null($folderParentId)) {
+            $usersSeeingDestination = $this->foldersRelationsTable->findByForeignId($folderParentId)->extract('user_id')->toArray();
+            $this->foldersRelationsTable->updateAll(['folder_parent_id' => $folderParentId], [
+                'foreign_id' => $folder->id,
+                'user_id IN' => $usersSeeingDestination
+            ]);
+        }
+
+        // Move the folder to the root for rest of users who have it organized as the operator.
+        $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], [
+            'foreign_id' => $folder->id,
+            'folder_parent_id' => $folder->folder_parent_id
+        ]);
+
+        return $folder->set('folder_parent_id', $folderParentId);
     }
 }
