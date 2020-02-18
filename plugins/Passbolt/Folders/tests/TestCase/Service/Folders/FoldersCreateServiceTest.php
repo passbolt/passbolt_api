@@ -35,7 +35,7 @@ use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
-use Passbolt\Folders\Service\FoldersCreateService;
+use Passbolt\Folders\Service\Folders\FoldersCreateService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
@@ -43,9 +43,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
- * Passbolt\Folders\Service\FoldersCreateService Test Case
+ * Passbolt\Folders\Service\Folders\FoldersCreateService Test Case
  *
- * @uses \Passbolt\Folders\Service\FoldersCreateService
+ * @uses \Passbolt\Folders\Service\Folders\FoldersCreateService
  */
 class FoldersCreateServiceTest extends FoldersTestCase
 {

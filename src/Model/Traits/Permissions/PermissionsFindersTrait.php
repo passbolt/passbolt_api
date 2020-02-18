@@ -118,6 +118,45 @@ trait PermissionsFindersTrait
     }
 
     /**
+     * Returns a query retrieving the permissions an aco have.
+     *
+     * The $checkGroupsUsers will also return the permissions inherited from the groups the aro is member of.
+     *
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $acoForeignKey The target aco id. By instance a resource or a folder id.
+     * @return Query
+     */
+    public function findAllByAco(string $acoType, string $acoForeignKey)
+    {
+        return $this->find()
+            ->where([
+                'Permissions.aco' => $acoType,
+                'Permissions.aco_foreign_key' => $acoForeignKey
+            ]);
+    }
+
+    public function findAllUsersHavingAccessToAco(string $acoType, string $acoForeignKey)
+    {
+        $permissionsForAco = $this->findAllByAco($acoType, $acoForeignKey);
+
+        // Retrieve users from groups having access to the aco.
+        $usersFromGroupsHavingAccessToAco = $this->Groups->GroupsUsers->find()
+            ->where([
+                'group_id IN' => $permissionsForAco->select('aro_foreign_key'),
+                'deleted' => false,
+            ]);
+
+        return $this->Users->find()
+            ->where([
+                'OR' => [
+                    ['Users.id IN' => $permissionsForAco->select('aro_foreign_key')],
+                    ['Users.id IN' => $usersFromGroupsHavingAccessToAco->select('user_id')]
+                ],
+                'Users.deleted' => false,
+            ]);
+    }
+
+    /**
      * Returns a query retrieving the acos (resources or folders) that are shared with someone else that the given aco
      * (user or group). By instance, it is useful to know which resources ownership need to be transferred when deleting
      * a user.

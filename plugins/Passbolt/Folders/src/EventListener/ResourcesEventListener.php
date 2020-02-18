@@ -18,9 +18,9 @@ namespace Passbolt\Folders\EventListener;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\Utility\Hash;
-use Passbolt\Folders\Service\ResourcesAfterCreateService;
-use Passbolt\Folders\Service\ResourcesAfterSoftDeleteService;
-use Passbolt\Folders\Service\ResourcesAfterUpdateService;
+use Passbolt\Folders\Service\Resources\ResourcesAfterCreateService;
+use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
+use Passbolt\Folders\Service\Resources\ResourcesAfterUpdateService;
 
 /**
  * Listen when a resource is created or updated,

@@ -78,6 +78,8 @@ trait FoldersModelTrait
      */
     public function addFolderFor($data = [], $usersIds = [], $options = [])
     {
+        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+
         reset($usersIds);
         $userId = key($usersIds);
         if (!isset($data['created_by'])) {
@@ -87,19 +89,15 @@ trait FoldersModelTrait
             $data['modified_by'] = $userId;
         }
 
-        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $folder = $this->getDummyFolderEntity($data, $options);
 
         $foldersTable->saveOrFail($folder);
 
-        foreach ($usersIds as $userId => $permissionType) {
-            $this->addPermission('Folder', $folder->id, 'User', $userId, $permissionType);
-            $folderRelationData = [
-                'foreign_model' => PermissionsTable::FOLDER_ACO,
-                'foreign_id' => $folder->id,
-                'user_id' => $userId,
-                'folder_parent_id' => $data['folder_parent_id'] ?? null,
-            ];
+        foreach ($usersIds as $aroForeignKey => $permissionType) {
+            $this->addPermission('Folder', $folder->id, null, $aroForeignKey, $permissionType);
+            $folderParentId = $data['folder_parent_id'] ?? null;
+            $folderRelationData = ['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folder->id,
+                'user_id' => $aroForeignKey, 'folder_parent_id' => $folderParentId];
             $this->addFolderRelation($folderRelationData);
         }
 

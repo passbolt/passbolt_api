@@ -13,13 +13,11 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\FoldersItems;
 
-use App\Utility\UserAccessControl;
-use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 
-class FoldersHasAncestorService
+class FoldersItemsHasAncestorService
 {
 
     /**
@@ -38,12 +36,12 @@ class FoldersHasAncestorService
     /**
      * Check if a folder has another one as ancestor.
      *
-     * @param UserAccessControl $uac The current user
      * @param string|null $folderId The target folder.
      * @param string $ancestorFolderId The potential folder ancestor
+     * @param string $userId
      * @return bool
      */
-    public function hasAncestor(UserAccessControl $uac, string $folderId = null, string $ancestorFolderId)
+    public function hasAncestor(string $folderId = null, string $ancestorFolderId, string $userId)
     {
         if ($ancestorFolderId === $folderId) {
             return true;
@@ -52,9 +50,9 @@ class FoldersHasAncestorService
             return false;
         }
 
-        $folderParentId = $this->getFolderParentId($uac->userId(), $folderId);
+        $folderParentId = $this->getFolderParentId($userId, $folderId);
 
-        return $this->hasAncestor($uac, $folderParentId, $ancestorFolderId);
+        return $this->hasAncestor($folderParentId, $ancestorFolderId, $userId);
     }
 
     /**

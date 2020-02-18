@@ -24,7 +24,7 @@ use App\Utility\UuidFactory;
 use Cake\Event\Event;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Notification\Email\DeleteFolderEmailRedactor;
-use Passbolt\Folders\Service\FoldersDeleteService;
+use Passbolt\Folders\Service\Folders\FoldersDeleteService;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**

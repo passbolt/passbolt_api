@@ -173,41 +173,9 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
-    private function addGroup()
-    {
-        $entity = $this->Groups->newEntity(
-            self::getDummyGroup(),
-            [
-                'validate' => 'default',
-                'accessibleFields' => [
-                    'name' => true,
-                    'created_by' => true,
-                    'modified_by' => true,
-                    'groups_users' => true,
-                    'deleted' => true,
-                ],
-                'associated' => [
-                    'GroupsUsers' => [
-                        'validate' => 'saveGroup',
-                        'accessibleFields' => [
-                            'user_id' => true,
-                            'is_admin' => true,
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        return $this->Groups->save($entity);
-    }
-
     public function testSuccess_ContainPermissionsGroup()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
-
-        $group = $this->addGroup();
-        $folder = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
-        $this->addPermission('Folder', $folder->id, 'Group', $group->id, Permission::OWNER);
+        $folder = $this->insertContainPermissionsGroupFixture();
 
         $this->authenticateAs('ada');
         $this->getJson("/folders/{$folder->id}.json?contain[permissions]=1&contain[permissions.group]=1&api-version=2");
@@ -225,6 +193,23 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         }
         $this->assertObjectHasAttribute('group', $permission);
         $this->assertGroupAttributes($permission->group);
+    }
+
+    public function insertContainPermissionsGroupFixture()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $groupData = [
+            'groups_users' => [
+                ['user_id' => $userAId, 'is_admin' => true],
+                ['user_id' => $userBId],
+            ]
+        ];
+        $group = $this->addGroup($groupData);
+        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $this->addPermission('Folder', $folder->id, 'Group', $group->id, Permission::OWNER);
+
+        return $folder;
     }
 
     public function testSuccess_ContainPermissionsUserProfile()

@@ -38,6 +38,11 @@ Router::plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilde
         ->setPass(['folderId'])
         ->setMethods(['DELETE']);
 
+    /** @uses \Passbolt\Folders\Controller\Folders\FoldersShareController::share() */
+    $routes->connect('/:folderId/permissions', ['prefix' => 'Folders', 'controller' => 'FoldersShare', 'action' => 'share'])
+        ->setPass(['folderId'])
+        ->setMethods(['PUT', 'POST']);
+
     /** @uses \Passbolt\Folders\Controller\Folders\FoldersIndexController::index() */
     $routes->connect('/', ['prefix' => 'Folders', 'controller' => 'FoldersIndex', 'action' => 'index'])
         ->setMethods(['GET']);

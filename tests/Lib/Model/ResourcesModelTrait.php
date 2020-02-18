@@ -15,12 +15,20 @@
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 trait ResourcesModelTrait
 {
+    /**
+     * Add a dummy resource.
+     *
+     * @param array $data The resource data
+     * @param array $options The entity options
+     * @return Resource
+     */
     public function addResource($data = [], $options = [])
     {
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
@@ -64,6 +72,13 @@ trait ResourcesModelTrait
         return $resource;
     }
 
+    /**
+     * Get a new resource entity
+     *
+     * @param array $data The resource data.
+     * @param array $options The new entity options.
+     * @return Resouce
+     */
     public function getDummyResourceEntity($data = [], $options = [])
     {
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');

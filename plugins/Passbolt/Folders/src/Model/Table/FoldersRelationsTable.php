@@ -175,4 +175,57 @@ class FoldersRelationsTable extends Table
 
         return $exist;
     }
+
+    /**
+     * Check if an item exists in a user tree.
+     *
+     * @param string $userId The target user
+     * @param string $foreignId The target item id
+     * @return bool
+     */
+    public function existsInUserTree(string $userId, string $foreignId)
+    {
+        $conditions = ['foreign_id' => $foreignId, 'user_id' => $userId];
+
+        return $this->exists($conditions);
+    }
+
+    /**
+     * Move an item from multiple locations to a target location.
+     *
+     * @param string $foreignId The target item
+     * @param array $fromFoldersIds The list of folders ids to move from
+     * @param string|null $folderParentId (optional) The destination folder location. Set it to null to null to move the
+     * item to the root. Default null.
+     */
+    public function moveItemFrom(string $foreignId, array $fromFoldersIds, string $folderParentId = null)
+    {
+        $fields = [
+            'folder_parent_id' => $folderParentId
+        ];
+        $conditions = [
+            'foreign_id' => $foreignId,
+            'folder_parent_id IN' => $fromFoldersIds
+        ];
+        $this->updateAll($fields, $conditions);
+    }
+
+    /**
+     * Move an item for users from wherever they are to a target location
+     * .
+     * @param string $foreignId The target item
+     * @param array $forUsersIds The list of users to move the item for
+     * @param string $folderParentId The destination folder
+     */
+    public function moveItemFor(string $foreignId, array $forUsersIds, $folderParentId = null)
+    {
+        $fields = [
+            'folder_parent_id' => $folderParentId
+        ];
+        $conditions = [
+            'foreign_id' => $foreignId,
+            'user_id IN' => $forUsersIds,
+        ];
+        $this->updateAll($fields, $conditions);
+    }
 }

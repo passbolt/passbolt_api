@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\Folders;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
@@ -31,6 +31,8 @@ use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Service\FoldersPermissionsDeleteService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
 
 class FoldersDeleteService
 {

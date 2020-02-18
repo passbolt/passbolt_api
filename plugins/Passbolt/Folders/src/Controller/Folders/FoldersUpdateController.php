@@ -20,7 +20,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Service\FoldersUpdateService;
+use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 
 class FoldersUpdateController extends AppController
 {

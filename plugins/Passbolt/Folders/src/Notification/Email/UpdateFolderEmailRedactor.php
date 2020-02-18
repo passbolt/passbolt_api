@@ -24,7 +24,7 @@ use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Service\FoldersUpdateService;
+use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 
 /**
  * Passbolt ~ Open source password manager for teams

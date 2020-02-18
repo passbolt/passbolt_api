@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Resource;
 use App\Utility\UserAccessControl;
@@ -21,6 +21,8 @@ use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
 
 class ResourcesMoveService
 {
@@ -62,7 +64,8 @@ class ResourcesMoveService
     {
         $this->foldersRelationsTable->getConnection()->transactional(function () use ($uac, $resource, $folderParentId) {
             $this->foldersRelationsDeleteService->delete($uac, $resource->id);
-            $this->foldersRelationsCreateService->create($uac, $resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $folderParentId);
+            $userId = $uac->userId();
+            $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $userId, $folderParentId);
             $resource->set(ContainFolderParentIdBehavior::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
         });
     }

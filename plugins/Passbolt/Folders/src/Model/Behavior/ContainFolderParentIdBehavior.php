@@ -26,7 +26,7 @@ use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Service\FoldersPermissionsCreateService;
+use Passbolt\Folders\Service\PermissionsCreateService;
 use UnexpectedValueException;
 
 /**
@@ -75,7 +75,7 @@ class ContainFolderParentIdBehavior extends Behavior
     ];
 
     /**
-     * @var FoldersPermissionsCreateService
+     * @var PermissionsCreateService
      */
     private $foldersRelationsTable;
 

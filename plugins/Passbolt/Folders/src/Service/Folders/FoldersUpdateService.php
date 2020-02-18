@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\Folders;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
@@ -31,6 +31,7 @@ use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
 
 class FoldersUpdateService
 {
@@ -44,9 +45,9 @@ class FoldersUpdateService
     private $foldersTable;
 
     /**
-     * @var FoldersHasAncestorService
+     * @var FoldersItemsHasAncestorService
      */
-    private $foldersHasAncestorService;
+    private $foldersItemsHasAncestorService;
 
     /**
      * @var ResourcesMoveService
@@ -77,7 +78,7 @@ class FoldersUpdateService
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
-        $this->foldersHasAncestorService = new FoldersHasAncestorService();
+        $this->foldersItemsHasAncestorService = new FoldersItemsHasAncestorService();
         $this->foldersMoveService = new FoldersMoveService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
@@ -281,7 +282,7 @@ class FoldersUpdateService
      */
     private function assertMoveIsCycleFree(UserAccessControl $uac, Folder $folder, string $folderParentId)
     {
-        $hasAncestor = $this->foldersHasAncestorService->hasAncestor($uac, $folderParentId, $folder->id);
+        $hasAncestor = $this->foldersItemsHasAncestorService->hasAncestor($folderParentId, $folder->id, $uac->userId());
         if ($hasAncestor) {
             $errors = ['folder_cycle' => 'The destination folder cannot be a child.'];
             $folder->setError('folder_parent_id', $errors);

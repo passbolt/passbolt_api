@@ -13,10 +13,8 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\FoldersRelations;
 
-use App\Error\Exception\ValidationException;
-use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 

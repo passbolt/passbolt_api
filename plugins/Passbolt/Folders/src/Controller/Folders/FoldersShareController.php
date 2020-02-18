@@ -16,28 +16,37 @@
 namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Service\Folders\FoldersCreateService;
+use Passbolt\Folders\Service\Folders\FoldersShareService;
 
-class FoldersCreateController extends AppController
+class FoldersShareController extends AppController
 {
     /**
-     * Folders create action.
+     * Folders update permissions action
      *
+     * @param string $id The identifier of the folder.
      * @return void
-     * @throws \Exception
+     * @throws BadRequestException If the folder id is not valid
+     * @throws \Exception If an unexpected error occurred.
      */
-    public function create()
+    public function share(string $id)
     {
+        if (!Validation::uuid($id)) {
+            throw new BadRequestException(__('The folder id is not valid.'));
+        }
+
         $uac = $this->User->getAccessControl();
+        $foldersUpdatePermissionsService = new FoldersShareService();
+
         $data = $this->getData();
-        $folderCreateService = new FoldersCreateService();
 
         /** @var Folder $folder */
-        $folder = $folderCreateService->create($uac, $data);
+        $folder = $foldersUpdatePermissionsService->share($uac, $id, $data);
 
-        $this->success(__('The folder `{0}` has been added successfully.', $folder->name), $folder);
+        $this->success(__('The folder `{0}` has been updated successfully.', $folder->name), $folder);
     }
 
     /**
@@ -55,9 +64,8 @@ class FoldersCreateController extends AppController
             $data['name'] = $name;
         }
 
-        $folderParentId = Hash::get($body, 'folder_parent_id');
-        if (isset($folderParentId)) {
-            $data['folder_parent_id'] = $folderParentId;
+        if (array_key_exists('folder_parent_id', $body)) {
+            $data['folder_parent_id'] = $body['folder_parent_id'];
         }
 
         return $data;

@@ -13,12 +13,13 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\Folders;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Service\Permissions\PermissionsCreateService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\EntityInterface;
@@ -32,6 +33,7 @@ use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 
 class FoldersCreateService
 {
@@ -45,9 +47,9 @@ class FoldersCreateService
     private $foldersTable;
 
     /**
-     * @var FoldersPermissionsCreateService
+     * @var PermissionsCreateService
      */
-    private $foldersPermissionsCreateService;
+    private $permissionsCreateService;
 
     /**
      * @var FoldersRelationsCreateService
@@ -66,7 +68,7 @@ class FoldersCreateService
     {
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
-        $this->foldersPermissionsCreateService = new FoldersPermissionsCreateService();
+        $this->permissionsCreateService = new PermissionsCreateService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
@@ -162,9 +164,10 @@ class FoldersCreateService
     private function createPermission(UserAccessControl $uac, Folder $folder)
     {
         try {
-            $this->foldersPermissionsCreateService->create($uac, $folder->id, Permission::OWNER);
+            $userId = $uac->userId();
+            $this->permissionsCreateService->create($uac, PermissionsTable::FOLDER_ACO, $folder->id, PermissionsTable::USER_ARO, $userId, Permission::OWNER);
         } catch (Exception $error) {
-            throw new InternalErrorException(__('Could not create the folder, please try again later.'), 400, $error);
+            throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $error);
         }
     }
 
@@ -186,7 +189,8 @@ class FoldersCreateService
         }
 
         try {
-            $this->foldersRelationsCreateService->create($uac, $folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderParentId);
+            $userId = $uac->userId();
+            $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
             $folder->set('folder_parent_id', $folderParentId);
         } catch (Exception $e) {
             throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $e);

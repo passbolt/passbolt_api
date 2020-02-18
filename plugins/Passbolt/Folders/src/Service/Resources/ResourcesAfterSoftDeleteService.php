@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Resource;
 use Cake\ORM\TableRegistry;

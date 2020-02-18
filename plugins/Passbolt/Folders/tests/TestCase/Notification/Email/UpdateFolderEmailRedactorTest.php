@@ -24,7 +24,7 @@ use App\Utility\UuidFactory;
 use Cake\Event\Event;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Notification\Email\UpdateFolderEmailRedactor;
-use Passbolt\Folders\Service\FoldersUpdateService;
+use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**

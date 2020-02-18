@@ -1,7 +1,6 @@
 <?php
 namespace Passbolt\Folders\Notification\Email;
 
-use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -11,7 +10,7 @@ use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Service\FoldersCreateService;
+use Passbolt\Folders\Service\Folders\FoldersCreateService;
 
 /**
  * Passbolt ~ Open source password manager for teams

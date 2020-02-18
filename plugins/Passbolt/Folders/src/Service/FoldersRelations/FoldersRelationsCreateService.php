@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service;
+namespace Passbolt\Folders\Service\FoldersRelations;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
@@ -41,19 +41,20 @@ class FoldersRelationsCreateService
     /**
      * Create a folder relation for the current user.
      *
-     * @param UserAccessControl $uac The current user
-     * @param string $foreignId The target folder
-     * @param string $foreignModel
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $foreignModel The target foreign model
+     * @param string $foreignId The target foreign instance id
+     * @param string $userId The target user id
      * @param string|null $folderParentId (optional) The target folder destination.
      * @return Folder
      * @throws Exception If an unexpected error occurred
      */
-    public function create(UserAccessControl $uac, string $foreignId, string $foreignModel, string $folderParentId = null)
+    public function create(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId, string $folderParentId = null)
     {
         $folderRelation = null;
 
-        $this->foldersRelationsTable->getConnection()->transactional(function () use (&$folderRelation, $uac, $foreignModel, $foreignId, $folderParentId) {
-            $folderRelation = $this->createUserFolderRelation($uac, $foreignId, $foreignModel, $folderParentId);
+        $this->foldersRelationsTable->getConnection()->transactional(function () use (&$folderRelation, $foreignModel, $foreignId, $userId, $folderParentId) {
+            $folderRelation = $this->createUserFolderRelation($foreignModel, $foreignId, $userId, $folderParentId);
         });
 
         return $folderRelation;
@@ -62,16 +63,15 @@ class FoldersRelationsCreateService
     /**
      * Create and save the folder relation in database.
      *
-     * @param UserAccessControl $uac The current user
-     * @param string $folderId The target id
-     * @param string $foreignModel The target model
+     * @param string $foreignModel The target foreign model
+     * @param string $foreignId The target foreign instance id
+     * @param string $userId The target user id
      * @param string|null $folderParentId (optional) The target folder destination.
      * @return FoldersRelation
      */
-    private function createUserFolderRelation(UserAccessControl $uac, string $folderId, string $foreignModel, string $folderParentId = null)
+    private function createUserFolderRelation(string $foreignModel, string $foreignId, string $userId, string $folderParentId = null)
     {
-        $userId = $uac->userId();
-        $folderRelation = $this->buildFolderRelationEntity($userId, $folderId, $foreignModel, $folderParentId);
+        $folderRelation = $this->buildFolderRelationEntity($foreignModel, $foreignId, $userId, $folderParentId);
         $this->handleFolderRelationValidationErrors($folderRelation);
         $this->foldersRelationsTable->save($folderRelation);
         $this->handleFolderRelationValidationErrors($folderRelation);
@@ -82,17 +82,17 @@ class FoldersRelationsCreateService
     /**
      * Build the folder relation entity.
      *
-     * @param string $userId The user id.
-     * @param string $folderId The target id
-     * @param string $foreignModel The target model
+     * @param string $foreignModel The target foreign model
+     * @param string $foreignId The target foreign instance id
+     * @param string $userId The target user id
      * @param string|null $folderParentId (optional) The target folder destination.
      * @return FoldersRelation
      */
-    private function buildFolderRelationEntity(string $userId, string $folderId, string $foreignModel, $folderParentId = null)
+    private function buildFolderRelationEntity(string $foreignModel, string $foreignId, string $userId, $folderParentId = null)
     {
         $data = [
             'foreign_model' => $foreignModel,
-            'foreign_id' => $folderId,
+            'foreign_id' => $foreignId,
             'user_id' => $userId,
             'folder_parent_id' => $folderParentId,
         ];

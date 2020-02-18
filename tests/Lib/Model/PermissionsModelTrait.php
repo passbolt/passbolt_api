@@ -50,7 +50,7 @@ trait PermissionsModelTrait
      * @param string $aro_foreign_key Target aro
      * @param int $type The type of permissions
      */
-    public function addPermission($aco, $aco_foreign_key, $aro, $aro_foreign_key, $type = Permission::OWNER)
+    public function addPermission($aco, $aco_foreign_key, $aro = null, $aro_foreign_key, $type = Permission::OWNER)
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [
@@ -59,7 +59,13 @@ trait PermissionsModelTrait
                 '*' => true,
             ],
         ];
+        // If aro is not given, then try to determine it.
+        if (is_null($aro)) {
+            $groupsTable = TableRegistry::getTableLocator()->get('Groups');
+            $aro = $groupsTable->exists(['id' => $aro_foreign_key]) ? 'Group' : 'User';
+        }
         $data = [
+            'id' =>  UuidFactory::uuid("permission.id.{$aco_foreign_key}-{$aro_foreign_key}"),
             'aco' => $aco,
             'aco_foreign_key' => $aco_foreign_key,
             'aro' => $aro,
@@ -108,5 +114,18 @@ trait PermissionsModelTrait
     {
         $permission = $this->Permissions->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
         $this->assertEmpty($permission);
+    }
+
+    /**
+     * Assert that an aro has an expected computed access.
+     * @param string $aco
+     * @param string $acoForeignKey
+     * @param string $aroForeignKey
+     * @param string $type
+     */
+    protected function assertComputedAccess($aco, $acoForeignKey, $aroForeignKey, $type)
+    {
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $this->assertTrue($permissionsTable->hasAccess($aco, $acoForeignKey, $aroForeignKey, $type));
     }
 }

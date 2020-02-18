@@ -15,7 +15,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Folders\Service\FoldersHasAncestorService;
+use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
@@ -23,11 +23,11 @@ use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
- * Passbolt\Folders\Service\FolderHasAncestorService Test Case
+ * Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService Test Case
  *
- * @covers \Passbolt\Folders\Service\FolderHasAncestorService
+ * @covers \Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService
  */
-class FoldersHasAncestorServiceTest extends FoldersTestCase
+class FoldersItemsHasAncestorServiceTest extends FoldersTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;
@@ -54,7 +54,7 @@ class FoldersHasAncestorServiceTest extends FoldersTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-        $this->service = new FoldersHasAncestorService();
+        $this->service = new FoldersItemsHasAncestorService();
     }
 
     public function testFolderHasItsParentHasAncestor()
@@ -64,16 +64,16 @@ class FoldersHasAncestorServiceTest extends FoldersTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
 
-        $hasAncestor = $this->service->hasAncestor($uac, $folderB->id, $folderA->id);
+        $hasAncestor = $this->service->hasAncestor($folderB->id, $folderA->id, $uac->userId());
         $this->assertTrue($hasAncestor);
 
-        $hasAncestor = $this->service->hasAncestor($uac, $folderC->id, $folderB->id);
+        $hasAncestor = $this->service->hasAncestor($folderC->id, $folderB->id, $uac->userId());
         $this->assertTrue($hasAncestor);
 
-        $hasAncestor = $this->service->hasAncestor($uac, $folderC->id, $folderA->id);
+        $hasAncestor = $this->service->hasAncestor($folderC->id, $folderA->id, $uac->userId());
         $this->assertTrue($hasAncestor);
 
-        $hasAncestor = $this->service->hasAncestor($uac, $folderA->id, $folderA->id);
+        $hasAncestor = $this->service->hasAncestor($folderA->id, $folderA->id, $uac->userId());
         $this->assertTrue($hasAncestor);
     }
 
@@ -102,7 +102,7 @@ class FoldersHasAncestorServiceTest extends FoldersTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
 
-        $hasAncestor = $this->service->hasAncestor($uac, $folderA->id, $folderB->id);
+        $hasAncestor = $this->service->hasAncestor($folderA->id, $folderB->id, $uac->userId());
         $this->assertFalse($hasAncestor);
     }
 
@@ -127,7 +127,7 @@ class FoldersHasAncestorServiceTest extends FoldersTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
 
-        $hasAncestor = $this->service->hasAncestor($uac, $folderB->id, $folderA->id);
+        $hasAncestor = $this->service->hasAncestor($folderB->id, $folderA->id, $uac->userId());
         $this->assertFalse($hasAncestor);
     }
 

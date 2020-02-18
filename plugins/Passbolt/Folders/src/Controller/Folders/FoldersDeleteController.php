@@ -20,7 +20,7 @@ use App\Controller\Component\QueryStringComponent;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\Folders\Service\FoldersDeleteService;
+use Passbolt\Folders\Service\Folders\FoldersDeleteService;
 
 class FoldersDeleteController extends AppController
 {
