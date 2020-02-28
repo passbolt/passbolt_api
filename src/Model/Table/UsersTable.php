@@ -378,6 +378,9 @@ class UsersTable extends Table
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll(['user_id' => $user->id]);
 
+        // Mark gpg ke as deleted
+        $this->Gpgkeys->updateAll(['deleted' => true], ['user_id' => $user->id]);
+
         // Mark user as deleted
         $user->deleted = true;
         if (!$this->save($user, ['checkRules' => false])) {
