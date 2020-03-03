@@ -15,14 +15,14 @@
 
 namespace Passbolt\EmailNotificationSettings\Utility;
 
-use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
+use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource;
+use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource;
+use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource;
 
 class EmailNotificationSettings
 {
@@ -36,48 +36,14 @@ class EmailNotificationSettings
     private static $settings;
 
     /**
-     * Default settings.
-     *
-     * @var array
+     * @var ConfigEmailNotificationSettingsSource
      */
-    private static $defaultSettings = [
-        'purify' => [
-            'subject' => false,
-        ],
-        'show' => [
-            'comment' => true,
-            'description' => true,
-            'secret' => true,
-            'uri' => true,
-            'username' => true,
-        ],
-        'send' => [
-            'comment' => [
-                'add' => true,
-            ],
-            'password' => [
-                'create' => true,
-                'share' => true,
-                'update' => true,
-                'delete' => true,
-            ],
-            'user' => [
-                'create' => true,
-                'recover' => true,
-            ],
-            'group' => [
-                'delete' => true,
-                'user' => [
-                    'add' => true,
-                    'delete' => true,
-                    'update' => true,
-                ],
-                'manager' => [
-                    'update' => true,
-                ],
-            ],
-        ],
-    ];
+    private static $configSettingsSource;
+
+    /**
+     * @var DbEmailNotificationSettingsSource
+     */
+    private static $dbSettingsSource;
 
     /**
      * Flush the cache version of the settings.
@@ -142,41 +108,40 @@ class EmailNotificationSettings
     }
 
     /**
-     * Get settings loaded from config/default.php and config/passbolt.php in the CakePHP config.
+     * Get notification settings from the config/default.php and config/passbolt.php.
      *
-     * @return array $config setting if found and null otherwise
+     * @return array
      */
     protected static function getSettingsFromFile()
     {
-        $fileConfigs = Configure::read('passbolt.email');
+        static::$configSettingsSource = new ConfigEmailNotificationSettingsSource();
 
-        if (isset($fileConfigs['validate'])) {
-            unset($fileConfigs['validate']);
-        }
-
-        return $fileConfigs;
+        return static::$configSettingsSource->read();
     }
 
     /**
-     * Get config setting from the DB
+     * Get notification settings saved in the database.
      *
-     * @return bool|null $config setting if found and null otherwise
+     * @return array $config setting if found and null otherwise
      * @throws RecordNotFoundException If a matching DB config doesn't exist
      * @throws InternalErrorException If the DB config is not valid json string
      */
     protected static function getSettingsFromDb()
     {
-        /** @var OrganizationSettingsTable $organizationSettings */
-        $organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $notificationSettingFromDb = $organizationSettings->getFirstSettingOrFail(static::NAMESPACE);
-        $settings = \json_decode($notificationSettingFromDb->get('value'), true);
+        static::$dbSettingsSource = new DbEmailNotificationSettingsSource();
 
-        // look for invalid structured string
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new InternalErrorException('The Email Notification Settings configs are invalid');
-        }
+        return static::$dbSettingsSource->read();
+    }
 
-        return $settings;
+    /**
+     * Get notification settings from the default definition.
+     * @return array
+     */
+    protected static function getSettingsFromDefault()
+    {
+        $defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(new EmailNotificationSettingsForm());
+
+        return $defaultSettingsSource->read();
     }
 
     /**
@@ -187,7 +152,7 @@ class EmailNotificationSettings
     protected static function checkSettingsAreOverriddenByFile()
     {
         $flatFileSettings = Hash::flatten(static::getSettingsFromFile());
-        $flatDefaultSettings = Hash::flatten(static::$defaultSettings);
+        $flatDefaultSettings = Hash::flatten(static::getSettingsFromDefault());
         $diff = array_diff_assoc($flatFileSettings, $flatDefaultSettings);
 
         return count($diff) !== 0;
@@ -207,16 +172,7 @@ class EmailNotificationSettings
 
         $configs = Hash::expand($configs);
 
-        $data = json_encode($configs);
-
-        // look for invalid structured string
-        if (json_last_error() != JSON_ERROR_NONE) {
-            throw new InternalErrorException('The Email Notification Settings configs are invalid');
-        }
-
-        /** @var OrganizationSettingsTable $organizationSettings */
-        $organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $organizationSettings->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $data, $accessControl);
+        static::$dbSettingsSource->write($configs, $accessControl);
 
         static::flushCache();
     }
@@ -231,8 +187,16 @@ class EmailNotificationSettings
     public static function isConfigKeyValid(string $key)
     {
         // for lookups from a form, transform the $key to dot delimited format
-        $key = str_replace('_', '.', $key);
+        return Hash::check(static::getSettingsFromFile(), static::underscoreToDottedFormat($key));
+    }
 
-        return Hash::check(static::getSettingsFromFile(), $key);
+    /**
+     * Return a string normalized to the dotted format i.e: "email_settings_xxx" into "email.settings.xxx"
+     * @param string $key Key to normalize
+     * @return string
+     */
+    public static function underscoreToDottedFormat(string $key)
+    {
+        return str_replace('_', '.', $key);
     }
 }
