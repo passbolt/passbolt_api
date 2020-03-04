@@ -96,7 +96,7 @@ class SecretsTable extends Table
             ->ascii('data', __('The message is not a valid armored gpg message.'))
             ->add('data', 'isValidGpgMessage', [
                 'rule' => [$this, 'isValidGpgMessageRule'],
-                'message' => __('The message is not a valid armored gpg message.')
+                'message' => __('The message is not a valid armored gpg message.'),
             ])
             ->requirePresence('data', 'create', __('A message is required.'))
             ->notEmpty('data', __('The message cannot be empty.'));
@@ -152,21 +152,21 @@ class SecretsTable extends Table
         );
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The user does not exist.'),
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The user does not exist.'),
         ]);
         $rules->addCreate($rules->existsIn(['resource_id'], 'Resources'), 'resource_exists', [
             'errorField' => 'resource_id',
-            'message' => __('The resource does not exist.')
+            'message' => __('The resource does not exist.'),
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'resource_id',
-            'message' => __('The resource does not exist.')
+            'message' => __('The resource does not exist.'),
         ]);
         $rules->addCreate(new HasResourceAccessRule(), 'has_resource_access', [
             'errorField' => 'resource_id',
@@ -212,7 +212,7 @@ class SecretsTable extends Table
             $options = ['accessibleFields' => [
                 'resource_id' => true,
                 'user_id' => true,
-                'data' => true
+                'data' => true,
             ]];
             // Create and validate the new secret entity.
             $secret = $this->newEntity($secret, $options);
@@ -238,7 +238,7 @@ class SecretsTable extends Table
         return $this->find()
             ->where([
                 'resource_id' => $resourceId,
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
     }
 
@@ -254,7 +254,7 @@ class SecretsTable extends Table
         return $this->find()
             ->where([
                 'resource_id IN' => $resourcesIds,
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
     }
 }

@@ -12,16 +12,20 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
+
 namespace App\Error\Exception;
 
 use Cake\Core\Exception\Exception;
+use Cake\ORM\Table;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Controller.
  * Compared to ValidationException the second constructor parameter can be anything
  * e.g. a custom error message format, not necessarily an entity
  */
-class CustomValidationException extends Exception
+class CustomValidationException extends Exception implements
+    ExceptionWithErrorsDetailInterface,
+    ExceptionWithTableDetailInterface
 {
 
     /**
@@ -30,7 +34,7 @@ class CustomValidationException extends Exception
     protected $_defaultCode = 400;
 
     /**
-     * The validation errros.
+     * The validation errors.
      *
      * @var array|null
      */
@@ -39,7 +43,7 @@ class CustomValidationException extends Exception
     /**
      * The table that throw the validation exception.
      *
-     * @var \Cake\ORM\Table
+     * @var Table
      */
     protected $_table = null;
 
@@ -48,7 +52,7 @@ class CustomValidationException extends Exception
      *
      * @param string $message The error message
      * @param mixed|null $errors The validation errors.
-     * @param \Cake\ORM\Table $table The table that is the source of the validation errors.
+     * @param Table $table The table that is the source of the validation errors.
      * @param int $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
@@ -72,7 +76,7 @@ class CustomValidationException extends Exception
     /**
      * Get the table
      *
-     * @return \Cake\ORM\Table
+     * @return Table
      */
     public function getTable()
     {

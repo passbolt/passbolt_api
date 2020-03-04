@@ -149,7 +149,7 @@ class WebInstaller
         $gpgSettings += [
             'fingerprint' => $gpgSettings['fingerprint'],
             'public' => Configure::read('passbolt.gpg.serverKey.public'),
-            'private' => Configure::read('passbolt.gpg.serverKey.private')
+            'private' => Configure::read('passbolt.gpg.serverKey.private'),
         ];
         $this->setSettings('gpg', $gpgSettings);
     }
@@ -224,7 +224,7 @@ class WebInstaller
 
         $this->setSettings('user', [
             'user_id' => $user->id,
-            'token' => $token->token
+            'token' => $token->token,
         ]);
     }
 

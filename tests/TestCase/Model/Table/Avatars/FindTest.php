@@ -48,7 +48,7 @@ class FindTest extends AppTestCase
         $adminUser = $Users->find()
             ->where(['Users.id' => UuidFactory::uuid('user.id.admin')])
             ->contain([
-                'Profiles' => AvatarsTable::addContainAvatar()
+                'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->first();
 
@@ -66,7 +66,7 @@ class FindTest extends AppTestCase
         $adaUser = $Users->find()
             ->where(['Users.id' => UuidFactory::uuid('user.id.ada')])
             ->contain([
-                'Profiles' => AvatarsTable::addContainAvatar()
+                'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->first();
         $this->assertTrue(!empty(Hash::get($adaUser, 'profile.avatar.url.medium')));

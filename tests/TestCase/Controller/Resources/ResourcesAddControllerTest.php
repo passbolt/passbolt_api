@@ -25,7 +25,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue'
+        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue',
     ];
 
     public function setUp()
@@ -62,13 +62,13 @@ W3AI8+rWjK8MGH2T88hCYI/6
                 'name' => 'new resource name',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
-                'description' => 'new resource description'
+                'description' => 'new resource description',
             ],
             'Secret' => [
                 [
-                    'data' => $this->_getGpgMessage()
-                ]
-            ]
+                    'data' => $this->_getGpgMessage(),
+                ],
+            ],
         ];
         $data = array_merge($defaultData, $data);
 
@@ -82,25 +82,25 @@ W3AI8+rWjK8MGH2T88hCYI/6
                 'name' => '新的專用資源名稱',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.域.com',
-                'description' => '新的資源描述'
+                'description' => '新的資源描述',
             ]]),
             'slavic' => $this->_getDummyPostData(['Resource' => [
                 'name' => 'Новое имя частного ресурса',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.домен.com',
-                'description' => 'Новое описание частного ресурса'
+                'description' => 'Новое описание частного ресурса',
             ]]),
             'french' => $this->_getDummyPostData(['Resource' => [
                 'name' => 'Nouveau nom de resource privée',
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.mon-domain.com',
-                'description' => 'Nouvelle description de resource privée'
+                'description' => 'Nouvelle description de resource privée',
             ]]),
             'emoticon' => $this->_getDummyPostData(['Resource' => [
                 'name' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
                 'username' => 'username@domain.com',
                 'uri' => 'https://www.domain.com',
-                'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}"
+                'description' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
             ]]),
         ];
 
@@ -218,24 +218,24 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $errors = [
             'resource name is missing' => [
                 'errorField' => 'Resource.name._empty',
-                'data' => $this->_getDummyPostData(['Resource' => ['name' => null]])
+                'data' => $this->_getDummyPostData(['Resource' => ['name' => null]]),
             ],
             'secret must be provided' => [
                 'errorField' => 'Secrets._required',
-                'data' => $this->_getDummyPostData(['Secret' => null])
+                'data' => $this->_getDummyPostData(['Secret' => null]),
             ],
             'secret is invalid' => [
                 'errorField' => 'Secrets.0.Secret.data.isValidGpgMessage',
                 'data' => $this->_getDummyPostData(['Secret' => [
-                    0 => ['data' => 'Invalid secret']
-                ]])
+                    0 => ['data' => 'Invalid secret'],
+                ]]),
             ],
             'too many secrets provided' => [
                 'errorField' => 'Secrets.hasAtMost',
                 'data' => $this->_getDummyPostData(['Secret' => [
                     0 => ['data' => $this->_getGpgMessage()],
                     1 => ['user_id' => UuidFactory::uuid('user.id.betty'), 'data' => $this->_getGpgMessage()],
-                ]])
+                ]]),
             ],
         ];
 

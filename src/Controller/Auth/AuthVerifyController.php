@@ -54,7 +54,7 @@ class AuthVerifyController extends AppController
         }
         $key = [
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'),
-            'keydata' => $file->read()
+            'keydata' => $file->read(),
         ];
         $this->success(__('The operation was successful.'), $key);
     }

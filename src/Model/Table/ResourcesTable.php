@@ -68,29 +68,29 @@ class ResourcesTable extends Table
         $this->hasOne('Creator', [
             'className' => 'Users',
             'bindingKey' => 'created_by',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
         $this->hasOne('Favorites', [
-            'foreignKey' => 'foreign_key'
+            'foreignKey' => 'foreign_key',
         ]);
         $this->hasOne('Modifier', [
             'className' => 'Users',
             'bindingKey' => 'modified_by',
-            'foreignKey' => 'id'
+            'foreignKey' => 'id',
         ]);
         $this->hasOne('Permission', [
             'className' => 'Permissions',
-            'foreignKey' => 'aco_foreign_key'
+            'foreignKey' => 'aco_foreign_key',
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aco_foreign_key',
             'saveStrategy' => 'replace',
             // Important so that we can track the delete event and log it.
-            'cascadeCallbacks' => true
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Secrets', [
             'foreignKey' => 'resource_id',
-            'saveStrategy' => 'replace'
+            'saveStrategy' => 'replace',
         ]);
     }
 
@@ -167,26 +167,26 @@ class ResourcesTable extends Table
         // Create rules.
         $rules->addCreate([$this, 'isOwnerPermissionProvidedRule'], 'owner_permission_provided', [
             'errorField' => 'permissions',
-            'message' => __('At least one owner permission must be provided.')
+            'message' => __('At least one owner permission must be provided.'),
         ]);
         $rules->addCreate([$this, 'isOwnerSecretProvidedRule'], 'owner_secret_provided', [
             'errorField' => 'secrets',
-            'message' => __('The secret of the owner is required.')
+            'message' => __('The secret of the owner is required.'),
         ]);
 
         // Update rules.
         $rules->addUpdate([$this, 'isSecretsProvidedRule'], 'secrets_provided', [
             'errorField' => 'secrets',
-            'message' => __('The secrets of all the users having access to the resource are required.')
+            'message' => __('The secrets of all the users having access to the resource are required.'),
         ]);
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'resource_is_not_soft_deleted', [
             'table' => 'Resources',
             'errorField' => 'id',
-            'message' => __('The resource cannot be soft deleted.')
+            'message' => __('The resource cannot be soft deleted.'),
         ]);
         $rules->addUpdate([$this, 'isOwnerPermissionProvidedRule'], 'at_least_one_owner', [
             'errorField' => 'permissions',
-            'message' => __('At least one owner permission must be provided.')
+            'message' => __('At least one owner permission must be provided.'),
         ]);
 
         return $rules;
@@ -306,14 +306,14 @@ class ResourcesTable extends Table
         }
         if ($resource->deleted) {
             $resource->setError('deleted', [
-                'is_not_soft_deleted' => __('The resource cannot be soft deleted.')
+                'is_not_soft_deleted' => __('The resource cannot be soft deleted.'),
             ]);
 
             return false;
         }
         if (!$this->hasAccess($userId, $resource->id, Permission::UPDATE)) {
             $resource->setError('id', [
-                'has_access' => __('The user cannot delete this resource.')
+                'has_access' => __('The user cannot delete this resource.'),
             ]);
 
             return false;
@@ -323,15 +323,15 @@ class ResourcesTable extends Table
         $data = [
             'deleted' => true,
             'modified_by' => $userId,
-            'secrets' => []
+            'secrets' => [],
         ];
         $patchOptions = [
             'accessibleFields' => [
                 'deleted' => true,
                 'secrets' => true,
                 'modified' => true,
-                'modified_by' => true
-            ]
+                'modified_by' => true,
+            ],
         ];
         $this->patchEntity($resource, $data, $patchOptions);
         if ($resource->getErrors()) {
@@ -458,7 +458,7 @@ class ResourcesTable extends Table
 
         return [
             'added' => $secretsToAddFor,
-            'removed' => $secretsToDeleteFor
+            'removed' => $secretsToDeleteFor,
         ];
     }
 
@@ -545,7 +545,7 @@ class ResourcesTable extends Table
         // Save the resource permissions.
         $options = [
             'accessibleFields' => [
-                'permissions' => true
+                'permissions' => true,
             ],
             'associated' => [
                 'Permissions' => [
@@ -554,10 +554,10 @@ class ResourcesTable extends Table
                         'aco_foreign_key' => true,
                         'aro' => true,
                         'aro_foreign_key' => true,
-                        'type' => true
-                    ]
-                ]
-            ]
+                        'type' => true,
+                    ],
+                ],
+            ],
         ];
         $this->save($resource, $options);
 
@@ -614,15 +614,15 @@ class ResourcesTable extends Table
         // Save the resource secrets.
         $options = [
             'accessibleFields' => [
-                'secrets' => true
+                'secrets' => true,
             ],
             'associated' => [
                 'Secrets' => [
                     'accessibleFields' => [
                         'data' => true,
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ];
 
         return $this->save($resource, $options);
@@ -644,7 +644,7 @@ class ResourcesTable extends Table
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
         $Favorites->deleteAll([
             'foreign_key' => $resourceId,
-            'user_id IN' => $usersId
+            'user_id IN' => $usersId,
         ]);
     }
 

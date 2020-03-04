@@ -63,14 +63,14 @@ class AppController extends Controller
          */
         $this->loadComponent('Auth', [
             'authenticate' => [
-                'Gpg'
+                'Gpg',
             ],
             'loginAction' => [
                 'prefix' => 'Auth',
                 'controller' => 'AuthLogin',
                 'action' => 'loginGet',
                 '_method' => 'GET',
-                'plugin' => null
+                'plugin' => null,
             ],
         ]);
 
@@ -142,7 +142,7 @@ class AppController extends Controller
                 'code' => 200,
             ],
             'body' => $body,
-            '_serialize' => ['header', 'body']
+            '_serialize' => ['header', 'body'],
         ]);
         $this->setViewBuilderOptions();
     }
@@ -172,10 +172,10 @@ class AppController extends Controller
                 'action' => UserAction::getInstance()->getActionId(),
                 'message' => $message,
                 'url' => Router::url(),
-                'code' => $errorCode
+                'code' => $errorCode,
             ],
             'body' => $body,
-            '_serialize' => ['header', 'body']
+            '_serialize' => ['header', 'body'],
         ]);
         $this->setViewBuilderOptions();
     }

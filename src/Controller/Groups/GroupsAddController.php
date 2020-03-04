@@ -73,7 +73,7 @@ class GroupsAddController extends AppController
             $output['groups_users'] = Hash::reduce($data, 'GroupUsers.{n}', function ($result, $row) {
                 $result[] = [
                     'user_id' => Hash::get($row, 'GroupUser.user_id', ''),
-                    'is_admin' => (bool)Hash::get($row, 'GroupUser.is_admin', false)
+                    'is_admin' => (bool)Hash::get($row, 'GroupUser.is_admin', false),
                 ];
 
                 return $result;

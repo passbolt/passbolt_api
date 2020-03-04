@@ -49,16 +49,16 @@ class GpgKeyForm extends Form
             ->ascii('public_key_armored', __('The public key is not a valid ascii string.'))
             ->add('public_key_armored', 'is_public_key', [
                 'rule' => [$this, 'checkIsPublicKey'],
-                'message' => 'The key is not a valid public key'
+                'message' => 'The key is not a valid public key',
             ])
             ->add('public_key_armored', 'has_no_expiry', [
                 'rule' => [$this, 'checkHasNoExpiry'],
-                'message' => 'The key cannot have an expiry date'
+                'message' => 'The key cannot have an expiry date',
             ])
             ->add('public_key_armored', 'can_encrypt', [
                 'last' => true,
                 'rule' => [$this, 'checkCanEncrypt'],
-                'message' => 'The public key cannot be used to encrypt.'
+                'message' => 'The public key cannot be used to encrypt.',
             ]);
 
         $validator
@@ -67,16 +67,16 @@ class GpgKeyForm extends Form
             ->ascii('private_key_armored', __('The private key is not a valid ascii string.'))
             ->add('private_key_armored', 'is_private_key', [
                 'rule' => [$this, 'checkIsPrivateKey'],
-                'message' => 'The key is not a valid private key'
+                'message' => 'The key is not a valid private key',
             ])
             ->add('private_key_armored', 'has_no_expiry', [
                 'rule' => [$this, 'checkHasNoExpiry'],
-                'message' => 'The key cannot have an expiry date'
+                'message' => 'The key cannot have an expiry date',
             ])
             ->add('private_key_armored', 'can_decrypt', [
                 'last' => true,
                 'rule' => [$this, 'checkCanDecrypt'],
-                'message' => 'The private key cannot be used to decrypt. Please note that passbolt does not support GPG key protected with a secret.'
+                'message' => 'The private key cannot be used to decrypt. Please note that passbolt does not support GPG key protected with a secret.',
             ]);
 
         $validator
@@ -86,7 +86,7 @@ class GpgKeyForm extends Form
             ->add('fingerprint', 'match_public_private_fingerprints', [
                 'last' => true,
                 'rule' => [$this, 'checkPublicPrivateFingerprints'],
-                'message' => 'The fingerprint does not match the public and the private keys fingerprints.'
+                'message' => 'The fingerprint does not match the public and the private keys fingerprints.',
             ]);
 
         return $validator;

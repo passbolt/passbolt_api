@@ -36,17 +36,17 @@ class MysqlExportTask extends AppShell
             ->addOption('datasource', [
                 'short' => 'd',
                 'default' => 'default',
-                'help' => __('Datasource name')
+                'help' => __('Datasource name'),
             ])
             ->addOption('clear-previous', [
                 'boolean' => true,
                 'default' => false,
-                'help' => __('Clear previous backups.')
+                'help' => __('Clear previous backups.'),
             ])
             ->addOption('force', [
                 'boolean' => true,
                 'default' => false,
-                'help' => __('Override if file already exist.')
+                'help' => __('Override if file already exist.'),
             ])
             ->addOption('file', [
                 'help' => 'The file to export the schema and data to.',

@@ -48,10 +48,10 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $data = [
             ['id' => UuidFactory::uuid("group_user.id.freelancer-jean"), 'is_admin' => false],
-            ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'is_admin' => true]
+            ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'is_admin' => true],
         ];
         $patchOptions = ['allowedOperations' => [
-            'update' => true
+            'update' => true,
         ]];
 
         // Retrieve the groups and its groups_users to update.
@@ -85,10 +85,10 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $data = [
             ['id' => UuidFactory::uuid("group_user.id.freelancer-kathleen"), 'delete' => true],
-            ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true]
+            ['id' => UuidFactory::uuid("group_user.id.freelancer-lynne"), 'delete' => true],
         ];
         $patchOptions = ['allowedOperations' => [
-            'delete' => true
+            'delete' => true,
         ]];
 
         // Retrieve the groups and its groups_users to update.
@@ -123,7 +123,7 @@ class PatchEntitiesWithChangesTest extends AppTestCase
             ['user_id' => UuidFactory::uuid("user.id.betty"), 'isAdmin' => false],
         ];
         $patchOptions = ['allowedOperations' => [
-            'add' => true
+            'add' => true,
         ]];
 
         // Retrieve the groups and its groups_users to update.
@@ -158,23 +158,23 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $testCases = [
             'membership does not exist' => [
                 'errorField' => '0.id.group_user_exists',
-                'data' => [['id' => UuidFactory::uuid()]]
+                'data' => [['id' => UuidFactory::uuid()]],
             ],
             'membership relative to another group' => [
                 'errorField' => '0.id.group_user_exists',
-                'data' => [['id' => UuidFactory::uuid("group_user.id.it_support-jean")]]
+                'data' => [['id' => UuidFactory::uuid("group_user.id.it_support-jean")]],
             ],
             'is_admin cannot be empty' => [
                 'errorField' => '0.is_admin._empty',
                 'data' => [[
                     'id' => UuidFactory::uuid("group_user.id.freelancer-jean"),
-                    'is_admin' => null]]
+                    'is_admin' => null]],
             ],
             'is_admin is invalid' => [
                 'errorField' => '0.is_admin.boolean',
                 'data' => [[
                     'id' => UuidFactory::uuid("group_user.id.freelancer-jean"),
-                    'type' => 42]]
+                    'type' => 42]],
             ],
         ];
 
@@ -187,11 +187,11 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $testCases = [
             'membership does not exist' => [
                 'errorField' => '0.id.group_user_exists',
-                'data' => [['id' => UuidFactory::uuid(), 'delete' => true]]
+                'data' => [['id' => UuidFactory::uuid(), 'delete' => true]],
             ],
             'permission relative to another group' => [
                 'errorField' => '0.id.group_user_exists',
-                'data' => [['id' => UuidFactory::uuid("group_user.id.it_support-jean"), 'delete' => true]]
+                'data' => [['id' => UuidFactory::uuid("group_user.id.it_support-jean"), 'delete' => true]],
             ],
         ];
 
@@ -205,19 +205,19 @@ class PatchEntitiesWithChangesTest extends AppTestCase
         $testCases = [
             'user_id is required' => [
                 'errorField' => '0.user_id._required',
-                'data' => [['is_admin' => true]]
+                'data' => [['is_admin' => true]],
             ],
             'user_id cannot be empty' => [
                 'errorField' => '0.user_id._empty',
-                'data' => [['user_id' => null]]
+                'data' => [['user_id' => null]],
             ],
             'is_admin type cannot be empty' => [
                 'errorField' => '0.is_admin._empty',
-                'data' => [['user_id' => $userAId, 'is_admin' => null]]
+                'data' => [['user_id' => $userAId, 'is_admin' => null]],
             ],
             'is_admin type is invalid' => [
                 'errorField' => '0.is_admin.boolean',
-                'data' => [['user_id' => $userAId, 'is_admin' => 42]]
+                'data' => [['user_id' => $userAId, 'is_admin' => 42]],
             ],
         ];
 

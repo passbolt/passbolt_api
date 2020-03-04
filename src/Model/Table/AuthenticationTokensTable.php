@@ -64,7 +64,7 @@ class AuthenticationTokensTable extends Table
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
-            'joinType' => 'INNER'
+            'joinType' => 'INNER',
         ]);
     }
 
@@ -91,7 +91,7 @@ class AuthenticationTokensTable extends Table
             ->allowEmptyString('token', __('Then authentication type should not be empty.'), false)
             ->add('type', ['type' => [
                 'rule' => [$this, 'isValidAuthenticationTokenType'],
-                'message' => __('This authentication type is not supported.')
+                'message' => __('This authentication type is not supported.'),
             ]]);
 
         $validator
@@ -146,7 +146,7 @@ class AuthenticationTokensTable extends Table
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The user does not exist.'),
         ]);
 
         return $rules;
@@ -169,7 +169,7 @@ class AuthenticationTokensTable extends Table
                 'user_id' => $userId,
                 'token' => UuidFactory::uuid(),
                 'active' => true,
-                'type' => $type
+                'type' => $type,
             ],
             ['accessibleFields' => [
                 'user_id' => true,

@@ -30,7 +30,7 @@ trait SubscribedEmailRedactorTrait
     public function implementedEvents()
     {
         return [
-            CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this
+            CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,
         ];
     }
 

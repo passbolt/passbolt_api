@@ -32,7 +32,7 @@ class SaveTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Secrets'
+        'app.Base/Resources', 'app.Base/Secrets',
     ];
 
     public function setUp()
@@ -58,17 +58,17 @@ class SaveTest extends AppTestCase
                 'created_by' => true,
                 'modified_by' => true,
                 'groups_users' => true,
-                'deleted' => true
+                'deleted' => true,
             ],
             'associated' => [
                 'GroupsUsers' => [
                     'validate' => 'saveGroup',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'is_admin' => true
-                    ]
+                        'is_admin' => true,
+                    ],
                 ],
-            ]
+            ],
         ];
     }
 
@@ -148,7 +148,7 @@ class SaveTest extends AppTestCase
         $data = self::getDummyGroup();
         $data['groups_users'] = [
             ['user_id' => UuidFactory::uuid('user.id.ada')],
-            ['user_id' => UuidFactory::uuid('user.id.betty')]
+            ['user_id' => UuidFactory::uuid('user.id.betty')],
         ];
         $options = self::getEntityDefaultOptions();
         $entity = $this->Groups->newEntity($data, $options);

@@ -31,7 +31,7 @@ trait GroupsModelTrait
             'name' => 'New group name',
             'groups_users' => [
                 ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => true],
-                ['user_id' => UuidFactory::uuid('user.id.betty')]
+                ['user_id' => UuidFactory::uuid('user.id.betty')],
             ],
             'created_by' => UuidFactory::uuid('user.id.admin'),
             'modified_by' => UuidFactory::uuid('user.id.admin'),

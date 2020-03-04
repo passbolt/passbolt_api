@@ -51,7 +51,7 @@ class Application extends BaseApplication
             ->add(ContentSecurityPolicyMiddleware::class)
             ->add(new ErrorHandlerMiddleware(null, Configure::read('Error')))
             ->add(new AssetMiddleware([
-                'cacheTime' => Configure::read('Asset.cacheTime')
+                'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
             ->add(new RoutingMiddleware($this))
             ->add(new SessionPreventExtensionMiddleware())

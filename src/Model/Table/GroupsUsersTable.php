@@ -124,30 +124,30 @@ class GroupsUsersTable extends Table
     {
         $rules->addCreate($rules->isUnique(['group_id', 'user_id']), 'group_user_unique', [
             'errorField' => 'group_id',
-            'message' => __('The user is already member of this group.')
+            'message' => __('The user is already member of this group.'),
         ]);
         $rules->addCreate($rules->existsIn(['group_id'], 'Groups'), 'group_exists', [
             'errorField' => 'group_id',
-            'message' => __('The group does not exist.')
+            'message' => __('The group does not exist.'),
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
             'errorField' => 'group_id',
-            'message' => __('The group does not exist.')
+            'message' => __('The group does not exist.'),
         ]);
         $rules->addCreate($rules->existsIn(['user_id'], 'Users'), 'user_exists', [
             'errorField' => 'user_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The user does not exist.'),
         ]);
         $rules->addCreate(new IsNotSoftDeletedRule(), 'user_is_not_soft_deleted', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The user does not exist.'),
         ]);
         $rules->addCreate(new IsActiveRule(), 'user_is_active', [
             'table' => 'Users',
             'errorField' => 'user_id',
-            'message' => __('The user does not exist.')
+            'message' => __('The user does not exist.'),
         ]);
 
         return $rules;
@@ -216,7 +216,7 @@ class GroupsUsersTable extends Table
             ->select(['group_id'])->distinct()
             ->where([
                 'user_id <>' => $userId,
-                'is_admin' => true
+                'is_admin' => true,
             ]);
 
         // (R)
@@ -230,7 +230,7 @@ class GroupsUsersTable extends Table
             // R = GROUPS_USER_IS_MANAGER
             ->where([
                 'user_id' => $userId,
-                'is_admin' => true
+                'is_admin' => true,
             ])
             // R = R - GROUPS_OTHER_USER_ARE_MANAGER
             ->where(['group_id NOT IN' => $groupsOtherUsersAreManager]);
@@ -267,7 +267,7 @@ class GroupsUsersTable extends Table
         $groupsOtherUsers = $this->find()
             ->select(['group_id'])->distinct()
             ->where([
-                'user_id <>' => $userId
+                'user_id <>' => $userId,
             ]);
 
         // (R)
@@ -280,7 +280,7 @@ class GroupsUsersTable extends Table
             ->where([
                 'user_id' => $userId,
                 // GROUPS_USER_IS_MEMBER - GROUPS_OTHER_USER_ARE_MEMBER
-                'group_id NOT IN' => $groupsOtherUsers
+                'group_id NOT IN' => $groupsOtherUsers,
             ]);
 
         return $query;
@@ -321,7 +321,7 @@ class GroupsUsersTable extends Table
             ->where([
                 'user_id' => $userId,
                 // GROUPS_USER_IS_MEMBER - GROUPS_USER_ONLY_MEMBER
-                'group_id NOT IN' => $groupsUserOnlyMember
+                'group_id NOT IN' => $groupsUserOnlyMember,
             ]);
 
         return $query;
@@ -357,7 +357,7 @@ class GroupsUsersTable extends Table
             ->where([
                 'user_id' => $userId,
                 'group_id' => $groupId,
-                'is_admin' => true
+                'is_admin' => true,
             ])->first();
 
         return (!empty($user));
@@ -425,7 +425,7 @@ class GroupsUsersTable extends Table
                 // The groupUserKey does not belong to the group.
                 if (is_null($groupUserKey)) {
                     $errors = ['id' => [
-                        'group_user_exists' => __('The membership does not exist.', $change['id'])
+                        'group_user_exists' => __('The membership does not exist.', $change['id']),
                     ]];
                     throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
                 }

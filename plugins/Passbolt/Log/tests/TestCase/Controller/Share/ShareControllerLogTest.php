@@ -35,7 +35,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
         'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
         'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory'
+        'plugin.Passbolt/Log.Base/SecretsHistory',
     ];
 
     public function setUp()
@@ -72,7 +72,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -105,7 +105,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $data = ['permissions' => []];
         // Delete the permission of the user Betty.
         $data['permissions'][] = [
-            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true
+            'id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true,
         ];
 
         $this->authenticateAs('ada');
@@ -117,7 +117,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -161,7 +161,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -211,7 +211,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.dryRun'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 1
+            'status' => 1,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
 
@@ -247,7 +247,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         $actionLog = $this->assertActionLogExists([
             'action_id' => UuidFactory::uuid('Share.share'),
             'user_id' => UuidFactory::uuid('user.id.ada'),
-            'status' => 0
+            'status' => 0,
         ]);
         $this->assertActionLogIdMatchesResponse($actionLog['id'], $this->_responseJsonHeader);
     }

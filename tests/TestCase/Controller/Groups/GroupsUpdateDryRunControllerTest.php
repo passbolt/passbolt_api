@@ -161,7 +161,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         // Try to add the user Ada.
         $data = [
             'name' => 'Name changed',
-            'groups_users' => [['user_id' => $userAId]]
+            'groups_users' => [['user_id' => $userAId]],
         ];
 
         // Update the group name.

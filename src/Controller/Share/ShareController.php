@@ -193,8 +193,8 @@ class ShareController extends AppController
         $result = [
             'changes' => [
                 'added' => [],
-                'removed' => []
-            ]
+                'removed' => [],
+            ],
         ];
 
         // Format the content.

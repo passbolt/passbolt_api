@@ -28,7 +28,7 @@ class CleanupTest extends AppTestCase
     public $Groups;
     public $fixtures = [
         'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Permissions',
-        'app.Base/Resources', 'app.Base/Secrets'
+        'app.Base/Resources', 'app.Base/Secrets',
     ];
     public $options;
 
@@ -39,7 +39,7 @@ class CleanupTest extends AppTestCase
         $this->options = ['accessibleFields' => [
            'resource_id' => true,
            'user_id' => true,
-           'data' => true
+           'data' => true,
         ]];
     }
 

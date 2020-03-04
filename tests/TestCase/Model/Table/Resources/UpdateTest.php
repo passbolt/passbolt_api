@@ -41,7 +41,7 @@ class UpdateTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
-        'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets'
+        'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
     ];
 
     public function setUp()
@@ -76,7 +76,7 @@ class UpdateTest extends AppTestCase
             'username' => 'username_updated@by.test',
             'uri' => 'https://uri.updated.by.test',
             'description' => 'Resource description updated',
-            'modified_by' => $resource->modified_by
+            'modified_by' => $resource->modified_by,
         ];
 
         // If secrets provided update them all.
@@ -87,7 +87,7 @@ class UpdateTest extends AppTestCase
                 $defaultData['secrets'][] = [
                     'id' => $secret->id,
                     'user_id' => $secret->user_id,
-                    'data' => $encrypted
+                    'data' => $encrypted,
                 ];
             }
         }
@@ -107,17 +107,17 @@ class UpdateTest extends AppTestCase
                 'uri' => true,
                 'description' => true,
                 'modified_by' => true,
-                'secrets' => true
+                'secrets' => true,
             ],
             'associated' => [
                 'Secrets' => [
                     'validate' => 'saveResource',
                     'accessibleFields' => [
                         'data' => true,
-                        'user_id' => true
-                    ]
-                ]
-            ]
+                        'user_id' => true,
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -134,7 +134,7 @@ class UpdateTest extends AppTestCase
 
         // Get the dummy resource updated data.
         $data = $this->_getUpdatedDummydata($resource, [
-            'modified_by' => $modifierId
+            'modified_by' => $modifierId,
         ]);
 
         // Save the entity.
@@ -238,7 +238,7 @@ class UpdateTest extends AppTestCase
         $userId = UuidFactory::uuid('user.id.edith');
         $data['secrets'][] = [
             'user_id' => $userId,
-            'data' => $this->_encryptSecret($userId, 'Update secret data')
+            'data' => $this->_encryptSecret($userId, 'Update secret data'),
         ];
 
         // Save the entity.

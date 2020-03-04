@@ -129,7 +129,7 @@ class EntitiesHistoryTable extends Table
                         'type' => true,
                     ],
                 ],
-            ]
+            ],
         ]);
     }
 

@@ -24,7 +24,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
-        'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue'
+        'app.Base/Profiles', 'app.Base/AuthenticationTokens', 'app.Base/Avatars', 'app.Base/EmailQueue',
     ];
 
     public function testUsersAddNotLoggedInError()
@@ -33,8 +33,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'username' => 'notallowed@passbolt.com',
             'profile' => [
                 'first_name' => 'not',
-                'last_name' => 'allowed'
-            ]
+                'last_name' => 'allowed',
+            ],
         ];
         $this->postJson('/users.json', $data);
         $this->assertAuthenticationError();
@@ -47,8 +47,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'username' => 'notallowed@passbolt.com',
             'profile' => [
                 'first_name' => 'not',
-                'last_name' => 'allowed'
-            ]
+                'last_name' => 'allowed',
+            ],
         ];
         $this->postJson('/users.json', $data);
         $this->assertError(403, 'Only administrators can add new users.');
@@ -66,7 +66,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'role_id' => $adminRoleId,
                 'profile' => [
                     'first_name' => '傅',
-                    'last_name' => '苹'
+                    'last_name' => '苹',
                 ],
             ],
             'user role' => [
@@ -74,16 +74,16 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'role_id' => $userRoleId,
                 'profile' => [
                     'first_name' => 'Borka',
-                    'last_name' => 'Jerman Blažič'
+                    'last_name' => 'Jerman Blažič',
                 ],
             ],
             'no role' => [
                 'username' => 'aurore@passbolt.com',
                 'profile' => [
                     'first_name' => 'Aurore',
-                    'last_name' => 'Avarguès-Weber'
+                    'last_name' => 'Avarguès-Weber',
                 ],
-            ]
+            ],
         ];
 
         foreach ($success as $case => $data) {
@@ -136,8 +136,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
-            ]
+                'last_name' => 'Avarguès-Weber',
+            ],
         ];
 
         $this->postJson('/users.json', $data);
@@ -159,8 +159,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
-            ]
+                'last_name' => 'Avarguès-Weber',
+            ],
         ];
         $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
@@ -179,8 +179,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             ],
             'Profile' => [
                 'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
-            ]
+                'last_name' => 'Avarguès-Weber',
+            ],
         ];
         $this->postJson('/users.json', $data);
         $this->assertResponseSuccess();
@@ -199,8 +199,8 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             ],
             'Profile' => [
                 'first_name' => 'ada',
-                'last_name' => 'lovelace'
-            ]
+                'last_name' => 'lovelace',
+            ],
         ];
         $this->postJson('/users.json', $data);
         $this->assertError(400, 'Could not validate user data.');

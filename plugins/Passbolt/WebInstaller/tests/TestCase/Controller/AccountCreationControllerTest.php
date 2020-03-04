@@ -38,7 +38,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $postData = [
             'username' => 'aurore@passbolt.com',
             'first_name' => 'Aurore',
-            'last_name' => 'Avarguès-Weber'
+            'last_name' => 'Avarguès-Weber',
         ];
         $this->post('/install/account_creation', $postData);
         $this->assertResponseCode(302);
@@ -48,8 +48,8 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
             'username' => 'aurore@passbolt.com',
             'profile' => [
                 'first_name' => 'Aurore',
-                'last_name' => 'Avarguès-Weber'
-            ]
+                'last_name' => 'Avarguès-Weber',
+            ],
         ];
         $this->assertSession($expectedData, 'webinstaller.first_user');
     }
@@ -59,7 +59,7 @@ class AccountCreationControllerTest extends WebInstallerIntegrationTestCase
         $postData = [
             'username' => 'invalid-email',
             'first_name' => 'Aurore',
-            'last_name' => 'Avarguès-Weber'
+            'last_name' => 'Avarguès-Weber',
         ];
         $this->post('/install/account_creation', $postData);
         $data = ($this->_getBodyAsString());

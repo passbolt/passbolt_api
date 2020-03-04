@@ -59,8 +59,8 @@ class GpgKeyFormTest extends AppTestCase
                 'test_cases' => [
                     '2FC8945833C51946E937F9FED47B0811573EE67E' => false,
                     $this->getDummyGpgkey()['fingerprint'] => true,
-                ]
-            ]
+                ],
+            ],
         ];
         $this->assertFormFieldFormatValidation(GpgKeyForm::class, 'fingerprint', $this->getDummyGpgkey(), $testCases);
     }

@@ -82,7 +82,7 @@ class AccountCreationController extends WebInstallerController
             'profile' => [
                 'first_name' => $data['first_name'],
                 'last_name' => $data['last_name'],
-            ]
+            ],
         ];
     }
 }

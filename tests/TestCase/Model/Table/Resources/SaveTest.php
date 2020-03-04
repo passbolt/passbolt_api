@@ -56,7 +56,7 @@ class SaveTest extends AppTestCase
                 'created_by' => true,
                 'modified_by' => true,
                 'secrets' => true,
-                'permissions' => true
+                'permissions' => true,
             ],
             'associated' => [
                 'Permissions' => [
@@ -65,17 +65,17 @@ class SaveTest extends AppTestCase
                         'aco' => true,
                         'aro' => true,
                         'aro_foreign_key' => true,
-                        'type' => true
-                    ]
+                        'type' => true,
+                    ],
                 ],
                 'Secrets' => [
                     'validate' => 'saveResource',
                     'accessibleFields' => [
                         'user_id' => true,
-                        'data' => true
-                    ]
-                ]
-            ]
+                        'data' => true,
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -158,7 +158,7 @@ class SaveTest extends AppTestCase
         $resource = self::getDummyResource();
         $testCases = [
             'requirePresence' => self::getRequirePresenceTestCases(),
-            'notEmpty' => self::getNotEmptyTestCases()
+            'notEmpty' => self::getNotEmptyTestCases(),
         ];
         $this->assertFieldFormatValidation($this->Resources, 'secrets', self::getDummyResource(), self::getEntityDefaultOptions(), $testCases);
 
@@ -183,7 +183,7 @@ sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
 QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
 W3AI8+rWjK8MGH2T88hCYI/6
 =uahb
------END PGP MESSAGE-----'
+-----END PGP MESSAGE-----',
         ]];
         $secrets[1] = $secrets[0];
         $entityData = array_merge($resource, ['secrets' => $secrets]);

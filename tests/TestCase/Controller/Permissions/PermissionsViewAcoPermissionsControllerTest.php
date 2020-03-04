@@ -26,7 +26,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions',
-        'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Avatars'
+        'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Avatars',
     ];
 
     public function testPermissionsViewSuccess()

@@ -62,8 +62,8 @@ sG7jLzQBV/GVWtR4hVebstP+q05Sib+sKwLOTZhzWNPKruBsdaBCUTxcmI6qwDHS
 QQFgGx0K1xQj2rKiP2j0cDHyGsWIlOITN+4r6Ohx23qRhVo0txPWVOYLpC8JnlfQ
 W3AI8+rWjK8MGH2T88hCYI/6
 =uahb
------END PGP MESSAGE-----'
-                ]
+-----END PGP MESSAGE-----',
+                ],
             ],
         ];
         $entityContent = array_merge($entityContent, $data);

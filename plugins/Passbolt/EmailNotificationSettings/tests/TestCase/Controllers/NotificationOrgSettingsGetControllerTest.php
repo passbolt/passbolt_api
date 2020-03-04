@@ -29,7 +29,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
     public $fixtures = [
         'app.Base/OrganizationSettings',
         'app.Base/AuthenticationTokens', 'app.Base/Users',
-        'app.Base/Roles'
+        'app.Base/Roles',
     ];
 
     public function tearDown()
@@ -98,7 +98,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
-            'send_password_share' => false
+            'send_password_share' => false,
         ];
 
         // Mock DB settings
@@ -124,7 +124,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
-            'send_password_share' => false
+            'send_password_share' => false,
         ];
 
         // Mock File settings
@@ -152,7 +152,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         $cases = [
             'send_comment_add' => false,
             'send_password_create' => true,
-            'send_password_share' => false
+            'send_password_share' => false,
         ];
 
         // Mock DB settings

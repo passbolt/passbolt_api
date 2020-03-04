@@ -36,8 +36,8 @@ trait UsersModelTrait
             'active' => false,
             'profile' => [
                 'first_name' => 'dummy',
-                'last_name' => 'content'
-            ]
+                'last_name' => 'content',
+            ],
         ];
         $entityContent = array_merge($entityContent, $data);
 
@@ -61,8 +61,8 @@ trait UsersModelTrait
             'active' => false,
             'profile' => [
                 'first_name' => 'updated',
-                'last_name' => 'name'
-            ]
+                'last_name' => 'name',
+            ],
         ];
 
         return array_merge($updateData, $override);

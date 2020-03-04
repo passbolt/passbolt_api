@@ -54,8 +54,8 @@ trait PermissionsFindersTrait
             $query->contain([
                 'Users' => [
                     'Profiles' =>
-                        AvatarsTable::addContainAvatar()
-                ]
+                        AvatarsTable::addContainAvatar(),
+                ],
             ]);
         }
 
@@ -190,7 +190,7 @@ trait PermissionsFindersTrait
             ->select(['aco_foreign_key'])->distinct()
             ->where([
                 'aro_foreign_key NOT IN' => $arosIds,
-                'type' => Permission::OWNER
+                'type' => Permission::OWNER,
             ]);
 
         // (R)
@@ -385,7 +385,7 @@ trait PermissionsFindersTrait
             ->select('aco_foreign_key')->distinct()
             ->where([
                 'aro_foreign_key IN' => $arosIds,
-                'type' => Permission::OWNER
+                'type' => Permission::OWNER,
             ]);
     }
 }

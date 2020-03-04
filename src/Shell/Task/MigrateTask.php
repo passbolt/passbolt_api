@@ -37,7 +37,7 @@ class MigrateTask extends AppShell
             ->addOption('backup', [
                 'help' => 'Make a database backup to be used in case something goes wrong.',
                 'boolean' => true,
-                'default' => false
+                'default' => false,
             ]);
 
         return $parser;

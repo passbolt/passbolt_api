@@ -324,7 +324,7 @@ hcciUFw5
 
         // Try to add the user frances.
         $data = [
-            'name' => 'Updated group name'
+            'name' => 'Updated group name',
         ];
 
         // Update the group name.
@@ -350,7 +350,7 @@ hcciUFw5
 
         // Try to add the user frances.
         $data = [
-            'name' => 'Updated group name'
+            'name' => 'Updated group name',
         ];
 
         // Update the group name.
@@ -480,7 +480,7 @@ hcciUFw5
         // Try to add the user frances.
         $data = [
             'name' => 'Updated group name',
-            'groups_users' => $changes
+            'groups_users' => $changes,
         ];
 
         // Update the group users.

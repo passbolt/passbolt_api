@@ -35,7 +35,7 @@ class SettingsIndexController extends AppController
      * @var array
      */
     protected $alwaysWhiteListed = [
-        'version'
+        'version',
     ];
 
     /**
@@ -62,7 +62,7 @@ class SettingsIndexController extends AppController
         $role = $this->User->role();
         // Retrieve and sanity the query options.
         $whitelist = [
-            'contain' => ['header']
+            'contain' => ['header'],
         ];
         $options = $this->QueryString->get($whitelist);
         $withHeader = isset($options['contain']['header']) && $options['contain']['header'] === false ? false : true;
@@ -93,7 +93,7 @@ class SettingsIndexController extends AppController
                 'app' => [
                     'version' => [
                         'number' => Configure::read('passbolt.version'),
-                        'name' => Configure::read('passbolt.name')
+                        'name' => Configure::read('passbolt.name'),
                     ],
                     'url' => Router::url('/', true),
                     'debug' => Configure::read('debug') ? 1 : 0,
@@ -101,7 +101,7 @@ class SettingsIndexController extends AppController
                     // session timeout info in minutes
                     'session_timeout' => Configure::read('Session.timeout', ini_get('session.gc_maxlifetime') / 60),
                     'image_storage' => [
-                        'public_path' => Configure::read('ImageStorage.publicPath')
+                        'public_path' => Configure::read('ImageStorage.publicPath'),
                     ],
                 ],
                 'passbolt' => [
