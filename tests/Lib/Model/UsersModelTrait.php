@@ -100,6 +100,9 @@ trait UsersModelTrait
 
         $favorites = $this->Favorites->find()->where(['user_id' => $id])->count();
         $this->assertEquals(0, $favorites);
+
+        $gpgKeys = $this->Gpgkeys->find()->where(['user_id' => $id, 'deleted' => 0])->count();
+        $this->assertEquals(0, $gpgKeys);
     }
 
     /**

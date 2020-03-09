@@ -302,11 +302,12 @@ class GpgkeysTable extends Table
      */
     public function findIndex(Query $query, array $options)
     {
-        $query->where(['deleted' => false]);
         if (isset($options['filter']['modified-after'])) {
             $modified = date('Y-m-d H:i:s', $options['filter']['modified-after']);
             $query->where(['modified >' => $modified]);
         }
+
+        $query->where(['deleted' => $options['filter']['is-deleted'] ?? false]);
 
         return $query;
     }
