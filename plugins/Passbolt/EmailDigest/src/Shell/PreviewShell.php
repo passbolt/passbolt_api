@@ -19,9 +19,9 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\Console\Shell;
 use Cake\Core\Configure;
 use Exception;
-use Passbolt\EmailDigest\Service\SendEmailBatchService;
+use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 
-class SenderShell extends Shell
+class PreviewShell extends Shell
 {
     /**
      * Gets the option parser instance and configures it.
@@ -35,12 +35,12 @@ class SenderShell extends Shell
     {
         $parser = parent::getOptionParser();
         $parser
-            ->setDescription('Sends a batch of queued emails as emails digests.')
+            ->setDescription('Preview a batch of queued emails as emails digests.')
             ->addOption(
                 'limit',
                 [
                     'short' => 'l',
-                    'help' => 'How many emails should be sent in this batch?',
+                    'help' => 'How many emails should be in this batch?',
                     'default' => Configure::read('passbolt.plugins.EmailDigest.batchSizeLimit'),
                 ]
             );
@@ -54,9 +54,9 @@ class SenderShell extends Shell
      */
     public function main()
     {
-        $emailSenderService = new SendEmailBatchService();
+        $emailSenderService = new PreviewEmailBatchService();
 
-        $emailSenderService->sendNextEmailsBatch($this->getParam('limit'));
+        $emailSenderService->previewNextEmailsBatch($this->getParam('limit'));
     }
 
     /**
