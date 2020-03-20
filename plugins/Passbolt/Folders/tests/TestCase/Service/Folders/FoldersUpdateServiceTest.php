@@ -133,7 +133,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userId);
         $folderData = ['name' => ''];
 
-        try {;
+        try {
             $this->service->update($uac, $folder->id, $folderData);
         } catch (ValidationException $e) {
             $this->assertEquals("Could not validate the folder data.", $e->getMessage());

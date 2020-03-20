@@ -13,8 +13,9 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Service;
+namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
@@ -133,13 +134,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->markTestIncomplete();
     }
 
-    /* ************************************************************** */
-    /* SHARED FOLDER HAVING NO PARENT WITH USERS */
-    /* ************************************************************** */
-
-    public function testShareFolder_UsersSharedNoParentError1_InsufficientPermission()
+    public function testShareFolder_CommonError3_InsufficientPermission()
     {
-        $folder = $this->insertUsersSharedNoParentError1Fixture();
+        $folder = $this->insertFixture_ShareFolder_CommonError3();
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
 
@@ -147,7 +144,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->service->share($uac, $folder->id);
     }
 
-    public function insertUsersSharedNoParentError1Fixture()
+    public function insertFixture_ShareFolder_CommonError3()
     {
         // Ada has access to folder A as a READ
         // Betty has access to folder A as a OWNER
@@ -159,9 +156,56 @@ class FoldersShareServiceTest extends FoldersTestCase
         return $folder;
     }
 
-    public function testShareFolder_UsersSharedNoParentSuccess1_ShareFolder()
+    /* ************************************************************** */
+    /* ADD USER PERMISSION - FOLDER NO PARENT */
+    /* ************************************************************** */
+
+    public function testShareFolderError_AddUser_PermissionValidationException1()
     {
-        $folder = $this->insertUsersSharedNoParentSuccess1Fixture();
+        $folder = $this->insertFixture_ShareFolderError_AddUser_PermissionValidationException1();
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userNotExistId = UuidFactory::uuid();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folder->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userNotExistId, 'type' => Permission::READ];
+
+        try {
+            $this->service->share($uac, $folder->id, $data);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = [
+                'permissions' => [
+                    1 => [
+                        'aro_foreign_key' => [
+                            '_existsIn' => 'This value does not exist',
+                            'aro_exists' => 'The aro does not exist.',
+
+                        ]
+                    ]
+                ]
+            ];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+
+        $this->assertFalse(true, 'The test should throw an exception');
+    }
+
+    public function insertFixture_ShareFolderError_AddUser_PermissionValidationException1()
+    {
+        // Ada is OWNER of folder A
+        // A (Ada:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+
+        return $folder;
+    }
+
+    public function testShareFolderSuccess_AddUser_NotParent1()
+    {
+        $folder = $this->insertFixture_ShareFolderSuccess_AddUser_NotParent1();
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
@@ -178,7 +222,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertItemIsInTrees($folder->id, 2);
     }
 
-    public function insertUsersSharedNoParentSuccess1Fixture()
+    public function insertFixture_ShareFolderSuccess_AddUser_NotParent1()
     {
         // Ada is OWNER of folder A
         // A (Ada:O)
@@ -189,12 +233,12 @@ class FoldersShareServiceTest extends FoldersTestCase
     }
 
     /* ************************************************************** */
-    /* SHARED FOLDER HAVING A PARENT WITH USERS */
+    /* ADD USER PERMISSION - FOLDER HAVING A PARENT */
     /* ************************************************************** */
 
-    public function testShareFolder_UsersSharedHavingOneParentSuccess1_ShareFolderHavingSharedParentInOperatorTree()
+    public function testShareFolderSuccess_AddUser_FolderHasParent1_VisibleParentInOperatorTree()
     {
-        list($folderA, $folderB) = $this->insertUsersSharedHavingOneParentSuccess1Fixture();
+        list($folderA, $folderB) = $this->insertFixture_ShareFolderSuccess_AddUser_FolderHasParent1();
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
@@ -218,7 +262,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertItemIsInTrees($folderB->id, 2);
     }
 
-    public function insertUsersSharedHavingOneParentSuccess1Fixture()
+    public function insertFixture_ShareFolderSuccess_AddUser_FolderHasParent1()
     {
         // Ada is OWNER of folder A
         // Betty is OWNER of folder A
@@ -235,9 +279,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB];
     }
 
-    public function testShareFolder_UsersSharedHavingOneParentSuccess1_1_ShareFolderHavingSharedParentInOperatorTreeWithOperatorReadOnParent()
+    public function testShareFolderSuccess_AddUser_FolderHasParent1_1_VisibleParentInOperatorTree_OperatorReadOnParent()
     {
-        list($folderA, $folderB) = $this->insertUsersSharedHavingOneParentSuccess1_1Fixture();
+        list($folderA, $folderB) = $this->insertFixture_ShareFolderSuccess_AddUser_FolderHasParent1_1();
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
@@ -259,7 +303,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingOneParentSuccess1_1Fixture()
+    public function insertFixture_ShareFolderSuccess_AddUser_FolderHasParent1_1()
     {
         // Ada has READ on folder A
         // Betty is OWNER of folder A
@@ -276,9 +320,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB];
     }
 
-    public function testShareFolder_UsersSharedHavingOneParentSuccess2_ShareFolderHavingNotSharedParentInOperatorTree()
+    public function testShareFolderSuccess_AddUser_FolderHasParent2_NotVisibleParentInOperatorTree()
     {
-        list($folderA, $folderB) = $this->insertUsersSharedHavingOneParentSuccess2Fixture();
+        list($folderA, $folderB) = $this->insertFixture_ShareFolderSuccess_AddUser_FolderHasParent2();
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
@@ -300,7 +344,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingOneParentSuccess2Fixture()
+    public function insertFixture_ShareFolderSuccess_AddUser_FolderHasParent2()
     {
         // Ada is OWNER of folder A
         // Ada is OWNER of folder B
@@ -315,9 +359,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB];
     }
 
-    public function testShareFolder_UsersSharedHavingOneParentSuccess3_ShareFolderAlreadyInSomeoneElseSharedFolder()
+    public function testShareFolderSuccess_AddUser_FolderHasParent3_VisibleParentInOtherUserTree()
     {
-        list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingOneParentSuccess3Fixture();
+        list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingOneParent3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -343,7 +387,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderB->id, $userCId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingOneParentSuccess3Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingOneParent3()
     {
         // Betty is OWNER of folder A
         // Carol is OWNER of folder A
@@ -367,12 +411,12 @@ class FoldersShareServiceTest extends FoldersTestCase
     }
 
     /* ************************************************************** */
-    /* SHARED FOLDER HAVING MULTIPLE PARENTS WITH USERS */
+    /* ADD USER PERMISSION - FOLDER HAVING MULTIPLE PARENT */
     /* ************************************************************** */
 
-    public function testShareFolder_UsersSharedHavingMultipleParentsSuccess1_HavingMultipleParentsWithAnOperatorRepresentation()
+    public function testShareFolderAddUserSuccess_HavingMultipleParents1_MultipleVisibleParents_OneParentInOperatorTree()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingMultipleParentsSuccess1Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingMultipleParents1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -404,7 +448,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderC->id, $userCId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingMultipleParentsSuccess1Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingMultipleParents1()
     {
         // Ada is OWNER of folder A
         // Betty is OWNER of folder A
@@ -435,9 +479,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId, $userCId];
     }
 
-    public function testShareFolder_UsersSharedHavingMultipleParentsSuccess2_MultipleParentAndNotOperatorParent()
+    public function testShareFolderAddUserSuccess_HavingMultipleParents2_MultipleVisibleParents_NoParentInOperatorTree()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId, $userDId) = $this->insertUsersSharedHavingMultipleParentsSuccess2Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId, $userDId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingMultipleParents2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -477,7 +521,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderC->id, $userDId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingMultipleParentsSuccess2Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingMultipleParents2()
     {
         // Betty is OWNER of A
         // Carol is OWNER of A
@@ -511,12 +555,12 @@ class FoldersShareServiceTest extends FoldersTestCase
     }
 
     /* ************************************************************** */
-    /* SHARED FOLDER HAVING CHILDREN WITH USERS */
+    /* ADD USER PERMISSION - FOLDER HAVING CHILDREN */
     /* ************************************************************** */
 
-    public function testShareFolder_UsersSharedHavingChildrenSuccess1_ShareFolderHavingChildrenInOperatorTree()
+    public function testShareFolderAddUserSuccess_HavingChildren1_ChildInOperatorTree()
     {
-        list($folderA, $folderB,$userAId, $userBId) = $this->insertUsersSharedHavingChildrenSuccess1Fixture();
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -536,7 +580,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingChildrenSuccess1Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingChildren1()
     {
         // Ada is OWNER of folder A
         // Ada is OWNER of folder B
@@ -557,9 +601,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $userAId, $userBId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenSuccess2_ShareFolderHavingChildrenInOperatorTreeAndOtherUsersTrees()
+    public function testShareFolderAddUserSuccess_HavingChildren2_ChildInOperatorTree_ChildAlreadyOrganizedInTargetUserTree()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertUsersSharedHavingChildrenSuccess2Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -585,7 +629,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderC->id, $userBId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingChildrenSuccess2Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingChildren2()
     {
         // Ada is OWNER of folder A
         // Ada is OWNER of folder B
@@ -611,9 +655,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenSuccess2_1_ShareFolderPersonalFolderContainingPersonalOrganizedFolder()
+    public function testShareFolderAddUserSuccess_HavingChildren2_1_ChildInOperatorTree_OperatorReadOnChild_ChildAlreadyOrganizedInTargetUserTree()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertUsersSharedHavingChildrenSuccess2_1Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren2_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -638,7 +682,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderC->id, $userBId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingChildrenSuccess2_1Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingChildren2_1()
     {
         // Ada is OWNER of folder A
         // Ada has READ on folder B
@@ -664,9 +708,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenSuccess2_2_ShareFolderPersonalFolderContainingPersonalOrganizedFolders()
+    public function testShareFolderAddUserSuccess_HavingChildren2_2_ChildrenInOperatorTree_OperatorReadOnChildren_ChildrenAlreadyOrganizedInTargetUserTree()
     {
-        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId) = $this->insertUsersSharedHavingChildrenSuccess2_2Fixture();
+        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren2_2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -696,7 +740,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderD->id, $userBId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingChildrenSuccess2_2Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingChildren2_2()
     {
         // Ada is OWNER of folder A
         // Ada has READ on folder B
@@ -733,9 +777,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenSuccess3_ShareFolderHavingChildrenInAnOtherUserTrees()
+    public function testShareFolderAddUserSuccess_HavingChildren3_VisibleChildInOtherUsersTrees()
     {
-        list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingChildrenSuccess3Fixture();
+        list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -761,7 +805,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertPermission($folderB->id, $userCId, Permission::OWNER);
     }
 
-    public function insertUsersSharedHavingChildrenSuccess3Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingChildren3()
     {
         // Ada is OWNER of folder A
         // Carol is OWNER of folder A
@@ -785,12 +829,12 @@ class FoldersShareServiceTest extends FoldersTestCase
     }
 
     /* ************************************************************** */
-    /* SHARED FOLDER HAVING PARENTS & CHILDREN WITH USERS */
+    /* ADD USER PERMISSION - FOLDER HAVING PARENT(S) AND CHILDREN */
     /* ************************************************************** */
 
-    public function testShareFolder_UsersSharedHavingChildrenAndParentSuccess1_FixCycle()
+    public function testShareFolderAddUserSuccess_HavingParentsAndChildren1_CycleDetectedWhenReconstructingParent_ParentInOperatorTree()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingChildrenAndParentSuccess1Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -823,7 +867,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
     }
 
-    public function insertUsersSharedHavingChildrenAndParentSuccess1Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1()
     {
         // Ada is OWNER of folder A
         // Carol is OWNER of folder A
@@ -864,9 +908,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId, $userCId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenAndParentSuccess1_1_FixCycleWithUserInReadOnly()
+    public function testShareFolderAddUserSuccess_HavingParentsAndChildren1_1_CycleDetectedWhenReconstructingParent_ParentInOperatorTree_OperatorReadOnParent()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingChildrenAndParentSuccess1_1Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -899,7 +943,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
     }
 
-    public function insertUsersSharedHavingChildrenAndParentSuccess1_1Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1_1()
     {
         // Ada has READ on folder A
         // Carol is OWNER of folder A
@@ -940,9 +984,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId, $userCId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenAndParentSuccess1_2_FixCycleWithMultipleLevel()
+    public function testShareFolderAddUserSuccess_HavingParentsAndChildren1_2_CycleDetectedWhenReconstructingParent_ParentInOperatorTree_CycleDetectedInParentAncestors()
     {
-        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingChildrenAndParentSuccess1_2Fixture();
+        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1_2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderC->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -982,7 +1026,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
     }
 
-    public function insertUsersSharedHavingChildrenAndParentSuccess1_2Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1_2()
     {
         // Ada is OWNER of folder A
         // Carol is OWNER of folder A
@@ -1029,9 +1073,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId];
     }
 
-    public function testShareFolder_UsersSharedHavingChildrenAndParentSuccess2_FixCycle()
+    public function testShareFolderAddUserSuccess_HavingParentsAndChildren2_CycleDetectedWhenReconstructingChildren_ChildrenInOperatorTree()
     {
-        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertUsersSharedHavingChildrenAndParentSuccess2Fixture();
+        list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
@@ -1064,7 +1108,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
     }
 
-    public function insertUsersSharedHavingChildrenAndParentSuccess2Fixture()
+    public function insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren2()
     {
         // Ada is OWNER of folder A
         // Carol is OWNER of folder A
@@ -1076,7 +1120,10 @@ class FoldersShareServiceTest extends FoldersTestCase
         // Betty sees C in B
         // Carol sees A in C
         // ---
-        // Difficult to represent
+        // A (Ada:O, Carol:O)
+        // |- B (Ada:O, Betty:O)
+        //    |- C (Betty:O, Carol:O)
+        //       |- A (Ada:O, Carol:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $userCId = UuidFactory::uuid('user.id.carol');
@@ -1105,8 +1152,110 @@ class FoldersShareServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId, $userCId];
     }
 
+    public function testShareFolderAddUserSuccess_HavingParentsAndChildren2_1_CycleDetectedWhenReconstructingChildren_ChildrenInOperatorTree_CycleDetectedInChildrenOfChildren()
+    {
+        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId) =
+            $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren2_1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userBId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::OWNER];
+        $folder = $this->service->share($uac, $folderB->id, $data);
+
+        $this->assertTrue($folder instanceof Folder);
+
+        // Folder A.
+        $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
+        $this->assertPermissionNotExist($folderA->id, $userBId, Permission::OWNER);
+        $this->assertPermission($folderA->id, $userCId, Permission::OWNER);
+        $this->assertPermissionNotExist($folderA->id, $userDId, Permission::OWNER);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelationNotExist($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, $folderD->id);
+        $this->assertFolderRelationNotExist($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId);
+        // Folder B
+        $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
+        $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
+        $this->assertPermission($folderB->id, $userCId, Permission::OWNER);
+        $this->assertPermissionNotExist($folderB->id, $userDId);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelationNotExist($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId);
+        $this->assertFolderRelationNotExist($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId);
+        // Folder C
+        $this->assertPermissionNotExist($folderC->id, $userAId);
+        $this->assertPermission($folderC->id, $userBId, Permission::OWNER);
+        $this->assertPermission($folderC->id, $userCId, Permission::OWNER);
+        $this->assertFolderRelationNotExist($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
+        $this->assertFolderRelationNotExist($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId);
+        // Folder D
+        $this->assertPermissionNotExist($folderD->id, $userAId);
+        $this->assertFolderRelationNotExist($folderD->id, $userBId, Permission::OWNER);
+        $this->assertPermission($folderD->id, $userCId, Permission::OWNER);
+        $this->assertPermission($folderD->id, $userDId, Permission::OWNER);
+        $this->assertFolderRelationNotExist($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId);
+        $this->assertFolderRelationNotExist($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, $folderC->id);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId, null);
+    }
+
+    public function insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren2_1()
+    {
+        //  Ada is OWNER of folder A
+        //  Carol is OWNER of folder A
+        //  Ada is OWNER of folder B
+        //  Dame is OWNER of folder B
+        //  Betty is OWNER of folder C
+        //  Carol is OWNER of folder C
+        //  Carol is OWNER of folder D
+        //  Dame is OWNER of folder D
+        //  Ada sees B in A
+        //  Betty sess C in B
+        //  Carol sees D in C
+        //  Carol sees A in D
+        // ---
+        // A (Ada:O, Carol:O)
+        // |- B (Ada:O, Betty:O)
+        //    |- C (Betty:O, Carol:O)
+        //       |- D (Carol:O, Dame:O)
+        //          |- A (Ada:O, Carol:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $userDId = UuidFactory::uuid('user.id.dame');
+        $folderA = $this->addFolder(['name' => 'A']);
+        $folderB = $this->addFolder(['name' => 'B']);
+        $folderC = $this->addFolder(['name' => 'C']);
+        $folderD = $this->addFolder(['name' => 'D']);
+        // Folder A
+        $this->addPermission('Folder', $folderA->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderA->id, 'User', $userCId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userCId, 'folder_parent_id' => $folderD->id]);
+        // Folder B
+        $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => null]);
+        // Folder C
+        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userCId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => $folderB->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userCId, 'folder_parent_id' => null]);
+        // Folder D
+        $this->addPermission('Folder', $folderD->id, 'User', $userCId, Permission::OWNER);
+        $this->addPermission('Folder', $folderD->id, 'User', $userDId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userCId, 'folder_parent_id' => $folderC->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userDId, 'folder_parent_id' => null]);
+
+        return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId];
+    }
+
     /* ************************************************************** */
-    /* SHARED FOLDER WITH GROUPS */
+    /* ADD GROUP PERMISSION - FOLDER NO PARENT */
     /* ************************************************************** */
 
     public function testShareFolder_GroupsSharedSuccess1_ShareFolderWithGroup()
@@ -1170,5 +1319,342 @@ class FoldersShareServiceTest extends FoldersTestCase
         $group = $this->addGroup(['name' => '1', 'groups_users' => [['user_id' => $userBId, 'is_admin' => true], ['user_id' => $userAId, 'is_admin' => true]]]);
 
         return [$folder, $group];
+    }
+
+    /* ************************************************************** */
+    /* REMOVE USER PERMISSION - VALIDATION */
+    /* ************************************************************** */
+
+    public function testShareFolderError_RemoveUser1_AtLeastOneOwner()
+    {
+        list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderError_RemoveUser1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::READ];
+
+        try {
+            $this->service->share($uac, $folderA->id, $data);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['permissions' => ['at_least_one_owner' => 'At least one owner permission must be provided.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+
+        $this->assertFalse(true, 'The test should throw an exception');
+    }
+
+    public function insertFixture_ShareFolderError_RemoveUser1()
+    {
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // A (Ada:O, Betty:R)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+
+        return [$folderA, $userAId, $userBId];
+    }
+
+    /* ************************************************************** */
+    /* REMOVE USER PERMISSION - FOLDER NO PARENT */
+    /* ************************************************************** */
+
+    public function testShareFolderSuccess_RemoveUser1_NoParent()
+    {
+        list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $folder = $this->service->share($uac, $folderA->id, $data);
+
+        $this->assertTrue($folder instanceof Folder);
+        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelationNotExist($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId);
+        $this->assertPermission($folder->id, $userAId, Permission::OWNER);
+        $this->assertPermissionNotExist($folder->id, $userBId);
+        $this->assertItemIsInTrees($folder->id, 1);
+    }
+
+    public function insertFixture_ShareFolderSuccess_RemoveUser1()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // A (Ada:O, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$folderA, $userAId, $userBId];
+    }
+
+    /* ************************************************************** */
+    /* REMOVE USER PERMISSION - HAVING A PARENT */
+    /* ************************************************************** */
+
+    public function testShareFolderSuccess_RemoveUser2_HavingAParent()
+    {
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser2();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $folder = $this->service->share($uac, $folderB->id, $data);
+
+        $this->assertTrue($folder instanceof Folder);
+
+        // Folder A.
+        $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
+        $this->assertPermission($folderA->id, $userBId, Permission::OWNER);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder B.
+        $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
+        $this->assertPermissionNotExist($folderB->id, $userBId);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelationNotExist($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+    }
+
+    public function insertFixture_ShareFolderSuccess_RemoveUser2()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // Ada is OWNER of folder B
+        // Betty is OWNER of folder B
+        // Ada sees B in A
+        // Betty sees B in A
+        // ----
+        // A (Ada:O, Betty:O)
+        // |- B (Ada:O, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$folderA, $folderB, $userAId, $userBId];
+    }
+
+    /* ************************************************************** */
+    /* REMOVE USER PERMISSION - HAVING CHILDREN */
+    /* ************************************************************** */
+
+    public function testShareFolderSuccess_RemoveUser3_HavingAChild()
+    {
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser3();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $folder = $this->service->share($uac, $folderA->id, $data);
+
+        $this->assertTrue($folder instanceof Folder);
+
+        // Folder A.
+        $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
+        $this->assertPermissionNotExist($folderA->id, $userBId);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelationNotExist($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder B.
+        $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
+        $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+    }
+
+    public function insertFixture_ShareFolderSuccess_RemoveUser3()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // Ada is OWNER of folder B
+        // Betty is OWNER of folder B
+        // Ada sees B in A
+        // Betty sees B in A
+        // ----
+        // A (Ada:O, Betty:O)
+        // |- B (Ada:O, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$folderA, $folderB, $userAId, $userBId];
+    }
+
+    public function testShareFolderSuccess_RemoveUser3_1_HavingChildren()
+    {
+        list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser3_1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $folder = $this->service->share($uac, $folderA->id, $data);
+
+        $this->assertTrue($folder instanceof Folder);
+
+        // Folder A.
+        $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
+        $this->assertPermissionNotExist($folderA->id, $userBId);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelationNotExist($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder B.
+        $this->assertPermission($folderB->id, $userAId, Permission::OWNER);
+        $this->assertPermission($folderB->id, $userBId, Permission::OWNER);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder C.
+        $this->assertPermission($folderC->id, $userAId, Permission::OWNER);
+        $this->assertPermission($folderC->id, $userBId, Permission::OWNER);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+    }
+
+    public function insertFixture_ShareFolderSuccess_RemoveUser3_1()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // Ada is OWNER of folder B
+        // Betty is OWNER of folder B
+        // Ada is OWNER of folder C
+        // Betty is OWNER of folder C
+        // Ada sees B in A
+        // Betty sees B in A
+        // Ada sees C in A
+        // Betty sees C in A
+        // ----
+        // A (Ada:O, Betty:O)
+        // |- B (Ada:O, Betty:O)
+        // |- C (Ada:O, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$folderA, $folderB, $folderC, $userAId, $userBId];
+    }
+
+    /* ************************************************************** */
+    /* UPDATE USER PERMISSION */
+    /* ************************************************************** */
+
+    public function testShareFolderSuccess_UpdateUser1()
+    {
+        list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_UpdateUser1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::OWNER];
+        $folder = $this->service->share($uac, $folderA->id, $data);
+
+        $this->assertTrue($folder instanceof Folder);
+
+        // Folder A.
+        $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
+        $this->assertPermission($folderA->id, $userBId, Permission::OWNER);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+    }
+
+    public function insertFixture_ShareFolderSuccess_UpdateUser1()
+    {
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // ----
+        // A (Ada:O, Betty:R)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+
+        return [$folderA, $userAId, $userBId];
+    }
+
+    public function testShareFolderError_UpdateUser1_PermissionDoesNotExist_PermissionValidationException()
+    {
+        list($folderA, $userAId) = $this->insertFixture_ShareFolderError_UpdateUser1();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid(), 'type' => Permission::OWNER];
+
+        try {
+            $this->service->share($uac, $folderA->id, $data);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['permissions' => [1 => ['id' => ['exists' => 'The permission does not exist.']]]];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+    }
+
+    public function insertFixture_ShareFolderError_UpdateUser1()
+    {
+        // Ada is OWNER of folder A
+        // ----
+        // A (Ada:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+
+        return [$folderA, $userAId];
+    }
+
+    public function testShareFolderError_UpdateUser2_ValidationException()
+    {
+        list($folderA, $userAId) = $this->insertFixture_ShareFolderError_UpdateUser2();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => 100000];
+
+        try {
+            $this->service->share($uac, $folderA->id, $data);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['permissions' => [0 => ['type' => ['inList' => 'The type must be one of the following: 1, 7, 15.']]]];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+    }
+
+    public function insertFixture_ShareFolderError_UpdateUser2()
+    {
+        // Ada is OWNER of folder A
+        // ----
+        // A (Ada:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+
+        return [$folderA, $userAId];
+    }
+
+    public function testShareFolderError_UpdateUser3_AtLeastOneOwner()
+    {
+        list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderError_UpdateUser3();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::READ];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::READ];
+
+        try {
+            $this->service->share($uac, $folderA->id, $data);
+        } catch (ValidationException $e) {
+            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $errors = ['permissions' => ['at_least_one_owner' => 'At least one owner permission must be provided.']];
+            $this->assertEquals($errors, $e->getErrors());
+
+            return;
+        }
+
+        $this->assertFalse(true, 'The test should throw an exception');
+    }
+
+    public function insertFixture_ShareFolderError_UpdateUser3()
+    {
+        // Ada is OWNER of folder A
+        // Betty has READ on folder A
+        // A (Ada:O, Betty:R)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+
+        return [$folderA, $userAId, $userBId];
     }
 }

@@ -76,7 +76,7 @@ class FoldersMoveService
         }
 
         $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $folderParentId) {
-            $this->foldersRelationsDeleteService->delete($uac, $folder->id);
+            $this->foldersRelationsDeleteService->delete($uac->userId(), $folder->id, true);
             $userId = $uac->userId();
             $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);
             $folder->set(ContainFolderParentIdBehavior::FOLDER_PARENT_ID_PROPERTY, $folderParentId);

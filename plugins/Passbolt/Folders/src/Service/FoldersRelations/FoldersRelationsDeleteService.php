@@ -15,7 +15,6 @@
 
 namespace Passbolt\Folders\Service\FoldersRelations;
 
-use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 
 class FoldersRelationsDeleteService
@@ -33,18 +32,29 @@ class FoldersRelationsDeleteService
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 
-    public function delete(UserAccessControl $uac, string $foreignId)
+    public function delete(string $userId, string $foreignId, bool $moveContentToRoot = false)
     {
-        $this->foldersRelationsTable->getConnection()->transactional(function () use ($uac, $foreignId) {
-            $this->deleteFolderRelation($uac, $foreignId);
+        $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId, $moveContentToRoot) {
+            $this->deleteFolderRelation($userId, $foreignId, $moveContentToRoot);
         });
     }
 
-    private function deleteFolderRelation($uac, $foreignId)
+    private function deleteFolderRelation($userId, $foreignId, $moveContentToRoot)
     {
+        if ($moveContentToRoot) {
+            $fields = [
+                'folder_parent_id' => null
+            ];
+            $conditions = [
+                'folder_parent_id' => $foreignId,
+                'user_id' => $userId,
+            ];
+            $this->foldersRelationsTable->updateAll($fields, $conditions);
+        }
+
         $this->foldersRelationsTable->deleteAll([
             'foreign_id' => $foreignId,
-            'user_id' => $uac->userId(),
+            'user_id' => $userId,
         ]);
     }
 }

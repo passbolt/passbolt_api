@@ -63,7 +63,7 @@ class ResourcesMoveService
     public function move(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
     {
         $this->foldersRelationsTable->getConnection()->transactional(function () use ($uac, $resource, $folderParentId) {
-            $this->foldersRelationsDeleteService->delete($uac, $resource->id);
+            $this->foldersRelationsDeleteService->delete($uac->userId(), $resource->id);
             $userId = $uac->userId();
             $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $userId, $folderParentId);
             $resource->set(ContainFolderParentIdBehavior::FOLDER_PARENT_ID_PROPERTY, $folderParentId);

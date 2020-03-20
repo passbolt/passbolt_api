@@ -15,9 +15,11 @@
 
 namespace Passbolt\Folders\Service\Folders;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Service\Permissions\PermissionsAcoHasOwnerService;
 use App\Service\Permissions\PermissionsCreateService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
@@ -35,6 +37,7 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersItems\FoldersItemsGetAncestorsService;
 use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
 use Passbolt\Folders\Service\FoldersRelationsHasAncestorService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 
@@ -68,6 +71,11 @@ class FoldersShareService
     private $foldersRelationsCreateService;
 
     /**
+     * @var FoldersRelationsDeleteService
+     */
+    private $foldersRelationsDeleteService;
+
+    /**
      * @var FoldersRelationsTable
      */
     private $foldersRelationsTable;
@@ -76,6 +84,11 @@ class FoldersShareService
      * @var GroupsUsersTable
      */
     private $groupsUsersTable;
+
+    /**
+     * @var PermissionsAcoHasOwnerService
+     */
+    private $permissionsAcoHasOwnerService;
 
     /**
      * @var PermissionsCreateService
@@ -98,12 +111,14 @@ class FoldersShareService
     public function __construct()
     {
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
+        $this->foldersRelationsDeleteService = new FoldersRelationsDeleteService();
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->foldersItemsGetAncestorsService = new FoldersItemsGetAncestorsService();
         $this->foldersItemsHasAncestorService = new FoldersItemsHasAncestorService();
+        $this->permissionsAcoHasOwnerService = new PermissionsAcoHasOwnerService();
         $this->permissionsCreateService = new PermissionsCreateService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
@@ -127,7 +142,7 @@ class FoldersShareService
         }
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
-            $this->updatePermissions($uac, $folder, $data);
+            $this->shareFolder($uac, $folder, $data);
         });
 
 //        $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
@@ -175,69 +190,71 @@ class FoldersShareService
     }
 
     /**
-     * Update the folder permission
+     * Share a folder.
+     *
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The folder to update the permission
      * @param array $data The request data
      * @throws Exception If something went wrong
      */
-    private function updatePermissions(UserAccessControl $uac, Folder $folder, array $data)
+    private function shareFolder(UserAccessControl $uac, Folder $folder, array $data)
     {
         $isPersonal = $this->foldersTable->isPersonal($folder->id);
         $permissionsData = Hash::get($data, 'permissions', []);
-        $keepPermissionsIds = [];
 
-        foreach ($permissionsData as $permissionData) {
+        // Permissions not provided in the request data will be deleted.
+        $requestPermissionsIds = Hash::extract($data, 'permissions.{n}.id');
+        $originalPermissionsIds = Hash::extract($folder->permissions, '{n}.id');
+        $permissionsIdsToDelete = array_diff($originalPermissionsIds, $requestPermissionsIds);
+        foreach ($permissionsIdsToDelete as $permissionIdToDelete) {
+            $this->deletePermission($folder, $permissionIdToDelete);
+        }
+
+        // Add / update permissions provided in the request data.
+        foreach ($permissionsData as $index => $permissionData) {
             $permissionId = Hash::get($permissionData, 'id', null);
+            // A new permission is provided when no id is found in the permission data.
             if (is_null($permissionId)) {
-                $this->addPermission($uac, $folder, $permissionData, $isPersonal);
+                $this->addPermission($index, $uac, $folder, $permissionData, $isPersonal);
             } else {
-                $this->updatePermission($folder, $permissionData);
+                // Otherwise update the permission.
+                $this->updatePermission($index, $folder, $permissionData);
                 $keepPermissionsIds[] = $permissionData['id'];
             }
         }
 
-        $originalPermissionsIds = Hash::extract($folder->permissions, '{n}.id');
-        $permissionsIdsToDelete = array_diff($originalPermissionsIds, $keepPermissionsIds);
-//        var_dump('delete all this permissions', $permissionsIdsToDelete);
+        $this->assertAtLeastOneOwnerPermission($folder);
     }
 
     /**
-     * Add a permission to a folder.
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The folder to add a permission onto
-     * @param array $permissionData The permission data object
-     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
+     * Update a permission on a folder.
+     * @param Folder $folder The target folder
+     * @param string $permissionId the target permission
      * @throws Exception
      */
-    private function addPermission(UserAccessControl $uac, Folder $folder, array $permissionData, bool $isPersonal = false)
+    private function deletePermission(Folder $folder, string $permissionId)
     {
-        $aro = Hash::get($permissionData, 'aro', '');
-        $aroForeignKey = Hash::get($permissionData, 'aro_foreign_key', '');
-        $type = Hash::get($permissionData, 'type', '');
+        $permission = $this->permissionsTable->get($permissionId);
+        $this->permissionsTable->delete($permission);
 
-        $this->permissionsCreateService->create($uac, PermissionsTable::FOLDER_ACO, $folder->id, $aro, $aroForeignKey, $type);
-
-        if ($aro === PermissionsTable::GROUP_ARO) {
-            $this->addFolderToGroupUsersTrees($uac, $folder, $aroForeignKey, $isPersonal);
+        if ($permission->aro === PermissionsTable::GROUP_ARO) {
+            $this->removeFolderFromGroupUsersTrees($folder, $permission->aro_foreign_key);
         } else {
-            $this->addFolderToUserTree($uac, $folder, $aroForeignKey, $isPersonal);
+            $this->removeFolderFromUserTree($folder, $permission->aro_foreign_key);
         }
     }
 
     /**
-     * Add a folder to a group of users trees.
-     * @param UserAccessControl $uac The operator
+     * Remove a folder from a group of users trees.
      * @param Folder $folder The target folder
      * @param string $groupId The target group
-     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
-     * @throws Exception If something wrong occurred
+     * @throws Exception
      */
-    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId, bool $isPersonal = false)
+    private function removeFolderFromGroupUsersTrees(Folder $folder, string $groupId)
     {
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
-            $this->addFolderToUserTree($uac, $folder, $groupUserId, $isPersonal);
+            $this->addFolderToUserTree($folder, $groupUserId);
         }
     }
 
@@ -585,7 +602,8 @@ class FoldersShareService
         if (!empty($cyclesFoldersIds)) {
             // If a cycle is detected in the operator tree then:
             // - Do not apply the parent change;
-            // - Break the parent folder relationship in other trees.
+            // - Break the parent folder relationship in other trees: Move the folder to the root of users seeing the
+            //   the target folder in the parent folder.
             $cyclesFoldersIdsInOperatorTree = $this->filterFoldersIdsByUserIdAccess($userId, $cyclesFoldersIds);
             if (!empty($cyclesFoldersIdsInOperatorTree)) {
                 $this->foldersRelationsTable->moveItemFrom($folder->id, [$folderParentId]);
@@ -663,29 +681,135 @@ class FoldersShareService
     }
 
     /**
+     * Remove a folder from a user tree
+     * @param Folder $folder The target folder
+     * @param string $userId The target user
+     */
+    private function removeFolderFromUserTree(Folder $folder, string $userId)
+    {
+        // If the user still has access to the folder, don't alter the user tree.
+        $hasAccess = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->id, $userId);
+        if ($hasAccess) {
+            return;
+        }
+
+        $this->foldersRelationsDeleteService->delete($userId, $folder->id, true);
+    }
+
+    /**
+     * Add a permission to a folder.
+     * @param int $rowIndexRef The row index in the request data
+     * @param UserAccessControl $uac The operator
+     * @param Folder $folder The folder to add a permission onto
+     * @param array $permissionData The permission data object
+     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
+     * @throws Exception
+     */
+    private function addPermission(int $rowIndexRef, UserAccessControl $uac, Folder $folder, array $permissionData, bool $isPersonal = false)
+    {
+        $aro = Hash::get($permissionData, 'aro', '');
+        $aroForeignKey = Hash::get($permissionData, 'aro_foreign_key', '');
+        $type = Hash::get($permissionData, 'type', '');
+
+        try {
+            $this->permissionsCreateService->create($uac, PermissionsTable::FOLDER_ACO, $folder->id, $aro, $aroForeignKey, $type);
+        } catch (ValidationException $e) {
+            $folder->setError('permissions', [$rowIndexRef => $e->getErrors()]);
+            $this->handleValidationErrors($folder);
+        }
+
+        if ($aro === PermissionsTable::GROUP_ARO) {
+            $this->addFolderToGroupUsersTrees($uac, $folder, $aroForeignKey, $isPersonal);
+        } else {
+            $this->addFolderToUserTree($uac, $folder, $aroForeignKey, $isPersonal);
+        }
+    }
+
+    /**
+     * Handle folder validation errors.
+     *
+     * @param Folder $folder The folder
+     * @return void
+     * @throws ValidationException If the provided data does not validate.
+     */
+    private function handleValidationErrors($folder)
+    {
+        $errors = $folder->getErrors();
+        if (!empty($errors)) {
+            throw new ValidationException(__('Could not validate the folder data.'), $folder, $this->foldersTable);
+        }
+    }
+
+    /**
+     * Add a folder to a group of users trees.
+     * @param UserAccessControl $uac The operator
+     * @param Folder $folder The target folder
+     * @param string $groupId The target group
+     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
+     * @throws Exception If something wrong occurred
+     */
+    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId, bool $isPersonal = false)
+    {
+        $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
+        foreach ($grousUsersIds as $groupUserId) {
+            $this->addFolderToUserTree($uac, $folder, $groupUserId, $isPersonal);
+        }
+    }
+
+    /**
      * Update a permission on a folder.
+     * @param int $rowIndexRef The row index in the request data
      * @param Folder $folder The target folder
      * @param array $permissionData The permission data.
      */
-    private function updatePermission(Folder $folder, array $permissionData)
+    private function updatePermission(int $rowIndexRef, Folder $folder, array $permissionData)
     {
         $permissionId = $permissionData['id'];
         $originalPermissionsMatch = Hash::extract($folder->permissions, "{n}[id={$permissionId}]", []);
-        // If the permissions to update is not found.
+
+        // If the permissions to update does not exist.
         if (empty($originalPermissionsMatch)) {
-            // throw exception
+            $errors = ['id' => ['exists' => 'The permission does not exist.']];
+            $folder->setError('permissions', [$rowIndexRef => $errors]);
+            $this->handleValidationErrors($folder);
         }
-        $originalPermissionType = $originalPermissionsMatch[0]->type;
 
+        /** @var Permission */
+        $permission = $originalPermissionsMatch[0];
+
+        // If the permission is similar to the original, nothing to do.
+        $originalPermissionType = $permission->type;
         $updatedPermissionType = Hash::get($permissionData, 'type');
-//        var_dump($originalPermissionType, $updatedPermissionType);
-
-        if ($originalPermissionType !== $updatedPermissionType) {
-//            var_dump('update permission', $permissionData);
-        } else {
-//            var_dump('nothing to do for permission', $permissionData);
+        if ($originalPermissionType === $updatedPermissionType) {
+            return;
         }
-//        $this->isPermissionChanged($folder->permissions, $permissionData)
+
+        $patchEntityOptions = ['accessibleFields' => ['type' => true]];
+        $permission = $this->permissionsTable->patchEntity($permission, $permissionData, $patchEntityOptions);
+        if ($permission->hasErrors()) {
+            $folder->setError('permissions', [$rowIndexRef => $permission->getErrors()]);
+            $this->handleValidationErrors($folder);
+        }
+
+        $this->permissionsTable->save($permission);
+        if ($permission->hasErrors()) {
+            $folder->setError('permissions', [$rowIndexRef => $permission->getErrors()]);
+            $this->handleValidationErrors($folder);
+        }
     }
 
+    /**
+     * Assert that the folder has at least one owner.
+     * @param Folder $folder The folder to assert
+     * @throws Exception If something unexpected occured
+     * @throws ValidationException If the folder has no owner
+     */
+    private function assertAtLeastOneOwnerPermission(Folder $folder)
+    {
+        $hasOwner = $this->permissionsAcoHasOwnerService->check($folder->id);
+        if (!$hasOwner) {
+            $folder->setError('permissions', ['at_least_one_owner' => 'At least one owner permission must be provided.']);
+            $this->handleValidationErrors($folder);
+        }
+    }
 }

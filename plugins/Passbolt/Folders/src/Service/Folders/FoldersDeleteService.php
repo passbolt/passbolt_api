@@ -31,7 +31,6 @@ use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Service\FoldersPermissionsDeleteService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
 
 class FoldersDeleteService
@@ -54,11 +53,6 @@ class FoldersDeleteService
      * @var FoldersRelationsDeleteService
      */
     private $foldersRelationsDeleteService;
-
-    /**
-     * @var FoldersPermissionsDeleteService
-     */
-    private $foldersPermissionsDeleteService;
 
     /**
      * @var PermissionsTable
@@ -86,7 +80,6 @@ class FoldersDeleteService
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->userHasPermissionService = new UserHasPermissionService();
         $this->foldersRelationsDeleteService = new FoldersRelationsDeleteService();
-        $this->foldersPermissionsDeleteService = new FoldersPermissionsDeleteService();
     }
 
     /**
@@ -111,7 +104,6 @@ class FoldersDeleteService
             }
             $this->foldersTable->delete($folder, ['atomic' => false]);
             $this->handleValidationErrors($folder);
-
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
                 'uac' => $uac,
                 'folder' => $folder,
