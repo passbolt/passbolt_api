@@ -26,6 +26,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
@@ -62,12 +63,14 @@ class ResourcesAfterCreateService
      *
      * @param UserAccessControl $uac The current user.
      * @param resource $resource The created resource.
-     * @param string|null $folderParentId The destination folder to move in. Place the folder at the root if null given.
+     * @param array $data The data sent by the user to create the resource.
      * @return void
      * @throws Exception
      */
-    public function afterCreate(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
+    public function afterCreate(UserAccessControl $uac, Resource $resource, array $data = [])
     {
+        $folderParentId = Hash::get($data, 'folder_parent_id', null);
+
         if (!is_null($folderParentId)) {
             $this->validateParentFolder($uac, $resource, $folderParentId);
             if ($resource->hasErrors()) {
@@ -96,6 +99,12 @@ class ResourcesAfterCreateService
      */
     private function validateParentFolder(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
     {
+        if (!Validation::uuid($folderParentId)) {
+            $errors = ['uuid' => 'The folder parent id is not valid.'];
+
+            return $resource->setError('folder_parent_id', $errors);
+        }
+
         // The parent folder must exist.
         try {
             $this->foldersTable->get($folderParentId);

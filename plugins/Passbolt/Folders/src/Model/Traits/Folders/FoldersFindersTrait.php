@@ -170,6 +170,18 @@ trait FoldersFindersTrait
     }
 
     /**
+     * Filter a query to retrieve folders on their ids with the given list of ids
+     *
+     * @param Query $query Query to filter on
+     * @param array $folderIds array of folders ids
+     * @return Query|Folder[]
+     */
+    public function _filterByIds(Query $query, array $folderIds)
+    {
+        return $query->where(['Folders.id IN' => $folderIds]);
+    }
+
+    /**
      * Filter a Folders query by search.
      * Search on the name field.
      *
@@ -188,18 +200,6 @@ trait FoldersFindersTrait
         return $query->where([
             ['name LIKE' => '%' . $name . '%'],
         ]);
-    }
-
-    /**
-     * Filter a query to retrieve folders on their ids with the given list of ids
-     *
-     * @param Query $query Query to filter on
-     * @param array $folderIds array of folders ids
-     * @return Query|Folder[]
-     */
-    public function _filterByIds(Query $query, array $folderIds)
-    {
-        return $query->where(['Folders.id IN' => $folderIds]);
     }
 
     /**

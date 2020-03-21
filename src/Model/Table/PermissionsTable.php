@@ -23,7 +23,6 @@ use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
 use Cake\Core\Configure;
-use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -484,24 +483,5 @@ class PermissionsTable extends Table
     public function cleanupHardDeletedGroups($dryRun = false)
     {
         return $this->cleanupHardDeletedAro('Groups', $dryRun);
-    }
-
-    /**
-     * @param AroEntityInterface $aroEntity User for which the permission must be defined
-     * @param AcoEntityInterface $acoEntity Entity for which the permissions must be defined
-     * @param int $permission The permission which must be defined
-     * @return bool
-     */
-    public function isGivenPermissionDefinedForAroOnAco(AroEntityInterface $aroEntity, AcoEntityInterface $acoEntity, int $permission)
-    {
-        return (bool)$this->find()
-            ->where(function (QueryExpression $exp) use ($aroEntity, $acoEntity, $permission) {
-                return $exp->eq('aco', $acoEntity->getAcoType())
-                    ->eq('aco_foreign_key', $acoEntity->getAcoForeignKey())
-                    ->eq('aro_foreign_key', $aroEntity->getAroForeignKey())
-                    ->eq('aro', $aroEntity->getAroType())
-                    ->gte('type', $permission);
-            })
-            ->count();
     }
 }

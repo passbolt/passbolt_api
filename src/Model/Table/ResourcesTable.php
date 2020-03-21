@@ -20,7 +20,6 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
-use Cake\Event\Event;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\RulesChecker;

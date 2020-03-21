@@ -23,6 +23,7 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
@@ -64,12 +65,14 @@ class ResourcesAfterUpdateService
      *
      * @param UserAccessControl $uac The current user.
      * @param resource $resource The created resource.
-     * @param string|null $folderParentId The destination folder to move in. Place the folder at the root if null given.
+     * @param array $data The data sent by the user to update the resource.
      * @return void
      * @throws Exception
      */
-    public function afterUpdate(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
+    public function afterUpdate(UserAccessControl $uac, Resource $resource, array $data = [])
     {
+        $folderParentId = Hash::get($data, 'folder_parent_id', null);
+
         if (!is_null($folderParentId)) {
             if (!$this->validateParentFolder($uac, $resource, $folderParentId)) {
                 return;
@@ -91,31 +94,10 @@ class ResourcesAfterUpdateService
         if (is_null($folderParentId)) {
             return $this->assertUserCanMoveOutOfFolder($uac, $resource);
         } else {
-            return $this->assertFolderParentExists($resource, $folderParentId)
+            return $this->assertFolderParentIdIsValid($resource, $folderParentId)
                 && $this->assertUserCanMoveOutOfFolder($uac, $resource)
                 && $this->assertUserCanMoveInFolder($uac, $resource, $folderParentId);
         }
-    }
-
-    /**
-     * Assert that the parent folder exists.
-     *
-     * @param resource $resource The resource to move.
-     * @param string $folderId The destination folder.
-     * @return boolean
-     */
-    private function assertFolderParentExists(Resource $resource, string $folderId)
-    {
-        try {
-            $this->foldersTable->get($folderId);
-        } catch (RecordNotFoundException $e) {
-            $errors = ['folder_exists' => 'The folder parent must exist.'];
-            $resource->setError('folder_parent_id', $errors);
-
-            return false;
-        }
-
-        return true;
     }
 
     /**
@@ -127,6 +109,35 @@ class ResourcesAfterUpdateService
     private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, Resource $resource)
     {
         // @todo Not needed with personal folder.
+        return true;
+    }
+
+
+    /**
+     * Assert that the parent folder id is valid and exists.
+     *
+     * @param resource $resource The resource to move.
+     * @param string $folderId The destination folder.
+     * @return boolean
+     */
+    private function assertFolderParentIdIsValid(Resource $resource, string $folderId)
+    {
+        if (!Validation::uuid($folderId)) {
+            $errors = ['uuid' => 'The folder parent id is not valid.'];
+            $resource->setError('folder_parent_id', $errors);
+
+            return false;
+        }
+
+        try {
+            $this->foldersTable->get($folderId);
+        } catch (RecordNotFoundException $e) {
+            $errors = ['folder_exists' => 'The folder parent must exist.'];
+            $resource->setError('folder_parent_id', $errors);
+
+            return false;
+        }
+
         return true;
     }
 

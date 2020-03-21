@@ -17,7 +17,6 @@ namespace Passbolt\Folders\EventListener;
 
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\Utility\Hash;
 use Passbolt\Folders\Service\Resources\ResourcesAfterCreateService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterUpdateService;
@@ -43,26 +42,32 @@ class ResourcesEventListener implements EventListenerInterface
         ];
     }
 
+    /**
+     * Handle a resource after create event.
+     * @param Event $event The event.
+     * @throws \Exception
+     */
     public function handleResourceAfterCreateEvent(Event $event)
     {
-        // @todo validate the inputs.
-        $resource = $event->getSubject();
-        $data = $event->getData();
-        $uac = Hash::get($data, 'uac');
-        $folderParentId = Hash::get($data['data'], 'folder_parent_id', null);
+        $resource = $event->getData('resource');
+        $uac = $event->getData('accessControl');
+        $data = $event->getData('data');
         $service = new ResourcesAfterCreateService();
-        $service->afterCreate($uac, $resource, $folderParentId);
+        $service->afterCreate($uac, $resource, $data);
     }
 
+    /**
+     * Handle a resource after update event.
+     * @param Event $event The event.
+     * @throws \Exception
+     */
     public function handleResourceAfterUpdateEvent(Event $event)
     {
-        // @todo validate the inputs.
-        $resource = $event->getSubject();
-        $data = $event->getData();
-        $uac = Hash::get($data, 'uac');
-        $folderParentId = Hash::get($data['data'], 'folder_parent_id', null);
+        $resource = $event->getData('resource');
+        $uac = $event->getData('accessControl');
+        $data = $event->getData('data');
         $service = new ResourcesAfterUpdateService();
-        $service->afterUpdate($uac, $resource, $folderParentId);
+        $service->afterUpdate($uac, $resource, $data);
     }
 
     /**
