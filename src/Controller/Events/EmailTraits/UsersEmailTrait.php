@@ -16,6 +16,7 @@ namespace App\Controller\Events\EmailTraits;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -88,6 +89,9 @@ trait UsersEmailTrait
         }
 
         $Users = TableRegistry::getTableLocator()->get('Users');
+        $Users->loadInto($user, [
+            'Profiles' => AvatarsTable::addContainAvatar(),
+        ]);
         $admin = $Users->findFirstForEmail($adminId);
         $subject = __("Welcome to passbolt, {0}!", $user->profile->first_name);
         $template = 'AN/user_register_admin';
