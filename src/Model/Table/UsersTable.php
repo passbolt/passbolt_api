@@ -43,6 +43,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
  * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable|\Cake\ORM\Association\HasMany $EntitiesHistory
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -98,6 +99,10 @@ class UsersTable extends Table
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aro_foreign_key',
+        ]);
+        $this->hasMany('EntitiesHistory', [
+            'className' => 'Passbolt/Log.EntitiesHistory',
+            'foreignKey' => 'foreign_key',
         ]);
     }
 
