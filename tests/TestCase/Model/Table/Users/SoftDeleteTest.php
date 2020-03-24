@@ -31,7 +31,7 @@ class SoftDeleteTest extends AppTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
-        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Secrets',
+        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
     ];
 
@@ -45,6 +45,7 @@ class SoftDeleteTest extends AppTestCase
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
+        $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function testUsersSoftDeleteSuccess_NoOwnerNoResourcesSharedNoGroupsMember_DelUserCase0()

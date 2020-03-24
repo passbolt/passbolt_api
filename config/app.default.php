@@ -254,7 +254,7 @@ return [
              * decreases performance because each query needs to be traversed and
              * manipulated before being executed.
              */
-            'quoteIdentifiers' => false,
+            'quoteIdentifiers' => env('DATASOURCES_QUOTE_IDENTIFIER', false),
 
             /**
              * During development, if using MySQL < 5.6, uncommenting the
