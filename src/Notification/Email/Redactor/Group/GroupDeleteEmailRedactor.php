@@ -13,11 +13,10 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Group;
 
+use App\Controller\Groups\GroupsDeleteController;
 use App\Model\Entity\Group;
-use App\Model\Entity\GroupsUser;
-use App\Model\Entity\Resource;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
@@ -45,8 +44,8 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     private $isEnabled;
 
     /**
-     * @param bool $isEnabled
-     * @param UsersTable $usersTable
+     * @param bool $isEnabled Is Enabled
+     * @param UsersTable $usersTable Users Table
      */
     public function __construct(bool $isEnabled, UsersTable $usersTable = null)
     {
@@ -62,7 +61,7 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'GroupsDeleteController.delete.success'
+            GroupsDeleteController::DELETE_SUCCESS_EVENT_NAME,
         ];
     }
 

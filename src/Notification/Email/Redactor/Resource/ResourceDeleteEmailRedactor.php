@@ -13,8 +13,9 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Resource;
 
+use App\Controller\Resources\ResourcesDeleteController;
 use App\Model\Entity\Resource;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
@@ -62,6 +63,14 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private $showSecret;
 
+    /**
+     * @param bool            $isEnabled Is Enabled
+     * @param bool            $showUsername Show username in email
+     * @param bool            $showUri Show uri in email
+     * @param bool            $showDescription Show desc in email
+     * @param bool            $showSecret Show secret in email
+     * @param UsersTable|null $usersTable Users table
+     */
     public function __construct(
         bool $isEnabled,
         bool $showUsername,
@@ -86,7 +95,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'ResourcesDeleteController.delete.success'
+            ResourcesDeleteController::DELETE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -125,7 +134,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param string $emailRecipient Email of the recipient user
      * @param User $owner User who executed the action
-     * @param Resource $resource Resource
+     * @param resource $resource Resource
      * @return Email
      */
     private function createDeleteEmail(string $emailRecipient, User $owner, Resource $resource)

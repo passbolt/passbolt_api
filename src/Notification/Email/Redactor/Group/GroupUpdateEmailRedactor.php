@@ -13,8 +13,9 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Group;
 
+use App\Controller\Groups\GroupsUpdateController;
 use App\Model\Entity\Group;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\EmailCollection;
@@ -22,12 +23,15 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
 
 class GroupUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 {
-    use SubscribedEmailRedactorTrait;
     use EventDispatcherTrait;
+    use SubscribedEmailRedactorTrait;
+
+    const CREATE_EVENT_NAME = 'GroupsUpdateEmailRedactor.create';
 
     /**
      * @var UsersTable
@@ -35,10 +39,14 @@ class GroupUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @param UsersTable|null $usersTable
+     * @param EventManager|null $eventManager Event Manager Instance
+     * @param UsersTable|null   $usersTable Users Table
      */
-    public function __construct(UsersTable $usersTable = null)
+    public function __construct(EventManager $eventManager = null, UsersTable $usersTable = null)
     {
+        if ($eventManager !== null) {
+            $this->setEventManager($eventManager);
+        }
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -50,7 +58,7 @@ class GroupUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'GroupsUpdateController.update.success'
+            GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -69,8 +77,14 @@ class GroupUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         $removedGroupsUsers = $event->getData('removedGroupsUsers');
         $userId = $event->getData('userId');
 
-        // dispatch update email event to collaborating redactors
-        $this->dispatchEvent('GroupsUpdateEmailRedactor.create', $event->getData());
+        // Re-dispatch update email event data to collaborating redactors
+        $this->dispatchEvent(static::CREATE_EVENT_NAME, [
+            'group' => $group,
+            'addedGroupsUsers' => $addedGroupsUsers,
+            'updatedGroupsUsers' => $updatedGroupsUsers,
+            'removedGroupsUsers' => $removedGroupsUsers,
+            'userId' => $userId,
+        ]);
 
         return $emailCollection;
     }

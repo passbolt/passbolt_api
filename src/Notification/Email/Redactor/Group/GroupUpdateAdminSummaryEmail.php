@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
@@ -43,8 +43,8 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
     private $isEnabled;
 
     /**
-     * @param bool $isEnabled
-     * @param UsersTable $usersTable
+     * @param bool $isEnabled Is Enabled
+     * @param UsersTable $usersTable Users Table
      */
     public function __construct(bool $isEnabled, UsersTable $usersTable = null)
     {
@@ -60,12 +60,13 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'GroupsUpdateEmailRedactor.create',
+            GroupUpdateEmailRedactor::CREATE_EVENT_NAME,
         ];
     }
 
     /**
      * @param Event $event User delete event
+     *
      * @return EmailCollection
      */
     public function onSubscribedEvent(Event $event)
@@ -119,15 +120,16 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
 
         // Send the email to all the group managers.
         foreach ($groupManagers as $groupManager) {
-            $this->createSummaryEmail(
+            $emailCollection->addEmail($this->createSummaryEmail(
                 $groupManager->username,
                 $group,
-                $this->_getSummaryUser($addedUsersIds),// Retrieve the user information corresponding to the users impacted by the changes.
+                $this->_getSummaryUser($addedUsersIds),
+                // Retrieve the user information corresponding to the users impacted by the changes.
                 $this->_getSummaryUser($updatedUsersIds),
                 $this->_getSummaryUser($removedUsersIds),
                 $whoIsAdmin,
                 $modifiedBy
-            );
+            ));
         }
 
         return $emailCollection;
@@ -136,11 +138,12 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
     /**
      * @param string $emailRecipient Email recipient
      * @param Group $group Group
-     * @param array $addedUsers
-     * @param array $updatedUsers
-     * @param array $removedUsers
-     * @param $whoIsAdmin
-     * @param User $modifiedBy
+     * @param array $addedUsers List of added users
+     * @param array $updatedUsers List of updated users
+     * @param array $removedUsers List of removed users
+     * @param array $whoIsAdmin List of users
+     * @param User $modifiedBy User who modified
+     *
      * @return Email
      */
     private function createSummaryEmail(
@@ -149,18 +152,21 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
         array $addedUsers,
         array $updatedUsers,
         array $removedUsers,
-        $whoIsAdmin,
+        array $whoIsAdmin,
         User $modifiedBy
     ) {
         $subject = __("{0} updated the group {1}", $modifiedBy->profile->first_name, $group->name);
-        $data = ['body' => [
-            'admin' => $modifiedBy,
-            'group' => $group,
-            'addedUsers' => $addedUsers,
-            'updatedUsers' => $updatedUsers,
-            'removedUsers' => $removedUsers,
-            'whoIsAdmin' => $whoIsAdmin,
-        ], 'title' => $subject];
+        $data = [
+            'body' => [
+                'admin' => $modifiedBy,
+                'group' => $group,
+                'addedUsers' => $addedUsers,
+                'updatedUsers' => $updatedUsers,
+                'removedUsers' => $removedUsers,
+                'whoIsAdmin' => $whoIsAdmin,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
     }
@@ -169,6 +175,7 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
      * Retrieve the information of a list of users that will be used in the summary email.
      *
      * @param array $usersIds The list of users to retrieve the information for.
+     *
      * @return array
      */
     private function _getSummaryUser(array $usersIds = [])
@@ -183,9 +190,13 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
             ->where(['Users.id IN' => $usersIds])
             ->toArray();
     }
+
     /**
-     * @param Group $group
-     * @param array $excludeUsersIds
+     * Get a list of groupo managers
+     *
+     * @param Group $group Group
+     * @param array $excludeUsersIds ID of the users to exclude from the managers to retrieve
+     *
      * @return User[]
      */
     private function getGroupManagers(Group $group, array $excludeUsersIds)
@@ -193,11 +204,13 @@ class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
         return $this->usersTable->find()
             ->select(['Users.username'])
             ->innerJoinWith('GroupsUsers')
-            ->where([
-                'GroupsUsers.group_id' => $group->id,
-                'GroupsUsers.is_admin' => true,
-                'GroupsUsers.user_id NOT IN' => $excludeUsersIds,
-            ])
+            ->where(
+                [
+                    'GroupsUsers.group_id' => $group->id,
+                    'GroupsUsers.is_admin' => true,
+                    'GroupsUsers.user_id NOT IN' => $excludeUsersIds,
+                ]
+            )
             ->toArray();
     }
 }

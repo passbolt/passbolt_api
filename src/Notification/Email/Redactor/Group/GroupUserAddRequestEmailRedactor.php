@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
@@ -49,8 +49,9 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     private $groupsUsersTable;
 
     /**
-     * @param bool $isEnabled
-     * @param UsersTable $usersTable
+     * @param bool                  $isEnabled Is Enabled
+     * @param UsersTable            $usersTable Users Table
+     * @param GroupsUsersTable|null $groupsUsersTable Groups Users Table
      */
     public function __construct(bool $isEnabled, UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
     {
@@ -67,7 +68,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     public function getSubscribedEvents()
     {
         return [
-            'Model.Groups.requestGroupUsers.success'
+            'Model.Groups.requestGroupUsers.success',
         ];
     }
 
@@ -117,9 +118,9 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
 
     /**
      * @param string $emailRecipient Email of the group manager to send the notification to
-     * @param User $admin the admin that requested the action
-     * @param Group $group the group on which to add groupUsers
-     * @param array $requestedGroupUsers the list of groupUsers entity to request to add
+     * @param User   $admin the admin that requested the action
+     * @param Group  $group the group on which to add groupUsers
+     * @param array  $requestedGroupUsers the list of groupUsers entity to request to add
      * @return Email
      */
     private function createGroupUserAddEmail(string $emailRecipient, User $admin, Group $group, array $requestedGroupUsers)

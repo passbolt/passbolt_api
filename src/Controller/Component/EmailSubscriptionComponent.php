@@ -22,7 +22,6 @@ use Cake\Controller\Component;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventManager;
 use Cake\ORM\TableRegistry;
-use EmailQueue\Model\Table\EmailQueueTable;
 
 class EmailSubscriptionComponent extends Component
 {
@@ -46,10 +45,9 @@ class EmailSubscriptionComponent extends Component
             EventManager::instance(),
             new EmailSubscriptionManager(),
             new EmailSender(
-                EventManager::instance(),
-                $this->getEmailQueueTable(),
-                $config[self::APP_FULL_BASE_URL],
-                $config[self::PASSBOLT_EMAIL_PURIFY_SUBJECT] ?? false
+                TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue'),
+                $this->getConfig(self::APP_FULL_BASE_URL),
+                $this->getConfig(self::PASSBOLT_EMAIL_PURIFY_SUBJECT) ?? false
             )
         );
 
@@ -61,22 +59,6 @@ class EmailSubscriptionComponent extends Component
      */
     public function beforeFilter()
     {
-        $this->run();
-    }
-
-    /**
-     * @return void
-     */
-    public function run()
-    {
         $this->emailSubscriptionDispatcher->collect();
-    }
-
-    /**
-     * @return EmailQueueTable
-     */
-    private function getEmailQueueTable()
-    {
-        return TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
     }
 }

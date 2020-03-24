@@ -30,6 +30,8 @@ use Cake\Validation\Validation;
 
 class UsersDeleteController extends AppController
 {
+    const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
+
     /**
      * Before filter
      *
@@ -236,14 +238,14 @@ class UsersDeleteController extends AppController
     /**
      * Send email notification
      *
-     * @param User $user entity
+     * @param User  $deletedUser entity
      * @param array $groupIds list of Group entity user was member of
      * @return void
      */
-    protected function _notifyUsers(User $user, array $groupIds)
+    protected function _notifyUsers(User $deletedUser, array $groupIds)
     {
-        $event = new Event('UsersDeleteController.delete.success', $this, [
-            'user' => $user,
+        $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
+            'user' => $deletedUser,
             'groupsIds' => $groupIds,
             'deletedBy' => $this->User->id(),
         ]);

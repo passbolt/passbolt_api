@@ -13,12 +13,12 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Share;
 
+use App\Controller\Share\ShareController;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
 use App\Model\Entity\User;
-use App\Model\Table\ResourcesTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -61,6 +61,14 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private $showSecret;
 
+    /**
+     * @param bool            $isEnabled Is enabled
+     * @param bool            $showUsername Show username in email
+     * @param bool            $showUri Show uri in email
+     * @param bool            $showDescription Show description in email
+     * @param bool            $showSecret Show secret in email
+     * @param UsersTable|null $usersTable Users Table
+     */
     public function __construct(
         bool $isEnabled,
         bool $showUsername,
@@ -68,8 +76,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
         bool $showDescription,
         bool $showSecret,
         UsersTable $usersTable = null
-    )
-    {
+    ) {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->isEnabled = $isEnabled;
         $this->showUsername = $showUsername;
@@ -86,7 +93,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'ShareController.share.success'
+            ShareController::SHARE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -116,13 +123,22 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
             $secrets = Hash::combine($changes['secrets'], '{n}.user_id', '{n}.data');
 
             foreach ($users as $userId => $userName) {
-                $emailCollection->addEmail($this->createShareEmail($userName, $owner, $resource, $secrets[$userId]));
+                $emailCollection->addEmail(
+                    $this->createShareEmail($userName, $owner, $resource, $secrets[$userId])
+                );
             }
         }
 
         return $emailCollection;
     }
 
+    /**
+     * Return a collection of users from a list of user ids
+     *
+     * @param array $userIds A list of user ids
+     *
+     * @return array
+     */
     private function getUserFromIds(array $userIds)
     {
         return $this->usersTable->find()
@@ -133,25 +149,28 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param string $emailRecipient Email of the user to send email to
-     * @param User $owner Owner
-     * @param Resource $resource Resource
-     * @param Secret $secret Secret
+     * @param string   $emailRecipient Email of the user to send email to
+     * @param User     $owner Owner
+     * @param resource $resource Resource
+     * @param string   $secret Secret
      * @return Email
      */
-    private function createShareEmail(string $emailRecipient, User $owner, Resource $resource, Secret $secret)
+    private function createShareEmail(string $emailRecipient, User $owner, Resource $resource, string $secret)
     {
         $subject = __("{0} shared the password {1}", $owner->profile->first_name, $resource->name);
 
-        $data = ['body' => [
-            'owner' => $owner,
-            'resource' => $resource,
-            'secret' => $secret,
-            'showUsername' => $this->showUsername,
-            'showUri' => $this->showUri,
-            'showDescription' => $this->showDescription,
-            'showSecret' => $this->showSecret,
-        ], 'title' => $subject];
+        $data = [
+            'body' => [
+                'owner' => $owner,
+                'resource' => $resource,
+                'secret' => $secret,
+                'showUsername' => $this->showUsername,
+                'showUri' => $this->showUri,
+                'showDescription' => $this->showDescription,
+                'showSecret' => $this->showSecret,
+            ],
+            'title' => $subject,
+        ];
 
         return new Email($emailRecipient, $subject, $data, self::TEMPLATE);
     }

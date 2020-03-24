@@ -15,7 +15,9 @@
 namespace App\Notification\Email;
 
 use Cake\Event\Event;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
+use Cake\Event\EventManager;
 use Cake\Event\EventManagerInterface;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -35,6 +37,8 @@ use Throwable;
  */
 class EmailSubscriptionDispatcher implements EventListenerInterface
 {
+    use EventDispatcherTrait;
+
     /**
      * @var EventManagerInterface
      */
@@ -56,18 +60,18 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     private $logger;
 
     /**
-     * @param EventManagerInterface $eventManager Event manager
+     * @param EventManager $eventManager Event manager
      * @param EmailSubscriptionManager $emailSubscriptionManager EmailSubscriptionManaer
      * @param EmailSender $emailSender EmailSender
      * @param LoggerInterface $logger Logger
      */
     public function __construct(
-        EventManagerInterface $eventManager,
+        EventManager $eventManager,
         EmailSubscriptionManager $emailSubscriptionManager,
         EmailSender $emailSender,
         LoggerInterface $logger = null
     ) {
-        $this->eventManager = $eventManager;
+        $this->setEventManager($eventManager);
         $this->emailSubscriptionManager = $emailSubscriptionManager;
         $this->emailSender = $emailSender;
         $this->logger = $logger ?? new NullLogger();
@@ -78,8 +82,10 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
      */
     public function collect()
     {
-        $this->eventManager->dispatch(CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManager));
-        $this->eventManager->on($this);
+        $this->getEventManager()->dispatch(
+            CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManager)
+        );
+        $this->getEventManager()->on($this);
 
         return $this;
     }

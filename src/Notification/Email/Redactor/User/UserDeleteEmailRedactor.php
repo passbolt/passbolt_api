@@ -15,6 +15,7 @@
 
 namespace App\Notification\Email\Redactor\User;
 
+use App\Controller\Users\UsersDeleteController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use App\Model\Table\GroupsUsersTable;
@@ -23,6 +24,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 
@@ -44,6 +46,11 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private $groupsUsersTable;
 
+    /**
+     * @param bool                  $isEnabled Is Enabled
+     * @param UsersTable|null       $usersTable UsersTable
+     * @param GroupsUsersTable|null $groupsUsersTable GroupsUsersTable
+     */
     public function __construct(bool $isEnabled, UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -76,12 +83,16 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         foreach ($usersToNotify as $username => $groups) {
-            $emailCollection->addEmail($this->createDeleteUserEmail($user, $groups, $deletedBy));
+            $emailCollection->addEmail($this->createDeleteUserEmail($username, $user, $groups, $deletedBy));
         }
 
         return $emailCollection;
     }
 
+    /**
+     * @param array $groupsIds Groups IDs
+     * @return ResultSetInterface
+     */
     private function getGroupManagers(array $groupsIds)
     {
         return $this->groupsUsersTable->find()
@@ -92,17 +103,18 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param User $user User
+     * @param string  $recipient Email recipient
+     * @param User    $user User
      * @param Group[] $groups Groups
-     * @param User $deletedBy User admin who deleted the user
+     * @param User    $deletedBy User admin who deleted the user
      * @return Email
      */
-    private function createDeleteUserEmail(User $user, array $groups, User $deletedBy)
+    private function createDeleteUserEmail(string $recipient, User $user, array $groups, User $deletedBy)
     {
         $subject = __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
 
         return new Email(
-            $user->username,
+            $recipient,
             $subject,
             ['body' => ['user' => $user, 'groups' => $groups, 'admin' => $deletedBy], 'title' => $subject],
             'GM/user_delete'
@@ -117,7 +129,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'UsersDeleteController.delete.success'
+            UsersDeleteController::DELETE_SUCCESS_EVENT_NAME,
         ];
     }
 }

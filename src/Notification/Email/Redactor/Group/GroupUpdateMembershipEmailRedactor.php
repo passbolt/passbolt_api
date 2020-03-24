@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
@@ -43,8 +43,8 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
     private $isEnabled;
 
     /**
-     * @param bool $isEnabled
-     * @param UsersTable $usersTable
+     * @param bool       $isEnabled Is Enabled
+     * @param UsersTable $usersTable Users Table
      */
     public function __construct(bool $isEnabled, UsersTable $usersTable = null)
     {
@@ -60,7 +60,7 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
     public function getSubscribedEvents()
     {
         return [
-            'GroupsUpdateEmailRedactor.create'
+            GroupUpdateEmailRedactor::CREATE_EVENT_NAME,
         ];
     }
 
@@ -90,6 +90,12 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
         return $emailCollection;
     }
 
+    /**
+     * @param array $updatedGroupsUsers List of updated users
+     * @param User  $modifiedBy User who modified
+     * @param Group $group Group
+     * @return array
+     */
     public function createUpdateMembershipGroupUpdateEmails(array $updatedGroupsUsers, User $modifiedBy, Group $group)
     {
         // Retrieve the users to send an email to.
@@ -110,11 +116,12 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
 
     /**
      * Create group update email for the user whom the membership has changed
+     *
      * @param string $emailRecipient Email recipient
-     * @param $userId
-     * @param bool $isAdmin
-     * @param User $modifiedBy person who did the change
-     * @param Group $group Group the affected group
+     * @param string $userId Id of the user
+     * @param bool   $isAdmin Is user admin
+     * @param User   $modifiedBy person who did the change
+     * @param Group  $group Group the affected group
      * @return Email
      */
     public function createUpdateMembershipGroupUpdateEmail(string $emailRecipient, $userId, bool $isAdmin, User $modifiedBy, Group $group)

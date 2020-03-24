@@ -29,6 +29,9 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
+    const TEMPLATE_REGISTER_SELF = 'AN/user_register_self';
+    const TEMPLATE_REGISTER_ADMIN = 'AN/user_register_admin';
+
     /**
      * @var UsersTable
      */
@@ -39,6 +42,10 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private $isNotificationEnabled;
 
+    /**
+     * @param bool            $isNotificationEnabled Is Notification enabled
+     * @param UsersTable|null $usersTable Users Table
+     */
     public function __construct(bool $isNotificationEnabled, UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -66,6 +73,10 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         return $emailCollection->addEmail($email);
     }
 
+    /**
+     * @param User $user User to include in the subject
+     * @return string
+     */
     private function getSubject(User $user)
     {
         return __("Welcome to passbolt, {0}!", $user->profile->first_name);
@@ -84,7 +95,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
             $user->username,
             $this->getSubject($user),
             ['body' => ['user' => $user, 'token' => $uac], 'title' => $this->getSubject($user)],
-            'AN/user_register_self'
+            static::TEMPLATE_REGISTER_SELF
         );
     }
 
@@ -102,7 +113,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
             $user->username,
             $this->getSubject($user),
             ['body' => ['user' => $user, 'token' => $uac, 'admin' => $admin], 'title' => $this->getSubject($user)],
-            'AN/user_register_admin'
+            static::TEMPLATE_REGISTER_ADMIN
         );
     }
 
@@ -114,8 +125,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'Model.Users.afterRegister.success',
-            'UsersRecoverController.registerPost.success'
+            UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME,
         ];
     }
 }

@@ -30,6 +30,8 @@ use Cake\Validation\Validation;
 
 class ResourcesDeleteController extends AppController
 {
+    const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
+
     /**
      * Resource Delete action
      *
@@ -110,7 +112,7 @@ class ResourcesDeleteController extends AppController
      */
     protected function _notifyUser(Resource $resource, \Cake\Datasource\ResultSetInterface $users)
     {
-        $event = new Event('ResourcesDeleteController.delete.success', $this, [
+        $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,
             'deletedBy' => $this->User->id(),
             'users' => $users,

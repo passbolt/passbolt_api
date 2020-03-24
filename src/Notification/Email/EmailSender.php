@@ -37,11 +37,6 @@ class EmailSender
     private $emailQueue;
 
     /**
-     * @var EventManagerInterface
-     */
-    private $eventManager;
-
-    /**
      * @var string
      */
     private $appFullBaseUrl;
@@ -52,15 +47,13 @@ class EmailSender
     private $purifySubject = false;
 
     /**
-     * @param EventManagerInterface $eventManager EventManager object
      * @param EmailQueueTable $emailQueue Email queue
      * @param string $appFullBaseUrl Full base url of the Passbolt instance
      * @param bool $purifySubject True if subject must be purified
      */
-    public function __construct(EventManagerInterface $eventManager, EmailQueueTable $emailQueue, string $appFullBaseUrl, bool $purifySubject)
+    public function __construct(EmailQueueTable $emailQueue, string $appFullBaseUrl, bool $purifySubject)
     {
         $this->emailQueue = $emailQueue;
-        $this->eventManager = $eventManager;
         $this->appFullBaseUrl = $appFullBaseUrl;
         $this->purifySubject = $purifySubject;
     }

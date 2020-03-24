@@ -13,21 +13,16 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Recovery;
 
+use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\AuthenticationToken;
-use App\Model\Entity\Comment;
-use App\Model\Entity\Resource;
-use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Model\Table\ResourcesTable;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
 
 class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -56,7 +51,7 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'UsersRecoverController.recoverPost.success'
+            UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME,
         ];
     }
 

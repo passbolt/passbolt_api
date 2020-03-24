@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Comment;
 
 use App\Model\Entity\Comment;
 use App\Model\Entity\Resource;
@@ -52,6 +52,12 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private $showCommentInEmail;
 
+    /**
+     * @param bool                $isEnabled Is Enabled
+     * @param bool                $showCommentInEmail Show comment in email
+     * @param UsersTable|null     $usersTable Users Table
+     * @param ResourcesTable|null $resourcesTable Resources Table
+     */
     public function __construct(bool $isEnabled, bool $showCommentInEmail, UsersTable $usersTable = null, ResourcesTable $resourcesTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
@@ -68,7 +74,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'CommentAddController.addPost.success'
+            'CommentAddController.addPost.success',
         ];
     }
 
@@ -112,7 +118,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param User $user User to notify
      * @param User $creator Creator of the comment
-     * @param Resource $resource Resource on which a comment was added
+     * @param resource $resource Resource on which a comment was added
      * @param Comment $comment Comment added
      * @return Email
      */

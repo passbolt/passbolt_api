@@ -16,27 +16,29 @@
 namespace App\Notification\Email\Redactor;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
-use App\Notification\Email\Redactor\User\CommentAddEmailRedactor;
-use App\Notification\Email\Redactor\User\AccountRecoveryEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupDeleteEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupUpdateEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupUpdateMembershipEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupUserAddEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupUserAddRequestEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupUserDeleteEmailRedactor;
-use App\Notification\Email\Redactor\User\ResourceCreateEmailRedactor;
-use App\Notification\Email\Redactor\User\ResourceDeleteEmailRedactor;
-use App\Notification\Email\Redactor\User\ResourceUpdateEmailRedactor;
-use App\Notification\Email\Redactor\User\ShareEmailRedactor;
-use App\Notification\Email\Redactor\User\GroupUpdateAdminSummaryEmail;
+use App\Notification\Email\Redactor\Comment\CommentAddEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupDeleteEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmail;
+use App\Notification\Email\Redactor\Group\GroupUpdateEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUpdateMembershipEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
+use App\Notification\Email\Redactor\Recovery\AccountRecoveryEmailRedactor;
+use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
+use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
+use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
+use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
+use App\Notification\Email\SubscribedEmailRedactorInterface;
+use Cake\Event\EventManager;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
-     * @return array of SubscribedEmailRedactors
+     * @return SubscribedEmailRedactorInterface[]
      */
     public function getSubscribedRedactors()
     {
@@ -91,10 +93,16 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
             new GroupDeleteEmailRedactor(
                 EmailNotificationSettings::get('send.group.delete')
             ),
-            new GroupUpdateEmailRedactor(),
-            new GroupUpdateMembershipEmailRedactor(EmailNotificationSettings::get('send.group.user.update')),
-            new GroupUserDeleteEmailRedactor(EmailNotificationSettings::get('send.group.user.delete')),
-            new GroupUpdateAdminSummaryEmail(EmailNotificationSettings::get('send.group.manager.update')),
+            new GroupUpdateEmailRedactor(EventManager::instance()),
+            new GroupUpdateMembershipEmailRedactor(
+                EmailNotificationSettings::get('send.group.user.update')
+            ),
+            new GroupUserDeleteEmailRedactor(
+                EmailNotificationSettings::get('send.group.user.delete')
+            ),
+            new GroupUpdateAdminSummaryEmail(
+                EmailNotificationSettings::get('send.group.manager.update')
+            ),
         ];
     }
 }

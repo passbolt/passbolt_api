@@ -13,8 +13,9 @@
  * @since         2.14.0
  */
 
-namespace App\Notification\Email\Redactor\User;
+namespace App\Notification\Email\Redactor\Resource;
 
+use App\Controller\Resources\ResourcesUpdateController;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
@@ -41,31 +42,34 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      * @var bool
      */
     private $isEnabled;
+
     /**
      * @var mixed
      */
     private $showUsername;
+
     /**
      * @var mixed
      */
     private $showUri;
+
     /**
      * @var mixed
      */
     private $showDescription;
+
     /**
      * @var mixed
      */
     private $showSecret;
 
     /**
-     * ResourceUpdateEmailRedactor constructor.
-     * @param bool $isEnabled
-     * @param bool $showUsername Show username in email
-     * @param bool $showUri Show uri in email
-     * @param bool $showDescription Show description in email
-     * @param bool $showSecret Show secret in email
-     * @param UsersTable $usersTable
+     * @param bool       $isEnabled Is Enabled
+     * @param bool       $showUsername Show username in email
+     * @param bool       $showUri Show uri in email
+     * @param bool       $showDescription Show description in email
+     * @param bool       $showSecret Show secret in email
+     * @param UsersTable $usersTable Users Table
      */
     public function __construct(
         bool $isEnabled,
@@ -91,7 +95,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'ResourcesUpdateController.update.success'
+            ResourcesUpdateController::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -124,9 +128,9 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param string $emailRecipient Email of the recipient user
-     * @param User $owner User who executed the action
-     * @param Resource $resource Resource
+     * @param string   $emailRecipient Email of the recipient user
+     * @param User     $owner User who executed the action
+     * @param resource $resource Resource
      * @return Email
      */
     private function createUpdateEmail(string $emailRecipient, User $owner, Resource $resource)

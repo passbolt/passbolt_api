@@ -58,6 +58,8 @@ class UsersTable extends Table
 {
     use UsersFindersTrait;
 
+    const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
+
     /**
      * Initialize method
      *
@@ -434,7 +436,7 @@ class UsersTable extends Table
         if (isset($control) && !is_null($control->userId())) {
             $eventData['adminId'] = $control->userId();
         }
-        $event = new Event('Model.Users.afterRegister.success', $this, $eventData);
+        $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
 
         return $user;

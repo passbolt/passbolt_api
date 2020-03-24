@@ -14,18 +14,13 @@
  */
 namespace App\Shell\Task;
 
-use App\Controller\Events\EmailNotificationsListener;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
-use Cake\Event\Event;
-use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
-use Ramsey\Uuid\Uuid;
 
 class RegisterUserTask extends AppShell
 {
