@@ -18,6 +18,11 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\NotificationSettings\Utility\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\Utility\NotificationSettings\GroupNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\Utility\NotificationSettings\PurifyNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\Utility\NotificationSettings\ResourceNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\Utility\NotificationSettings\UserNotificationSettingsDefinition;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -101,6 +106,14 @@ class Application extends BaseApplication
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
         }
+
+        $this->getEventManager()
+            // Add the different email settings definitions for Passbolt Core
+            ->on(new CommentNotificationSettingsDefinition())
+            ->on(new GroupNotificationSettingsDefinition())
+            ->on(new PurifyNotificationSettingsDefinition())
+            ->on(new ResourceNotificationSettingsDefinition())
+            ->on(new UserNotificationSettingsDefinition());
     }
 
     /**

@@ -12,14 +12,15 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
-namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettings;
+
+namespace App\Notification\NotificationSettings\Utility\NotificationSettings;
 
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionTrait;
 
-class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
+class GroupNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
 {
     use EmailNotificationSettingsDefinitionTrait;
 
@@ -30,7 +31,12 @@ class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsD
     public function buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('purify_subject', ['type' => 'boolean', 'default' => false]);
+            // send controls
+            ->addField('send_group_delete', ['type' => 'boolean', 'default' => true])
+            ->addField('send_group_user_add', ['type' => 'boolean', 'default' => true])
+            ->addField('send_group_user_delete', ['type' => 'boolean', 'default' => true])
+            ->addField('send_group_user_update', ['type' => 'boolean', 'default' => true])
+            ->addField('send_group_manager_update', ['type' => 'boolean', 'default' => true]);
     }
 
     /**
@@ -39,7 +45,10 @@ class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsD
      */
     public function buildValidator(Validator $validator)
     {
-        return $validator
-            ->boolean('purify_subject', __('Purify subject should be a boolean.'));
+        return $validator->boolean('send_group_delete', __('Send group delete should be a boolean.'))
+            ->boolean('send_group_user_add', __('Send group user add should be a boolean.'))
+            ->boolean('send_group_user_delete', __('Send group user delete should be a boolean.'))
+            ->boolean('send_group_user_update', __('Send group user update should be a boolean.'))
+            ->boolean('send_group_manager_update', __('Send group manager update should be a boolean.'));
     }
 }
