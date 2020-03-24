@@ -15,6 +15,7 @@
 namespace App\Model\Traits\Users;
 
 use App\Model\Entity\Role;
+use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
@@ -481,6 +482,26 @@ trait UsersFindersTrait
             ->first();
 
         return $user;
+    }
+
+    /**
+     * Return a list of admin users (active, non soft-deleted) with their role attached
+     * @return User[]
+     */
+    public function findAdmins()
+    {
+        $users = $this->find()
+            ->where(
+                [
+                    'Users.deleted' => false,
+                    'Users.active'  => true,
+                    'Roles.name'    => Role::ADMIN,
+                ]
+            )
+            ->order(['Users.created' => 'ASC'])
+            ->contain(['Roles']);
+
+        return $users;
     }
 
     /**

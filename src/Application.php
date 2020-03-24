@@ -18,6 +18,8 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Notification\NotificationSettings\Utility\NotificationSettings\AdminNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\Utility\NotificationSettings\CommentNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\Utility\NotificationSettings\GroupNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\Utility\NotificationSettings\PurifyNotificationSettingsDefinition;
@@ -26,6 +28,7 @@ use App\Notification\NotificationSettings\Utility\NotificationSettings\UserNotif
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Routing\Middleware\AssetMiddleware;
@@ -108,12 +111,15 @@ class Application extends BaseApplication
         }
 
         $this->getEventManager()
+            // Contains all emails redactors for Passbolt Core
+            ->on(new CoreEmailRedactorPool())
             // Add the different email settings definitions for Passbolt Core
             ->on(new CommentNotificationSettingsDefinition())
             ->on(new GroupNotificationSettingsDefinition())
             ->on(new PurifyNotificationSettingsDefinition())
             ->on(new ResourceNotificationSettingsDefinition())
-            ->on(new UserNotificationSettingsDefinition());
+            ->on(new UserNotificationSettingsDefinition())
+            ->on(new AdminNotificationSettingsDefinition());
     }
 
     /**
