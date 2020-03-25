@@ -15,6 +15,7 @@
 namespace Passbolt\Folders\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * Folder Entity
@@ -46,4 +47,17 @@ class Folder extends Entity
         'created_by' => false,
         'modified_by' => false,
     ];
+
+    /**
+     * Is the folder personal.
+     *
+     * @return bool
+     */
+    public function isPersonal()
+    {
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+
+        return $foldersRelationsTable->findByForeignId($this->id)
+                ->count() === 1;
+    }
 }

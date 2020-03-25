@@ -133,16 +133,4 @@ class FoldersTable extends Table
 
         return $validator;
     }
-
-    /**
-     * Check if a folder is a personal folder.
-     *
-     * @param string $id The target item id
-     * @return bool
-     */
-    public function isPersonal(string $id)
-    {
-        return $this->FoldersRelations->findByForeignId($id)
-                ->count() === 1;
-    }
 }

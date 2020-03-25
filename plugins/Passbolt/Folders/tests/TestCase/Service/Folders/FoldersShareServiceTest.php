@@ -34,6 +34,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
+use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
@@ -167,30 +168,21 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userNotExistId = UuidFactory::uuid();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folder->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userNotExistId, 'type' => Permission::READ];
 
         try {
             $this->service->share($uac, $folder->id, $data);
+            $this->assertFalse(true, 'The test should throw an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = [
-                'permissions' => [
-                    1 => [
-                        'aro_foreign_key' => [
-                            '_existsIn' => 'This value does not exist',
-                            'aro_exists' => 'The aro does not exist.',
-
-                        ]
-                    ]
-                ]
-            ];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
+            $this->assertUpdatePermissionsValidationException($e, 'permissions.0.aro_foreign_key._existsIn');
         }
+    }
 
-        $this->assertFalse(true, 'The test should throw an exception');
+    private function assertUpdatePermissionsValidationException(ValidationException $e, string $errorFieldName)
+    {
+        $this->assertEquals("Could not validate folder data.", $e->getMessage());
+        $error = Hash::get($e->getErrors(), $errorFieldName);
+        $this->assertNotNull($error, "Expected error not found : {$errorFieldName}. Errors: " . json_encode($e->getErrors()));
     }
 
     public function insertFixture_ShareFolderError_AddUser_PermissionValidationException1()
@@ -210,7 +202,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folder->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::READ];
         $folder = $this->service->share($uac, $folder->id, $data);
 
@@ -243,7 +234,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -286,7 +276,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -327,7 +316,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -364,8 +352,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingOneParent3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userCId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -419,8 +405,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingMultipleParents1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userCId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -484,9 +468,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId, $userDId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingMultipleParents2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userCId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userDId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -563,7 +544,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -606,7 +586,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -660,7 +639,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren2_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -713,7 +691,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren2_2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -782,8 +759,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingChildren3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userCId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -837,8 +812,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userBId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -913,8 +886,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userBId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -989,8 +960,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren1_2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderC->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderC->id}-{$userBId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderC->id, $data);
 
@@ -1078,8 +1047,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userCId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userBId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -1158,8 +1125,6 @@ class FoldersShareServiceTest extends FoldersTestCase
             $this->insertFixture_ShareFolderAddUserSuccess_HavingParentsAndChildren2_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userBId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
@@ -1265,7 +1230,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folder->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $group->id, 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folder->id, $data);
 
@@ -1296,7 +1260,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folder->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['aro' => 'Group', 'aro_foreign_key' => $group->id, 'type' => Permission::READ];
         $folder = $this->service->share($uac, $folder->id, $data);
 
@@ -1330,19 +1293,14 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderError_RemoveUser1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::READ];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'delete' => true];
 
         try {
             $this->service->share($uac, $folderA->id, $data);
+            $this->assertFalse(true, 'The test should throw an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['permissions' => ['at_least_one_owner' => 'At least one owner permission must be provided.']];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
+            $this->assertUpdatePermissionsValidationException($e, 'permissions.at_least_one_owner');
         }
-
-        $this->assertFalse(true, 'The test should throw an exception');
     }
 
     public function insertFixture_ShareFolderError_RemoveUser1()
@@ -1367,6 +1325,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'delete' => true];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
         $this->assertTrue($folder instanceof Folder);
@@ -1398,7 +1357,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderB->id}-{$userBId}"), 'delete' => true];
         $folder = $this->service->share($uac, $folderB->id, $data);
 
         $this->assertTrue($folder instanceof Folder);
@@ -1443,7 +1402,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'delete' => true];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
         $this->assertTrue($folder instanceof Folder);
@@ -1484,7 +1443,7 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_RemoveUser3_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
+        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'delete' => true];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
         $this->assertTrue($folder instanceof Folder);
@@ -1540,7 +1499,6 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $userAId, $userBId) = $this->insertFixture_ShareFolderSuccess_UpdateUser1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::OWNER];
         $folder = $this->service->share($uac, $folderA->id, $data);
 
@@ -1571,17 +1529,13 @@ class FoldersShareServiceTest extends FoldersTestCase
         list($folderA, $userAId) = $this->insertFixture_ShareFolderError_UpdateUser1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::OWNER];
         $data['permissions'][] = ['id' => UuidFactory::uuid(), 'type' => Permission::OWNER];
 
         try {
             $this->service->share($uac, $folderA->id, $data);
+            $this->assertFalse('True', 'The test should throw an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['permissions' => [1 => ['id' => ['exists' => 'The permission does not exist.']]]];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
+            $this->assertUpdatePermissionsValidationException($e, 'permissions.0.id.exists');
         }
     }
 
@@ -1605,12 +1559,9 @@ class FoldersShareServiceTest extends FoldersTestCase
 
         try {
             $this->service->share($uac, $folderA->id, $data);
+            $this->assertFalse(true, 'The test should throw an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['permissions' => [0 => ['type' => ['inList' => 'The type must be one of the following: 1, 7, 15.']]]];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
+            $this->assertUpdatePermissionsValidationException($e, 'permissions.0.type.inList');
         }
     }
 
@@ -1631,19 +1582,13 @@ class FoldersShareServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userAId}"), 'type' => Permission::READ];
-        $data['permissions'][] = ['id' => UuidFactory::uuid("permission.id.{$folderA->id}-{$userBId}"), 'type' => Permission::READ];
 
         try {
             $this->service->share($uac, $folderA->id, $data);
+            $this->assertFalse(true, 'The test should throw an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
-            $errors = ['permissions' => ['at_least_one_owner' => 'At least one owner permission must be provided.']];
-            $this->assertEquals($errors, $e->getErrors());
-
-            return;
+            $this->assertUpdatePermissionsValidationException($e, 'permissions.at_least_one_owner');
         }
-
-        $this->assertFalse(true, 'The test should throw an exception');
     }
 
     public function insertFixture_ShareFolderError_UpdateUser3()

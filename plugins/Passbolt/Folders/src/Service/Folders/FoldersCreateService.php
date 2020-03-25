@@ -163,9 +163,16 @@ class FoldersCreateService
      */
     private function createPermission(UserAccessControl $uac, Folder $folder)
     {
+        $userId = $uac->userId();
+        $permissionData = [
+            'aco' => PermissionsTable::FOLDER_ACO,
+            'aco_foreign_key' => $folder->id,
+            'aro' => PermissionsTable::USER_ARO,
+            'aro_foreign_key' => $userId,
+            'type' => Permission::OWNER,
+        ];
         try {
-            $userId = $uac->userId();
-            $this->permissionsCreateService->create($uac, PermissionsTable::FOLDER_ACO, $folder->id, PermissionsTable::USER_ARO, $userId, Permission::OWNER);
+            $this->permissionsCreateService->create($uac, $permissionData);
         } catch (Exception $error) {
             throw new InternalErrorException(__('Could not create the folder, please try again later.'), 500, $error);
         }

@@ -237,7 +237,7 @@ class ShareControllerLogTest extends LogIntegrationTestCase
         // Users permissions changes.
         // Add an owner permission for the user Edith
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $data['secrets'][] = ['user_id' => $userEId, 'data' => self::getDummySecretData()];
+        $data['secrets'][] = ['user_id' => $userEId, 'data' => Hash::get(self::getDummySecretData(), 'data')];
         $expectedAddedUsersIds[] = $userEId;
 
         $this->authenticateAs('ada');

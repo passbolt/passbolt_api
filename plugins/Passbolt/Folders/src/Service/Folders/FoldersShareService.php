@@ -15,12 +15,14 @@
 
 namespace Passbolt\Folders\Service\Folders;
 
+use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsAcoHasOwnerService;
 use App\Service\Permissions\PermissionsCreateService;
+use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -61,11 +63,6 @@ class FoldersShareService
     private $foldersItemsHasAncestorService;
 
     /**
-     * @var ResourcesMoveService
-     */
-    private $foldersMoveService;
-
-    /**
      * @var FoldersRelationsCreateService
      */
     private $foldersRelationsCreateService;
@@ -101,6 +98,11 @@ class FoldersShareService
     private $permissionsTable;
 
     /**
+     * @var PermissionsUpdatePermissionsService
+     */
+    private $permissionsUpdatePermissionsService;
+
+    /**
      * @var UserHasPermissionService
      */
     private $userHasPermissionService;
@@ -120,6 +122,7 @@ class FoldersShareService
         $this->foldersItemsHasAncestorService = new FoldersItemsHasAncestorService();
         $this->permissionsAcoHasOwnerService = new PermissionsAcoHasOwnerService();
         $this->permissionsCreateService = new PermissionsCreateService();
+        $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
@@ -137,12 +140,16 @@ class FoldersShareService
         $folder = $this->getFolder($id, $uac);
         $this->assertUserCanShare($uac, $folder);
 
-        if (empty($data)) {
+        $permissionsData = Hash::get($data, 'permissions', []);
+        if (empty($permissionsData)) {
             return $folder;
         }
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
-            $this->shareFolder($uac, $folder, $data);
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData) {
+            $isPersonal = $folder->isPersonal($folder->id);
+            $result = $this->updatePermissions($uac, $folder, $permissionsData);
+            $this->postPermissionsRevoked($folder, $result['removed']);
+            $this->postPermissionsAdded($uac, $folder, $isPersonal, $result['added']);
         });
 
 //        $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
@@ -166,8 +173,7 @@ class FoldersShareService
         try {
             return $this->foldersTable->get($folderId, [
                 'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
-                'user_id' => $uac->userId(),
-                'contain' => ['Permissions']
+                'user_id' => $uac->userId()
             ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The folder does not exist.'));
@@ -190,57 +196,56 @@ class FoldersShareService
     }
 
     /**
-     * Share a folder.
+     * Update a folder permissions
      *
      * @param UserAccessControl $uac The operator
-     * @param Folder $folder The folder to update the permission
-     * @param array $data The request data
-     * @throws Exception If something went wrong
+     * @param Folder $folder The target folder
+     * @param array $changes The list of permissions changes
+     * @return void
+     * @throws ValidationException If the permissions didn't validate
+     * @throws \Exception If something went wrong
      */
-    private function shareFolder(UserAccessControl $uac, Folder $folder, array $data)
+    private function updatePermissions(UserAccessControl $uac, Folder $folder, array $changes)
     {
-        $isPersonal = $this->foldersTable->isPersonal($folder->id);
-        $permissionsData = Hash::get($data, 'permissions', []);
-
-        // Permissions not provided in the request data will be deleted.
-        $requestPermissionsIds = Hash::extract($data, 'permissions.{n}.id');
-        $originalPermissionsIds = Hash::extract($folder->permissions, '{n}.id');
-        $permissionsIdsToDelete = array_diff($originalPermissionsIds, $requestPermissionsIds);
-        foreach ($permissionsIdsToDelete as $permissionIdToDelete) {
-            $this->deletePermission($folder, $permissionIdToDelete);
+        try {
+            return $this->permissionsUpdatePermissionsService->updatePermissions($uac, PermissionsTable::FOLDER_ACO, $folder->id, $changes);
+        } catch (CustomValidationException $e) {
+            $folder->setError('permissions', $e->getErrors());
+            $this->handleValidationErrors($folder);
         }
-
-        // Add / update permissions provided in the request data.
-        foreach ($permissionsData as $index => $permissionData) {
-            $permissionId = Hash::get($permissionData, 'id', null);
-            // A new permission is provided when no id is found in the permission data.
-            if (is_null($permissionId)) {
-                $this->addPermission($index, $uac, $folder, $permissionData, $isPersonal);
-            } else {
-                // Otherwise update the permission.
-                $this->updatePermission($index, $folder, $permissionData);
-                $keepPermissionsIds[] = $permissionData['id'];
-            }
-        }
-
-        $this->assertAtLeastOneOwnerPermission($folder);
     }
 
     /**
-     * Update a permission on a folder.
+     * Handle folder validation errors.
+     *
      * @param Folder $folder The target folder
-     * @param string $permissionId the target permission
-     * @throws Exception
+     * @return void
+     * @throws ValidationException If the provided data does not validate.
      */
-    private function deletePermission(Folder $folder, string $permissionId)
+    private function handleValidationErrors(Folder $folder)
     {
-        $permission = $this->permissionsTable->get($permissionId);
-        $this->permissionsTable->delete($permission);
+        $errors = $folder->getErrors();
+        if (!empty($errors)) {
+            throw new ValidationException(__('Could not validate folder data.'), $folder, $this->foldersTable);
+        }
+    }
 
-        if ($permission->aro === PermissionsTable::GROUP_ARO) {
-            $this->removeFolderFromGroupUsersTrees($folder, $permission->aro_foreign_key);
-        } else {
-            $this->removeFolderFromUserTree($folder, $permission->aro_foreign_key);
+    /**
+     * Post permissions revoked.
+     *
+     * @param Folder $folder The target folder
+     * @param array $deletedPermissions The list of deleted permissions
+     * @return void
+     * @throws Exception If something unexpected occurred
+     */
+    private function postPermissionsRevoked(Folder $folder, array $deletedPermissions = [])
+    {
+        foreach ($deletedPermissions as $permission) {
+            if ($permission->aro === PermissionsTable::GROUP_ARO) {
+                $this->removeFolderFromGroupUsersTrees($folder, $permission->aro_foreign_key);
+            } else {
+                $this->removeFolderFromUserTree($folder, $permission->aro_foreign_key);
+            }
         }
     }
 
@@ -260,6 +265,7 @@ class FoldersShareService
 
     /**
      * Add a folder to a user tree.
+     *
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param string $userId The target user
@@ -290,6 +296,7 @@ class FoldersShareService
 
     /**
      * Reconstruct a folder parent in a user tree based on the operator representation
+     *
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param string $userId The target user
@@ -697,46 +704,23 @@ class FoldersShareService
     }
 
     /**
-     * Add a permission to a folder.
-     * @param int $rowIndexRef The row index in the request data
-     * @param UserAccessControl $uac The operator
-     * @param Folder $folder The folder to add a permission onto
-     * @param array $permissionData The permission data object
-     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
-     * @throws Exception
-     */
-    private function addPermission(int $rowIndexRef, UserAccessControl $uac, Folder $folder, array $permissionData, bool $isPersonal = false)
-    {
-        $aro = Hash::get($permissionData, 'aro', '');
-        $aroForeignKey = Hash::get($permissionData, 'aro_foreign_key', '');
-        $type = Hash::get($permissionData, 'type', '');
-
-        try {
-            $this->permissionsCreateService->create($uac, PermissionsTable::FOLDER_ACO, $folder->id, $aro, $aroForeignKey, $type);
-        } catch (ValidationException $e) {
-            $folder->setError('permissions', [$rowIndexRef => $e->getErrors()]);
-            $this->handleValidationErrors($folder);
-        }
-
-        if ($aro === PermissionsTable::GROUP_ARO) {
-            $this->addFolderToGroupUsersTrees($uac, $folder, $aroForeignKey, $isPersonal);
-        } else {
-            $this->addFolderToUserTree($uac, $folder, $aroForeignKey, $isPersonal);
-        }
-    }
-
-    /**
-     * Handle folder validation errors.
+     * Post permissions added.
      *
-     * @param Folder $folder The folder
+     * @param UserAccessControl $uac The operator
+     * @param Folder $folder The target folder
+     * @param bool $isPersonal Was the folder personal before shared with other users.
+     * @param array $addedPermissions The list of added permissions
      * @return void
-     * @throws ValidationException If the provided data does not validate.
+     * @throws Exception If something unexpected occurred
      */
-    private function handleValidationErrors($folder)
+    private function postPermissionsAdded(UserAccessControl $uac, Folder $folder, bool $isPersonal, array $addedPermissions = [])
     {
-        $errors = $folder->getErrors();
-        if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate the folder data.'), $folder, $this->foldersTable);
+        foreach ($addedPermissions as $permission) {
+            if ($permission->aro === PermissionsTable::GROUP_ARO) {
+                $this->addFolderToGroupUsersTrees($uac, $folder, $permission->aro_foreign_key, $isPersonal);
+            } else {
+                $this->addFolderToUserTree($uac, $folder, $permission->aro_foreign_key, $isPersonal);
+            }
         }
     }
 
@@ -753,63 +737,6 @@ class FoldersShareService
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
             $this->addFolderToUserTree($uac, $folder, $groupUserId, $isPersonal);
-        }
-    }
-
-    /**
-     * Update a permission on a folder.
-     * @param int $rowIndexRef The row index in the request data
-     * @param Folder $folder The target folder
-     * @param array $permissionData The permission data.
-     */
-    private function updatePermission(int $rowIndexRef, Folder $folder, array $permissionData)
-    {
-        $permissionId = $permissionData['id'];
-        $originalPermissionsMatch = Hash::extract($folder->permissions, "{n}[id={$permissionId}]", []);
-
-        // If the permissions to update does not exist.
-        if (empty($originalPermissionsMatch)) {
-            $errors = ['id' => ['exists' => 'The permission does not exist.']];
-            $folder->setError('permissions', [$rowIndexRef => $errors]);
-            $this->handleValidationErrors($folder);
-        }
-
-        /** @var Permission */
-        $permission = $originalPermissionsMatch[0];
-
-        // If the permission is similar to the original, nothing to do.
-        $originalPermissionType = $permission->type;
-        $updatedPermissionType = Hash::get($permissionData, 'type');
-        if ($originalPermissionType === $updatedPermissionType) {
-            return;
-        }
-
-        $patchEntityOptions = ['accessibleFields' => ['type' => true]];
-        $permission = $this->permissionsTable->patchEntity($permission, $permissionData, $patchEntityOptions);
-        if ($permission->hasErrors()) {
-            $folder->setError('permissions', [$rowIndexRef => $permission->getErrors()]);
-            $this->handleValidationErrors($folder);
-        }
-
-        $this->permissionsTable->save($permission);
-        if ($permission->hasErrors()) {
-            $folder->setError('permissions', [$rowIndexRef => $permission->getErrors()]);
-            $this->handleValidationErrors($folder);
-        }
-    }
-
-    /**
-     * Assert that the folder has at least one owner.
-     * @param Folder $folder The folder to assert
-     * @throws Exception If something unexpected occured
-     * @throws ValidationException If the folder has no owner
-     */
-    private function assertAtLeastOneOwnerPermission(Folder $folder)
-    {
-        $hasOwner = $this->permissionsAcoHasOwnerService->check($folder->id);
-        if (!$hasOwner) {
-            $folder->setError('permissions', ['at_least_one_owner' => 'At least one owner permission must be provided.']);
-            $this->handleValidationErrors($folder);
         }
     }
 }

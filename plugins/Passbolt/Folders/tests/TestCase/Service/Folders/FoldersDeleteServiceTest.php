@@ -22,6 +22,7 @@ use App\Model\Table\ResourcesTable;
 use App\Test\Fixture\Alt0\SecretsFixture;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
@@ -66,6 +67,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
+        GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,

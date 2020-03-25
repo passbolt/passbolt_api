@@ -100,7 +100,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     private function _getDummyResourceData()
     {
         $dummy = $this->getDummyResourceData();
-        $dummy['secrets'][] = $this->getDummySecret(['resource_id' => null]);
+        $dummy['secrets'][] = $this->getDummySecretData(['resource_id' => null]);
 
         return $dummy;
     }
