@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -12,6 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
+
 namespace App\Notification\Email\Redactor;
 
 use App\Controller\Setup\SetupCompleteController;
@@ -42,10 +43,19 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @var UsersTable
      */
     private $usersTable;
+    /**
+     * @var bool
+     */
+    private $isLogPluginEnabled;
 
-    public function __construct(UsersTable $usersTable = null)
+    /**
+     * @param bool            $isLogPluginEnabled If the log plugin is enabled or not
+     * @param UsersTable|null $usersTable Users Table instance
+     */
+    public function __construct(bool $isLogPluginEnabled, UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
+        $this->isLogPluginEnabled = $isLogPluginEnabled;
     }
 
     /**
@@ -53,13 +63,11 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      */
     public function getSubscribedEvents()
     {
-        return [
-            SetupCompleteController::EVENT_NAME,
-        ];
+        return $this->isActive() ? [SetupCompleteController::EVENT_NAME] : [];
     }
 
     /**
-     * @param Event $event
+     * @param Event $event Event Instance
      *
      * @return EmailCollection
      */
@@ -103,9 +111,9 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
     }
 
     /**
-     * @param User       $admin       An admin user to notify
-     * @param User       $user        User who completed setup
-     * @param User       $invitedBy   User who invited the user
+     * @param User       $admin An admin user to notify
+     * @param User       $user User who completed setup
+     * @param User       $invitedBy User who invited the user
      * @param FrozenDate $invitedWhen When user was invited
      *
      * @return Email
@@ -122,10 +130,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             $subject,
             [
                 'title' => $subject,
-                'body'  => [
-                    'user'        => $user,
-                    'admin'       => $admin,
-                    'invitedBy'   => $invitedBy->id === $admin->id ? __('you') : $invitedBy->profile->first_name,
+                'body' => [
+                    'user' => $user,
+                    'admin' => $admin,
+                    'invitedBy' => $invitedBy->id === $admin->id ? __('you') : $invitedBy->profile->first_name,
                     'invitedWhen' => $invitedWhen->timeAgoInWords(
                         [
                             'accuracy' => 'day',
@@ -135,5 +143,15 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             ],
             self::TEMPLATE
         );
+    }
+
+    /**
+     * Return whether or not the plugin is enabled
+     *
+     * @return bool
+     */
+    private function isActive()
+    {
+        return $this->isLogPluginEnabled;
     }
 }

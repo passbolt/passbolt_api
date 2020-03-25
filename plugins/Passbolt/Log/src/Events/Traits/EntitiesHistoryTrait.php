@@ -84,10 +84,10 @@ trait EntitiesHistoryTrait
         'UsersAdd.addPost' => [
             'models' => [
                 'Users' => [
-                    EntityHistory::CRUD_CREATE
-                ]
-            ]
-        ]
+                    EntityHistory::CRUD_CREATE,
+                ],
+            ],
+        ],
     ];
 
     /**

@@ -13,7 +13,7 @@
  * @since         2.13.0
  */
 
-namespace App\Notification\NotificationSettings\Utility\NotificationSettings;
+namespace App\Notification\NotificationSettings;
 
 use Cake\Form\Schema;
 use Cake\Validation\Validator;

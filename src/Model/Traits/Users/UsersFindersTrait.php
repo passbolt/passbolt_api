@@ -31,7 +31,6 @@ use InvalidArgumentException;
  */
 trait UsersFindersTrait
 {
-
     /**
      * Filter a Groups query by groups users.
      *
@@ -494,8 +493,8 @@ trait UsersFindersTrait
             ->where(
                 [
                     'Users.deleted' => false,
-                    'Users.active'  => true,
-                    'Roles.name'    => Role::ADMIN,
+                    'Users.active' => true,
+                    'Roles.name' => Role::ADMIN,
                 ]
             )
             ->order(['Users.created' => 'ASC'])

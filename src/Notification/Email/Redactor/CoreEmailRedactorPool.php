@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -16,6 +16,7 @@ namespace App\Notification\Email\Redactor;
 
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
+use Cake\Core\Configure;
 
 class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
@@ -25,7 +26,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
     public function getSubscribedRedactors()
     {
         return [
-            new AdminUserSetupCompleteEmailRedactor(),
+            new AdminUserSetupCompleteEmailRedactor(Configure::read('passbolt.plugins.log.enabled')),
         ];
     }
 }
