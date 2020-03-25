@@ -27,7 +27,8 @@ class ShareControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Avatars', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets',
+        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
+        'app.Base/OrganizationSettings', 'app.Base/EmailQueue',
     ];
 
     public function setUp()
@@ -140,19 +141,19 @@ hcciUFw5
         $userSId = UuidFactory::uuid('user.id.sofia');
         $testCases = [
             'cannot a permission that does not exist' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid()],
                 ]],
             ],
             'cannot delete a permission of another resource' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true],
                 ]],
             ],
             'cannot add a permission with invalid data' => [
-                'errorField' => 'permissions.0.aro_foreign_key._required',
+                'errorField' => 'permissions.0.aro_foreign_key._empty',
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'type' => Permission::OWNER],
                 ]],
@@ -187,7 +188,7 @@ hcciUFw5
                 ]],
             ],
             'cannot add a secret for a user who do not have access to the resource' => [
-                'errorField' => 'secrets.secrets_provided',
+                'errorField' => 'secrets.0.resource_id.has_resource_access',
                 'data' => ['secrets' => [
                     ['user_id' => $userEId, 'data' => $this->getValidSecret()],
                 ]],

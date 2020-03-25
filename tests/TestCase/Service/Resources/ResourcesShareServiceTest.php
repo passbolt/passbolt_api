@@ -10,21 +10,29 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.14.0
  */
 
-namespace App\Test\TestCase\Model\Table\Resources;
+namespace App\Test\TestCase\Service\Resources;
 
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Service\Resources\ResourcesShareService;
 use App\Test\Lib\AppTestCase;
+use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
-class ShareTest extends AppTestCase
+/**
+ * \App\Test\TestCase\Service\Resources\ResourcesShareServiceTest Test Case
+ *
+ * @covers \App\Test\TestCase\Service\Resources\ResourcesShareServiceTest
+ */
+class ResourcesShareServiceTest extends AppTestCase
 {
-
     public $Resources;
 
     public $fixtures = [
@@ -40,6 +48,7 @@ class ShareTest extends AppTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
+        $this->service = new ResourcesShareService();
     }
 
     public function tearDown()
@@ -68,11 +77,17 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
+    /* ************************************************************** */
+    /* SHARE */
+    /* ************************************************************** */
+
     public function testShareSuccess()
     {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
         // Users
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
@@ -119,8 +134,8 @@ hcciUFw5
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         // Share.
-        $result = $this->Resources->share($resource, $changes, $secrets);
-        $this->assertNotFalse($result);
+        $resource = $this->service->share($uac, $resourceId, $changes, $secrets);
+        $this->assertFalse($resource->hasErrors());
 
         // Load the resource.
         $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
@@ -146,9 +161,11 @@ hcciUFw5
 
     public function testShareLostAccessFavoritesDeleted()
     {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
         // Users
         $userDId = UuidFactory::uuid('user.id.dame');
 
@@ -165,8 +182,8 @@ hcciUFw5
         $expectedRemovedUsersIds[] = $userDId;
 
         // Share.
-        $result = $this->Resources->share($resource, $changes, $secrets);
-        $this->assertNotFalse($result);
+        $resource = $this->service->share($uac, $resourceId, $changes, $secrets);
+        $this->assertFalse($resource->hasErrors());
 
         // Ensure the apache favorite for Dame is deleted
         // But the other favorites for this resource are not touched.
@@ -185,6 +202,9 @@ hcciUFw5
 
     public function testShareValidationError()
     {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
         $resourceApacheId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
         $userAId = UuidFactory::uuid('user.id.ada');
@@ -193,13 +213,13 @@ hcciUFw5
             // Check some validation format rules, just to ensure they are well returned by the
             // PatchEntitiesWithChanges function
             'cannot update a permission that does not exist' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => [
                     'permissions' => [[
                         'id' => UuidFactory::uuid()]]],
             ],
             'cannot delete a permission of another resource' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => [
                     'permissions' => [[
                         'id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"),
@@ -207,7 +227,7 @@ hcciUFw5
                 ],
             ],
             'cannot add a permission with invalid data' => [
-                'errorField' => 'permissions.0.aro_foreign_key._required',
+                'errorField' => 'permissions.0.aro_foreign_key._empty',
                 'data' => [
                     'permissions' => [
                         ['aro' => 'User', 'type' => Permission::OWNER]]],
@@ -255,24 +275,188 @@ hcciUFw5
         ];
 
         foreach ($testCases as $caseLabel => $case) {
-            $resource = $this->Resources->get($resourceApacheId, ['contain' => ['Permissions', 'Secrets']]);
             $permissions = Hash::get($case, 'data.permissions', []);
             $secrets = Hash::get($case, 'data.secrets', []);
-            $this->Resources->share($resource, $permissions, $secrets);
-            $this->assertEntityError($resource, $case['errorField']);
+            try {
+                $this->service->share($uac, $resourceApacheId, $permissions, $secrets);
+            } catch (ValidationException $e) {
+                $this->assertEquals("Could not validate resource data.", $e->getMessage());
+                $error = Hash::get($e->getErrors(), $case['errorField']);
+                $this->assertNotNull($error, "Expected error not found : {$case['errorField']}. Errors: " . json_encode($e->getErrors()));
+
+                continue;
+            }
+            $this->assertFalse(true, 'The test should throw an exception.');
         }
     }
 
     public function testShareErrorRuleResourceIsNotSoftDeleted()
     {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
         $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
         $data = [[
             'aro' => 'User',
             'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
             'type' => Permission::OWNER]];
-        $this->Resources->share($resource, $data);
-        $errorField = 'id.resource_is_not_soft_deleted';
-        $this->assertEntityError($resource, $errorField);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('The resource does not exist.');
+        $this->service->share($uac, $resourceId, $data);
+    }
+
+    /* ************************************************************** */
+    /* SHARE DRY RUN */
+    /* ************************************************************** */
+
+    public function testShareDryRunSuccess()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        // Define actors of this tests
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        // Users
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userEId = UuidFactory::uuid('user.id.edith');
+        $userFId = UuidFactory::uuid('user.id.frances');
+        $userJId = UuidFactory::uuid('user.id.jean');
+        $userKId = UuidFactory::uuid('user.id.kathleen');
+        $userLId = UuidFactory::uuid('user.id.lynne');
+        $userMId = UuidFactory::uuid('user.id.marlyn');
+        $userNId = UuidFactory::uuid('user.id.nancy');
+        // Groups
+        $groupBId = UuidFactory::uuid('group.id.board');
+        $groupFId = UuidFactory::uuid('group.id.freelancer');
+        $groupAId = UuidFactory::uuid('group.id.accounting');
+
+        // Expected results.
+        $expectedAddedUsersIds = [];
+        $expectedRemovedUsersIds = [];
+
+        // Build the changes.
+        $changes = [];
+
+        // Users permissions changes.
+        // Change the permission of the user Ada to read (no users are expected to be added or removed).
+        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'type' => Permission::READ];
+        // Delete the permission of the user Betty.
+        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$userBId"), 'delete' => true];
+        $expectedRemovedUsersIds[] = $userBId;
+        // Add an owner permission for the user Edith
+        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
+        $expectedAddedUsersIds[] = $userEId;
+
+        // Groups permissions changes.
+        // Change the permission of the group Board (no users are expected to be added or removed).
+        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupBId"), 'type' => Permission::OWNER];
+        // Delete the permission of the group Freelancer.
+        $changes[] = ['id' => UuidFactory::uuid("permission.id.$resourceId-$groupFId"), 'delete' => true];
+        $expectedRemovedUsersIds = array_merge($expectedRemovedUsersIds, [$userJId, $userKId, $userLId, $userMId, $userNId]);
+        // Add a read permission for the group Accounting.
+        $changes[] = ['aro' => 'Group', 'aro_foreign_key' => $groupAId, 'type' => Permission::READ];
+        $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
+
+        // Share dry run.
+        $result = $this->service->shareDryRun($uac, $resourceId, $changes);
+        $this->assertNotEmpty($result);
+        $this->assertNotEmpty($result['added']);
+        $addedUsersIds = $result['added'];
+        $this->assertNotEmpty($result['deleted']);
+        $removedUsersIds = $result['deleted'];
+
+        // Assert the results.
+        $this->assertCount(count($expectedAddedUsersIds), $addedUsersIds);
+        $this->assertCount(count($expectedRemovedUsersIds), $removedUsersIds);
+        $this->assertEmpty(array_diff($expectedAddedUsersIds, $addedUsersIds));
+        $this->assertEmpty(array_diff($expectedRemovedUsersIds, $removedUsersIds));
+    }
+
+    /*
+     * The format validation is done by the Permissions model.
+     * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
+     */
+
+    public function testShareDryRunValidationError()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $resourceApacheId = UuidFactory::uuid('resource.id.apache');
+        $resourceAprilId = UuidFactory::uuid('resource.id.april');
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $testCases = [
+            // Check some validation format rules, just to ensure they are well returned by the
+            // PatchEntitiesWithChanges function
+            'cannot update a permission that does not exist' => [
+                'errorField' => 'permissions.0.id.exists',
+                'data' => [['id' => UuidFactory::uuid()]],
+            ],
+            'cannot delete a permission of another resource' => [
+                'errorField' => 'permissions.0.id.exists',
+                'data' => [[
+                    'id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"),
+                    'delete' => true]],
+            ],
+            'cannot add a permission with invalid data' => [
+                'errorField' => 'permissions.0.aro_foreign_key._empty',
+                'data' => [['aro' => 'User', 'type' => Permission::OWNER]],
+            ],
+            'cannot update a permission with a wrong permission type' => [
+                'errorField' => 'permissions.0.type.inList',
+                'data' => [['id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]],
+            ],
+            // Test build rules.
+            'cannot remove the latest owner' => [
+                'errorField' => 'permissions.at_least_one_owner',
+                'data' => [[
+                    'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"),
+                    'delete' => true]],
+            ],
+            'cannot add a permissions for a deleted user' => [
+                'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
+                'data' => [[
+                    'aro' => 'User',
+                    'aro_foreign_key' => UuidFactory::uuid('user.id.sofia'),
+                    'type' => Permission::OWNER]],
+            ],
+            'cannot add a permissions for an inactive user' => [
+                'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
+                'data' => [[
+                    'aro' => 'User',
+                    'aro_foreign_key' => UuidFactory::uuid('user.id.ruth'),
+                    'type' => Permission::OWNER]],
+            ],
+        ];
+
+        foreach ($testCases as $caseLabel => $case) {
+            try {
+                $this->service->shareDryRun($uac, $resourceApacheId, $case['data']);
+            } catch (ValidationException $e) {
+                $this->assertEquals("Could not validate resource data.", $e->getMessage());
+                $error = Hash::get($e->getErrors(), $case['errorField']);
+                $this->assertNotNull($error, "Expected error not found : {$case['errorField']}. Errors: " . json_encode($e->getErrors()));
+
+                continue;
+            }
+            $this->assertFalse(true, 'The test should throw an exception.');
+        }
+    }
+
+    public function testShareDryRunErrorRuleResourceIsNotSoftDeleted()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $resourceId = UuidFactory::uuid('resource.id.jquery');
+        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions']]);
+        $data = [[
+            'aro' => 'User',
+            'aro_foreign_key' => UuidFactory::uuid('user.id.ada'),
+            'type' => Permission::OWNER]];
+        $this->expectException(NotFoundException::class);
+        $this->service->shareDryRun($uac, $resource, $data);
     }
 }

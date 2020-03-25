@@ -200,7 +200,8 @@ class FindIndexOptions
 
     /**
      * Set the ID of the user for which the findIndex is executed
-     * @param string $userId
+     * @param string $userId The user id
+     * @return void
      */
     public function setUserId(string $userId)
     {

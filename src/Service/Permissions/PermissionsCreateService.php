@@ -40,19 +40,22 @@ class PermissionsCreateService
      * Create a permission.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $aco The permission aco type
-     * @param string $acoForeignKey The permission aco instance id
-     * @param string $aro The permission aro type
-     * @param string $aroForeignKey The permission aro instance id
-     * @param int $permissionType The permission type
+     * @param array $data The permission data
+     * [
+     *   string $aco The permission aco type
+     *   string $aco_foreign_key The permission aco instance id
+     *   string $aro The permission aro type
+     *   string $aro_foreign_key The permission aro instance id
+     *   int $type The permission type
+     * ]
      * @return Permission
      * @throws \Exception
      */
-    public function create(UserAccessControl $uac, string $aco, string $acoForeignKey, string $aro, string $aroForeignKey, int $permissionType)
+    public function create(UserAccessControl $uac, array $data = [])
     {
         $permission = null;
-        $this->permissionsTable->getConnection()->transactional(function () use (&$permission, $uac, $aco, $acoForeignKey, $aro, $aroForeignKey, $permissionType) {
-            $permission = $this->createPermission($uac, $aco, $acoForeignKey, $aro, $aroForeignKey, $permissionType);
+        $this->permissionsTable->getConnection()->transactional(function () use (&$permission, $uac, $data) {
+            $permission = $this->createPermission($uac, $data);
         });
 
         return $permission;
@@ -62,44 +65,47 @@ class PermissionsCreateService
      * Create and save a permission.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $aco The permission aco type
-     * @param string $acoForeignKey The permission aco instance id
-     * @param string $aro The permission aro type
-     * @param string $aroForeignKey The permission aro instance id
-     * @param int $permissionType The permission type
-     * @return void
+     * @param array $data The permission data
+     * [
+     *   string $aco The permission aco type
+     *   string $aco_foreign_key The permission aco instance id
+     *   string $aro The permission aro type
+     *   string $aro_foreign_key The permission aro instance id
+     *   int $type The permission type
+     * ]
+     * @return Permission
      */
-    private function createPermission(UserAccessControl $uac, string $aco, string $acoForeignKey, string $aro, string $aroForeignKey, int $permissionType)
+    private function createPermission(UserAccessControl $uac, array $data = [])
     {
-        $permission = $this->buildPermissionEntity($uac, $aco, $acoForeignKey, $aro, $aroForeignKey, $permissionType);
+        $permission = $this->buildPermissionEntity($uac, $data);
         $this->handlePermissionValidationErrors($permission);
         $this->permissionsTable->save($permission);
         $this->handlePermissionValidationErrors($permission);
+
+        return $permission;
     }
 
     /**
      * Build the permission entity.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $aco The permission aco type
-     * @param string $acoForeignKey The permission aco instance id
-     * @param string $aro The permission aro type
-     * @param string $aroForeignKey The permission aro instance id
-     * @param int $permissionType The permission type
+     * @param array $data The permission data
+     * [
+     *   string $aco The permission aco type
+     *   string $aco_foreign_key The permission aco instance id
+     *   string $aro The permission aro type
+     *   string $aro_foreign_key The permission aro instance id
+     *   int $type The permission type
+     * ]
      * @return Permission
      */
-    private function buildPermissionEntity(UserAccessControl $uac, string $aco, string $acoForeignKey, string $aro, string $aroForeignKey, int $permissionType)
+    private function buildPermissionEntity(UserAccessControl $uac, array $data = [])
     {
         $operatorId = $uac->userId();
-        $data = [
-            'aco' => $aco,
-            'aco_foreign_key' => $acoForeignKey,
-            'aro' => $aro,
-            'aro_foreign_key' => $aroForeignKey,
-            'type' => $permissionType,
+        $data = array_merge([
             'created_by' => $operatorId,
             'modified_by' => $operatorId,
-        ];
+        ], $data);
         $accessibleFields = [
             'aco' => true,
             'aco_foreign_key' => true,
