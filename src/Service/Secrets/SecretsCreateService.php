@@ -40,14 +40,13 @@ class SecretsCreateService
     /**
      * Create a secret.
      *
-     * @param UserAccessControl $uac The operator
      * @param array $data The secret data
      * @return Secret
      * @throws \Exception
      */
-    public function create(UserAccessControl $uac, array $data)
+    public function create(array $data)
     {
-        $secret = $this->buildEntity($uac, $data);
+        $secret = $this->buildEntity($data);
         $this->handleValidationErrors($secret);
 
         $this->secretsTable->getConnection()->transactional(function () use ($secret) {
@@ -61,26 +60,20 @@ class SecretsCreateService
     /**
      * Build the entity.
      *
-     * @param UserAccessControl $uac The operator
      * @param array $data The secret data
      * @return Secret
      */
-    private function buildEntity(UserAccessControl $uac, array $data)
+    private function buildEntity(array $data)
     {
-        $operatorId = $uac->userId();
         $data = [
             'resource_id' => Hash::get($data, 'resource_id'),
             'user_id' => Hash::get($data, 'user_id'),
             'data' => Hash::get($data, 'data'),
-            'created_by' => $operatorId,
-            'modified_by' => $operatorId,
         ];
         $accessibleFields = [
             'resource_id' => true,
             'user_id' => true,
             'data' => true,
-            'create_by' => true,
-            'modified_by' => true,
         ];
 
         return $this->secretsTable->newEntity($data, ['accessibleFields' => $accessibleFields]);

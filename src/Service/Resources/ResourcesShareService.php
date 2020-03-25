@@ -23,11 +23,10 @@ use App\Model\Table\FavoritesTable;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
-use App\Model\Table\SecretsTable;
 use App\Model\Table\UsersTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
-use App\Service\Secrets\SecretsCreateService;
+use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -55,14 +54,9 @@ class ResourcesShareService
     private $resourcesTable;
 
     /**
-     * @var SecretsCreateService
+     * @var SecretsUpdateSecretsService
      */
-    private $secretsCreateService;
-
-    /**
-     * @var SecretsTable
-     */
-    private $secretsTable;
+    private $secretsUpdateSecretsService;
 
     /**
      * @var UserHasPermissionService
@@ -83,8 +77,7 @@ class ResourcesShareService
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $this->secretsCreateService = new SecretsCreateService();
-        $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->userHasPermissionService = new UserHasPermissionService();
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
@@ -105,9 +98,9 @@ class ResourcesShareService
         $userIdsHavingAccessBefore = $this->getUsersIdsHavingAccessTo($resourceId);
 
         $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, $secrets, $userIdsHavingAccessBefore) {
-            $result = $this->updatePermissions($uac, $resource, $changes, $secrets);
-            $this->postAccessesRevoked($resource, $result['removed']);
-            $this->addSecrets($uac, $resource, $secrets, $userIdsHavingAccessBefore);
+            $updatePermissionsResult = $this->updatePermissions($uac, $resource, $changes);
+            $this->updateSecrets($uac, $resource, $secrets, $userIdsHavingAccessBefore);
+            $this->postAccessesRevoked($resource, $updatePermissionsResult['removed']);
         });
 
         return $resource;
@@ -186,6 +179,26 @@ class ResourcesShareService
     }
 
     /**
+     * Update the secrets.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param resource $resource The target resource
+     * @param array $data The list of secrets to add
+     * @param array $userIdsHavingAccessBefore The list of users ids having access to the resource before the share
+     * @return void
+     * @throws \Exception
+     */
+    private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data, array $userIdsHavingAccessBefore = [])
+    {
+        try {
+            $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+        } catch (CustomValidationException $e) {
+            $resource->setError('secrets', $e->getErrors());
+            $this->handleValidationErrors($resource);
+        }
+    }
+
+    /**
      * Post accesses revoked.
      *
      * @param resource $resource The target permissions
@@ -237,46 +250,10 @@ class ResourcesShareService
             return;
         }
 
-        $this->secretsTable->deleteAll([
-            'resource_id' => $resource->id,
-            'user_id' => $userId,
-        ]);
-
         $this->favoritesTable->deleteAll([
             'foreign_key' => $resource->id,
             'user_id' => $userId,
         ]);
-    }
-
-    /**
-     * Add secrets.
-     *
-     * @param UserAccessControl $uac The operator
-     * @param resource $resource The target resource
-     * @param array $data The list of secrets to add
-     * @param array $userIdsHavingAccessBefore The list of users ids having access to the resource before the share
-     * @return void
-     * @throws \Exception
-     */
-    private function addSecrets(UserAccessControl $uac, Resource $resource, array $data, array $userIdsHavingAccessBefore = [])
-    {
-        $userIdsHavingAccessAfter = $this->getUsersIdsHavingAccessTo($resource->id);
-        $usersIdsToAddSecretFor = array_diff($userIdsHavingAccessAfter, $userIdsHavingAccessBefore);
-
-        if (count($data) < count($usersIdsToAddSecretFor)) {
-            $resource->setError('secrets', ['secrets_provided' => 'The secrets of all the users having access to the resource are required.']);
-            $this->handleValidationErrors($resource);
-        }
-
-        foreach ($data as $rowIndex => $row) {
-            $row['resource_id'] = $resource->id;
-            try {
-                $this->secretsCreateService->create($uac, $row);
-            } catch (ValidationException $e) {
-                $resource->setError('secrets', [$rowIndex => $e->getErrors()]);
-                $this->handleValidationErrors($resource);
-            }
-        }
     }
 
     /**

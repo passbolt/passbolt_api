@@ -195,11 +195,6 @@ hcciUFw5
         $this->assertcontains(UuidFactory::uuid('resource.id.april'), $resourcesId);
     }
 
-    /*
-     * The format validation is done by the Permissions model.
-     * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
-     */
-
     public function testShareValidationError()
     {
         $userAId = UuidFactory::uuid('user.id.ada');
@@ -210,8 +205,6 @@ hcciUFw5
         $userAId = UuidFactory::uuid('user.id.ada');
         $userEId = UuidFactory::uuid('user.id.edith');
         $testCases = [
-            // Check some validation format rules, just to ensure they are well returned by the
-            // PatchEntitiesWithChanges function
             'cannot update a permission that does not exist' => [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => [

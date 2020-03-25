@@ -32,7 +32,7 @@ trait SecretsModelTrait
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $secret = self::getDummySecretEntity($data, $options);
 
-        $secretsTable->save($secret, ['checkRules' => false]);
+        $secretsTable->saveOrFail($secret, ['checkRules' => false]);
 
         return $secret;
     }
