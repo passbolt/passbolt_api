@@ -32,7 +32,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/Secrets',
+        'app.Base/Resources', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Avatars', 'app.Base/Favorites', 'app.Base/EmailQueue',
     ];
 
@@ -46,6 +46,7 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
             $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
             $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
             $this->Groups = TableRegistry::getTableLocator()->get('Groups');
+            $this->Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
     }
 
     public function testUsersDeleteDryRunSuccess()

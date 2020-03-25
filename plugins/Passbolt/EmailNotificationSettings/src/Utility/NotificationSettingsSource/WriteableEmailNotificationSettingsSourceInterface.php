@@ -10,26 +10,20 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         2.14.0
  */
-namespace App\Controller\Gpgkeys;
+namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource;
 
-use App\Controller\AppController;
-use Cake\Event\Event;
+use App\Utility\UserAccessControl;
 
-class GpgkeysIndexController extends AppController
+interface WriteableEmailNotificationSettingsSourceInterface
 {
     /**
-     * Gpgkey Index action
+     * Write an array of notification settings into a storage chosen by the implementation.
      *
+     * @param array $notificationSettingsData Notification settings with the dotted notation.
+     * @param UserAccessControl $userAccessControl UAC
      * @return void
      */
-    public function index()
-    {
-        $this->loadModel('Gpgkeys');
-        $whitelist = ['filter' => ['modified-after', 'is-deleted']];
-        $options = $this->QueryString->get($whitelist);
-        $gpgkeys = $this->Gpgkeys->find('index', $options);
-        $this->success(__('The operation was successful.'), $gpgkeys);
-    }
+    public function write(array $notificationSettingsData, UserAccessControl $userAccessControl);
 }

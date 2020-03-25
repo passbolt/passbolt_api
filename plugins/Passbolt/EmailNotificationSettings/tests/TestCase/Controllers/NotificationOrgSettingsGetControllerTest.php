@@ -32,6 +32,12 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         'app.Base/Roles',
     ];
 
+    public function setUp()
+    {
+        parent::setUp();
+        $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
+    }
+
     public function tearDown()
     {
         EmailNotificationSettings::flushCache();
