@@ -227,7 +227,7 @@ class FoldersUpdateService
     {
         if (!is_null($folder->folder_parent_id)) {
             $userId = $uac->userId();
-            $isAllowedToMoveOut= $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->folder_parent_id, $userId, Permission::UPDATE);
+            $isAllowedToMoveOut = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folder->folder_parent_id, $userId, Permission::UPDATE);
             if (!$isAllowedToMoveOut) {
                 $errors = ['has_folder_access' => 'You are not allowed to move content out of the parent folder.'];
                 $folder->setError('folder_parent_id', $errors);
@@ -293,7 +293,6 @@ class FoldersUpdateService
     /**
      * Move the folder.
      *
-     * @param UserAccessControl $uac The current user.
      * @param Folder $folder The folder to move.
      * @param string $folderParentId The destination folder.
      * @return void
@@ -306,16 +305,16 @@ class FoldersUpdateService
             $usersSeeingDestination = $this->foldersRelationsTable->findByForeignId($folderParentId)->extract('user_id')->toArray();
             $this->foldersRelationsTable->updateAll(['folder_parent_id' => $folderParentId], [
                 'foreign_id' => $folder->id,
-                'user_id IN' => $usersSeeingDestination
+                'user_id IN' => $usersSeeingDestination,
             ]);
         }
 
         // Move the folder to the root for rest of users who have it organized as the operator.
         $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], [
             'foreign_id' => $folder->id,
-            'folder_parent_id' => $folder->folder_parent_id
+            'folder_parent_id' => $folder->folder_parent_id,
         ]);
 
-        return $folder->set('folder_parent_id', $folderParentId);
+        $folder->set('folder_parent_id', $folderParentId);
     }
 }

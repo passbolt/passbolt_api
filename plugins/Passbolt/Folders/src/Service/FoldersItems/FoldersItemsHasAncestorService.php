@@ -36,16 +36,16 @@ class FoldersItemsHasAncestorService
     /**
      * Check if a folder has another one as ancestor.
      *
-     * @param string|null $folderId The target folder.
+     * @param string|null $folderId The target folder. Default null.
      * @param string $ancestorFolderId The potential folder ancestor
-     * @param string $userId
+     * @param string $userId The user tree to check in
      * @return bool
      */
     public function hasAncestor(string $folderId = null, string $ancestorFolderId, string $userId)
     {
         if ($ancestorFolderId === $folderId) {
             return true;
-        } else if (is_null($folderId)) {
+        } elseif (is_null($folderId)) {
             // Root has no ancestor.
             return false;
         }
@@ -61,7 +61,8 @@ class FoldersItemsHasAncestorService
      * @param string $folderId The folder to check for
      * @return string
      */
-    private function getFolderParentId(string $userId, string $folderId) {
+    private function getFolderParentId(string $userId, string $folderId)
+    {
         return $this->foldersRelationsTable->find()
             ->where([
                 'foreign_id' => $folderId,

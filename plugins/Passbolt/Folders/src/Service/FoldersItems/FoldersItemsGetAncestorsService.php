@@ -52,7 +52,8 @@ class FoldersItemsGetAncestorsService
      * @param array $_ancestors Internal variable to aggregate the recursive function results.
      * @return array
      */
-    private function _getAncestors(string $userId, string $folderId, array $_ancestors = []) {
+    private function _getAncestors(string $userId, string $folderId, array $_ancestors = [])
+    {
         $folderParentId = $this->foldersRelationsTable->findByUserIdAndForeignId($userId, $folderId)
             ->select('folder_parent_id')
             ->extract('folder_parent_id')

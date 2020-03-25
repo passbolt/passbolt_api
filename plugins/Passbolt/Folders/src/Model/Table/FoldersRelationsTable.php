@@ -197,15 +197,16 @@ class FoldersRelationsTable extends Table
      * @param array $fromFoldersIds The list of folders ids to move from
      * @param string|null $folderParentId (optional) The destination folder location. Set it to null to null to move the
      * item to the root. Default null.
+     * @return void
      */
     public function moveItemFrom(string $foreignId, array $fromFoldersIds, string $folderParentId = null)
     {
         $fields = [
-            'folder_parent_id' => $folderParentId
+            'folder_parent_id' => $folderParentId,
         ];
         $conditions = [
             'foreign_id' => $foreignId,
-            'folder_parent_id IN' => $fromFoldersIds
+            'folder_parent_id IN' => $fromFoldersIds,
         ];
         $this->updateAll($fields, $conditions);
     }
@@ -216,11 +217,12 @@ class FoldersRelationsTable extends Table
      * @param string $foreignId The target item
      * @param array $forUsersIds The list of users to move the item for
      * @param string $folderParentId The destination folder
+     * @return void
      */
     public function moveItemFor(string $foreignId, array $forUsersIds, $folderParentId = null)
     {
         $fields = [
-            'folder_parent_id' => $folderParentId
+            'folder_parent_id' => $folderParentId,
         ];
         $conditions = [
             'foreign_id' => $foreignId,

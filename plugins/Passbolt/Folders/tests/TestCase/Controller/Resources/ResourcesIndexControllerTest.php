@@ -31,10 +31,10 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
-    use FoldersRelationsModelTrait;
-    use FoldersModelTrait;
-    use PermissionsModelTrait;
     use FixtureProviderTrait;
+    use FoldersModelTrait;
+    use FoldersRelationsModelTrait;
+    use PermissionsModelTrait;
 
     private $Permissions;
 

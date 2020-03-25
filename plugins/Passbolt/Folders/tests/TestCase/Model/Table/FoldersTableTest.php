@@ -22,10 +22,10 @@ use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\UsersFixture;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
-use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -205,7 +205,7 @@ class FoldersTableTest extends AppTestCase
 
         // One parent should return only its children
         foreach ($expectedFoldersForParentId as $parentIdToFilter => $expectedFolderIds) {
-            $folders = $this->Folders->_filterQueryByParentIds($this->Folders->find(), [$parentIdToFilter]);
+            $folders = $this->Folders->filterQueryByParentIds($this->Folders->find(), [$parentIdToFilter]);
             $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
             $this->assertEquals(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders.");
         }
@@ -214,7 +214,7 @@ class FoldersTableTest extends AppTestCase
         $expectedFolderIds = $this->getAllChildrenFromExpectedFolders($expectedFoldersForParentId);
         $parentIdsToFilter = array_keys($expectedFoldersForParentId);
 
-        $folders = $this->Folders->_filterQueryByParentIds($this->Folders->find(), $parentIdsToFilter);
+        $folders = $this->Folders->filterQueryByParentIds($this->Folders->find(), $parentIdsToFilter);
         $resultFolderIds = Hash::extract($folders->toArray(), '{n}.id');
         $this->assertSame(asort($expectedFolderIds), asort($resultFolderIds), "List of folders returned does not contain expected folders. Filtering with multiple parent ids should return all children.");
     }
@@ -272,7 +272,7 @@ class FoldersTableTest extends AppTestCase
         ];
 
         foreach ($matchingNames as $matchingName) {
-            $folders = $this->Folders->_filterQueryBySearch($query, $matchingName);
+            $folders = $this->Folders->filterQueryBySearch($query, $matchingName);
             $this->assertCount(1, $folders, sprintf("FoldersTable::findAllByName() should match the given input: `%s`", $matchingName));
         }
 
@@ -282,7 +282,7 @@ class FoldersTableTest extends AppTestCase
         ];
 
         foreach ($nonMatchingNames as $nonMatchingName) {
-            $folders = $this->Folders->_filterQueryBySearch($query, $nonMatchingName);
+            $folders = $this->Folders->filterQueryBySearch($query, $nonMatchingName);
             $this->assertCount(0, $folders, sprintf("FoldersTable::findAllByName() should not match the given input: `%s`", $nonMatchingName));
         }
     }
@@ -311,7 +311,7 @@ class FoldersTableTest extends AppTestCase
             UuidFactory::uuid('folder.id.c'),
         ];
 
-        $folders = $this->Folders->_filterByIds($this->Folders->find(), $expectedFolderIds);
+        $folders = $this->Folders->filterByIds($this->Folders->find(), $expectedFolderIds);
         $folderIds = Hash::extract($folders->toArray(), '{n}.id');
 
         $this->assertSame($folderIds, $expectedFolderIds, "List of folders returned does not contain expected folders.");

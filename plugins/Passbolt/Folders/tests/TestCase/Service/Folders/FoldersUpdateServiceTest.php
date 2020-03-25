@@ -533,7 +533,6 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC];
     }
 
-
     public function testUpdateFolder_SharedSuccess5_MoveSharedFolderFromSharedFolderToRoot_KeepFolderOrganizedForSomeUsers()
     {
         list($folderA, $folderB, $folderC) = $this->insertSharedSuccess5Fixture();

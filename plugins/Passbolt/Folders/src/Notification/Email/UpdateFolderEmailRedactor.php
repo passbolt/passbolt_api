@@ -55,7 +55,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @param UsersTable $usersTable
+     * @param UsersTable $usersTable The users table
      */
     public function __construct(UsersTable $usersTable)
     {

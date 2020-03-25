@@ -99,7 +99,7 @@ class ResourcesTable extends Table
                 'className' => 'FoldersRelations',
                 'foreignKey' => 'foreign_id',
                 'conditions' => [
-                    'FoldersRelations.foreign_model' => 'Resource'
+                    'FoldersRelations.foreign_model' => 'Resource',
                 ],
                 'dependent' => true,
             ]);

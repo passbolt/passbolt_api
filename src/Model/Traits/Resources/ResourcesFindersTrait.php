@@ -94,7 +94,7 @@ trait ResourcesFindersTrait
         if (Configure::read('passbolt.plugins.folders')) {
             // Filter on resources with the given parent ids.
             if (isset($options['filter']['has-parent'])) {
-                $query = $this->_filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+                $query = $this->filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
             }
         }
 
@@ -330,18 +330,20 @@ trait ResourcesFindersTrait
      * @param array $parentIds Array of parent ids
      * @return Query
      */
-    public function _filterQueryByFolderParentIds(Query $query, array $parentIds)
+    public function filterQueryByFolderParentIds(Query $query, array $parentIds)
     {
         if (empty($parentIds)) {
             return $query;
         }
 
         $includeRoot = false;
-        $parentIds = array_filter($parentIds, function($value) use (&$includeRoot){
+        $parentIds = array_filter($parentIds, function ($value) use (&$includeRoot) {
             if ($value == Folder::ROOT_ID) {
                 $includeRoot = true;
+
                 return false;
             }
+
             return true;
         });
 
@@ -353,6 +355,7 @@ trait ResourcesFindersTrait
             if ($includeRoot) {
                 $conditions[] = ['folder_parent_id IS NULL'];
             }
+
             return $q->where(['OR' => $conditions]);
         });
     }

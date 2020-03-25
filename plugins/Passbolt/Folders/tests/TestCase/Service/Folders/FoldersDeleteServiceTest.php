@@ -285,8 +285,10 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
-        $resource1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id],
-            [$userBId => Permission::OWNER, $userAId => Permission::READ]);
+        $resource1 = $this->addResourceFor(
+            ['name' => 'R1', 'folder_parent_id' => $folderA->id],
+            [$userBId => Permission::OWNER, $userAId => Permission::READ]
+        );
 
         return [$folderA, $resource1];
     }

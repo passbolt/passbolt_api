@@ -55,6 +55,7 @@ trait FoldersRelationsModelTrait
     private static function isGroup(string $userId)
     {
         $groupsTable = TableRegistry::getTableLocator()->get('Groups');
+
         return $groupsTable->exists(['id' => $userId]);
     }
 

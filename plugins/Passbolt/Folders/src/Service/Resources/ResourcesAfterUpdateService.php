@@ -87,7 +87,7 @@ class ResourcesAfterUpdateService
      * @param UserAccessControl $uac The current user
      * @param resource $resource The resource to move.
      * @param string $folderParentId The destination folder.
-     * @return boolean
+     * @return bool
      */
     private function validateParentFolder(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
     {
@@ -104,7 +104,7 @@ class ResourcesAfterUpdateService
      * Check if the user can move content out of the folder;
      * @param UserAccessControl $uac The current user
      * @param resource $resource The resource to move.
-     * @return boolean
+     * @return bool
      */
     private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, Resource $resource)
     {
@@ -112,13 +112,12 @@ class ResourcesAfterUpdateService
         return true;
     }
 
-
     /**
      * Assert that the parent folder id is valid and exists.
      *
      * @param resource $resource The resource to move.
      * @param string $folderId The destination folder.
-     * @return boolean
+     * @return bool
      */
     private function assertFolderParentIdIsValid(Resource $resource, string $folderId)
     {
@@ -146,7 +145,7 @@ class ResourcesAfterUpdateService
      * @param UserAccessControl $uac The current user
      * @param resource $resource The resource to move.
      * @param string $folderParentId The destination folder
-     * @return boolean
+     * @return bool
      */
     private function assertUserCanMoveInFolder(UserAccessControl $uac, Resource $resource, string $folderParentId)
     {

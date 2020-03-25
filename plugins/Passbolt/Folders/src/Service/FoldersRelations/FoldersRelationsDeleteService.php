@@ -32,6 +32,14 @@ class FoldersRelationsDeleteService
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 
+    /**
+     * Delete a folder relation
+     * @param string $userId The target user
+     * @param string $foreignId The target item
+     * @param bool $moveContentToRoot (optional) Should the content be moved to root. Default false.
+     * @return void
+     * @throws \Exception
+     */
     public function delete(string $userId, string $foreignId, bool $moveContentToRoot = false)
     {
         $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId, $moveContentToRoot) {
@@ -39,11 +47,18 @@ class FoldersRelationsDeleteService
         });
     }
 
-    private function deleteFolderRelation($userId, $foreignId, $moveContentToRoot)
+    /**
+     * Delete a folder relation entity.
+     * @param string $userId The target user
+     * @param string $foreignId The target item
+     * @param bool $moveContentToRoot Should the content be moved to root ?
+     * @return void
+     */
+    private function deleteFolderRelation(string $userId, string $foreignId, bool $moveContentToRoot)
     {
         if ($moveContentToRoot) {
             $fields = [
-                'folder_parent_id' => null
+                'folder_parent_id' => null,
             ];
             $conditions = [
                 'folder_parent_id' => $foreignId,

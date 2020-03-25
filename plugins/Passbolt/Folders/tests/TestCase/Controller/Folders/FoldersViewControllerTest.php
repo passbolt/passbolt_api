@@ -51,11 +51,11 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersViewControllerTest extends FoldersIntegrationTestCase
 {
-    use IntegrationTestTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
+    use IntegrationTestTrait;
     use ProfilesModelTrait;
 
     /**
@@ -203,7 +203,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
             'groups_users' => [
                 ['user_id' => $userAId, 'is_admin' => true],
                 ['user_id' => $userBId],
-            ]
+            ],
         ];
         $group = $this->addGroup($groupData);
         $folder = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);

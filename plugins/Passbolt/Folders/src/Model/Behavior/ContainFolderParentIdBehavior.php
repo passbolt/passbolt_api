@@ -65,7 +65,7 @@ class ContainFolderParentIdBehavior extends Behavior
         ],
         'implementedMethods' => [
             /** @uses containFolderParentIdByUserId */
-            'containFolderParentIdByUserId' => 'containFolderParentIdByUserId',  // containFolderParentId is available as mixin method for table using this behavior
+            'containFolderParentIdByUserId' => 'containFolderParentIdByUserId', // containFolderParentId is available as mixin method for table using this behavior
         ],
         'events' => [
             'Model.afterSave' => ['new'],
@@ -136,6 +136,11 @@ class ContainFolderParentIdBehavior extends Behavior
         }
     }
 
+    /**
+     * Handle after save.
+     * @param EntityInterface $entity The target entity
+     * @return void
+     */
     private function handleAfterSave(EntityInterface $entity)
     {
         $events = $this->_config['events'];

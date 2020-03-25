@@ -416,7 +416,6 @@ class QueryStringComponent extends Component
         return true;
     }
 
-
     /**
      * Validate a filter that is a single resource id
      * Examples:

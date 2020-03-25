@@ -49,11 +49,11 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  */
 class FoldersCreateServiceTest extends FoldersTestCase
 {
+    use EventDispatcherTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
     use PermissionsModelTrait;
-    use EventDispatcherTrait;
 
     public $fixtures = [
         FoldersFixture::class,

@@ -102,7 +102,9 @@ class ResourcesAfterCreateService
         if (!Validation::uuid($folderParentId)) {
             $errors = ['uuid' => 'The folder parent id is not valid.'];
 
-            return $resource->setError('folder_parent_id', $errors);
+            $resource->setError('folder_parent_id', $errors);
+
+            return;
         }
 
         // The parent folder must exist.
@@ -111,7 +113,9 @@ class ResourcesAfterCreateService
         } catch (RecordNotFoundException $e) {
             $errors = ['folder_exists' => 'The folder parent must exist.'];
 
-            return $resource->setError('folder_parent_id', $errors);
+            $resource->setError('folder_parent_id', $errors);
+
+            return;
         }
 
         // The user should have at least UPDATE permission on the destination parent folder to insert content into.
@@ -120,7 +124,9 @@ class ResourcesAfterCreateService
         if (!$isAllowedToCreateIn) {
             $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
 
-            return $resource->setError('folder_parent_id', $errors);
+            $resource->setError('folder_parent_id', $errors);
+
+            return;
         }
     }
 }

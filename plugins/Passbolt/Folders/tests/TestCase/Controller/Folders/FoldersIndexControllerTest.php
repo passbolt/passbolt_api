@@ -50,9 +50,9 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
-    use PermissionsModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
+    use PermissionsModelTrait;
 
     /** @var FoldersRelationsTable */
     private $FoldersRelations;
@@ -194,9 +194,9 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
 
         $userId = UuidFactory::uuid('user.id.ada');
         foreach ($folderRelations as $folderParentId => $childrenFolders) {
-            $this->addFolderFor(['id' => $folderParentId,], [$userId => Permission::OWNER]);
+            $this->addFolderFor(['id' => $folderParentId, ], [$userId => Permission::OWNER]);
             foreach ($childrenFolders as $childrenFolderId) {
-                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId,], [$userId => Permission::OWNER]);
+                $this->addFolderFor(['id' => $childrenFolderId, 'folder_parent_id' => $folderParentId, ], [$userId => Permission::OWNER]);
             }
         }
     }
@@ -449,7 +449,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
             'groups_users' => [
                 ['user_id' => $userAId, 'is_admin' => true],
                 ['user_id' => $userBId],
-            ]
+            ],
         ];
         $group = $this->addGroup($groupData);
         $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $group->id => Permission::OWNER]);

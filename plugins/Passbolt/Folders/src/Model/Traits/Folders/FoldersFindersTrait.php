@@ -52,15 +52,15 @@ trait FoldersFindersTrait
         }
 
         if (isset($options['filter']['has-id'])) {
-            $this->_filterByIds($query, $options['filter']['has-id']);
+            $this->filterByIds($query, $options['filter']['has-id']);
         }
 
         if (isset($options['filter']['search'])) {
-            $this->_filterQueryBySearch($query, $options['filter']['search'][0]);
+            $this->filterQueryBySearch($query, $options['filter']['search'][0]);
         }
 
         if (isset($options['filter']['has-parent'])) {
-            $this->_filterQueryByParentIds($query, $options['filter']['has-parent']);
+            $this->filterQueryByParentIds($query, $options['filter']['has-parent']);
         }
 
         // Filter on folders the user has access
@@ -176,7 +176,7 @@ trait FoldersFindersTrait
      * @param array $folderIds array of folders ids
      * @return Query|Folder[]
      */
-    public function _filterByIds(Query $query, array $folderIds)
+    public function filterByIds(Query $query, array $folderIds)
     {
         return $query->where(['Folders.id IN' => $folderIds]);
     }
@@ -195,7 +195,7 @@ trait FoldersFindersTrait
      * @param string $name Name to filter
      * @return Query
      */
-    public function _filterQueryBySearch(Query $query, string $name)
+    public function filterQueryBySearch(Query $query, string $name)
     {
         return $query->where([
             ['name LIKE' => '%' . $name . '%'],
@@ -209,7 +209,7 @@ trait FoldersFindersTrait
      * @param array $parentIds Array of parent ids
      * @return Query
      */
-    public function _filterQueryByParentIds(Query $query, array $parentIds)
+    public function filterQueryByParentIds(Query $query, array $parentIds)
     {
         if (empty($parentIds)) {
             return $query;

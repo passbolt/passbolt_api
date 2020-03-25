@@ -21,8 +21,8 @@ use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
-use Cake\Event\EventDispatcherTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
@@ -168,6 +168,7 @@ class FoldersDeleteService
      * Delete a child folder
      * @param UserAccessControl $uac The current user.
      * @param string $folderId The folder to delete
+     * @return void
      * @throws Exception
      */
     private function deleteChildFolderOrMoveToRoot($uac, $folderId)
@@ -185,6 +186,7 @@ class FoldersDeleteService
      * Delete a child resource
      * @param UserAccessControl $uac The current user.
      * @param string $resourceId The resource to delete
+     * @return void
      */
     private function deleteChildResourceOrMoveToRoot($uac, $resourceId)
     {

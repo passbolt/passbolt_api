@@ -45,6 +45,7 @@ class ResourcesEventListener implements EventListenerInterface
     /**
      * Handle a resource after create event.
      * @param Event $event The event.
+     * @return void
      * @throws \Exception
      */
     public function handleResourceAfterCreateEvent(Event $event)
@@ -59,6 +60,7 @@ class ResourcesEventListener implements EventListenerInterface
     /**
      * Handle a resource after update event.
      * @param Event $event The event.
+     * @return void
      * @throws \Exception
      */
     public function handleResourceAfterUpdateEvent(Event $event)
@@ -73,6 +75,7 @@ class ResourcesEventListener implements EventListenerInterface
     /**
      * Handle a resource after soft delete event.
      * @param Event $event The event.
+     * @return void
      * @throws \Exception
      */
     public function handleResourceAfterSoftDeleteEvent(Event $event)

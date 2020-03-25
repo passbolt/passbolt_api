@@ -18,9 +18,9 @@ namespace Passbolt\Folders\Model\Table;
 use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
-use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 
 /**
  * Folders Model

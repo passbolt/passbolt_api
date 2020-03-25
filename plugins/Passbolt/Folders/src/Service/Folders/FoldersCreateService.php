@@ -222,7 +222,9 @@ class FoldersCreateService
         } catch (RecordNotFoundException $e) {
             $errors = ['folder_exists' => 'The folder parent must exist.'];
 
-            return $folder->setError('folder_parent_id', $errors);
+            $folder->setError('folder_parent_id', $errors);
+
+            return;
         }
 
         // The user should have at least UPDATE permission on the destination parent folder to insert content into.
@@ -231,7 +233,9 @@ class FoldersCreateService
         if (!$isAllowedToMoveIn) {
             $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
 
-            return $folder->setError('folder_parent_id', $errors);
+            $folder->setError('folder_parent_id', $errors);
+
+            return;
         }
     }
 }

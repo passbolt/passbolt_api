@@ -39,9 +39,8 @@ use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersItems\FoldersItemsGetAncestorsService;
 use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
-use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
-use Passbolt\Folders\Service\FoldersRelationsHasAncestorService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
 
 class FoldersShareService
 {
@@ -173,7 +172,7 @@ class FoldersShareService
         try {
             return $this->foldersTable->get($folderId, [
                 'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
-                'user_id' => $uac->userId()
+                'user_id' => $uac->userId(),
             ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The folder does not exist.'));
@@ -184,6 +183,7 @@ class FoldersShareService
      * Assert if the operator can share the given folder.
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The folder to assert
+     * @return void
      * @throws ForbiddenException If the user cannot share the folder
      */
     private function assertUserCanShare(UserAccessControl $uac, Folder $folder)
@@ -201,7 +201,7 @@ class FoldersShareService
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param array $changes The list of permissions changes
-     * @return void
+     * @return array
      * @throws ValidationException If the permissions didn't validate
      * @throws \Exception If something went wrong
      */
@@ -253,6 +253,7 @@ class FoldersShareService
      * Remove a folder from a group of users trees.
      * @param Folder $folder The target folder
      * @param string $groupId The target group
+     * @return void
      * @throws Exception
      */
     private function removeFolderFromGroupUsersTrees(Folder $folder, string $groupId)
@@ -270,6 +271,7 @@ class FoldersShareService
      * @param Folder $folder The target folder
      * @param string $userId The target user
      * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
+     * @return void
      * @throws Exception If something wrong occurred
      */
     private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId, bool $isPersonal = false)
@@ -297,7 +299,6 @@ class FoldersShareService
     /**
      * Reconstruct a folder parent in a user tree based on the operator representation
      *
-     * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param string $userId The target user
      * @return string|null
@@ -353,13 +354,13 @@ class FoldersShareService
         $query = $this->foldersRelationsTable->find()
             ->where([
                 'foreign_id' => $folderId,
-                'folder_parent_id IN' => $userItems->select('foreign_id')
+                'folder_parent_id IN' => $userItems->select('foreign_id'),
             ]);
 
         $exclude = Hash::get($options, 'exclude', []);
         if (!empty($exclude)) {
             $query->where([
-                'folder_parent_id NOT IN' => $exclude
+                'folder_parent_id NOT IN' => $exclude,
             ]);
         }
 
@@ -487,7 +488,7 @@ class FoldersShareService
         $childrenFromBasedUserTreeQuery = $this->foldersRelationsTable->find()
             ->where([
                 'folder_parent_id' => $folderId,
-                'user_id' => $fromUserIdTree
+                'user_id' => $fromUserIdTree,
             ]);
 
         // R = USERS_ITEMS ⋂ FOLDER_CHILDREN_FROM_BASED_USER_TREE
@@ -565,7 +566,7 @@ class FoldersShareService
         $childrenIds = $this->foldersRelationsTable->find()
             ->where([
                 'user_id' => $userId,
-                'folder_parent_id' => $folderId
+                'folder_parent_id' => $folderId,
             ])
             ->select('foreign_id')
             ->extract('foreign_id')
@@ -585,6 +586,7 @@ class FoldersShareService
      * @param UserAccessControl $uac The operator
      * @param Folder $folder The target folder
      * @param string $userId The target user
+     * @return void
      */
     private function reconstructFolderParentFromOtherUsersTrees(UserAccessControl $uac, Folder $folder, string $userId)
     {
@@ -598,6 +600,7 @@ class FoldersShareService
             // We don't choose a version over another, the folder will be from the identified other parent folders to
             // the root.
             $this->foldersRelationsTable->moveItemFrom($folder->id, $folderParentsIds, null);
+
             return;
         } else {
             $folderParentId = $folderParentsIds[0];
@@ -614,6 +617,7 @@ class FoldersShareService
             $cyclesFoldersIdsInOperatorTree = $this->filterFoldersIdsByUserIdAccess($userId, $cyclesFoldersIds);
             if (!empty($cyclesFoldersIdsInOperatorTree)) {
                 $this->foldersRelationsTable->moveItemFrom($folder->id, [$folderParentId]);
+
                 return;
             }
 
@@ -639,10 +643,11 @@ class FoldersShareService
         if (empty($foldersIds)) {
             return [];
         }
+
         return $this->foldersRelationsTable->find()
             ->where([
                 'foreign_id IN' => $foldersIds,
-                'user_id' => $userId
+                'user_id' => $userId,
             ])
             ->select('foreign_id')
             ->extract('foreign_id')
@@ -655,6 +660,7 @@ class FoldersShareService
      * @param Folder $folder The target folder
      * @param string $userId The target user
      * @param array $operatorFolderChildrenIds A list of items already added by the operator reconstruction process.
+     * @return void
      */
     private function reconstructFolderChildrenFromOtherUsersTrees(UserAccessControl $uac, Folder $folder, string $userId, array $operatorFolderChildrenIds = [])
     {
@@ -672,6 +678,7 @@ class FoldersShareService
             $cyclesFoldersIdsInOperatorTree = $this->filterFoldersIdsByUserIdAccess($uac->userId(), $cyclesFoldersIds);
             if (!empty($cyclesFoldersIdsInOperatorTree)) {
                 $this->foldersRelationsTable->moveItemFrom($childId, [$folder->id]);
+
                 return;
             }
 
@@ -691,6 +698,7 @@ class FoldersShareService
      * Remove a folder from a user tree
      * @param Folder $folder The target folder
      * @param string $userId The target user
+     * @return void
      */
     private function removeFolderFromUserTree(Folder $folder, string $userId)
     {
@@ -730,6 +738,7 @@ class FoldersShareService
      * @param Folder $folder The target folder
      * @param string $groupId The target group
      * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
+     * @return void
      * @throws Exception If something wrong occurred
      */
     private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId, bool $isPersonal = false)

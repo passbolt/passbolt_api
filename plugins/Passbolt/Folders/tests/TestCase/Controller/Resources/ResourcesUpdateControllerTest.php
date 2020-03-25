@@ -47,9 +47,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
-    use FoldersRelationsModelTrait;
-    use FoldersModelTrait;
     use FixtureProviderTrait;
+    use FoldersModelTrait;
+    use FoldersRelationsModelTrait;
     use ResourcesModelTrait;
 
     public $fixtures = [
