@@ -242,7 +242,7 @@ trait PermissionsFindersTrait
             ->where([
                 'aco' => $acoType,
                 'aro_foreign_key NOT IN' => $aros,
-                'type' => Permission::OWNER
+                'type' => Permission::OWNER,
             ]);
 
         // (R)

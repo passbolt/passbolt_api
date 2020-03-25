@@ -28,7 +28,7 @@ trait PermissionsModelTrait
      * @param array $data Custom data that will be merged with the default content.
      * @return array Comment data
      */
-    public static function getDummyPermission($data = [])
+    public static function getDummyPermission(array $data = [])
     {
         $entityContent = [
             'aco' => 'Resource',
@@ -45,12 +45,13 @@ trait PermissionsModelTrait
     /**
      * Add permission.
      * @param string $aco Aco
-     * @param string $aco_foreign_key Target aco
+     * @param string $acoForeignKey Target aco
      * @param string $aro Aro
-     * @param string $aro_foreign_key Target aro
+     * @param string $aroForeignKey Target aro
      * @param int $type The type of permissions
+     * @return Permission
      */
-    public function addPermission($aco, $aco_foreign_key, $aro = null, $aro_foreign_key, $type = Permission::OWNER)
+    public function addPermission(string $aco, string $acoForeignKey, string $aro, string $aroForeignKey, int $type = Permission::OWNER)
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [
@@ -62,14 +63,14 @@ trait PermissionsModelTrait
         // If aro is not given, then try to determine it.
         if (is_null($aro)) {
             $groupsTable = TableRegistry::getTableLocator()->get('Groups');
-            $aro = $groupsTable->exists(['id' => $aro_foreign_key]) ? 'Group' : 'User';
+            $aro = $groupsTable->exists(['id' => $aroForeignKey]) ? 'Group' : 'User';
         }
         $data = [
-            'id' =>  UuidFactory::uuid("permission.id.{$aco_foreign_key}-{$aro_foreign_key}"),
+            'id' => UuidFactory::uuid("permission.id.{$acoForeignKey}-{$aroForeignKey}"),
             'aco' => $aco,
-            'aco_foreign_key' => $aco_foreign_key,
+            'aco_foreign_key' => $acoForeignKey,
             'aro' => $aro,
-            'aro_foreign_key' => $aro_foreign_key,
+            'aro_foreign_key' => $aroForeignKey,
             'type' => $type,
         ];
         $permission = $permissionsTable->newEntity($data, $saveOptions);

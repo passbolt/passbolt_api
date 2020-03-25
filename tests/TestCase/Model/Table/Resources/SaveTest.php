@@ -86,7 +86,7 @@ class SaveTest extends AppTestCase
         $userId = UuidFactory::uuid('user.id.ada');
         $dummy = self::getDummyResourceData();
         $dummy['permissions'][] = $this->getDummyPermission(['aco_foreign_key' => $userId]);
-        $dummy['secrets'][] = $this->getDummySecret(['resource_id' => null]);
+        $dummy['secrets'][] = $this->getDummySecretData(['resource_id' => null]);
 
         return $dummy;
     }

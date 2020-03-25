@@ -18,9 +18,7 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
-use App\Model\Entity\Resource;
 use App\Model\Table\ResourcesTable;
-use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 
 /**
@@ -58,7 +56,6 @@ class ResourcesAddController extends AppController
             ],
         ];
 
-        /** @var Resource $resource */
         $resource = $this->Resources->findView($this->User->id(), $result->id, $options)->first();
 
         $this->success(__('The resource has been added successfully.'), $resource);
@@ -68,7 +65,7 @@ class ResourcesAddController extends AppController
      * Build the resource entity from user input
      *
      * @param array $data Array of data
-     * @return Resource $resource resource entity
+     * @return \App\Model\Entity\Resource
      */
     protected function _buildAndValidateEntity(array $data)
     {
@@ -127,7 +124,7 @@ class ResourcesAddController extends AppController
     /**
      * Format request data formatted for API v1 to API v2 format
      *
-     * @return array data
+     * @return array
      */
     protected function _formatRequestData()
     {
@@ -152,11 +149,11 @@ class ResourcesAddController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param EntityInterface $resource Resource
+     * @param \App\Model\Entity\Resource $resource the
      * @throws ValidationException if the resource validation failed
      * @return void
      */
-    protected function _handleValidationError(Resource $resource)
+    protected function _handleValidationError(\App\Model\Entity\Resource $resource)
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
@@ -166,10 +163,12 @@ class ResourcesAddController extends AppController
 
     /**
      * Trigger the after resource create event.
-     * @param {Resource} $resource The created resource
-     * @param {array} $data The request data.
+     * @param \App\Model\Entity\Resource $resource The created resource
+     * @param array $data The request data.
+     * @return void
      */
-    protected function afterCreate(Resource $resource, array $data = []) {
+    protected function afterCreate(\App\Model\Entity\Resource $resource, array $data = [])
+    {
         $uac = $this->User->getAccessControl();
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
         $event = new Event('ResourcesAddController.addPost.success', $this, $eventData);

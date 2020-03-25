@@ -114,16 +114,16 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $userSId = UuidFactory::uuid('user.id.sofia');
         $testCases = [
             'cannot update a permission that does not exist' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => [['id' => UuidFactory::uuid()]],
             ],
             'cannot delete a permission of another resource' => [
-                'errorField' => 'permissions.0.id.permission_exists',
+                'errorField' => 'permissions.0.id.exists',
                 'data' => [
                     ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true]],
             ],
             'cannot add a permission with invalid data' => [
-                'errorField' => 'permissions.0.aro_foreign_key._required',
+                'errorField' => 'permissions.0.aro_foreign_key._empty',
                 'data' => [['aro' => 'User', 'type' => Permission::OWNER]],
             ],
             'cannot add a permission for a soft deleted user' => [

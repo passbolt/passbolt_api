@@ -15,7 +15,6 @@
 
 namespace App\Model\Table;
 
-use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
@@ -23,6 +22,7 @@ use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -261,11 +261,11 @@ class PermissionsTable extends Table
     /**
      * Checks that the aro exists
      *
-     * @param \Cake\Datasource\EntityInterface $entity The entity to test
+     * @param EntityInterface $entity The entity to test
      * @param array $options The additional options for this rule
      * @return bool
      */
-    public function aroExistsRule(\Cake\Datasource\EntityInterface $entity, array $options)
+    public function aroExistsRule(EntityInterface $entity, array $options)
     {
         $rules = new RulesChecker($options);
         $aro = Inflector::pluralize($entity->aro);
@@ -294,110 +294,6 @@ class PermissionsTable extends Table
         }
 
         return false;
-    }
-
-    /**
-     * Patch a list of permission entities with a list of changes.
-     * A change is formatted as following :
-     *
-     * - Add a new permission:
-     * [
-     *   'aro' => string,
-     *   'aro_foreign_key' => uuid,
-     *   'type' => int
-     * ]
-     *
-     * - Update a permission:
-     * [
-     *   'id' => uuid,
-     *   'type' => int
-     * ]
-     *
-     * - Delete a permission
-     * [
-     *   'id' => uuid,
-     *   'delete' => boolean
-     * ]
-     *
-     * The 4th parameter $changeReferences will allow the caller to know on which permissions the changes have been
-     * applied on.
-     *
-     * Example :
-     * $changesReferences = [0=>4];
-     *
-     * It means the first change of the list of changes has been applied to the 5th permission in the list of
-     * permission entities.
-     *
-     * @param array $entities The list of permissions entities to patch
-     * @param array $changes The changes to apply
-     * @param null $acoForeignKey The aco identifier that the entities belong to
-     * @param array $changesReferences A reference list of the applied changes
-     * @throw CustomValidationException If a change try to modify a permission that is not in the list of permissions
-     * @throw CustomValidationException If a change does not validate when calling patchEntity
-     * @throw CustomValidationException If a change does not validate when calling newEntity
-     * @return array The list of permissions entities patched with the changes
-     */
-    public function patchEntitiesWithChanges($entities = [], $changes = [], $acoForeignKey = null, &$changesReferences = [])
-    {
-        foreach ($changes as $changeKey => $change) {
-            // Update or Delete case.
-            if (isset($change['id'])) {
-                // Retrieve the permission a change is requested for.
-                $permissionKey = null;
-                foreach ($entities as $key => $entity) {
-                    if ($entity['id'] == $change['id']) {
-                        $permissionKey = $key;
-                        break;
-                    }
-                }
-                // The permission does not belong to the resource.
-                if (is_null($permissionKey)) {
-                    $errors = ['id' => [
-                        'permission_exists' => __('The permission does not exist.', $change['id']),
-                    ]];
-                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
-                }
-                // Keep a trace of the permission entity the change will be applied on.
-                $changesReferences[$changeKey] = $permissionKey;
-
-                // Delete case.
-                if (isset($change['delete']) && $change['delete']) {
-                    unset($entities[$permissionKey]);
-                } else {
-                    // Update case
-                    $options = ['accessibleFields' => ['type' => true]];
-                    $this->patchEntity($entities[$permissionKey], $change, $options);
-                    $errors = $entities[$permissionKey]->getErrors();
-                    if (!empty($errors)) {
-                        throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
-                    }
-                }
-            } else {
-                // Add case.
-                // Enforce data.
-                $change['aco'] = 'Resource';
-                $change['aco_foreign_key'] = $acoForeignKey;
-                // New entity options.
-                $options = ['accessibleFields' => [
-                    'aco' => true,
-                    'aco_foreign_key' => true,
-                    'aro' => true,
-                    'aro_foreign_key' => true,
-                    'type' => true,
-                ]];
-                // Create and validate the new permission entity.
-                $permission = $this->newEntity($change, $options);
-                $errors = $permission->getErrors();
-                if (!empty($errors)) {
-                    throw new CustomValidationException(__('Validation error.'), [$changeKey => $errors]);
-                }
-                $entities[] = $permission;
-                // Keep a trace of the permission entity the change will be applied on.
-                $changesReferences[$changeKey] = count($entities) - 1;
-            }
-        }
-
-        return $entities;
     }
 
     /**

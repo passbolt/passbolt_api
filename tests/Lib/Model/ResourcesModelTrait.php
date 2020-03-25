@@ -14,10 +14,10 @@
  */
 namespace App\Test\Lib\Model;
 
-use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
 trait ResourcesModelTrait
@@ -42,13 +42,13 @@ trait ResourcesModelTrait
     /**
      * Add folders for the given users
      * @param array $data Data
-     * @param array $usersIds UserIDS
+     * @param array $aroForeignKeys List of user or group id. The first element should refer to a user id.
      * @return \Cake\Datasource\EntityInterface
      */
-    public function addResourceFor($data = [], $usersIds)
+    public function addResourceFor(array $data = [], array $aroForeignKeys = [])
     {
-        reset($usersIds);
-        $userId = key($usersIds);
+        reset($aroForeignKeys);
+        $userId = key($aroForeignKeys);
         if (!isset($data['created_by'])) {
             $data['created_by'] = $userId;
         }
@@ -56,10 +56,44 @@ trait ResourcesModelTrait
             $data['modified_by'] = $userId;
         }
 
-        $resource = $this->addResource($data, $usersIds);
+        $resource = $this->addResource($data);
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
 
-        foreach ($usersIds as $userId => $permissionType) {
-            $this->addPermission('Resource', $resource->id, 'User', $userId, $permissionType);
+        foreach ($aroForeignKeys as $aroForeignKey => $permissionType) {
+            $isUser = $usersTable->findById($aroForeignKey)->count() > 0;
+            $aro = $isUser ? 'User' : 'Group';
+            $this->addPermission('Resource', $resource->id, $aro, $aroForeignKey, $permissionType);
+            if ($isUser) {
+                $this->addResourceForUserAssociatedData($resource, $aroForeignKey, $data);
+            } else {
+                $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($aroForeignKey)->extract('user_id')->toArray();
+                foreach ($groupUsersIds as $groupUserId) {
+                    $this->addResourceForUserAssociatedData($resource, $groupUserId);
+                }
+            }
+        }
+
+        return $resource;
+    }
+
+    /**
+     * Add resource associated data for a user:
+     * - Secrets.
+     * - Folders if folders enabled.
+     *
+     * @param Resource $resource
+     * @param string $userId
+     * @param array $data
+     */
+    private function addResourceForUserAssociatedData(Resource $resource, string $userId, array $data = [])
+    {
+        $secretData = [
+            'resource_id' => $resource->id,
+            'user_id' => $userId,
+        ];
+        $this->addSecret($secretData);
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
             $folderRelationData = [
                 'foreign_model' => PermissionsTable::RESOURCE_ACO,
                 'foreign_id' => $resource->id,
@@ -68,8 +102,6 @@ trait ResourcesModelTrait
             ];
             $this->addFolderRelation($folderRelationData);
         }
-
-        return $resource;
     }
 
     /**

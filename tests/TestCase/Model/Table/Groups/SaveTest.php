@@ -99,7 +99,7 @@ class SaveTest extends AppTestCase
             'groups_users' => [
                 ['user_id' => $userAId, 'is_admin' => true],
                 ['user_id' => $userBId],
-            ]
+            ],
         ];
         $data = self::getDummyGroupData($groupData);
         $options = self::getEntityDefaultOptions();
@@ -135,7 +135,7 @@ class SaveTest extends AppTestCase
             'groups_users' => [
                 ['user_id' => $userAId, 'is_admin' => true],
                 ['user_id' => $userBId],
-            ]
+            ],
         ];
         $data = self::getDummyGroupData($groupData);
         $data['name'] = 'Freelancer';

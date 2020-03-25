@@ -74,7 +74,6 @@ class ResourcesUpdateController extends AppController
             $this->_handleValidationError($resource);
         });
 
-
         // Retrieve the updated resource.
         $options = [
             'contain' => ['creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true],
@@ -87,7 +86,7 @@ class ResourcesUpdateController extends AppController
     /**
      * Build the resource entity from user input
      *
-     * @param Resource $resource Resource
+     * @param resource $resource Resource
      * @param array $data Request data
      * @return void
      */
@@ -157,7 +156,7 @@ class ResourcesUpdateController extends AppController
     /**
      * Manage validation errors.
      *
-     * @param Resource $resource entity
+     * @param resource $resource entity
      * @return void
      * @throws ValidationException
      * @throws NotFoundException
@@ -179,8 +178,9 @@ class ResourcesUpdateController extends AppController
 
     /**
      * Trigger the after resource update event.
-     * @param Resource $resource The update resource
+     * @param resource $resource The update resource
      * @param array $data The request data.
+     * @return void
      */
     protected function afterUpdate(Resource $resource, array $data = [])
     {
