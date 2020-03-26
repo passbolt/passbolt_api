@@ -16,19 +16,37 @@ namespace Passbolt\Folders\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
-use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
-use Passbolt\Folders\EventListener\ResourcesEventListener;
+use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 
 abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
 {
     public function setUp()
     {
         parent::setUp();
+
+        Configure::write('passbolt.plugins.log.enabled', true);
         Configure::write('passbolt.plugins.folders.enabled', true);
 
-        EventManager::instance()
-            ->on(new ResourcesEventListener()) // Add folder relation when resource is created / update
-            ->on(new AddFolderParentIdBehavior()); // Decorate the query to add the "folder_parent_id" property on the entities
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $permissionsTable->belongsTo('Passbolt/Log.PermissionsHistory', [
+            'foreignKey' => 'foreign_key',
+        ]);
+
+        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $resourcesTable->belongsTo('Passbolt/Log.EntitiesHistory', [
+            'foreignKey' => 'foreign_key',
+        ]);
+
+        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $resourcesTable->addBehavior(ContainFolderParentIdBehavior::class);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
     }
 }

@@ -94,16 +94,12 @@ class FoldersDeleteService
     public function delete(UserAccessControl $uac, string $id, bool $cascade = false)
     {
         $folder = $this->getFolder($id);
-        $this->assertUserCanDeleteFolder($uac, $id);
+        if (!$this->checkUserCanDelete($uac, PermissionsTable::FOLDER_ACO, $id)) {
+            throw new ForbiddenException(__('You are not allowed to delete this folder.'));
+        }
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $cascade) {
-            if ($cascade) {
-                $this->deleteFolderContent($uac, $folder);
-            } else {
-                $this->moveFolderContentToRoot($folder);
-            }
-            $this->foldersTable->delete($folder, ['atomic' => false]);
-            $this->handleValidationErrors($folder);
+        $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $cascade) {
+            $this->deleteFolder($uac, $folder, $cascade);
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [
                 'uac' => $uac,
                 'folder' => $folder,
@@ -131,99 +127,112 @@ class FoldersDeleteService
      * Assert that the current user can update the destination folder.
      *
      * @param UserAccessControl $uac The current user
-     * @param string $folderId The folder to check.
-     * @return void
-     * @throws ForbiddenException If the user is not allowed to delete the folder.
+     * @param string $itemModel The target item model
+     * @param string $itemId The target item
+     * @return bool
      */
-    private function assertUserCanDeleteFolder(UserAccessControl $uac, string $folderId)
+    private function checkUserCanDelete(UserAccessControl $uac, string $itemModel, string $itemId)
     {
         $userId = $uac->userId();
-        $isAllowed = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $userId, Permission::UPDATE);
-        if (!$isAllowed) {
-            throw new ForbiddenException(__('You are not allowed to delete this folder.'));
-        }
+
+        return $this->userHasPermissionService->check($itemModel, $itemId, $userId, Permission::UPDATE);
     }
 
     /**
-     * Delete the content of a folder.
-     * @param UserAccessControl $uac The current user.
-     * @param Folder $folder The folder to delete the content
+     * Delete a folder.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param Folder $folder The target folder
+     * @param bool $cascade Should delete the content
      * @return void
      * @throws Exception
      */
-    private function deleteFolderContent(UserAccessControl $uac, Folder $folder)
+    private function deleteFolder(UserAccessControl $uac, $folder, bool $cascade)
+    {
+        if ($cascade) {
+            $this->deleteFolderChildrenOrMoveToRoot($uac, $folder);
+        } else {
+            $this->moveFolderContentToRoot($folder);
+        }
+
+        $this->foldersTable->delete($folder, ['atomic' => false]);
+        $this->foldersRelationsTable->deleteAll(['foreign_id' => $folder->id]);
+        $this->permissionsTable->deleteAll(['aco_foreign_key' => $folder->id]);
+    }
+
+    /**
+     * Delete the content of a folder if possible, otherwise move it to the root.
+     *
+     * @param UserAccessControl $uac The current user.
+     * @param Folder $folder The target folder
+     * @return void
+     * @throws Exception
+     */
+    private function deleteFolderChildrenOrMoveToRoot(UserAccessControl $uac, Folder $folder)
     {
         $children = $this->foldersRelationsTable->findAllByFolderParentId($folder->id);
 
         foreach ($children as $folderRelation) {
-            if ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-                $this->deleteChildFolderOrMoveToRoot($uac, $folderRelation->foreign_id);
-            } elseif ($folderRelation->foreign_model === FoldersRelation::FOREIGN_MODEL_RESOURCE) {
-                $this->deleteChildResourceOrMoveToRoot($uac, $folderRelation->foreign_id);
-            }
+            $this->deleteFolderChildOrMoveToRoot($uac, $folderRelation->foreign_model, $folderRelation->foreign_id, $folder->id);
         }
     }
 
     /**
-     * Delete a child folder
-     * @param UserAccessControl $uac The current user.
-     * @param string $folderId The folder to delete
+     * Delete a folder child if possible, otherwise move it to the root.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param string $foreignModel The type of child
+     * @param string $foreignId The child identifier
+     * @param string $folderParentId The parent folder identifier
      * @return void
      * @throws Exception
      */
-    private function deleteChildFolderOrMoveToRoot($uac, $folderId)
+    private function deleteFolderChildOrMoveToRoot(UserAccessControl $uac, string $foreignModel, string $foreignId, string $folderParentId)
     {
-        $userId = $uac->userId();
-        $canDelete = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderId, $userId, Permission::UPDATE);
+        $canDelete = $this->checkUserCanDelete($uac, $foreignModel, $foreignId);
         if ($canDelete) {
-            $this->delete($uac, $folderId, true);
+            switch ($foreignModel) {
+                case FoldersRelation::FOREIGN_MODEL_FOLDER:
+                    $folder = $this->getFolder($foreignId);
+                    $this->deleteFolder($uac, $folder, true);
+                    break;
+                case FoldersRelation::FOREIGN_MODEL_RESOURCE:
+                    $this->deleteResource($uac, $foreignId);
+                    break;
+            }
         } else {
-            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['foreign_id' => $folderId]);
+            $this->foldersRelationsTable->moveItemFrom($foreignId, [$folderParentId], null);
         }
     }
 
     /**
      * Delete a child resource
+     *
      * @param UserAccessControl $uac The current user.
      * @param string $resourceId The resource to delete
      * @return void
      */
-    private function deleteChildResourceOrMoveToRoot($uac, $resourceId)
+    private function deleteResource($uac, $resourceId)
     {
         $userId = $uac->userId();
         $canDelete = $this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resourceId, $userId, Permission::UPDATE);
-        if ($canDelete) {
-            $resource = $this->resourcesTable->get($resourceId);
-            $this->resourcesTable->softDelete($uac->userId(), $resource);
-        } else {
-            $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['foreign_id' => $resourceId]);
+        if (!$canDelete) {
+            throw new ForbiddenException('You cannot delete this resource');
         }
+
+        $resource = $this->resourcesTable->get($resourceId);
+        $this->resourcesTable->softDelete($uac->userId(), $resource);
     }
 
     /**
      * Move folder content to root.
      *
-     * @param Folder $folder The folder to delete
+     * @param Folder $folder The target folder
      * @return void
      * @throws Exception
      */
     private function moveFolderContentToRoot(Folder $folder)
     {
         $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], ['folder_parent_id' => $folder->id]);
-    }
-
-    /**
-     * Handle folder validation errors.
-     *
-     * @param Folder $folder The folder
-     * @return void
-     * @throws ValidationException If the provided data does not validate.
-     */
-    private function handleValidationErrors($folder)
-    {
-        $errors = $folder->getErrors();
-        if (!empty($errors)) {
-            throw new ValidationException(__('Could not delete the folder.'), $folder, $this->foldersTable);
-        }
     }
 }

@@ -31,7 +31,6 @@ use App\Test\Fixture\Base\ProfilesFixture;
 use App\Test\Fixture\Base\ResourcesFixture;
 use App\Test\Fixture\Base\RolesFixture;
 use App\Test\Fixture\Base\UsersFixture;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
@@ -42,10 +41,14 @@ use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
+use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
+use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
+use Passbolt\Log\Test\Fixture\Base\EntitiesHistoryFixture;
 
-class ResourcesAddControllerTest extends AppIntegrationTestCase
+class ResourcesAddControllerTest extends FoldersIntegrationTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;
@@ -69,6 +72,9 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         ProfilesFixture::class,
         ResourcesFixture::class,
         OrganizationSettingsFixture::class,
+        EntitiesHistoryFixture::class,
+        ActionsFixture::class,
+        ActionLogsFixture::class,
     ];
 
     /**

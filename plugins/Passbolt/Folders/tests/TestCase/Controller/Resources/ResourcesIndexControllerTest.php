@@ -4,7 +4,6 @@ namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
@@ -13,6 +12,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Closure;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
@@ -29,7 +29,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
-class ResourcesIndexControllerTest extends AppIntegrationTestCase
+class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;

@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Service;
+namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
@@ -48,6 +48,8 @@ use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
+use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Service\FoldersDeleteService Test Case
@@ -64,6 +66,8 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use ResourcesModelTrait;
 
     public $fixtures = [
+        ActionsFixture::class,
+        ActionLogsFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
@@ -110,7 +114,6 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     public function setUp()
     {
         parent::setUp();
-        Configure::write('passbolt.plugins.folders.enabled', true);
         $config = TableRegistry::getTableLocator()->exists('Folders') ? [] : ['className' => FoldersTable::class];
         $this->Folders = TableRegistry::getTableLocator()->get('Folders', $config);
         $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];

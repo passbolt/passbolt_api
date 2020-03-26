@@ -37,6 +37,8 @@ use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Passbolt\Log\Test\Fixture\Base\ActionLogsFixture;
+use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 
 /**
  * Passbolt\Folders\Controller\Folders\FoldersCreateController Test Case
@@ -51,6 +53,8 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
+        ActionsFixture::class,
+        ActionLogsFixture::class,
         AvatarsFixture::class,
         FoldersFixture::class,
         FoldersRelationsFixture::class,

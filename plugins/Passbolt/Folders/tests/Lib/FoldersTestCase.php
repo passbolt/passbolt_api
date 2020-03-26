@@ -17,8 +17,10 @@ namespace Passbolt\Folders\Test\Lib;
 use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
+use Cake\ORM\TableRegistry;
 use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
 use Passbolt\Folders\EventListener\ResourcesEventListener;
+use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 
 abstract class FoldersTestCase extends AppTestCase
 {
@@ -26,6 +28,9 @@ abstract class FoldersTestCase extends AppTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders.enabled', true);
+
+        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        $resourcesTable->addBehavior(ContainFolderParentIdBehavior::class);
 
         EventManager::instance()
             ->on(new ResourcesEventListener()) // Add folder relation when resource is created / update

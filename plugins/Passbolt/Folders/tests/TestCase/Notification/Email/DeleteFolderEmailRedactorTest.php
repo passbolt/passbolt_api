@@ -18,13 +18,13 @@ namespace Passbolt\Folders\Test\TestCase\Notification\Email;
 use App\Model\Entity\Profile;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
-use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Notification\Email\DeleteFolderEmailRedactor;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
+use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -40,7 +40,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
-class DeleteFolderEmailRedactorTest extends AppTestCase
+class DeleteFolderEmailRedactorTest extends FoldersTestCase
 {
     /**
      * @var DeleteFolderEmailRedactor

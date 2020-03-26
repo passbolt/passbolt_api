@@ -108,7 +108,7 @@ class ResourcesAfterUpdateService
      */
     private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, Resource $resource)
     {
-        // @todo Not needed with personal folder.
+        // @todo Not needed with personal folder. Sir.
         return true;
     }
 

@@ -13,26 +13,20 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\EventListener;
+namespace Passbolt\Folders\Test\TestCase\Service\Resources;
 
-use Passbolt\Folders\EventListener\ResourcesEventListener;
-use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
+use Passbolt\Folders\Test\Lib\FoldersTestCase;
 
 /**
- * Class ResourceEventListenerTest
- * @covers \Passbolt\Folders\EventListener\ResourcesEventListener
+ * Passbolt\Folders\Service\Folders\ResourcesAfterUpdateService Test Case
+ *
+ * @uses \Passbolt\Folders\Service\Resources\ResourcesAfterUpdateService
  */
-class ResourceEventListenerTest extends FoldersIntegrationTestCase
+class ResourcesAfterUpdateServiceTest extends FoldersTestCase
 {
-    /**
-     * @var ResourcesEventListener
-     */
-    private $sut;
 
     public function setUp()
     {
-        $this->sut = new ResourcesEventListener();
-
         parent::setUp();
     }
 

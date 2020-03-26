@@ -17,20 +17,20 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
  * Passbolt\Folders\Model\Table\FoldersRelationsTable Test Case
  */
-class FoldersRelationsTableTest extends AppTestCase
+class FoldersRelationsTableTest extends FoldersTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;

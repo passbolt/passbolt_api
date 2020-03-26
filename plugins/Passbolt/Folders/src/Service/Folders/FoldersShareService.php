@@ -260,7 +260,7 @@ class FoldersShareService
     {
         $grousUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
-            $this->addFolderToUserTree($folder, $groupUserId);
+            $this->removeFolderFromUserTree($folder, $groupUserId);
         }
     }
 
@@ -349,7 +349,7 @@ class FoldersShareService
      */
     private function getPotentialFolderParentsIds(string $folderId, string $userId, array $options = [])
     {
-        $userItems = $this->foldersRelationsTable->findByUserIdAndForeignModel($userId, PermissionsTable::FOLDER_ACO);
+        $userItems = $this->foldersRelationsTable->findByUserIdAndForeignModel($userId, FoldersRelation::FOREIGN_MODEL_FOLDER);
 
         $query = $this->foldersRelationsTable->find()
             ->where([
@@ -699,6 +699,7 @@ class FoldersShareService
      * @param Folder $folder The target folder
      * @param string $userId The target user
      * @return void
+     * @throws \Exception
      */
     private function removeFolderFromUserTree(Folder $folder, string $userId)
     {

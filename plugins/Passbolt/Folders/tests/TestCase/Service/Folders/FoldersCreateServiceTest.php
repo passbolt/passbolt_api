@@ -13,13 +13,14 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Service;
+namespace Passbolt\Folders\Test\TestCase\Service\Folders;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
 use App\Test\Fixture\Base\GpgkeysFixture;
+use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
 use App\Test\Fixture\Base\PermissionsFixture;
 use App\Test\Fixture\Base\ProfilesFixture;
@@ -59,6 +60,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         FoldersFixture::class,
         FoldersRelationsFixture::class,
         GpgkeysFixture::class,
+        GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
         ProfilesFixture::class,

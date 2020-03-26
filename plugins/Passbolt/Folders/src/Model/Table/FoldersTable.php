@@ -74,12 +74,12 @@ class FoldersTable extends Table
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aco_foreign_key',
-            'dependent' => true,
+            'dependent' => false,
         ]);
         $this->hasMany('FoldersRelations', [
             'className' => 'Passbolt/Folders.FoldersRelations',
             'foreignKey' => 'foreign_id',
-            'dependent' => true,
+            'dependent' => false,
         ]);
         $this->belongsToMany('ChildrenFolders', [
             'className' => 'Passbolt/Folders.Folders',

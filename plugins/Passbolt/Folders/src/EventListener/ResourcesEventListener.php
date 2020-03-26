@@ -15,8 +15,11 @@
 
 namespace Passbolt\Folders\EventListener;
 
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Passbolt\Folders\Service\Resources\ResourcesAfterAccessGrantedService;
+use Passbolt\Folders\Service\Resources\ResourcesAfterAccessRevokedService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterCreateService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterSoftDeleteService;
 use Passbolt\Folders\Service\Resources\ResourcesAfterUpdateService;
@@ -39,6 +42,8 @@ class ResourcesEventListener implements EventListenerInterface
             'ResourcesAddController.addPost.success' => 'handleResourceAfterCreateEvent',
             'ResourcesUpdateController.update.success' => 'handleResourceAfterUpdateEvent',
             'Model.Resource.afterSoftDelete' => 'handleResourceAfterSoftDeleteEvent',
+            'Service.ResourcesShare.afterAccessGranted' => 'handleResourceAfterAccessGrantedEvent',
+            'Service.ResourcesShare.afterAccessRevoked' => 'handleResourceAfterAccessRevokedEvent',
         ];
     }
 
@@ -83,5 +88,33 @@ class ResourcesEventListener implements EventListenerInterface
         $resource = $event->getSubject();
         $service = new ResourcesAfterSoftDeleteService();
         $service->afterSoftDelete($resource);
+    }
+
+    /**
+     * Handle a resource after an access has been granted.
+     * @param Event $event The event.
+     * @return void
+     * @throws \Exception
+     */
+    public function handleResourceAfterAccessGrantedEvent(Event $event)
+    {
+        $uac = $event->getData('accessControl');
+        $permission = $event->getData('permission');
+        $service = new ResourcesAfterAccessGrantedService();
+        $service->afterAccessGranted($uac, $permission);
+    }
+
+    /**
+     * Handle a resource after an access has been granted.
+     * @param Event $event The event.
+     * @return void
+     * @throws \Exception
+     */
+    public function handleResourceAfterAccessRevokedEvent(Event $event)
+    {
+        $uac = $event->getData('accessControl');
+        $permission = $event->getData('permission');
+        $service = new ResourcesAfterAccessRevokedService();
+        $service->afterAccessRevoked($uac, $permission);
     }
 }
