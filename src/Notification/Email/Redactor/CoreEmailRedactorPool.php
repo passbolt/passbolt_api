@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 
 namespace App\Notification\Email\Redactor;
@@ -31,12 +31,14 @@ use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
+use Cake\Core\Configure;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
      * Return true if the redactor is enabled
+     *
      * @param string $notificationSettingPath Notification Settings path with dot notation
      * @return mixed
      */
@@ -91,6 +93,9 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if ($this->isRedactorEnabled('send.group.manager.update')) {
             $redactors[] = new GroupUpdateAdminSummaryEmail();
+        }
+        if ($this->isRedactorEnabled('send.admin.user.setup.completed') && Configure::read('passbolt.plugins.log.enabled')) {
+            $redactors[] = new AdminUserSetupCompleteEmailRedactor();
         }
 
         return $redactors;

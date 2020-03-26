@@ -31,7 +31,6 @@ use InvalidArgumentException;
  */
 trait UsersFindersTrait
 {
-
     /**
      * Filter a Groups query by groups users.
      *
@@ -482,6 +481,26 @@ trait UsersFindersTrait
             ->first();
 
         return $user;
+    }
+
+    /**
+     * Return a list of admin users (active, non soft-deleted) with their role attached
+     * @return User[]
+     */
+    public function findAdmins()
+    {
+        $users = $this->find()
+            ->where(
+                [
+                    'Users.deleted' => false,
+                    'Users.active' => true,
+                    'Roles.name' => Role::ADMIN,
+                ]
+            )
+            ->order(['Users.created' => 'ASC'])
+            ->contain(['Roles']);
+
+        return $users;
     }
 
     /**

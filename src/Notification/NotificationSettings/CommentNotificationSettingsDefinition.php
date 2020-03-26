@@ -12,15 +12,14 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
-
-namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettings;
+namespace App\Notification\NotificationSettings;
 
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionTrait;
 
-class UserNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
+class CommentNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
 {
     use EmailNotificationSettingsDefinitionTrait;
 
@@ -31,9 +30,10 @@ class UserNotificationSettingsDefinition implements EmailNotificationSettingsDef
     public function buildSchema(Schema $schema)
     {
         return $schema
-            // send controls
-            ->addField('send_user_create', ['type' => 'boolean', 'default' => true])
-            ->addField('send_user_recover', ['type' => 'boolean', 'default' => true]);
+            // Show controls
+            ->addField('show_comment', ['type' => 'boolean', 'default' => true])
+            // Send controls
+            ->addField('send_comment_add', ['type' => 'boolean', 'default' => true]);
     }
 
     /**
@@ -43,7 +43,7 @@ class UserNotificationSettingsDefinition implements EmailNotificationSettingsDef
     public function buildValidator(Validator $validator)
     {
         return $validator
-            ->boolean('send_user_create', __('Send user create should be a boolean.'))
-            ->boolean('send_user_recover', __('Send user recover should be a boolean.'));
+            ->boolean('show_comment', __('Show comment should be a boolean.'))
+            ->boolean('send_comment_add', __('Send comment add should be a boolean.'));
     }
 }

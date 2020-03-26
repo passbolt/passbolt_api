@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettings;
+namespace App\Notification\NotificationSettings;
 
 use Cake\Form\Schema;
 use Cake\Validation\Validator;

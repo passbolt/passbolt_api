@@ -22,6 +22,12 @@ use App\Notification\EmailDigest\DigestMarshallerRegister\Group\GroupUserEmailDi
 use App\Notification\EmailDigest\DigestMarshallerRegister\Resource\ResourceEmailDigestMarshallerRegister;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\PurifyNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -33,7 +39,6 @@ use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 
 class Application extends BaseApplication
 {
-
     /**
      * Setup the PSR-7 middleware passbolt application will use.
      *
@@ -109,6 +114,13 @@ class Application extends BaseApplication
         $this->getEventManager()
             // Contains all emails redactors for Passbolt Core
             ->on(new CoreEmailRedactorPool())
+            // Add the different email settings definitions for Passbolt Core
+            ->on(new CommentNotificationSettingsDefinition())
+            ->on(new GroupNotificationSettingsDefinition())
+            ->on(new PurifyNotificationSettingsDefinition())
+            ->on(new ResourceNotificationSettingsDefinition())
+            ->on(new UserNotificationSettingsDefinition())
+            ->on(new AdminNotificationSettingsDefinition())
             // Register emails digest marshallers
             ->on(new GroupUserEmailDigestMarshallerRegister())
             ->on(new ResourceEmailDigestMarshallerRegister());

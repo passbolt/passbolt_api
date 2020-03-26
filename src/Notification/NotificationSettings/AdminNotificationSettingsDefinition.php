@@ -10,16 +10,17 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
-namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettings;
+
+namespace App\Notification\NotificationSettings;
 
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionTrait;
 
-class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
+class AdminNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
 {
     use EmailNotificationSettingsDefinitionTrait;
 
@@ -30,7 +31,8 @@ class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsD
     public function buildSchema(Schema $schema)
     {
         return $schema
-            ->addField('purify_subject', ['type' => 'boolean', 'default' => false]);
+            // send controls
+            ->addField('send_admin_user_setup_completed', ['type' => 'boolean', 'default' => true]);
     }
 
     /**
@@ -40,6 +42,6 @@ class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsD
     public function buildValidator(Validator $validator)
     {
         return $validator
-            ->boolean('purify_subject', __('Purify subject should be a boolean.'));
+            ->boolean('send_admin_user_setup_completed', __('An email notification setting should be a boolean.'));
     }
 }
