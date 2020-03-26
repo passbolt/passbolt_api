@@ -18,6 +18,10 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\Email\EmailSender;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Notification\Email\EmailSubscriptionManager;
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestMarshallerRegister\Group\GroupUserEmailDigestMarshallerRegister;
 use App\Notification\EmailDigest\DigestMarshallerRegister\Resource\ResourceEmailDigestMarshallerRegister;
 use Cake\Core\Configure;
@@ -26,6 +30,7 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
@@ -105,7 +110,16 @@ class Application extends BaseApplication
             $this->addCliPlugins();
         }
 
-        $this->registerEvents();
+        $this->getEventManager()
+            // Contains all emails redactors for Passbolt Core
+            ->on(new CoreEmailRedactorPool())
+            // Register emails digest marshallers
+            ->on(new GroupUserEmailDigestMarshallerRegister())
+            ->on(new ResourceEmailDigestMarshallerRegister());
+
+        // Register the emails redactors which listen on events where emails must be sent
+        // It must happens after the emails redactors have been registered in the system
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
     /**
@@ -190,16 +204,5 @@ class Application extends BaseApplication
         }
 
         return $this;
-    }
-
-    /**
-     * Register some required events at bootstrap
-     * @return void
-     */
-    protected function registerEvents()
-    {
-        EventManager::instance()
-            ->on(new GroupUserEmailDigestMarshallerRegister())
-            ->on(new ResourceEmailDigestMarshallerRegister());
     }
 }

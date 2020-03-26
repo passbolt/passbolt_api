@@ -19,7 +19,6 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailSender;
 use App\Notification\Email\EmailSenderException;
 use App\Utility\Purifier;
-use Cake\Event\EventManagerInterface;
 use Cake\TestSuite\TestCase;
 use EmailQueue\Model\Table\EmailQueueTable;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -34,11 +33,6 @@ class EmailSenderTest extends TestCase
     private $sut;
 
     /**
-     * @var MockObject|EventManagerInterface
-     */
-    private $eventManagerMock;
-
-    /**
      * @var MockObject|EmailQueueTable
      */
     private $emailQueueMock;
@@ -50,12 +44,10 @@ class EmailSenderTest extends TestCase
 
     public function setUp()
     {
-        $this->eventManagerMock = $this->createMock(EventManagerInterface::class);
         $this->emailQueueMock = $this->createMock(EmailQueueTable::class);
         $this->purifySubject = false;
 
         $this->sut = new EmailSender(
-            $this->eventManagerMock,
             $this->emailQueueMock,
             self::APP_FULL_BASE_URL,
             $this->purifySubject
@@ -122,7 +114,6 @@ class EmailSenderTest extends TestCase
     public function testThatSendEnqueueEmailWithOptionsWhenPurifySubjectIsEnabled()
     {
         $sut = new EmailSender(
-            $this->eventManagerMock,
             $this->emailQueueMock,
             self::APP_FULL_BASE_URL,
             true
