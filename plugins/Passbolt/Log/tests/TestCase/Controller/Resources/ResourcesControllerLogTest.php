@@ -28,7 +28,7 @@ class ResourcesControllerLogTest extends LogIntegrationTestCase
         'plugin.Passbolt/Log.Base/SecretAccesses', 'app.Base/Favorites', 'app.Base/EmailQueue',
         'plugin.Passbolt/Log.Base/Actions', 'plugin.Passbolt/Log.Base/ActionLogs',
         'plugin.Passbolt/Log.Base/EntitiesHistory', 'plugin.Passbolt/Log.Base/PermissionsHistory',
-        'plugin.Passbolt/Log.Base/SecretsHistory',
+        'plugin.Passbolt/Log.Base/SecretsHistory', 'app.Base/OrganizationSettings',
     ];
 
     public function testLogResourcesAddSuccessWithSecrets()

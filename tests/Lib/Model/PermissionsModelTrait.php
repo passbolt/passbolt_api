@@ -51,7 +51,7 @@ trait PermissionsModelTrait
      * @param int $type The type of permissions
      * @return Permission
      */
-    public function addPermission(string $aco, string $acoForeignKey, string $aro, string $aroForeignKey, int $type = Permission::OWNER)
+    public function addPermission(string $aco, string $acoForeignKey, string $aro = null, string $aroForeignKey, int $type = Permission::OWNER)
     {
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $saveOptions = [
@@ -98,7 +98,8 @@ trait PermissionsModelTrait
      */
     protected function assertPermission($acoForeignKey, $aroForeignKey, $type)
     {
-        $permission = $this->Permissions->find()->where([
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $permission = $permissionsTable->find()->where([
             'aco_foreign_key' => $acoForeignKey,
             'aro_foreign_key' => $aroForeignKey,
             'type' => $type,
@@ -113,7 +114,8 @@ trait PermissionsModelTrait
      */
     protected function assertPermissionNotExist($acoForeignKey, $aroForeignKey)
     {
-        $permission = $this->Permissions->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $permission = $permissionsTable->find()->where(['aco_foreign_key' => $acoForeignKey, 'aro_foreign_key' => $aroForeignKey])->first();
         $this->assertEmpty($permission);
     }
 
