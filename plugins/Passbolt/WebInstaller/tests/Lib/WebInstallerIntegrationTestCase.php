@@ -44,6 +44,9 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
                 Configure::delete('passbolt.webInstaller.configured');
             }
         }
+        if ($this->isWebInstallerFriendly()) {
+            $this->restoreTestConnection();
+        }
     }
 
     public function mockPassboltIsNotconfigured()
