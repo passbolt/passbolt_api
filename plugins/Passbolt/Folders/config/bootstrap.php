@@ -17,10 +17,12 @@ use Cake\Event\EventManager;
 use Passbolt\Folders\EventListener\AddFolderParentIdBehavior;
 use Passbolt\Folders\EventListener\ResourcesEventListener;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
+use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 
 Configure::load('Passbolt/Folders.config', 'default', true);
 
 EventManager::instance()
     ->on(new ResourcesEventListener()) // Add folder relation when resource is created / update
     ->on(new AddFolderParentIdBehavior()) // Decorate the query to add the "folder_parent_id" property on the entities
-    ->on(new FoldersEmailRedactorPool()); // Register email redactors
+    ->on(new FoldersEmailRedactorPool()) // Register email redactors
+    ->on(new FolderNotificationSettingsDefinition()); // Add email notification settings definition
