@@ -23,7 +23,7 @@ use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\EmailSubscriptionManager;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use Cake\Event\Event;
-use Cake\Event\EventManagerInterface;
+use Cake\Event\EventManager;
 use Cake\TestSuite\TestCase;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -40,7 +40,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
     private $emailSenderMock;
 
     /**
-     * @var MockObject|EventManagerInterface
+     * @var MockObject|EventManager
      */
     private $eventManagerMock;
 
@@ -61,7 +61,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
 
     public function setUp()
     {
-        $this->eventManagerMock = $this->createMock(EventManagerInterface::class);
+        $this->eventManagerMock = $this->createMock(EventManager::class);
         $this->emailSubscriptionManagerMock = $this->createMock(EmailSubscriptionManager::class);
         $this->emailSenderMock = $this->createMock(EmailSender::class);
         $this->loggerMock = $this->createMock(LoggerInterface::class);
@@ -126,7 +126,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
             ->method('on')
             ->with($this->sut);
 
-        $this->assertEquals($this->sut, $this->sut->collect());
+        $this->assertEquals($this->sut, $this->sut->collectSubscribedEmailRedactors());
     }
 
     public function testThatDispatchDoesNotSendEmailIfCollectionIsEmpty()

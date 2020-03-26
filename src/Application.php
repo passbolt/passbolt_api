@@ -18,6 +18,10 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\EmailDigest\DigestMarshallerRegister\Group\GroupUserEmailDigestMarshallerRegister;
+use App\Notification\EmailDigest\DigestMarshallerRegister\Resource\ResourceEmailDigestMarshallerRegister;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
@@ -101,6 +105,17 @@ class Application extends BaseApplication
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
         }
+
+        $this->getEventManager()
+            // Contains all emails redactors for Passbolt Core
+            ->on(new CoreEmailRedactorPool())
+            // Register emails digest marshallers
+            ->on(new GroupUserEmailDigestMarshallerRegister())
+            ->on(new ResourceEmailDigestMarshallerRegister());
+
+        // Register the emails redactors which listen on events where emails must be sent
+        // It must happens after the emails redactors have been registered in the system
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
     /**
@@ -155,6 +170,7 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true ]);
+        $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
 
         if (!WebInstallerMiddleware::isConfigured()) {
             $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);

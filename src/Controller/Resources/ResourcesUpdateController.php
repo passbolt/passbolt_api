@@ -29,6 +29,8 @@ use Cake\Validation\Validation;
 
 class ResourcesUpdateController extends AppController
 {
+    const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
+
     /**
      * Resource Update action
      *
@@ -181,7 +183,7 @@ class ResourcesUpdateController extends AppController
      */
     protected function _notifyUser(\App\Model\Entity\Resource $resource)
     {
-        $event = new Event('ResourcesUpdateController.update.success', $this, [
+        $event = new Event(static::UPDATE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,
         ]);
         $this->getEventManager()->dispatch($event);
