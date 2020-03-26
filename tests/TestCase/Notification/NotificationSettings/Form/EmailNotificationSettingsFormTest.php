@@ -13,20 +13,39 @@
  * @since         2.10.0
  */
 
-namespace Passbolt\EmailNotificationSettings\Test\TestCase\Form;
+namespace App\Test\TestCase\Notification\NotificationSettings\Form;
 
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\PurifyNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use Cake\Event\EventDispatcherTrait;
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
 
 class EmailNotificationSettingsFormTest extends AppTestCase
 {
+    use EventDispatcherTrait;
     use FormatValidationTrait;
 
     public function setUp()
     {
         parent::setUp();
+
         $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
+
+        $this->getEventManager()
+            // Add the different email settings definitions for Passbolt Core
+            ->on(new CommentNotificationSettingsDefinition())
+            ->on(new GroupNotificationSettingsDefinition())
+            ->on(new PurifyNotificationSettingsDefinition())
+            ->on(new ResourceNotificationSettingsDefinition())
+            ->on(new UserNotificationSettingsDefinition())
+            ->on(new AdminNotificationSettingsDefinition());
     }
 
     public function testNotificationSettingsFormFieldShowComment()
@@ -267,6 +286,20 @@ class EmailNotificationSettingsFormTest extends AppTestCase
         );
     }
 
+    public function testNotificationSettingsFormFieldSendAdminUserSetupCompleted()
+    {
+        $testCases = [
+            'boolean' => $this->getBooleanTestCases(),
+        ];
+
+        $this->assertFormFieldFormatValidation(
+            EmailNotificationSettingsForm::class,
+            'send_admin_user_setup_completed',
+            self::getDummyData(),
+            $testCases
+        );
+    }
+
     public function testNotificationSettingsFormIgnoresInvalidKeys()
     {
         $validKeys = static::getDummyData();
@@ -320,6 +353,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             'send_group_user_delete' => true,
             'send_group_user_update' => true,
             'send_group_manager_update' => true,
+            'send_admin_user_setup_completed' => true,
         ];
 
         return array_merge($default, $data);

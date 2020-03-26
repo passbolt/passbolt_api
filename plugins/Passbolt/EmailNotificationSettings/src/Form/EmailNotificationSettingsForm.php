@@ -21,12 +21,11 @@ use Cake\Validation\Validator;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionRegisterEvent;
-use Passbolt\EmailNotificationSettings\Utility\NotificationSettings\UserNotificationSettingsDefinition;
 
 class EmailNotificationSettingsForm extends Form
 {
     /**
-     * @var UserNotificationSettingsDefinition[]
+     * @var EmailNotificationSettingsDefinitionInterface[]
      */
     private $notificationSettingsDefinitions = [];
 

@@ -15,8 +15,19 @@
 
 namespace Passbolt\Log\Model\Entity;
 
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
+/**
+ * @property string $id
+ * @property string $action_log_id
+ * @property string $foreign_model
+ * @property string $foreign_key
+ * @property string $crud
+ * @property FrozenTime $created
+ * @property ActionLog $action_log
+ *
+ */
 class EntityHistory extends Entity
 {
     const CRUD_CREATE = 'c';

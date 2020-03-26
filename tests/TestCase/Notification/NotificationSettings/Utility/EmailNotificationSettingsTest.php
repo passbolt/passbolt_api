@@ -13,7 +13,7 @@
  * @since         2.10.0
  */
 
-namespace Passbolt\EmailNotificationSettings\Test\TestCase\Utility;
+namespace App\Test\TestCase\Notification\NotificationSettings\Utility;
 
 use App\Model\Entity\Role;
 use App\Model\Table\OrganizationSettingsTable;
