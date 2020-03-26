@@ -17,6 +17,7 @@ namespace App\Notification\Email\Redactor\User;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -102,6 +103,10 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId)
     {
         $admin = $this->usersTable->findFirstForEmail($adminId);
+
+        $this->usersTable->loadInto($user, [
+            'Profiles' => AvatarsTable::addContainAvatar(),
+        ]);
 
         return new Email(
             $user->username,
