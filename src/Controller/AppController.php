@@ -73,10 +73,6 @@ class AppController extends Controller
             ],
         ]);
 
-        $this->loadComponent('EmailSubscription', [
-            EmailSubscriptionComponent::APP_FULL_BASE_URL => Configure::read('App.fullBaseUrl'),
-        ]);
-
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
 

@@ -15,6 +15,7 @@
 
 namespace App\Notification\Email\Redactor\Group;
 
+use App\Controller\Groups\GroupsUpdateController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
@@ -38,18 +39,11 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @param bool       $isEnabled Is Enabled
      * @param UsersTable $usersTable Users Table
      */
-    public function __construct(bool $isEnabled, UsersTable $usersTable = null)
+    public function __construct(UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -60,7 +54,7 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
     public function getSubscribedEvents()
     {
         return [
-            GroupUpdateEmailRedactor::CREATE_EVENT_NAME,
+            GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -77,7 +71,7 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
         $modifiedById = $event->getData('userId');
         $modifiedBy = $this->usersTable->findFirstForEmail($modifiedById);
 
-        if (empty($updatedGroupsUsers) || !$this->isEnabled) {
+        if (empty($updatedGroupsUsers)) {
             return $emailCollection;
         }
 

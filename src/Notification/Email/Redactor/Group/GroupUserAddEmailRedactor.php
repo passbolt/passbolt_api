@@ -15,6 +15,7 @@
 
 namespace App\Notification\Email\Redactor\Group;
 
+use App\Controller\Groups\GroupsUpdateController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use App\Model\Table\GroupsTable;
@@ -40,18 +41,11 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @param bool            $isEnabled Is Enabled
      * @param UsersTable|null $usersTable Users Table
      */
-    public function __construct(bool $isEnabled, UsersTable $usersTable = null)
+    public function __construct(UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -63,7 +57,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     {
         return [
             GroupsTable::GROUP_CREATE_SUCCESS_EVENT_NAME,
-            GroupUpdateEmailRedactor::CREATE_EVENT_NAME,
+            GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -75,12 +69,8 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $emailCollection = new EmailCollection();
 
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
-
         switch ($event->getName()) {
-            case GroupUpdateEmailRedactor::CREATE_EVENT_NAME:
+            case GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME:
                 /** @var Group $resource */
                 $group = $event->getData('group');
                 $addedGroupsUsers = $event->getData('addedGroupsUsers'); // the list of added groups users

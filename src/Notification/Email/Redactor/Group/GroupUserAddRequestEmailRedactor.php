@@ -39,25 +39,18 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
      * @var GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @param bool                  $isEnabled Is Enabled
      * @param UsersTable            $usersTable Users Table
      * @param GroupsUsersTable|null $groupsUsersTable Groups Users Table
      */
-    public function __construct(bool $isEnabled, UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
+    public function __construct(UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -84,10 +77,6 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
         $group = $event->getData('group');
         $accessControl = $event->getData('requester');
         $requestedGroupUsers = $event->getData('groupUsers');
-
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
 
         foreach ($requestedGroupUsers as $key => $groupUser) {
             $requestedGroupUsers[$key]->user = $this->_getSummaryUser([$groupUser->user_id])[0];

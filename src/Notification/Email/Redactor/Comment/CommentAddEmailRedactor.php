@@ -15,6 +15,7 @@
 
 namespace App\Notification\Email\Redactor\Comment;
 
+use App\Controller\Comments\CommentsAddController;
 use App\Model\Entity\Comment;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
@@ -38,32 +39,22 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
      * @var UsersTable
      */
     private $usersTable;
-    /**
-     * @var bool
-     */
-    private $isEnabled;
 
     /**
      * @var ResourcesTable
      */
     private $resourcesTable;
-    /**
-     * @var bool
-     */
-    private $showCommentInEmail;
 
     /**
-     * @param bool                $isEnabled Is Enabled
-     * @param bool                $showCommentInEmail Show comment in email
+     * @param array               $config Configuration for the redactor
      * @param UsersTable|null     $usersTable Users Table
      * @param ResourcesTable|null $resourcesTable Resources Table
      */
-    public function __construct(bool $isEnabled, bool $showCommentInEmail, UsersTable $usersTable = null, ResourcesTable $resourcesTable = null)
+    public function __construct(array $config = [], UsersTable $usersTable = null, ResourcesTable $resourcesTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->resourcesTable = $resourcesTable ?? TableRegistry::getTableLocator()->get('Resources');
-        $this->isEnabled = $isEnabled;
-        $this->showCommentInEmail = $showCommentInEmail;
+        $this->setConfig($config);
     }
 
     /**
@@ -74,7 +65,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents()
     {
         return [
-            'CommentAddController.addPost.success',
+            CommentsAddController::ADD_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -87,10 +78,6 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
         $emailCollection = new EmailCollection();
 
         $comment = $event->getData('comment');
-
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
 
         // Find the users that have access to the resource (including via their groups)
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$comment->foreign_key]]];
@@ -116,17 +103,25 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param User $user User to notify
-     * @param User $creator Creator of the comment
+     * @param User     $user User to notify
+     * @param User     $creator Creator of the comment
      * @param resource $resource Resource on which a comment was added
-     * @param Comment $comment Comment added
+     * @param Comment  $comment Comment added
      * @return Email
      */
     private function createCommentAddEmail(User $user, User $creator, Resource $resource, Comment $comment)
     {
         $subject = __("{0} commented on {1}", $creator->profile->first_name, $resource->name);
-        $body = ['creator' => $creator, 'comment' => $comment, 'resource' => $resource, 'showComment' => $this->showCommentInEmail];
-        $data = ['body' => $body, 'title' => $subject];
+        $body = [
+            'creator' => $creator,
+            'comment' => $comment,
+            'resource' => $resource,
+            'showComment' => $this->getConfig('show.comment'),
+        ];
+        $data = [
+            'body' => $body,
+            'title' => $subject,
+        ];
 
         return new Email($user->username, $subject, $data, self::TEMPLATE);
     }

@@ -38,18 +38,11 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isNotificationEnabled;
-
-    /**
-     * @param bool            $isNotificationEnabled Is Notification enabled
      * @param UsersTable|null $usersTable Users Table
      */
-    public function __construct(bool $isNotificationEnabled, UsersTable $usersTable = null)
+    public function __construct(UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isNotificationEnabled = $isNotificationEnabled;
     }
 
     /**
@@ -59,10 +52,6 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     public function onSubscribedEvent(Event $event)
     {
         $emailCollection = new EmailCollection();
-
-        if (!$this->isNotificationEnabled) {
-            return $emailCollection;
-        }
 
         $user = $event->getData('user');
         $uac = $event->getData('token');
@@ -83,7 +72,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param User $user User
+     * @param User                $user User
      * @param AuthenticationToken $uac UAC
      * @return Email
      */
@@ -94,15 +83,20 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         return new Email(
             $user->username,
             $this->getSubject($user),
-            ['body' => ['user' => $user, 'token' => $uac], 'title' => $this->getSubject($user)],
+            [
+                'body' => [
+                    'user' => $user, 'token' => $uac,
+                ],
+                'title' => $this->getSubject($user),
+            ],
             static::TEMPLATE_REGISTER_SELF
         );
     }
 
     /**
-     * @param User $user User
+     * @param User                $user User
      * @param AuthenticationToken $uac UAC
-     * @param string $adminId Admin user ID
+     * @param string              $adminId Admin user ID
      * @return Email
      */
     private function createEmailAdminRegister(User $user, AuthenticationToken $uac, string $adminId)
@@ -112,7 +106,12 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         return new Email(
             $user->username,
             $this->getSubject($user),
-            ['body' => ['user' => $user, 'token' => $uac, 'admin' => $admin], 'title' => $this->getSubject($user)],
+            [
+                'body' => [
+                    'user' => $user, 'token' => $uac, 'admin' => $admin,
+                ],
+                'title' => $this->getSubject($user),
+            ],
             static::TEMPLATE_REGISTER_ADMIN
         );
     }

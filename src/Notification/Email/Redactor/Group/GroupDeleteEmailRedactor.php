@@ -39,18 +39,11 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @param bool $isEnabled Is Enabled
      * @param UsersTable $usersTable Users Table
      */
-    public function __construct(bool $isEnabled, UsersTable $usersTable = null)
+    public function __construct(UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -76,10 +69,6 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         /** @var Group $resource */
         $group = $event->getData('group');
         $deletedBy = $event->getData('userId');
-
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
 
         $admin = $this->usersTable->findFirstForEmail($deletedBy);
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');

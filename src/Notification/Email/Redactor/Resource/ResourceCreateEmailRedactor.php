@@ -37,50 +37,13 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @var bool
+     * @param array      $config Configuration for the redactor
+     * @param UsersTable $usersTable Users Table
      */
-    private $isEnabled;
-    /**
-     * @var mixed
-     */
-    private $showUsername;
-    /**
-     * @var mixed
-     */
-    private $showUri;
-    /**
-     * @var mixed
-     */
-    private $showDescription;
-    /**
-     * @var mixed
-     */
-    private $showSecret;
-
-    /**
-     * ResourceCreateEmailRedactor constructor.
-     *
-     * @param bool            $isEnabled Is Enabled
-     * @param bool            $showUsername Show username in email
-     * @param bool            $showUri Show uri in email
-     * @param bool            $showDescription Show desc in email
-     * @param bool            $showSecret Show secret in email
-     * @param UsersTable|null $usersTable Users table
-     */
-    public function __construct(
-        bool $isEnabled,
-        bool $showUsername,
-        bool $showUri,
-        bool $showDescription,
-        bool $showSecret,
-        UsersTable $usersTable = null
-    ) {
+    public function __construct(array $config = [], UsersTable $usersTable = null)
+    {
+        $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isEnabled = $isEnabled;
-        $this->showUsername = $showUsername;
-        $this->showUri = $showUri;
-        $this->showDescription = $showDescription;
-        $this->showSecret = $showSecret;
     }
 
     /**
@@ -106,10 +69,6 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
         /** @var Resource $resource */
         $resource = $event->getData('resource');
 
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
-
         $emailCollection->addEmail($this->createResourceCreateEmail($resource));
 
         return $emailCollection;
@@ -127,10 +86,10 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
             'body' => [
                 'user' => $user,
                 'resource' => $resource,
-                'showUsername' => $this->showUsername,
-                'showUri' => $this->showUri,
-                'showDescription' => $this->showDescription,
-                'showSecret' => $this->showSecret,
+                'showUsername' => $this->getConfig('show.username'),
+                'showUri' => $this->getConfig('show.uri'),
+                'showDescription' => $this->getConfig('show.description'),
+                'showSecret' => $this->getConfig('show.secret'),
             ], 'title' => $subject,
         ];
 

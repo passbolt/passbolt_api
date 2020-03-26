@@ -36,10 +36,6 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      * @var UsersTable
      */
     private $usersTable;
-    /**
-     * @var bool
-     */
-    private $isEnabled;
 
     /**
      * @var GroupsUsersTable
@@ -47,15 +43,13 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     private $groupsUsersTable;
 
     /**
-     * @param bool                  $isEnabled Is Enabled
      * @param UsersTable|null       $usersTable UsersTable
      * @param GroupsUsersTable|null $groupsUsersTable GroupsUsersTable
      */
-    public function __construct(bool $isEnabled, UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
+    public function __construct(UsersTable $usersTable = null, GroupsUsersTable $groupsUsersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
-        $this->isEnabled = $isEnabled;
     }
 
     /**
@@ -70,7 +64,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $groupsIds = $event->getData('groupsIds');
         $deletedById = $event->getData('deletedBy');
 
-        if (!$this->isEnabled || empty($groupsIds)) {
+        if (empty($groupsIds)) {
             return $emailCollection;
         }
 

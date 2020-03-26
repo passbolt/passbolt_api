@@ -39,52 +39,13 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @var mixed
-     */
-    private $showUsername;
-
-    /**
-     * @var mixed
-     */
-    private $showUri;
-
-    /**
-     * @var mixed
-     */
-    private $showDescription;
-
-    /**
-     * @var mixed
-     */
-    private $showSecret;
-
-    /**
-     * @param bool       $isEnabled Is Enabled
-     * @param bool       $showUsername Show username in email
-     * @param bool       $showUri Show uri in email
-     * @param bool       $showDescription Show description in email
-     * @param bool       $showSecret Show secret in email
+     * @param array      $config Configuration for the redactor
      * @param UsersTable $usersTable Users Table
      */
-    public function __construct(
-        bool $isEnabled,
-        bool $showUsername,
-        bool $showUri,
-        bool $showDescription,
-        bool $showSecret,
-        UsersTable $usersTable = null
-    ) {
+    public function __construct(array $config = [], UsersTable $usersTable = null)
+    {
+        $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isEnabled = $isEnabled;
-        $this->showUsername = $showUsername;
-        $this->showUri = $showUri;
-        $this->showDescription = $showDescription;
-        $this->showSecret = $showSecret;
     }
 
     /**
@@ -109,10 +70,6 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var Resource $resource */
         $resource = $event->getData('resource');
-
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
 
         // Get the users that can access this resource
         $options = ['contain' => ['Roles'], 'filter' => ['has-access' => [$resource->id]]];
@@ -140,10 +97,10 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
             'body' => [
                 'user' => $owner,
                 'resource' => $resource,
-                'showUsername' => $this->showUsername,
-                'showUri' => $this->showUri,
-                'showDescription' => $this->showDescription,
-                'showSecret' => $this->showSecret,
+                'showUsername' => $this->getConfig('show.username'),
+                'showUri' => $this->getConfig('show.uri'),
+                'showDescription' => $this->getConfig('show.description'),
+                'showSecret' => $this->getConfig('show.secret'),
             ], 'title' => $subject,
         ];
 

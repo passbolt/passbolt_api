@@ -31,19 +31,6 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     const TEMPLATE = 'AN/user_recover';
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @param bool $isEnabled If notification is enabled or not
-     */
-    public function __construct(bool $isEnabled)
-    {
-        $this->isEnabled = $isEnabled;
-    }
-
-    /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
      *
      * @return array
@@ -62,10 +49,6 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     public function onSubscribedEvent(Event $event)
     {
         $emailCollection = new EmailCollection();
-
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
 
         /** @var User $user */
         $user = $event->getData('user');

@@ -126,7 +126,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
             ->method('on')
             ->with($this->sut);
 
-        $this->assertEquals($this->sut, $this->sut->collect());
+        $this->assertEquals($this->sut, $this->sut->collectSubscribedEmailRedactors());
     }
 
     public function testThatDispatchDoesNotSendEmailIfCollectionIsEmpty()

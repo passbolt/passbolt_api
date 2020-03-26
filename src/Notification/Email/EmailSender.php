@@ -16,7 +16,9 @@
 namespace App\Notification\Email;
 
 use App\Utility\Purifier;
+use Cake\Core\Configure;
 use Cake\Event\EventManagerInterface;
+use Cake\ORM\TableRegistry;
 use EmailQueue\EmailQueue;
 use EmailQueue\Model\Table\EmailQueueTable;
 use Exception;
@@ -47,15 +49,15 @@ class EmailSender
     private $purifySubject = false;
 
     /**
-     * @param EmailQueueTable $emailQueue Email queue
+     * @param EmailQueueTable $emailQueue Email Queue Table instance
      * @param string $appFullBaseUrl Full base url of the Passbolt instance
-     * @param bool $purifySubject True if subject must be purified
+     * @param bool $purifySubject True if subject of emails must be purified before generation
      */
-    public function __construct(EmailQueueTable $emailQueue, string $appFullBaseUrl, bool $purifySubject)
+    public function __construct(EmailQueueTable $emailQueue = null, string $appFullBaseUrl = null, bool $purifySubject = null)
     {
-        $this->emailQueue = $emailQueue;
-        $this->appFullBaseUrl = $appFullBaseUrl;
-        $this->purifySubject = $purifySubject;
+        $this->emailQueue = $emailQueue ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
+        $this->appFullBaseUrl = $appFullBaseUrl ?? Configure::read('App.fullBaseUrl');
+        $this->purifySubject = $purifySubject ?? Configure::read('passbolt.email.purify.subject');
     }
 
     /**

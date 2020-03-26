@@ -17,7 +17,6 @@ namespace App\Notification\Email\Redactor\Share;
 
 use App\Controller\Share\ShareController;
 use App\Model\Entity\Resource;
-use App\Model\Entity\Secret;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
@@ -40,49 +39,13 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @var bool
-     */
-    private $isEnabled;
-
-    /**
-     * @var bool
-     */
-    private $showUsername;
-    /**
-     * @var bool
-     */
-    private $showUri;
-    /**
-     * @var bool
-     */
-    private $showDescription;
-    /**
-     * @var bool
-     */
-    private $showSecret;
-
-    /**
-     * @param bool            $isEnabled Is enabled
-     * @param bool            $showUsername Show username in email
-     * @param bool            $showUri Show uri in email
-     * @param bool            $showDescription Show description in email
-     * @param bool            $showSecret Show secret in email
+     * @param array $config Configuration for redactor
      * @param UsersTable|null $usersTable Users Table
      */
-    public function __construct(
-        bool $isEnabled,
-        bool $showUsername,
-        bool $showUri,
-        bool $showDescription,
-        bool $showSecret,
-        UsersTable $usersTable = null
-    ) {
+    public function __construct(array $config = [], UsersTable $usersTable = null)
+    {
+        $this->setConfig($config);
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isEnabled = $isEnabled;
-        $this->showUsername = $showUsername;
-        $this->showUri = $showUri;
-        $this->showDescription = $showDescription;
-        $this->showSecret = $showSecret;
     }
 
     /**
@@ -108,10 +71,6 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
         $resource = $event->getData('resource');
         $changes = $event->getData('changes');
         $ownerId = $event->getData('ownerId');
-
-        if (!$this->isEnabled) {
-            return $emailCollection;
-        }
 
         // for now only handle the new share
         // e.g. we don't notify when permission changes or are removed
@@ -164,10 +123,10 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
                 'owner' => $owner,
                 'resource' => $resource,
                 'secret' => $secret,
-                'showUsername' => $this->showUsername,
-                'showUri' => $this->showUri,
-                'showDescription' => $this->showDescription,
-                'showSecret' => $this->showSecret,
+                'showUsername' => $this->getConfig('show.username'),
+                'showUri' => $this->getConfig('show.uri'),
+                'showDescription' => $this->getConfig('show.description'),
+                'showSecret' => $this->getConfig('show.secret'),
             ],
             'title' => $subject,
         ];
