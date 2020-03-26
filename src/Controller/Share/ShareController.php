@@ -29,6 +29,8 @@ use Cake\Validation\Validation;
 
 class ShareController extends AppController
 {
+    const SHARE_SUCCESS_EVENT_NAME = 'ShareController.share.success';
+
     /**
      * Share Dry Run action
      *
@@ -217,7 +219,7 @@ class ShareController extends AppController
      */
     protected function _notifyUsers(Resource $resource, array $data)
     {
-        $event = new Event('ShareController.share.success', $this, [
+        $event = new Event(static::SHARE_SUCCESS_EVENT_NAME, $this, [
             'resource' => $resource,
             'changes' => $data,
             'ownerId' => $this->User->id(),

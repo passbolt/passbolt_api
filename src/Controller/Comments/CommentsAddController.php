@@ -26,6 +26,8 @@ use Cake\Validation\Validation;
 
 class CommentsAddController extends AppController
 {
+    const ADD_SUCCESS_EVENT_NAME = 'CommentAddController.addPost.success';
+
     /**
      * Create a new comment for a resource.
      *
@@ -148,7 +150,7 @@ class CommentsAddController extends AppController
      */
     protected function _notifyUsers($comment)
     {
-        $event = new Event('CommentAddController.addPost.success', $this, [
+        $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, [
             'comment' => $comment,
         ]);
         $this->getEventManager()->dispatch($event);

@@ -30,6 +30,8 @@ use Cake\Validation\Validation;
 class GroupsUpdateController extends AppController
 {
     // Is the current user manager of the group ?
+    const UPDATE_SUCCESS_EVENT_NAME = 'GroupsUpdateController.update.success';
+
     protected $_isGroupManager = false;
 
     /**
@@ -232,7 +234,7 @@ class GroupsUpdateController extends AppController
         array $updatedGroupsUsers,
         array $removedGroupsUsers
     ) {
-        $event = new Event('GroupsUpdateController.update.success', $this, [
+        $event = new Event(static::UPDATE_SUCCESS_EVENT_NAME, $this, [
             'group' => $group,
             'addedGroupsUsers' => $addedGroupsUsers,
             'updatedGroupsUsers' => $updatedGroupsUsers,

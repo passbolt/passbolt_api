@@ -18,11 +18,17 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Notification\Email\EmailSender;
+use App\Notification\Email\EmailSubscriptionDispatcher;
+use App\Notification\Email\EmailSubscriptionManager;
+use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use Cake\Core\Configure;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
+use Cake\Event\EventManager;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
@@ -101,6 +107,14 @@ class Application extends BaseApplication
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
         }
+
+        $this->getEventManager()
+            // Contains all emails redactors for Passbolt Core
+            ->on(new CoreEmailRedactorPool());
+
+        // Register the emails redactors which listen on events where emails must be sent
+        // It must happens after the emails redactors have been registered in the system
+        (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
     }
 
     /**
