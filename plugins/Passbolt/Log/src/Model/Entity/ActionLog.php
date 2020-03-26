@@ -15,6 +15,7 @@
 
 namespace Passbolt\Log\Model\Entity;
 
+use App\Model\Entity\User;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
@@ -25,6 +26,7 @@ use Cake\ORM\Entity;
  * @property string $context
  * @property bool $status
  * @property FrozenTime $created
+ * @property User $user
  */
 class ActionLog extends Entity
 {

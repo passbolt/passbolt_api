@@ -42,6 +42,6 @@ class AdminNotificationSettingsDefinition implements EmailNotificationSettingsDe
     public function buildValidator(Validator $validator)
     {
         return $validator
-            ->boolean('send_admin_user_setup_completed', __('Send user registration completed should be a boolean.'));
+            ->boolean('send_admin_user_setup_completed', __('An email notification setting should be a boolean.'));
     }
 }

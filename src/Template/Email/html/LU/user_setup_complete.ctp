@@ -26,8 +26,12 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 /** @var User $user */
 $admin = $body['admin'];
+/** @var User $invitedBy */
 $invitedBy = $body['invitedBy'];
+/** @var string $invitedWhen */
 $invitedWhen = $body['invitedWhen'];
+/** @var bool $invitedByYou */
+$invitedByYou = $body['invitedByYou'];
 
 echo $this->element('Email/module/avatar',[
     'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
@@ -37,15 +41,19 @@ echo $this->element('Email/module/avatar',[
         'last_name' => Purifier::clean($user->profile->last_name),
         'datetime' => $user->modified,
         'text' => __(
-            '{0} have just activated their account on',
+            '{0} have just activated their account on passbolt!',
             $user->profile->first_name
         )
     ])
 ]);
 
-$text = ' ' . __('The user is now active on Passbolt and you can share passwords with them.');
+$text = ' ' . __('The user is now active on passbolt and you can share passwords with them.');
 $text .= '<br/><br/>';
-$text .= __('This user was invited by {0} {1}.', $invitedBy, $invitedWhen);
+if ($invitedByYou) {
+    $text .= __('This user was invited by you {0}.', $invitedWhen);
+} else {
+    $text .= __('This user was invited by {0} {1}.', $invitedBy->profile->first_name, $invitedWhen);
+}
 $text .= '<br/>';
 echo $this->element('Email/module/text', [
     'text' => $text

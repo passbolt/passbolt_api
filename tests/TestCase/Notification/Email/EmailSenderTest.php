@@ -113,7 +113,7 @@ class EmailSenderTest extends TestCase
 
         $this->emailQueueMock->expects($this->once())
             ->method('enqueue')
-            ->with($email->getTo(), $data, $options)
+            ->with($email->getRecipient(), $data, $options)
             ->willReturn(true);
 
         $this->sut->sendEmail($email);
@@ -143,7 +143,7 @@ class EmailSenderTest extends TestCase
 
         $this->emailQueueMock->expects($this->once())
             ->method('enqueue')
-            ->with($email->getTo(), $data, $options)
+            ->with($email->getRecipient(), $data, $options)
             ->willReturn(true);
 
         $sut->sendEmail($email);
@@ -166,7 +166,7 @@ class EmailSenderTest extends TestCase
 
         $this->emailQueueMock->expects($this->once())
             ->method('enqueue')
-            ->with($email->getTo(), $expectedData, $options)
+            ->with($email->getRecipient(), $expectedData, $options)
             ->willReturn(true);
 
         $this->sut->sendEmail($email);

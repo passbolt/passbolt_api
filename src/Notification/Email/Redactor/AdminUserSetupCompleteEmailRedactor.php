@@ -23,12 +23,13 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\EntityHistory;
+use RuntimeException;
 
 /**
  * Send an email to the admins when an user completes the setup
@@ -43,19 +44,17 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @var UsersTable
      */
     private $usersTable;
-    /**
-     * @var bool
-     */
-    private $isLogPluginEnabled;
 
     /**
-     * @param bool            $isLogPluginEnabled If the log plugin is enabled or not
      * @param UsersTable|null $usersTable Users Table instance
      */
-    public function __construct(bool $isLogPluginEnabled, UsersTable $usersTable = null)
+    public function __construct(UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->isLogPluginEnabled = $isLogPluginEnabled;
+        if (!Configure::read('passbolt.plugins.log.enabled')) {
+            // Check if plugin log is enabled because this redactor uses on ActionLog tables
+            throw new RuntimeException(sprintf('%s requires Passbolt/Log plugin', __CLASS__));
+        }
     }
 
     /**
@@ -63,29 +62,36 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      */
     public function getSubscribedEvents()
     {
-        return $this->isActive() ? [SetupCompleteController::EVENT_NAME] : [];
+        return [
+            SetupCompleteController::COMPLETE_SUCCESS_EVENT_NAME,
+        ];
     }
 
     /**
      * @param Event $event Event Instance
-     *
      * @return EmailCollection
      */
     public function onSubscribedEvent(Event $event)
     {
+        return $this->createEmailCollection($event->getData()['user']);
+    }
+
+    /**
+     * @param User $userWhoCompletedSetup User who completed the setup
+     * @return EmailCollection
+     */
+    private function createEmailCollection(User $userWhoCompletedSetup)
+    {
         $emailCollection = new EmailCollection();
-        $data = $event->getData();
 
-        /** @var User $user */
-        $user = $data['user'];
-
+        /** @var User $userWhoCompletedSetup */
+        $userWhoCompletedSetup = $this->usersTable->loadInto(
         // Load additional associations needed for the email
-        $this->usersTable->loadInto(
-            $user,
+            $userWhoCompletedSetup,
             [
                 'Profiles',
                 'EntitiesHistory' => function (Query $q) {
-                    // Filter on the created action (can happen only once)
+                    // Filter on the created action (this action can happen only once)
                     return $q->where(['crud' => EntityHistory::CRUD_CREATE]);
                 },
                 'EntitiesHistory.ActionLogs',
@@ -95,7 +101,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         );
 
         /** @var EntityHistory $createdHistory */
-        $createdHistory = $user->entities_history[0];
+        $createdHistory = $userWhoCompletedSetup->entities_history[0];
 
         $invitedBy = $createdHistory->action_log->user;
         $invitedWhen = $createdHistory->action_log->created;
@@ -104,7 +110,9 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         $admins = $this->usersTable->findAdmins();
         // Create an email for every admin
         foreach ($admins as $admin) {
-            $emailCollection->addEmail($this->createEmail($admin, $user, $invitedBy, $invitedWhen));
+            $emailCollection->addEmail(
+                $this->createEmail($admin, $userWhoCompletedSetup, $invitedBy, $invitedWhen)
+            );
         }
 
         return $emailCollection;
@@ -112,18 +120,18 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
 
     /**
      * @param User       $admin An admin user to notify
-     * @param User       $user User who completed setup
+     * @param User       $userCompletedSetup User who completed setup
      * @param User       $invitedBy User who invited the user
-     * @param FrozenDate $invitedWhen When user was invited
+     * @param FrozenTime $invitedWhen When user was invited
      *
      * @return Email
      */
-    private function createEmail(User $admin, User $user, User $invitedBy, FrozenTime $invitedWhen)
+    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, FrozenTime $invitedWhen)
     {
         /** @var Profile $profile */
-        $profile = $user->profile;
+        $profile = $userCompletedSetup->profile;
 
-        $subject = __('{0} has just activated their account on', $profile->first_name);
+        $subject = __('{0} have just activated their account on passbolt', $profile->first_name);
 
         return new Email(
             $admin->username,
@@ -131,27 +139,14 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             [
                 'title' => $subject,
                 'body' => [
-                    'user' => $user,
+                    'user' => $userCompletedSetup,
                     'admin' => $admin,
-                    'invitedBy' => $invitedBy->id === $admin->id ? __('you') : $invitedBy->profile->first_name,
-                    'invitedWhen' => $invitedWhen->timeAgoInWords(
-                        [
-                            'accuracy' => 'day',
-                        ]
-                    ),
+                    'invitedBy' => $invitedBy,
+                    'invitedWhen' => $invitedWhen->timeAgoInWords(['accuracy' => 'day']),
+                    'invitedByYou' => $invitedBy->id === $admin->id,
                 ],
             ],
             self::TEMPLATE
         );
-    }
-
-    /**
-     * Return whether or not the plugin is enabled
-     *
-     * @return bool
-     */
-    private function isActive()
-    {
-        return $this->isLogPluginEnabled;
     }
 }

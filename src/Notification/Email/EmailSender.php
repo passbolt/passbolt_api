@@ -75,7 +75,7 @@ class EmailSender
         $email = $this->addFullBaseUrlToEmail($email);
         $options = $this->getEmailOptions($email);
 
-        if (!$this->emailQueue->enqueue($email->getTo(), $email->getData(), $options)) {
+        if (!$this->emailQueue->enqueue($email->getRecipient(), $email->getData(), $options)) {
             throw new EmailSenderException($email, $options);
         }
 

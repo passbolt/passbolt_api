@@ -25,7 +25,7 @@ use Cake\Validation\Validation;
 
 class SetupCompleteController extends AppController
 {
-    const EVENT_NAME = 'SetupCompleteController.complete.success';
+    const COMPLETE_SUCCESS_EVENT_NAME = 'SetupCompleteController.complete.success';
 
     private $_data; // formated request data
 
@@ -91,7 +91,7 @@ class SetupCompleteController extends AppController
             throw new InternalErrorException(__('Could not save the user data.'));
         }
 
-        $this->dispatchEvent(static::EVENT_NAME, [
+        $this->dispatchEvent(static::COMPLETE_SUCCESS_EVENT_NAME, [
             'user' => $user,
         ]);
 
