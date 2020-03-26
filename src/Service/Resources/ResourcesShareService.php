@@ -17,6 +17,7 @@ namespace App\Service\Resources;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Table\FavoritesTable;
@@ -28,6 +29,7 @@ use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
+use Cake\Event\Event;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 
@@ -100,7 +102,8 @@ class ResourcesShareService
         $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, $secrets, $userIdsHavingAccessBefore) {
             $updatePermissionsResult = $this->updatePermissions($uac, $resource, $changes);
             $this->updateSecrets($uac, $resource, $secrets, $userIdsHavingAccessBefore);
-            $this->postAccessesRevoked($resource, $updatePermissionsResult['removed']);
+            $this->postAccessesGranted($uac, $updatePermissionsResult['added']);
+            $this->postAccessesRevoked($uac, $resource, $updatePermissionsResult['removed']);
         });
 
         return $resource;
@@ -199,21 +202,65 @@ class ResourcesShareService
     }
 
     /**
+     * Post accesses granted.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param array $addedPermissions The list of added permissions
+     * @return void
+     */
+    private function postAccessesGranted(UserAccessControl $uac, array $addedPermissions = [])
+    {
+        foreach ($addedPermissions as $addedPermission) {
+            $this->notifyAccessGranted($uac, $addedPermission);
+        }
+    }
+
+    /**
+     * Trigger an event to notify other components about the granted permissions.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param Permission $permission The granted permission
+     * @return void
+     */
+    private function notifyAccessGranted(UserAccessControl $uac, Permission $permission)
+    {
+        $eventData = ['permission' => $permission, 'accessControl' => $uac];
+        $event = new Event('Service.ResourcesShare.afterAccessGranted', $this, $eventData);
+        $this->resourcesTable->getEventManager()->dispatch($event);
+    }
+
+    /**
      * Post accesses revoked.
      *
+     * @param UserAccessControl $uac The operator
      * @param resource $resource The target permissions
      * @param array $deletedPermissions The list of deleted permissions
      * @return void
      */
-    private function postAccessesRevoked(Resource $resource, array $deletedPermissions = [])
+    private function postAccessesRevoked(UserAccessControl $uac, Resource $resource, array $deletedPermissions = [])
     {
         foreach ($deletedPermissions as $deletedPermission) {
+            $this->notifyAccessRevoked($uac, $deletedPermission);
             if ($deletedPermission->aro === PermissionsTable::GROUP_ARO) {
                 $this->postGroupAccessRevoked($resource, $deletedPermission->aro_foreign_key);
             } else {
                 $this->postUserAccessRevoked($resource, $deletedPermission->aro_foreign_key);
             }
         }
+    }
+
+    /**
+     * Trigger an event to notify other components about the revoked permissions.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param Permission $permission The revoked permission
+     * @return void
+     */
+    private function notifyAccessRevoked(UserAccessControl $uac, Permission $permission)
+    {
+        $eventData = ['permission' => $permission, 'accessControl' => $uac];
+        $event = new Event('Service.ResourcesShare.afterAccessRevoked', $this, $eventData);
+        $this->resourcesTable->getEventManager()->dispatch($event);
     }
 
     /**
