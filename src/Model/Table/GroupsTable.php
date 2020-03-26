@@ -49,6 +49,8 @@ class GroupsTable extends Table
 {
     use GroupsFindersTrait;
 
+    const GROUP_CREATE_SUCCESS_EVENT_NAME = 'Model.Groups.create.success';
+
     /**
      * Initialize method
      *
@@ -236,7 +238,7 @@ class GroupsTable extends Table
 
         // Dispatch event.
         $eventData = ['group' => $groupSaved, 'requester' => $control];
-        $event = new Event('Model.Groups.create.success', $this, $eventData);
+        $event = new Event(static::GROUP_CREATE_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
 
         return $groupSaved;

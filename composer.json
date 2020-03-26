@@ -65,7 +65,8 @@
             "Passbolt\\RememberMe\\": "./plugins/Passbolt/RememberMe/src",
             "Passbolt\\WebInstaller\\": "./plugins/Passbolt/WebInstaller/src",
             "Passbolt\\Log\\": "./plugins/Passbolt/Log/src",
-            "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src"
+            "Passbolt\\EmailNotificationSettings\\": "./plugins/Passbolt/EmailNotificationSettings/src",
+            "Passbolt\\EmailDigest\\": "./plugins/Passbolt/EmailDigest/src"
         }
     },
     "autoload-dev": {
@@ -74,7 +75,8 @@
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/Passbolt/WebInstaller/tests",
             "Passbolt\\Log\\Test\\": "./plugins/Passbolt/Log/tests",
-            "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests"
+            "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/Passbolt/EmailNotificationSettings/tests",
+            "Passbolt\\EmailDigest\\Test\\": "./plugins/Passbolt/EmailDigest/tests"
         }
     },
     "scripts": {
