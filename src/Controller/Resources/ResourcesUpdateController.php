@@ -33,6 +33,8 @@ use Cake\Validation\Validation;
  */
 class ResourcesUpdateController extends AppController
 {
+    const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
+
     /**
      * Resource Update action
      *
@@ -186,7 +188,7 @@ class ResourcesUpdateController extends AppController
     {
         $uac = $this->User->getAccessControl();
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
-        $event = new Event('ResourcesUpdateController.update.success', $this, $eventData);
+        $event = new Event(static::UPDATE_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
     }
 }

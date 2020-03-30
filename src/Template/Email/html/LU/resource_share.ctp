@@ -13,6 +13,7 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
+use App\View\Helper\AvatarHelper;
 use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
@@ -27,7 +28,7 @@ $showDescription = $body['showDescription'];
 $showSecret = $body['showSecret'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => Router::url(DS . $owner->profile->avatar->url['small'], true),
+    'url' => AvatarHelper::getAvatarUrl($owner->profile->avatar),
     'text' => $this->element('Email/module/avatar_text', [
         'username' => Purifier::clean($owner->username),
         'first_name' => Purifier::clean($owner->profile->first_name),

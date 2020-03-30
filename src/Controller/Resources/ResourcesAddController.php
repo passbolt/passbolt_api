@@ -26,6 +26,8 @@ use Cake\Event\Event;
  */
 class ResourcesAddController extends AppController
 {
+    const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
+
     /**
      * Resource Add action
      *
@@ -171,7 +173,7 @@ class ResourcesAddController extends AppController
     {
         $uac = $this->User->getAccessControl();
         $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
-        $event = new Event('ResourcesAddController.addPost.success', $this, $eventData);
+        $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
     }
 }

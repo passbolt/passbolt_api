@@ -46,6 +46,11 @@ class EmailNotificationSettings
     private static $dbSettingsSource;
 
     /**
+     * @var DefaultEmailNotificationSettingsSource
+     */
+    private static $defaultSettingsSource;
+
+    /**
      * Flush the cache version of the settings.
      *
      * @return void
@@ -114,9 +119,19 @@ class EmailNotificationSettings
      */
     protected static function getSettingsFromFile()
     {
-        static::$configSettingsSource = new ConfigEmailNotificationSettingsSource();
+        return static::getConfigSettingsSource()->read();
+    }
 
-        return static::$configSettingsSource->read();
+    /**
+     * @return ConfigEmailNotificationSettingsSource
+     */
+    protected static function getConfigSettingsSource()
+    {
+        if (!static::$configSettingsSource) {
+            static::$configSettingsSource = new ConfigEmailNotificationSettingsSource();
+        }
+
+        return static::$configSettingsSource;
     }
 
     /**
@@ -128,9 +143,19 @@ class EmailNotificationSettings
      */
     protected static function getSettingsFromDb()
     {
-        static::$dbSettingsSource = new DbEmailNotificationSettingsSource();
+        return static::getDbSettingsSource()->read();
+    }
 
-        return static::$dbSettingsSource->read();
+    /**
+     * @return DbEmailNotificationSettingsSource
+     */
+    protected static function getDbSettingsSource()
+    {
+        if (!static::$dbSettingsSource) {
+            static::$dbSettingsSource = new DbEmailNotificationSettingsSource();
+        }
+
+        return static::$dbSettingsSource;
     }
 
     /**
@@ -139,9 +164,19 @@ class EmailNotificationSettings
      */
     protected static function getSettingsFromDefault()
     {
-        $defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(new EmailNotificationSettingsForm());
+        return static::getDefaultSettingsSource()->read();
+    }
 
-        return $defaultSettingsSource->read();
+    /**
+     * @return DefaultEmailNotificationSettingsSource
+     */
+    protected static function getDefaultSettingsSource()
+    {
+        if (!static::$defaultSettingsSource) {
+            static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(new EmailNotificationSettingsForm());
+        }
+
+        return static::$defaultSettingsSource;
     }
 
     /**
@@ -172,7 +207,7 @@ class EmailNotificationSettings
 
         $configs = Hash::expand($configs);
 
-        static::$dbSettingsSource->write($configs, $accessControl);
+        static::getDbSettingsSource()->write($configs, $accessControl);
 
         static::flushCache();
     }

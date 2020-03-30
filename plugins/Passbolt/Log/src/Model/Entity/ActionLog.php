@@ -15,11 +15,18 @@
 
 namespace Passbolt\Log\Model\Entity;
 
+use App\Model\Entity\User;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 
 /**
- * Class ActionLog
- * @package Passbolt\Log\Model\Entity
+ * @property string $id
+ * @property string $user_id
+ * @property string $action_id
+ * @property string $context
+ * @property bool $status
+ * @property FrozenTime $created
+ * @property User $user
  */
 class ActionLog extends Entity
 {
