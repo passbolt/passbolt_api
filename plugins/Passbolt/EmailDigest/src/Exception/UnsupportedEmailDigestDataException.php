@@ -18,6 +18,9 @@ use Cake\ORM\Entity;
 use Exception;
 use Throwable;
 
+/**
+ * This exception must only be used by the email digest marshallers
+ */
 class UnsupportedEmailDigestDataException extends Exception
 {
     /**
@@ -26,7 +29,6 @@ class UnsupportedEmailDigestDataException extends Exception
     private $unsupportedEmail;
 
     /**
-     * UnsupportedEmailDigestDataException constructor.
      * @param Entity $emailData The unsupported email
      * @param string $message Message
      * @param int $code Code

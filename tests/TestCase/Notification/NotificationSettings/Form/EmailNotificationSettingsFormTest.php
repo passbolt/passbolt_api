@@ -15,11 +15,10 @@
 
 namespace App\Test\TestCase\Notification\NotificationSettings\Form;
 
-use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\PurifyNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use App\Test\Lib\AppTestCase;
@@ -42,7 +41,7 @@ class EmailNotificationSettingsFormTest extends AppTestCase
             // Add the different email settings definitions for Passbolt Core
             ->on(new CommentNotificationSettingsDefinition())
             ->on(new GroupNotificationSettingsDefinition())
-            ->on(new PurifyNotificationSettingsDefinition())
+            ->on(new GeneralNotificationSettingsDefinition())
             ->on(new ResourceNotificationSettingsDefinition())
             ->on(new UserNotificationSettingsDefinition())
             ->on(new AdminNotificationSettingsDefinition());

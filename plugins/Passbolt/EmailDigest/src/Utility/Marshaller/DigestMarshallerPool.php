@@ -18,10 +18,11 @@ namespace Passbolt\EmailDigest\Utility\Marshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\PoolDigestMarshaller;
 
 /**
- * DigestMarshallerPool handle a collection of DigestMarshaller instances which can be ordered by priority.
+ * DigestMarshallerPool handle a collection of DigestMarshaller instances which are ordered by priority.
  * @see DigestMarshallerInterface
  *
- * It is uses by the PoolDigestMarshaller and other components to retrieve and add digests marshallers dynamically.
+ * It is used by the PoolDigestMarshaller and other components to retrieve and add digests marshallers dynamically.
+ *
  * @see PoolDigestMarshaller
  * Lowest priority is equal to DigestMarshallerPool::LOWEST_PRIORITY
  */

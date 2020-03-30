@@ -15,6 +15,10 @@
 
 namespace App\Notification\EmailDigest\DigestMarshallerRegister\Resource;
 
+use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
+use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
+use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
+use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use Cake\Core\Configure;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
@@ -22,7 +26,7 @@ use Passbolt\EmailDigest\Utility\Factory\DigestMarshallerFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerPool;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerRegisterTrait;
-use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndExecutedByDigestMarshaller;
+use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndOperatorDigestMarshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\MaximumThresholdSwitchDigestMarshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\MinimumThresholdSwitchDigestMarshaller;
 
@@ -33,6 +37,9 @@ use Passbolt\EmailDigest\Utility\Marshaller\Type\MinimumThresholdSwitchDigestMar
 class ResourceEmailDigestMarshallerRegister implements EventListenerInterface
 {
     use DigestMarshallerRegisterTrait;
+
+    const RESOURCE_CHANGES_TEMPLATE = 'LU/resource_changes';
+    const RESOURCE_SHARE_MULTIPLE_TEMPLATE = 'LU/resource_share_multiple';
 
     /**
      * @var DigestMarshallerFactory
@@ -67,17 +74,17 @@ class ResourceEmailDigestMarshallerRegister implements EventListenerInterface
      *
      * @param int $minimumThreshold Minimum threshold
      * @param int $maximumThreshold Maximum threshold
-     * @return ByTemplateAndExecutedByDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
      */
     private function createResourceChangesDigestMarshaller(int $minimumThreshold, int $maximumThreshold)
     {
         $supportedTemplates = [
-            "LU/resource_create",
-            "LU/resource_update",
-            "LU/resource_delete",
+            ResourceCreateEmailRedactor::TEMPLATE,
+            ResourceUpdateEmailRedactor::TEMPLATE,
+            ResourceDeleteEmailRedactor::TEMPLATE,
         ];
 
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
+        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndOperatorEmailDigestMarshaller(
             __("{0} has made changes on resources", "{0}"),
             'user'
         );
@@ -92,7 +99,7 @@ class ResourceEmailDigestMarshallerRegister implements EventListenerInterface
             function (Entity $emailData, int $emailCount) {
                 $digest = (new EmailDigest())
                     ->setSubject(__('Resources are waiting for you on passbolt'))
-                    ->setTemplate('LU/resource_change_too_many')
+                    ->setTemplate(static::RESOURCE_CHANGES_TEMPLATE)
                     ->setEmailRecipient($emailData->email)
                     ->addTemplateVar('user', $emailData->template_vars['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
@@ -109,17 +116,18 @@ class ResourceEmailDigestMarshallerRegister implements EventListenerInterface
      * Create a new email digest marshaller for the resource share emails.
      * The marshaller will create a digest only if there is minimum 2 emails.
      * It will create another digest if there is more than 50 emails.
+     *
      * @param int $minimumThreshold Minimum threshold
      * @param int $maximumThreshold Maximum threshold
-     * @return ByTemplateAndExecutedByDigestMarshaller|MaximumThresholdSwitchDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller|MaximumThresholdSwitchDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
      */
     private function createResourceShareDigestMarshaller(int $minimumThreshold, int $maximumThreshold)
     {
         $supportedTemplates = [
-            "LU/resource_share",
+            ShareEmailRedactor::TEMPLATE,
         ];
 
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
+        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndOperatorEmailDigestMarshaller(
             __("{0} has shared resources", "{0}"),
             'owner'
         );
@@ -134,7 +142,7 @@ class ResourceEmailDigestMarshallerRegister implements EventListenerInterface
             function (Entity $emailData, int $emailCount) {
                 $digest = (new EmailDigest())
                     ->setSubject(__('Resources are waiting for you on passbolt'))
-                    ->setTemplate('LU/resource_share_too_many')
+                    ->setTemplate(static::RESOURCE_SHARE_MULTIPLE_TEMPLATE)
                     ->setEmailRecipient($emailData->email)
                     ->addTemplateVar('owner', $emailData->template_vars['body']['owner'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
