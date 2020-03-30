@@ -30,7 +30,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($creator->profile->first_name),
         'last_name' => Purifier::clean($creator->profile->last_name),
         'datetime' => $comment->created,
-        'text' => __('{0} commented on {1}', null, Purifier::clean($resource->name))
+        'text' => __('{0} commented on {1}', Purifier::clean($creator->profile->first_name), Purifier::clean($resource->name))
     ])
 ]);
 

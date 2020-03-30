@@ -28,7 +28,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => $group->modified,
-        'text' => __('{0} deleted a group', null)
+        'text' => __('{0} deleted a group', Purifier::clean($admin->profile->first_name))
     ])
 ]);
 
