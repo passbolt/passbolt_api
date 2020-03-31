@@ -29,6 +29,8 @@ use Cake\Validation\Validation;
 
 class GroupsDeleteController extends AppController
 {
+    const DELETE_SUCCESS_EVENT_NAME = 'GroupsDeleteController.delete.success';
+
     /**
      * Before filter
      *
@@ -178,7 +180,7 @@ class GroupsDeleteController extends AppController
      */
     protected function _notifyUsers($group)
     {
-        $event = new Event('GroupsDeleteController.delete.success', $this, [
+        $event = new Event(static::DELETE_SUCCESS_EVENT_NAME, $this, [
             'group' => $group,
             'userId' => $this->User->id(),
         ]);

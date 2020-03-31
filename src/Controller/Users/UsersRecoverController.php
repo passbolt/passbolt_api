@@ -17,6 +17,7 @@ namespace App\Controller\Users;
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Model\Table\UsersTable;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -24,6 +25,8 @@ use Cake\Http\Exception\ForbiddenException;
 
 class UsersRecoverController extends AppController
 {
+    const RECOVER_SUCCESS_EVENT_NAME = 'UsersRecoverController.recoverPost.success';
+
     /**
      * Before filter
      *
@@ -85,12 +88,12 @@ class UsersRecoverController extends AppController
             $adminId = null;
             if ($user->active) {
                 $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
-                $event = 'UsersRecoverController.recoverPost.success';
+                $event = static::RECOVER_SUCCESS_EVENT_NAME;
             } else {
                 // The user has not completed the setup, restart setup
                 // Fixes https://github.com/passbolt/passbolt_api/issues/73
                 $token = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_REGISTER);
-                $event = 'Model.Users.afterRegister.success';
+                $event = UsersTable::AFTER_REGISTER_SUCCESS_EVENT_NAME;
                 if ($this->User->role() === Role::ADMIN) {
                     $adminId = $this->User->id();
                 }

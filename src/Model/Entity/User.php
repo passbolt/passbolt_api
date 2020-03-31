@@ -34,7 +34,9 @@ use Cake\ORM\TableRegistry;
  * @property \App\Model\Entity\FileStorage[] $file_storage
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
  * @property \App\Model\Entity\Profile[] $profiles
+ * @property \App\Model\Entity\Profile $profile
  * @property \App\Model\Entity\GroupUser[] $groups_users
+ * @property \Passbolt\Log\Model\Entity\EntityHistory[] $entities_history
  */
 class User extends Entity
 {

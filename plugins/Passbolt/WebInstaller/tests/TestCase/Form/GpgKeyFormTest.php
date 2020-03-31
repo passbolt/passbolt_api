@@ -17,10 +17,12 @@ namespace Passbolt\WebInstaller\Test\TestCase\Form;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
+use Cake\Event\EventDispatcherTrait;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
 
 class GpgKeyFormTest extends AppTestCase
 {
+    use EventDispatcherTrait;
     use FormatValidationTrait;
     use GpgkeysModelTrait;
 

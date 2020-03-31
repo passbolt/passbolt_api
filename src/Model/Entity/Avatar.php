@@ -71,7 +71,7 @@ class Avatar extends ImageStorage
      * @param array $options options
      * @return bool|string
      */
-    public function getAvatarUrl(Avatar $avatar, string $version = 'small', array $options = [])
+    private function getAvatarUrl(Avatar $avatar, string $version = 'small', array $options = [])
     {
         // Default options.
         $defaultOptions = ['version' => 'small'];
