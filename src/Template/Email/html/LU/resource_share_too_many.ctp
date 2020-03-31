@@ -28,7 +28,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($owner->profile->first_name),
         'last_name' => Purifier::clean($owner->profile->last_name),
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} shared a password with you', null)
+        'text' => __('{0} shared a password with you', Purifier::clean($owner->profile->first_name))
     ])
 ]);
 

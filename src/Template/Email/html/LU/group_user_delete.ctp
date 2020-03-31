@@ -29,7 +29,7 @@ echo $this->element('Email/module/avatar',[
         'first_name' => Purifier::clean($admin->profile->first_name),
         'last_name' => Purifier::clean($admin->profile->last_name),
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} removed you from the group {1}', null, Purifier::clean($group->name))
+        'text' => __('{0} removed you from the group {1}', Purifier::clean($admin->profile->first_name), Purifier::clean($group->name))
     ])
 ]);
 

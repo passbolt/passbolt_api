@@ -13,6 +13,10 @@
  * @since         2.14.0
  */
 
+/**
+ * This is the default template used by any email digest
+ * Its content is defined by the marshaller which create the digest
+ */
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 
 $digestContent = $body[EmailDigest::TPL_VAR_DIGEST_CONTENT];

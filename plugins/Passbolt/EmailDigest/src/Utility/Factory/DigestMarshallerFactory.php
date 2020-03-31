@@ -19,7 +19,7 @@ use Cake\Event\EventManager;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerInterface;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerPool;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerRegisterEvent;
-use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndExecutedByDigestMarshaller;
+use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndOperatorDigestMarshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\MaximumThresholdSwitchDigestMarshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\MinimumThresholdSwitchDigestMarshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\PoolDigestMarshaller;
@@ -105,11 +105,11 @@ class DigestMarshallerFactory
     /**
      * @param string $subject Subject to use for the email digest created by marshaller
      * @param string $executedByTemplateVarKey Name of the variable in template vars body which contain the user
-     * @return ByTemplateAndExecutedByDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller
      */
-    public function createByTemplateAndExecutedByEmailDigestMarshaller(string $subject, string $executedByTemplateVarKey)
+    public function createByTemplateAndOperatorEmailDigestMarshaller(string $subject, string $executedByTemplateVarKey)
     {
-        return new ByTemplateAndExecutedByDigestMarshaller($subject, $executedByTemplateVarKey, $this->emailPreviewFactory);
+        return new ByTemplateAndOperatorDigestMarshaller($subject, $executedByTemplateVarKey, $this->emailPreviewFactory);
     }
 
     /**
@@ -128,13 +128,13 @@ class DigestMarshallerFactory
     }
 
     /**
-     * @param ByTemplateAndExecutedByDigestMarshaller $digestMarshaller Marshaller
-     * @param int $maximumThreshold Maximum Threshold
-     * @param callable $onThresholdCallback Callback function to execute when threshold is reached.
+     * @param ByTemplateAndOperatorDigestMarshaller $digestMarshaller Marshaller
+     * @param int                                   $maximumThreshold Maximum Threshold
+     * @param callable                              $onThresholdCallback Callback function to execute when threshold is reached.
      * @return MaximumThresholdSwitchDigestMarshaller
      */
     public function createThresholdMaximumSwitchDigestMarshaller(
-        ByTemplateAndExecutedByDigestMarshaller $digestMarshaller,
+        ByTemplateAndOperatorDigestMarshaller $digestMarshaller,
         int $maximumThreshold,
         callable $onThresholdCallback
     ) {
