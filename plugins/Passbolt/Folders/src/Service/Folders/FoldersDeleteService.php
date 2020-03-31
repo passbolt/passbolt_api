@@ -221,6 +221,8 @@ class FoldersDeleteService
         }
 
         $resource = $this->resourcesTable->get($resourceId);
+        // The soft delete function will trigger an event that once caught will remove the resource from the users
+        // folders trees.
         $this->resourcesTable->softDelete($uac->userId(), $resource);
     }
 

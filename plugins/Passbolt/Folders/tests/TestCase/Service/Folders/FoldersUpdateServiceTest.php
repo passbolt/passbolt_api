@@ -414,6 +414,47 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         return [$folderA, $folderB];
     }
 
+    public function testUpdateFolder_SharedSuccess1_1_MoveSharedFolderFromRootIntoSharedFolder_FolderSharedWithGroup()
+    {
+        list($folderA, $folderB) = $this->insertSharedSuccess1Fixture1_1();
+
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $uac = new UserAccessControl(Role::USER, $userAId);
+        $folder = $this->service->update($uac, $folderB->id, ['folder_parent_id' => $folderA->id]);
+        $this->assertTrue($folder instanceof Folder);
+        $this->assertObjectHasFolderParentIdAttribute($folder, $folderA->id);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 2);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderA->id);
+    }
+
+    private function insertSharedSuccess1Fixture1_1()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // Ada is OWNER of folder B
+        // Betty is OWNER of folder B
+        // ---
+        // A (Ada:O, Betty:Owner)
+        // B (Ada:O, Betty:Owner)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
+            ['user_id' => $userBId, 'is_admin' => true],
+        ]]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+
+        return [$folderA, $folderB];
+    }
+
     public function testUpdateFolder_SharedSuccess2_MoveSharedFolderFromSharedFolderToSharedFolder_MoveToRootForSomeUsers()
     {
         list($folderA, $folderB, $folderC) = $this->insertSharedSuccess2Fixture();
@@ -424,8 +465,18 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folder = $this->service->update($uac, $folderB->id, ['folder_parent_id' => $folderC->id]);
         $this->assertTrue($folder instanceof Folder);
         $this->assertObjectHasFolderParentIdAttribute($folder, $folderC->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderC->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 2);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderC->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder C
+        $this->assertItemIsInTrees($folderC->id, 1);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
     }
 
     private function insertSharedSuccess2Fixture()
@@ -443,7 +494,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $folderC = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
+        $folderC = $this->addFolderFor(['name' => 'C'], [$userAId => Permission::OWNER]);
 
         return [$folderA, $folderB, $folderC];
     }
@@ -458,8 +509,20 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folder = $this->service->update($uac, $folderB->id, ['folder_parent_id' => $folderD->id]);
         $this->assertTrue($folder instanceof Folder);
         $this->assertObjectHasFolderParentIdAttribute($folder, $folderD->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderD->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 1);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderD->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
+        // Folder C
+        $this->assertItemIsInTrees($folderC->id, 1);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder D
+        $this->assertItemIsInTrees($folderD->id, 1);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
     }
 
     private function insertSharedSuccess3Fixture()
@@ -503,8 +566,18 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folder = $this->service->update($uac, $folderB->id, ['folder_parent_id' => $folderC->id]);
         $this->assertTrue($folder instanceof Folder);
         $this->assertObjectHasFolderParentIdAttribute($folder, $folderC->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderC->id);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 1);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderC->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
+        // Folder C
+        $this->assertItemIsInTrees($folderC->id, 2);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
     }
 
     private function insertSharedSuccess4Fixture()
@@ -543,8 +616,17 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folder = $this->service->update($uac, $folderC->id, ['folder_parent_id' => null]);
         $this->assertTrue($folder instanceof Folder);
         $this->assertObjectHasFolderParentIdAttribute($folder, null);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folder->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderB->id);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 1);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 1);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        // Folder C
+        $this->assertItemIsInTrees($folderC->id, 2);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderB->id);
     }
 
     private function insertSharedSuccess5Fixture()

@@ -300,7 +300,8 @@ class FoldersUpdateService
      */
     private function moveFolder(Folder $folder, string $folderParentId = null)
     {
-        // If the destination folder is not the root, then move the folder into it for users who can see it.
+        // If the destination folder is not the root, then move the folder into the destination folder for users who can
+        // see it.
         if (!is_null($folderParentId)) {
             $usersSeeingDestination = $this->foldersRelationsTable->findByForeignId($folderParentId)->extract('user_id')->toArray();
             $this->foldersRelationsTable->updateAll(['folder_parent_id' => $folderParentId], [
@@ -309,7 +310,8 @@ class FoldersUpdateService
             ]);
         }
 
-        // Move the folder to the root for rest of users who have it organized as the operator.
+        // Move the folder to the root for rest of users who have it organized as the operator but cannot see the
+        // destination folder (if any).
         $this->foldersRelationsTable->updateAll(['folder_parent_id' => null], [
             'foreign_id' => $folder->id,
             'folder_parent_id' => $folder->folder_parent_id,
