@@ -14,18 +14,14 @@
  */
 namespace App\Shell\Task;
 
-use App\Controller\Events\EmailNotificationsListener;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Shell\AppShell;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
-use Cake\Event\Event;
-use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
-use Ramsey\Uuid\Uuid;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 class RegisterUserTask extends AppShell
 {
@@ -219,11 +215,19 @@ class RegisterUserTask extends AppShell
         // Display the token in console for convenience
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $token = $AuthenticationTokens->getByUserId($user->id);
-        $this->_success(
-            __(
-                "To start registration follow the link in provided in your mailbox or here: \n{0}",
+
+        if (EmailNotificationSettings::get('send.user.create')) {
+            $message = __(
+                "To start registration follow the link provided in your mailbox or here: \n{0}",
                 Router::url('/setup/install/' . $user->id . '/' . $token->token, true)
-            )
-        );
+            );
+        } else {
+            $message = __(
+                "To start registration follow the link provided here: \n{0}",
+                Router::url('/setup/install/' . $user->id . '/' . $token->token, true)
+            );
+        }
+
+        $this->_success($message);
     }
 }

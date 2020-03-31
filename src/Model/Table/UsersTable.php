@@ -43,6 +43,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\ProfilesTable|\Cake\ORM\Association\HasMany $Profiles
  * @property \App\Model\Table\GroupsUsersTable|\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable|\Cake\ORM\Association\BelongsToMany $Groups
+ * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable|\Cake\ORM\Association\HasMany $EntitiesHistory
  *
  * @method \App\Model\Entity\User get($primaryKey, $options = [])
  * @method \App\Model\Entity\User newEntity($data = null, array $options = [])
@@ -57,6 +58,8 @@ use Cake\Validation\Validator;
 class UsersTable extends Table
 {
     use UsersFindersTrait;
+
+    const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
 
     /**
      * Initialize method
@@ -98,6 +101,10 @@ class UsersTable extends Table
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aro_foreign_key',
+        ]);
+        $this->hasMany('EntitiesHistory', [
+            'className' => 'Passbolt/Log.EntitiesHistory',
+            'foreignKey' => 'foreign_key',
         ]);
     }
 
@@ -438,7 +445,7 @@ class UsersTable extends Table
         if (isset($control) && !is_null($control->userId())) {
             $eventData['adminId'] = $control->userId();
         }
-        $event = new Event('Model.Users.afterRegister.success', $this, $eventData);
+        $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->getEventManager()->dispatch($event);
 
         return $user;

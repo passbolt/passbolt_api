@@ -160,7 +160,7 @@ trait FormatValidationTrait
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = array_merge($formData, [$fieldName => $testCaseData]);
                 $formData = $this->_adjustEntityData($formData);
-                $form = new $FormClass();
+                $form = new $FormClass($this->getEventManager());
                 $validate = $form->validate($formData);
 
                 if ($expectedResult == true) {
