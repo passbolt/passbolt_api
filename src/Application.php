@@ -124,6 +124,16 @@ class Application extends BaseApplication
             // Register emails digest marshallers
             ->on(new GroupUserEmailDigestMarshallerRegister())
             ->on(new ResourceEmailDigestMarshallerRegister());
+    }
+
+    /**
+     * Bootstrap all the loaded plugins
+     * Any which require the application to be fully loaded should be registered here.
+     * @return void
+     */
+    public function pluginBootstrap()
+    {
+        parent::pluginBootstrap();
 
         // Register the emails redactors which listen on events where emails must be sent
         // It must happens after the emails redactors have been registered in the system
@@ -181,7 +191,7 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true ]);
+        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
 
         if (!WebInstallerMiddleware::isConfigured()) {
