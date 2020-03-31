@@ -24,8 +24,8 @@ use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
-use App\Notification\NotificationSettings\PurifyNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
 use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use Cake\Core\Configure;
@@ -117,13 +117,23 @@ class Application extends BaseApplication
             // Add the different email settings definitions for Passbolt Core
             ->on(new CommentNotificationSettingsDefinition())
             ->on(new GroupNotificationSettingsDefinition())
-            ->on(new PurifyNotificationSettingsDefinition())
+            ->on(new GeneralNotificationSettingsDefinition())
             ->on(new ResourceNotificationSettingsDefinition())
             ->on(new UserNotificationSettingsDefinition())
             ->on(new AdminNotificationSettingsDefinition())
             // Register emails digest marshallers
             ->on(new GroupUserEmailDigestMarshallerRegister())
             ->on(new ResourceEmailDigestMarshallerRegister());
+    }
+
+    /**
+     * Bootstrap all the loaded plugins
+     * Any which require the application to be fully loaded should be registered here.
+     * @return void
+     */
+    public function pluginBootstrap()
+    {
+        parent::pluginBootstrap();
 
         // Register the emails redactors which listen on events where emails must be sent
         // It must happens after the emails redactors have been registered in the system
@@ -181,7 +191,7 @@ class Application extends BaseApplication
         $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
         $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true ]);
+        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
         $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
 
         $folderEnabled = Configure::read('passbolt.plugins.folders.enabled');

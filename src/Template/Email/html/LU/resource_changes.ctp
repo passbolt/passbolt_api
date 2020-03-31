@@ -13,34 +13,29 @@
  * @since         2.0.0
  */
 use App\Utility\Purifier;
-use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
-$creator = $body['creator'];
-$comment = $body['comment'];
-$resource = $body['resource'];
-$showComment = $body['showComment'];
+$user = $body['user'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($creator->profile->avatar),
+    'url' => Router::url(DS . $user->profile->avatar->url['small'], true),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($creator->username),
-        'first_name' => Purifier::clean($creator->profile->first_name),
-        'last_name' => Purifier::clean($creator->profile->last_name),
-        'datetime' => $comment->created,
-        'text' => __('{0} commented on {1}', Purifier::clean($creator->profile->first_name), Purifier::clean($resource->name))
+        'username' => Purifier::clean($user->username),
+        'first_name' => Purifier::clean($user->profile->first_name),
+        'last_name' => Purifier::clean($user->profile->last_name),
+        'text' => __('Changes were made on resources shared with you!')
     ])
 ]);
 
-if ($showComment) {
-    echo $this->element('Email/module/text', [
-        'text' => Purifier::clean($comment->content)
-    ]);
-}
+$text = __('More than {0} resources were changed, go check them out on Passbolt.', $count) . '<br/>';
+
+echo $this->element('Email/module/text', [
+    'text' => $text
+]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'url' => Router::url("/app/passwords/view", true),
     'text' => __('view it in passbolt')
 ]);

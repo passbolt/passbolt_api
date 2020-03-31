@@ -17,16 +17,16 @@ namespace Passbolt\EmailDigest\Utility\Marshaller\Type;
 
 use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
-use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerInterface;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerPool;
 
 /**
- * Marshall emails digests using a collection of digest marshallers which are contained in a marshallers pool.
- * Orders in which the marshallers are picked is defined by the marshallers pool, so they can be ordered in fashioned ways (priority, availability..).
+ * Marshall emails digests using a collection of digest marshallers which are contained in a collection.
+ * This collection is hold in the DigestMarshallerPool. It also defines the order in which the digests marshallers are returned.
  *
- * The first digest marshaller picked from the top of the pool will be used to marshall a digest of the email.
+ * When marshalling an email, the first digest marshaller returned by the DigestMarshallerPool which can marshal
+ * the given email will be used to marshall a digest with this email.
  */
 class PoolDigestMarshaller extends AbstractDigestMarshaller implements DigestMarshallerInterface
 {

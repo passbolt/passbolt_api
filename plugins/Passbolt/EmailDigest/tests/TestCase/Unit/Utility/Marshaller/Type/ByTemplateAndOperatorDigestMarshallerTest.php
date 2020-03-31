@@ -21,15 +21,15 @@ use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
-use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndExecutedByDigestMarshaller;
+use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndOperatorDigestMarshaller;
 use PHPUnit\Framework\MockObject\MockObject;
 
-class ByTemplateAndExecutedByDigestMarshallerTest extends TestCase
+class ByTemplateAndOperatorDigestMarshallerTest extends TestCase
 {
     use EmailDigestMockTestTrait;
 
     /**
-     * @var ByTemplateAndExecutedByDigestMarshaller
+     * @var ByTemplateAndOperatorDigestMarshaller
      */
     private $sut;
 
@@ -42,7 +42,7 @@ class ByTemplateAndExecutedByDigestMarshallerTest extends TestCase
     {
         $this->emailPreviewFactoryMock = $this->createMock(EmailPreviewFactory::class);
 
-        $this->sut = new ByTemplateAndExecutedByDigestMarshaller('Test subject', 'user', $this->emailPreviewFactoryMock);
+        $this->sut = new ByTemplateAndOperatorDigestMarshaller('Test subject', 'user', $this->emailPreviewFactoryMock);
 
         parent::setUp();
     }

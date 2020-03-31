@@ -18,7 +18,7 @@ namespace App\Notification\Email\Redactor;
 use App\Notification\Email\AbstractSubscribedEmailRedactorPool;
 use App\Notification\Email\Redactor\Comment\CommentAddEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupDeleteEmailRedactor;
-use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmail;
+use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUpdateMembershipEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
@@ -92,7 +92,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
             $redactors[] = new GroupUserDeleteEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.manager.update')) {
-            $redactors[] = new GroupUpdateAdminSummaryEmail();
+            $redactors[] = new GroupUpdateAdminSummaryEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.admin.user.setup.completed') && Configure::read('passbolt.plugins.log.enabled')) {
             $redactors[] = new AdminUserSetupCompleteEmailRedactor();

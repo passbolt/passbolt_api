@@ -21,9 +21,16 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerInterface;
 
 /**
- * Allow to wrap another marshaller and to define a threshold limit for number of emails that the wrapped marshaller can marshall.
- * Once the threshold limit is reached, it calls the callback function defined.
+ * The MinimumThresholdSwitchDigestMarshaller is used to marshall emails with a given email marshaller until a certain
+ * amount of emails is added to the marshaller. When this amount of emails is reached, it switch to another marshaller.
+ * All emails which were included in the initial marshaller are moved to this other marshaller.
+ *
+ * e.g. it can be used to create a digest composed of a maximum 50 emails, and switch strategy if there is more and
+ * create a new digest with a more condensed information.
+ *
  * The callback function must return a collection of digests (which can be an array of zero, one or multiple digests).
+ *
+ * @package Passbolt\EmailDigest\Utility\Marshaller\Type
  */
 class MaximumThresholdSwitchDigestMarshaller extends AbstractDigestMarshaller
 {

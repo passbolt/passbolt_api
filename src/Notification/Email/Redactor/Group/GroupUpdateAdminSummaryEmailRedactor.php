@@ -27,7 +27,7 @@ use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
-class GroupUpdateAdminSummaryEmail implements SubscribedEmailRedactorInterface
+class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 

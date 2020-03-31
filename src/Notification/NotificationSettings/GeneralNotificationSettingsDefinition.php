@@ -19,7 +19,7 @@ use Cake\Validation\Validator;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionTrait;
 
-class PurifyNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
+class GeneralNotificationSettingsDefinition implements EmailNotificationSettingsDefinitionInterface
 {
     use EmailNotificationSettingsDefinitionTrait;
 

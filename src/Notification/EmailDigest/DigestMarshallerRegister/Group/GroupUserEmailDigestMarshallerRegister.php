@@ -15,11 +15,15 @@
 
 namespace App\Notification\EmailDigest\DigestMarshallerRegister\Group;
 
+use App\Notification\Email\Redactor\Group\GroupDeleteEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUpdateMembershipEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
+use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
 use Cake\Event\EventListenerInterface;
 use Passbolt\EmailDigest\Utility\Factory\DigestMarshallerFactory;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerPool;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerRegisterTrait;
-use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndExecutedByDigestMarshaller;
+use Passbolt\EmailDigest\Utility\Marshaller\Type\ByTemplateAndOperatorDigestMarshaller;
 use Passbolt\EmailDigest\Utility\Marshaller\Type\MinimumThresholdSwitchDigestMarshaller;
 
 class GroupUserEmailDigestMarshallerRegister implements EventListenerInterface
@@ -50,41 +54,19 @@ class GroupUserEmailDigestMarshallerRegister implements EventListenerInterface
             ->addDigestMarshaller($this->createGroupAddMemberDigestMarshaller())
             ->addDigestMarshaller($this->createGroupUpdateMembershipDigestMarshaller())
             ->addDigestMarshaller($this->createGroupDeleteMemberDigestMarshaller())
-            ->addDigestMarshaller($this->createGroupAddDigestMarshaller())
             ->addDigestMarshaller($this->createDeleteGroupDigestMarshaller());
     }
 
     /**
-     * @return ByTemplateAndExecutedByDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
-     */
-    private function createGroupAddDigestMarshaller()
-    {
-        $templates = [
-            "LU/group_add",
-        ];
-
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
-            __("{0} added the groups", "{0}"),
-            "admin"
-        );
-
-        foreach ($templates as $template) {
-            $digestMarshaller->addSupportedTemplate($template);
-        }
-
-        return $this->digestMarshallerFactory->createThresholdMinimumSwitchDigestMarshaller($digestMarshaller);
-    }
-
-    /**
-     * @return ByTemplateAndExecutedByDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
      */
     private function createGroupAddMemberDigestMarshaller()
     {
         $templates = [
-            "LU/group_user_add",
+            GroupUserAddEmailRedactor::TEMPLATE,
         ];
 
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
+        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndOperatorEmailDigestMarshaller(
             __("{0} added you to groups"),
             "admin"
         );
@@ -97,15 +79,15 @@ class GroupUserEmailDigestMarshallerRegister implements EventListenerInterface
     }
 
     /**
-     * @return ByTemplateAndExecutedByDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
      */
     private function createDeleteGroupDigestMarshaller()
     {
         $templates = [
-            "LU/group_delete",
+            GroupDeleteEmailRedactor::TEMPLATE,
         ];
 
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
+        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndOperatorEmailDigestMarshaller(
             __("{0} deleted the groups"),
             "admin"
         );
@@ -118,15 +100,15 @@ class GroupUserEmailDigestMarshallerRegister implements EventListenerInterface
     }
 
     /**
-     * @return ByTemplateAndExecutedByDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
      */
     private function createGroupUpdateMembershipDigestMarshaller()
     {
         $templates = [
-            "LU/group_user_update",
+            GroupUpdateMembershipEmailRedactor::TEMPLATE,
         ];
 
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
+        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndOperatorEmailDigestMarshaller(
             __("{0} updated your membership in groups"),
             "admin"
         );
@@ -139,15 +121,15 @@ class GroupUserEmailDigestMarshallerRegister implements EventListenerInterface
     }
 
     /**
-     * @return ByTemplateAndExecutedByDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
+     * @return ByTemplateAndOperatorDigestMarshaller|MinimumThresholdSwitchDigestMarshaller
      */
     private function createGroupDeleteMemberDigestMarshaller()
     {
         $templates = [
-            "LU/group_user_delete",
+            GroupUserDeleteEmailRedactor::TEMPLATE,
         ];
 
-        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndExecutedByEmailDigestMarshaller(
+        $digestMarshaller = $this->digestMarshallerFactory->createByTemplateAndOperatorEmailDigestMarshaller(
             __("{0} removed you from groups"),
             "admin"
         );

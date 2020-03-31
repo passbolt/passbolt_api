@@ -26,7 +26,7 @@ use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerInterface;
 /**
  * Aggregate in a same digest the emails with a template in the list of the marshaller's supported template
  */
-class ByTemplateAndExecutedByDigestMarshaller extends AbstractDigestMarshaller implements DigestMarshallerInterface
+class ByTemplateAndOperatorDigestMarshaller extends AbstractDigestMarshaller implements DigestMarshallerInterface
 {
     /**
      * @var EmailPreviewFactory
@@ -86,9 +86,9 @@ class ByTemplateAndExecutedByDigestMarshaller extends AbstractDigestMarshaller i
             throw new UnsupportedEmailDigestDataException($emailQueueEntity);
         }
 
-        $user = $this->getExecutedByUserFromEmail($emailQueueEntity);
-        $username = $user->username;
-        $firstName = $user->profile->first_name;
+        $operator = $this->getOperatorFromEmail($emailQueueEntity);
+        $username = $operator->username;
+        $firstName = $operator->profile->first_name;
 
         $digest = $this->digests[$username] ?? new EmailDigest();
 
@@ -106,7 +106,7 @@ class ByTemplateAndExecutedByDigestMarshaller extends AbstractDigestMarshaller i
      */
     public function canMarshalDigestsFrom(Entity $emailQueueEntity)
     {
-        $executedBy = $this->getExecutedByUserFromEmail($emailQueueEntity);
+        $executedBy = $this->getOperatorFromEmail($emailQueueEntity);
 
         return !empty($executedBy) ? $this->isTemplateSupported($emailQueueEntity->template) : false;
     }
@@ -165,7 +165,7 @@ class ByTemplateAndExecutedByDigestMarshaller extends AbstractDigestMarshaller i
      * @param Entity $emailData An email queue entity
      * @return User|null
      */
-    private function getExecutedByUserFromEmail(Entity $emailData)
+    private function getOperatorFromEmail(Entity $emailData)
     {
         return $emailData->template_vars['body'][$this->executedByTemplateVarKey] ?? null;
     }

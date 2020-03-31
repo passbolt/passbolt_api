@@ -20,8 +20,15 @@ use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 use Passbolt\EmailDigest\Utility\Marshaller\DigestMarshallerInterface;
 
 /**
- * Allow to wrap another marshaller and to define a threshold limit for number of emails that the wrapped marshaller can marshall.
- * Once the threshold limit is reached, it falls back on the threshold marshaller.
+ * The MinimumThresholdSwitchDigestMarshaller is used to marshall emails with a given email marshaller until a certain
+ * amount of emails is added to the marshaller. When this amount of emails is reached, it switch to another marshaller.
+ * All emails which were included in the initial marshaller are moved to this other marshaller.
+ *
+ * e.g. it can be used to create a digest composed of a maximum 50 emails, and switch strategy if there is more and
+ * create a new digest with a more condensed information.
+ *
+ * Both at threshold and below threshold marshaller must be able to marshall the email entity.
+ *
  * @package Passbolt\EmailDigest\Utility\Marshaller\Type
  */
 class MinimumThresholdSwitchDigestMarshaller extends AbstractDigestMarshaller
@@ -93,7 +100,8 @@ class MinimumThresholdSwitchDigestMarshaller extends AbstractDigestMarshaller
      */
     public function canMarshalDigestsFrom(Entity $emailQueueEntity)
     {
-        return $this->atThresholdDigestMarshaller->canMarshalDigestsFrom($emailQueueEntity) && $this->belowThresholdDigestMarshaller->canMarshalDigestsFrom($emailQueueEntity);
+        return $this->atThresholdDigestMarshaller->canMarshalDigestsFrom($emailQueueEntity)
+            && $this->belowThresholdDigestMarshaller->canMarshalDigestsFrom($emailQueueEntity);
     }
 
     /**
