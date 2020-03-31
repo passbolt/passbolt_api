@@ -75,13 +75,9 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         $this->service = new ResourcesAfterAccessRevokedService();
     }
 
-    /* ************************************************************** */
-    /* REMOVE USER PERMISSION - RESOURCE NO PARENT */
-    /* ************************************************************** */
-
-    public function testAfterShareResourceRemoveUserSuccess1_NoParent()
+    public function testResourceAfterAccessRevokedSuccess_UserPermissionRevoked()
     {
-        list($r1, $userAId, $userBId) = $this->insertFixture_AfterShareResourceRemoveUserSuccess1();
+        list($r1, $userAId, $userBId) = $this->insertFixture_UserPermissionRevoked();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $userBId)->first();
@@ -90,11 +86,9 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
 
         $this->assertItemIsInTrees($r1->id, 1);
         $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertPermission($r1->id, $userAId, Permission::OWNER);
-        $this->assertPermissionNotExist($r1->id, $userBId);
     }
 
-    public function insertFixture_AfterShareResourceRemoveUserSuccess1()
+    public function insertFixture_UserPermissionRevoked()
     {
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1
@@ -106,48 +100,35 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
         return [$r1, $userAId, $userBId];
     }
 
-    /* ************************************************************** */
-    /* REMOVE USER PERMISSION - RESOURCE HAVING A PARENT */
-    /* ************************************************************** */
-
-    public function testAfterShareResourceRemoveUserSuccess2_HavingAParent()
+    public function testResourceAfterAccessRevokedSuccess_GroupPermissionRevoked()
     {
-        list($folderA, $r1, $userAId, $userBId) = $this->insertFixture_AfterShareResourceRemoveUserSuccess2();
+        list($r1, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_GroupPermissionRevoked();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $userBId)->first();
+        $permission = $this->permissionsTable->findByAcoForeignKeyAndAroForeignKey($r1->id, $g1->id)->first();
         $this->permissionsTable->delete($permission);
         $this->service->afterAccessRevoked($uac, $permission);
 
-        // Folder A.
-        $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertPermission($folderA->id, $userAId, Permission::OWNER);
-        $this->assertPermission($folderA->id, $userBId, Permission::OWNER);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-        // Resource1
         $this->assertItemIsInTrees($r1->id, 1);
-        $this->assertPermission($r1->id, $userAId, Permission::OWNER);
-        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
-        $this->assertFolderRelationNotExist($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+        $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
     }
 
-    public function insertFixture_AfterShareResourceRemoveUserSuccess2()
+    public function insertFixture_GroupPermissionRevoked()
     {
-        // Ada is OWNER of folder A
-        // Betty is OWNER of folder A
         // Ada is OWNER of resource R1
-        // Betty is OWNER of resource R1
-        // Ada sees R1 in A
-        // Betty sees R1 in A
-        // ----
-        // A (Ada:O, Betty:O)
-        // |- R1 (Ada:O, Betty:O)
+        // G1 is OWNER of resource R1
+        // Betty is member of G1
+        // Carol is member of G1
+        // R1 (Ada:O, G1)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
-        $r1 = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
+            ['user_id' => $userBId, 'is_admin' => true],
+            ['user_id' => $userCId, 'is_admin' => true],
+        ]]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
 
-        return [$folderA, $r1, $userAId, $userBId];
+        return [$r1, $g1, $userAId, $userBId, $userCId];
     }
 }

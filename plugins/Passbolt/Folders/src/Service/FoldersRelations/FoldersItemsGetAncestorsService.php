@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Service\FoldersItems;
+namespace Passbolt\Folders\Service\FoldersRelations;
 
 use Cake\ORM\TableRegistry;
 

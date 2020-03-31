@@ -13,9 +13,8 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
@@ -23,9 +22,9 @@ use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 
 /**
- * Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService Test Case
+ * Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService Test Case
  *
- * @covers \Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService
+ * @covers \Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService
  */
 class FoldersItemsHasAncestorServiceTest extends FoldersTestCase
 {
@@ -53,7 +52,6 @@ class FoldersItemsHasAncestorServiceTest extends FoldersTestCase
     public function setUp()
     {
         parent::setUp();
-        Configure::write('passbolt.plugins.folders', ['enabled' => true]);
         $this->service = new FoldersItemsHasAncestorService();
     }
 

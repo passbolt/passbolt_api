@@ -31,7 +31,7 @@ use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService;
 
 class FoldersUpdateService
 {

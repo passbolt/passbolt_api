@@ -22,7 +22,7 @@ use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Service\FoldersItems\FoldersItemsHasAncestorService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
 
@@ -76,6 +76,7 @@ class FoldersMoveService
         }
 
         $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $folderParentId) {
+            // @todo Should we use the new FoldersRelationsRemoveItemFromUserTree ?
             $this->foldersRelationsDeleteService->delete($uac->userId(), $folder->id, true);
             $userId = $uac->userId();
             $this->foldersRelationsCreateService->create($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $folderParentId);

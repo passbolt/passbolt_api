@@ -26,24 +26,19 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
-use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 
 class ResourcesAfterAccessRevokedService
 {
     /**
+     * @var FoldersRelationsRemoveItemFromUserTreeService
+     */
+    private $foldersRelationsRemoveItemFromUserTree;
+
+    /**
      * @var GroupsUsersTable
      */
     private $groupsUsersTable;
-
-    /**
-     * @var UserHasPermissionService
-     */
-    private $userHasPermissionService;
-
-    /**
-     * @var FoldersRelationsDeleteService
-     */
-    private $foldersRelationsDeleteService;
 
     /**
      * @var ResourcesTable
@@ -51,11 +46,16 @@ class ResourcesAfterAccessRevokedService
     private $resourcesTable;
 
     /**
+     * @var UserHasPermissionService
+     */
+    private $userHasPermissionService;
+
+    /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->foldersRelationsDeleteService = new FoldersRelationsDeleteService();
+        $this->foldersRelationsRemoveItemFromUserTree = new FoldersRelationsRemoveItemFromUserTreeService();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->userHasPermissionService = new UserHasPermissionService();
@@ -77,6 +77,26 @@ class ResourcesAfterAccessRevokedService
             $this->removeResourceFromGroupUsersTrees($resource, $permission->aro_foreign_key);
         } else {
             $this->removeResourceFromUserTree($resource, $permission->aro_foreign_key);
+        }
+    }
+
+    /**
+     * Retrieve the resource.
+     *
+     * @param UserAccessControl $uac UserAccessControl updating the resource
+     * @param string $resourceId The resource identifier to retrieve.
+     * @return \App\Model\Entity\Resource
+     * @throws NotFoundException If the resource does not exist.
+     */
+    private function getResource(UserAccessControl $uac, string $resourceId)
+    {
+        try {
+            return $this->resourcesTable->get($resourceId, [
+                'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
+                'user_id' => $uac->userId(),
+            ]);
+        } catch (RecordNotFoundException $e) {
+            throw new NotFoundException(__('The resource does not exist.'));
         }
     }
 
@@ -106,32 +126,12 @@ class ResourcesAfterAccessRevokedService
      */
     private function removeResourceFromUserTree(\App\Model\Entity\Resource $resource, string $userId)
     {
-        // If the user still has access to the folder, don't alter the user tree.
+        // If the user still has access to the resource, don't alter the user tree.
         $hasAccess = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $resource->id, $userId);
         if ($hasAccess) {
             return;
         }
 
-        $this->foldersRelationsDeleteService->delete($userId, $resource->id);
-    }
-
-    /**
-     * Retrieve the resource.
-     *
-     * @param UserAccessControl $uac UserAccessControl updating the resource
-     * @param string $resourceId The resource identifier to retrieve.
-     * @return \App\Model\Entity\Resource
-     * @throws NotFoundException If the resource does not exist.
-     */
-    private function getResource(UserAccessControl $uac, string $resourceId)
-    {
-        try {
-            return $this->resourcesTable->get($resourceId, [
-                'finder' => ContainFolderParentIdBehavior::FINDER_NAME,
-                'user_id' => $uac->userId(),
-            ]);
-        } catch (RecordNotFoundException $e) {
-            throw new NotFoundException(__('The resource does not exist.'));
-        }
+        $this->foldersRelationsRemoveItemFromUserTree->removeItemFromUserTree($resource->id, $userId);
     }
 }

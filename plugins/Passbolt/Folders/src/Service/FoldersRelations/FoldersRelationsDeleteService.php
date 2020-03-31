@@ -36,40 +36,16 @@ class FoldersRelationsDeleteService
      * Delete a folder relation
      * @param string $userId The target user
      * @param string $foreignId The target item
-     * @param bool $moveContentToRoot (optional) Should the content be moved to root. Default false.
      * @return void
      * @throws \Exception
      */
-    public function delete(string $userId, string $foreignId, bool $moveContentToRoot = false)
+    public function delete(string $userId, string $foreignId)
     {
-        $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId, $moveContentToRoot) {
-            $this->deleteFolderRelation($userId, $foreignId, $moveContentToRoot);
-        });
-    }
-
-    /**
-     * Delete a folder relation entity.
-     * @param string $userId The target user
-     * @param string $foreignId The target item
-     * @param bool $moveContentToRoot Should the content be moved to root ?
-     * @return void
-     */
-    private function deleteFolderRelation(string $userId, string $foreignId, bool $moveContentToRoot)
-    {
-        if ($moveContentToRoot) {
-            $fields = [
-                'folder_parent_id' => null,
-            ];
-            $conditions = [
-                'folder_parent_id' => $foreignId,
+        $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId) {
+            $this->foldersRelationsTable->deleteAll([
+                'foreign_id' => $foreignId,
                 'user_id' => $userId,
-            ];
-            $this->foldersRelationsTable->updateAll($fields, $conditions);
-        }
-
-        $this->foldersRelationsTable->deleteAll([
-            'foreign_id' => $foreignId,
-            'user_id' => $userId,
-        ]);
+            ]);
+        });
     }
 }
