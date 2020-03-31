@@ -21,6 +21,7 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use Cake\Core\Configure;
 use Cake\ORM\Query;
+use Cake\ORM\ResultSet;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Composer\EventDispatcher\EventDispatcher;
@@ -506,7 +507,7 @@ trait UsersFindersTrait
     /**
      * Get all active users.
      *
-     * @return object User
+     * @return User
      */
     public function findActive()
     {
@@ -519,5 +520,30 @@ trait UsersFindersTrait
              ->all();
 
         return $user;
+    }
+
+    /**
+     * Get all non-active users.
+     *
+     * @return ResultSet|User[]
+     */
+    private function findNonActive()
+    {
+        return $this->find()
+            ->where([
+                'Users.deleted' => false,
+                'Users.active' => false,
+            ])
+            ->order(['Users.created' => 'ASC'])
+            ->all();
+    }
+
+    /**
+     * Get all non-active users as a list.
+     * @return User[]
+     */
+    public function findNonActiveUsersAsList()
+    {
+        return $this->findNonActive()->toList();
     }
 }
