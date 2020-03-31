@@ -177,16 +177,6 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     /* PERSONAL FOLDER */
     /* ************************************************************** */
 
-    public function testDeleteFolder_PersoSuccess1_DeleteFolder()
-    {
-        $folder = $this->insertPersoSuccess1Fixture();
-
-        $userId = UuidFactory::uuid('user.id.ada');
-        $uac = new UserAccessControl(Role::USER, $userId);
-        $this->service->delete($uac, $folder->id);
-        $this->assertFolderNotExist($folder->id);
-    }
-
     private function insertPersoSuccess1Fixture()
     {
         // Ada has access to folder A as a OWNER
@@ -196,6 +186,16 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userId => Permission::OWNER]);
 
         return $folderA;
+    }
+
+    public function testDeleteFolder_PersoSuccess1_DeleteFolder()
+    {
+        $folder = $this->insertPersoSuccess1Fixture();
+
+        $userId = UuidFactory::uuid('user.id.ada');
+        $uac = new UserAccessControl(Role::USER, $userId);
+        $this->service->delete($uac, $folder->id);
+        $this->assertFolderNotExist($folder->id);
     }
 
     public function testDeleteFolder_PersoSuccess2_NoCascadeMoveChildrenToRoot()
@@ -300,7 +300,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     /* SHARED FOLDER */
     /* ************************************************************** */
 
-    public function testDeleteFolder_SharedError1_ParentFolderInsufficientPermission()
+    public function testDeleteFolder_SharedError1_InsufficientPermission()
     {
         list ($folderA) = $this->insertSharedErrorFixture();
 
@@ -341,7 +341,15 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         // A (Ada:O, Betty:R)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::READ]);
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
+            ['user_id' => $userCId, 'is_admin' => true],
+        ]]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [
+            $userAId => Permission::OWNER,
+            $userBId => Permission::READ,
+            $g1->id => Permission::READ
+        ]);
 
         return [$folderA];
     }
@@ -379,7 +387,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         return [$folderA, $folderB];
     }
 
-    public function testDeleteFolder_SharedSucces3_CascadeDelete()
+    public function testDeleteFolder_SharedSuccess3_CascadeDelete()
     {
         list ($folderA, $resource1, $folderB, $resource2) = $this->insertSharedSucces3Fixture();
 
