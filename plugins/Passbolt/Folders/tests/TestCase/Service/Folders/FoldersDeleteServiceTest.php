@@ -348,7 +348,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [
             $userAId => Permission::OWNER,
             $userBId => Permission::READ,
-            $g1->id => Permission::READ
+            $g1->id => Permission::READ,
         ]);
 
         return [$folderA];
