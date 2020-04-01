@@ -19,7 +19,9 @@ use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use function json_decode;
 
@@ -69,5 +71,19 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
         }
 
         return $settings;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailable()
+    {
+        try {
+            TableRegistry::getTableLocator()->get('OrganizationSettings');
+        } catch (Exception $exception) {
+            return false;
+        }
+
+        return true;
     }
 }

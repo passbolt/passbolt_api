@@ -17,12 +17,14 @@ namespace Passbolt\EmailNotificationSettings\Utility;
 
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource;
+use const ARRAY_FILTER_USE_KEY;
 
 class EmailNotificationSettings
 {
@@ -95,18 +97,20 @@ class EmailNotificationSettings
      */
     protected static function getSettings()
     {
-        $settings = static::getSettingsFromFile();
-        $settingsOverridenByfile = static::checkSettingsAreOverriddenByFile();
+        $settings = static::getSettingsFromConfig();
+        $settingsOverriddenByConfig = static::checkDefaultSettingsAreOverriddenByConfig();
         $settings['sources'] = [
             'database' => false,
-            'file' => $settingsOverridenByfile,
+            'file' => $settingsOverriddenByConfig,
         ];
 
-        try {
-            $dbSettings = static::getSettingsFromDb();
-            $settings['sources']['database'] = true;
-            $settings = array_replace_recursive($settings, $dbSettings);
-        } catch (RecordNotFoundException $exception) {
+        if (static::getDbSettingsSource()->isAvailable()) {
+            try {
+                $dbSettings = static::getSettingsFromDb();
+                $settings['sources']['database'] = true;
+                $settings = array_replace_recursive($settings, $dbSettings);
+            } catch (RecordNotFoundException $exception) {
+            }
         }
 
         return $settings;
@@ -117,9 +121,26 @@ class EmailNotificationSettings
      *
      * @return array
      */
-    protected static function getSettingsFromFile()
+    protected static function getSettingsFromConfig()
     {
-        return static::getConfigSettingsSource()->read();
+        return static::sanitizeSettings(static::getConfigSettingsSource()->read());
+    }
+
+    /**
+     * Sanitize the provided settings and filter out the settings which does not exist
+     * @param array $settings Settings to sanitize
+     * @return array
+     */
+    protected static function sanitizeSettings(array $settings)
+    {
+        $default = Hash::flatten(static::getSettingsFromDefault());
+        $settings = Hash::flatten($settings);
+
+        $filteredSettings = array_filter($settings, function ($key) use ($default) {
+            return array_key_exists($key, $default);
+        }, ARRAY_FILTER_USE_KEY);
+
+        return Hash::expand($filteredSettings);
     }
 
     /**
@@ -143,7 +164,7 @@ class EmailNotificationSettings
      */
     protected static function getSettingsFromDb()
     {
-        return static::getDbSettingsSource()->read();
+        return static::sanitizeSettings(static::getDbSettingsSource()->read());
     }
 
     /**
@@ -173,7 +194,9 @@ class EmailNotificationSettings
     protected static function getDefaultSettingsSource()
     {
         if (!static::$defaultSettingsSource) {
-            static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(new EmailNotificationSettingsForm());
+            static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(
+                new EmailNotificationSettingsForm(EventManager::instance())
+            );
         }
 
         return static::$defaultSettingsSource;
@@ -184,11 +207,13 @@ class EmailNotificationSettings
      *
      * @return bool
      */
-    protected static function checkSettingsAreOverriddenByFile()
+    protected static function checkDefaultSettingsAreOverriddenByConfig()
     {
-        $flatFileSettings = Hash::flatten(static::getSettingsFromFile());
         $flatDefaultSettings = Hash::flatten(static::getSettingsFromDefault());
-        $diff = array_diff_assoc($flatFileSettings, $flatDefaultSettings);
+
+        $flatFileSettings = Hash::flatten(static::getSettingsFromConfig());
+
+        $diff = array_diff_assoc($flatDefaultSettings, $flatFileSettings);
 
         return count($diff) !== 0;
     }
@@ -221,8 +246,7 @@ class EmailNotificationSettings
      */
     public static function isConfigKeyValid(string $key)
     {
-        // for lookups from a form, transform the $key to dot delimited format
-        return Hash::check(static::getSettingsFromFile(), static::underscoreToDottedFormat($key));
+        return Hash::check(static::getSettingsFromDefault(), static::underscoreToDottedFormat($key));
     }
 
     /**
