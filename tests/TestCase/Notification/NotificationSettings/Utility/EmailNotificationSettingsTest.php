@@ -18,13 +18,19 @@ namespace App\Test\TestCase\Notification\NotificationSettings\Utility;
 use App\Model\Entity\Role;
 use App\Model\Table\OrganizationSettingsTable;
 use App\Model\Table\UsersTable;
+use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use EmailQueue\Model\Table\EmailQueueTable;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -49,6 +55,14 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
 
         /** @var UsersTable Users */
         $this->Users = TableRegistry::getTableLocator()->get('Users');
+
+        EventManager::instance()
+            ->on(new CommentNotificationSettingsDefinition())
+            ->on(new GroupNotificationSettingsDefinition())
+            ->on(new GeneralNotificationSettingsDefinition())
+            ->on(new ResourceNotificationSettingsDefinition())
+            ->on(new UserNotificationSettingsDefinition())
+            ->on(new AdminNotificationSettingsDefinition());
     }
 
     public function tearDown()
@@ -65,23 +79,23 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     public function testNotificationSettingReturnsConfigSetting()
     {
         $cases = [
-            'show_comment' => true,
-            'show_description' => true,
-            'show_secret' => true,
-            'show_uri' => true,
-            'show_username' => true,
-            'send_comment_add' => true,
-            'send_password_create' => true,
-            'send_password_share' => true,
-            'send_password_update' => true,
-            'send_password_delete' => true,
-            'send_user_create' => true,
-            'send_user_recover' => true,
-            'send_group_delete' => true,
-            'send_group_user_add' => true,
-            'send_group_user_delete' => true,
-            'send_group_user_update' => true,
-            'send_group_manager_update' => true,
+            'show.comment' => true,
+            'show.description' => true,
+            'show.secret' => true,
+            'show.uri' => true,
+            'show.username' => true,
+            'send.comment.add' => true,
+            'send.password.create' => true,
+            'send.password.share' => true,
+            'send.password.update' => true,
+            'send.password.delete' => true,
+            'send.user.create' => true,
+            'send.user.recover' => true,
+            'send.group.delete' => true,
+            'send.group.user.add' => true,
+            'send.group.user.delete' => true,
+            'send.group.user.update' => true,
+            'send.group.manager.update' => true,
         ];
 
         foreach ($cases as $config => $expected) {
@@ -94,7 +108,8 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             ], $accessControl);
 
             $updatedTriggerSetting = EmailNotificationSettings::get($config);
-            $this->assertEquals($updatedTriggerSetting, !$originalConfigSetting, $config);
+            $expectedConfigSetting = !$originalConfigSetting;
+            $this->assertEquals($expectedConfigSetting, $updatedTriggerSetting, $config);
         }
     }
 
@@ -106,9 +121,9 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     public function testNotificationSettingReturnsDBSetting()
     {
         $cases = [
-            'send_comment_add' => false,
-            'send_password_create' => true,
-            'send_password_share' => false,
+            'send.comment.add' => false,
+            'send.password.create' => true,
+            'send.password.share' => false,
         ];
 
         $this->setEmailNotificationSettings($cases);
@@ -117,22 +132,6 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
 
             $this->assertEquals($expected, $triggerSettingFromDb, $config);
         }
-    }
-
-    /**
-     * @group notification
-     * @group notificationSettings
-     * @group notificationOrgSettings
-     */
-    public function testNotificationSettingPicksNewConfig()
-    {
-        $config = EmailNotificationSettings::get();
-        $this->assertFalse(Hash::check($config, 'send.new.config'));
-        Configure::write('passbolt.email.send.new.config', true);
-        EmailNotificationSettings::flushCache();
-        $config = EmailNotificationSettings::get();
-        $this->assertTrue(Hash::check($config, 'send.new.config'));
-        $this->assertTrue(Hash::get($config, 'send.new.config'));
     }
 
     /**

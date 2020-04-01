@@ -41,7 +41,12 @@ trait EmailNotificationSettingsTestTrait
      */
     protected function setEmailNotificationSettings(array $settings = [])
     {
+        $settingsToSave = [];
+        foreach ($settings as $key => $setting) {
+            $key = EmailNotificationSettings::underscoreToDottedFormat($key);
+            $settingsToSave[$key] = $setting;
+        }
         $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
-        EmailNotificationSettings::save($settings, $uac);
+        EmailNotificationSettings::save($settingsToSave, $uac);
     }
 }

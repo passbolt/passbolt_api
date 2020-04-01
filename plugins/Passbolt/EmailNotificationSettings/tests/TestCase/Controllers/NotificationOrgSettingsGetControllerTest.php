@@ -14,8 +14,15 @@
  */
 namespace Passbolt\EmailNotificationSettings\Test\TestCase\Controllers;
 
+use App\Notification\NotificationSettings\AdminNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\CommentNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GeneralNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\GroupNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\ResourceNotificationSettingsDefinition;
+use App\Notification\NotificationSettings\UserNotificationSettingsDefinition;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
+use Cake\Event\EventManager;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
@@ -36,6 +43,13 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->loadPlugins(['Passbolt/EmailNotificationSettings']);
+        EventManager::instance()
+            ->on(new CommentNotificationSettingsDefinition())
+            ->on(new GroupNotificationSettingsDefinition())
+            ->on(new GeneralNotificationSettingsDefinition())
+            ->on(new ResourceNotificationSettingsDefinition())
+            ->on(new UserNotificationSettingsDefinition())
+            ->on(new AdminNotificationSettingsDefinition());
     }
 
     public function tearDown()
@@ -135,7 +149,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
 
         // Mock File settings
         foreach ($cases as $case => $value) {
-            Configure::write('passbolt.email.' . $case, $value);
+            $configKey = EmailNotificationSettings::underscoreToDottedFormat($case);
+            Configure::write('passbolt.email.' . $configKey, $value);
         }
 
         $this->authenticateAs('admin');
@@ -163,7 +178,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
 
         // Mock DB settings
         foreach ($cases as $case => $value) {
-            Configure::write('passbolt.email.' . $case, $value);
+            $configKey = EmailNotificationSettings::underscoreToDottedFormat($case);
+            Configure::write('passbolt.email.' . $configKey, $value);
         }
 
         // Override with DB settings

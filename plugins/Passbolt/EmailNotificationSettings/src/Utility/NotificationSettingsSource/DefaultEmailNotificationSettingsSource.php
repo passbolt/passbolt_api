@@ -17,6 +17,7 @@ namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource;
 
 use Cake\Form\Form as CakeForm;
 use Cake\Form\Schema;
+use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionInterface;
 
@@ -80,6 +81,6 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
             $defaultSettings[EmailNotificationSettings::underscoreToDottedFormat($fieldName)] = $field['default'];
         }
 
-        return $defaultSettings;
+        return Hash::expand($defaultSettings);
     }
 }
