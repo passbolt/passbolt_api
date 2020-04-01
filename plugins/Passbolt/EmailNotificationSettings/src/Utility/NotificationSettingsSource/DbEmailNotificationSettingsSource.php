@@ -20,12 +20,26 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use function json_decode;
 
 class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSettingsSourceInterface, WriteableEmailNotificationSettingsSourceInterface
 {
     const NAMESPACE = 'emailNotification';
+
+    /**
+     * @var OrganizationSettingsTable
+     */
+    private $organizationSettingsTable;
+
+    /**
+     * DbEmailNotificationSettingsSource constructor.
+     */
+    public function __construct()
+    {
+        $this->organizationSettingsTable = TableRegistry::getTableLocator()->get('OrganizationSettings');
+    }
 
     /**
      * @param array $notificationSettingsData Notification settings data
@@ -41,9 +55,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
             throw new InternalErrorException('The Email Notification Settings configs are invalid');
         }
 
-        /** @var OrganizationSettingsTable $organizationSettings */
-        $organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $organizationSettings->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $data, $uac);
+        $this->organizationSettingsTable->createOrUpdateSetting(EmailNotificationSettings::NAMESPACE, $data, $uac);
     }
 
     /**
@@ -58,9 +70,7 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
      */
     public function read()
     {
-        /** @var OrganizationSettingsTable $organizationSettings */
-        $organizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
-        $notificationSettingFromDb = $organizationSettings->getFirstSettingOrFail(static::NAMESPACE);
+        $notificationSettingFromDb = $this->organizationSettingsTable->getFirstSettingOrFail(static::NAMESPACE);
         $settings = json_decode($notificationSettingFromDb->get('value'), true);
 
         // look for invalid structured string
@@ -69,5 +79,22 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
         }
 
         return $settings;
+    }
+
+    /**
+     * Check if the table exists with a simple query to the database.
+     * This check must be done before using this notification settings source to avoid
+     * DB exception raised during installation because of queries run against the table when it does exist .
+     * @return bool
+     */
+    public function isAvailable()
+    {
+        try {
+            $this->organizationSettingsTable->exists([]);
+        } catch (Exception $exception) {
+            return false;
+        }
+
+        return true;
     }
 }
