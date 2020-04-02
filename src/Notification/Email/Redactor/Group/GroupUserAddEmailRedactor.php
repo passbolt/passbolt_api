@@ -15,7 +15,6 @@
 
 namespace App\Notification\Email\Redactor\Group;
 
-use App\Controller\Groups\GroupsUpdateController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use App\Model\Table\GroupsTable;
@@ -24,6 +23,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Groups\GroupsUpdateService;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
@@ -57,7 +57,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     {
         return [
             GroupsTable::GROUP_CREATE_SUCCESS_EVENT_NAME,
-            GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME,
+            GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -70,7 +70,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
         $emailCollection = new EmailCollection();
 
         switch ($event->getName()) {
-            case GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME:
+            case GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME:
                 /** @var Group $resource */
                 $group = $event->getData('group');
                 $addedGroupsUsers = $event->getData('addedGroupsUsers'); // the list of added groups users

@@ -15,7 +15,6 @@
 
 namespace App\Notification\Email\Redactor\Group;
 
-use App\Controller\Groups\GroupsUpdateController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
@@ -23,6 +22,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -54,7 +54,7 @@ class GroupUpdateMembershipEmailRedactor implements SubscribedEmailRedactorInter
     public function getSubscribedEvents()
     {
         return [
-            GroupsUpdateController::UPDATE_SUCCESS_EVENT_NAME,
+            GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 

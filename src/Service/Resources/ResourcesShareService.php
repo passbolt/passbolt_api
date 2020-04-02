@@ -19,12 +19,12 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Entity\Role;
 use App\Model\Table\FavoritesTable;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourcesTable;
 use App\Model\Table\UsersTable;
+use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
@@ -44,6 +44,11 @@ class ResourcesShareService
      * @var GroupsUsersTable
      */
     private $groupsUsersTable;
+
+    /**
+     * @var PermissionsGetUsersIdsHavingAccessToService
+     */
+    private $permissionsGetUsersIdsHavingAccessToService;
 
     /**
      * @var PermissionsUpdatePermissionsService
@@ -77,6 +82,7 @@ class ResourcesShareService
     {
         $this->favoritesTable = TableRegistry::getTableLocator()->get('Favorites');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
@@ -97,11 +103,10 @@ class ResourcesShareService
     public function share(UserAccessControl $uac, string $resourceId, array $changes = [], array $secrets = [])
     {
         $resource = $this->getResource($resourceId);
-        $userIdsHavingAccessBefore = $this->getUsersIdsHavingAccessTo($resourceId);
 
-        $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, $secrets, $userIdsHavingAccessBefore) {
+        $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, $secrets) {
             $updatePermissionsResult = $this->updatePermissions($uac, $resource, $changes);
-            $this->updateSecrets($uac, $resource, $secrets, $userIdsHavingAccessBefore);
+            $this->updateSecrets($uac, $resource, $secrets);
             $this->postAccessesGranted($uac, $updatePermissionsResult['added']);
             $this->postAccessesRevoked($uac, $resource, $updatePermissionsResult['removed']);
         });
@@ -124,22 +129,6 @@ class ResourcesShareService
         }
 
         return $resource;
-    }
-
-    /**
-     * Return a list of users ids having access to a given resource/folder.
-     *
-     * @param string $acoForeignKey The target resource/folder id.
-     * @return array
-     */
-    private function getUsersIdsHavingAccessTo(string $acoForeignKey)
-    {
-        $findUsersOptions['filter']['has-access'] = [$acoForeignKey];
-
-        return $this->usersTable->findIndex(Role::USER, $findUsersOptions)
-            ->select('id')
-            ->extract('id')
-            ->toArray();
     }
 
     /**
@@ -187,11 +176,10 @@ class ResourcesShareService
      * @param UserAccessControl $uac The operator
      * @param resource $resource The target resource
      * @param array $data The list of secrets to add
-     * @param array $userIdsHavingAccessBefore The list of users ids having access to the resource before the share
      * @return void
      * @throws \Exception
      */
-    private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data, array $userIdsHavingAccessBefore = [])
+    private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data)
     {
         try {
             $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
@@ -324,12 +312,12 @@ class ResourcesShareService
     public function shareDryRun(UserAccessControl $uac, string $resourceId, array $changes = [])
     {
         $resource = $this->getResource($resourceId);
-        $userIdsHavingAccessBefore = $this->getUsersIdsHavingAccessTo($resourceId);
+        $userIdsHavingAccessBefore = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resourceId);
         $userIdsHavingAccessAfter = [];
 
         $this->resourcesTable->getConnection()->transactional(function () use ($uac, $resource, $changes, &$userIdsHavingAccessAfter) {
             $this->updatePermissions($uac, $resource, $changes);
-            $userIdsHavingAccessAfter = $this->getUsersIdsHavingAccessTo($resource->id);
+            $userIdsHavingAccessAfter = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
 
             // Don't commit the transaction.
             return false;

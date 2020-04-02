@@ -15,6 +15,7 @@
 namespace App\Test\Lib\Model;
 
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait GroupsUsersModelTrait
 {
@@ -51,7 +52,41 @@ trait GroupsUsersModelTrait
     }
 
     /**
-     * Assert a user is admin of group a group.
+     * Assert a user is member of a group.
+     * @param string $groupId The target group
+     * @param string $userId The target user
+     * @param bool $isAdmin Is the member also admin of the group
+     * @return bool
+     */
+    protected function assertUserIsMemberOf(string $groupId, string $userId, bool $isAdmin = false)
+    {
+        $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $count = $groupsUsersTable->find()->where([
+            'user_id' => $userId,
+            'group_id' => $groupId,
+            'is_admin' => $isAdmin,
+        ])->count();
+        $this->assertEquals(1, $count);
+    }
+
+    /**
+     * Assert a user is not member of a group.
+     * @param string $groupId The target group
+     * @param string $userId The target user
+     * @return bool
+     */
+    protected function assertUserIsNotMemberOf(string $groupId, string $userId)
+    {
+        $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $count = $groupsUsersTable->find()->where([
+            'user_id' => $userId,
+            'group_id' => $groupId,
+        ])->count();
+        $this->assertEquals(0, $count);
+    }
+
+    /**
+     * Assert a user is admin of a group.
      * @param string $groupId
      * @param string $userId
      */
