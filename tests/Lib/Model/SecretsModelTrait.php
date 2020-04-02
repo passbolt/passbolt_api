@@ -30,8 +30,13 @@ trait SecretsModelTrait
     public function addSecret($data = [], $options = [])
     {
         $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        $secret = self::getDummySecretEntity($data, $options);
 
+        $secret = $secretsTable->findByResourceIdAndUserId($data['resource_id'], $data['user_id'])->first();
+        if (!empty($secret)) {
+            return $secret;
+        }
+
+        $secret = self::getDummySecretEntity($data, $options);
         $secretsTable->saveOrFail($secret, ['checkRules' => false]);
 
         return $secret;
@@ -113,7 +118,8 @@ W3AI8+rWjK8MGH2T88hCYI/6
      */
     protected function assertSecretExists($resourceId, $userId)
     {
-        $secret = $this->Secrets->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+        $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $secret = $secretsTable->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
         $this->assertNotEmpty($secret);
     }
 
@@ -124,7 +130,8 @@ W3AI8+rWjK8MGH2T88hCYI/6
      */
     protected function assertSecretNotExist($resourceId, $userId)
     {
-        $secret = $this->Secrets->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
+        $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $secret = $secretsTable->find()->where(['resource_id' => $resourceId, 'user_id' => $userId])->first();
         $this->assertEmpty($secret);
     }
 }

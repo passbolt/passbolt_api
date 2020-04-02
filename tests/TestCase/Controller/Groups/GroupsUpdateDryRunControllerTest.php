@@ -22,7 +22,10 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users', 'app.Base/Secrets'];
+    public $fixtures = [
+        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
+        'app.Base/Users', 'app.Base/Secrets', 'app.Base/OrganizationSettings',
+    ];
 
     public function setUp()
     {

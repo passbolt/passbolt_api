@@ -590,7 +590,7 @@ hcciUFw5
 
     public function testGroupsUpdateErrorDoesNotExistGroup()
     {
-        $this->authenticateAs('ada');
+        $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid();
         $this->putJson("/groups/$groupId.json");
         $this->assertError(404, 'The group does not exist.');

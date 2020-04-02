@@ -61,6 +61,11 @@ class PermissionsUpdatePermissionsService
      * @param string $acoForeignkey The target entity id
      * @param array $data The permissions to update
      * @return array
+     * [
+     *   added => <array> List of added permissions
+     *   deleted => <array> List of deleted permissions
+     *   updated => <array> List of updated permissions
+     * ]
      * @throws \Exception If something unexpected occurred
      */
     public function updatePermissions(UserAccessControl $uac, string $aco, string $acoForeignkey, array $data = [])
@@ -77,7 +82,7 @@ class PermissionsUpdatePermissionsService
                 $permission = $this->addPermission($uac, $rowIndex, $aco, $acoForeignkey, $row);
                 $addedPermissions[] = $permission;
             } else {
-                // If a property field is found and set to true, then delete the permission.
+                // If a property delete is found and set to true, then delete the permission.
                 // Otherwise update it.
                 $permission = $this->getPermission($rowIndex, $acoForeignkey, $permissionId);
                 $delete = Hash::get($row, 'delete');
@@ -165,9 +170,9 @@ class PermissionsUpdatePermissionsService
     }
 
     /**
-     * Delete a permission on an entity.
+     * Delete a permission.
      *
-     * @param Permission $permission The target permissoin
+     * @param Permission $permission The target permission
      * @return Permission
      * @throws Exception
      */
@@ -179,7 +184,7 @@ class PermissionsUpdatePermissionsService
     }
 
     /**
-     * Update a permission on an entity.
+     * Update a permission.
      *
      * @param UserAccessControl $uac The operator
      * @param int $rowIndexRef The row index in the request data

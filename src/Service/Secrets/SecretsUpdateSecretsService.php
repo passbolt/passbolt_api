@@ -17,16 +17,21 @@ namespace App\Service\Secrets;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\Role;
 use App\Model\Entity\Secret;
 use App\Model\Table\SecretsTable;
 use App\Model\Table\UsersTable;
+use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class SecretsUpdateSecretsService
 {
+    /**
+     * @var PermissionsGetUsersIdsHavingAccessToService
+     */
+    private $permissionsGetUsersIdsHavingAccessToService;
+
     /**
      * @var SecretsUpdateSecretsService
      */
@@ -43,15 +48,13 @@ class SecretsUpdateSecretsService
     private $usersTable;
 
     /**
-     * @param SecretsTable $secretsTable SecretsTable instance
+     * Instantiate the constructor
      */
-    public function __construct(SecretsTable $secretsTable = null)
+    public function __construct()
     {
+        $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretCreateService = new SecretsCreateService();
-        $this->secretsTable = $secretsTable;
-        if (is_null($this->secretsTable)) {
-            $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        }
+        $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 
@@ -60,7 +63,14 @@ class SecretsUpdateSecretsService
      *
      * @param UserAccessControl $uac The operator.
      * @param string $resourceId The resource to update the secrets for.
-     * @param array $data The list of secrets to add.
+     * @param array $data The list of secrets to add
+     * [
+     *   [
+     *     user_id <string> The user the secret is encrypted for
+     *     data <string> The encrypted secret
+     *   ],
+     *   ...
+     * ]
      * @return void
      * @throws \Exception If something unexpected occurred
      */
@@ -112,6 +122,20 @@ class SecretsUpdateSecretsService
     }
 
     /**
+     * Handle secrets validation errors.
+     *
+     * @param array $errors The list of errors
+     * @return void
+     * @throws ValidationException If the provided data does not validate.
+     */
+    private function handleValidationErrors(array $errors = [])
+    {
+        if (!empty($errors)) {
+            throw new CustomValidationException(__('Could not validate secrets data.'), $errors, $this->secretsTable);
+        }
+    }
+
+    /**
      * Add a secret for a resource and a user.
      *
      * @param UserAccessControl $uac The operator
@@ -138,20 +162,6 @@ class SecretsUpdateSecretsService
     }
 
     /**
-     * Handle secrets validation errors.
-     *
-     * @param array $errors The list of errors
-     * @return void
-     * @throws ValidationException If the provided data does not validate.
-     */
-    private function handleValidationErrors(array $errors = [])
-    {
-        if (!empty($errors)) {
-            throw new CustomValidationException(__('Could not validate secrets data.'), $errors, $this->secretsTable);
-        }
-    }
-
-    /**
      * Delete the secrets for which the users have no access.
      *
      * @param string $resourceId The target resource
@@ -159,27 +169,12 @@ class SecretsUpdateSecretsService
      */
     private function deleteOrphanSecrets(string $resourceId)
     {
-        $usersIds = $this->getUsersIdsHavingAccessTo($resourceId);
+        $usersIds = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resourceId);
+
         $this->secretsTable->deleteAll([
             'resource_id' => $resourceId,
             'user_id NOT IN' => $usersIds,
         ]);
-    }
-
-    /**
-     * Return a list of users ids having access to a given resource/folder.
-     *
-     * @param string $acoForeignKey The target resource/folder id.
-     * @return array
-     */
-    private function getUsersIdsHavingAccessTo(string $acoForeignKey)
-    {
-        $findUsersOptions['filter']['has-access'] = [$acoForeignKey];
-
-        return $this->usersTable->findIndex(Role::USER, $findUsersOptions)
-            ->select('id')
-            ->extract('id')
-            ->toArray();
     }
 
     /**
@@ -190,7 +185,7 @@ class SecretsUpdateSecretsService
      */
     private function assertAllSecretsAreProvided(string $resourceId)
     {
-        $usersIdsHavingAccess = $this->getUsersIdsHavingAccessTo($resourceId);
+        $usersIdsHavingAccess = $this->permissionsGetUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);
         $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)->extract('user_id')->toArray();
         sort($usersIdsHavingASecret);

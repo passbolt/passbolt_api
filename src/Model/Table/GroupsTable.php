@@ -151,10 +151,6 @@ class GroupsTable extends Table
             ),
             'group_unique'
         );
-        $rules->addUpdate([$this, 'atLeastOneAdminRule'], 'at_least_one_admin', [
-            'errorField' => 'groups_users',
-            'message' => __('A group manager must be provided.'),
-        ]);
         $rules->addUpdate(new IsNotSoftDeletedRule(), 'group_is_not_soft_deleted', [
             'table' => 'Groups',
             'errorField' => 'id',
