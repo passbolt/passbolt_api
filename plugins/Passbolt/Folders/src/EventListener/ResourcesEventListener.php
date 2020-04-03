@@ -28,7 +28,6 @@ use Passbolt\Folders\Service\Resources\ResourcesAfterUpdateService;
  * Listen when a resource is created or updated,
  * and use the request payload to create/delete relation between a resource and the given/existing parent.
  *
- * Class AddFolderParentIdBehavior
  * @package Passbolt\Folders\EventListener
  */
 class ResourcesEventListener implements EventListenerInterface

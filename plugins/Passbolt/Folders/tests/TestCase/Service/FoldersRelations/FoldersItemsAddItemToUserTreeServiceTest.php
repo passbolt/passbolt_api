@@ -90,7 +90,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list ($folderA, $userAId, $userBId) = $this->insertFixture_Folder_NoParentNoChild1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
 
         $this->assertItemIsInTrees($folderA->id, 2);
         $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId);
@@ -120,7 +120,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_HavingOneParent1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -157,7 +157,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_HavingOneParent2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userBId);
 
         // Assert Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
@@ -192,7 +192,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_HavingOneParent3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -240,7 +240,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_HavingMultipleParents1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -296,7 +296,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId, $userDId) = $this->insertFixture_Folder_HavingMultipleParents2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -359,7 +359,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_HavingChildren1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -400,7 +400,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder_HavingChildren2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -451,7 +451,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder_HavingChildren3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId, true);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId, true);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -503,7 +503,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId) = $this->insertFixture_Folder_HavingChildren4();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId, true);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId, true);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -567,7 +567,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_HavingChildren5();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 3);
@@ -615,7 +615,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_HavingParentsAndChildren1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userCId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userCId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -681,7 +681,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_HavingParentsAndChildren2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderC, $userCId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, $userCId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -756,7 +756,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_HavingParentsAndChildren3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderA, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $userBId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 3);
@@ -826,7 +826,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
             $this->insertFixture_Folder_HavingParentsAndChildren4();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $folderB, $userCId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $userCId);
 
         // Folder A.
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -911,7 +911,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($r1, $userAId, $userBId) = $this->insertFixture_Resource_NotParent1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         $this->assertItemIsInTrees($r1->id, 2);
         $this->assertFolderRelation($r1->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
@@ -941,7 +941,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $r1, $userAId, $userBId) = $this->insertFixture_Resource_HavingOneParent1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -978,7 +978,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $r1, $userAId, $userBId) = $this->insertFixture_Resource_HavingOneParent1_1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -1015,7 +1015,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $r1, $userAId, $userBId) = $this->insertFixture_Resource_HavingOneParent2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
@@ -1050,7 +1050,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $r1, $userAId, $userBId, $userCId) = $this->insertFixture_Resource_HavingOneParent3();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -1098,7 +1098,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $r1, $folderC, $userAId, $userBId, $userCId) = $this->insertFixture_Resource_HavingMultipleParents1();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
@@ -1154,7 +1154,7 @@ class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
         list($folderA, $r1, $folderC, $userAId, $userBId, $userCId, $userDId) = $this->insertFixture_Resource_HavingMultipleParents2();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->addItemToUserTree($uac, $r1, $userBId);
+        $this->service->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $r1->id, $userBId);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);

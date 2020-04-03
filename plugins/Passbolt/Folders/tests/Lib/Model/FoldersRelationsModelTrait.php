@@ -35,6 +35,11 @@ trait FoldersRelationsModelTrait
         $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $userId = Hash::get($data, 'user_id', '');
 
+        $folderRelation = $foldersRelationsTable->findByForeignIdAndUserId($data['foreign_id'], $data['user_id'])->first();
+        if (!empty($folderRelation)) {
+            return $folderRelation;
+        }
+
         // If build folders relation for an entire group.
         if (self::isGroup($userId)) {
             $grousUsersIds = $groupsUsersTable->findByGroupId($userId)->extract('user_id')->toArray();
