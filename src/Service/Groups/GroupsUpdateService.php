@@ -32,6 +32,8 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateService
 {
+    const AFTER_GROUP_USER_ADDED_EVENT_NAME = 'Service.GroupsUpdate.afterGroupUserAdded';
+    const AFTER_GROUP_USER_REMOVED_EVENT_NAME = 'Service.GroupsUpdate.afterGroupUserRemoved';
     const UPDATE_SUCCESS_EVENT_NAME = 'GroupsUpdateController.update.success';
 
     /**
@@ -275,8 +277,8 @@ class GroupsUpdateService
     private function postGroupUsersAdded(UserAccessControl $uac, Group $group, array $addedGroupUsers = [])
     {
         foreach ($addedGroupUsers as $groupUser) {
-            $eventData = ['group_user' => $groupUser, 'accessControl' => $uac];
-            $event = new Event('Service.GroupsUpdate.afterGroupUserAdded', $this, $eventData);
+            $eventData = ['groupUser' => $groupUser, 'accessControl' => $uac];
+            $event = new Event(self::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this, $eventData);
             $this->groupsTable->getEventManager()->dispatch($event);
         }
     }
@@ -314,8 +316,8 @@ class GroupsUpdateService
             }
         }
 
-        $eventData = ['group_user' => $groupUser, 'accessControl' => $uac];
-        $event = new Event('Service.GroupsUpdate.afterGroupUserRemoved', $this, $eventData);
+        $eventData = ['groupUser' => $groupUser, 'accessControl' => $uac];
+        $event = new Event(self::AFTER_GROUP_USER_REMOVED_EVENT_NAME, $this, $eventData);
         $this->groupsTable->getEventManager()->dispatch($event);
     }
 

@@ -118,6 +118,7 @@ class ShareController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
         // The user can access the resource.
+        // @todo check, but it should be a forbidden
         if (!$this->Resources->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, $resourceId, $this->User->id(), Permission::OWNER)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

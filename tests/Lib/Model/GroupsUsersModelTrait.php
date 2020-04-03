@@ -19,6 +19,47 @@ use Cake\ORM\TableRegistry;
 
 trait GroupsUsersModelTrait
 {
+    /**
+     * Add a dummy group user.
+     *
+     * @param array $data The group user data
+     * @param array $options The entity options
+     * @return Group
+     */
+    public function addGroupUser($data = [], $options = [])
+    {
+        $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $groupUser = self::getDummyGroupUserEntity($data, $options);
+
+        $groupsUsersTable->save($groupUser, ['checkRules' => true]);
+
+        return $groupUser;
+    }
+
+    /**
+     * Get a new group user entity
+     *
+     * @param array $data The group user data.
+     * @param array $options The new entity options.
+     * @return Resouce
+     */
+    public function getDummyGroupUserEntity($data = [], $options = [])
+    {
+        $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $defaultOptions = [
+            'validate' => false,
+            'accessibleFields' => [
+                'group_id' => true,
+                'user_id' => true,
+                'is_admin' => true,
+            ],
+        ];
+
+        $data = self::getDummyGroupUserData($data);
+        $options = array_merge($defaultOptions, $options);
+
+        return $groupsUsersTable->newEntity($data, $options);
+    }
 
     /**
      * Get a dummy group user with test data.
@@ -27,7 +68,7 @@ trait GroupsUsersModelTrait
      * @param array $data Custom data that will be merged with the default content.
      * @return array Comment data
      */
-    public static function getDummyGroupUser($data = [])
+    public static function getDummyGroupUserData($data = [])
     {
         $entityContent = [
             'group_id' => UuidFactory::uuid('group.id.board'),
