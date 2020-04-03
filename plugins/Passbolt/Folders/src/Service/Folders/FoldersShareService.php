@@ -32,6 +32,7 @@ use Cake\Utility\Hash;
 use Exception;
 use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
@@ -307,6 +308,6 @@ class FoldersShareService
      */
     private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId, bool $isPersonal = false)
     {
-        $this->foldersRelationsAddItemToUserTreeService->addItemToUserTree($uac, $folder, $userId, $isPersonal);
+        $this->foldersRelationsAddItemToUserTreeService->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id, $userId, $isPersonal);
     }
 }

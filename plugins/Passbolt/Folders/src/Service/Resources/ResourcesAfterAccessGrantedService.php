@@ -25,6 +25,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Folders\Model\Behavior\ContainFolderParentIdBehavior;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
 
 class ResourcesAfterAccessGrantedService
@@ -121,6 +122,6 @@ class ResourcesAfterAccessGrantedService
      */
     private function addResourceToUserTree(UserAccessControl $uac, \App\Model\Entity\Resource $resource, string $userId)
     {
-        $this->foldersRelationsAddItemToUserTree->addItemToUserTree($uac, $resource, $userId);
+        $this->foldersRelationsAddItemToUserTree->addItemToUserTree($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $userId);
     }
 }

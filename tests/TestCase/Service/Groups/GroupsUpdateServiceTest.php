@@ -18,12 +18,14 @@ namespace App\Test\TestCase\Service\Groups;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Model\Table\GroupsTable;
 use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\SecretsTable;
 use App\Service\Groups\GroupsUpdateService;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -39,6 +41,11 @@ class GroupsUpdateServiceTest extends AppTestCase
         'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Favorites', 'app.Base/Avatars', 'app.Base/EmailQueue', 'app.Base/OrganizationSettings',
     ];
+
+    /**
+     * @var GroupsTable
+     */
+    private $groupsTable;
 
     /**
      * @var GroupsUsersTable
@@ -58,9 +65,39 @@ class GroupsUpdateServiceTest extends AppTestCase
     public function setUp()
     {
         parent::setUp();
+        $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
         $this->service = new GroupsUpdateService();
+    }
+
+    /* ************************************************************** */
+    /* COMMON */
+    /* ************************************************************** */
+
+    public function testUpdateSuccess_Common_EventsAreFired()
+    {
+        // Enable event tracking
+        $this->groupsTable->getEventManager()->setEventList(new EventList());
+
+        list($r1, $r2, $g1, $userAId, $userBId, $userCId) = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        // Events are trigger when a user is added or removed from a group
+        $userAGroupUser = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first();
+        $userDId = UuidFactory::uuid('user.id.dame');
+        $changes = [
+            ['id' => $userAGroupUser->id, 'delete' => true],
+            ['user_id' => $userDId, 'is_admin' => true],
+        ];
+        $secrets = [
+            ['resource_id' => $r1->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ['resource_id' => $r2->id, 'user_id' => $userDId, 'data' => Hash::get($this->getDummySecretData(), 'data')],
+            ];
+
+        $this->service->update($uac, $g1->id, [], $changes, $secrets);
+        $this->assertEventFired(GroupsUpdateService::AFTER_GROUP_USER_REMOVED_EVENT_NAME, $this->groupsTable->getEventManager());
+        $this->assertEventFired(GroupsUpdateService::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this->groupsTable->getEventManager());
     }
 
     /* ************************************************************** */
