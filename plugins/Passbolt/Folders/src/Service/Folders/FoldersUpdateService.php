@@ -303,11 +303,16 @@ class FoldersUpdateService
         // If the destination folder is not the root, then move the folder into the destination folder for users who can
         // see it.
         if (!is_null($folderParentId)) {
-            $usersSeeingDestination = $this->foldersRelationsTable->findByForeignId($folderParentId)->select('user_id');
-            $this->foldersRelationsTable->updateAll(['folder_parent_id' => $folderParentId], [
-                'foreign_id' => $folder->id,
-                'user_id IN' => $usersSeeingDestination,
-            ]);
+            $usersSeeingDestination = $this->foldersRelationsTable->findByForeignId($folderParentId)
+                ->select('user_id')
+                ->extract('user_id')
+                ->toArray();
+            if (!empty($usersSeeingDestination)) {
+                $this->foldersRelationsTable->updateAll(['folder_parent_id' => $folderParentId], [
+                    'foreign_id' => $folder->id,
+                    'user_id IN' => $usersSeeingDestination,
+                ]);
+            }
         }
 
         // Move the folder to the root for rest of users who have it organized as the operator but cannot see the
