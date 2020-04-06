@@ -12,18 +12,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
+use App\Utility\Purifier;
+use Cake\Core\Configure;
+use Cake\Http\Exception\InternalErrorException;
 
-Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilder $routes) {
-    $routes->setExtensions(['json']);
+if (!isset($report)) {
+    throw new InternalErrorException();
+}
 
-    /**
-     * Generate and return a report
-     *
-     * @uses \Passbolt\Reports\Controller\Reports\AdminReportsViewController::getReport()
-     */
-    $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'AdminReportsView', 'action' => 'getReport'])
-        ->setMethods(['GET'])
-        ->setPass(['reportSlug']);
-});
+$this->assign('title',	Purifier::clean($report['name']));
+$this->Html->css('themes/default/api_reports.min.css?v='
+    . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
+
+$subReports = $report['data'] ?? [];
+
+foreach ($subReports as $report) {
+    $reportElement = Purifier::clean($report['slug']);
+    echo $this->element($reportElement, [ 'report' => $report]);
+}
+?>

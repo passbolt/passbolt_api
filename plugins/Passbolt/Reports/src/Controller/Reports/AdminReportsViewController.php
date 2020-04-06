@@ -12,29 +12,29 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-
 namespace Passbolt\Reports\Controller\Reports;
 
 use App\Controller\AppController;
+use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\UsersTable;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
 use Exception;
 use InvalidArgumentException;
-use Passbolt\Reports\Factory\ReportServiceFactory;
-use Passbolt\Reports\Utility\Report;
-use Passbolt\Reports\Utility\ReportServiceInterface;
+use Passbolt\Reports\Utility\ReportInterface;
+use Passbolt\Reports\Utility\ReportViewService;
 
 class AdminReportsViewController extends AppController
 {
     const DEFAULT_LAYOUT = 'Passbolt/Reports.Reports/ReportsLayout';
 
     /**
-     * @var ReportServiceFactory
+     * @var ReportViewService
      */
-    private $generateReportService;
+    private $reportViewService;
 
     /**
      * @var UsersTable
@@ -48,8 +48,8 @@ class AdminReportsViewController extends AppController
     public function initialize()
     {
         parent::initialize();
-        $this->generateReportService = new ReportServiceFactory();
-        $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
+        $this->reportViewService = new ReportViewService();
+        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
@@ -60,18 +60,25 @@ class AdminReportsViewController extends AppController
      */
     public function getReport(string $reportSlug)
     {
-        $uac = $this->User->getAccessControl();
+        if ($this->User->role() !== Role::ADMIN) {
+            throw new ForbiddenException(__('Only administrators can view admin reports.'));
+        }
 
         try {
-            $reportService = $this->generateReportService->get($reportSlug);
+            $report = $this->reportViewService->getReport($reportSlug);
         } catch (InvalidArgumentException $exception) {
             throw new BadRequestException(__('The requested report `{0}` does not exist.', $reportSlug));
         }
 
-        /** @var User $user */
-        $user = $this->usersTable->get($uac->userId());
+        /** @var FindIndexOptions $options */
+        $options = $this->formatRequestData($report->getSupportedOptions());
 
-        $report = $reportService->createReport($user, $this->formatRequestData($reportService));
+        /** @var User $creator */
+        $creator = $this->usersTable->get($this->User->id(), ['contain' => 'Profiles']);
+
+        $report
+            ->setOptions($options)
+            ->setCreator($creator);
 
         if (!$this->request->is('json')) {
             $this->renderReportInHtml($report);
@@ -81,30 +88,32 @@ class AdminReportsViewController extends AppController
     }
 
     /**
-     * @param ReportServiceInterface $reportService An instance of report service
+     * Format request data
+     * Get supported options from report service and extract / validate them using QueryString component
+     *
+     * @param FindIndexOptions $allowedOptions allowed options
      * @return FindIndexOptions
      */
-    private function formatRequestData(ReportServiceInterface $reportService)
+    private function formatRequestData(FindIndexOptions $allowedOptions)
     {
-        $findIndexOptions = $reportService->getSupportedOptions();
-        $options = $this->QueryString->get($findIndexOptions->toArray(), $findIndexOptions->getFilterValidators());
+        $options = $this->QueryString->get($allowedOptions->toArray(), $allowedOptions->getFilterValidators());
 
         return FindIndexOptions::createFromArray($options);
     }
 
     /**
-     * @param Report $report Instance of Report to render
+     * Set view variables, theme and template for html render
+     *
+     * @param ReportInterface $report Instance of Report to render
      * @return void
      */
-    private function renderReportInHtml(Report $report)
+    private function renderReportInHtml(ReportInterface $report)
     {
-        // Rendering in HTML
         $this->viewBuilder()
             ->setTemplatePath('Reports/html')
             ->setLayout(static::DEFAULT_LAYOUT)
             ->setTheme(false)
-            ->setTemplate($report->getTemplate())
-            ->setVars($report->jsonSerialize());
-        $this->render();
+            ->setTemplate($report->getTemplate());
+        $this->set('report', $report->createReport());
     }
 }

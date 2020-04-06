@@ -12,18 +12,5 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
-
-Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilder $routes) {
-    $routes->setExtensions(['json']);
-
-    /**
-     * Generate and return a report
-     *
-     * @uses \Passbolt\Reports\Controller\Reports\AdminReportsViewController::getReport()
-     */
-    $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'AdminReportsView', 'action' => 'getReport'])
-        ->setMethods(['GET'])
-        ->setPass(['reportSlug']);
-});
+pr($report);
+?>

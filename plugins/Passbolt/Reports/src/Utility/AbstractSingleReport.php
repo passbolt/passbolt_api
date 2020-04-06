@@ -12,18 +12,27 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
+namespace Passbolt\Reports\Utility;
 
-Router::plugin('Passbolt/Reports', ['path' => '/reports'], function (RouteBuilder $routes) {
-    $routes->setExtensions(['json']);
+abstract class AbstractSingleReport extends AbstractReport
+{
+    const SINGLE_REPORT_TEMPLATE = 'Passbolt/Reports.SingleReport';
+    const SINGLE_REPORT_TYPE = 'Single';
 
     /**
-     * Generate and return a report
+     * Return the template associated to the generated report by the report generator.
      *
-     * @uses \Passbolt\Reports\Controller\Reports\AdminReportsViewController::getReport()
+     * @return string
      */
-    $routes->connect('/:reportSlug', ['prefix' => 'Reports', 'controller' => 'AdminReportsView', 'action' => 'getReport'])
-        ->setMethods(['GET'])
-        ->setPass(['reportSlug']);
-});
+    public function getTemplate() {
+        return $this->template ?? self::SINGLE_REPORT_TEMPLATE;
+    }
+
+    /**
+     * @inheritDoc
+     * @return string the report type, "single" in this case
+     */
+    public function getType() {
+        return self::SINGLE_REPORT_TYPE;
+    }
+}
