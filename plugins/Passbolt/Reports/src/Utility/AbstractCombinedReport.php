@@ -14,7 +14,7 @@
  */
 namespace Passbolt\Reports\Utility;
 
-abstract class AbstractCombinedReport extends AbstractReport implements CombinedReport
+abstract class AbstractCombinedReport extends AbstractReport implements CombinedReportInterface
 {
     const COMBINED_REPORT_TEMPLATE = 'Passbolt/Reports.CombinedReport';
     const COMBINED_REPORT_TYPE = 'combined';
@@ -49,6 +49,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
     public function addReport(ReportInterface $report)
     {
         $this->subReports[] = $report;
+
         return $this;
     }
 
@@ -69,6 +70,7 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
         foreach ($this->subReports as $reports) {
             $data[] = $reports->createReport();
         }
+
         return $data;
     }
 }

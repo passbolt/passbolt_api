@@ -21,23 +21,23 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments'
+        'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments',
     ];
 
-    public function testReportsViewControllerThrowErrorWhenNotAuthenticated()
+    public function testReportsViewControllerError_ThrowErrorWhenNotAuthenticated()
     {
         $this->getJson('/reports/' . EmployeeOnBoardingReport::SLUG . '.json');
         $this->assertAuthenticationError();
     }
 
-    public function testReportsViewControllerThrowUnauthorizedErrorWhenNotAdmin()
+    public function testReportsViewControllerError_ThrowUnauthorizedErrorWhenNotAdmin()
     {
         $this->authenticateAs('ada');
         $this->getJson('/reports/' . EmployeeOnBoardingReport::SLUG . '.json');
         $this->assertError(403, 'Only administrators can view admin reports.');
     }
 
-    public function testThatViewReportReturnBadRequestWhenReportSlugIsNotSupported()
+    public function testReportsViewControllerError_BadRequestWhenSlugIsNotSupported()
     {
         $this->authenticateAs('admin');
         $this->getJson('/reports/this-report-does-not-exist.json');
@@ -47,7 +47,7 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     public function testReportsViewControllerSuccess()
     {
         $this->authenticateAs('admin');
-        $this->getJson('/reports/'. EmployeeOnBoardingReport::SLUG . '.json?api-version=2');
+        $this->getJson('/reports/' . EmployeeOnBoardingReport::SLUG . '.json?api-version=2');
         $this->assertResponseSuccess();
     }
 }

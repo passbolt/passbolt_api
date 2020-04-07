@@ -12,16 +12,21 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility\CombinedReports;
+namespace Passbolt\Reports\Utility;
 
-use Passbolt\Reports\Utility\AbstractCombinedReport;
-
-class EmptyCombinedReport extends AbstractCombinedReport
+interface CombinedReportInterface
 {
     /**
-     * EmptyCombinedReport constructor
+     * Add a report to the combined report list
+     *
+     * @param ReportInterface $report report
+     * @return ReportInterface $this
      */
-    public function __construct()
-    {
-    }
+    public function addReport(ReportInterface $report);
+
+    /**
+     * Get the sub reports list
+     * @return array of ReportServiceInterface
+     */
+    public function getReports();
 }

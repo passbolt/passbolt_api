@@ -12,16 +12,16 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility\CombinedReports;
+namespace Passbolt\Reports\Test\TestCase\Utility\SingleReports\Users;
 
-use Passbolt\Reports\Utility\AbstractCombinedReport;
+use Cake\TestSuite\TestCase;
 
-class EmptyCombinedReport extends AbstractCombinedReport
+class ActiveUsersCountReportTest extends TestCase
 {
-    /**
-     * EmptyCombinedReport constructor
-     */
-    public function __construct()
+    public $fixtures = [];
+
+    public function testReportsActiveUsersCountReportIncomplete()
     {
+        $this->markTestIncomplete();
     }
 }

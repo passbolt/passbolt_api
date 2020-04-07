@@ -14,12 +14,11 @@
  */
 namespace Passbolt\Reports\Utility;
 
-use App\Model\Entity\User;
 use Passbolt\Reports\Utility\CombinedReports\EmployeeOnBoardingReport;
 use Passbolt\Reports\Utility\CombinedReports\EmptyCombinedReport;
-use Passbolt\Reports\Utility\CombinedReports\Users\ActiveUsersCountReport;
-use Passbolt\Reports\Utility\CombinedReports\Users\NonActiveUsersCountReport;
-use Passbolt\Reports\Utility\CombinedReports\Users\NonActiveUsersListReport;
+use Passbolt\Reports\Utility\SingleReports\Users\ActiveUsersCountReport;
+use Passbolt\Reports\Utility\SingleReports\Users\NonActiveUsersCountReport;
+use Passbolt\Reports\Utility\SingleReports\Users\NonActiveUsersListReport;
 
 /**
  * Contains the list of all available report services.
@@ -45,7 +44,7 @@ class ReportPool
 
             // Single reports
             ActiveUsersCountReport::SLUG => function () {
-              return new ActiveUsersCountReport();
+                return new ActiveUsersCountReport();
             },
             NonActiveUsersCountReport::SLUG => function () {
                 return new NonActiveUsersCountReport();
@@ -55,13 +54,13 @@ class ReportPool
             },
 
             // The sky the limit reports -> make setCallableGetData
-            'my-dynamic-report' => function() {
+            'my-dynamic-report' => function () {
                 return (new EmptyCombinedReport())
                     ->setSlug('my-dynamic-report')
                     ->setDescription('Out of control reports')
                     ->setName('No limits')
                     ->addReport(new NonActiveUsersCountReport());
-            }
+            },
         ];
     }
 }

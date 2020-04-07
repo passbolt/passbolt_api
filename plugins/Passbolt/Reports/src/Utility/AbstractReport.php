@@ -57,6 +57,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
+
         return $this;
     }
 
@@ -66,6 +67,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     public function setName(string $name)
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -75,6 +77,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     public function setDescription(string $description)
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     public function setTemplate(string $template)
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -93,6 +97,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     public function setOptions(FindIndexOptions $options)
     {
         $this->options = $options;
+
         return $this;
     }
 
@@ -102,6 +107,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     public function setCreator(User $creator)
     {
         $this->creator = $creator;
+
         return $this;
     }
 
@@ -116,7 +122,8 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
@@ -139,7 +146,8 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     /**
      * @return User|null
      */
-    public function getCreator() {
+    public function getCreator()
+    {
         return $this->creator ?? null;
     }
 
@@ -154,7 +162,7 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
             'name' => $this->getName(),
             'description' => $this->getDescription(),
             'created' => FrozenTime::now(),
-            'data' => $this->getData()
+            'data' => $this->getData(),
         ];
 
         // Creator is optional
@@ -179,7 +187,8 @@ abstract class AbstractReport implements ReportInterface, JsonSerializable
     /**
      * @inheritDoc
      */
-    public function getSlug() {
+    public function getSlug()
+    {
         return $this->slug;
     }
 

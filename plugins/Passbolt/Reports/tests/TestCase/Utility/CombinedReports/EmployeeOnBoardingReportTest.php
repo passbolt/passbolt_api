@@ -12,21 +12,16 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility;
+namespace Passbolt\Reports\Test\TestCase\Utility\CombinedReports;
 
-interface CombinedReport
+use Cake\TestSuite\TestCase;
+
+class EmployeeOnBoardingReportTest extends TestCase
 {
-    /**
-     * Add a report to the combined report list
-     *
-     * @param ReportInterface $report
-     * @return ReportInterface $this
-     */
-    public function addReport(ReportInterface $report);
+    public $fixtures = [];
 
-    /**
-     * Get the sub reports list
-     * @return array of ReportServiceInterface
-     */
-    public function getReports();
+    public function testReportsEmployeeOnBoardingReportIncomplete()
+    {
+        $this->markTestIncomplete();
+    }
 }

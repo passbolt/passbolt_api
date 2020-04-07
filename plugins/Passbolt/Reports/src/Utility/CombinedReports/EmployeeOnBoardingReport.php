@@ -15,9 +15,9 @@
 namespace Passbolt\Reports\Utility\CombinedReports;
 
 use Passbolt\Reports\Utility\AbstractCombinedReport;
-use Passbolt\Reports\Utility\CombinedReports\Users\ActiveUsersCountReport;
-use Passbolt\Reports\Utility\CombinedReports\Users\NonActiveUsersCountReport;
-use Passbolt\Reports\Utility\CombinedReports\Users\NonActiveUsersListReport;
+use Passbolt\Reports\Utility\SingleReports\Users\ActiveUsersCountReport;
+use Passbolt\Reports\Utility\SingleReports\Users\NonActiveUsersCountReport;
+use Passbolt\Reports\Utility\SingleReports\Users\NonActiveUsersListReport;
 
 class EmployeeOnBoardingReport extends AbstractCombinedReport
 {

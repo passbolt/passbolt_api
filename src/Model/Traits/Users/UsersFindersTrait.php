@@ -520,5 +520,4 @@ trait UsersFindersTrait
 
         return $user;
     }
-
 }

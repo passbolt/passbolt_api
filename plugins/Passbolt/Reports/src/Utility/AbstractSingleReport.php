@@ -17,14 +17,15 @@ namespace Passbolt\Reports\Utility;
 abstract class AbstractSingleReport extends AbstractReport
 {
     const SINGLE_REPORT_TEMPLATE = 'Passbolt/Reports.SingleReport';
-    const SINGLE_REPORT_TYPE = 'Single';
+    const SINGLE_REPORT_TYPE = 'single';
 
     /**
      * Return the template associated to the generated report by the report generator.
      *
      * @return string
      */
-    public function getTemplate() {
+    public function getTemplate()
+    {
         return $this->template ?? self::SINGLE_REPORT_TEMPLATE;
     }
 
@@ -32,7 +33,8 @@ abstract class AbstractSingleReport extends AbstractReport
      * @inheritDoc
      * @return string the report type, "single" in this case
      */
-    public function getType() {
+    public function getType()
+    {
         return self::SINGLE_REPORT_TYPE;
     }
 }

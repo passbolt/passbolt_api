@@ -12,15 +12,15 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
  */
-namespace Passbolt\Reports\Utility\CombinedReports\Users;
+namespace Passbolt\Reports\Utility\SingleReports\Users;
 
 use App\Model\Table\UsersTable;
 use Cake\ORM\TableRegistry;
 use Passbolt\Reports\Utility\AbstractSingleReport;
 
-class ActiveUsersCountReport extends AbstractSingleReport
+class NonActiveUsersListReport extends AbstractSingleReport
 {
-    const SLUG = 'active-users-count';
+    const SLUG = 'non-active-users-list';
 
     /**
      * @var UsersTable
@@ -34,8 +34,8 @@ class ActiveUsersCountReport extends AbstractSingleReport
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         $this->setSlug(self::SLUG)
-            ->setName(__('Active user count.'))
-            ->setDescription(__('Total number of users who have activated their account.'));
+            ->setName(__('Non active user list report'))
+            ->setDescription(__('List of all users who have not activated their account.'));
     }
 
     /**
@@ -43,18 +43,18 @@ class ActiveUsersCountReport extends AbstractSingleReport
      */
     public function getData()
     {
-        $count = $this->usersTable->find()
-            ->contain(['Profiles'])
+        $users = $this->usersTable->find()
+            ->contain(['Profiles', 'Roles'])
             ->where([
                 'Users.deleted' => false,
-                'Users.active' => true,
+                'Users.active' => false,
             ])
             ->order(['Users.created' => 'ASC'])
             ->all()
-            ->count();
+            ->toList();
 
         return [
-            'count' => $count,
+            'users' => $users,
         ];
     }
 }

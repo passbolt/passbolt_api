@@ -14,7 +14,6 @@
  */
 namespace Passbolt\Reports\Utility;
 
-use App\Model\Entity\User;
 use InvalidArgumentException;
 
 /**
@@ -27,32 +26,32 @@ class ReportViewService
     /**
      * @var ReportPool
      */
-    private $reportServicePool;
+    private $reportPool;
 
     /**
-     * @param ReportPool $reportServicePool An instance of ReportServicePool
+     * @param ReportPool $reportPool An instance of ReportPool
      */
-    public function __construct(ReportPool $reportServicePool = null)
+    public function __construct(ReportPool $reportPool = null)
     {
-        $this->reportServicePool = $reportServicePool ?? new ReportPool();
+        $this->reportPool = $reportPool ?? new ReportPool();
     }
 
     /**
-     * Return a report service collection
+     * Build a object implementing ReportInterface for given slug
      *
      * @param string $reportSlug Slug of the report
+     * @throws InvalidArgumentException if the slug is not supported
      * @return ReportInterface
-     * @throws InvalidArgumentException
      */
     public function getReport(string $reportSlug)
     {
-        $reportServices = $this->reportServicePool->getReports($reportSlug);
-        $reportServiceCollection = $reportServices[$reportSlug] ?? false;
+        $reports = $this->reportPool->getReports();
+        $report = $reports[$reportSlug] ?? false;
 
-        if (!$reportServiceCollection) {
+        if (!$report) {
             throw new InvalidArgumentException();
         }
 
-        return $reportServiceCollection($this);
+        return $report($this);
     }
 }
