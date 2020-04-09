@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Service;
+namespace Passbolt\Folders\Test\TestCase\Service\FoldersRelations;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
@@ -33,9 +33,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
-use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
@@ -48,7 +46,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  *
  * @covers \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
  */
-class FoldersItemsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
+class FoldersRelationsRemoveItemFromUserTreeServiceTest extends FoldersTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;

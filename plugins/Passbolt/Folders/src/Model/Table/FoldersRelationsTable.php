@@ -230,4 +230,17 @@ class FoldersRelationsTable extends Table
         ];
         $this->updateAll($fields, $conditions);
     }
+
+    /**
+     * Check that a folder is personal.
+     *
+     * @param string $foreignModel The item model
+     * @param string $foreignId The item id
+     * @return bool
+     */
+    public function isPersonal(string $foreignModel, string $foreignId)
+    {
+        return $this->findByForeignModelAndForeignId($foreignModel, $foreignId)
+                ->count() === 1;
+    }
 }

@@ -13,7 +13,7 @@
  * @since         2.14.0
  */
 
-namespace Passbolt\Folders\Test\TestCase\Service;
+namespace Passbolt\Folders\Test\TestCase\Service\FoldersRelations;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
@@ -44,7 +44,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  *
  * @covers \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemToUserTreeService
  */
-class FoldersItemsAddItemToUserTreeServiceTest extends FoldersTestCase
+class FoldersRelationsAddItemToUserTreeServiceTest extends FoldersTestCase
 {
     use FixtureProviderTrait;
     use FoldersModelTrait;

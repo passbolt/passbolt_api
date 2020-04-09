@@ -150,7 +150,7 @@ class FoldersCreateService
     {
         $errors = $folder->getErrors();
         if (!empty($errors)) {
-            throw new ValidationException(__('Could not validate the folder data.'), $folder, $this->foldersTable);
+            throw new ValidationException(__('Could not validate folder data.'), $folder, $this->foldersTable);
         }
     }
 

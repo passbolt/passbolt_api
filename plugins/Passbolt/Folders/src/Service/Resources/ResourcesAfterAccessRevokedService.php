@@ -126,9 +126,8 @@ class ResourcesAfterAccessRevokedService
      */
     private function removeResourceFromUserTree(\App\Model\Entity\Resource $resource, string $userId)
     {
-        // @todo should not be PermissionsTable::FOLDER_ACO, fix that and ensure there is coverage for it.
         // If the user still has access to the resource, don't alter the user tree.
-        $hasAccess = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $resource->id, $userId);
+        $hasAccess = $this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resource->id, $userId);
         if ($hasAccess) {
             return;
         }

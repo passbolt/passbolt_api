@@ -134,14 +134,12 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         try {
             $this->service->create($uac, $folderData);
+            $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $this->assertEquals("Could not validate folder data.", $e->getMessage());
             $errors = ['name' => ['_empty' => 'The name cannot be empty.']];
             $this->assertEquals($errors, $e->getErrors());
-
-            return;
         }
-        $this->fail('Expect ValidationException');
     }
 
     public function testCreateFolder_CommonError2_ParentFolderNotExist()
@@ -155,14 +153,12 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         try {
             $this->service->create($uac, $folderData);
+            $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $this->assertEquals("Could not validate folder data.", $e->getMessage());
             $errors = ['folder_parent_id' => ['folder_exists' => 'The folder parent must exist.']];
             $this->assertEquals($errors, $e->getErrors());
-
-            return;
         }
-        $this->fail('Expect ValidationException');
     }
 
     public function testCreateFolder_CommonError3_ParentFolderNoPermission()
@@ -175,14 +171,12 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         try {
             $this->service->create($uac, $folderData);
+            $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $this->assertEquals("Could not validate folder data.", $e->getMessage());
             $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
-
-            return;
         }
-        $this->fail('Expect ValidationException');
     }
 
     private function insertCommonError3Fixture()
@@ -257,14 +251,12 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         try {
             $this->service->create($uac, $folderData);
+            $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
-            $this->assertEquals("Could not validate the folder data.", $e->getMessage());
+            $this->assertEquals("Could not validate folder data.", $e->getMessage());
             $errors = ['folder_parent_id' => ['has_folder_access' => 'You are not allowed to create content into the parent folder.']];
             $this->assertEquals($errors, $e->getErrors());
-
-            return;
         }
-        $this->fail('Expect ValidationException');
     }
 
     private function insertSharedError1Fixture()

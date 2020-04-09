@@ -68,11 +68,6 @@ class FoldersShareService
     private $groupsUsersTable;
 
     /**
-     * @var PermissionsTable
-     */
-    private $permissionsTable;
-
-    /**
      * @var PermissionsUpdatePermissionsService
      */
     private $permissionsUpdatePermissionsService;
@@ -92,7 +87,6 @@ class FoldersShareService
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->foldersRelationsAddItemToUserTreeService = new FoldersRelationsAddItemToUserTreeService();
         $this->foldersRelationsRemoveItemFromUserTreeService = new FoldersRelationsRemoveItemFromUserTreeService();
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
@@ -117,7 +111,7 @@ class FoldersShareService
         }
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData) {
-            $isPersonal = $folder->isPersonal($folder->id);
+            $isPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id);
             $result = $this->updatePermissions($uac, $folder, $permissionsData);
             $this->postPermissionsRevoked($folder, $result['removed']);
             $this->postPermissionsAdded($uac, $folder, $isPersonal, $result['added']);

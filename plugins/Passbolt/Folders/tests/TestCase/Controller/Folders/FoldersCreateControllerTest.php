@@ -135,7 +135,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         $data = ['name' => ''];
         $this->authenticateAs('ada');
         $this->postJson('/folders.json?api-version=2', $data);
-        $this->assertError(400, 'Could not validate the folder data.');
+        $this->assertError(400, 'Could not validate folder data.');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'name');
         $this->assertNotNull($error, "The test should return an error of the given field.");
@@ -150,7 +150,7 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
         ];
         $this->authenticateAs('ada');
         $this->postJson('/folders.json?api-version=2', $data);
-        $this->assertError(400, 'Could not validate the folder data');
+        $this->assertError(400, 'Could not validate folder data');
         $arr = json_decode(json_encode($this->_responseJsonBody), true);
         $error = Hash::get($arr, 'folder_parent_id');
         $this->assertNotNull($error, "The test should return an error of the given field.");

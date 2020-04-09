@@ -15,50 +15,37 @@
 
 namespace Passbolt\Folders\Service\Resources;
 
-use App\Model\Entity\Permission;
+use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
-use App\Model\Table\PermissionsTable;
-use App\Service\Permissions\UserHasPermissionService;
+use App\Model\Table\ResourcesTable;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Exception;
-use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
+use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsMoveItemInUserTreeService;
 
 class ResourcesAfterUpdateService
 {
     /**
-     * @var FoldersTable
+     * @var FoldersRelationsMoveItemInUserTreeService
      */
-    private $foldersTable;
+    private $foldersRelationsMoveItemInUserTreeService;
 
     /**
-     * @var FoldersRelationsCreateService
+     * @var ResourcesTable
      */
-    private $foldersRelationsCreateService;
-
-    /**
-     * @var ResourcesMoveService
-     */
-    private $resourcesMoveService;
-
-    /**
-     * @var UserHasPermissionService
-     */
-    private $userHasPermissionService;
+    private $resourcesTable;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
-        $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
-        $this->resourcesMoveService = new ResourcesMoveService();
-        $this->userHasPermissionService = new UserHasPermissionService();
+        $this->foldersRelationsMoveItemInUserTreeService = new FoldersRelationsMoveItemInUserTreeService();
+        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
     }
 
     /**
@@ -71,93 +58,47 @@ class ResourcesAfterUpdateService
      */
     public function afterUpdate(UserAccessControl $uac, Resource $resource, array $data = [])
     {
-        $folderParentId = Hash::get($data, 'folder_parent_id', null);
-
-        if (!is_null($folderParentId)) {
-            if (!$this->validateParentFolder($uac, $resource, $folderParentId)) {
-                return;
-            }
-        }
-        $this->resourcesMoveService->move($uac, $resource, $folderParentId);
-    }
-
-    /**
-     * Validate the parent folder
-     *
-     * @param UserAccessControl $uac The current user
-     * @param resource $resource The resource to move.
-     * @param string $folderParentId The destination folder.
-     * @return bool
-     */
-    private function validateParentFolder(UserAccessControl $uac, Resource $resource, string $folderParentId = null)
-    {
-        if (is_null($folderParentId)) {
-            return $this->assertUserCanMoveOutOfFolder($uac, $resource);
-        } else {
-            return $this->assertFolderParentIdIsValid($resource, $folderParentId)
-                && $this->assertUserCanMoveOutOfFolder($uac, $resource)
-                && $this->assertUserCanMoveInFolder($uac, $resource, $folderParentId);
-        }
-    }
-
-    /**
-     * Check if the user can move content out of the folder;
-     * @param UserAccessControl $uac The current user
-     * @param resource $resource The resource to move.
-     * @return bool
-     */
-    private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, Resource $resource)
-    {
-        // @todo Not needed with personal folder. Sir.
-        return true;
-    }
-
-    /**
-     * Assert that the parent folder id is valid and exists.
-     *
-     * @param resource $resource The resource to move.
-     * @param string $folderId The destination folder.
-     * @return bool
-     */
-    private function assertFolderParentIdIsValid(Resource $resource, string $folderId)
-    {
-        if (!Validation::uuid($folderId)) {
-            $errors = ['uuid' => 'The folder parent id is not valid.'];
-            $resource->setError('folder_parent_id', $errors);
-
-            return false;
-        }
+        $folderParentId = $this->getAndValidateFolderParentId($resource, $data);
 
         try {
-            $this->foldersTable->get($folderId);
-        } catch (RecordNotFoundException $e) {
-            $errors = ['folder_exists' => 'The folder parent must exist.'];
-            $resource->setError('folder_parent_id', $errors);
-
-            return false;
+            $this->foldersRelationsMoveItemInUserTreeService->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderParentId);
+        } catch (CustomValidationException $e) {
+            $resource->setError('folder_parent_id', $e->getErrors());
+            $this->handleValidationErrors($resource);
         }
-
-        return true;
     }
 
     /**
-     * Check if the user can move content in the folder;
-     * @param UserAccessControl $uac The current user
-     * @param resource $resource The resource to move.
-     * @param string $folderParentId The destination folder
-     * @return bool
+     * Get and validate the folder parent id from the data.
+     *
+     * @param resource $resource The target resource
+     * @param array $data The data
+     * @return string
      */
-    private function assertUserCanMoveInFolder(UserAccessControl $uac, Resource $resource, string $folderParentId)
+    private function getAndValidateFolderParentId(Resource $resource, array $data = [])
     {
-        $userId = $uac->userId();
-        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
-        if (!$isAllowedToMoveIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
-            $resource->setError('folder_parent_id', $errors);
+        $folderParentId = Hash::get($data, 'folder_parent_id', null);
 
-            return false;
+        if (!is_null($folderParentId) && !Validation::uuid($folderParentId)) {
+            $errors = ['uuid' => 'The folder parent id is not valid.'];
+            $resource->setError('folder_parent_id', $errors);
+            $this->handleValidationErrors($resource);
         }
 
-        return true;
+        return $folderParentId;
+    }
+
+    /**
+     * Handle resource validation errors.
+     *
+     * @param resource $resource The resource
+     * @return void
+     * @throws ValidationException If the provided data does not validate.
+     */
+    private function handleValidationErrors(Resource $resource)
+    {
+        if ($resource->hasErrors()) {
+            throw new ValidationException(__('Could not validate resource data.'), $resource, $this->resourcesTable);
+        }
     }
 }
