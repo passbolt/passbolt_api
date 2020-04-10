@@ -146,7 +146,7 @@ class FoldersRelationsMoveItemInUserTreeService
         }
 
         // User can always move content out of a personal folder.
-        $isPersonal = $this->foldersRelationsTable->isPersonal($foreingModel, $foreignId);
+        $isPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderParentId);
         if ($isPersonal) {
             return;
         }
