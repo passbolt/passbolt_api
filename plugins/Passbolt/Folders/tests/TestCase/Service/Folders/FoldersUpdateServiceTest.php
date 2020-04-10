@@ -43,7 +43,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 /**
  * Passbolt\Folders\Service\FoldersUpdateService Test Case
  *
- * @covers \Passbolt\Folders\Service\FoldersUpdateService
+ * @covers \Passbolt\Folders\Service\Folders\FoldersUpdateService
  */
 class FoldersUpdateServiceTest extends FoldersTestCase
 {

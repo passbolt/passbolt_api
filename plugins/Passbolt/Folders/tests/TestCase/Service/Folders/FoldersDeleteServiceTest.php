@@ -54,7 +54,7 @@ use Passbolt\Log\Test\Fixture\Base\ActionsFixture;
 /**
  * Passbolt\Folders\Service\FoldersDeleteService Test Case
  *
- * @uses \Passbolt\Folders\Service\FoldersDeleteService
+ * @uses \Passbolt\Folders\Service\Folders\FoldersDeleteService
  */
 class FoldersDeleteServiceTest extends FoldersTestCase
 {
