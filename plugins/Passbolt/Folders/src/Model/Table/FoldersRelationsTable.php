@@ -238,8 +238,12 @@ class FoldersRelationsTable extends Table
      * @param string $foreignId The item id
      * @return bool
      */
-    public function isPersonal(string $foreignModel, string $foreignId)
+    public function isPersonal(string $foreignModel, string $foreignId = null)
     {
+        if (is_null($foreignId)) {
+            return false;
+        }
+
         return $this->findByForeignModelAndForeignId($foreignModel, $foreignId)
                 ->count() === 1;
     }

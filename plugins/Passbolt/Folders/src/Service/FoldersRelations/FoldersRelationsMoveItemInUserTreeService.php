@@ -140,15 +140,19 @@ class FoldersRelationsMoveItemInUserTreeService
      */
     private function assertUserCanMoveOutOfFolder(UserAccessControl $uac, string $foreingModel, string $foreignId, string $folderParentId = null)
     {
+        // User can always move content from root.
         if (is_null($folderParentId)) {
             return;
         }
 
+        // User can always move content out of a personal folder.
         $isPersonal = $this->foldersRelationsTable->isPersonal($foreingModel, $foreignId);
         if ($isPersonal) {
             return;
         }
 
+        // User can move content out of a shared folder if the user has at least an update permission on the folder to
+        // move and the original parent folder.
         $userId = $uac->userId();
         $isAllowedToMoveOut = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
         if (!$isAllowedToMoveOut) {
@@ -166,7 +170,8 @@ class FoldersRelationsMoveItemInUserTreeService
     /**
      * Check if the user can move content in a folder.
      * - User can always move content to the root.
-     * - User can move content in a folder if the user has at least update permission on the folder.
+     * - User can move content with any permission into a personal folder.
+     * - User can move content with sufficient permission (>UPDATE) into shared folder with sufficient permission (>UPDATE)
      * - User can move content if the operation is not creating a cycle.
      *
      * @param UserAccessControl $uac The current user
@@ -182,12 +187,23 @@ class FoldersRelationsMoveItemInUserTreeService
         }
 
         $userId = $uac->userId();
-        $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
-        if (!$isAllowedToMoveIn) {
-            $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
-            $this->handleValidationErrors($errors);
+
+        $isFolderParentPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderParentId);
+        if (!$isFolderParentPersonal) {
+            $isAllowedToMoveIn = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $folderParentId, $userId, Permission::UPDATE);
+            if (!$isAllowedToMoveIn) {
+                $errors = ['has_folder_access' => 'You are not allowed to create content into the parent folder.'];
+                $this->handleValidationErrors($errors);
+            }
+
+            $isAllowedToMove = $this->userHasPermissionService->check($foreignModel, $foreignId, $userId, Permission::UPDATE);
+            if (!$isAllowedToMove) {
+                $errors = ['has_access' => 'You are not allowed to move this item.'];
+                $this->handleValidationErrors($errors);
+            }
         }
 
+        // @todo document cycle detection.
         if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
             $hasAncestor = $this->foldersItemsHasAncestorService->hasAncestor($folderParentId, $foreignId, $uac->userId());
             if ($hasAncestor) {
@@ -195,6 +211,9 @@ class FoldersRelationsMoveItemInUserTreeService
                 $this->handleValidationErrors($errors);
             }
         }
+
+        // @todo check conflict detections in other trees.
+        // Stop detection when a personal folder is met.
     }
 
     /**

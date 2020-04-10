@@ -447,6 +447,37 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
 
+    public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
+    {
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        try {
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (CustomValidationException $e) {
+            $this->assertEquals('Could not validate move data.', $e->getMessage());
+            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $this->assertEquals($errors, $e->getErrors());
+        }
+    }
+
+    public function insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // Ada has READ on B
+        // ----
+        // A (Ada:O, Betty:O)
+        // B (Ada:R, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+
+        return [$folderA, $folderB, $userAId, $userBId];
+    }
+
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission()
     {
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
@@ -472,8 +503,8 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         // B (Ada:R, Betty:O)
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
-        $folderA = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER]);
-        $folderB = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -507,6 +538,73 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$folderA, $folderB, $userAId, $userBId];
+    }
+
+    public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder()
+    {
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        try {
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, null);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (CustomValidationException $e) {
+            $this->assertEquals("Could not validate move data.", $e->getMessage());
+            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $this->assertEquals($errors, $e->getErrors());
+        }
+    }
+
+    public function insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder()
+    {
+        // Ada is OWNER of folder A
+        // Betty is OWNER of folder A
+        // Ada has READ on folder B
+        // Betty is OWNER of folder B
+        // Folder A is in B
+        // ---
+        // A (Ada:O, Betty:O)
+        // |- B (Ada:R, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B', 'folder_parent_id' => $folderA->id], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
+
+        return [$folderA, $folderB, $userAId, $userBId];
+    }
+
+    /* ************************************************************** */
+    /* FOLDER - SELF ORGANIZE */
+    /* ************************************************************** */
+
+    public function testMoveItemInUserTreeSuccess_Folder_SelfOrganize_MoveFromRootToPersonalFolder()
+    {
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SelfOrganize_MoveFromRootToPersonalFolder();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
+
+        $this->assertItemIsInTrees($folderA->id, 1);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+    }
+
+    private function insertFixture_Folder_SelfOrganize_MoveFromRootToPersonalFolder()
+    {
+        // Ada is OWNER of folder A
+        // Ada has READ on folder B
+        // Betty is OWNER of folder B
+        // ---
+        // A (Ada:O)
+        // B (Ada:R, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
         return [$folderA, $folderB, $userAId, $userBId];
     }
@@ -910,6 +1008,40 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
         $resource = $this->addResourceFor(['name' => 'R1', 'folder_parent_id' => $folderA->id], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+
+        return [$folderA, $resource, $userAId, $userBId];
+    }
+
+    /* ************************************************************** */
+    /* RESOURCE - SELF ORGANIZE */
+    /* ************************************************************** */
+
+    public function testMoveItemInUserTreeSuccess_Resource_SelfOrganize_MoveFromRootToPersonalFolder()
+    {
+        list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SelfOrganize_MoveFromRootToPersonalFolder();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
+
+        $this->assertItemIsInTrees($folderA->id, 1);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertItemIsInTrees($resource->id, 2);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+    }
+
+    private function insertFixture_Resource_SelfOrganize_MoveFromRootToPersonalFolder()
+    {
+        // Ada is OWNER of folder A
+        // Ada has READ on folder B
+        // Betty is OWNER of folder B
+        // ---
+        // A (Ada:O)
+        // B (Ada:R, Betty:O)
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
+        $resource = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::READ, $userBId => Permission::OWNER]);
 
         return [$folderA, $resource, $userAId, $userBId];
     }
