@@ -223,10 +223,20 @@ class FoldersRelationsAddItemToUserTreeService
      */
     private function detectCycleBeforeReconstructFolderParent(string $userId, string $folderId, string $folderParentId)
     {
+        $conflictedFoldersIds = [];
         $ancestorsIds = $this->foldersItemsGetAncestorsService->getAncestors($userId, $folderParentId);
-        $potentialChildrenIds = $this->getPotentialFolderChildrenIds($folderId, $userId);
 
-        return array_intersect($ancestorsIds, $potentialChildrenIds);
+        foreach ($ancestorsIds as $ancestorId) {
+            $usersIdsSeeingFolderParent = $this->getUsersIdsHavingAccessTo($ancestorId);
+            foreach ($usersIdsSeeingFolderParent as $userIdSeeingFolderParent) {
+                $hasAncestor = $this->foldersItemsHasAncestorService->hasAncestor($ancestorId, $folderId, $userIdSeeingFolderParent);
+                if ($hasAncestor) {
+                    $conflictedFoldersIds[] = $ancestorId;
+                }
+            }
+        }
+
+        return $conflictedFoldersIds;
     }
 
     /**
