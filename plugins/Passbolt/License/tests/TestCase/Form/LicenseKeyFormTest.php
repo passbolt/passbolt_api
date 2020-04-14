@@ -65,12 +65,12 @@ class LicenseKeyFormTest extends TestCase
             return $this->fail('The license does not validate: ' . $e->getMessage());
         }
 
-        $this->assertEquals('93c6987e-084f-4c22-b6f1-56dd8b2989b4', $licenseInfo['id']);
-        $this->assertEquals('a175f567-1474-4580-be8f-fb21afb031ea', $licenseInfo['customer_id']);
-        $this->assertEquals(35, $licenseInfo['users']);
-        $this->assertEquals('1161946b-b300-5119-9409-7b9246a3a5ab', $licenseInfo['plan_id']);
-        $this->assertEquals('2020-03-26T00:00:00+00:00', $licenseInfo['expiry']);
-        $this->assertEquals('2019-03-27T00:00:00+00:00', $licenseInfo['created']);
+        $this->assertEquals('a68a8dd6-fd0a-429e-abb7-0ee4c2d93154', $licenseInfo['id']);
+        $this->assertEquals('063c86fe-60ea-4a6a-bdc3-6d6939588634', $licenseInfo['customer_id']);
+        $this->assertEquals(100, $licenseInfo['users']);
+        $this->assertEquals('470ce472-5063-5c7c-8f31-05470d147c8c', $licenseInfo['plan_id']);
+        $this->assertEquals('2022-04-14T00:00:00+00:00', $licenseInfo['expiry']);
+        $this->assertEquals('2020-04-14T00:00:00+00:00', $licenseInfo['created']);
     }
 
     public function testLicenseKeyValidate_ErrorInvalidFormat()
