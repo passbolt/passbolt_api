@@ -31,6 +31,7 @@ class FoldersRelation extends Entity
 {
     const FOREIGN_MODEL_FOLDER = 'Folder';
     const FOREIGN_MODEL_RESOURCE = 'Resource';
+    const ROOT = null;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

@@ -113,7 +113,13 @@ class FoldersShareService
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData) {
             $isPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id);
             $result = $this->updatePermissions($uac, $folder, $permissionsData);
+            // If the folder was a personal folder. Then move the content that was self organized and for which the user
+            // does not have sufficient permission onto it (<UPDATE) to move into a shared folder.
+            if ($isPersonal && !empty($result['added'])) {
+                $this->moveSelfOrganizedContentWithInsufficientPermissionToRoot($uac, $folder);
+            }
             $this->postPermissionsRevoked($folder, $result['removed']);
+            // @todo is it still necessary to pass isPersonal to postPermissionAdded ? Self organized content is moved to the root by the updated permissions function.
             $this->postPermissionsAdded($uac, $folder, $isPersonal, $result['added']);
         });
 
@@ -174,12 +180,19 @@ class FoldersShareService
      */
     private function updatePermissions(UserAccessControl $uac, Folder $folder, array $changes)
     {
+        $result = [
+            'added' => [],
+            'removed' => [],
+        ];
+
         try {
-            return $this->permissionsUpdatePermissionsService->updatePermissions($uac, PermissionsTable::FOLDER_ACO, $folder->id, $changes);
+            $result = $this->permissionsUpdatePermissionsService->updatePermissions($uac, PermissionsTable::FOLDER_ACO, $folder->id, $changes);
         } catch (CustomValidationException $e) {
             $folder->setError('permissions', $e->getErrors());
             $this->handleValidationErrors($folder);
         }
+
+        return $result;
     }
 
     /**
@@ -194,6 +207,27 @@ class FoldersShareService
         $errors = $folder->getErrors();
         if (!empty($errors)) {
             throw new ValidationException(__('Could not validate folder data.'), $folder, $this->foldersTable);
+        }
+    }
+
+    /**
+     * Move content of the folder which was self organized without sufficient permission (<UPDATE) to move it into
+     * a shared folder to the root of the operator.
+     *
+     * @param UserAccessControl $uac The operator
+     * @param Folder $folder The target shared folder
+     * @return void
+     */
+    private function moveSelfOrganizedContentWithInsufficientPermissionToRoot(UserAccessControl $uac, Folder $folder)
+    {
+        $userItemsIds = $this->foldersRelationsTable->findByUserIdAndFolderParentId($uac->userId(), $folder->id)
+            ->select('foreign_id')->extract('foreign_id')->toArray();
+        foreach ($userItemsIds as $userItemId) {
+            $canUpdate = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $userItemId, $uac->userId(), Permission::UPDATE);
+            if (!$canUpdate) {
+                $this->foldersRelationsTable->moveItemFor($userItemId, [$uac->userId()], null);
+                continue;
+            }
         }
     }
 

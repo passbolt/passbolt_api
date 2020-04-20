@@ -27,7 +27,7 @@ use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\IntegrationTestTrait;
-use Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService;
+use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHasAncestorService;
 use Passbolt\Folders\Test\Fixture\FoldersFixture;
 use Passbolt\Folders\Test\Fixture\FoldersRelationsFixture;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
@@ -37,7 +37,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
 /**
  * Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService Test Case
  *
- * @covers \Passbolt\Folders\Service\FoldersRelations\FoldersItemsHasAncestorService
+ * @covers \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHasAncestorService
  */
 class FoldersRelationsHasAncestorServiceTest extends FoldersTestCase
 {
@@ -65,7 +65,7 @@ class FoldersRelationsHasAncestorServiceTest extends FoldersTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->service = new FoldersItemsHasAncestorService();
+        $this->service = new FoldersRelationsHasAncestorService();
     }
 
     public function testFolderHasItsParentHasAncestor()

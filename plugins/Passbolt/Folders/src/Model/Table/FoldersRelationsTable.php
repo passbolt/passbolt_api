@@ -72,6 +72,15 @@ class FoldersRelationsTable extends Table
             'foreignKey' => 'foreign_id',
         ]);
         $this->belongsTo('Users');
+        $this->hasMany('Children', [
+            'className' => 'FoldersRelations',
+            'bindingKey' => 'foreign_id',
+            'foreignKey' => 'folder_parent_id',
+            'dependent' => false,
+//            'conditions' => [
+//                'FoldersRelations.user_id' => 'Children.user_id'
+//            ]
+        ]);
     }
 
     /**

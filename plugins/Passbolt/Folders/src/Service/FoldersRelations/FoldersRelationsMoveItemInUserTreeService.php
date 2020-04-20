@@ -20,6 +20,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
+use App\Utility\UserAction;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
@@ -28,7 +29,7 @@ use Passbolt\Folders\Model\Table\FoldersTable;
 class FoldersRelationsMoveItemInUserTreeService
 {
     /**
-     * @var FoldersItemsHasAncestorService
+     * @var FoldersRelationsHasAncestorService
      */
     private $foldersItemsHasAncestorService;
 
@@ -54,7 +55,8 @@ class FoldersRelationsMoveItemInUserTreeService
     {
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
-        $this->foldersItemsHasAncestorService = new FoldersItemsHasAncestorService();
+        $this->foldersItemsGetAncestorsService = new FoldersRelationsGetAncestorsService();
+        $this->foldersItemsHasAncestorService = new FoldersRelationsHasAncestorService();
         $this->userHasPermissionService = new UserHasPermissionService();
     }
 
@@ -73,7 +75,7 @@ class FoldersRelationsMoveItemInUserTreeService
         $originalFolderParentId = $this->getFolderParentId($uac, $foreignModel, $foreignId);
         $this->assertUserCanMoveOutOfFolder($uac, $foreignModel, $foreignId, $originalFolderParentId);
         $this->assertUserCanMoveInFolder($uac, $foreignModel, $foreignId, $folderParentId);
-        $this->performMove($foreignId, $originalFolderParentId, $folderParentId);
+        $this->performMove($uac, $foreignId, $originalFolderParentId, $folderParentId);
     }
 
     /**
@@ -219,13 +221,28 @@ class FoldersRelationsMoveItemInUserTreeService
     /**
      * Move an item from a location to another.
      *
-     * @param string $foreignId The item to move
-     * @param string|null $originalFolderParentId The original folder location. Null if root.
-     * @param string|null $folderParentId The target folder location. Null if root
+     * @param string $uac The item to move
+     * @param null $foreignId The original folder location. Null if root.
+     * @param null $originalFolderParentId The target folder location. Null if root
      * @return void
      */
-    private function performMove(string $foreignId, string $originalFolderParentId = null, string $folderParentId = null)
+    private function performMove(UserAccessControl $uac, string $foreignId, string $originalFolderParentId = null, string $folderParentId = null)
     {
+        if (!is_null($folderParentId)) {
+            $cycleFolders = $this->detectCycleBeforeReconstructFolderParent($uac->userId(), $foreignId, $folderParentId);
+            foreach ($cycleFolders as $cycleFolder) {
+                $cycleFolderParentId = $this->foldersRelationsTable->findByForeignIdAndUserId($cycleFolder['foreign_id'], $cycleFolder['user_id'])
+                    ->select('folder_parent_id')->extract('folder_parent_id')->first();
+//                print_r('cycle folder id '); print_r($cycleFolder);
+//                $test = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($cycleFolderId, $foreignId)->first();
+//                print_r('$cycleFolderId D ' . $cycleFolderId . "\n");
+//                print_r('$foreignId B ' . $foreignId . "\n");
+//                var_dump($test);
+//                die();
+                $this->foldersRelationsTable->moveItemFrom($cycleFolder['foreign_id'], [$cycleFolderParentId]);
+            }
+        }
+
         // If the destination folder is not the root, then move the folder into the destination folder for users who can
         // see it.
         if (!is_null($folderParentId)) {
@@ -249,5 +266,48 @@ class FoldersRelationsMoveItemInUserTreeService
                 'folder_parent_id' => $originalFolderParentId,
             ]);
         }
+    }
+
+    /**
+     * Detect a cycle before reconstructing an item parent.
+     *
+     * A cycle is detected when an ancestor of the target folder in the target user tree is a child of the target folder
+     * in another user tree. Then break the relation between the identified child and the target folder.
+     *
+     * @param string $userId The target user tree
+     * @param string $folderId The target folder that will have be moved in the parent
+     * @param string $folderParentId The target folder parent the folder will be moved in
+     * @return array A list of folder which are responsible of a cycle
+     */
+    private function detectCycleBeforeReconstructFolderParent(string $userId, string $folderId, string $folderParentId)
+    {
+        $conflictedFolders = [];
+        $ancestorsIds = $this->foldersItemsGetAncestorsService->getAncestors($userId, $folderParentId);
+
+        foreach ($ancestorsIds as $ancestorId) {
+            // @todo seeing both no ?
+            $usersIdsSeeingFolderParent = $this->getUsersIdsHavingAccessTo($ancestorId);
+            foreach ($usersIdsSeeingFolderParent as $userIdSeeingFolderParent) {
+                $hasAncestor = $this->foldersItemsHasAncestorService->hasAncestor($ancestorId, $folderId, $userIdSeeingFolderParent, true);
+                if ($hasAncestor) {
+                    $conflictedFolders[] = ['foreign_id' => $ancestorId, 'user_id' => $userIdSeeingFolderParent];
+                }
+            }
+        }
+
+        return $conflictedFolders;
+    }
+
+    /**
+     * Get a list of users ids having access to a given item.
+     * @param string $foreignId The target folder
+     * @return array
+     */
+    public function getUsersIdsHavingAccessTo(string $foreignId)
+    {
+        return $this->foldersRelationsTable->findByForeignId($foreignId)
+            ->select('user_id')
+            ->extract('user_id')
+            ->toArray();
     }
 }

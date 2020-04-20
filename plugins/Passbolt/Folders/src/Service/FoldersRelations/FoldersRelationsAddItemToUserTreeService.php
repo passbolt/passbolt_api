@@ -15,29 +15,22 @@
 
 namespace Passbolt\Folders\Service\FoldersRelations;
 
-use App\Model\Entity\Permission;
-use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\EntityInterface;
+use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Exception;
-use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersRelationsAddItemToUserTreeService
 {
     /**
-     * @var FoldersItemsGetAncestorsService
+     * @var FoldersTable
      */
-    private $foldersItemsGetAncestorsService;
-
-    /**
-     * @var FoldersItemsHasAncestorService
-     */
-    private $foldersItemsHasAncestorService;
+    private $foldersTable;
 
     /**
      * @var FoldersRelationsTable
@@ -50,6 +43,11 @@ class FoldersRelationsAddItemToUserTreeService
     private $foldersRelationsCreateService;
 
     /**
+     * @var FoldersRelationsDetectStronglyConnectedComponents
+     */
+    private $folderRelationsDetectStronglyConnectedComponents;
+
+    /**
      * @var UserHasPermissionService
      */
     private $userHasPermissionService;
@@ -59,9 +57,9 @@ class FoldersRelationsAddItemToUserTreeService
      */
     public function __construct()
     {
-        $this->foldersItemsGetAncestorsService = new FoldersItemsGetAncestorsService();
-        $this->foldersItemsHasAncestorService = new FoldersItemsHasAncestorService();
+        $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
+        $this->folderRelationsDetectStronglyConnectedComponents = new FoldersRelationsDetectStronglyConnectedComponents();
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->userHasPermissionService = new UserHasPermissionService();
     }
@@ -71,509 +69,566 @@ class FoldersRelationsAddItemToUserTreeService
      *
      * @param UserAccessControl $uac The user at the origin of the operation
      * @param string $foreignModel The entity model
-     * @param string $foreignId The entity id
-     * @param string $userId The target user id
-     * @param bool (optional) $isPersonal (Optional) Is the item personal. Default false.
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
      * @return void
      * @throws Exception If an unexpected error occurred
      */
-    public function addItemToUserTree(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId, bool $isPersonal = false)
+    public function addItemToUserTree(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId)
     {
+//        // DEBUG
+//        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+//        $users = $foldersRelationsTable->Users->find()->where(['username in' => [
+//            'ada@passbolt.com', 'betty@passbolt.com', 'carol@passbolt.com', 'dame@passbolt.com', 'edith@passbolt.com'
+//        ]])->order(['username']);
+//        foreach ($users as $user) {
+//            $this->{$user->username} = $user->id;
+//            print_r('User ' . $user->username . ' : ' . $user->id . "\n");
+//        }
+//        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+//        $folders = $foldersTable->find()->order(['name']);
+//        foreach ($folders as $folder) {
+//            $this->{$folder->name} = $folder->id;
+//            print_r('Folder ' . $folder->name . ' : ' . $folder->id . "\n");
+//        }
+//        // END DEBUG
+
         $existsInUserTree = $this->foldersRelationsTable->existsInUserTree($userId, $foreignId);
         if ($existsInUserTree) {
             return;
         }
 
-        $this->foldersRelationsTable->getConnection()->transactional(function () use (&$uac, $foreignModel, $foreignId, $userId, $isPersonal) {
-            // Insert the item at the root of the target user tree.
-            $this->foldersRelationsCreateService->create($uac, $foreignModel, $foreignId, $userId, null);
-
-            // When an existing item is shared with a user, the user tree will be reconstructed based on other trees in
-            // order to ensure a common organization among all passbolt users.
-            // A highest priority is given to the operator representation, a first treatment is done to reconstruct only
-            // the operator nodes in the target user tree. Then a second treatment is done to reconstruct nodes from
-            // other users trees.
-            list ($appliedFolderParentId, $appliedFolderChildrenIds) = $this->reconstructUserTreeBasedOnOperatorTree($uac, $foreignModel, $foreignId, $userId, $isPersonal);
-            $this->reconstructUserTreeBasedOnOtherUsersTrees($uac, $foreignModel, $foreignId, $userId, $appliedFolderParentId, $appliedFolderChildrenIds);
+        $this->foldersRelationsTable->getConnection()->transactional(function () use (&$uac, $foreignModel, $foreignId, $userId) {
+            // Add the item at the root of the target user tree.
+            $this->foldersRelationsCreateService->create($uac, $foreignModel, $foreignId, $userId, FoldersRelation::ROOT);
+            // Then reconstruct the user tree.
+            $this->reconstructUserTree($uac, $foreignModel, $foreignId, $userId);
         });
     }
 
     /**
-     * Reconstruct the user tree based on the operator representation.
+     * Reconstruct the target user tree for the newly added item in order to ensure a common organization among all
+     * passbolt users. When an item is shared with a user, its organization is also shared along with it. The ancestor
+     * and children associations of this item in other users trees should be reflected in the target user tree.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
      * @param string $foreignModel The entity model
-     * @param string $foreignId The entity id
-     * @param string $userId The target user
-     * @param bool (optional) $isPersonal (Optional) Is the item personal. Default false.
-     * @return array
-     * [
-     *   0 => The applied folder parent id if any
-     *   1 => The applied folder children ids if any
-     * ]
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @return void
      */
-    private function reconstructUserTreeBasedOnOperatorTree(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId, bool $isPersonal = false)
+    private function reconstructUserTree(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId)
     {
-        $appliedOperatorFolderParentId = $this->reconstructFolderParentBasedOnOperatorTree($uac, $foreignModel, $foreignId, $userId);
-        $appliedOperatorFolderChildrenIds = [];
+        $changes = $this->getReconstructChanges($uac, $foreignModel, $foreignId, $userId);
+        $changes = $this->sortReconstructChangesByPriorities($uac, $changes);
 
-        // If the item is a folder, reconstruct the folder children.
-        if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-            $appliedOperatorFolderChildrenIds = $this->reconstructFolderChildrenFromOperatorTree($uac, $foreignId, $userId, $isPersonal);
+        foreach ($changes as $change) {
+            if ($change['type'] === 'parent') {
+                $this->reconstructParent($uac, $foreignModel, $foreignId, $userId, $change);
+            } elseif ($change['type'] === 'child') {
+                $this->reconstructChild($uac, $foreignId, $userId, $change);
+            } else {
+                throw new InternalErrorException('Change type must be parent or child.');
+            }
         }
-
-        return [$appliedOperatorFolderParentId, $appliedOperatorFolderChildrenIds];
     }
 
     /**
-     * Reconstruct a folder parent in a user tree based on the operator representation.
+     * Returns a list of changes to apply to the user tree in order to integrate the newly added item. The list of
+     * changes will contain potential parents and children associations to apply to the target user tree. Each
+     * proposed change will come with metrics in order to define later the priority of execution.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $foreignModel The target entity model
-     * @param string $foreignId The target entity
-     * @param string $userId The target user
-     * @return string|null
-     */
-    private function reconstructFolderParentBasedOnOperatorTree(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId)
-    {
-        $folderParentId = $this->foldersRelationsTable->findByForeignIdAndUserId($foreignId, $uac->userId())
-            ->select('folder_parent_id')
-            ->extract('folder_parent_id')
-            ->first();
-
-        // The item doesn't have any parent in the operator tree.
-        if (is_null($folderParentId)) {
-            return null;
-        }
-
-        // The user cannot see the operator folder parent.
-        $existsInUserTree = $this->foldersRelationsTable->existsInUserTree($userId, $folderParentId);
-        if (!$existsInUserTree) {
-            return null;
-        }
-
-        // Conflict detection: Another item in the target user tree could be a parent of the target item.
-        // The operator representation has the highest priority and it will be applied: the target item will be moved
-        // from the identified other parent folders to the root of the users having this representation.
-        $conflictedFolderParentsIds = $this->getPotentialFolderParentsIds($foreignId, $userId, ['exclude' => $folderParentId]);
-        if (!empty($conflictedFolderParentsIds)) {
-            $this->foldersRelationsTable->moveItemFrom($foreignId, $conflictedFolderParentsIds);
-        }
-
-        // If the item is a folder, try to detect a cycle.
-        if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-            // Cycle detection: An ancestor of the target folder in the target user tree is a child of the target folder
-            // in another user tree. Then break the relation between the identified child and the target folder to solve
-            // the cycle.
-            $cycleFolderIds = $this->detectCycleBeforeReconstructFolderParent($userId, $foreignId, $folderParentId);
-            foreach ($cycleFolderIds as $cycleFolderId) {
-                $this->foldersRelationsTable->moveItemFrom($cycleFolderId, [$foreignId]);
-            }
-        }
-
-        // Move the item into the parent folder.
-        $this->foldersRelationsTable->moveItemFor($foreignId, [$userId], $folderParentId);
-
-        return $folderParentId;
-    }
-
-    /**
-     * Get the potential folder parents of a folder in a user tree.
-     * @param string $folderId The target folder
-     * @param string $userId The target user
-     * @param array $options Option
-     * [
-     *   array $exclude Exclude folders from the query
-     * ]
+     * @param string $foreignModel The entity model
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
      * @return array
      */
-    private function getPotentialFolderParentsIds(string $folderId, string $userId, array $options = [])
+    private function getReconstructChanges(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId)
     {
+        $changes = $this->getReconstructFolderParentChanges($uac, $foreignId, $userId);
+        if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
+            $changes = array_merge($changes, $this->getReconstructFolderChildrenChanges($uac, $foreignId, $userId));
+        }
+
+        return $changes;
+    }
+
+    /**
+     * Returns a list of parents changes to apply to the user tree in order to associate the newly added item with a
+     * parent already present in the user tree. This function does not decide which parent will be chosen to associate
+     * the newly added item with, but it will return metrics that will help to define later the priority of execution.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @return array
+     * [
+     *   string $type The type of change, "parent" here
+     *   string $foreignId The target folder parent id
+     *   bool $inOperatorTree Has the operator this representation
+     *   int $usedCount How many user have this representation
+     *   string $created The target folder created date
+     * ]
+     */
+    private function getReconstructFolderParentChanges(UserAccessControl $uac, string $foreignId, string $userId)
+    {
+        $changes = [];
+        $folderParentsIds = $this->getPotentialParentIdsFor($foreignId, $userId);
+
+        foreach ($folderParentsIds as $folderParentId) {
+            $inOperatorTree = $this->foldersRelationsTable->existsInUserTree($uac->userId(), $folderParentId);
+            $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($foreignId, $folderParentId)->count();
+            $created = $this->foldersTable->findById($folderParentId)->select('created')->extract('created')->first();
+            $changes[] = [
+                'type' => 'parent',
+                'foreignId' => $folderParentId,
+                'inOperatorTree' => $inOperatorTree,
+                'usedCount' => $usedCount,
+                'created' => $created,
+            ];
+        }
+
+        return $changes;
+    }
+
+    /**
+     * Returns a list of folders that could be a potential parent of the newly added item in the target user tree.
+     *
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @return array<string>
+     */
+    private function getPotentialParentIdsFor(string $foreignId, string $userId)
+    {
+        // R = All the folders that are a parent of the newly added item in other users trees and are also visible by
+        //     the target user.
+        //
+        // Details :
+        // USERS_ITEMS = All the items the target user can see
+        // FOLDER_PARENTS = All the parents of the newly added item in all the users trees
+        // R = USERS_ITEMS ⋂ FOLDER_PARENTS
+
+        // USERS_ITEMS
         $userItems = $this->foldersRelationsTable->findByUserIdAndForeignModel($userId, FoldersRelation::FOREIGN_MODEL_FOLDER);
-
-        $query = $this->foldersRelationsTable->find()
-            ->where([
-                'foreign_id' => $folderId,
-                'folder_parent_id IN' => $userItems->select('foreign_id'),
-            ]);
-
-        $exclude = Hash::get($options, 'exclude', []);
-        if (!empty($exclude)) {
-            $query->where([
-                'folder_parent_id NOT IN' => $exclude,
-            ]);
-        }
-
-        return $query->select('folder_parent_id')
-            ->distinct()
-            ->extract('folder_parent_id')
-            ->toArray();
-    }
-
-    /**
-     * Detect a cycle before reconstructing an item parent.
-     *
-     * A cycle is detected when an ancestor of the target folder in the target user tree is a child of the target folder
-     * in another user tree. Then break the relation between the identified child and the target folder.
-     *
-     * @param string $userId The target user tree
-     * @param string $folderId The target folder that will have be moved in the parent
-     * @param string $folderParentId The target folder parent the folder will be moved in
-     * @return array A list of folder which are responsible of a cycle
-     */
-    private function detectCycleBeforeReconstructFolderParent(string $userId, string $folderId, string $folderParentId)
-    {
-        $conflictedFoldersIds = [];
-        $ancestorsIds = $this->foldersItemsGetAncestorsService->getAncestors($userId, $folderParentId);
-
-        foreach ($ancestorsIds as $ancestorId) {
-            $usersIdsSeeingFolderParent = $this->getUsersIdsHavingAccessTo($ancestorId);
-            foreach ($usersIdsSeeingFolderParent as $userIdSeeingFolderParent) {
-                $hasAncestor = $this->foldersItemsHasAncestorService->hasAncestor($ancestorId, $folderId, $userIdSeeingFolderParent);
-                if ($hasAncestor) {
-                    $conflictedFoldersIds[] = $ancestorId;
-                }
-            }
-        }
-
-        return $conflictedFoldersIds;
-    }
-
-    /**
-     * Get the list of potential children of a folder in a user tree.
-     * @param string $folderId The target folder
-     * @param string $userId The target user
-     * @return array The list of potential children
-     */
-    private function getPotentialFolderChildrenIds(string $folderId, string $userId)
-    {
-        // R = All the items that are children of the given folder in all users tree that the target user can also see.
-        //
-        // Details :
-        // USERS_ITEMS = All the items the target user can see
-        // FOLDER_CHILDREN = The children if the target folder in all users trees
-        // R = USERS_ITEMS ⋂ FOLDER_CHILDREN
-
-        // USERS_ITEMS
-        $userItemsQuery = $this->foldersRelationsTable->findByUserIdAndForeignModel($userId, PermissionsTable::FOLDER_ACO);
-
-        // FOLDER_CHILDREN
-        $childrenQuery = $this->foldersRelationsTable->findByFolderParentId($folderId);
-
-        // R = USERS_ITEMS ⋂ FOLDER_CHILDREN
-        $resultQuery = $childrenQuery->where(['foreign_id IN' => $userItemsQuery->select('foreign_id')]);
-
-        return $resultQuery->select('foreign_id')
-            ->distinct()
-            ->extract('foreign_id')
-            ->toArray();
-    }
-
-    /**
-     * Reconstruct the children of a folder in a user tree based on the operator representation
-     * @param UserAccessControl $uac The operator
-     * @param string $folderId The target folder
-     * @param string $userId The target user tree
-     * @param bool $isPersonal (Optional) Is the permission added to a personal folder. Default false.
-     * @return array The list of children that has been added to the folder
-     */
-    private function reconstructFolderChildrenFromOperatorTree(UserAccessControl $uac, string $folderId, string $userId, bool $isPersonal = false)
-    {
-        $childrenIds = $this->getPotentialFolderChildrenIdsFromUserTree($uac->userId(), $folderId, $userId);
-
-        foreach ($childrenIds as $childId) {
-            // Self organization detection: If one of the operator child is self organized for the operator, then move
-            // this child to the root of the operator and don't consider it as a child to reconstruct into the target
-            // folder for the target user.
-            if ($isPersonal) {
-                $canUpdate = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $childId, $uac->userId(), Permission::UPDATE);
-                if (!$canUpdate) {
-                    $this->foldersRelationsTable->moveItemFor($childId, [$uac->userId()], null);
-                    continue;
-                }
-            }
-
-            // Conflict detection: If one of the operator children is organized in another folder the target user can see.
-            // Then operator view is applied and other representations are broken. The child in conflict will be moved at
-            // the root of the users having a different representations.
-            $conflictedFolderParentIds = $this->getPotentialFolderParentsIds($childId, $userId);
-            array_splice($conflictedFolderParentIds, array_search($folderId, $conflictedFolderParentIds), 1);
-            if (!empty($conflictedFolderParentIds)) {
-                $this->foldersRelationsTable->moveItemFrom($childId, $conflictedFolderParentIds, null);
-            }
-
-            // Cycle detection: The identified child or one of its children in the target user tree is an ancestor of
-            // the target folder in another user tree.
-            $cyclesFoldersIds = $this->detectCycleBeforeReconstructFolderChildren($userId, $childId, $folderId);
-            // As the operator representation has the highest priority: break the cycle by moving the target folder from
-            // the folder responsible of a cycle to the root of the users trees having this representation.
-            foreach ($cyclesFoldersIds as $cyclesFolderId) {
-                $this->foldersRelationsTable->moveItemFrom($folderId, [$cyclesFolderId], null);
-            }
-
-            $this->foldersRelationsTable->moveItemFor($childId, [$userId], $folderId);
-        }
-
-        return $childrenIds;
-    }
-
-    /**
-     * Get the list of potential children of a folder for a user based on another user representation.
-     *
-     * @param string $fromUserIdTree The base user tree
-     * @param string $folderId The target folder
-     * @param string $userId The target user
-     * @return array The list of potential children ids
-     */
-    private function getPotentialFolderChildrenIdsFromUserTree(string $fromUserIdTree, string $folderId, string $userId)
-    {
-        // R = All the items that are children of the given folder in the based user representation the target user can
-        //     also see.
-        //
-        // Details :
-        // USERS_ITEMS = All the items the target user can see
-        // FOLDER_CHILDREN_FROM_BASED_USER_TREE = The children if the target folder in the based user tree
-        // R = USERS_ITEMS ⋂ FOLDER_CHILDREN_FROM_BASED_USER_TREE
-
-        // USERS_ITEMS
-        $userItemsQuery = $this->foldersRelationsTable->findByUserIdAndForeignModel($userId, PermissionsTable::FOLDER_ACO);
-
-        // FOLDER_CHILDREN_FROM_BASED_USER_TREE
-        $childrenFromBasedUserTreeQuery = $this->foldersRelationsTable->find()
-            ->where([
-                'folder_parent_id' => $folderId,
-                'user_id' => $fromUserIdTree,
-            ]);
-
-        // R = USERS_ITEMS ⋂ FOLDER_CHILDREN_FROM_BASED_USER_TREE
-        $result = $childrenFromBasedUserTreeQuery->where([
-            'foreign_id IN' => $userItemsQuery->select('foreign_id'),
+        // FOLDER_PARENTS
+        $query = $this->foldersRelationsTable->findByForeignId($foreignId);
+        // R = USERS_ITEMS ⋂ FOLDER_PARENTS
+        $query->where([
+            'folder_parent_id IN' => $userItems->select('foreign_id'),
         ]);
 
-        return $result->select('foreign_id')
-            ->distinct()
+        return $query->select(['folder_parent_id'])
+            ->distinct('folder_parent_id')
+            ->extract('folder_parent_id')
+            ->toArray();
+    }
+
+    /**
+     * Returns a list of children changes to apply to the user tree in order to associate the newly added item with
+     * children items already present in the user tree. The priority of execution is not decided by this function but
+     * metrics are associated to each change to help later to decide the order. Priority is important in the sense that
+     * changes can be indirectly in conflict with each other. By instance if when a first change is applied, if this
+     * change create an indirect conflict (SCCs by instance) with a third user tree, then while resolving this conflict
+     * it can make a second change in the list not valid anymore.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @return array
+     * [
+     *   string $type The type of change, "parent" here
+     *   string $foreignId The target folder parent id
+     *   bool $inOperatorTree Has the operator this representation
+     *   int $usedCount How many user have this representation
+     *   string $created The target item created date
+     * ]
+     */
+    private function getReconstructFolderChildrenChanges(UserAccessControl $uac, string $foreignId, string $userId)
+    {
+        $changes = [];
+        $folderChildrenIds = $this->getPotentialChildrenIdsFor($foreignId, $userId);
+        foreach ($folderChildrenIds as $folderChildId) {
+            $inOperatorTree = $this->foldersRelationsTable->existsInUserTree($uac->userId(), $folderChildId);
+            $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($foreignId, $folderChildId)->count();
+            $created = $this->foldersTable->findById($folderChildId)->select('created')->extract('created')->first();
+            $changes[] = [
+                'type' => 'child',
+                'foreignId' => $folderChildId,
+                'inOperatorTree' => $inOperatorTree,
+                'usedCount' => $usedCount,
+                'created' => $created,
+            ];
+        }
+
+        return $changes;
+    }
+
+    /**
+     * Returns a list of items that could be potential children of the newly added item in the target user tree.
+     *
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @return array<string>
+     */
+    private function getPotentialChildrenIdsFor(string $foreignId, string $userId)
+    {
+        // R = All the folders that are a parent of the newly added item in other users trees and are also visible by
+        //     the target user.
+        //
+        // Details :
+        // USERS_ITEMS = All the items the target user can see
+        // CHILDREN = All the children of the newly added item in all the users trees
+        // R = USERS_ITEMS ⋂ CHILDREN
+
+        // USERS_ITEMS = All the items the target user can see
+        $userItems = $this->foldersRelationsTable->findByUserIdAndForeignModel($userId, FoldersRelation::FOREIGN_MODEL_FOLDER);
+        // CHILDREN
+        $query = $this->foldersRelationsTable->findByFolderParentId($foreignId);
+        // R = USERS_ITEMS ⋂ CHILDREN
+        $query->where(['foreign_id IN' => $userItems->select('foreign_id')]);
+
+        return $query->select(['foreign_id'])
+            ->distinct('foreign_id')
             ->extract('foreign_id')
             ->toArray();
     }
 
     /**
-     * Detect a cycle before reconstructing an item children.
+     * Sort the list of changes by priorities:
+     * 1. Operator;
+     * 2. Most used;
+     * 3. Oldest;
      *
-     * A cycle is detected when a potential child or one of its children is parent of the target folder in another
-     * user's tree.
-     *
-     * @param string $userId The target user tree
-     * @param string $folderId The target folder that will have be moved in the parent
-     * @param string $folderParentId The target folder parent the folder will be moved in
-     * @return array A list of folder which are responsible of a cycle
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param array $changes The list of changes to sort
+     * @return array
      */
-    private function detectCycleBeforeReconstructFolderChildren(string $userId, string $folderId, string $folderParentId)
+    private function sortReconstructChangesByPriorities(UserAccessControl $uac, array $changes)
     {
-        // R = All the items that could be a child and parent of the target folder after reconstruction.
-        //
-        // Details :
-        // POTENTIAL_CHILDREN_AND_GRAND_CHILDREN = The potential child and all its descendants in the target user tree
-        // FOLDER_ANCESTORS = The folders ancestors in all users trees
-        // R = POTENTIAL_CHILDREN_AND_GRAND_CHILDREN ⋂ FOLDER_ANCESTORS
-
-        $conflictedFoldersIds = [];
-
-        $usersIdsSeeingFolderParent = $this->getUsersIdsHavingAccessTo($folderParentId);
-        $children = $this->getFolderChildrenIdsFromUserTree($userId, $folderId, true);
-        $children[] = $folderId;
-        foreach ($usersIdsSeeingFolderParent as $userIdSeeingFolderParent) {
-            foreach ($children as $child) {
-                $cycleDetected = $this->foldersItemsHasAncestorService->hasAncestor($folderParentId, $child, $userIdSeeingFolderParent);
-                if ($cycleDetected) {
-                    $conflictedFoldersIds[] = $child;
-                }
+        usort($changes, function ($changeA, $changeB) use ($uac) {
+            // Operator relations should be applied in priority.
+            if ($changeA['inOperatorTree']) {
+                return -1;
+            } elseif ($changeB['inOperatorTree']) {
+                return 1;
             }
-        }
+            // Otherwise most used relations should be applied in priority.
+            if ($changeA['usedCount'] > $changeB['usedCount']) {
+                return -1;
+            } elseif ($changeA['usedCount'] < $changeB['usedCount']) {
+                return 1;
+            }
+            // Otherwise oldest relations should be applied in priority.
+            if ($changeA['created'] < $changeB['created']) {
+                return -1;
+            } elseif ($changeB['created'] < $changeA['created']) {
+                return 1;
+            }
 
-        return $conflictedFoldersIds;
+            return 1;
+        });
+
+        return $changes;
     }
 
     /**
-     * Get a list of users ids having access to a given item.
-     * @param string $foreignId The target folder
+     * Reconstruct the newly added item parent in the target user tree.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $foreignModel The entity model
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @param array $change The change
+     * @return void
+     */
+    private function reconstructParent(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId, array $change)
+    {
+        // If no one see the newly added item in the proposed parent, then this change is not valid anymore.
+        // It happens when the item has already been organized already by a change with a higher priority.
+        $exists = $this->foldersRelationsTable->exists(['foreign_id' => $foreignId, 'folder_parent_id' => $change['foreignId']]);
+        if (!$exists) {
+            return;
+        }
+
+        // Move the item to the root of users seeing the item in another potential folder parent. Except for people
+        // seeing the item in the proposed parent folder.
+        $potentialFolderParentsIds = $this->getPotentialParentIdsFor($foreignId, $userId);
+        array_splice($potentialFolderParentsIds, array_search($change['foreignId'], $potentialFolderParentsIds), 1);
+        if (!empty($potentialFolderParentsIds)) {
+            $this->foldersRelationsTable->moveItemFrom($foreignId, $potentialFolderParentsIds, FoldersRelation::ROOT);
+        }
+
+        // Move the item to the proposed parent folder for all users seeing the proposed parent folder and the target
+        // item.
+        $usersIdsHavingAccessToFolderParent = $this->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
+        $this->foldersRelationsTable->moveItemFor($foreignId, $usersIdsHavingAccessToFolderParent, $change['foreignId']);
+
+        // If the newly added item is a folder, detect and fix conflicts.
+        if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
+            $this->detectAndRepairConflicts($uac, $userId, $usersIdsHavingAccessToFolderParent, $change);
+        }
+    }
+
+    /**
+     * Return a list of users ids having access to a list of items.
+     *
+     * @param array $foreignIds The list of items to check for.
      * @return array
      */
-    public function getUsersIdsHavingAccessTo(string $foreignId)
+    public function getUsersIdsHavingAccessToMultipleItems(array $foreignIds)
     {
-        return $this->foldersRelationsTable->findByForeignId($foreignId)
-            ->select('user_id')
+        if (empty($foreignIds)) {
+            throw new InternalErrorException('The foreignIds parameter cannot be empty.');
+        }
+
+        // R = All the users that have access to all the given items.
+        //
+        // Details :
+        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the first item of the list
+        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the second item of the list
+        // ....
+        // USERS_HAVING_ACCESS_TO_ITEM_N = All the users having access to the N item of the list
+        // R = USERS_HAVING_ACCESS_TO_ITEM_1 ⋂ USERS_HAVING_ACCESS_TO_ITEM_2 ⋂ ... ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
+
+        $query = $this->foldersRelationsTable->find();
+
+        foreach ($foreignIds as $foreignId) {
+            // R = R ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
+            $query->where([
+                'user_id IN' => $this->findUsersIdsHavingAccessToItem($foreignId),
+            ]);
+        }
+
+        return $query
             ->extract('user_id')
             ->toArray();
     }
 
     /**
-     * Get folder's children ids in a user tree.
+     * Returns a query that retrieves all the users having access to a given item.
      *
-     * @param string $userId The target user
-     * @param string $folderId The target folder
-     * @param bool $recursive (Optional) Return the children of the children recursively. Note the result will be a flat
-     * of children, the structure won't be preserved.
-     * @return array
+     * @param string $foreignId The target folder
+     * @return Query
      */
-    public function getFolderChildrenIdsFromUserTree(string $userId, string $folderId, bool $recursive = false)
+    public function findUsersIdsHavingAccessToItem(string $foreignId)
     {
-        $childrenIds = $this->foldersRelationsTable->find()
-            ->where([
-                'user_id' => $userId,
-                'folder_parent_id' => $folderId,
-            ])
-            ->select('foreign_id')
-            ->extract('foreign_id')
-            ->toArray();
-
-        if ($recursive) {
-            foreach ($childrenIds as $childId) {
-                $childrenIds += $this->getFolderChildrenIdsFromUserTree($userId, $childId, true);
-            }
-        }
-
-        return $childrenIds;
+        return $this->foldersRelationsTable->findByForeignId($foreignId)
+            ->select('user_id');
     }
 
     /**
-     * Reconstruct the user tree based on the other users trees.
+     * Detect an repair conflicts after a change is applied to user trees.
+     *
+     * Two kind of conflicts can be identified.
+     * - A cycle in the impacted users trees. The newly added folder cannot be it's own grand father. This case can only
+     *   happen when a personal folder is involved.
+     * - A cycle between two user trees, also called strongly connected components. Two folders cannot be seen by two
+     *   different user as a child for one and as an ancestor for the other.
      *
      * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $foreignModel The target entity model
-     * @param string $foreignId The target entity
-     * @param string $userId The target user
-     * @param string|null $appliedOperatorFolderParentId The applied operator folder parent id. Null if none.
-     * @param array $appliedFolderChildrenId The already applied operator folder children if any.
+     * @param string $userId The target user id the item is added for
+     * @param array $indirectlyImpactedUsersIds The users impacted by this change
      * @return void
      */
-    private function reconstructUserTreeBasedOnOtherUsersTrees(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId, string $appliedOperatorFolderParentId = null, array $appliedFolderChildrenId = [])
+    private function detectAndRepairConflicts(UserAccessControl $uac, string $userId, array $indirectlyImpactedUsersIds)
     {
-        // If the operator view has not been applied, or the operator doesn't see the item into a folder. Try to
-        // apply other users representations.
-        if (is_null($appliedOperatorFolderParentId)) {
-            $this->reconstructFolderParentFromOtherUsersTrees($uac, $foreignModel, $foreignId, $userId);
-        }
+        // Detect and repair a cycle in the target user tree.
+        // This can happen when a personal folder is involved.
+        $this->detectAndRepairCycleInUserTree($userId);
 
-        // If the item is a folder, reconstruct the folder children.
-        if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-            $this->reconstructFolderChildrenFromOtherUsersTrees($uac, $foreignId, $userId, $appliedFolderChildrenId);
-        }
+        // Detect an repair strongly connected components between the users affected by a change other users.
+        $this->detectAndRepairStronglyConnectedComponents($uac, $userId, $indirectlyImpactedUsersIds);
     }
 
     /**
-     * Reconstruct the parent of a folder in a user tree based on non operator users representation
-     * @param UserAccessControl $uac The operator
-     * @param string $foreignModel The target entity model
-     * @param string $foreignId The target entity
-     * @param string $userId The target user
+     * Look for a cycle in the target user tree and fix it.
+     *
+     * @param string $userId The target user id the item is added for
      * @return void
      */
-    private function reconstructFolderParentFromOtherUsersTrees(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId)
+    private function detectAndRepairCycleInUserTree(string $userId)
     {
-        $folderParentsIds = $this->getPotentialFolderParentsIds($foreignId, $userId);
-        $folderParentsIdsCount = count($folderParentsIds);
-
-        if (!$folderParentsIdsCount) {
+        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectBetweenUsers([$userId], true);
+        if (empty($sccs)) {
             return;
-        } elseif ($folderParentsIdsCount > 1) {
-            // Conflict detection: Multiple folder parents found.
-            // We don't choose a version over another, the folder will be moved from the identified other parent folders
-            // to the root of users having this representation.
-            $this->foldersRelationsTable->moveItemFrom($foreignId, $folderParentsIds, null);
-
-            return;
-        } else {
-            $folderParentId = $folderParentsIds[0];
         }
 
-        // If the item is a folder, try to detect a cycle.
-        if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
-            // Cycle detection: An ancestor of the target folder in the target user tree is a child of the target folder in
-            // another user tree.
-            $cyclesFoldersIds = $this->detectCycleBeforeReconstructFolderParent($userId, $foreignId, $folderParentId);
-            if (!empty($cyclesFoldersIds)) {
-                // If a cycle is detected in the operator tree then:
-                // - Do not apply the parent change;
-                // - Break the parent folder relationship in other trees: Move the folder to the root of users seeing the
-                //   the target folder in the parent folder.
-                $cyclesFoldersIdsInOperatorTree = $this->filterFoldersIdsByUserIdAccess($userId, $cyclesFoldersIds);
-                if (!empty($cyclesFoldersIdsInOperatorTree)) {
-                    $this->foldersRelationsTable->moveItemFrom($foreignId, [$folderParentId]);
+        $foldersRelations = reset($sccs);
+        $folderRelationToBreak = $this->identifyCycleFolderRelationToBreak($userId, $foldersRelations);
+        $this->foldersRelationsTable->moveItemFrom($folderRelationToBreak['foreign_id'], [$folderRelationToBreak['folder_parent_id']], FoldersRelation::ROOT);
 
-                    return;
-                }
+        // Continue to look and fix cycle until the tree is cycle free.
+        if (count($sccs) > 1) {
+            $this->detectAndRepairCycleInUserTree($userId);
+        }
+    }
 
-                // If the cycle are relative to other users tree then: Move the detected cycle folder to the root for
-                // each user seeing it in the target folder.
-                foreach ($cyclesFoldersIds as $cyclesFolderId) {
-                    $this->foldersRelationsTable->moveItemFrom($cyclesFolderId, [$foreignId], null);
-                }
+    /**
+     * Identify which relation should be broken to solve the cycle.
+     *
+     * @param string $userId The target user id the item is added for
+     * @param array $foldersRelations The list of folders relations responsible of a cycle
+     * @return array
+     */
+    private function identifyCycleFolderRelationToBreak(string $userId, array $foldersRelations)
+    {
+        $personalFolderRelation = null;
+
+        // Look for a personal folder. A cycle cannot be created in a user tree if it doesn't involve a personal folder.
+        foreach ($foldersRelations as $folderRelation) {
+            $isPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderRelation['folder_parent_id']);
+            if ($isPersonal) {
+                $personalFolderRelation = $folderRelation;
+                break;
             }
         }
 
-        // Move the folder into the parent parent.
-        $this->foldersRelationsTable->moveItemFor($foreignId, [$userId], $folderParentId);
-    }
-
-    /**
-     * Filter a list of items ids and return the ones that are in a user tree.
-     * @param string $userId The target user
-     * @param array $foldersIds The list of items id to filter
-     * @return array The filtered list
-     */
-    private function filterFoldersIdsByUserIdAccess(string $userId, array $foldersIds = [])
-    {
-        if (empty($foldersIds)) {
-            return [];
+        // If a cycle is found but it does not include a personal folder, then we have an integrity issue with the graph.
+        // The cleanup task should identify and solve this issue.
+        if (is_null($personalFolderRelation)) {
+            throw new InternalErrorException("Strongly connected components found in the tree of ($userId), but it is not related to a personal folder.");
         }
 
-        return $this->foldersRelationsTable->find()
-            ->where([
-                'foreign_id IN' => $foldersIds,
-                'user_id' => $userId,
-            ])
-            ->select('foreign_id')
-            ->extract('foreign_id')
-            ->toArray();
+        return $personalFolderRelation;
     }
 
     /**
-     * Reconstruct the children of a folder in a user tree based on non operator users representation
-     * @param UserAccessControl $uac The operator
-     * @param string $folderId The target folder
-     * @param string $userId The target user
-     * @param array $operatorFolderChildrenIds A list of items already added by the operator reconstruction process.
+     * Look for strongly connected components between the users impacted by a change and other passbolt users.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $userId The target user id the item is added for
+     * @param array $usersIdsImpacted Users impacted by the change
      * @return void
      */
-    private function reconstructFolderChildrenFromOtherUsersTrees(UserAccessControl $uac, string $folderId, string $userId, array $operatorFolderChildrenIds = [])
+    private function detectAndRepairStronglyConnectedComponents(UserAccessControl $uac, string $userId, array $usersIdsImpacted)
     {
-        $childrenIds = $this->getPotentialFolderChildrenIds($folderId, $userId);
-        $childrenIds = array_diff($childrenIds, $operatorFolderChildrenIds);
-
-        foreach ($childrenIds as $childId) {
-            // Cycle detection: The identified child or one of its children in the target user tree is an ancestor of
-            // the target folder in another user tree.
-            $cyclesFoldersIds = $this->detectCycleBeforeReconstructFolderChildren($userId, $childId, $folderId);
-
-            // If a cycle is detected in the operator tree then:
-            // - Do not apply the child change;
-            // - Break the parent folder relationship in other trees.
-            $cyclesFoldersIdsInOperatorTree = $this->filterFoldersIdsByUserIdAccess($uac->userId(), $cyclesFoldersIds);
-            if (!empty($cyclesFoldersIdsInOperatorTree)) {
-                $this->foldersRelationsTable->moveItemFrom($childId, [$folderId]);
-
-                return;
-            }
-
-            // If the cycle are relative to other users trees then: Move the target folder from the folder responsible
-            // of a cycle to the root of the users trees having this representation.
-            // @todo no test to validate this line
-            foreach ($cyclesFoldersIds as $cyclesFolderId) {
-                $this->foldersRelationsTable->moveItemFrom($folderId, [$cyclesFolderId], null);
-            }
-
-            // Move the child into the target folder.
-            $this->foldersRelationsTable->moveItemFor($childId, [$userId], $folderId);
+        $usersIdsToDetectSCCsFor = array_merge([$userId], $usersIdsImpacted);
+        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectBetweenUsersAndAllUsers($usersIdsToDetectSCCsFor);
+        if (empty($sccs)) {
+            return;
         }
+
+        // Treat the first scc found.
+        $scc = reset($sccs);
+        $folderRelationToBreak = $this->identifyStronglyConnectedComponentsRelationToBreak($uac, $userId, $scc['folders_relations']);
+        $this->foldersRelationsTable->moveItemFrom($folderRelationToBreak['foreignId'], [$folderRelationToBreak['folderParentId']], FoldersRelation::ROOT);
+
+        // Run the repair function again in order to solve other SCCs. The current call might have impacted other SCCs.
+        if (count($sccs) > 1) {
+            $this->detectAndRepairStronglyConnectedComponents($uac, $userId, $usersIdsImpacted);
+        }
+    }
+
+    /**
+     * Identify the relation to break in order to solve an SCC.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $userId The target user id the item is added for
+     * @param array $foldersRelations The list of folders relations responsible of a cycle
+     * @return array
+     * [
+     *   string $foreign_id The item id
+     *   string $folder_parent_id The item folder parent
+     *   bool $inOperatorTree Does the operator see the relation
+     *   bool $inUserTree Does the user see the relation
+     *   int $usedCount How many user see the relation
+     *   string $created The oldest time this relation has been created
+     * ]
+     */
+    private function identifyStronglyConnectedComponentsRelationToBreak(UserAccessControl $uac, string $userId, array $foldersRelations)
+    {
+        // Retrieve folder relation info that will help to identify the relation to break.
+        foreach ($foldersRelations as $i => $folderRelation) {
+            $inOperatorTree = $this->foldersRelationsTable->exists(['foreign_id' => $folderRelation['foreign_id'], 'folder_parent_id' => $folderRelation['folder_parent_id'], 'user_id' => $uac->userId()]);
+            $inUserTree = $this->foldersRelationsTable->exists(['foreign_id' => $folderRelation['foreign_id'], 'folder_parent_id' => $folderRelation['folder_parent_id'], 'user_id' => $userId]);
+            $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($folderRelation['foreign_id'], $folderRelation['folder_parent_id'])->count();
+            $created = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($folderRelation['foreign_id'], $folderRelation['folder_parent_id'])->order('created ')->select('created')->extract('created')->first();
+            $foldersRelations[$i] = [
+                'foreignId' => $folderRelation['foreign_id'],
+                'folderParentId' => $folderRelation['folder_parent_id'],
+                'inOperatorTree' => $inOperatorTree,
+                'inUserTree' => $inUserTree,
+                'usedCount' => $usedCount,
+                'created' => $created,
+            ];
+        }
+
+        // Sort the folders relations in order to
+        $foldersRelations = $this->sortStronglyConnectedComponentsConflictedFoldersRelations($uac, $foldersRelations);
+
+        return $foldersRelations[0];
+    }
+
+    /**
+     * Sort the list of conflicted folders relations moving to top the relations with the highest priority to be broken.
+     * 1. Newest;
+     * 2. Not in user tree
+     * 3. Less used;
+     * 4. Operator;
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param array $foldersRelations The strongly connected components as a list of folders relations
+     * @return array
+     */
+    private function sortStronglyConnectedComponentsConflictedFoldersRelations(UserAccessControl $uac, array $foldersRelations)
+    {
+        usort($foldersRelations, function ($folderRelationA, $folderRelationB) use ($uac) {
+            // Operator relations should be broken with the lowest priority.
+            if ($folderRelationA['inOperatorTree']) {
+                return 1;
+            } elseif ($folderRelationB['inOperatorTree']) {
+                return -1;
+            }
+            // Otherwise most used relations should be broken with the lowest priority.
+            if ($folderRelationA['usedCount'] > $folderRelationB['usedCount']) {
+                return 1;
+            } elseif ($folderRelationA['usedCount'] < $folderRelationB['usedCount']) {
+                return -1;
+            }
+            // Otherwise relations in the user tree should be broken with the lowest priority.
+            if ($folderRelationA['inUserTree']) {
+                return 1;
+            } elseif ($folderRelationB['inUserTree']) {
+                return -1;
+            }
+            // Otherwise oldest relation s should be broken with the lowest priority.
+            if ($folderRelationA['created'] < $folderRelationB['created']) {
+                return 1;
+            } elseif ($folderRelationA['created'] > $folderRelationB['created']) {
+                return -1;
+            }
+
+            return -1;
+        });
+
+        return $foldersRelations;
+    }
+
+    /**
+     * Reconstruct a newly added item child in the target user tree.
+     *
+     * @param UserAccessControl $uac The user at the origin of the operation
+     * @param string $foreignId The item id
+     * @param string $userId The target user id the item is added for
+     * @param array $change The change
+     * @return void
+     */
+    private function reconstructChild(UserAccessControl $uac, string $foreignId, string $userId, array $change)
+    {
+        // If no one see the proposed child into the newly added item, then this change is not valid anymore.
+        // It happens when the proposed child has been invalided by a previous change with a higher priority.
+        $exists = $this->foldersRelationsTable->exists(['foreign_id' => $change['foreignId'], 'folder_parent_id' => $foreignId]);
+        if (!$exists) {
+            return;
+        }
+
+        // Move the proposed child item into the newly added item for all users seeing the proposed child and the newly
+        // added item.
+        $usersIdsHavingAccessToItemAndProposedChild = $this->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
+        $this->foldersRelationsTable->moveItemFor($change['foreignId'], $usersIdsHavingAccessToItemAndProposedChild, $foreignId);
+
+        // Detect and fix conflicts.
+        $this->detectAndRepairConflicts($uac, $userId, $usersIdsHavingAccessToItemAndProposedChild);
     }
 }
