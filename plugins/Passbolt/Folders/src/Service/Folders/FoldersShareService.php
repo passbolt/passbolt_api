@@ -111,7 +111,7 @@ class FoldersShareService
         }
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData) {
-            $isPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folder->id);
+            $isPersonal = $this->foldersRelationsTable->isItemPersonal($folder->id);
             $result = $this->updatePermissions($uac, $folder, $permissionsData);
             // If the folder was a personal folder. Then move the content that was self organized and for which the user
             // does not have sufficient permission onto it (<UPDATE) to move into a shared folder.

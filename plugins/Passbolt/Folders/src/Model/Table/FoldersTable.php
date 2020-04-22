@@ -133,4 +133,18 @@ class FoldersTable extends Table
 
         return $validator;
     }
+
+    /**
+     * Get a folder created date.
+     *
+     * @param string $id The folder id
+     * @return string
+     */
+    public function getCreatedDate(string $id)
+    {
+        return $this->findById($id)
+            ->select('created')
+            ->extract('created')
+            ->first();
+    }
 }

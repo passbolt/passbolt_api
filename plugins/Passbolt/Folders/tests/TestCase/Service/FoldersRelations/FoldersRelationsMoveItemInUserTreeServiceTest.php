@@ -113,7 +113,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
 
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($folderB->id, 1);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
     }
@@ -137,12 +137,12 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId) = $this->insertFixture_Folder_Personal_MoveFolderToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, null);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
 
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($folderB->id, 1);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Folder_Personal_MoveFolderToRoot()
@@ -198,8 +198,8 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
 
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($folderB->id, 2);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderA->id);
@@ -231,8 +231,8 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($folderB->id, 2);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
@@ -269,15 +269,15 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($folderB->id, 2);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderC->id);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 1);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Folder_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination()
@@ -310,17 +310,17 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($folderB->id, 2);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderD->id);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 1);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder D
         $this->assertItemIsInTrees($folderD->id, 1);
-        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Folder_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders()
@@ -364,15 +364,15 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($folderB->id, 2);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderC->id);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 2);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Folder_SharedWithUser_MoveFromRootToSharedFolder_MoveToTargetFolderForUsersSeeingIt()
@@ -393,7 +393,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::OWNER]);
         $folderB = $this->addFolder(['name' => 'B']);
         $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
         $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
         $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => $folderA->id]);
         $folderC = $this->addFolderFor(['name' => 'C'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
@@ -406,17 +406,17 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $folderC, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, null);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, FoldersRelation::ROOT);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($folderB->id, 1);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 2);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderB->id);
     }
 
@@ -447,145 +447,159 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         return [$folderA, $folderB, $folderC, $userAId, $userBId];
     }
 
-//    public function testMoveItemInUserTreeSuccess_Folder_TODOC1()
-//    {
-//        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_TODOC1();
-//        $uac = new UserAccessControl(Role::USER, $userAId);
-//
-//        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, $folderB->id);
-//
-//        // Folder A
-//        $this->assertItemIsInTrees($folderA->id, 2);
-//        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-//        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderD->id);
-//        // Folder B
-//        $this->assertItemIsInTrees($folderB->id, 2);
-//        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
-//        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
-//        // Folder C
-//        $this->assertItemIsInTrees($folderC->id, 2);
-//        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderB->id);
-//        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-//        // Folder D
-//        $this->assertItemIsInTrees($folderD->id, 2);
-//        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-//        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
-//    }
-//
-//    private function insertFixture_Folder_TODOC1()
-//    {
-//
-//        $userAId = UuidFactory::uuid('user.id.ada');
-//        $userBId = UuidFactory::uuid('user.id.betty');
-//        $userCId = UuidFactory::uuid('user.id.carol');
-//        $folderA = $this->addFolder(['name' => 'A']);
-//        $folderB = $this->addFolder(['name' => 'B']);
-//        $folderC = $this->addFolder(['name' => 'C']);
-//        $folderD = $this->addFolder(['name' => 'D']);
-//
-//        print_r('A ' . $folderA->id . "\n");
-//        print_r('B ' . $folderB->id . "\n");
-//        print_r('C ' . $folderC->id . "\n");
-//        print_r('D ' . $folderD->id . "\n");
-//
-//        // Folder A
-//        $this->addPermission('Folder', $folderA->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderA->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userBId, 'folder_parent_id' => $folderD->id]);
-//        // Folder B
-//        $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userCId, 'folder_parent_id' => null]);
-//        // Folder C
-//        $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => null]);
-//        // Folder D
-//        $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->id]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userCId, 'folder_parent_id' => null]);
-//
-//        return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId];
-//    }
-//
-//    public function testMoveItemInUserTreeSuccess_Folder_TODOC2()
-//    {
-//        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId) = $this->insertFixture_Folder_TODOC2();
-//        $uac = new UserAccessControl(Role::USER, $userAId);
-//
-//        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
-//
-//        // Folder A
-//        $this->assertItemIsInTrees($folderA->id, 2);
-//        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-//        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-//        // Folder B
-//        $this->assertItemIsInTrees($folderB->id, 2);
-//        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
-//        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
-//        // Folder C
-//        $this->assertItemIsInTrees($folderC->id, 2);
-//        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderB->id);
-//        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
-//        // Folder D
-//        $this->assertItemIsInTrees($folderD->id, 2);
-//        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
-//        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, null);
-//    }
-//
-//    private function insertFixture_Folder_TODOC2()
-//    {
-//
-//        $userAId = UuidFactory::uuid('user.id.ada');
-//        $userBId = UuidFactory::uuid('user.id.betty');
-//        $userCId = UuidFactory::uuid('user.id.carol');
-//        $folderA = $this->addFolder(['name' => 'A']);
-//        $folderB = $this->addFolder(['name' => 'B']);
-//        $folderC = $this->addFolder(['name' => 'C']);
-//        $folderD = $this->addFolder(['name' => 'D']);
-//
-//        // Folder A
-//        $this->addPermission('Folder', $folderA->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderA->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userBId, 'folder_parent_id' => $folderD->id]);
-//        // Folder B
-//        $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userCId, 'folder_parent_id' => null]);
-//        // Folder C
-//        $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userAId, 'folder_parent_id' => $folderB->id]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => null]);
-//        // Folder D
-//        $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
-//        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->id]);
-//        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userCId, 'folder_parent_id' => null]);
-//
-//        return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId];
-//    }
-//
-//    public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
-//    {
-//        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
-//        $uac = new UserAccessControl(Role::USER, $userAId);
-//
-//        try {
-//            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
-//            $this->assertFalse(true, 'The test should catch an exception');
-//        } catch (CustomValidationException $e) {
-//            $this->assertEquals('Could not validate move data.', $e->getMessage());
-//            $errors = ['has_access' => 'You are not allowed to move this item.'];
-//            $this->assertEquals($errors, $e->getErrors());
-//        }
-//    }
+    public function testMoveItemInUserTreeSuccess_Folder_MoveSharedFolderShouldNotCreateSCCInOtherUsersTrees()
+    {
+        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId) = $this->insertFixture_Folder_MoveSharedFolderShouldNotCreateSCCInOtherUsersTrees();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderC->id, $folderB->id);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 3);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderD->id);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId, $folderD->id);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 2);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, FoldersRelation::ROOT);
+        // Folder C
+        $this->assertItemIsInTrees($folderC->id, 2);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderB->id);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        // Folder D
+        $this->assertItemIsInTrees($folderD->id, 3);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId, FoldersRelation::ROOT);
+    }
+
+    private function insertFixture_Folder_MoveSharedFolderShouldNotCreateSCCInOtherUsersTrees()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $userDId = UuidFactory::uuid('user.id.dame');
+        $folderA = $this->addFolder(['name' => 'A']);
+        $folderB = $this->addFolder(['name' => 'B']);
+        $folderC = $this->addFolder(['name' => 'C']);
+        $folderD = $this->addFolder(['name' => 'D']);
+
+        // Folder A
+        $this->addPermission('Folder', $folderA->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderA->id, 'User', $userBId, Permission::OWNER);
+        $this->addPermission('Folder', $folderA->id, 'User', $userDId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userBId, 'folder_parent_id' => $folderD->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userDId, 'folder_parent_id' => $folderD->id]);
+        // Folder B
+        $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => $folderA->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userCId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        // Folder C
+        $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        // Folder D
+        $this->addPermission('Folder', $folderC->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userDId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userCId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userDId, 'folder_parent_id' => FoldersRelation::ROOT]);
+
+        return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId];
+    }
+
+    public function testMoveItemInUserTreeSuccess_Folder_MoveSharedFolderShouldNotCreateIndirectSCCInOtherUsersTrees()
+    {
+        list($folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId, $userEId) = $this->insertFixture_Folder_MoveSharedFolderShouldNotCreateIndirectSCCInOtherUsersTrees();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
+
+        // Folder A
+        $this->assertItemIsInTrees($folderA->id, 2);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderC->id);
+        // Folder B
+        $this->assertItemIsInTrees($folderB->id, 3);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, $folderA->id);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, FoldersRelation::ROOT);
+        // Folder C
+        $this->assertItemIsInTrees($folderC->id, 3);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, $folderD->id);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userEId, $folderD->id);
+        // Folder D
+        $this->assertItemIsInTrees($folderD->id, 3);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userCId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userDId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userEId, FoldersRelation::ROOT);
+    }
+
+    private function insertFixture_Folder_MoveSharedFolderShouldNotCreateIndirectSCCInOtherUsersTrees()
+    {
+        $userAId = UuidFactory::uuid('user.id.ada');
+        $userBId = UuidFactory::uuid('user.id.betty');
+        $userCId = UuidFactory::uuid('user.id.carol');
+        $userDId = UuidFactory::uuid('user.id.dame');
+        $userEId = UuidFactory::uuid('user.id.edith');
+        $folderA = $this->addFolder(['name' => 'A']);
+        $folderB = $this->addFolder(['name' => 'B']);
+        $folderC = $this->addFolder(['name' => 'C']);
+        $folderD = $this->addFolder(['name' => 'D']);
+
+        // Folder A
+        $this->addPermission('Folder', $folderA->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderA->id, 'User', $userBId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderA->id, 'user_id' => $userBId, 'folder_parent_id' => $folderC->id]);
+        // in order to make the test predictable, we need to make the relation C->A older than the relation D->C, so
+        // the algorithm will always choose the relation to break.
+        sleep(1);
+        // Folder B
+        $this->addPermission('Folder', $folderB->id, 'User', $userAId, Permission::OWNER);
+        $this->addPermission('Folder', $folderB->id, 'User', $userBId, Permission::OWNER);
+        $this->addPermission('Folder', $folderB->id, 'User', $userCId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userBId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderB->id, 'user_id' => $userCId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        // Folder C
+        $this->addPermission('Folder', $folderC->id, 'User', $userBId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userCId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userEId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userBId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userCId, 'folder_parent_id' => $folderD->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderC->id, 'user_id' => $userEId, 'folder_parent_id' => $folderD->id]);
+        // Folder D
+        $this->addPermission('Folder', $folderC->id, 'User', $userCId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userDId, Permission::OWNER);
+        $this->addPermission('Folder', $folderC->id, 'User', $userEId, Permission::OWNER);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userCId, 'folder_parent_id' => $folderB->id]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userDId, 'folder_parent_id' => FoldersRelation::ROOT]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::FOLDER_ACO, 'foreign_id' => $folderD->id, 'user_id' => $userEId, 'folder_parent_id' => FoldersRelation::ROOT]);
+
+        return [$folderA, $folderB, $folderC, $folderD, $userAId, $userBId, $userCId, $userDId, $userEId];
+    }
+
+    public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
+    {
+        list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
+        $uac = new UserAccessControl(Role::USER, $userAId);
+
+        try {
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
+            $this->assertFalse(true, 'The test should catch an exception');
+        } catch (CustomValidationException $e) {
+            $this->assertEquals('Could not validate move data.', $e->getMessage());
+            $errors = ['has_access' => 'You are not allowed to move this item.'];
+            $this->assertEquals($errors, $e->getErrors());
+        }
+    }
 
     public function insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
     {
@@ -640,7 +654,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
-            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, null);
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals("Could not validate move data.", $e->getMessage());
@@ -673,7 +687,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
-            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, null);
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals("Could not validate move data.", $e->getMessage());
@@ -712,10 +726,10 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id);
 
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($folderB->id, 2);
         $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, $folderA->id);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Folder_SelfOrganize_MoveFromRootToPersonalFolder()
@@ -739,13 +753,13 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $userAId, $userBId) = $this->insertFixture_Folder_SelfOrganize_MoveFromPersonalToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, null);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, FoldersRelation::ROOT);
 
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($folderB->id, 2);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Folder_SelfOrganize_MoveFromPersonalToRoot()
@@ -841,7 +855,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         // Resource
         $this->assertItemIsInTrees($resource->id, 1);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
@@ -861,14 +875,14 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         list($folderA, $resource, $userAId) = $this->insertFixture_Resource_Personal_MoveToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, null);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         // Resource
         $this->assertItemIsInTrees($resource->id, 1);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, FoldersRelation::ROOT);
     }
 
     public function insertFixture_Resource_Personal_MoveToRoot()
@@ -892,8 +906,8 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
 
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($resource->id, 2);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderA->id);
@@ -925,8 +939,8 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($resource->id, 2);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
@@ -963,15 +977,15 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 2);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Resource
         $this->assertItemIsInTrees($resource->id, 2);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderC->id);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, FoldersRelation::ROOT);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 1);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Resource_SharedWithUser_MoveIntoSharedFolder_MoveToRootForUsersNotSeeingDestination()
@@ -1004,17 +1018,17 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         // R1
         $this->assertItemIsInTrees($resource->id, 2);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderD->id);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderC->id);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 1);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // Folder D
         $this->assertItemIsInTrees($folderD->id, 1);
-        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderD->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Resource_SharedWithUser_MoveFromSharedFolderToSharedFolder_DontMoveForUsersNotSeeingOriginalAndTargetFolders()
@@ -1058,15 +1072,15 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // R1
         $this->assertItemIsInTrees($resource->id, 2);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderC->id);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderC->id);
         // Folder C
         $this->assertItemIsInTrees($folderC->id, 2);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
-        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($folderC->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Resource_SharedWithUser_MoveFromRootToSharedFolder_MoveToTargetFolderForUsersSeeingIt()
@@ -1087,7 +1101,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $folderA = $this->addFolderFor(['name' => 'A'], [$userBId => Permission::OWNER]);
         $resource = $this->addResource(['name' => 'R1']);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, 'User', $userAId, Permission::OWNER);
-        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userAId, 'folder_parent_id' => null]);
+        $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userAId, 'folder_parent_id' => FoldersRelation::ROOT]);
         $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, 'User', $userBId, Permission::OWNER);
         $this->addFolderRelation(['foreign_model' => PermissionsTable::RESOURCE_ACO, 'foreign_id' => $resource->id, 'user_id' => $userBId, 'folder_parent_id' => $folderA->id]);
         $folderC = $this->addFolderFor(['name' => 'C'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
@@ -1100,17 +1114,17 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         list($folderA, $folderB, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SharedWithUser_MoveFromSharedFolderToRoot_MoveToRootForUsersSeeingItInTheOriginalOperatorFolder();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, null);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
 
         // Folder A
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         // Folder B
         $this->assertItemIsInTrees($folderB->id, 1);
-        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, null);
+        $this->assertFolderRelation($folderB->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userBId, FoldersRelation::ROOT);
         // R1
         $this->assertItemIsInTrees($resource->id, 2);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, FoldersRelation::ROOT);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, $folderB->id);
     }
 
@@ -1177,7 +1191,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
-            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, null);
+            $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (CustomValidationException $e) {
             $this->assertEquals("Could not validate move data.", $e->getMessage());
@@ -1216,10 +1230,10 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
 
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($resource->id, 2);
         $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, $folderA->id);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Resource_SelfOrganize_MoveFromRootToPersonalFolder()
@@ -1243,13 +1257,13 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
         list($folderA, $resource, $userAId, $userBId) = $this->insertFixture_Resource_SelfOrganize_MoveFromPersonalFolderToRoot();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, null);
+        $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, FoldersRelation::ROOT);
 
         $this->assertItemIsInTrees($folderA->id, 1);
-        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, null);
+        $this->assertFolderRelation($folderA->id, FoldersRelation::FOREIGN_MODEL_FOLDER, $userAId, FoldersRelation::ROOT);
         $this->assertItemIsInTrees($resource->id, 2);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, null);
-        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, null);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userAId, FoldersRelation::ROOT);
+        $this->assertFolderRelation($resource->id, FoldersRelation::FOREIGN_MODEL_RESOURCE, $userBId, FoldersRelation::ROOT);
     }
 
     private function insertFixture_Resource_SelfOrganize_MoveFromPersonalFolderToRoot()

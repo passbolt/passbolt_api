@@ -18,7 +18,6 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -48,6 +47,11 @@ class FoldersRelationsAddItemToUserTreeService
     private $folderRelationsDetectStronglyConnectedComponents;
 
     /**
+     * @var FoldersRelationsRepairStronglyConnectedComponents
+     */
+    private $foldersRelationsRepairStronglyConnectedComponents;
+
+    /**
      * @var UserHasPermissionService
      */
     private $userHasPermissionService;
@@ -60,6 +64,7 @@ class FoldersRelationsAddItemToUserTreeService
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->folderRelationsDetectStronglyConnectedComponents = new FoldersRelationsDetectStronglyConnectedComponents();
+        $this->foldersRelationsRepairStronglyConnectedComponents = new FoldersRelationsRepairStronglyConnectedComponents();
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $this->userHasPermissionService = new UserHasPermissionService();
     }
@@ -76,25 +81,8 @@ class FoldersRelationsAddItemToUserTreeService
      */
     public function addItemToUserTree(UserAccessControl $uac, string $foreignModel, string $foreignId, string $userId)
     {
-//        // DEBUG
-//        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-//        $users = $foldersRelationsTable->Users->find()->where(['username in' => [
-//            'ada@passbolt.com', 'betty@passbolt.com', 'carol@passbolt.com', 'dame@passbolt.com', 'edith@passbolt.com'
-//        ]])->order(['username']);
-//        foreach ($users as $user) {
-//            $this->{$user->username} = $user->id;
-//            print_r('User ' . $user->username . ' : ' . $user->id . "\n");
-//        }
-//        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
-//        $folders = $foldersTable->find()->order(['name']);
-//        foreach ($folders as $folder) {
-//            $this->{$folder->name} = $folder->id;
-//            print_r('Folder ' . $folder->name . ' : ' . $folder->id . "\n");
-//        }
-//        // END DEBUG
-
-        $existsInUserTree = $this->foldersRelationsTable->existsInUserTree($userId, $foreignId);
-        if ($existsInUserTree) {
+        $exists = $this->foldersRelationsTable->isItemInUserTree($userId, $foreignId);
+        if ($exists) {
             return;
         }
 
@@ -177,9 +165,10 @@ class FoldersRelationsAddItemToUserTreeService
         $folderParentsIds = $this->getPotentialParentIdsFor($foreignId, $userId);
 
         foreach ($folderParentsIds as $folderParentId) {
-            $inOperatorTree = $this->foldersRelationsTable->existsInUserTree($uac->userId(), $folderParentId);
-            $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($foreignId, $folderParentId)->count();
-            $created = $this->foldersTable->findById($folderParentId)->select('created')->extract('created')->first();
+            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->userId(), $folderParentId);
+            $usedCount = $this->foldersRelationsTable->countRelationUsage($foreignId, $folderParentId);
+            $created = $this->foldersTable->getCreatedDate($folderParentId);
+
             $changes[] = [
                 'type' => 'parent',
                 'foreignId' => $folderParentId,
@@ -249,7 +238,7 @@ class FoldersRelationsAddItemToUserTreeService
         $changes = [];
         $folderChildrenIds = $this->getPotentialChildrenIdsFor($foreignId, $userId);
         foreach ($folderChildrenIds as $folderChildId) {
-            $inOperatorTree = $this->foldersRelationsTable->existsInUserTree($uac->userId(), $folderChildId);
+            $inOperatorTree = $this->foldersRelationsTable->isItemInUserTree($uac->userId(), $folderChildId);
             $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($foreignId, $folderChildId)->count();
             $created = $this->foldersTable->findById($folderChildId)->select('created')->extract('created')->first();
             $changes[] = [
@@ -361,60 +350,13 @@ class FoldersRelationsAddItemToUserTreeService
 
         // Move the item to the proposed parent folder for all users seeing the proposed parent folder and the target
         // item.
-        $usersIdsHavingAccessToFolderParent = $this->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
+        $usersIdsHavingAccessToFolderParent = $this->foldersRelationsTable->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
         $this->foldersRelationsTable->moveItemFor($foreignId, $usersIdsHavingAccessToFolderParent, $change['foreignId']);
 
         // If the newly added item is a folder, detect and fix conflicts.
         if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
             $this->detectAndRepairConflicts($uac, $userId, $usersIdsHavingAccessToFolderParent, $change);
         }
-    }
-
-    /**
-     * Return a list of users ids having access to a list of items.
-     *
-     * @param array $foreignIds The list of items to check for.
-     * @return array
-     */
-    public function getUsersIdsHavingAccessToMultipleItems(array $foreignIds)
-    {
-        if (empty($foreignIds)) {
-            throw new InternalErrorException('The foreignIds parameter cannot be empty.');
-        }
-
-        // R = All the users that have access to all the given items.
-        //
-        // Details :
-        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the first item of the list
-        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the second item of the list
-        // ....
-        // USERS_HAVING_ACCESS_TO_ITEM_N = All the users having access to the N item of the list
-        // R = USERS_HAVING_ACCESS_TO_ITEM_1 ⋂ USERS_HAVING_ACCESS_TO_ITEM_2 ⋂ ... ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
-
-        $query = $this->foldersRelationsTable->find();
-
-        foreach ($foreignIds as $foreignId) {
-            // R = R ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
-            $query->where([
-                'user_id IN' => $this->findUsersIdsHavingAccessToItem($foreignId),
-            ]);
-        }
-
-        return $query
-            ->extract('user_id')
-            ->toArray();
-    }
-
-    /**
-     * Returns a query that retrieves all the users having access to a given item.
-     *
-     * @param string $foreignId The target folder
-     * @return Query
-     */
-    public function findUsersIdsHavingAccessToItem(string $foreignId)
-    {
-        return $this->foldersRelationsTable->findByForeignId($foreignId)
-            ->select('user_id');
     }
 
     /**
@@ -449,7 +391,7 @@ class FoldersRelationsAddItemToUserTreeService
      */
     private function detectAndRepairCycleInUserTree(string $userId)
     {
-        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectBetweenUsers([$userId], true);
+        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectInAggregatedUsersTrees([$userId], true);
         if (empty($sccs)) {
             return;
         }
@@ -477,7 +419,7 @@ class FoldersRelationsAddItemToUserTreeService
 
         // Look for a personal folder. A cycle cannot be created in a user tree if it doesn't involve a personal folder.
         foreach ($foldersRelations as $folderRelation) {
-            $isPersonal = $this->foldersRelationsTable->isPersonal(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderRelation['folder_parent_id']);
+            $isPersonal = $this->foldersRelationsTable->isItemPersonal($folderRelation['folder_parent_id']);
             if ($isPersonal) {
                 $personalFolderRelation = $folderRelation;
                 break;
@@ -504,105 +446,17 @@ class FoldersRelationsAddItemToUserTreeService
     private function detectAndRepairStronglyConnectedComponents(UserAccessControl $uac, string $userId, array $usersIdsImpacted)
     {
         $usersIdsToDetectSCCsFor = array_merge([$userId], $usersIdsImpacted);
-        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->detectBetweenUsersAndAllUsers($usersIdsToDetectSCCsFor);
+        $sccs = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor);
         if (empty($sccs)) {
             return;
         }
 
         // Treat the first scc found.
         $scc = reset($sccs);
-        $folderRelationToBreak = $this->identifyStronglyConnectedComponentsRelationToBreak($uac, $userId, $scc['folders_relations']);
-        $this->foldersRelationsTable->moveItemFrom($folderRelationToBreak['foreignId'], [$folderRelationToBreak['folderParentId']], FoldersRelation::ROOT);
+        $this->foldersRelationsRepairStronglyConnectedComponents->repair($uac, $userId, $scc);
 
-        // Run the repair function again in order to solve other SCCs. The current call might have impacted other SCCs.
-        if (count($sccs) > 1) {
-            $this->detectAndRepairStronglyConnectedComponents($uac, $userId, $usersIdsImpacted);
-        }
-    }
-
-    /**
-     * Identify the relation to break in order to solve an SCC.
-     *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param string $userId The target user id the item is added for
-     * @param array $foldersRelations The list of folders relations responsible of a cycle
-     * @return array
-     * [
-     *   string $foreign_id The item id
-     *   string $folder_parent_id The item folder parent
-     *   bool $inOperatorTree Does the operator see the relation
-     *   bool $inUserTree Does the user see the relation
-     *   int $usedCount How many user see the relation
-     *   string $created The oldest time this relation has been created
-     * ]
-     */
-    private function identifyStronglyConnectedComponentsRelationToBreak(UserAccessControl $uac, string $userId, array $foldersRelations)
-    {
-        // Retrieve folder relation info that will help to identify the relation to break.
-        foreach ($foldersRelations as $i => $folderRelation) {
-            $inOperatorTree = $this->foldersRelationsTable->exists(['foreign_id' => $folderRelation['foreign_id'], 'folder_parent_id' => $folderRelation['folder_parent_id'], 'user_id' => $uac->userId()]);
-            $inUserTree = $this->foldersRelationsTable->exists(['foreign_id' => $folderRelation['foreign_id'], 'folder_parent_id' => $folderRelation['folder_parent_id'], 'user_id' => $userId]);
-            $usedCount = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($folderRelation['foreign_id'], $folderRelation['folder_parent_id'])->count();
-            $created = $this->foldersRelationsTable->findByForeignIdAndFolderParentId($folderRelation['foreign_id'], $folderRelation['folder_parent_id'])->order('created ')->select('created')->extract('created')->first();
-            $foldersRelations[$i] = [
-                'foreignId' => $folderRelation['foreign_id'],
-                'folderParentId' => $folderRelation['folder_parent_id'],
-                'inOperatorTree' => $inOperatorTree,
-                'inUserTree' => $inUserTree,
-                'usedCount' => $usedCount,
-                'created' => $created,
-            ];
-        }
-
-        // Sort the folders relations in order to
-        $foldersRelations = $this->sortStronglyConnectedComponentsConflictedFoldersRelations($uac, $foldersRelations);
-
-        return $foldersRelations[0];
-    }
-
-    /**
-     * Sort the list of conflicted folders relations moving to top the relations with the highest priority to be broken.
-     * 1. Newest;
-     * 2. Not in user tree
-     * 3. Less used;
-     * 4. Operator;
-     *
-     * @param UserAccessControl $uac The user at the origin of the operation
-     * @param array $foldersRelations The strongly connected components as a list of folders relations
-     * @return array
-     */
-    private function sortStronglyConnectedComponentsConflictedFoldersRelations(UserAccessControl $uac, array $foldersRelations)
-    {
-        usort($foldersRelations, function ($folderRelationA, $folderRelationB) use ($uac) {
-            // Operator relations should be broken with the lowest priority.
-            if ($folderRelationA['inOperatorTree']) {
-                return 1;
-            } elseif ($folderRelationB['inOperatorTree']) {
-                return -1;
-            }
-            // Otherwise most used relations should be broken with the lowest priority.
-            if ($folderRelationA['usedCount'] > $folderRelationB['usedCount']) {
-                return 1;
-            } elseif ($folderRelationA['usedCount'] < $folderRelationB['usedCount']) {
-                return -1;
-            }
-            // Otherwise relations in the user tree should be broken with the lowest priority.
-            if ($folderRelationA['inUserTree']) {
-                return 1;
-            } elseif ($folderRelationB['inUserTree']) {
-                return -1;
-            }
-            // Otherwise oldest relation s should be broken with the lowest priority.
-            if ($folderRelationA['created'] < $folderRelationB['created']) {
-                return 1;
-            } elseif ($folderRelationA['created'] > $folderRelationB['created']) {
-                return -1;
-            }
-
-            return -1;
-        });
-
-        return $foldersRelations;
+        // Run the repair function again in order to find others SCCs.
+        $this->detectAndRepairStronglyConnectedComponents($uac, $userId, $usersIdsImpacted);
     }
 
     /**
@@ -625,7 +479,7 @@ class FoldersRelationsAddItemToUserTreeService
 
         // Move the proposed child item into the newly added item for all users seeing the proposed child and the newly
         // added item.
-        $usersIdsHavingAccessToItemAndProposedChild = $this->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
+        $usersIdsHavingAccessToItemAndProposedChild = $this->foldersRelationsTable->getUsersIdsHavingAccessToMultipleItems([$foreignId, $change['foreignId']]);
         $this->foldersRelationsTable->moveItemFor($change['foreignId'], $usersIdsHavingAccessToItemAndProposedChild, $foreignId);
 
         // Detect and fix conflicts.

@@ -12,10 +12,12 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.14.0
  */
+
 namespace Passbolt\Folders\Model\Table;
 
 use App\Model\Rule\IsNotSoftDeletedRule;
 use Cake\Datasource\EntityInterface;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Behavior\TimestampBehavior;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -72,15 +74,6 @@ class FoldersRelationsTable extends Table
             'foreignKey' => 'foreign_id',
         ]);
         $this->belongsTo('Users');
-        $this->hasMany('Children', [
-            'className' => 'FoldersRelations',
-            'bindingKey' => 'foreign_id',
-            'foreignKey' => 'folder_parent_id',
-            'dependent' => false,
-//            'conditions' => [
-//                'FoldersRelations.user_id' => 'Children.user_id'
-//            ]
-        ]);
     }
 
     /**
@@ -186,15 +179,169 @@ class FoldersRelationsTable extends Table
     }
 
     /**
-     * Check if an item exists in a user tree.
+     * Count the number of occurrences of a given relation.
+     *
+     * @param string $foreignId The relation child id
+     * @param string $folderParentId The relation parent id
+     * @return int
+     */
+    public function countRelationUsage(string $foreignId, string $folderParentId = FoldersRelation::ROOT)
+    {
+        $conditions = [
+            'foreign_id' => $foreignId,
+            'folder_parent_id' => $folderParentId,
+        ];
+
+        return $this->find()
+            ->where($conditions)
+            ->count();
+    }
+
+    /**
+     * Get an item folder parent id in a user tree.
+     *
+     * @param string $userId The target user to look for
+     * @param string $foreignId The item identifier
+     * @return string
+     */
+    public function getItemFolderParentIdInUserTree(string $userId, string $foreignId)
+    {
+        $foldersParentIds = $this->getItemFoldersParentIdsInUsersTrees([$userId], $foreignId);
+
+        return reset($foldersParentIds);
+    }
+
+    /**
+     * Get an item folders parent ids in multiple users trees.
+     *
+     * @param array $usersIds The list of users to get the item folder parent id
+     * @param string $foreignId The target entity id
+     * @param bool $excludeRoot Exclude the root folder. Default false.
+     * @return array
+     */
+    public function getItemFoldersParentIdsInUsersTrees(array $usersIds, string $foreignId, bool $excludeRoot = false)
+    {
+        $conditions = [
+            'user_id IN' => $usersIds,
+            'foreign_id' => $foreignId,
+        ];
+
+        if ($excludeRoot) {
+            $conditions[] = 'folder_parent_id IS NOT NULL';
+        }
+
+        return $this->find()
+            ->where($conditions)
+            ->select('folder_parent_id')
+            ->distinct('folder_parent_id')
+            ->extract('folder_parent_id')
+            ->toArray();
+    }
+
+    /**
+     * Get the oldest usage of a relation.
+     *
+     * @param string $foreignId The target entity id
+     * @param string $folderParentId The target entity parent id
+     * @return string
+     */
+    public function getRelationOldestCreatedDate(string $foreignId, string $folderParentId = FoldersRelation::ROOT)
+    {
+        $conditions = [
+            'foreign_id' => $foreignId,
+            'folder_parent_id' => $folderParentId,
+        ];
+
+        return $this->find()
+            ->where($conditions)
+            ->order('created ')
+            ->select('created')
+            ->extract('created')
+            ->first();
+    }
+
+    /**
+     * Return a list of users ids having access to a list of items.
+     *
+     * @param array $foreignIds The list of items to check for.
+     * @return array
+     */
+    public function getUsersIdsHavingAccessToMultipleItems(array $foreignIds)
+    {
+        if (empty($foreignIds)) {
+            throw new InternalErrorException('The foreignIds parameter cannot be empty.');
+        }
+
+        // R = All the users that have access to all the given items.
+        //
+        // Details :
+        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the first item of the list
+        // USERS_HAVING_ACCESS_TO_ITEM_1 = All the users having access to the second item of the list
+        // ....
+        // USERS_HAVING_ACCESS_TO_ITEM_N = All the users having access to the N item of the list
+        // R = USERS_HAVING_ACCESS_TO_ITEM_1 ⋂ USERS_HAVING_ACCESS_TO_ITEM_2 ⋂ ... ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
+
+        $query = $this->find();
+
+        foreach ($foreignIds as $foreignId) {
+            // R = R ⋂ USERS_HAVING_ACCESS_TO_ITEM_N
+            $query->where([
+                'user_id IN' => $this->findUsersIdsHavingAccessToItem($foreignId),
+            ]);
+        }
+
+        return $query
+            ->select('user_id')
+            ->distinct('user_id')
+            ->extract('user_id')
+            ->toArray();
+    }
+
+    /**
+     * Check if an item is personal.
+     *
+     * @param string $foreignId The item id
+     * @return bool
+     */
+    public function isItemPersonal(string $foreignId = null)
+    {
+        if (is_null($foreignId)) {
+            return false;
+        }
+
+        return $this->findByForeignId($foreignId)
+                ->count() === 1;
+    }
+
+    /**
+     * Check if an item is in a user tree.
      *
      * @param string $userId The target user
      * @param string $foreignId The target item id
      * @return bool
      */
-    public function existsInUserTree(string $userId, string $foreignId)
+    public function isItemInUserTree(string $userId, string $foreignId)
     {
         $conditions = ['foreign_id' => $foreignId, 'user_id' => $userId];
+
+        return $this->exists($conditions);
+    }
+
+    /**
+     * Check if an item is organized in a specified folder for a given user
+     *
+     * @param string $userId The target user
+     * @param string $foreignId The target item id
+     * @param string $folderParentId The target folder parent id
+     * @return bool
+     */
+    public function isItemOrganizedInUserTree(string $userId, string $foreignId, string $folderParentId = FoldersRelation::ROOT)
+    {
+        $conditions = [
+            'foreign_id' => $foreignId,
+            'folder_parent_id' => $folderParentId,
+            'user_id' => $userId,
+        ];
 
         return $this->exists($conditions);
     }
@@ -238,22 +385,5 @@ class FoldersRelationsTable extends Table
             'user_id IN' => $forUsersIds,
         ];
         $this->updateAll($fields, $conditions);
-    }
-
-    /**
-     * Check that a folder is personal.
-     *
-     * @param string $foreignModel The item model
-     * @param string $foreignId The item id
-     * @return bool
-     */
-    public function isPersonal(string $foreignModel, string $foreignId = null)
-    {
-        if (is_null($foreignId)) {
-            return false;
-        }
-
-        return $this->findByForeignModelAndForeignId($foreignModel, $foreignId)
-                ->count() === 1;
     }
 }
