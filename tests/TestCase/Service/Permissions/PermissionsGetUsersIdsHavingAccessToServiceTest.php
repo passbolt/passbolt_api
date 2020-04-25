@@ -79,8 +79,9 @@ class PermissionsGetUsersIdsHavingAccessToServiceTest extends AppTestCase
             ['user_id' => $userBId, 'is_admin' => true],
             ['user_id' => $userCId, 'is_admin' => true],
         ]]);
-        $for = [$userAId => Permission::OWNER, $userBId => Permission::OWNER, $g1->id => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
+        $forUsers = [$userAId => Permission::OWNER, $userBId => Permission::OWNER];
+        $forGroups = [$g1->id => Permission::OWNER];
+        $resource1 = $this->addResourceFor(['name' => 'R1'], $forUsers, $forGroups);
 
         return [$resource1, $g1, $userAId, $userBId, $userCId];
     }

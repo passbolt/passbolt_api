@@ -114,11 +114,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $groupAId = UuidFactory::uuid('group.id.accounting');
-        $for = [
-            $userAId => Permission::OWNER,
-            $groupAId => Permission::OWNER,
-        ];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $for);
+        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$groupAId => Permission::OWNER]);
 
         return [$resource1, $userAId, $groupAId];
     }
@@ -274,7 +270,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
     {
         $userAId = UuidFactory::uuid('user.id.ada');
         $groupAId = UuidFactory::uuid('group.id.accounting');
-        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $groupAId => Permission::READ]);
+        $resource1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$groupAId => Permission::READ]);
 
         return [$resource1, $userAId, $groupAId];
     }

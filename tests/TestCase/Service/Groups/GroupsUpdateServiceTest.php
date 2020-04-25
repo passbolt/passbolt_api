@@ -151,8 +151,8 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userBId, 'is_admin' => true],
             ['user_id' => $userCId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $r2, $g1, $userAId, $userBId, $userCId];
     }
@@ -196,7 +196,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => false],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId];
     }
@@ -242,8 +242,8 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => false],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
-        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
+        $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $r2, $g1, $userAId, $userBId];
     }
@@ -271,7 +271,7 @@ class GroupsUpdateServiceTest extends AppTestCase
         $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
             ['user_id' => $userAId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId];
     }
@@ -372,7 +372,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => false],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
         $r2 = $this->addResourceFor(['name' => 'R2'], [$userAId => Permission::OWNER]);
 
         return [$r1, $r2, $g1, $userAId, $userBId];
@@ -407,7 +407,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => false],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId];
     }
@@ -490,7 +490,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $g2, $userAId, $userBId];
     }
@@ -529,7 +529,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userBId, 'is_admin' => true],
             ['user_id' => $userCId, 'is_admin' => false],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId, $userCId];
     }
@@ -558,7 +558,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId];
     }
@@ -627,7 +627,7 @@ class GroupsUpdateServiceTest extends AppTestCase
             ['user_id' => $userAId, 'is_admin' => true],
             ['user_id' => $userBId, 'is_admin' => true],
         ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER, $g1->id => Permission::OWNER]);
+        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $g2, $userAId, $userBId];
     }
