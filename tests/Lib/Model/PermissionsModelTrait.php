@@ -74,7 +74,7 @@ trait PermissionsModelTrait
             'type' => $type,
         ];
         $permission = $permissionsTable->newEntity($data, $saveOptions);
-        $permissionsTable->saveOrFail($permission);
+        $permissionsTable->saveOrFail($permission, ['checkRules' => false]);
 
         return $permission;
     }

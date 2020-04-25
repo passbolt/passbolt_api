@@ -42,13 +42,14 @@ trait ResourcesModelTrait
     /**
      * Add folders for the given users
      * @param array $data Data
-     * @param array $aroForeignKeys List of user or group id. The first element should refer to a user id.
+     * @param array $users List of user to add a resource for. The first element should refer to a user id.
+     * @param array $groups List of groups to add a resource for.
      * @return \Cake\Datasource\EntityInterface
      */
-    public function addResourceFor(array $data = [], array $aroForeignKeys = [])
+    public function addResourceFor(array $data = [], array $users = [], array $groups = [])
     {
-        reset($aroForeignKeys);
-        $userId = key($aroForeignKeys);
+        reset($users);
+        $userId = key($users);
         if (!isset($data['created_by'])) {
             $data['created_by'] = $userId;
         }
@@ -59,17 +60,16 @@ trait ResourcesModelTrait
         $resource = $this->addResource($data);
         $usersTable = TableRegistry::getTableLocator()->get('Users');
 
-        foreach ($aroForeignKeys as $aroForeignKey => $permissionType) {
-            $isUser = $usersTable->findById($aroForeignKey)->count() > 0;
-            $aro = $isUser ? 'User' : 'Group';
-            $this->addPermission('Resource', $resource->id, $aro, $aroForeignKey, $permissionType);
-            if ($isUser) {
-                $this->addResourceForUserAssociatedData($resource, $aroForeignKey, $data);
-            } else {
-                $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($aroForeignKey)->extract('user_id')->toArray();
-                foreach ($groupUsersIds as $groupUserId) {
-                    $this->addResourceForUserAssociatedData($resource, $groupUserId);
-                }
+        foreach ($users as $userId => $permissionType) {
+            $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::USER_ARO, $userId, $permissionType);
+            $this->addResourceForUserAssociatedData($resource, $userId, $data);
+        }
+
+        foreach ($groups as $groupId => $permissionType) {
+            $this->addPermission(PermissionsTable::RESOURCE_ACO, $resource->id, PermissionsTable::GROUP_ARO, $groupId, $permissionType);
+            $groupUsersIds = $usersTable->Groups->GroupsUsers->findByGroupId($groupId)->extract('user_id')->toArray();
+            foreach ($groupUsersIds as $groupUserId) {
+                $this->addResourceForUserAssociatedData($resource, $groupUserId);
             }
         }
 
