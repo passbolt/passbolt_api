@@ -27,7 +27,7 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.14.0
+ * @since         2.13.0
  */
 class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
 {
