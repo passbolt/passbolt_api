@@ -48,7 +48,6 @@ use Cake\Validation\Validator;
 class PermissionsTable extends Table
 {
     use PermissionsFindersTrait;
-    use ResourcesCleanupTrait;
     use TableCleanupTrait;
 
     const RESOURCE_ACO = 'Resource';
@@ -62,6 +61,7 @@ class PermissionsTable extends Table
      */
     const ALLOWED_ACOS = [
         self::RESOURCE_ACO,
+        self::FOLDER_ACO,
     ];
 
     /**
@@ -101,6 +101,12 @@ class PermissionsTable extends Table
         $this->belongsTo('Resources', [
             'foreignKey' => 'aco_foreign_key',
         ]);
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $this->belongsTo('Folders', [
+                'foreignKey' => 'aco_foreign_key',
+            ]);
+        }
 
         $this->belongsTo('Users', [
             'foreignKey' => 'aro_foreign_key',
@@ -331,6 +337,47 @@ class PermissionsTable extends Table
     }
 
     /**
+     * Delete all association records where associated model entities are soft deleted
+     *
+     * @param string $modelName model
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedAco(string $modelName, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith($modelName)
+            ->where([
+                $modelName . '.deleted' => true,
+                'aco' => ucfirst(Inflector::singularize($modelName)),
+            ]);
+
+        return $this->cleanupSoftDeleted($modelName, $dryRun, $query);
+    }
+
+    /**
+     * Delete all association records where associated model entities are deleted
+     *
+     * @param string $modelName model
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedAco(string $modelName, $dryRun = false)
+    {
+        $query = $this->query()
+            ->select(['id'])
+            ->leftJoinWith($modelName)
+            ->where(function ($exp, $q) use ($modelName) {
+                return $exp
+                    ->isNull($modelName . '.id')
+                    ->eq('aco', ucfirst(Inflector::singularize($modelName)));
+            });
+
+        return $this->cleanupHardDeleted($modelName, $dryRun, $query);
+    }
+
+    /**
      * Delete all records where associated users are soft deleted
      *
      * @param bool $dryRun false
@@ -372,5 +419,27 @@ class PermissionsTable extends Table
     public function cleanupHardDeletedGroups($dryRun = false)
     {
         return $this->cleanupHardDeletedAro('Groups', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated resources are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupHardDeletedResources(bool $dryRun = false)
+    {
+        return $this->cleanupHardDeletedAco('Resources', $dryRun);
+    }
+
+    /**
+     * Delete all records where associated resources are deleted
+     *
+     * @param bool $dryRun false
+     * @return number of affected records
+     */
+    public function cleanupSoftDeletedResources(bool $dryRun = false)
+    {
+        return $this->cleanupSoftDeletedAco('Resources', $dryRun);
     }
 }
